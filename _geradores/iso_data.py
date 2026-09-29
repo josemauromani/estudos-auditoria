@@ -35,6 +35,7 @@ ESTUDOS = {
     "w5h2": ("5W2H", "../5W2H/treinamento-5w2h.html"),
     "auditoria": ("Auditoria interna", "../Auditoria/treinamento-auditoria.html"),
     "nc": ("Não conformidade e ação corretiva", "../Nao-Conformidade/treinamento-nao-conformidade.html"),
+    "ac": ("Análise crítica pela direção", "../Analise-Critica/treinamento-analise-critica.html"),
 }
 
 
@@ -222,7 +223,7 @@ REQ = _req([
     ("9.3", "Análise crítica pela direção",
      "A alta direção deve analisar o sistema a intervalos planejados, considerando as entradas definidas pela norma: ações anteriores, mudanças, desempenho, recursos, riscos e oportunidades de melhoria. As saídas são decisões sobre melhoria, mudanças e recursos.",
      "O que a direção decidiu na última análise crítica?",
-     "Ata da análise crítica, com entradas, decisões e responsáveis.", ()),
+     "Ata da análise crítica, com entradas, decisões e responsáveis.", ("ac",)),
     # ------------------------------------------------------------ 10
     ("10.1", "Melhoria: generalidades",
      "Determinar e selecionar oportunidades de melhoria e implementar ações para atender aos requisitos do cliente e aumentar a satisfação: melhorar produtos e serviços, corrigir e prevenir efeitos indesejados e melhorar o sistema.",

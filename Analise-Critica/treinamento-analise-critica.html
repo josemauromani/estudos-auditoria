@@ -1,0 +1,1590 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Análise crítica pela direção</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<style>
+:root{
+  --ground:#F3F6F7; --surface:#FFFFFF; --sunk:#E9EEF0; --ink:#16242E; --muted:#566672; --rule:#D3DBE0;
+  --accent:#2B5C8A;
+  --s1:#2A6FB0; --s1-tint:#DCE8F3;
+  --s2:#D19A2E; --s2-tint:#F8EBCB;
+  --s3:#B0413E; --s3-tint:#F5DEDC;
+  --on-s2:#16242E;
+  --p:#2B5C8A; --p-tint:#DCE8F3;
+  --d:#A96A12; --d-tint:#F6E8CF;
+  --c:#1E7B73; --c-tint:#D9EEEB;
+  --a:#B0413E; --a-tint:#F5DEDC;
+  --on-hue:#FFFFFF;
+  --good:#1F7A4D; --good-tint:#DDF1E5;
+  --bad:#B0413E; --bad-tint:#F5DEDC;
+  --display:"Barlow Semi Condensed","Arial Narrow",Arial,sans-serif;
+  --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --ground:#0F171C; --surface:#172229; --sunk:#1E2B33; --ink:#E4EAED; --muted:#9BABB6; --rule:#2B3A44;
+    --accent:#86B7E3;
+  --s1:#4F97DB; --s1-tint:#1B2F42;
+  --s2:#B58E14; --s2-tint:#3A2C12;
+  --s3:#D14B45; --s3-tint:#3D1F1E;
+  --on-s2:#0F171C;
+    --p:#86B7E3; --p-tint:#1B2F42;
+    --d:#E2AC4F; --d-tint:#3A2C12;
+    --c:#5FC6BA; --c-tint:#15332F;
+    --a:#EC8E89; --a-tint:#3D1F1E;
+    --on-hue:#0F171C;
+    --good:#6FCF9B; --good-tint:#163326;
+    --bad:#EC8E89; --bad-tint:#3D1F1E;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --ground:#0F171C; --surface:#172229; --sunk:#1E2B33; --ink:#E4EAED; --muted:#9BABB6; --rule:#2B3A44;
+  --accent:#86B7E3;
+  --s1:#4F97DB; --s1-tint:#1B2F42;
+  --s2:#B58E14; --s2-tint:#3A2C12;
+  --s3:#D14B45; --s3-tint:#3D1F1E;
+  --on-s2:#0F171C;
+  --p:#86B7E3; --p-tint:#1B2F42;
+  --d:#E2AC4F; --d-tint:#3A2C12;
+  --c:#5FC6BA; --c-tint:#15332F;
+  --a:#EC8E89; --a-tint:#3D1F1E;
+  --on-hue:#0F171C;
+  --good:#6FCF9B; --good-tint:#163326;
+  --bad:#EC8E89; --bad-tint:#3D1F1E;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--ground);color:var(--ink);font:400 16px/1.65 var(--body);-webkit-text-size-adjust:100%}
+a{color:var(--accent);text-underline-offset:3px}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.page{max-width:1180px;margin-inline:auto;padding-inline:20px;padding-block:36px 80px}
+
+/* Cabeçalho */
+.mast{display:flex;flex-direction:column;gap:18px;padding-bottom:32px;border-bottom:1px solid var(--rule)}
+.tiles{display:flex;gap:6px}
+.tiles span{width:44px;height:44px;display:grid;place-items:center;font:700 24px/1 var(--display);color:var(--on-hue)}
+.tiles .p{background:var(--p)} .tiles .d{background:var(--d)} .tiles .c{background:var(--c)} .tiles .a{background:var(--a)}
+h1{font:700 clamp(2.3rem,6vw,3.6rem)/1.02 var(--display);letter-spacing:-.01em;margin:0;text-wrap:balance}
+.lead{font-size:1.15rem;line-height:1.55;max-width:62ch;margin:0;color:var(--ink)}
+.meta{display:flex;flex-direction:row;flex-wrap:wrap;gap:6px 22px;font:400 .8rem/1.4 var(--mono);color:var(--muted);margin:0;padding:0;list-style:none}
+
+/* Estrutura */
+.layout{display:grid;grid-template-columns:minmax(0,1fr);gap:32px;padding-top:32px}
+.toc{font-size:.92rem}
+.toc h2{font:500 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+.toc ol{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:2px 20px;counter-reset:toc}
+.toc li{counter-increment:toc}
+.toc a{display:flex;gap:10px;padding:5px 0;color:var(--ink);text-decoration:none;line-height:1.35}
+.toc a::before{content:counter(toc,decimal-leading-zero);font:400 .75rem/1.7 var(--mono);color:var(--muted)}
+.toc a:hover{color:var(--accent);text-decoration:underline}
+@media (min-width:1020px){
+  .layout{grid-template-columns:200px minmax(0,1fr);gap:64px}
+  .toc{position:sticky;top:calc(env(safe-area-inset-top,0px) + 24px);align-self:start}
+  .toc ol{grid-template-columns:1fr}
+}
+main{display:flex;flex-direction:column;gap:72px;min-width:0}
+section{display:flex;flex-direction:column;gap:20px;scroll-margin-top:24px}
+.eyebrow{font:500 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0}
+h2{font:700 clamp(1.7rem,4vw,2.2rem)/1.1 var(--display);margin:0;text-wrap:balance}
+h3{font:600 1.3rem/1.2 var(--display);margin:12px 0 0;text-wrap:balance}
+h4{font:600 .95rem/1.3 var(--body);margin:0}
+p{margin:0}
+section > p, section > ul, section > ol, section > h3{max-width:68ch}
+ul,ol{margin:0;padding-left:1.25em;display:flex;flex-direction:column;gap:6px}
+strong{font-weight:600}
+code{font:400 .88em var(--mono);background:var(--sunk);padding:1px 5px;border-radius:3px}
+
+/* Letras coloridas no texto */
+.k{display:inline-grid;place-items:center;width:1.45em;height:1.45em;font:700 .85em/1 var(--display);color:var(--on-hue);vertical-align:.05em}
+.k.p{background:var(--p)} .k.d{background:var(--d)} .k.c{background:var(--c)} .k.a{background:var(--a)}
+
+/* Figuras */
+figure{margin:0;display:flex;flex-direction:column;gap:10px;position:relative}
+.scroll{overflow-x:auto;background:var(--surface);border:1px solid var(--rule);padding:18px}
+.scroll svg{display:block;width:100%;min-width:820px;height:auto;color:var(--ink)}
+figcaption{font-size:.86rem;line-height:1.5;color:var(--muted);max-width:72ch}
+figcaption b{color:var(--ink);font-weight:600}
+svg text{font-family:var(--body);fill:var(--ink)}
+svg .disp{font-family:var(--display);font-weight:700}
+svg .mono{font-family:var(--mono);letter-spacing:.08em}
+svg .on{fill:var(--on-hue)}
+svg .mu{fill:var(--muted)}
+svg .b{font-weight:600}
+svg .ln{stroke:var(--ink);stroke-width:1.5;fill:none}
+svg .ln-mu{stroke:var(--muted);stroke-width:1.5;fill:none}
+svg .ln-bold{stroke:var(--ink);stroke-width:3;fill:none;stroke-linejoin:round;stroke-linecap:round}
+svg .dash{stroke-dasharray:5 4}
+svg .ah{fill:var(--ink)} svg .ah-mu{fill:var(--muted)}
+svg .bx{fill:var(--surface);stroke:var(--rule);stroke-width:1.5}
+svg .bx-ink{fill:var(--ink);stroke:var(--ink)}
+svg .t-ground{fill:var(--ground)}
+svg .bx-out{fill:none;stroke:var(--muted);stroke-width:1.5;stroke-dasharray:5 4}
+svg .bx-p{fill:var(--p-tint);stroke:var(--p);stroke-width:1.5} svg .hd-p{fill:var(--p)}
+svg .bx-d{fill:var(--d-tint);stroke:var(--d);stroke-width:1.5} svg .hd-d{fill:var(--d)}
+svg .bx-c{fill:var(--c-tint);stroke:var(--c);stroke-width:1.5} svg .hd-c{fill:var(--c)}
+svg .bx-a{fill:var(--a-tint);stroke:var(--a);stroke-width:1.5} svg .hd-a{fill:var(--a)}
+svg .gap{stroke:var(--surface);stroke-width:4}
+svg .gap2{stroke:var(--surface);stroke-width:2}
+svg .hub{fill:var(--surface)}
+
+/* Gráfico */
+svg .grid{stroke:var(--rule);stroke-width:1}
+svg .band{fill:var(--sunk)}
+svg .series{stroke:var(--accent);stroke-width:2;fill:none;stroke-linejoin:round;stroke-linecap:round}
+svg .pt{fill:var(--accent);stroke:var(--surface);stroke-width:2}
+svg .pt.on-hit{stroke:var(--ink)}
+svg .goal{stroke:var(--muted);stroke-width:1.5;stroke-dasharray:6 4;fill:none}
+svg .xh{stroke:var(--muted);stroke-width:1}
+svg .hit{fill:transparent;cursor:crosshair;outline:none}
+svg .root{fill:var(--accent);stroke:var(--surface);stroke-width:2}
+.tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--ground);padding:6px 10px;font-size:.78rem;line-height:1.4;transform:translate(-50%,calc(-100% - 14px));white-space:nowrap;z-index:2}
+.tip b{display:block;font:600 1.05rem/1.2 var(--body)}
+details.data{font-size:.88rem}
+details.data summary{cursor:pointer;font:400 .82rem var(--mono);color:var(--muted);padding:4px 0}
+details.data .tbl{margin-top:8px}
+details.data table{min-width:420px}
+
+/* Tabelas */
+.tbl{overflow-x:auto;border:1px solid var(--rule);background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:780px;font-size:.88rem;line-height:1.4}
+th,td{padding:9px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--rule)}
+tr:last-child > td{border-bottom:0}
+thead th{font:600 .8rem/1.3 var(--body);background:var(--sunk)}
+td.num{font-variant-numeric:tabular-nums;white-space:nowrap;font-family:var(--mono);font-size:.82rem}
+
+/* Situação da entrada e tipo de saída */
+.chip{display:inline-block;padding:2px 8px;font:600 .76rem/1.45 var(--body);color:var(--on-hue);white-space:nowrap}
+.chip.s1{background:var(--s1)} .chip.s2{background:var(--s2);color:var(--on-s2)} .chip.s3{background:var(--s3)}
+.chip.sl{background:var(--sunk);color:var(--ink);box-shadow:inset 0 0 0 1px var(--rule)}
+svg .hd-ink{fill:var(--ink)}
+svg .f1{fill:var(--s1)} svg .f2{fill:var(--s2)} svg .f3{fill:var(--s3)}
+svg .on2{fill:var(--on-s2)}
+svg .diag{fill:var(--sunk)}
+svg .dot{fill:var(--ink)}
+svg .seg{stroke:var(--surface);stroke-width:2}
+svg .halo{paint-order:stroke;stroke:var(--surface);stroke-width:5px;stroke-linejoin:round}
+svg .hit:focus-visible{stroke:var(--accent);stroke-width:2}
+
+/* Tabelas dos exemplos */
+table.aud{font-size:.8rem;min-width:860px;line-height:1.4}
+table.aud th, table.aud td{padding:8px 9px}
+table.aud td.n{white-space:nowrap;font-weight:600;color:var(--muted)}
+table.aud td.c, table.aud th.c{text-align:center;font-variant-numeric:tabular-nums}
+table.aud td.nw{white-space:nowrap;font-variant-numeric:tabular-nums}
+table.aud td small{display:block;color:var(--muted);font-size:.76rem;margin-top:3px}
+table.aud caption{caption-side:top;text-align:left;padding:10px 12px;font:500 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);background:var(--sunk)}
+
+/* Ficha da reunião (acima de cada exemplo) */
+.ficha{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:0;border:1px solid var(--rule);background:var(--surface)}
+.ficha div{padding:12px 14px;border-right:1px solid var(--rule);border-bottom:1px solid var(--rule);margin:0 -1px -1px 0}
+.ficha dt{font:500 .68rem/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.ficha dd{margin:0;font-size:.9rem;line-height:1.4}
+dl{margin:0}
+
+/* Blocos */
+.pair{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.box{background:var(--surface);border:1px solid var(--rule);padding:18px 20px;display:flex;flex-direction:column;gap:10px}
+.box h4{font:600 1.1rem/1.2 var(--display)}
+.box ul{font-size:.93rem}
+.note{background:var(--sunk);padding:16px 20px;max-width:72ch;font-size:.94rem;display:flex;flex-direction:column;gap:6px}
+.note h4{font:500 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+
+/* Passo a passo */
+.steps{list-style:none;padding:0;counter-reset:st;gap:0;max-width:none;border-top:1px solid var(--rule)}
+.steps li{counter-increment:st;display:grid;grid-template-columns:44px minmax(0,1fr);gap:4px 12px;padding:16px 0;border-bottom:1px solid var(--rule)}
+.steps li::before{content:counter(st);font:700 1.7rem/1 var(--display);color:var(--muted);grid-row:span 2}
+.steps h4{font:600 1.1rem/1.25 var(--display)}
+.steps p{font-size:.95rem;max-width:64ch;grid-column:2}
+
+/* Erros comuns */
+.errs{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:0 40px;border-top:1px solid var(--rule)}
+.errs div{padding:16px 16px 16px 0;border-bottom:1px solid var(--rule);display:flex;flex-direction:column;gap:4px}
+.errs h4{font:600 1.05rem/1.25 var(--display)}
+.errs p{font-size:.92rem}
+.errs .fix{color:var(--muted)}
+.errs .fix b{color:var(--ink);font-weight:600}
+
+/* Checklist */
+.check{list-style:none;padding:0;gap:0;max-width:none;border:1px solid var(--rule);background:var(--surface)}
+.check li{border-bottom:1px solid var(--rule)}
+.check li:last-child{border-bottom:0}
+.check label{display:grid;grid-template-columns:22px minmax(0,1fr);gap:12px;padding:11px 16px;cursor:pointer;font-size:.94rem;align-items:start}
+.check input{width:18px;height:18px;margin:3px 0 0;accent-color:var(--c)}
+.check input:checked + span{color:var(--muted);text-decoration:line-through}
+.bar{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;font:400 .82rem var(--mono);color:var(--muted)}
+.bar b{color:var(--ink);font-weight:500}
+
+/* Exercício */
+.quiz{display:flex;flex-direction:column;gap:0;border:1px solid var(--rule);background:var(--surface)}
+.q{display:grid;grid-template-columns:minmax(0,1fr);gap:10px;padding:14px 16px;border-bottom:1px solid var(--rule)}
+.q:last-child{border-bottom:0}
+@media (min-width:720px){.q{grid-template-columns:minmax(0,1fr) auto;align-items:center}}
+.q p{font-size:.95rem}
+.q .why{grid-column:1/-1;font-size:.86rem;color:var(--muted)}
+.q .why b{font-weight:600}
+.q .why.ok b{color:var(--good)} .q .why.no b{color:var(--bad)}
+.opts{display:flex;gap:6px}
+.opts button{width:40px;height:40px;border:1.5px solid var(--rule);background:var(--surface);color:var(--ink);font:700 1.1rem/1 var(--display);cursor:pointer;border-radius:0}
+.opts button:hover:not(:disabled){border-color:var(--ink)}
+.opts button:disabled{cursor:default;opacity:.45}
+.opts button.right{background:var(--good-tint);border-color:var(--good);color:var(--good);opacity:1}
+.opts button.wrong{background:var(--bad-tint);border-color:var(--bad);color:var(--bad);opacity:1}
+.btn{border:1.5px solid var(--ink);background:transparent;color:var(--ink);font:500 .82rem var(--mono);padding:7px 14px;cursor:pointer;border-radius:0}
+.btn:hover{background:var(--ink);color:var(--ground)}
+
+/* Glossário */
+.gloss{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:0 40px;border-top:1px solid var(--rule)}
+.gloss div{padding:12px 0;border-bottom:1px solid var(--rule)}
+.gloss dt{font:600 1.02rem/1.3 var(--display)}
+.gloss dd{margin:2px 0 0;font-size:.9rem;color:var(--muted)}
+footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);font-size:.84rem;color:var(--muted);max-width:72ch}
+
+.quiz .opts{flex-wrap:wrap}
+.quiz .opts button{width:auto;min-width:40px;padding:0 11px;font-size:1rem}
+@media (min-width:720px){.q{grid-template-columns:minmax(0,1fr) auto}}
+</style>
+</head>
+<body>
+<div class="page" lang="pt-BR">
+
+<header class="mast">
+  <div class="tiles" aria-hidden="true"><span class="p">A</span><span class="d">C</span><span class="c">D</span></div>
+  <h1>Análise crítica pela direção na prática</h1>
+  <p class="lead">Um guia de estudo para preparar, conduzir e registrar a reunião em que a direção olha para os resultados do sistema de gestão e decide o que melhorar, o que mudar e que recursos prover.</p>
+  <ul class="meta">
+    <li>Treinamento autoinstrucional</li>
+    <li>13 módulos</li>
+    <li>Leitura de cerca de 50 minutos</li>
+    <li>3 exemplos resolvidos e 2 exercícios</li>
+  </ul>
+</header>
+
+<div class="layout">
+
+<nav class="toc" aria-label="Sumário">
+  <h2>Sumário</h2>
+  <ol>
+    <li><a href="#o-que-e">O que é</a></li>
+    <li><a href="#quando">Quando fazer</a></li>
+    <li><a href="#como">Como preparar e conduzir</a></li>
+    <li><a href="#entradas">As entradas</a></li>
+    <li><a href="#saidas">As saídas</a></li>
+    <li><a href="#exemplos">Exemplos resolvidos</a></li>
+    <li><a href="#acompanhar">Acompanhar as decisões</a></li>
+    <li><a href="#erros">Erros comuns</a></li>
+    <li><a href="#ferramentas">A análise crítica e outras ferramentas</a></li>
+    <li><a href="#iso">Nas normas ISO</a></li>
+    <li><a href="#reuniao">A reunião</a></li>
+    <li><a href="#pratique">Pratique</a></li>
+    <li><a href="#planilha">A planilha de apoio</a></li>
+    <li><a href="#glossario">Glossário</a></li>
+  </ol>
+</nav>
+
+<main>
+
+<!-- ============================ MÓDULO 1 ============================ -->
+<section id="o-que-e">
+  <p class="eyebrow">Módulo 1</p>
+  <h2>O que é</h2>
+  <p>A análise crítica pela direção é a reunião em que a alta direção avalia o sistema de gestão como um todo. Os indicadores, as auditorias e as não conformidades mostram partes do sistema. A análise crítica junta as partes, conclui e decide.</p>
+  <p>Ela responde a uma pergunta: o sistema continua servindo à organização? A resposta tem quatro lados. O sistema precisa estar <strong>adequado</strong> ao que a organização faz, ser <strong>suficiente</strong> para cobrir o que importa, ser <strong>eficaz</strong> em entregar resultados e estar <strong>alinhado</strong> à estratégia.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 286" role="img" aria-label="A análise crítica pela direção. À esquerda, as entradas, que mostram o que aconteceu: resultados dos indicadores, auditorias e não conformidades, clientes e fornecedores, riscos, mudanças e recursos. No centro, a direção avalia se o sistema está adequado, suficiente, eficaz e alinhado. À direita, as saídas, que dizem o que será feito: melhorias, mudanças no sistema e recursos. As decisões de uma análise são a primeira entrada da análise seguinte.">
+        <defs>
+          <marker id="a1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker>
+          <marker id="a1m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah-mu" d="M0 0 L10 5 L0 10 z"/></marker>
+        </defs>
+        <g font-size="11.5">
+          <rect class="bx" x="10" y="20" width="270" height="176"/>
+          <text class="mono mu" x="28" y="44" font-size="10">ENTRADAS · O QUE ACONTECEU</text>
+          <text x="28" y="74">· Ações das análises anteriores</text>
+          <text x="28" y="96">· Mudanças fora e dentro da organização</text>
+          <text x="28" y="118">· Clientes, objetivos e processos</text>
+          <text x="28" y="140">· Não conformidades e auditorias</text>
+          <text x="28" y="162">· Fornecedores e recursos</text>
+          <text x="28" y="184">· Riscos e oportunidades</text>
+
+          <rect class="bx-ink" x="315" y="20" width="270" height="176"/>
+          <text class="mono t-ground" x="333" y="44" font-size="10">ANÁLISE · A DIREÇÃO AVALIA</text>
+          <text class="b t-ground" x="333" y="74" font-size="14">O sistema continua servindo?</text>
+          <text class="t-ground" x="333" y="104">Adequado ao que fazemos</text>
+          <text class="t-ground" x="333" y="126">Suficiente para o que importa</text>
+          <text class="t-ground" x="333" y="148">Eficaz nos resultados</text>
+          <text class="t-ground" x="333" y="170">Alinhado à estratégia</text>
+
+          <rect class="bx" x="620" y="20" width="270" height="176"/>
+          <text class="mono mu" x="638" y="44" font-size="10">SAÍDAS · O QUE SERÁ FEITO</text>
+          <text class="b" x="638" y="78" font-size="13">Melhorias</text>
+          <text class="mu" x="638" y="96">o que será feito melhor</text>
+          <text class="b" x="638" y="124" font-size="13">Mudanças no sistema</text>
+          <text class="mu" x="638" y="142">o que muda em processos e objetivos</text>
+          <text class="b" x="638" y="170" font-size="13">Recursos</text>
+          <text class="mu" x="638" y="188">o que será provido</text>
+        </g>
+        <line class="ln" x1="282" y1="108" x2="311" y2="108" marker-end="url(#a1)"/>
+        <line class="ln" x1="587" y1="108" x2="616" y2="108" marker-end="url(#a1)"/>
+        <path class="ln-mu dash" d="M755 198 V244 H145 V202" marker-end="url(#a1m)"/>
+        <text class="mu" x="450" y="268" font-size="11.5" text-anchor="middle">as decisões de uma análise são a primeira entrada da análise seguinte</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 1.</b> A análise crítica recebe fatos e entrega decisões. Uma reunião que só recebe é uma apresentação. Uma reunião que decide sem fatos é uma opinião.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Reunião</th><th style="width:26%">Quem conduz</th><th style="width:26%">O que olha</th><th>O que decide</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Reunião de indicadores</strong></td><td>O dono de cada processo.</td><td>Os resultados do mês, indicador por indicador.</td><td>Ações sobre o resultado do processo.</td></tr>
+        <tr><td><strong>Reunião de encerramento da auditoria</strong></td><td>O auditor líder.</td><td>As constatações de um processo.</td><td>Nada. Ela informa, e o auditado decide depois.</td></tr>
+        <tr><td><strong>Análise crítica pela direção</strong></td><td>A alta direção.</td><td>O sistema inteiro, no período.</td><td>Melhorias, mudanças no sistema e recursos.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>A palavra “crítica” não quer dizer procurar defeitos. Quer dizer examinar com critério: comparar o que se planejou com o que se alcançou, e tirar uma conclusão.</p>
+</section>
+
+<!-- ============================ MÓDULO 2 ============================ -->
+<section id="quando">
+  <p class="eyebrow">Módulo 2</p>
+  <h2>Quando fazer</h2>
+  <p>A norma pede que a análise seja feita a intervalos planejados, e deixa o intervalo para a organização. Uma vez por ano é o mínimo usado na prática. Organizações em mudança, ou no início da implantação, ganham com um intervalo de seis meses.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 236" role="img" aria-label="Calendário do sistema de gestão em um ano. A reunião de indicadores acontece todos os meses. As auditorias internas acontecem de fevereiro a novembro. A análise crítica acontece em fevereiro e em agosto. A auditoria externa acontece em outubro. A análise de fevereiro fecha o ano anterior e vem antes do orçamento. A de agosto vem antes da auditoria externa.">
+        <g class="mono" font-size="10" text-anchor="middle">
+          <text class="mu" x="230" y="24">JAN</text><text class="mu" x="286" y="24">FEV</text><text class="mu" x="342" y="24">MAR</text><text class="mu" x="398" y="24">ABR</text>
+          <text class="mu" x="454" y="24">MAI</text><text class="mu" x="510" y="24">JUN</text><text class="mu" x="566" y="24">JUL</text><text class="mu" x="622" y="24">AGO</text>
+          <text class="mu" x="678" y="24">SET</text><text class="mu" x="734" y="24">OUT</text><text class="mu" x="790" y="24">NOV</text><text class="mu" x="846" y="24">DEZ</text>
+        </g>
+        <g>
+          <line class="grid" x1="20" y1="38" x2="880" y2="38"/><line class="grid" x1="20" y1="78" x2="880" y2="78"/>
+          <line class="grid" x1="20" y1="118" x2="880" y2="118"/><line class="grid" x1="20" y1="158" x2="880" y2="158"/><line class="grid" x1="20" y1="198" x2="880" y2="198"/>
+        </g>
+        <rect class="band" x="258" y="39" width="56" height="158"/><rect class="band" x="594" y="39" width="56" height="158"/>
+        <g font-size="12">
+          <text x="20" y="63">Reunião de indicadores</text>
+          <text x="20" y="103">Auditorias internas</text>
+          <text class="b" x="20" y="143">Análise crítica</text>
+          <text x="20" y="183">Auditoria externa</text>
+        </g>
+        <g class="dot">
+          <circle cx="230" cy="58" r="4"/><circle cx="286" cy="58" r="4"/><circle cx="342" cy="58" r="4"/><circle cx="398" cy="58" r="4"/>
+          <circle cx="454" cy="58" r="4"/><circle cx="510" cy="58" r="4"/><circle cx="566" cy="58" r="4"/><circle cx="622" cy="58" r="4"/>
+          <circle cx="678" cy="58" r="4"/><circle cx="734" cy="58" r="4"/><circle cx="790" cy="58" r="4"/><circle cx="846" cy="58" r="4"/>
+        </g>
+        <g class="dot">
+          <circle cx="286" cy="98" r="4"/><circle cx="342" cy="98" r="4"/><circle cx="398" cy="98" r="4"/><circle cx="454" cy="98" r="4"/>
+          <circle cx="510" cy="98" r="4"/><circle cx="566" cy="98" r="4"/><circle cx="622" cy="98" r="4"/><circle cx="678" cy="98" r="4"/>
+          <circle cx="734" cy="98" r="4"/><circle cx="790" cy="98" r="4"/>
+        </g>
+        <rect class="hd-ink" x="272" y="124" width="28" height="28"/><rect class="hd-ink" x="608" y="124" width="28" height="28"/>
+        <rect class="bx" x="722" y="166" width="24" height="24"/>
+        <text class="mu" x="286" y="222" font-size="11" text-anchor="middle">fecha o ano e vem antes do orçamento</text>
+        <text class="mu" x="622" y="222" font-size="11" text-anchor="middle">vem antes da auditoria externa</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 2.</b> Um calendário com análise crítica a cada seis meses. A data não é escolhida pela agenda da direção: ela vem depois dos resultados e antes das decisões de orçamento.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:28%">Momento</th><th style="width:36%">O que fazer</th><th>Resultado</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Data do calendário</strong></td><td>Fazer a análise completa, com todas as entradas.</td><td>Avaliação do sistema e decisões para o período seguinte.</td></tr>
+        <tr><td><strong>Antes do orçamento</strong></td><td>Levar os pedidos de recursos das áreas, com os resultados que os justificam.</td><td>Recursos aprovados junto com o motivo.</td></tr>
+        <tr><td><strong>Mudança grande</strong></td><td>Fazer uma análise extraordinária: nova unidade, novo produto, perda de um cliente importante.</td><td>Sistema ajustado antes de a mudança virar problema.</td></tr>
+        <tr><td><strong>Resultado grave</strong></td><td>Fazer uma análise extraordinária: não conformidade maior, reclamação séria, acidente.</td><td>Decisão da direção, sem esperar a data do calendário.</td></tr>
+        <tr><td><strong>Antes da auditoria externa</strong></td><td>Conferir se a análise do período foi feita e se as decisões andaram.</td><td>Evidência pronta. A análise não deve ser feita só para a auditoria.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pair">
+    <div class="box">
+      <h4>Uma reunião por período serve quando</h4>
+      <ul>
+        <li>A organização é pequena, e a direção acompanha a rotina de perto.</li>
+        <li>Os resultados mudam devagar.</li>
+        <li>As outras reuniões já tratam os desvios do mês.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h4>Divida a pauta em várias reuniões quando</h4>
+      <ul>
+        <li>A reunião única passa de três horas.</li>
+        <li>A direção já se reúne todo mês ou a cada três meses.</li>
+        <li>Os temas pedem participantes diferentes.</li>
+      </ul>
+    </div>
+  </div>
+  <p>A pauta pode ser dividida, desde que todas as entradas sejam analisadas no período e que o conjunto fique registrado. O exemplo 3 mostra uma pauta dividida em quatro reuniões.</p>
+</section>
+
+<!-- ============================ MÓDULO 3 ============================ -->
+<section id="como">
+  <p class="eyebrow">Módulo 3</p>
+  <h2>Como preparar e conduzir</h2>
+  <p>A reunião dura duas horas. A preparação dura três semanas. É na preparação que os dados são reunidos, conferidos e resumidos. Quem chega à reunião já leu os resultados, e o tempo é usado para concluir e decidir.</p>
+
+  <ol class="steps">
+    <li><h4>Marque a data e convoque</h4><p>Com um mês de antecedência. A alta direção conduz. Participam os donos dos processos e quem apresenta cada entrada. A Qualidade organiza, e não decide.</p></li>
+    <li><h4>Distribua as entradas</h4><p>Cada entrada tem um responsável por apresentar. Ele recebe o pedido com três semanas de antecedência, com o período a analisar e o formato do resumo.</p></li>
+    <li><h4>Confira as ações anteriores</h4><p>Antes de qualquer resultado novo, levante a situação de cada decisão das análises anteriores: concluída, em andamento, atrasada ou cancelada.</p></li>
+    <li><h4>Resuma cada entrada em uma página</h4><p>O resultado do período, a tendência, a comparação com a meta e uma proposta de conclusão. Os dados completos ficam em anexo.</p></li>
+    <li><h4>Envie o material antes</h4><p>Com uma semana de antecedência. Na reunião, cada entrada é apresentada em cinco minutos, e o restante do tempo é de discussão.</p></li>
+    <li><h4>Conduza pela pauta</h4><p>Siga a ordem das entradas. Para cada uma, registre a conclusão da direção antes de passar à seguinte. Entrada sem conclusão é entrada não analisada.</p></li>
+    <li><h4>Decida, com responsável e prazo</h4><p>Cada decisão diz o que será feito, por quem, até quando e com que recurso. O recurso é aprovado na reunião, por quem tem autoridade para isso.</p></li>
+    <li><h4>Avalie o sistema e registre</h4><p>Feche com a avaliação dos quatro critérios, com justificativa. A ata sai em até uma semana, e as decisões entram no acompanhamento mensal.</p></li>
+  </ol>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:22%">Papel</th><th style="width:26%">Quem costuma ser</th><th>O que faz</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Quem conduz</strong></td><td>Diretor, sócio ou dono.</td><td>Abre a reunião, pede as conclusões e toma as decisões. Aprova os recursos.</td></tr>
+        <tr><td><strong>Quem organiza</strong></td><td>Responsável pela Qualidade.</td><td>Monta a pauta, cobra as entradas, redige a ata e acompanha as decisões.</td></tr>
+        <tr><td><strong>Quem apresenta</strong></td><td>Donos dos processos.</td><td>Traz o resultado da sua entrada, com a tendência e uma proposta de conclusão.</td></tr>
+        <tr><td><strong>Quem participa</strong></td><td>Gerentes e líderes.</td><td>Discute, propõe e assume as decisões que lhe cabem.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note">
+    <h4>Quem é a alta direção</h4>
+    <p>É a pessoa ou o grupo que dirige a organização no nível mais alto, com autoridade para mudar objetivos e prover recursos. Em uma loja, é o dono. Em uma indústria, é a diretoria. Quando o sistema cobre só uma parte da empresa, é quem dirige essa parte.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 4 ============================ -->
+<section id="entradas">
+  <p class="eyebrow">Módulo 4</p>
+  <h2>As entradas</h2>
+  <p>A ISO 9001 lista o que a direção precisa considerar. São seis itens, de “a” a “f”, e o item “c”, sobre o desempenho do sistema, se divide em sete. Na prática, a pauta tem doze entradas. Todas entram, mesmo quando a resposta é “nada a relatar”.</p>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:9%">Item</th><th style="width:25%">Entrada</th><th style="width:36%">O que a direção quer saber</th><th>Onde buscar</th></tr></thead>
+      <tbody>
+        <tr><td class="num">9.3.2 a</td><td><strong>Ações das análises anteriores</strong></td><td>O que foi decidido nas análises anteriores, e o que foi feito.</td><td>Ata da análise anterior e plano de ação</td></tr>
+        <tr><td class="num">9.3.2 b</td><td><strong>Mudanças no contexto</strong></td><td>O que mudou fora e dentro da organização, e afeta o sistema.</td><td>Matriz SWOT atualizada</td></tr>
+        <tr><td class="num">9.3.2 c1</td><td><strong>Satisfação do cliente</strong></td><td>O que os clientes e as outras partes interessadas dizem.</td><td>Pesquisa, reclamações e elogios</td></tr>
+        <tr><td class="num">9.3.2 c2</td><td><strong>Objetivos da qualidade</strong></td><td>Quanto de cada objetivo foi alcançado.</td><td>Quadro de objetivos, com meta e resultado</td></tr>
+        <tr><td class="num">9.3.2 c3</td><td><strong>Processos e produtos</strong></td><td>Como os processos se saíram, e se o produto saiu conforme.</td><td>Indicadores dos processos e de produto</td></tr>
+        <tr><td class="num">9.3.2 c4</td><td><strong>Não conformidades</strong></td><td>Quantas houve, de que tipo, e se as ações funcionaram.</td><td>Controle das não conformidades</td></tr>
+        <tr><td class="num">9.3.2 c5</td><td><strong>Monitoramento e medição</strong></td><td>O que as medições do período mostram.</td><td>Painel de indicadores</td></tr>
+        <tr><td class="num">9.3.2 c6</td><td><strong>Auditorias</strong></td><td>O que as auditorias internas e externas constataram.</td><td>Relatórios e programa de auditoria</td></tr>
+        <tr><td class="num">9.3.2 c7</td><td><strong>Provedores externos</strong></td><td>Como os fornecedores e os terceirizados se saíram.</td><td>Avaliação de fornecedores</td></tr>
+        <tr><td class="num">9.3.2 d</td><td><strong>Recursos</strong></td><td>Se as pessoas, os equipamentos e os sistemas são suficientes.</td><td>Pedidos das áreas e orçamento</td></tr>
+        <tr><td class="num">9.3.2 e</td><td><strong>Riscos e oportunidades</strong></td><td>Se as ações sobre os riscos e as oportunidades funcionaram.</td><td>Matriz de riscos, com o risco residual</td></tr>
+        <tr><td class="num">9.3.2 f</td><td><strong>Oportunidades de melhoria</strong></td><td>O que pode ser feito melhor, mesmo sem problema.</td><td>Sugestões, projetos e ciclos PDCA</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 444" role="img" aria-label="As doze entradas da análise crítica e onde buscar cada uma. a, ações das análises anteriores: ata da análise anterior e plano de ação, do estudo de 5W2H. b, mudanças no contexto: matriz swot atualizada, do estudo de Matriz SWOT. c1, satisfação do cliente: pesquisa, reclamações e elogios. c2, objetivos da qualidade: quadro de objetivos, com meta e resultado, do estudo de Indicadores. c3, processos e produtos: indicadores dos processos e de produto, do estudo de Mapa de processos. c4, não conformidades: controle das não conformidades, do estudo de Não conformidade. c5, monitoramento e medição: painel de indicadores, do estudo de Indicadores. c6, auditorias: relatórios e programa de auditoria, do estudo de Auditoria interna. c7, provedores externos: avaliação de fornecedores. d, recursos: pedidos das áreas e orçamento. e, riscos e oportunidades: matriz de riscos, com o risco residual, do estudo de Matriz de riscos. f, oportunidades de melhoria: sugestões, projetos e ciclos pdca, do estudo de PDCA.">
+        <defs><marker id="a3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah-mu" d="M0 0 L10 5 L0 10 z"/></marker></defs>
+        <rect class="hd-ink" x="20" y="14" width="330" height="34"/>
+        <text class="b t-ground" x="36" y="36" font-size="13">Entrada da análise crítica</text>
+        <rect class="hd-ink" x="410" y="14" width="470" height="34"/>
+        <text class="b t-ground" x="426" y="36" font-size="13">Onde buscar</text>
+        <rect class="bx" x="20" y="54" width="330" height="28"/>
+        <text x="36" y="73" font-size="12"><tspan class="b">a</tspan>  Ações das análises anteriores</text>
+        <line class="ln-mu" x1="352" y1="68" x2="406" y2="68" marker-end="url(#a3)"/>
+        <rect class="bx" x="410" y="54" width="470" height="28"/>
+        <text x="426" y="73" font-size="12">Ata da análise anterior e plano de ação</text>
+        <a href="../5W2H/treinamento-5w2h.html"><text class="b" x="866" y="73" font-size="11.5" text-anchor="end">5W2H</text></a>
+        <rect class="bx" x="20" y="86" width="330" height="28"/>
+        <text x="36" y="105" font-size="12"><tspan class="b">b</tspan>  Mudanças no contexto</text>
+        <line class="ln-mu" x1="352" y1="100" x2="406" y2="100" marker-end="url(#a3)"/>
+        <rect class="bx" x="410" y="86" width="470" height="28"/>
+        <text x="426" y="105" font-size="12">Matriz SWOT atualizada</text>
+        <a href="../SWOT/treinamento-swot.html"><text class="b" x="866" y="105" font-size="11.5" text-anchor="end">Matriz SWOT</text></a>
+        <rect class="bx" x="20" y="118" width="330" height="28"/>
+        <text x="36" y="137" font-size="12"><tspan class="b">c1</tspan>  Satisfação do cliente</text>
+        <line class="ln-mu" x1="352" y1="132" x2="406" y2="132" marker-end="url(#a3)"/>
+        <rect class="diag" x="410" y="118" width="470" height="28"/>
+        <text x="426" y="137" font-size="12">Pesquisa, reclamações e elogios</text>
+        <text class="mu" x="866" y="137" font-size="11" text-anchor="end">sem estudo na série</text>
+        <rect class="bx" x="20" y="150" width="330" height="28"/>
+        <text x="36" y="169" font-size="12"><tspan class="b">c2</tspan>  Objetivos da qualidade</text>
+        <line class="ln-mu" x1="352" y1="164" x2="406" y2="164" marker-end="url(#a3)"/>
+        <rect class="bx" x="410" y="150" width="470" height="28"/>
+        <text x="426" y="169" font-size="12">Quadro de objetivos, com meta e resultado</text>
+        <a href="../Indicadores/treinamento-indicadores.html"><text class="b" x="866" y="169" font-size="11.5" text-anchor="end">Indicadores</text></a>
+        <rect class="bx" x="20" y="182" width="330" height="28"/>
+        <text x="36" y="201" font-size="12"><tspan class="b">c3</tspan>  Processos e produtos</text>
+        <line class="ln-mu" x1="352" y1="196" x2="406" y2="196" marker-end="url(#a3)"/>
+        <rect class="bx" x="410" y="182" width="470" height="28"/>
+        <text x="426" y="201" font-size="12">Indicadores dos processos e de produto</text>
+        <a href="../Processos/treinamento-processos.html"><text class="b" x="866" y="201" font-size="11.5" text-anchor="end">Mapa de processos</text></a>
+        <rect class="bx" x="20" y="214" width="330" height="28"/>
+        <text x="36" y="233" font-size="12"><tspan class="b">c4</tspan>  Não conformidades</text>
+        <line class="ln-mu" x1="352" y1="228" x2="406" y2="228" marker-end="url(#a3)"/>
+        <rect class="bx" x="410" y="214" width="470" height="28"/>
+        <text x="426" y="233" font-size="12">Controle das não conformidades</text>
+        <a href="../Nao-Conformidade/treinamento-nao-conformidade.html"><text class="b" x="866" y="233" font-size="11.5" text-anchor="end">Não conformidade</text></a>
+        <rect class="bx" x="20" y="246" width="330" height="28"/>
+        <text x="36" y="265" font-size="12"><tspan class="b">c5</tspan>  Monitoramento e medição</text>
+        <line class="ln-mu" x1="352" y1="260" x2="406" y2="260" marker-end="url(#a3)"/>
+        <rect class="bx" x="410" y="246" width="470" height="28"/>
+        <text x="426" y="265" font-size="12">Painel de indicadores</text>
+        <a href="../Indicadores/treinamento-indicadores.html"><text class="b" x="866" y="265" font-size="11.5" text-anchor="end">Indicadores</text></a>
+        <rect class="bx" x="20" y="278" width="330" height="28"/>
+        <text x="36" y="297" font-size="12"><tspan class="b">c6</tspan>  Auditorias</text>
+        <line class="ln-mu" x1="352" y1="292" x2="406" y2="292" marker-end="url(#a3)"/>
+        <rect class="bx" x="410" y="278" width="470" height="28"/>
+        <text x="426" y="297" font-size="12">Relatórios e programa de auditoria</text>
+        <a href="../Auditoria/treinamento-auditoria.html"><text class="b" x="866" y="297" font-size="11.5" text-anchor="end">Auditoria interna</text></a>
+        <rect class="bx" x="20" y="310" width="330" height="28"/>
+        <text x="36" y="329" font-size="12"><tspan class="b">c7</tspan>  Provedores externos</text>
+        <line class="ln-mu" x1="352" y1="324" x2="406" y2="324" marker-end="url(#a3)"/>
+        <rect class="diag" x="410" y="310" width="470" height="28"/>
+        <text x="426" y="329" font-size="12">Avaliação de fornecedores</text>
+        <text class="mu" x="866" y="329" font-size="11" text-anchor="end">sem estudo na série</text>
+        <rect class="bx" x="20" y="342" width="330" height="28"/>
+        <text x="36" y="361" font-size="12"><tspan class="b">d</tspan>  Recursos</text>
+        <line class="ln-mu" x1="352" y1="356" x2="406" y2="356" marker-end="url(#a3)"/>
+        <rect class="diag" x="410" y="342" width="470" height="28"/>
+        <text x="426" y="361" font-size="12">Pedidos das áreas e orçamento</text>
+        <text class="mu" x="866" y="361" font-size="11" text-anchor="end">sem estudo na série</text>
+        <rect class="bx" x="20" y="374" width="330" height="28"/>
+        <text x="36" y="393" font-size="12"><tspan class="b">e</tspan>  Riscos e oportunidades</text>
+        <line class="ln-mu" x1="352" y1="388" x2="406" y2="388" marker-end="url(#a3)"/>
+        <rect class="bx" x="410" y="374" width="470" height="28"/>
+        <text x="426" y="393" font-size="12">Matriz de riscos, com o risco residual</text>
+        <a href="../Riscos/treinamento-riscos.html"><text class="b" x="866" y="393" font-size="11.5" text-anchor="end">Matriz de riscos</text></a>
+        <rect class="bx" x="20" y="406" width="330" height="28"/>
+        <text x="36" y="425" font-size="12"><tspan class="b">f</tspan>  Oportunidades de melhoria</text>
+        <line class="ln-mu" x1="352" y1="420" x2="406" y2="420" marker-end="url(#a3)"/>
+        <rect class="bx" x="410" y="406" width="470" height="28"/>
+        <text x="426" y="425" font-size="12">Sugestões, projetos e ciclos PDCA</text>
+        <a href="../PDCA/treinamento-pdca.html"><text class="b" x="866" y="425" font-size="11.5" text-anchor="end">PDCA</text></a>
+      </svg>
+    </div>
+    <figcaption><b>Figura 3.</b> As doze entradas e onde buscar cada uma. Quase todas já existem, como resultado de outro estudo da série. O texto da figura é um resumo, com palavras próprias.</figcaption>
+  </figure>
+
+  <h3>Como apresentar uma entrada</h3>
+  <p>Cada entrada responde a quatro perguntas, nesta ordem.</p>
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:22%">Pergunta</th><th style="width:36%">O que escrever</th><th>Exemplo, em não conformidades</th></tr></thead>
+      <tbody>
+        <tr><td><strong>O que aconteceu?</strong></td><td>O resultado do período, com número e fonte.</td><td>38 registros no ano, 30 encerrados, 27 eficazes.</td></tr>
+        <tr><td><strong>Para onde vai?</strong></td><td>A tendência: melhorando, estável ou piorando.</td><td>Estável: foram 36 no ano anterior.</td></tr>
+        <tr><td><strong>Como está?</strong></td><td>A situação: favorável, atenção ou crítica.</td><td>Atenção: o prazo médio de encerramento é de 74 dias.</td></tr>
+        <tr><td><strong>O que isso quer dizer?</strong></td><td>A conclusão, em uma frase.</td><td>O tratamento é eficaz, mas lento.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:18%">Situação</th><th style="width:40%">Quando usar</th><th>O que a direção faz</th></tr></thead>
+      <tbody>
+        <tr><td><span class="chip s1">Favorável</span></td><td>O resultado atende ao planejado, e a tendência não preocupa.</td><td>Registra a conclusão. Decide só se houver oportunidade.</td></tr>
+        <tr><td><span class="chip s2">Atenção</span></td><td>O resultado não atende em parte, ou a tendência é de piora.</td><td>Decide, ou registra por que não vai agir agora.</td></tr>
+        <tr><td><span class="chip s3">Crítica</span></td><td>O resultado compromete um objetivo, um cliente ou a operação.</td><td>Decide na reunião, com responsável, prazo e recurso.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note">
+    <h4>Sobre as três situações</h4>
+    <p>A norma não classifica as entradas. As três situações são uma convenção deste material, para que a direção veja em uma página onde estão os problemas. A planilha de apoio usa a mesma regra: entrada crítica sem decisão gera um aviso.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 5 ============================ -->
+<section id="saidas">
+  <p class="eyebrow">Módulo 5</p>
+  <h2>As saídas</h2>
+  <p>A saída da análise crítica é um conjunto de decisões. A norma pede decisões sobre três assuntos. Uma análise que não decide nada sobre nenhum deles só se justifica se todas as entradas estiverem favoráveis, e isso é raro.</p>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:9%">Item</th><th style="width:25%">Saída</th><th style="width:36%">O que a direção decide</th><th>Exemplo</th></tr></thead>
+      <tbody>
+        <tr><td class="num">9.3.3 a</td><td><strong>Oportunidades de melhoria</strong></td><td>O que será feito melhor.</td><td>Abrir um ciclo PDCA para reduzir o refugo.</td></tr>
+        <tr><td class="num">9.3.3 b</td><td><strong>Necessidades de mudança no sistema</strong></td><td>O que muda nos processos, nos documentos, nos objetivos ou nos indicadores.</td><td>Auditar a Produção a cada quatro meses.</td></tr>
+        <tr><td class="num">9.3.3 c</td><td><strong>Necessidades de recursos</strong></td><td>Que pessoas, equipamentos ou dinheiro serão providos.</td><td>Aprovar a compra do medidor de espessura.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 214" role="img" aria-label="Do fato à ação, em quatro passos. Fato: o refugo fechou o ano em 2,6%, para um máximo de 2,0%. Conclusão: a causa principal depende de equipamento. Decisão: aprovar a compra de dois medidores de espessura. Ação: diretor geral, até 30 de junho de 2027, com 96 mil reais. O fato e a conclusão ficam na entrada. A decisão e a ação ficam na saída.">
+        <defs>
+          <marker id="a4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker>
+        </defs>
+        <text class="mono mu" x="10" y="18" font-size="10">NA ENTRADA</text>
+        <text class="mono mu" x="466" y="18" font-size="10">NA SAÍDA</text>
+        <g font-size="11.5">
+          <rect class="bx" x="10" y="28" width="200" height="130"/>
+          <text class="mono mu" x="24" y="50" font-size="10">1 · FATO</text>
+          <text class="b" x="24" y="76" font-size="13">O que aconteceu</text>
+          <text x="24" y="104">O refugo fechou o ano</text><text x="24" y="120">em 2,6%, para um</text><text x="24" y="136">máximo de 2,0%.</text>
+
+          <rect class="bx" x="238" y="28" width="200" height="130"/>
+          <text class="mono mu" x="252" y="50" font-size="10">2 · CONCLUSÃO</text>
+          <text class="b" x="252" y="76" font-size="13">O que isso quer dizer</text>
+          <text x="252" y="104">A causa principal</text><text x="252" y="120">depende de</text><text x="252" y="136">equipamento.</text>
+
+          <rect class="bx-ink" x="466" y="28" width="200" height="130"/>
+          <text class="mono t-ground" x="480" y="50" font-size="10">3 · DECISÃO</text>
+          <text class="b t-ground" x="480" y="76" font-size="13">O que será feito</text>
+          <text class="t-ground" x="480" y="104">Aprovar a compra de</text><text class="t-ground" x="480" y="120">dois medidores de</text><text class="t-ground" x="480" y="136">espessura.</text>
+
+          <rect class="bx-ink" x="694" y="28" width="196" height="130"/>
+          <text class="mono t-ground" x="708" y="50" font-size="10">4 · AÇÃO</text>
+          <text class="b t-ground" x="708" y="76" font-size="13">Quem, quando, com quê</text>
+          <text class="t-ground" x="708" y="104">Diretor geral,</text><text class="t-ground" x="708" y="120">até 30/06/2027,</text><text class="t-ground" x="708" y="136">com R$ 96.000.</text>
+        </g>
+        <line class="ln" x1="212" y1="93" x2="234" y2="93" marker-end="url(#a4)"/>
+        <line class="ln" x1="440" y1="93" x2="462" y2="93" marker-end="url(#a4)"/>
+        <line class="ln" x1="668" y1="93" x2="690" y2="93" marker-end="url(#a4)"/>
+        <text x="450" y="194" font-size="11.5" text-anchor="middle">A ata que para no passo 1 é um relatório. A que chega ao passo 4 é uma análise crítica.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 4.</b> Do fato à ação. O exemplo é o da indústria de embalagens, no módulo 6.</figcaption>
+  </figure>
+
+  <div class="pair">
+    <div class="box">
+      <h4>Decisão bem escrita</h4>
+      <ul>
+        <li>Começa com verbo: aprovar, contratar, rever, auditar.</li>
+        <li>Diz de que entrada veio.</li>
+        <li>Tem um responsável, com nome ou cargo.</li>
+        <li>Tem prazo e, quando precisa, recurso aprovado.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h4>Decisão mal escrita</h4>
+      <ul>
+        <li>“Melhorar a comunicação entre as áreas.”</li>
+        <li>“Intensificar os treinamentos.”</li>
+        <li>“Todos devem dar mais atenção ao refugo.”</li>
+        <li>“Verificar a possibilidade de comprar o equipamento.”</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>A avaliação do sistema</h3>
+  <p>A ata fecha com a resposta às quatro perguntas do módulo 1, cada uma com “sim”, “parcial” ou “não” e uma justificativa. A resposta “parcial” é a mais comum e a mais útil: ela diz onde o sistema ainda não chegou.</p>
+
+  <div class="note">
+    <h4>O registro</h4>
+    <p>A norma pede que a organização guarde evidência dos resultados da análise crítica. A ata é a forma mais comum. Ela precisa mostrar as entradas analisadas, as conclusões e as decisões. A lista de presença e os anexos completam o registro.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 6 ============================ -->
+<section id="exemplos">
+  <p class="eyebrow">Módulo 6</p>
+  <h2>Exemplos resolvidos</h2>
+  <p>Duas análises críticas e uma pauta dividida. As organizações são as dos outros estudos da série, e as entradas são os resultados deles. Os dois primeiros exemplos também estão preenchidos na planilha de apoio. Os dados são ilustrativos e foram criados para este treinamento.</p>
+
+  <h3>Exemplo 1. A primeira análise crítica da pizzaria</h3>
+  <dl class="ficha">
+    <div><dt>Organização</dt><dd>Pizzaria (loja com salão e delivery)</dd></div>
+    <div><dt>Data e período</dt><dd>14/12/2026. Janeiro a novembro de 2026</dd></div>
+    <div><dt>Participantes</dt><dd>Dono da loja, que conduz, e mais 4 presentes</dd></div>
+    <div><dt>Análise anterior</dt><dd>Não houve</dd></div>
+    <div><dt>Origem</dt><dd>Lacuna do requisito 9.3 no diagnóstico de 02/10/2026: a loja nunca tinha feito análise crítica.</dd></div>
+  </dl>
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 366" role="img" aria-label="Painel das doze entradas da análise crítica da pizzaria. a, ações das análises anteriores: atenção, sem histórico, 1 decisão. b, mudanças no contexto: atenção, estável, 1 decisão. c1, satisfação do cliente: atenção, melhorando, 1 decisão. c2, objetivos da qualidade: favorável, melhorando, 0 decisões. c3, processos e produtos: atenção, sem histórico, 1 decisão. c4, não conformidades: favorável, sem histórico, 0 decisões. c5, monitoramento e medição: favorável, melhorando, 0 decisões. c6, auditorias: atenção, sem histórico, 1 decisão. c7, provedores externos: atenção, melhorando, 1 decisão. d, recursos: atenção, estável, 1 decisão. e, riscos e oportunidades: atenção, sem histórico, 1 decisão. f, oportunidades de melhoria: favorável, sem histórico, 0 decisões.">
+        <rect class="bx" x="10" y="10" width="288" height="76"/>
+        <rect class="f2" x="10" y="10" width="8" height="76"/>
+        <text x="32" y="34" font-size="12"><tspan class="mono mu" font-size="10.5">A</tspan>  <tspan class="b">Ações das análises anteriores</tspan></text>
+        <text x="32" y="56" font-size="12"><tspan class="b">Atenção</tspan> · sem histórico</text>
+        <text class="mu" x="32" y="74" font-size="11">1 decisão</text>
+        <rect class="bx" x="306" y="10" width="288" height="76"/>
+        <rect class="f2" x="306" y="10" width="8" height="76"/>
+        <text x="328" y="34" font-size="12"><tspan class="mono mu" font-size="10.5">B</tspan>  <tspan class="b">Mudanças no contexto</tspan></text>
+        <text x="328" y="56" font-size="12"><tspan class="b">Atenção</tspan> · estável</text>
+        <text class="mu" x="328" y="74" font-size="11">1 decisão</text>
+        <rect class="bx" x="602" y="10" width="288" height="76"/>
+        <rect class="f2" x="602" y="10" width="8" height="76"/>
+        <text x="624" y="34" font-size="12"><tspan class="mono mu" font-size="10.5">C1</tspan>  <tspan class="b">Satisfação do cliente</tspan></text>
+        <text x="624" y="56" font-size="12"><tspan class="b">Atenção</tspan> · melhorando</text>
+        <text class="mu" x="624" y="74" font-size="11">1 decisão</text>
+        <rect class="bx" x="10" y="94" width="288" height="76"/>
+        <rect class="f1" x="10" y="94" width="8" height="76"/>
+        <text x="32" y="118" font-size="12"><tspan class="mono mu" font-size="10.5">C2</tspan>  <tspan class="b">Objetivos da qualidade</tspan></text>
+        <text x="32" y="140" font-size="12"><tspan class="b">Favorável</tspan> · melhorando</text>
+        <text class="mu" x="32" y="158" font-size="11">sem decisão</text>
+        <rect class="bx" x="306" y="94" width="288" height="76"/>
+        <rect class="f2" x="306" y="94" width="8" height="76"/>
+        <text x="328" y="118" font-size="12"><tspan class="mono mu" font-size="10.5">C3</tspan>  <tspan class="b">Processos e produtos</tspan></text>
+        <text x="328" y="140" font-size="12"><tspan class="b">Atenção</tspan> · sem histórico</text>
+        <text class="mu" x="328" y="158" font-size="11">1 decisão</text>
+        <rect class="bx" x="602" y="94" width="288" height="76"/>
+        <rect class="f1" x="602" y="94" width="8" height="76"/>
+        <text x="624" y="118" font-size="12"><tspan class="mono mu" font-size="10.5">C4</tspan>  <tspan class="b">Não conformidades</tspan></text>
+        <text x="624" y="140" font-size="12"><tspan class="b">Favorável</tspan> · sem histórico</text>
+        <text class="mu" x="624" y="158" font-size="11">sem decisão</text>
+        <rect class="bx" x="10" y="178" width="288" height="76"/>
+        <rect class="f1" x="10" y="178" width="8" height="76"/>
+        <text x="32" y="202" font-size="12"><tspan class="mono mu" font-size="10.5">C5</tspan>  <tspan class="b">Monitoramento e medição</tspan></text>
+        <text x="32" y="224" font-size="12"><tspan class="b">Favorável</tspan> · melhorando</text>
+        <text class="mu" x="32" y="242" font-size="11">sem decisão</text>
+        <rect class="bx" x="306" y="178" width="288" height="76"/>
+        <rect class="f2" x="306" y="178" width="8" height="76"/>
+        <text x="328" y="202" font-size="12"><tspan class="mono mu" font-size="10.5">C6</tspan>  <tspan class="b">Auditorias</tspan></text>
+        <text x="328" y="224" font-size="12"><tspan class="b">Atenção</tspan> · sem histórico</text>
+        <text class="mu" x="328" y="242" font-size="11">1 decisão</text>
+        <rect class="bx" x="602" y="178" width="288" height="76"/>
+        <rect class="f2" x="602" y="178" width="8" height="76"/>
+        <text x="624" y="202" font-size="12"><tspan class="mono mu" font-size="10.5">C7</tspan>  <tspan class="b">Provedores externos</tspan></text>
+        <text x="624" y="224" font-size="12"><tspan class="b">Atenção</tspan> · melhorando</text>
+        <text class="mu" x="624" y="242" font-size="11">1 decisão</text>
+        <rect class="bx" x="10" y="262" width="288" height="76"/>
+        <rect class="f2" x="10" y="262" width="8" height="76"/>
+        <text x="32" y="286" font-size="12"><tspan class="mono mu" font-size="10.5">D</tspan>  <tspan class="b">Recursos</tspan></text>
+        <text x="32" y="308" font-size="12"><tspan class="b">Atenção</tspan> · estável</text>
+        <text class="mu" x="32" y="326" font-size="11">1 decisão</text>
+        <rect class="bx" x="306" y="262" width="288" height="76"/>
+        <rect class="f2" x="306" y="262" width="8" height="76"/>
+        <text x="328" y="286" font-size="12"><tspan class="mono mu" font-size="10.5">E</tspan>  <tspan class="b">Riscos e oportunidades</tspan></text>
+        <text x="328" y="308" font-size="12"><tspan class="b">Atenção</tspan> · sem histórico</text>
+        <text class="mu" x="328" y="326" font-size="11">1 decisão</text>
+        <rect class="bx" x="602" y="262" width="288" height="76"/>
+        <rect class="f1" x="602" y="262" width="8" height="76"/>
+        <text x="624" y="286" font-size="12"><tspan class="mono mu" font-size="10.5">F</tspan>  <tspan class="b">Oportunidades de melhoria</tspan></text>
+        <text x="624" y="308" font-size="12"><tspan class="b">Favorável</tspan> · sem histórico</text>
+        <text class="mu" x="624" y="326" font-size="11">sem decisão</text>
+        <g font-size="11.5">
+          <rect class="f1" x="10" y="346" width="14" height="14"/><text x="32" y="358">Favorável: 4</text>
+          <rect class="f2" x="160" y="346" width="14" height="14"/><text x="182" y="358">Atenção: 8</text>
+          <rect class="f3" x="310" y="346" width="14" height="14"/><text x="332" y="358">Crítica: 0</text>
+        </g>
+      </svg>
+    </div>
+    <figcaption><b>Figura 5.</b> O painel das entradas da pizzaria. Nenhuma entrada está crítica, e oito pedem atenção. É o retrato de um sistema que funciona em um processo e ainda não chegou aos outros.</figcaption>
+  </figure>
+  <div class="tbl">
+    <table class="aud">
+      <caption>Entradas analisadas</caption>
+      <thead><tr><th>Item</th><th style="width:16%">Entrada</th><th style="width:30%">Resultado no período</th><th style="width:10%">Tendência</th><th style="width:9%">Situação</th><th style="width:23%">Conclusão da direção</th><th class="c">Decisão nº</th></tr></thead>
+      <tbody>
+        <tr><td class="n">a</td><td><strong>Ações das análises anteriores</strong><small>Gerente da loja</small></td><td>Primeira análise crítica: não há ações anteriores. O ponto de partida é o diagnóstico, com 68% de atendimento.<small>Fonte: Diagnóstico de 02/10/2026</small></td><td>Sem histórico</td><td><span class="chip s2">Atenção</span></td><td>As lacunas do diagnóstico entram nesta pauta, cada uma na sua entrada.</td><td class="c">1</td></tr>
+        <tr><td class="n">b</td><td><strong>Mudanças no contexto</strong><small>Dono da loja</small></td><td>Sistema de pedidos trocado em julho. Duas pizzarias novas no bairro. Preço do queijo em alta.<small>Fonte: Matriz SWOT</small></td><td>Estável</td><td><span class="chip s2">Atenção</span></td><td>A concorrência pede atenção ao salão, que não tem padrão de atendimento.</td><td class="c">2</td></tr>
+        <tr><td class="n">c1</td><td><strong>Satisfação do cliente</strong><small>Atendente líder</small></td><td>Reclamações por 100 pedidos: 3,4 em outubro de 2025 e 1,7 em novembro de 2026. Não há pesquisa de satisfação.<small>Fonte: registro de reclamações</small></td><td>Melhorando</td><td><span class="chip s2">Atenção</span></td><td>A reclamação caiu, mas a loja só ouve quem reclama.</td><td class="c">3</td></tr>
+        <tr><td class="n">c2</td><td><strong>Objetivos da qualidade</strong><small>Gerente da loja</small></td><td>Entregas em até 40 minutos: 95% em novembro, para uma meta de 95%. Os quatro indicadores estão na meta.<small>Fonte: painel de indicadores</small></td><td>Melhorando</td><td><span class="chip s1">Favorável</span></td><td>Os objetivos do delivery foram alcançados. Manter.</td><td class="c">—</td></tr>
+        <tr><td class="n">c3</td><td><strong>Processos e produtos</strong><small>Gerente da loja</small></td><td>63% dos elementos dos processos estão definidos. Quatro processos não têm indicador. O salão não tem padrão.<small>Fonte: Mapa de processos de 14/10/2026</small></td><td>Sem histórico</td><td><span class="chip s2">Atenção</span></td><td>O sistema cobre bem o delivery, e pouco o restante da loja.</td><td class="c">4</td></tr>
+        <tr><td class="n">c4</td><td><strong>Não conformidades</strong><small>Gerente da loja</small></td><td>Dois registros no ano, os dois da auditoria 2026-03. O RNC 2026-05 foi encerrado como eficaz. O segundo está em verificação.<small>Fonte: controle das não conformidades</small></td><td>Sem histórico</td><td><span class="chip s1">Favorável</span></td><td>O tratamento funciona. Manter.</td><td class="c">—</td></tr>
+        <tr><td class="n">c5</td><td><strong>Monitoramento e medição</strong><small>Pizzaiolo líder</small></td><td>Temperatura registrada em todos os turnos desde outubro. Pedidos refeitos: 2,0% em setembro e 1,4% em novembro.<small>Fonte: planilhas de temperatura e de pedidos refeitos</small></td><td>Melhorando</td><td><span class="chip s1">Favorável</span></td><td>As medições são feitas e usadas. Manter.</td><td class="c">—</td></tr>
+        <tr><td class="n">c6</td><td><strong>Auditorias</strong><small>Atendente líder</small></td><td>Uma auditoria no ano, no delivery: duas não conformidades menores e uma oportunidade de melhoria. O salão e as compras nunca foram auditados.<small>Fonte: relatório da auditoria 2026-03</small></td><td>Sem histórico</td><td><span class="chip s2">Atenção</span></td><td>O programa de auditoria precisa cobrir os outros processos.</td><td class="c">5</td></tr>
+        <tr><td class="n">c7</td><td><strong>Provedores externos</strong><small>Gerente da loja</small></td><td>O fornecedor de queijo atrasou três entregas no ano. O segundo fornecedor foi homologado em novembro. Não há avaliação registrada.<small>Fonte: notas de compra e matriz de riscos</small></td><td>Melhorando</td><td><span class="chip s2">Atenção</span></td><td>O desempenho dos fornecedores é conhecido de memória, sem registro.</td><td class="c">6</td></tr>
+        <tr><td class="n">d</td><td><strong>Recursos</strong><small>Dono da loja</small></td><td>Nas noites de sexta e de sábado, o atendente do delivery também atende o salão. As motos e o forno atendem à demanda.<small>Fonte: escalas e pedidos dos líderes</small></td><td>Estável</td><td><span class="chip s2">Atenção</span></td><td>Falta uma pessoa no salão nas noites de pico.</td><td class="c">7</td></tr>
+        <tr><td class="n">e</td><td><strong>Riscos e oportunidades</strong><small>Gerente da loja</small></td><td>Sete riscos com ação: seis ações concluídas. O treinamento do segundo pizzaiolo, do risco R6, está atrasado.<small>Fonte: Matriz de riscos de 05/10/2026</small></td><td>Sem histórico</td><td><span class="chip s2">Atenção</span></td><td>As ações funcionaram nas duas noites de chuva de novembro. Falta concluir a do risco R6.</td><td class="c">8</td></tr>
+        <tr><td class="n">f</td><td><strong>Oportunidades de melhoria</strong><small>Todos</small></td><td>Três sugestões: pesquisa de satisfação na caixa, cardápio com fotos no salão e pedido por aplicativo de mensagens com roteiro.<small>Fonte: sugestões da equipe</small></td><td>Sem histórico</td><td><span class="chip s1">Favorável</span></td><td>A pesquisa de satisfação entra como decisão. As outras duas ficam para junho.</td><td class="c">—</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="tbl">
+    <table class="aud">
+      <caption>Saídas: decisões e ações</caption>
+      <thead><tr><th>Nº</th><th style="width:8%">Entrada</th><th style="width:15%">Tipo</th><th style="width:34%">Decisão</th><th style="width:15%">Responsável</th><th style="width:9%">Prazo</th><th>Recurso</th></tr></thead>
+      <tbody>
+        <tr><td class="n">1</td><td class="c">a</td><td><span class="chip sl">Mudança no sistema</span></td><td>Fazer a análise crítica a cada seis meses, com a pauta das doze entradas.</td><td>Dono da loja</td><td class="nw">14/06/2027</td><td>—</td></tr>
+        <tr><td class="n">2</td><td class="c">b</td><td><span class="chip sl">Mudança no sistema</span></td><td>Descrever o atendimento no salão, com SIPOC e padrão de atendimento.</td><td>Gerente da loja</td><td class="nw">26/02/2027</td><td>—</td></tr>
+        <tr><td class="n">3</td><td class="c">c1</td><td><span class="chip sl">Melhoria</span></td><td>Criar uma pesquisa de satisfação de três perguntas, com acesso pelo código impresso na caixa.</td><td>Atendente líder</td><td class="nw">29/01/2027</td><td>Impressão das etiquetas<small>R$ 300</small></td></tr>
+        <tr><td class="n">4</td><td class="c">c3</td><td><span class="chip sl">Mudança no sistema</span></td><td>Definir indicador e meta para os quatro processos que não têm.</td><td>Gerente da loja</td><td class="nw">26/02/2027</td><td>—</td></tr>
+        <tr><td class="n">5</td><td class="c">c6</td><td><span class="chip sl">Mudança no sistema</span></td><td>Aprovar o programa de auditoria de 2027, com o salão e as compras.</td><td>Gerente da loja</td><td class="nw">15/01/2027</td><td>—</td></tr>
+        <tr><td class="n">6</td><td class="c">c7</td><td><span class="chip sl">Mudança no sistema</span></td><td>Avaliar os fornecedores de insumos críticos a cada semestre, com registro.</td><td>Gerente da loja</td><td class="nw">29/01/2027</td><td>—</td></tr>
+        <tr><td class="n">7</td><td class="c">d</td><td><span class="chip sl">Recursos</span></td><td>Contratar um atendente de salão para as noites de sexta e de sábado.</td><td>Dono da loja</td><td class="nw">29/01/2027</td><td>Um atendente, duas noites por semana, por seis meses<small>R$ 10.800</small></td></tr>
+        <tr><td class="n">8</td><td class="c">e</td><td><span class="chip sl">Melhoria</span></td><td>Treinar o segundo pizzaiolo na regulagem do forno, como previsto no risco R6.</td><td>Pizzaiolo líder</td><td class="nw">22/01/2027</td><td>Oito horas de treinamento</td></tr>
+        <tr><td colspan="6"><strong>Recursos aprovados na reunião</strong></td><td class="nw"><strong>R$ 11.100</strong></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="tbl">
+    <table class="aud">
+      <caption>Avaliação do sistema</caption>
+      <thead><tr><th style="width:14%">Critério</th><th style="width:32%">Pergunta</th><th style="width:10%">Resposta</th><th>Justificativa</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Adequado</strong></td><td>O sistema serve para a organização como ela é hoje?</td><td>Sim</td><td>Os padrões descrevem o que a loja faz no delivery.</td></tr>
+        <tr><td><strong>Suficiente</strong></td><td>O sistema cobre tudo o que precisa cobrir?</td><td>Parcial</td><td>O salão, as compras e o treinamento ainda estão fora do sistema.</td></tr>
+        <tr><td><strong>Eficaz</strong></td><td>O sistema entrega os resultados planejados?</td><td>Parcial</td><td>Eficaz no delivery. Nos outros processos, não há indicador para dizer.</td></tr>
+        <tr><td><strong>Alinhado</strong></td><td>O sistema aponta para onde a direção quer ir?</td><td>Sim</td><td>Os objetivos apoiam a estratégia de crescer no delivery sem perder o salão.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p><strong>O que observar.</strong> Na primeira análise, a entrada “a” não tem ações para conferir, e isso fica registrado. O diagnóstico do estudo da <a href="../ISO-9001/treinamento-iso-9001.html#exemplos">ISO 9001</a> serviu de ponto de partida. Cinco das oito decisões são mudanças no sistema: a loja está levando ao salão, às compras e ao treinamento o que aprendeu no delivery. A única decisão de recurso foi aprovada pelo dono na própria reunião.</p>
+
+  <h3>Exemplo 2. A análise crítica semestral da indústria</h3>
+  <dl class="ficha">
+    <div><dt>Organização</dt><dd>Indústria de embalagens plásticas</dd></div>
+    <div><dt>Data e período</dt><dd>18/02/2027. Julho a dezembro de 2026, com o fechamento do ano</dd></div>
+    <div><dt>Participantes</dt><dd>Diretor geral, que conduz, e mais 5 presentes</dd></div>
+    <div><dt>Análise anterior</dt><dd>13/08/2026</dd></div>
+    <div><dt>Origem</dt><dd>Calendário do sistema de gestão: análise crítica em fevereiro e em agosto.</dd></div>
+  </dl>
+  <div class="tbl">
+    <table class="aud">
+      <caption>Entrada “a” · ações das análises anteriores, em 18/02/2027</caption>
+      <thead><tr><th>Nº</th><th style="width:9%">Análise</th><th style="width:24%">Ação decidida</th><th style="width:14%">Responsável</th><th style="width:9%">Prazo</th><th style="width:15%">Situação</th><th>Resultado</th></tr></thead>
+      <tbody>
+        <tr><td class="n">1</td><td class="nw">12/02/2026</td><td>Implantar a manutenção preventiva das extrusoras.</td><td>Supervisor de manutenção</td><td class="nw">30/06/2026</td><td><span class="chip s1">Concluída no prazo</span></td><td>Eficaz: sim. Paradas por quebra: de 14 para 5 por mês.</td></tr>
+        <tr><td class="n">2</td><td class="nw">12/02/2026</td><td>Contratar um analista para o Laboratório.</td><td>Gerente de RH</td><td class="nw">30/04/2026</td><td><span class="chip s2">Concluída com atraso</span></td><td>Eficaz: sim. Admissão em 15/05.</td></tr>
+        <tr><td class="n">3</td><td class="nw">12/02/2026</td><td>Abrir um projeto de redução do refugo, com ciclo PDCA.</td><td>Gerente industrial</td><td class="nw">31/03/2026</td><td><span class="chip s1">Concluída no prazo</span></td><td>Eficaz: parcial. Refugo de 3,4% para 2,6%. A meta é 2,0%.</td></tr>
+        <tr><td class="n">4</td><td class="nw">12/02/2026</td><td>Rever a pesquisa de satisfação do cliente.</td><td>Gerente comercial</td><td class="nw">29/05/2026</td><td><span class="chip s1">Concluída no prazo</span></td><td>Eficaz: sim. Pesquisa aplicada em novembro, com 41 respostas.</td></tr>
+        <tr><td class="n">5</td><td class="nw">13/08/2026</td><td>Treinar os auditores internos nas diretrizes da ISO 19011.</td><td>Coordenador da Qualidade</td><td class="nw">30/09/2026</td><td><span class="chip s1">Concluída no prazo</span></td><td>Eficaz: sim. Seis auditores treinados.</td></tr>
+        <tr><td class="n">6</td><td class="nw">13/08/2026</td><td>Atualizar o mapa de processos com a nova linha de produção.</td><td>Coordenador da Qualidade</td><td class="nw">30/11/2026</td><td><span class="chip s1">Concluída no prazo</span></td><td>Eficaz: sim. Mapa rev. 4.</td></tr>
+        <tr><td class="n">7</td><td class="nw">13/08/2026</td><td>Instalar o medidor de espessura em linha na extrusora 3.</td><td>Gerente de engenharia</td><td class="nw">30/11/2026</td><td><span class="chip s3">Atrasada</span></td><td>Orçamento recebido. Compra não aprovada.</td></tr>
+        <tr><td class="n">8</td><td class="nw">13/08/2026</td><td>Definir o indicador de prazo de entrega por cliente.</td><td>Gerente comercial</td><td class="nw">30/10/2026</td><td><span class="chip s3">Atrasada</span></td><td>—</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 366" role="img" aria-label="Painel das doze entradas da análise crítica da indústria. a, ações das análises anteriores: atenção, melhorando, 1 decisão. b, mudanças no contexto: atenção, estável, 1 decisão. c1, satisfação do cliente: atenção, estável, 1 decisão. c2, objetivos da qualidade: atenção, melhorando, 1 decisão. c3, processos e produtos: crítica, melhorando, 1 decisão. c4, não conformidades: atenção, estável, 1 decisão. c5, monitoramento e medição: favorável, estável, 0 decisões. c6, auditorias: atenção, estável, 1 decisão. c7, provedores externos: favorável, melhorando, 0 decisões. d, recursos: atenção, estável, 1 decisão. e, riscos e oportunidades: crítica, estável, 1 decisão. f, oportunidades de melhoria: favorável, sem histórico, 1 decisão.">
+        <rect class="bx" x="10" y="10" width="288" height="76"/>
+        <rect class="f2" x="10" y="10" width="8" height="76"/>
+        <text x="32" y="34" font-size="12"><tspan class="mono mu" font-size="10.5">A</tspan>  <tspan class="b">Ações das análises anteriores</tspan></text>
+        <text x="32" y="56" font-size="12"><tspan class="b">Atenção</tspan> · melhorando</text>
+        <text class="mu" x="32" y="74" font-size="11">1 decisão</text>
+        <rect class="bx" x="306" y="10" width="288" height="76"/>
+        <rect class="f2" x="306" y="10" width="8" height="76"/>
+        <text x="328" y="34" font-size="12"><tspan class="mono mu" font-size="10.5">B</tspan>  <tspan class="b">Mudanças no contexto</tspan></text>
+        <text x="328" y="56" font-size="12"><tspan class="b">Atenção</tspan> · estável</text>
+        <text class="mu" x="328" y="74" font-size="11">1 decisão</text>
+        <rect class="bx" x="602" y="10" width="288" height="76"/>
+        <rect class="f2" x="602" y="10" width="8" height="76"/>
+        <text x="624" y="34" font-size="12"><tspan class="mono mu" font-size="10.5">C1</tspan>  <tspan class="b">Satisfação do cliente</tspan></text>
+        <text x="624" y="56" font-size="12"><tspan class="b">Atenção</tspan> · estável</text>
+        <text class="mu" x="624" y="74" font-size="11">1 decisão</text>
+        <rect class="bx" x="10" y="94" width="288" height="76"/>
+        <rect class="f2" x="10" y="94" width="8" height="76"/>
+        <text x="32" y="118" font-size="12"><tspan class="mono mu" font-size="10.5">C2</tspan>  <tspan class="b">Objetivos da qualidade</tspan></text>
+        <text x="32" y="140" font-size="12"><tspan class="b">Atenção</tspan> · melhorando</text>
+        <text class="mu" x="32" y="158" font-size="11">1 decisão</text>
+        <rect class="bx" x="306" y="94" width="288" height="76"/>
+        <rect class="f3" x="306" y="94" width="8" height="76"/>
+        <text x="328" y="118" font-size="12"><tspan class="mono mu" font-size="10.5">C3</tspan>  <tspan class="b">Processos e produtos</tspan></text>
+        <text x="328" y="140" font-size="12"><tspan class="b">Crítica</tspan> · melhorando</text>
+        <text class="mu" x="328" y="158" font-size="11">1 decisão</text>
+        <rect class="bx" x="602" y="94" width="288" height="76"/>
+        <rect class="f2" x="602" y="94" width="8" height="76"/>
+        <text x="624" y="118" font-size="12"><tspan class="mono mu" font-size="10.5">C4</tspan>  <tspan class="b">Não conformidades</tspan></text>
+        <text x="624" y="140" font-size="12"><tspan class="b">Atenção</tspan> · estável</text>
+        <text class="mu" x="624" y="158" font-size="11">1 decisão</text>
+        <rect class="bx" x="10" y="178" width="288" height="76"/>
+        <rect class="f1" x="10" y="178" width="8" height="76"/>
+        <text x="32" y="202" font-size="12"><tspan class="mono mu" font-size="10.5">C5</tspan>  <tspan class="b">Monitoramento e medição</tspan></text>
+        <text x="32" y="224" font-size="12"><tspan class="b">Favorável</tspan> · estável</text>
+        <text class="mu" x="32" y="242" font-size="11">sem decisão</text>
+        <rect class="bx" x="306" y="178" width="288" height="76"/>
+        <rect class="f2" x="306" y="178" width="8" height="76"/>
+        <text x="328" y="202" font-size="12"><tspan class="mono mu" font-size="10.5">C6</tspan>  <tspan class="b">Auditorias</tspan></text>
+        <text x="328" y="224" font-size="12"><tspan class="b">Atenção</tspan> · estável</text>
+        <text class="mu" x="328" y="242" font-size="11">1 decisão</text>
+        <rect class="bx" x="602" y="178" width="288" height="76"/>
+        <rect class="f1" x="602" y="178" width="8" height="76"/>
+        <text x="624" y="202" font-size="12"><tspan class="mono mu" font-size="10.5">C7</tspan>  <tspan class="b">Provedores externos</tspan></text>
+        <text x="624" y="224" font-size="12"><tspan class="b">Favorável</tspan> · melhorando</text>
+        <text class="mu" x="624" y="242" font-size="11">sem decisão</text>
+        <rect class="bx" x="10" y="262" width="288" height="76"/>
+        <rect class="f2" x="10" y="262" width="8" height="76"/>
+        <text x="32" y="286" font-size="12"><tspan class="mono mu" font-size="10.5">D</tspan>  <tspan class="b">Recursos</tspan></text>
+        <text x="32" y="308" font-size="12"><tspan class="b">Atenção</tspan> · estável</text>
+        <text class="mu" x="32" y="326" font-size="11">1 decisão</text>
+        <rect class="bx" x="306" y="262" width="288" height="76"/>
+        <rect class="f3" x="306" y="262" width="8" height="76"/>
+        <text x="328" y="286" font-size="12"><tspan class="mono mu" font-size="10.5">E</tspan>  <tspan class="b">Riscos e oportunidades</tspan></text>
+        <text x="328" y="308" font-size="12"><tspan class="b">Crítica</tspan> · estável</text>
+        <text class="mu" x="328" y="326" font-size="11">1 decisão</text>
+        <rect class="bx" x="602" y="262" width="288" height="76"/>
+        <rect class="f1" x="602" y="262" width="8" height="76"/>
+        <text x="624" y="286" font-size="12"><tspan class="mono mu" font-size="10.5">F</tspan>  <tspan class="b">Oportunidades de melhoria</tspan></text>
+        <text x="624" y="308" font-size="12"><tspan class="b">Favorável</tspan> · sem histórico</text>
+        <text class="mu" x="624" y="326" font-size="11">1 decisão</text>
+        <g font-size="11.5">
+          <rect class="f1" x="10" y="346" width="14" height="14"/><text x="32" y="358">Favorável: 3</text>
+          <rect class="f2" x="160" y="346" width="14" height="14"/><text x="182" y="358">Atenção: 7</text>
+          <rect class="f3" x="310" y="346" width="14" height="14"/><text x="332" y="358">Crítica: 2</text>
+        </g>
+      </svg>
+    </div>
+    <figcaption><b>Figura 6.</b> O painel das entradas da indústria. As duas entradas críticas, o refugo e o risco do fornecedor único de resina, receberam decisão de recurso.</figcaption>
+  </figure>
+  <div class="tbl">
+    <table class="aud">
+      <caption>Entradas analisadas</caption>
+      <thead><tr><th>Item</th><th style="width:16%">Entrada</th><th style="width:30%">Resultado no período</th><th style="width:10%">Tendência</th><th style="width:9%">Situação</th><th style="width:23%">Conclusão da direção</th><th class="c">Decisão nº</th></tr></thead>
+      <tbody>
+        <tr><td class="n">a</td><td><strong>Ações das análises anteriores</strong><small>Coordenador da Qualidade</small></td><td>Oito ações decididas em 2026: seis concluídas, uma delas com atraso, e duas atrasadas.<small>Fonte: atas de fevereiro e de agosto de 2026</small></td><td>Melhorando</td><td><span class="chip s2">Atenção</span></td><td>As duas ações atrasadas dependem de decisão da direção.</td><td class="c">1</td></tr>
+        <tr><td class="n">b</td><td><strong>Mudanças no contexto</strong><small>Diretor geral</small></td><td>Extrusora 4 em operação desde setembro. Dois grandes clientes passam a exigir a certificação ISO 9001. Preço da resina ligado ao dólar.<small>Fonte: Matriz SWOT de janeiro de 2027</small></td><td>Estável</td><td><span class="chip s2">Atenção</span></td><td>A certificação deixou de ser um projeto e virou condição de venda.</td><td class="c">2</td></tr>
+        <tr><td class="n">c1</td><td><strong>Satisfação do cliente</strong><small>Gerente comercial</small></td><td>Nota da pesquisa: 8,4, para uma meta de 8,0. Reclamações por milhão de peças: 62, para um máximo de 50. Um só cliente fez 40% das reclamações.<small>Fonte: pesquisa de novembro e reclamações</small></td><td>Estável</td><td><span class="chip s2">Atenção</span></td><td>A satisfação geral é boa. O problema está concentrado em um cliente.</td><td class="c">3</td></tr>
+        <tr><td class="n">c2</td><td><strong>Objetivos da qualidade</strong><small>Coordenador da Qualidade</small></td><td>Cinco objetivos: três na meta, um em atenção e um fora da meta. O refugo fechou o ano em 2,6%, para um máximo de 2,0%.<small>Fonte: quadro de objetivos da qualidade</small></td><td>Melhorando</td><td><span class="chip s2">Atenção</span></td><td>O objetivo de refugo não foi alcançado pelo segundo ano.</td><td class="c">4</td></tr>
+        <tr><td class="n">c3</td><td><strong>Processos e produtos</strong><small>Gerente industrial</small></td><td>Refugo acima da meta nos doze meses. Lotes reprovados na inspeção final: 1,1%. A variação de espessura é a primeira causa, nas extrusoras 3 e 4.<small>Fonte: indicadores da Produção e do Laboratório</small></td><td>Melhorando</td><td><span class="chip s3">Crítica</span></td><td>O ciclo PDCA reduziu o refugo, mas a causa principal depende de equipamento.</td><td class="c">5</td></tr>
+        <tr><td class="n">c4</td><td><strong>Não conformidades</strong><small>Coordenador da Qualidade</small></td><td>38 registros em 2026: 30 encerrados, 27 deles como eficazes, e 8 em tratamento. O prazo médio de encerramento foi de 74 dias.<small>Fonte: controle das não conformidades</small></td><td>Estável</td><td><span class="chip s2">Atenção</span></td><td>O tratamento é eficaz, mas lento. Dois registros têm prazo vencido.</td><td class="c">6</td></tr>
+        <tr><td class="n">c5</td><td><strong>Monitoramento e medição</strong><small>Coordenador da Qualidade</small></td><td>Painel com 18 indicadores: 12 na meta, 4 em atenção e 2 fora da meta. Instrumentos calibrados no prazo: 100%.<small>Fonte: painel de indicadores</small></td><td>Estável</td><td><span class="chip s1">Favorável</span></td><td>As medições são feitas e analisadas todo mês. Manter.</td><td class="c">—</td></tr>
+        <tr><td class="n">c6</td><td><strong>Auditorias</strong><small>Coordenador da Qualidade</small></td><td>Programa cumprido: 12 auditorias, nos 9 processos. Foram 10 não conformidades e 14 oportunidades de melhoria. A Produção teve 3 não conformidades.<small>Fonte: relatórios das auditorias de 2026</small></td><td>Estável</td><td><span class="chip s2">Atenção</span></td><td>A Produção concentra as não conformidades pelo segundo ciclo.</td><td class="c">7</td></tr>
+        <tr><td class="n">c7</td><td><strong>Provedores externos</strong><small>Gerente de Suprimentos</small></td><td>Doze fornecedores críticos avaliados: nove aprovados, dois com plano de ação e um reprovado. Nenhuma devolução por item errado desde novembro.<small>Fonte: avaliação de fornecedores de dezembro</small></td><td>Melhorando</td><td><span class="chip s1">Favorável</span></td><td>As ações do RNC 2026-31 funcionaram. Manter a avaliação semestral.</td><td class="c">—</td></tr>
+        <tr><td class="n">d</td><td><strong>Recursos</strong><small>Gerente de RH</small></td><td>O Laboratório tem um analista a mais desde maio. A Qualidade tem seis auditores para doze auditorias, e as extrusoras 3 e 4 não têm medidor de espessura.<small>Fonte: pedidos das áreas e orçamento de 2027</small></td><td>Estável</td><td><span class="chip s2">Atenção</span></td><td>Faltam auditores e o equipamento de medição.</td><td class="c">8</td></tr>
+        <tr><td class="n">e</td><td><strong>Riscos e oportunidades</strong><small>Gerente de Suprimentos</small></td><td>Oito riscos: cinco ações concluídas e uma atrasada. O segundo fornecedor de resina, do risco C1, não foi homologado. O risco continua crítico.<small>Fonte: Matriz de riscos de Suprimentos</small></td><td>Estável</td><td><span class="chip s3">Crítica</span></td><td>Um atraso do fornecedor único para a produção. A homologação depende de ensaios externos.</td><td class="c">9</td></tr>
+        <tr><td class="n">f</td><td><strong>Oportunidades de melhoria</strong><small>Gerente de engenharia</small></td><td>Três oportunidades em andamento: linha com material reciclado, certificação e resina reciclada de menor custo.<small>Fonte: lista de oportunidades</small></td><td>Sem histórico</td><td><span class="chip s1">Favorável</span></td><td>O lote piloto com resina reciclada pode começar no primeiro semestre.</td><td class="c">10</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="tbl">
+    <table class="aud">
+      <caption>Saídas: decisões e ações</caption>
+      <thead><tr><th>Nº</th><th style="width:8%">Entrada</th><th style="width:15%">Tipo</th><th style="width:34%">Decisão</th><th style="width:15%">Responsável</th><th style="width:9%">Prazo</th><th>Recurso</th></tr></thead>
+      <tbody>
+        <tr><td class="n">1</td><td class="c">a</td><td><span class="chip sl">Mudança no sistema</span></td><td>Acompanhar as ações da análise crítica na reunião mensal de indicadores, a começar pelas duas atrasadas.</td><td>Coordenador da Qualidade</td><td class="nw">05/03/2027</td><td>—</td></tr>
+        <tr><td class="n">2</td><td class="c">b</td><td><span class="chip sl">Recursos</span></td><td>Contratar a auditoria de certificação ISO 9001 para o segundo semestre.</td><td>Diretor geral</td><td class="nw">30/04/2027</td><td>Organismo de certificação<small>R$ 38.000</small></td></tr>
+        <tr><td class="n">3</td><td class="c">c1</td><td><span class="chip sl">Melhoria</span></td><td>Visitar o cliente que concentra as reclamações e combinar um plano conjunto.</td><td>Gerente comercial</td><td class="nw">19/03/2027</td><td>—</td></tr>
+        <tr><td class="n">4</td><td class="c">c2</td><td><span class="chip sl">Melhoria</span></td><td>Abrir novo ciclo PDCA do refugo, com meta de 2,0% até dezembro.</td><td>Gerente industrial</td><td class="nw">31/03/2027</td><td>—</td></tr>
+        <tr><td class="n">5</td><td class="c">c3</td><td><span class="chip sl">Recursos</span></td><td>Aprovar a compra do medidor de espessura em linha para as extrusoras 3 e 4.</td><td>Diretor geral</td><td class="nw">30/06/2027</td><td>Dois medidores, com instalação<small>R$ 96.000</small></td></tr>
+        <tr><td class="n">6</td><td class="c">c4</td><td><span class="chip sl">Mudança no sistema</span></td><td>Definir prazo máximo de 60 dias para o tratamento das não conformidades.</td><td>Coordenador da Qualidade</td><td class="nw">31/03/2027</td><td>—</td></tr>
+        <tr><td class="n">7</td><td class="c">c6</td><td><span class="chip sl">Mudança no sistema</span></td><td>Auditar a Produção a cada quatro meses, no programa de 2027.</td><td>Coordenador da Qualidade</td><td class="nw">12/03/2027</td><td>—</td></tr>
+        <tr><td class="n">8</td><td class="c">d</td><td><span class="chip sl">Recursos</span></td><td>Formar mais quatro auditores internos.</td><td>Gerente de RH</td><td class="nw">28/05/2027</td><td>Curso de 16 horas<small>R$ 6.000</small></td></tr>
+        <tr><td class="n">9</td><td class="c">e</td><td><span class="chip sl">Recursos</span></td><td>Contratar os ensaios externos para concluir a homologação do segundo fornecedor de resina.</td><td>Gerente de Suprimentos</td><td class="nw">31/03/2027</td><td>Laboratório externo<small>R$ 12.000</small></td></tr>
+        <tr><td class="n">10</td><td class="c">f</td><td><span class="chip sl">Melhoria</span></td><td>Produzir o lote piloto com resina reciclada e medir o resultado.</td><td>Gerente de engenharia</td><td class="nw">30/06/2027</td><td>Uma tonelada de resina<small>R$ 9.000</small></td></tr>
+        <tr><td colspan="6"><strong>Recursos aprovados na reunião</strong></td><td class="nw"><strong>R$ 161.000</strong></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="tbl">
+    <table class="aud">
+      <caption>Avaliação do sistema</caption>
+      <thead><tr><th style="width:14%">Critério</th><th style="width:32%">Pergunta</th><th style="width:10%">Resposta</th><th>Justificativa</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Adequado</strong></td><td>O sistema serve para a organização como ela é hoje?</td><td>Sim</td><td>O mapa de processos foi atualizado com a nova linha de produção.</td></tr>
+        <tr><td><strong>Suficiente</strong></td><td>O sistema cobre tudo o que precisa cobrir?</td><td>Sim</td><td>Os nove processos têm dono, indicador e auditoria no programa.</td></tr>
+        <tr><td><strong>Eficaz</strong></td><td>O sistema entrega os resultados planejados?</td><td>Parcial</td><td>Três dos cinco objetivos foram alcançados. O refugo e o risco da resina seguem sem solução.</td></tr>
+        <tr><td><strong>Alinhado</strong></td><td>O sistema aponta para onde a direção quer ir?</td><td>Sim</td><td>A certificação e a linha com material reciclado estão nos objetivos de 2027.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p><strong>O que observar.</strong> As duas ações atrasadas da análise anterior ficaram paradas por seis meses sem que a direção soubesse: uma compra que não foi aprovada e um indicador que não foi iniciado. A reunião aprovou a compra e mudou a forma de acompanhar as ações. A entrada sobre fornecedores mostra o resultado do <a href="../Nao-Conformidade/treinamento-nao-conformidade.html#exemplos">RNC 2026-31</a>: nenhuma devolução desde novembro. A análise crítica é o lugar onde esse resultado chega à direção.</p>
+
+  <h3>Exemplo 3. Pauta dividida em quatro reuniões</h3>
+  <dl class="ficha">
+    <div><dt>Organização</dt><dd>Empresa de manutenção predial, com 80 pessoas</dd></div>
+    <div><dt>Reunião</dt><dd>Reunião de diretoria, no fim de cada trimestre</dd></div>
+    <div><dt>Regra</dt><dd>Cada entrada aparece pelo menos uma vez por ano. A reunião de dezembro traz todas e fecha com a avaliação do sistema.</dd></div>
+  </dl>
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 426" role="img" aria-label="Pauta da análise crítica dividida em quatro reuniões. Março: 7 entradas. Junho: 10 entradas. Setembro: 6 entradas. Dezembro: 12 entradas. a, ações das análises anteriores: março, junho, setembro, dezembro. b, mudanças no contexto: junho, dezembro. c1, satisfação do cliente: março, setembro, dezembro. c2, objetivos da qualidade: março, junho, setembro, dezembro. c3, processos e produtos: março, junho, setembro, dezembro. c4, não conformidades: março, junho, setembro, dezembro. c5, monitoramento e medição: junho, dezembro. c6, auditorias: junho, dezembro. c7, provedores externos: março, dezembro. d, recursos: junho, dezembro. e, riscos e oportunidades: junho, dezembro. f, oportunidades de melhoria: março, junho, setembro, dezembro.">
+        <text class="mono mu" x="20" y="36" font-size="9.5">ENTRADA</text>
+        <text class="mono mu" x="850" y="36" font-size="9.5" text-anchor="middle">VEZES NO ANO</text>
+        <text class="b" x="415.0" y="36" font-size="12" text-anchor="middle">Março</text>
+        <text class="b" x="525.0" y="36" font-size="12" text-anchor="middle">Junho</text>
+        <text class="b" x="635.0" y="36" font-size="12" text-anchor="middle">Setembro</text>
+        <text class="b" x="745.0" y="36" font-size="12" text-anchor="middle">Dezembro</text>
+        <rect class="diag" x="691" y="50" width="108" height="336"/>
+        <line class="grid" x1="20" y1="50" x2="900" y2="50"/>
+        <text x="20" y="69" font-size="11.5"><tspan class="b">a</tspan>  Ações das análises anteriores</text>
+        <circle class="dot" cx="415.0" cy="64.0" r="5.5"/>
+        <circle class="dot" cx="525.0" cy="64.0" r="5.5"/>
+        <circle class="dot" cx="635.0" cy="64.0" r="5.5"/>
+        <circle class="dot" cx="745.0" cy="64.0" r="5.5"/>
+        <text class="b" x="850" y="69" font-size="12" text-anchor="middle" style="font-variant-numeric:tabular-nums">4</text>
+        <line class="grid" x1="20" y1="78" x2="900" y2="78"/>
+        <text x="20" y="97" font-size="11.5"><tspan class="b">b</tspan>  Mudanças no contexto</text>
+        <circle class="dot" cx="525.0" cy="92.0" r="5.5"/>
+        <circle class="dot" cx="745.0" cy="92.0" r="5.5"/>
+        <text class="b" x="850" y="97" font-size="12" text-anchor="middle" style="font-variant-numeric:tabular-nums">2</text>
+        <line class="grid" x1="20" y1="106" x2="900" y2="106"/>
+        <text x="20" y="125" font-size="11.5"><tspan class="b">c1</tspan>  Satisfação do cliente</text>
+        <circle class="dot" cx="415.0" cy="120.0" r="5.5"/>
+        <circle class="dot" cx="635.0" cy="120.0" r="5.5"/>
+        <circle class="dot" cx="745.0" cy="120.0" r="5.5"/>
+        <text class="b" x="850" y="125" font-size="12" text-anchor="middle" style="font-variant-numeric:tabular-nums">3</text>
+        <line class="grid" x1="20" y1="134" x2="900" y2="134"/>
+        <text x="20" y="153" font-size="11.5"><tspan class="b">c2</tspan>  Objetivos da qualidade</text>
+        <circle class="dot" cx="415.0" cy="148.0" r="5.5"/>
+        <circle class="dot" cx="525.0" cy="148.0" r="5.5"/>
+        <circle class="dot" cx="635.0" cy="148.0" r="5.5"/>
+        <circle class="dot" cx="745.0" cy="148.0" r="5.5"/>
+        <text class="b" x="850" y="153" font-size="12" text-anchor="middle" style="font-variant-numeric:tabular-nums">4</text>
+        <line class="grid" x1="20" y1="162" x2="900" y2="162"/>
+        <text x="20" y="181" font-size="11.5"><tspan class="b">c3</tspan>  Processos e produtos</text>
+        <circle class="dot" cx="415.0" cy="176.0" r="5.5"/>
+        <circle class="dot" cx="525.0" cy="176.0" r="5.5"/>
+        <circle class="dot" cx="635.0" cy="176.0" r="5.5"/>
+        <circle class="dot" cx="745.0" cy="176.0" r="5.5"/>
+        <text class="b" x="850" y="181" font-size="12" text-anchor="middle" style="font-variant-numeric:tabular-nums">4</text>
+        <line class="grid" x1="20" y1="190" x2="900" y2="190"/>
+        <text x="20" y="209" font-size="11.5"><tspan class="b">c4</tspan>  Não conformidades</text>
+        <circle class="dot" cx="415.0" cy="204.0" r="5.5"/>
+        <circle class="dot" cx="525.0" cy="204.0" r="5.5"/>
+        <circle class="dot" cx="635.0" cy="204.0" r="5.5"/>
+        <circle class="dot" cx="745.0" cy="204.0" r="5.5"/>
+        <text class="b" x="850" y="209" font-size="12" text-anchor="middle" style="font-variant-numeric:tabular-nums">4</text>
+        <line class="grid" x1="20" y1="218" x2="900" y2="218"/>
+        <text x="20" y="237" font-size="11.5"><tspan class="b">c5</tspan>  Monitoramento e medição</text>
+        <circle class="dot" cx="525.0" cy="232.0" r="5.5"/>
+        <circle class="dot" cx="745.0" cy="232.0" r="5.5"/>
+        <text class="b" x="850" y="237" font-size="12" text-anchor="middle" style="font-variant-numeric:tabular-nums">2</text>
+        <line class="grid" x1="20" y1="246" x2="900" y2="246"/>
+        <text x="20" y="265" font-size="11.5"><tspan class="b">c6</tspan>  Auditorias</text>
+        <circle class="dot" cx="525.0" cy="260.0" r="5.5"/>
+        <circle class="dot" cx="745.0" cy="260.0" r="5.5"/>
+        <text class="b" x="850" y="265" font-size="12" text-anchor="middle" style="font-variant-numeric:tabular-nums">2</text>
+        <line class="grid" x1="20" y1="274" x2="900" y2="274"/>
+        <text x="20" y="293" font-size="11.5"><tspan class="b">c7</tspan>  Provedores externos</text>
+        <circle class="dot" cx="415.0" cy="288.0" r="5.5"/>
+        <circle class="dot" cx="745.0" cy="288.0" r="5.5"/>
+        <text class="b" x="850" y="293" font-size="12" text-anchor="middle" style="font-variant-numeric:tabular-nums">2</text>
+        <line class="grid" x1="20" y1="302" x2="900" y2="302"/>
+        <text x="20" y="321" font-size="11.5"><tspan class="b">d</tspan>  Recursos</text>
+        <circle class="dot" cx="525.0" cy="316.0" r="5.5"/>
+        <circle class="dot" cx="745.0" cy="316.0" r="5.5"/>
+        <text class="b" x="850" y="321" font-size="12" text-anchor="middle" style="font-variant-numeric:tabular-nums">2</text>
+        <line class="grid" x1="20" y1="330" x2="900" y2="330"/>
+        <text x="20" y="349" font-size="11.5"><tspan class="b">e</tspan>  Riscos e oportunidades</text>
+        <circle class="dot" cx="525.0" cy="344.0" r="5.5"/>
+        <circle class="dot" cx="745.0" cy="344.0" r="5.5"/>
+        <text class="b" x="850" y="349" font-size="12" text-anchor="middle" style="font-variant-numeric:tabular-nums">2</text>
+        <line class="grid" x1="20" y1="358" x2="900" y2="358"/>
+        <text x="20" y="377" font-size="11.5"><tspan class="b">f</tspan>  Oportunidades de melhoria</text>
+        <circle class="dot" cx="415.0" cy="372.0" r="5.5"/>
+        <circle class="dot" cx="525.0" cy="372.0" r="5.5"/>
+        <circle class="dot" cx="635.0" cy="372.0" r="5.5"/>
+        <circle class="dot" cx="745.0" cy="372.0" r="5.5"/>
+        <text class="b" x="850" y="377" font-size="12" text-anchor="middle" style="font-variant-numeric:tabular-nums">4</text>
+        <line class="grid" x1="20" y1="386" x2="900" y2="386"/>
+        <line class="grid" x1="360" y1="50" x2="360" y2="386"/>
+        <line class="grid" x1="470" y1="50" x2="470" y2="386"/>
+        <line class="grid" x1="580" y1="50" x2="580" y2="386"/>
+        <line class="grid" x1="690" y1="50" x2="690" y2="386"/>
+        <line class="grid" x1="800" y1="50" x2="800" y2="386"/>
+        <text class="mono mu" x="348" y="408" font-size="9.5" text-anchor="end">ENTRADAS NA REUNIÃO</text>
+        <text class="b" x="415.0" y="408" font-size="12" text-anchor="middle" style="font-variant-numeric:tabular-nums">7</text>
+        <text class="b" x="525.0" y="408" font-size="12" text-anchor="middle" style="font-variant-numeric:tabular-nums">10</text>
+        <text class="b" x="635.0" y="408" font-size="12" text-anchor="middle" style="font-variant-numeric:tabular-nums">6</text>
+        <text class="b" x="745.0" y="408" font-size="12" text-anchor="middle" style="font-variant-numeric:tabular-nums">12</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 7.</b> A pauta do ano. As entradas que mudam depressa aparecem nas quatro reuniões. As que dependem de um evento, como a auditoria ou a pesquisa de satisfação, aparecem depois dele.</figcaption>
+  </figure>
+  <p><strong>O que observar.</strong> A empresa não criou uma reunião nova. Ela usou a reunião de diretoria que já existia e reservou nela uma hora para o sistema de gestão. As quatro atas do ano, juntas, são o registro da análise crítica. A de dezembro traz o quadro que mostra em que reunião cada entrada foi analisada.</p>
+</section>
+
+<!-- ============================ MÓDULO 7 ============================ -->
+<section id="acompanhar">
+  <p class="eyebrow">Módulo 7</p>
+  <h2>Acompanhar as decisões</h2>
+  <p>A análise crítica vale pelo que acontece depois dela. A primeira entrada de cada reunião é a situação das decisões anteriores, e essa entrada diz muito sobre a própria reunião: se a direção decide e não acompanha, as decisões seguintes valem menos.</p>
+
+  <figure id="fig-bars">
+    <div class="scroll">
+      <svg id="bars" viewBox="0 0 900 280" role="img" aria-label="Gráfico de barras empilhadas com as decisões das quatro últimas análises críticas da indústria. Fev/2025: 4 concluídas no prazo, 3 concluídas com atraso e 2 não concluídas. Ago/2025: 4 concluídas no prazo, 2 concluídas com atraso e 1 não concluídas. Fev/2026: 3 concluídas no prazo, 1 concluídas com atraso e 0 não concluídas. Ago/2026: 2 concluídas no prazo, 0 concluídas com atraso e 2 não concluídas.">
+        <g font-size="11.5">
+          <rect class="f1" x="200" y="12" width="14" height="14"/><text x="222" y="24">Concluídas no prazo</text>
+          <rect class="f2" x="365.4" y="12" width="14" height="14"/><text x="387.4" y="24">Concluídas com atraso</text>
+          <rect class="f3" x="544.0" y="12" width="14" height="14"/><text x="566.0" y="24">Não concluídas</text>
+        </g>
+        <line class="grid" x1="200" y1="50" x2="200" y2="234"/>
+        <text class="mu" x="200" y="250" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">0</text>
+        <line class="grid" x1="320" y1="50" x2="320" y2="234"/>
+        <text class="mu" x="320" y="250" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">2</text>
+        <line class="grid" x1="440" y1="50" x2="440" y2="234"/>
+        <text class="mu" x="440" y="250" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">4</text>
+        <line class="grid" x1="560" y1="50" x2="560" y2="234"/>
+        <text class="mu" x="560" y="250" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">6</text>
+        <line class="grid" x1="680" y1="50" x2="680" y2="234"/>
+        <text class="mu" x="680" y="250" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">8</text>
+        <line class="grid" x1="800" y1="50" x2="800" y2="234"/>
+        <text class="mu" x="800" y="250" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">10</text>
+        <text class="mono mu" x="500.0" y="270" font-size="10" text-anchor="middle">DECISÕES</text>
+        <text x="20" y="84.0" font-size="12"><tspan class="b">Fev/2025</tspan><tspan class="mu"> · 9 decisões</tspan></text>
+        <rect class="seg f1" data-k="0" x="200" y="68.0" width="240" height="24"/>
+        <text class="b on" x="320.0" y="84.5" font-size="12" text-anchor="middle" pointer-events="none">4</text>
+        <rect class="seg f2" data-k="0" x="440" y="68.0" width="180" height="24"/>
+        <text class="b on2" x="530.0" y="84.5" font-size="12" text-anchor="middle" pointer-events="none">3</text>
+        <rect class="seg f3" data-k="0" x="620" y="68.0" width="120" height="24"/>
+        <text class="b on" x="680.0" y="84.5" font-size="12" text-anchor="middle" pointer-events="none">2</text>
+        <text class="halo" x="750" y="84.0" font-size="11.5"><tspan class="b">78%</tspan><tspan class="mu"> concluídas</tspan></text>
+        <text x="20" y="128.0" font-size="12"><tspan class="b">Ago/2025</tspan><tspan class="mu"> · 7 decisões</tspan></text>
+        <rect class="seg f1" data-k="1" x="200" y="112.0" width="240" height="24"/>
+        <text class="b on" x="320.0" y="128.5" font-size="12" text-anchor="middle" pointer-events="none">4</text>
+        <rect class="seg f2" data-k="1" x="440" y="112.0" width="120" height="24"/>
+        <text class="b on2" x="500.0" y="128.5" font-size="12" text-anchor="middle" pointer-events="none">2</text>
+        <rect class="seg f3" data-k="1" x="560" y="112.0" width="60" height="24"/>
+        <text class="b on" x="590.0" y="128.5" font-size="12" text-anchor="middle" pointer-events="none">1</text>
+        <text class="halo" x="630" y="128.0" font-size="11.5"><tspan class="b">86%</tspan><tspan class="mu"> concluídas</tspan></text>
+        <text x="20" y="172.0" font-size="12"><tspan class="b">Fev/2026</tspan><tspan class="mu"> · 4 decisões</tspan></text>
+        <rect class="seg f1" data-k="2" x="200" y="156.0" width="180" height="24"/>
+        <text class="b on" x="290.0" y="172.5" font-size="12" text-anchor="middle" pointer-events="none">3</text>
+        <rect class="seg f2" data-k="2" x="380" y="156.0" width="60" height="24"/>
+        <text class="b on2" x="410.0" y="172.5" font-size="12" text-anchor="middle" pointer-events="none">1</text>
+        <text class="halo" x="450" y="172.0" font-size="11.5"><tspan class="b">100%</tspan><tspan class="mu"> concluídas</tspan></text>
+        <text x="20" y="216.0" font-size="12"><tspan class="b">Ago/2026</tspan><tspan class="mu"> · 4 decisões</tspan></text>
+        <rect class="seg f1" data-k="3" x="200" y="200.0" width="120" height="24"/>
+        <text class="b on" x="260.0" y="216.5" font-size="12" text-anchor="middle" pointer-events="none">2</text>
+        <rect class="seg f3" data-k="3" x="320" y="200.0" width="120" height="24"/>
+        <text class="b on" x="380.0" y="216.5" font-size="12" text-anchor="middle" pointer-events="none">2</text>
+        <text class="halo" x="450" y="216.0" font-size="11.5"><tspan class="b">50%</tspan><tspan class="mu"> concluídas</tspan></text>
+        <rect class="hit" x="14" y="58" width="872" height="44" tabindex="0" role="img" aria-label="Análise de Fev/2025: 9 decisões, 4 concluídas no prazo, 3 com atraso e 2 não concluídas" data-k="0" data-r="Fev/2025" data-t="9" data-a="4" data-b="3" data-c="2" data-pct="78%" data-cx="470.0"/>
+        <rect class="hit" x="14" y="102" width="872" height="44" tabindex="0" role="img" aria-label="Análise de Ago/2025: 7 decisões, 4 concluídas no prazo, 2 com atraso e 1 não concluídas" data-k="1" data-r="Ago/2025" data-t="7" data-a="4" data-b="2" data-c="1" data-pct="86%" data-cx="410.0"/>
+        <rect class="hit" x="14" y="146" width="872" height="44" tabindex="0" role="img" aria-label="Análise de Fev/2026: 4 decisões, 3 concluídas no prazo, 1 com atraso e 0 não concluídas" data-k="2" data-r="Fev/2026" data-t="4" data-a="3" data-b="1" data-c="0" data-pct="100%" data-cx="320.0"/>
+        <rect class="hit" x="14" y="190" width="872" height="44" tabindex="0" role="img" aria-label="Análise de Ago/2026: 4 decisões, 2 concluídas no prazo, 0 com atraso e 2 não concluídas" data-k="3" data-r="Ago/2026" data-t="4" data-a="2" data-b="0" data-c="2" data-pct="50%" data-cx="320.0"/>
+      </svg>
+    </div>
+    <div class="tip" id="bars-tip" hidden></div>
+    <figcaption><b>Figura 8.</b> Decisões das quatro últimas análises críticas da indústria, pela situação em 18/02/2027. Passe o mouse sobre as barras para ver os valores.</figcaption>
+    <details class="data">
+      <summary>Ver os dados em tabela</summary>
+      <div class="tbl">
+        <table class="aud">
+          <thead><tr><th>Análise crítica</th><th class="c">Decisões</th><th class="c">Concluídas no prazo</th><th class="c">Concluídas com atraso</th><th class="c">Não concluídas</th><th class="c">Percentual concluído</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Fev/2025</strong></td><td class="c">9</td><td class="c">4</td><td class="c">3</td><td class="c">2</td><td class="c">78%</td></tr>
+            <tr><td><strong>Ago/2025</strong></td><td class="c">7</td><td class="c">4</td><td class="c">2</td><td class="c">1</td><td class="c">86%</td></tr>
+            <tr><td><strong>Fev/2026</strong></td><td class="c">4</td><td class="c">3</td><td class="c">1</td><td class="c">0</td><td class="c">100%</td></tr>
+            <tr><td><strong>Ago/2026</strong></td><td class="c">4</td><td class="c">2</td><td class="c">0</td><td class="c">2</td><td class="c">50%</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </details>
+  </figure>
+
+  <p>Nas duas análises de 2025, a direção tomou 16 decisões, e 8 foram concluídas no prazo. Nas duas de 2026, tomou 8, e 5 foram concluídas no prazo. A indústria passou a decidir menos em cada reunião e a concluir mais. As duas decisões não concluídas de agosto de 2026 têm a mesma origem: foram tomadas sem o recurso aprovado e sem acompanhamento entre uma análise e outra.</p>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Situação da ação</th><th style="width:40%">Quando</th><th>O que fazer na reunião</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Concluída no prazo</strong></td><td>A ação terminou até a data combinada.</td><td>Conferir se funcionou. Concluir não é o mesmo que resolver.</td></tr>
+        <tr><td><strong>Concluída com atraso</strong></td><td>A ação terminou depois da data combinada.</td><td>Conferir se funcionou, e entender o atraso.</td></tr>
+        <tr><td><strong>No prazo</strong></td><td>A ação não terminou, e a data ainda não chegou.</td><td>Registrar o andamento.</td></tr>
+        <tr><td><strong>Atrasada</strong></td><td>A ação não terminou, e a data já passou.</td><td>Decidir: novo prazo, outro responsável, mais recurso ou cancelamento.</td></tr>
+        <tr><td><strong>Cancelada</strong></td><td>A direção decidiu não fazer.</td><td>Registrar o motivo. Cancelar é uma decisão, e não um esquecimento.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note">
+    <h4>Entre uma análise e outra</h4>
+    <p>Seis meses é muito tempo para descobrir que uma ação não saiu do lugar. Leve as decisões da análise crítica para a reunião mensal de indicadores, como um item fixo da pauta. A análise seguinte recebe a situação pronta.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 8 ============================ -->
+<section id="erros">
+  <p class="eyebrow">Módulo 8</p>
+  <h2>Erros comuns</h2>
+  <div class="errs">
+    <div><h4>Fazer uma apresentação</h4><p>Quarenta telas, duas horas, nenhuma decisão.</p><p class="fix"><b>Correção:</b> envie os dados antes. Use a reunião para concluir e decidir.</p></div>
+    <div><h4>Deixar a direção de fora</h4><p>A Qualidade faz a análise, e a direção assina a ata.</p><p class="fix"><b>Correção:</b> a análise é da direção. Ela conduz, conclui e decide.</p></div>
+    <div><h4>Olhar só os indicadores</h4><p>A pauta tem o painel de indicadores e mais nada.</p><p class="fix"><b>Correção:</b> use a pauta das doze entradas. “Nada a relatar” também é registrado.</p></div>
+    <div><h4>Decidir sem dono</h4><p>“Melhorar a comunicação entre as áreas.”</p><p class="fix"><b>Correção:</b> cada decisão tem verbo, responsável, prazo e, quando precisa, recurso.</p></div>
+    <div><h4>Mostrar só a foto</h4><p>O resultado do mês aparece sem o dos meses anteriores.</p><p class="fix"><b>Correção:</b> mostre a tendência. A direção decide pelo caminho, e não pelo ponto.</p></div>
+    <div><h4>Esquecer as decisões</h4><p>A ata é guardada, e ninguém acompanha as ações.</p><p class="fix"><b>Correção:</b> leve as decisões para a reunião mensal. Comece a análise seguinte por elas.</p></div>
+    <div><h4>Fazer para a auditoria</h4><p>A reunião acontece na semana anterior à auditoria externa.</p><p class="fix"><b>Correção:</b> ligue a data ao fechamento dos resultados e ao orçamento.</p></div>
+    <div><h4>Escrever uma ata genérica</h4><p>“O sistema foi considerado adequado e eficaz.”</p><p class="fix"><b>Correção:</b> registre o fato, a conclusão e a justificativa de cada avaliação.</p></div>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 9 ============================ -->
+<section id="ferramentas">
+  <p class="eyebrow">Módulo 9</p>
+  <h2>A análise crítica e outras ferramentas</h2>
+  <p>A análise crítica é o ponto de chegada dos outros estudos da série. Cada um deles produz um resultado que vira entrada. E é também um ponto de partida: as decisões voltam para as ferramentas de planejamento.</p>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:26%">Ferramenta</th><th style="width:37%">O que ela entrega à análise crítica</th><th>O que ela recebe da análise crítica</th></tr></thead>
+      <tbody>
+        <tr><td><a href="../ISO-9001/treinamento-iso-9001.html"><strong>ISO 9001 requisito a requisito</strong></a></td><td>O diagnóstico de atendimento, como ponto de partida da primeira análise.</td><td>As lacunas que a direção decidiu fechar.</td></tr>
+        <tr><td><a href="../SWOT/treinamento-swot.html"><strong>Matriz SWOT</strong></a></td><td>As mudanças no contexto, na entrada “b”.</td><td>A data da próxima revisão do contexto.</td></tr>
+        <tr><td><a href="../Processos/treinamento-processos.html"><strong>Mapa de processos e tartaruga</strong></a></td><td>O desempenho de cada processo, na entrada “c3”.</td><td>Mudanças nos processos, nos donos e nos indicadores.</td></tr>
+        <tr><td><a href="../Riscos/treinamento-riscos.html"><strong>Matriz de riscos</strong></a></td><td>O risco residual e a eficácia das ações, na entrada “e”.</td><td>Decisão sobre os riscos críticos e sobre os aceitos.</td></tr>
+        <tr><td><a href="../Indicadores/treinamento-indicadores.html"><strong>Indicadores</strong></a></td><td>O quadro de objetivos e o painel, nas entradas “c2” e “c5”.</td><td>Metas revistas e indicadores novos.</td></tr>
+        <tr><td><a href="../Auditoria/treinamento-auditoria.html"><strong>Auditoria interna</strong></a></td><td>O resultado do programa de auditoria, na entrada “c6”.</td><td>Prioridades do programa seguinte.</td></tr>
+        <tr><td><a href="../Nao-Conformidade/treinamento-nao-conformidade.html"><strong>Não conformidade e ação corretiva</strong></a></td><td>O número, o tipo e a eficácia dos tratamentos, na entrada “c4”.</td><td>Regras de prazo e de prioridade.</td></tr>
+        <tr><td><a href="../GUT/treinamento-gut.html"><strong>Matriz GUT</strong></a></td><td>A ordem de prioridade das oportunidades, na entrada “f”.</td><td>A lista de temas a priorizar.</td></tr>
+        <tr><td><a href="../5W2H/treinamento-5w2h.html"><strong>5W2H</strong></a></td><td>A situação das ações anteriores, na entrada “a”.</td><td>As decisões, que viram plano de ação.</td></tr>
+        <tr><td><a href="../PDCA/treinamento-pdca.html"><strong>PDCA</strong></a></td><td>O resultado dos ciclos de melhoria, na entrada “f”.</td><td>Os problemas que merecem um ciclo novo.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pair">
+    <div class="box">
+      <h4>A análise crítica é o “verificar” do sistema</h4>
+      <ul>
+        <li>A reunião de indicadores verifica o processo, todo mês.</li>
+        <li>A auditoria verifica a conformidade, processo por processo.</li>
+        <li>A análise crítica verifica o sistema, no período.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h4>E o “agir” começa nela</h4>
+      <ul>
+        <li>As decisões de melhoria abrem ciclos PDCA.</li>
+        <li>As mudanças no sistema alteram processos e objetivos.</li>
+        <li>Os recursos entram no orçamento.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 10 ============================ -->
+<section id="iso">
+  <p class="eyebrow">Módulo 10</p>
+  <h2>Nas normas ISO</h2>
+  <p>A análise crítica pela direção é um requisito da ISO 9001:2015, no item 9.3, e aparece com a mesma estrutura nas outras normas de sistema de gestão, como a ISO 14001 e a ISO 45001. O item tem três partes: o que é e para que serve, o que entra e o que sai.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 164" role="img" aria-label="Os quatro critérios da avaliação do sistema. Adequado: O sistema serve para a organização como ela é hoje? Os processos, os documentos e os objetivos correspondem ao que a organização faz. Suficiente: O sistema cobre tudo o que precisa cobrir? Não há processo, requisito ou risco importante fora do sistema. Eficaz: O sistema entrega os resultados planejados? Os objetivos são alcançados, e os problemas não voltam. Alinhado: O sistema aponta para onde a direção quer ir? Os objetivos da qualidade apoiam a estratégia do negócio.">
+        <rect class="bx" x="10" y="10" width="214" height="144"/>
+        <rect class="hd-ink" x="10" y="10" width="214" height="34"/>
+        <text class="b t-ground" x="24" y="32" font-size="13">Adequado</text>
+        <text class="b" x="24" y="66" font-size="12">O sistema serve para a</text>
+        <text class="b" x="24" y="82" font-size="12">organização como ela é hoje?</text>
+        <text class="mu" x="24" y="108" font-size="11.5">Os processos, os documentos e os</text>
+        <text class="mu" x="24" y="124" font-size="11.5">objetivos correspondem ao que a</text>
+        <text class="mu" x="24" y="140" font-size="11.5">organização faz.</text>
+        <rect class="bx" x="232" y="10" width="214" height="144"/>
+        <rect class="hd-ink" x="232" y="10" width="214" height="34"/>
+        <text class="b t-ground" x="246" y="32" font-size="13">Suficiente</text>
+        <text class="b" x="246" y="66" font-size="12">O sistema cobre tudo o que</text>
+        <text class="b" x="246" y="82" font-size="12">precisa cobrir?</text>
+        <text class="mu" x="246" y="108" font-size="11.5">Não há processo, requisito ou</text>
+        <text class="mu" x="246" y="124" font-size="11.5">risco importante fora do sistema.</text>
+        <rect class="bx" x="454" y="10" width="214" height="144"/>
+        <rect class="hd-ink" x="454" y="10" width="214" height="34"/>
+        <text class="b t-ground" x="468" y="32" font-size="13">Eficaz</text>
+        <text class="b" x="468" y="66" font-size="12">O sistema entrega os</text>
+        <text class="b" x="468" y="82" font-size="12">resultados planejados?</text>
+        <text class="mu" x="468" y="108" font-size="11.5">Os objetivos são alcançados, e os</text>
+        <text class="mu" x="468" y="124" font-size="11.5">problemas não voltam.</text>
+        <rect class="bx" x="676" y="10" width="214" height="144"/>
+        <rect class="hd-ink" x="676" y="10" width="214" height="34"/>
+        <text class="b t-ground" x="690" y="32" font-size="13">Alinhado</text>
+        <text class="b" x="690" y="66" font-size="12">O sistema aponta para onde a</text>
+        <text class="b" x="690" y="82" font-size="12">direção quer ir?</text>
+        <text class="mu" x="690" y="108" font-size="11.5">Os objetivos da qualidade apoiam</text>
+        <text class="mu" x="690" y="124" font-size="11.5">a estratégia do negócio.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 9.</b> Os quatro critérios da avaliação do sistema, no requisito 9.3.1. O texto da figura é um resumo, com palavras próprias.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:10%">Item</th><th style="width:32%">O que pede, em resumo</th><th style="width:27%">O que isso significa</th><th>Evidências que o auditor procura</th></tr></thead>
+      <tbody>
+        <tr><td class="num">9.3.1</td><td>A alta direção deve analisar o sistema a intervalos planejados, para assegurar que ele continua adequado, suficiente, eficaz e alinhado à estratégia</td><td>A reunião tem data, é da direção e termina com uma avaliação.</td><td>Calendário, lista de presença e avaliação registrada.</td></tr>
+        <tr><td class="num">9.3.2</td><td>A análise deve ser planejada e realizada considerando as entradas da figura 3</td><td>Nenhuma entrada fica de fora da pauta do período.</td><td>Pauta e ata, com o resultado de cada entrada.</td></tr>
+        <tr><td class="num">9.3.3</td><td>As saídas devem incluir decisões e ações sobre melhoria, mudanças no sistema e recursos. A organização deve reter evidência dos resultados</td><td>A reunião decide, e o que foi decidido fica registrado.</td><td>Ata, com decisões, responsáveis e prazos.</td></tr>
+        <tr><td class="num">5.1.1</td><td>A alta direção deve responder pela eficácia do sistema</td><td>A direção conhece os resultados e sabe o que decidiu.</td><td>Entrevista com a direção.</td></tr>
+        <tr><td class="num">6.2</td><td>Os objetivos da qualidade devem ser monitorados e atualizados</td><td>As metas são revistas quando o resultado ou a estratégia mudam.</td><td>Objetivos revistos depois da análise.</td></tr>
+        <tr><td class="num">10.3</td><td>A organização deve considerar as saídas da análise crítica para determinar as necessidades de melhoria</td><td>As decisões viram ações de melhoria.</td><td>Planos de ação ligados à ata.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pair">
+    <div class="box">
+      <h4>O que a ISO 9001 exige</h4>
+      <ul>
+        <li>Análise a intervalos planejados.</li>
+        <li>Participação da alta direção.</li>
+        <li>Todas as entradas consideradas.</li>
+        <li>Decisões sobre melhoria, mudanças e recursos.</li>
+        <li>Evidência guardada.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h4>O que a ISO 9001 não exige</h4>
+      <ul>
+        <li>Uma reunião única: a pauta pode ser dividida.</li>
+        <li>Uma frequência determinada.</li>
+        <li>Um modelo de ata.</li>
+        <li>Um procedimento escrito para a análise.</li>
+        <li>A classificação das entradas por situação.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="note">
+    <h4>Pontos de atenção</h4>
+    <p>O auditor externo costuma começar pela análise crítica. Ela mostra, em um só registro, se a direção conhece o sistema e se as decisões têm continuidade. Ele vai comparar a ata com o que encontrar nos processos.</p>
+    <p>A emenda de 2024 à ISO 9001:2015 incluiu a mudança climática entre as questões do contexto. Quando ela for relevante para a organização, entra na entrada “b”, com as outras mudanças.</p>
+    <p>Este módulo usa a numeração da ISO 9001:2015 e resume os textos com palavras próprias. Confira sempre a edição vigente da norma antes de citar um requisito em relatório.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 11 ============================ -->
+<section id="reuniao">
+  <p class="eyebrow">Módulo 11</p>
+  <h2>A reunião</h2>
+  <p>Com o material enviado antes, a análise crítica de uma organização pequena ou média cabe em duas horas. A maior parte do tempo vai para o desempenho. A parte que não pode ser cortada é a das decisões.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 136" role="img" aria-label="Distribuição de uma análise crítica de 120 minutos: 15 minutos para a abertura e as ações anteriores, 45 minutos para o desempenho, 20 minutos para as mudanças, os recursos e os riscos, 30 minutos para as decisões e 10 minutos para a avaliação do sistema e o fecho.">
+        <g font-size="11.5" text-anchor="middle">
+          <rect class="bx" x="60" y="24" width="97.5" height="56"/><text x="108.8" y="49" font-size="10.5">Ações</text><text x="108.8" y="64" font-size="10.5">anteriores</text>
+          <rect class="hd-d gap2" x="157.5" y="24" width="292.5" height="56"/><text class="on b" x="303.8" y="56">Desempenho</text>
+          <rect class="bx" x="450" y="24" width="130" height="56"/><text x="515" y="49">Mudanças,</text><text x="515" y="64">recursos e riscos</text>
+          <rect class="hd-ink gap2" x="580" y="24" width="195" height="56"/><text class="t-ground b" x="677.5" y="56">Decisões</text>
+          <rect class="bx" x="775" y="24" width="65" height="56"/><text x="807.5" y="56" font-size="10.5">Avaliação</text>
+        </g>
+        <g class="ln-mu" stroke-width="1">
+          <line x1="60" y1="82" x2="60" y2="94"/><line x1="157.5" y1="82" x2="157.5" y2="94"/><line x1="450" y1="82" x2="450" y2="94"/>
+          <line x1="580" y1="82" x2="580" y2="94"/><line x1="775" y1="82" x2="775" y2="94"/><line x1="840" y1="82" x2="840" y2="94"/>
+        </g>
+        <g class="mono" font-size="10.5" text-anchor="middle">
+          <text class="mu" x="60" y="112">0</text><text class="mu" x="157.5" y="112">15</text><text class="mu" x="450" y="112">60</text>
+          <text class="mu" x="580" y="112">80</text><text class="mu" x="775" y="112">110</text><text class="mu" x="840" y="112">120</text>
+        </g>
+      </svg>
+    </div>
+    <figcaption><b>Figura 10.</b> Uma análise crítica de duas horas, desenhada em escala. As decisões ocupam um quarto do tempo. Quando a apresentação se estende, é desse bloco que o tempo sai, e é por isso que ele precisa de horário marcado.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Momento</th><th style="width:42%">O que fazer</th><th>Frases que ajudam</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Ações anteriores</strong></td><td>Conferir cada decisão da análise anterior: feita, atrasada ou cancelada.</td><td>“O que decidimos, e o que aconteceu?”</td></tr>
+        <tr><td><strong>Desempenho</strong></td><td>Percorrer as sete entradas do item “c”, com cinco minutos por entrada.</td><td>“Qual é a conclusão?”</td></tr>
+        <tr><td><strong>Mudanças, recursos e riscos</strong></td><td>Discutir o que mudou, o que falta e o que ameaça os objetivos.</td><td>“O que mudou desde a última vez?”</td></tr>
+        <tr><td><strong>Decisões</strong></td><td>Voltar às entradas em atenção e críticas, e decidir cada uma.</td><td>“Quem faz, até quando, e com quê?”</td></tr>
+        <tr><td><strong>Avaliação e fecho</strong></td><td>Responder às quatro perguntas sobre o sistema e marcar a próxima data.</td><td>“O sistema está nos servindo?”</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Projete a pauta das doze entradas e preencha a conclusão de cada uma na frente de todos. A ata sai quase pronta da reunião, e ninguém discute depois o que foi dito.</p>
+
+  <h3>Checklist da análise crítica</h3>
+  <p>Marque os itens conforme revisa a sua análise. As marcações ficam salvas neste navegador.</p>
+  <ol class="check" id="checklist">
+    <li><label><input type="checkbox" id="ck-1"><span>A análise crítica está no calendário, com intervalo definido.</span></label></li>
+    <li><label><input type="checkbox" id="ck-2"><span>A alta direção conduz a reunião e participa dela.</span></label></li>
+    <li><label><input type="checkbox" id="ck-3"><span>A pauta traz todas as entradas que a norma pede.</span></label></li>
+    <li><label><input type="checkbox" id="ck-4"><span>As entradas foram enviadas aos participantes antes da reunião.</span></label></li>
+    <li><label><input type="checkbox" id="ck-5"><span>As ações das análises anteriores foram conferidas, uma a uma.</span></label></li>
+    <li><label><input type="checkbox" id="ck-6"><span>Cada entrada traz fatos e dados, com a tendência do período.</span></label></li>
+    <li><label><input type="checkbox" id="ck-7"><span>Cada entrada tem uma conclusão escrita.</span></label></li>
+    <li><label><input type="checkbox" id="ck-8"><span>As decisões tratam de melhoria, de mudanças no sistema e de recursos.</span></label></li>
+    <li><label><input type="checkbox" id="ck-9"><span>Cada decisão tem responsável e prazo.</span></label></li>
+    <li><label><input type="checkbox" id="ck-10"><span>Os recursos necessários foram aprovados na própria reunião.</span></label></li>
+    <li><label><input type="checkbox" id="ck-11"><span>A ata registra a avaliação do sistema: adequado, suficiente, eficaz e alinhado.</span></label></li>
+    <li><label><input type="checkbox" id="ck-12"><span>A ata foi guardada, e as decisões são acompanhadas até o fim.</span></label></li>
+  </ol>
+  <div class="bar"><span><b id="ck-count">0</b> de 12 itens marcados</span><button class="btn" id="ck-reset" type="button">Limpar marcações</button></div>
+</section>
+
+<!-- ============================ MÓDULO 12 ============================ -->
+<section id="pratique">
+  <p class="eyebrow">Módulo 12</p>
+  <h2>Pratique</h2>
+  <h3>Exercício 1. Entrada, saída ou rotina?</h3>
+  <p>Cada item traz uma frase que poderia aparecer em uma reunião. Diga se ela é uma entrada da análise crítica, uma saída, ou um assunto da rotina, que não pertence a essa reunião.</p>
+  <div class="quiz" id="quiz"></div>
+  <div class="bar"><span>Acertos: <b id="qz-score">0</b> de <b id="qz-total">12</b></span><span>Respondidos: <b id="qz-done">0</b></span><button class="btn" id="qz-reset" type="button">Recomeçar</button></div>
+
+  <h3>Exercício 2. Prepare uma análise crítica</h3>
+  <p>Escolha uma organização ou uma área que você conhece bem. Abra a planilha de apoio e siga o roteiro.</p>
+  <ol>
+    <li>Na aba Reunião, escreva a data, o período analisado e os participantes.</li>
+    <li>Na aba Ações anteriores, liste o que foi decidido na última análise, com prazo e status.</li>
+    <li>Na aba Entradas, escreva o resultado, a tendência e a situação de cada entrada. Use “nada a relatar” quando for o caso.</li>
+    <li>Escreva a conclusão de cada entrada, em uma frase.</li>
+    <li>Na aba Saídas, escreva uma decisão para cada entrada crítica e para as entradas em atenção que pedem ação.</li>
+    <li>Volte à aba Reunião e responda às quatro perguntas sobre o sistema, com justificativa.</li>
+    <li>Passe o checklist do módulo 11.</li>
+  </ol>
+  <p>Depois, pegue a ata da última análise crítica da sua organização e procure nela os quatro passos da figura 4. Anote em que passo cada assunto parou.</p>
+</section>
+
+<!-- ============================ MÓDULO 13 ============================ -->
+<section id="planilha">
+  <p class="eyebrow">Módulo 13</p>
+  <h2>A planilha de apoio</h2>
+  <p>Este treinamento acompanha o arquivo <a id="xlsx-ref" href="Analise-Critica-modelo.xlsx">Analise-Critica-modelo.xlsx</a>, que fica na mesma pasta. As células em amarelo-claro são para preenchimento. As células cinza são calculadas.</p>
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Aba</th><th>Para que serve</th><th style="width:36%">O que ela calcula</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Instruções</strong></td><td>Legenda de cores, ordem de preenchimento e regras do modelo.</td><td>Nada. É só leitura.</td></tr>
+        <tr><td><strong>Reunião</strong></td><td>Data, período, até 10 participantes e avaliação do sistema.</td><td>Presença da direção, intervalo desde a análise anterior e situação da ata.</td></tr>
+        <tr><td><strong>Ações anteriores</strong></td><td>Até 15 ações decididas nas análises anteriores.</td><td>Situação de cada ação na data da reunião, percentual de conclusão e gráfico.</td></tr>
+        <tr><td><strong>Entradas</strong></td><td>As doze entradas, com resultado, tendência, situação e conclusão.</td><td>Conferência de cada entrada e número de decisões ligadas a ela.</td></tr>
+        <tr><td><strong>Saídas</strong></td><td>Até 15 decisões, com entrada de origem, tipo, responsável, prazo e recurso.</td><td>Conferência de cada decisão, contagem por tipo e valor total.</td></tr>
+        <tr><td><strong>Checklist</strong></td><td>Os mesmos 12 itens do módulo 11, com status Sim, Parcial ou Não.</td><td>Percentual atendido e situação da validação.</td></tr>
+        <tr><td><strong>Exemplo 1 e Exemplo 2</strong></td><td>A análise crítica da pizzaria e a da indústria.</td><td>Contagens por situação e por tipo, e situação das ações anteriores.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ GLOSSÁRIO ============================ -->
+<section id="glossario">
+  <p class="eyebrow">Referência</p>
+  <h2>Glossário</h2>
+  <dl class="gloss">
+    <div><dt>Adequação</dt><dd>Quanto o sistema corresponde ao que a organização é e faz hoje.</dd></div>
+    <div><dt>Alinhamento</dt><dd>Quanto os objetivos do sistema apoiam a estratégia da organização.</dd></div>
+    <div><dt>Alta direção</dt><dd>Pessoa ou grupo que dirige a organização no nível mais alto.</dd></div>
+    <div><dt>Análise crítica</dt><dd>Exame feito para concluir se algo continua adequado, suficiente e eficaz.</dd></div>
+    <div><dt>Ata</dt><dd>Registro da reunião, com as entradas analisadas, as conclusões e as decisões.</dd></div>
+    <div><dt>Eficácia</dt><dd>Quanto dos resultados planejados foi alcançado.</dd></div>
+    <div><dt>Entrada da análise crítica</dt><dd>Informação que a direção precisa considerar na análise.</dd></div>
+    <div><dt>Informação documentada retida</dt><dd>Registro guardado como evidência do que foi feito.</dd></div>
+    <div><dt>Intervalo planejado</dt><dd>Frequência definida pela organização, e cumprida.</dd></div>
+    <div><dt>Parte interessada</dt><dd>Pessoa ou organização que afeta o sistema, ou é afetada por ele.</dd></div>
+    <div><dt>Provedor externo</dt><dd>Fornecedor de produto ou de serviço, inclusive de processo terceirizado.</dd></div>
+    <div><dt>Saída da análise crítica</dt><dd>Decisão ou ação que resulta da análise.</dd></div>
+    <div><dt>Suficiência</dt><dd>Quanto o sistema cobre do que precisa cobrir.</dd></div>
+    <div><dt>Tendência</dt><dd>Direção em que um resultado caminha ao longo dos períodos.</dd></div>
+  </dl>
+</section>
+
+</main>
+</div>
+
+<footer>Material de estudo. Os exemplos, documentos e números são ilustrativos e foram criados para fins didáticos. As referências às normas ISO são resumos para estudo e não substituem o texto das normas.</footer>
+</div>
+
+<script>
+(function () {
+  function read(key) { try { return JSON.parse(localStorage.getItem(key) || 'null'); } catch (e) { return null; } }
+  function write(key, val) { try { localStorage.setItem(key, JSON.stringify(val)); } catch (e) {} }
+
+  /* ---------- Checklist ---------- */
+  var boxes = Array.prototype.slice.call(document.querySelectorAll('#checklist input'));
+  var count = document.getElementById('ck-count');
+  var saved = read('analise-critica-checklist') || {};
+  function refreshChecks() {
+    var n = 0, state = {};
+    boxes.forEach(function (b) { if (b.checked) { n++; } state[b.id] = b.checked; });
+    count.textContent = n;
+    return state;
+  }
+  boxes.forEach(function (b) {
+    if (saved[b.id]) { b.checked = true; }
+    b.addEventListener('change', function () { write('analise-critica-checklist', refreshChecks()); });
+  });
+  refreshChecks();
+  document.getElementById('ck-reset').addEventListener('click', function () {
+    boxes.forEach(function (b) { b.checked = false; });
+    write('analise-critica-checklist', refreshChecks());
+  });
+
+  /* ---------- Exercício ---------- */
+  var KEYS = ['E', 'S', 'R'];
+  var LABEL = { E: 'Entrada', S: 'Saída', R: 'Rotina' };
+  var NAMES = { E: 'entrada', S: 'saída', R: 'rotina' };
+  var ITEMS = [
+    { t: '“O refugo fechou o ano em 2,6%, para um máximo de 2,0%.”', a: 'E', w: 'É um resultado do período: desempenho dos processos.' },
+    { t: '“Fica aprovada a compra de dois medidores de espessura.”', a: 'S', w: 'É uma decisão sobre recursos.' },
+    { t: '“Das oito ações decididas no ano passado, duas estão atrasadas.”', a: 'E', w: 'É a situação das ações das análises anteriores.' },
+    { t: '“O lote reprovado na inspeção de hoje será retrabalhado.”', a: 'R', w: 'É a disposição de uma saída não conforme. Cabe ao processo, no dia.' },
+    { t: '“Dois grandes clientes passaram a exigir a certificação.”', a: 'E', w: 'É uma mudança no contexto externo.' },
+    { t: '“A Produção passa a ser auditada a cada quatro meses.”', a: 'S', w: 'É uma mudança no sistema: altera o programa de auditoria.' },
+    { t: '“As férias da equipe do Laboratório ficam para março.”', a: 'R', w: 'É uma decisão da gestão da área, sem efeito no sistema.' },
+    { t: '“O segundo fornecedor de resina ainda não foi homologado, e o risco continua crítico.”', a: 'E', w: 'É a eficácia das ações sobre os riscos.' },
+    { t: '“Será aberto um novo ciclo PDCA para o refugo, com meta de 2,0%.”', a: 'S', w: 'É uma decisão de melhoria.' },
+    { t: '“Doze fornecedores críticos foram avaliados, e um foi reprovado.”', a: 'E', w: 'É o desempenho dos provedores externos.' },
+    { t: '“A entrega de amanhã vai pela transportadora B.”', a: 'R', w: 'É uma decisão operacional, do processo de expedição.' },
+    { t: '“A meta de reclamações passa de 50 para 40 por milhão de peças.”', a: 'S', w: 'É uma mudança no sistema: altera um objetivo da qualidade.' }
+  ];
+  var quiz = document.getElementById('quiz');
+  var score = document.getElementById('qz-score');
+  var done = document.getElementById('qz-done');
+  document.getElementById('qz-total').textContent = ITEMS.length;
+  var hits = 0, answered = 0;
+
+  function render() {
+    hits = 0; answered = 0; score.textContent = 0; done.textContent = 0;
+    quiz.textContent = '';
+    ITEMS.forEach(function (item, idx) {
+      var row = document.createElement('div'); row.className = 'q';
+      var p = document.createElement('p'); p.textContent = (idx + 1) + '. ' + item.t;
+      var opts = document.createElement('div'); opts.className = 'opts';
+      opts.setAttribute('role', 'group'); opts.setAttribute('aria-label', 'Classificação do item ' + (idx + 1));
+      var why = document.createElement('p'); why.className = 'why'; why.hidden = true;
+      KEYS.forEach(function (k) {
+        var b = document.createElement('button');
+        b.type = 'button'; b.textContent = LABEL[k]; b.id = 'qz-' + idx + '-' + k;
+        b.setAttribute('data-k', k);
+        b.addEventListener('click', function () {
+          var ok = k === item.a;
+          Array.prototype.forEach.call(opts.children, function (o) {
+            o.disabled = true;
+            if (o.getAttribute('data-k') === item.a) { o.className = 'right'; }
+          });
+          if (!ok) { b.className = 'wrong'; }
+          var lead = document.createElement('b');
+          lead.textContent = (ok ? 'Certo. ' : 'A resposta é ' + NAMES[item.a] + '. ');
+          why.textContent = ''; why.appendChild(lead); why.appendChild(document.createTextNode(item.w));
+          why.className = 'why ' + (ok ? 'ok' : 'no'); why.hidden = false;
+          answered++; if (ok) { hits++; }
+          score.textContent = hits; done.textContent = answered;
+        });
+        opts.appendChild(b);
+      });
+      row.appendChild(p); row.appendChild(opts); row.appendChild(why);
+      quiz.appendChild(row);
+    });
+  }
+  render();
+  document.getElementById('qz-reset').addEventListener('click', render);
+
+  /* ---------- Gráfico: leitura dos valores ---------- */
+  var fig = document.getElementById('fig-bars');
+  var tip = document.getElementById('bars-tip');
+  var svg = document.getElementById('bars');
+  var segs = document.querySelectorAll('#bars .seg');
+  function hide() {
+    tip.hidden = true;
+    Array.prototype.forEach.call(segs, function (b) { b.removeAttribute('opacity'); });
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('#bars .hit'), function (r) {
+    function show() {
+      var d = r.dataset;
+      Array.prototype.forEach.call(segs, function (b) {
+        b.setAttribute('opacity', b.getAttribute('data-k') === d.k ? '1' : '.4');
+      });
+      tip.textContent = '';
+      var strong = document.createElement('b'); strong.textContent = d.pct + ' concluídas';
+      tip.appendChild(strong);
+      tip.appendChild(document.createTextNode('Análise de ' + d.r + ' · ' + d.t + ' decisões'));
+      tip.appendChild(document.createElement('br'));
+      tip.appendChild(document.createTextNode('No prazo: ' + d.a + ' · Com atraso: ' + d.b + ' · Não concluídas: ' + d.c));
+      var box = fig.getBoundingClientRect(), rb = r.getBoundingClientRect();
+      var pt = svg.createSVGPoint(); pt.x = parseFloat(d.cx); pt.y = 0;
+      var scr = pt.matrixTransform(svg.getScreenCTM());
+      tip.style.left = Math.min(Math.max(scr.x - box.left, 190), box.width - 190) + 'px';
+      tip.style.top = (rb.top - box.top + 4) + 'px';
+      tip.hidden = false;
+    }
+    r.addEventListener('pointerenter', show);
+    r.addEventListener('focus', show);
+    r.addEventListener('pointerleave', hide);
+    r.addEventListener('blur', hide);
+  });
+})();
+</script>
+</body>
+</html>

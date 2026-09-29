@@ -204,7 +204,7 @@ tb.append(f'            <tr class="tot"><td>Total</td><td class="c">{GERAL[0]}</
 tb += ['          </tbody>', '        </table>']
 
 # ---- figura 9: estudos da série × seções da norma
-ORDEM = ["swot", "proc", "sipoc", "raci", "riscos", "ind", "gut", "ishikawa", "w5h2", "pdca", "auditoria", "nc"]
+ORDEM = ["swot", "proc", "sipoc", "raci", "riscos", "ind", "gut", "ishikawa", "w5h2", "pdca", "auditoria", "nc", "ac"]
 CX = lambda j: 350 + j * 80  # noqa: E731
 HD = {"base": "hd-ink", "p": "hd-p", "d": "hd-d", "c": "hd-c", "a": "hd-a"}
 RY, R0 = 32, 70
@@ -243,6 +243,7 @@ AJUDA = {
     "9.1.2": "Traz a satisfação do cliente para o painel, com meta e análise.",
     "9.1.3": "O painel mostra a situação e a tendência. A GUT prioriza, e o Ishikawa procura as causas.",
     "9.2": "Entrega o programa, o plano, a lista de verificação e as constatações.",
+    "9.3": "Traz a pauta das doze entradas, o registro das decisões e o acompanhamento das ações.",
     "10.1": "Conduz a melhoria, do problema até a padronização.",
     "10.2": "Traz o tratamento em sete etapas, com análise de causa, plano e verificação da eficácia.",
     "10.3": "Um ciclo concluído é o ponto de partida do seguinte.",
