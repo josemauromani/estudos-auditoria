@@ -10,6 +10,7 @@ Para começar, abra o arquivo `index.html` no navegador.
 |---|---|---|
 | ISO 9001 requisito a requisito | `ISO-9001/` | `ISO-9001-modelo.xlsx` |
 | Matriz SWOT | `SWOT/` | `SWOT-modelo.xlsx` |
+| Mapa de processos e diagrama de tartaruga | `Processos/` | `Processos-modelo.xlsx` |
 | SIPOC | `SIPOC/` | `SIPOC-modelo.xlsx` |
 | Matriz RACI | `RACI/` | `RACI-modelo.xlsx` |
 | Matriz de riscos | `Riscos/` | `Riscos-modelo.xlsx` |

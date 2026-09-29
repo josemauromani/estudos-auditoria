@@ -1,0 +1,711 @@
+<body>
+<div class="page" lang="pt-BR">
+
+<header class="mast">
+  <div class="tiles" aria-hidden="true"><span class="p">G</span><span class="d">P</span><span class="c">A</span></div>
+  <h1>Mapa de processos e diagrama de tartaruga na prática</h1>
+  <p class="lead">Um guia de estudo para enxergar a organização como um conjunto de processos ligados, e cada processo por inteiro: o que entra, o que sai, com o quê, com quem, como e quanto.</p>
+  <ul class="meta">
+    <li>Treinamento autoinstrucional</li>
+    <li>12 módulos</li>
+    <li>Leitura de cerca de 45 minutos</li>
+    <li>3 exemplos resolvidos e 2 exercícios</li>
+  </ul>
+</header>
+
+<div class="layout">
+
+<nav class="toc" aria-label="Sumário">
+  <h2>Sumário</h2>
+  <ol>
+    <li><a href="#o-que-e">O que é</a></li>
+    <li><a href="#quando">Quando usar</a></li>
+    <li><a href="#mapa">Como construir o mapa</a></li>
+    <li><a href="#tartaruga">Como construir a tartaruga</a></li>
+    <li><a href="#exemplos">Exemplos resolvidos</a></li>
+    <li><a href="#elementos">Os oito elementos de um processo</a></li>
+    <li><a href="#erros">Erros comuns</a></li>
+    <li><a href="#ferramentas">O mapa e outras ferramentas</a></li>
+    <li><a href="#iso">Nas normas ISO</a></li>
+    <li><a href="#oficina">A oficina de mapeamento</a></li>
+    <li><a href="#pratique">Pratique</a></li>
+    <li><a href="#planilha">A planilha de apoio</a></li>
+    <li><a href="#glossario">Glossário</a></li>
+  </ol>
+</nav>
+
+<main>
+
+<!-- ============================ MÓDULO 1 ============================ -->
+<section id="o-que-e">
+  <p class="eyebrow">Módulo 1</p>
+  <h2>O que é</h2>
+  <p>Processo é um conjunto de atividades que transforma entradas em saídas. A organização inteira é feita deles: o que um processo entrega é o que outro recebe. Quando essa ligação falha, o cliente percebe, mesmo que cada área tenha feito a sua parte.</p>
+  <p>Este estudo trata de duas ferramentas que se completam. O <strong>mapa de processos</strong> mostra o conjunto: quais são os processos e como se ligam. O <strong>diagrama de tartaruga</strong> mostra um processo por inteiro, com tudo o que ele precisa para funcionar. As letras do título são os três tipos de processo do mapa: de <span class="k p">G</span> gestão, <span class="k d">P</span> principais e de <span class="k c">A</span> apoio.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 232" role="img" aria-label="Três níveis de detalhe. No primeiro, a organização: o mapa de processos mostra todos os processos e as ligações entre eles. No segundo, o processo: o SIPOC mostra o fluxo, e o diagrama de tartaruga mostra os recursos e os controles. No terceiro, a atividade: a instrução de trabalho e o fluxograma mostram o passo a passo.">
+        <defs>
+          <marker id="a1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker>
+        </defs>
+        <g font-size="11.5">
+          <rect class="bx-ink" x="10" y="20" width="270" height="150"/>
+          <text class="mono t-ground" x="28" y="44" font-size="10">NÍVEL 1 · A ORGANIZAÇÃO</text>
+          <text class="b t-ground" x="28" y="72" font-size="14">Mapa de processos</text>
+          <text class="t-ground" x="28" y="98">Quais são os processos?</text>
+          <text class="t-ground" x="28" y="116">Como se ligam?</text>
+          <text class="t-ground" x="28" y="148">Uma página para a organização.</text>
+
+          <rect class="bx" x="315" y="20" width="270" height="150"/>
+          <text class="mono mu" x="333" y="44" font-size="10">NÍVEL 2 · O PROCESSO</text>
+          <text class="b" x="333" y="72" font-size="14">SIPOC e tartaruga</text>
+          <text x="333" y="98">SIPOC: o fluxo, do fornecedor ao cliente.</text>
+          <text x="333" y="116">Tartaruga: os recursos e os controles.</text>
+          <text class="mu" x="333" y="148">Uma página para cada processo.</text>
+
+          <rect class="bx" x="620" y="20" width="270" height="150"/>
+          <text class="mono mu" x="638" y="44" font-size="10">NÍVEL 3 · A ATIVIDADE</text>
+          <text class="b" x="638" y="72" font-size="14">Instrução e fluxograma</text>
+          <text x="638" y="98">Como a atividade é feita?</text>
+          <text x="638" y="116">Em que ordem, e com que critério?</text>
+          <text class="mu" x="638" y="148">Só onde o passo a passo é necessário.</text>
+        </g>
+        <line class="ln" x1="282" y1="95" x2="311" y2="95" marker-end="url(#a1)"/>
+        <line class="ln" x1="587" y1="95" x2="616" y2="95" marker-end="url(#a1)"/>
+        <text x="450" y="206" font-size="11.5" text-anchor="middle">Do conjunto para o detalhe. Começar pelo nível 3 produz muitos documentos e nenhuma visão do todo.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 1.</b> Os três níveis de detalhe. Este estudo trata do primeiro e de metade do segundo. A outra metade está no estudo do <a href="../SIPOC/treinamento-sipoc.html">SIPOC</a>.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:22%">Ferramenta</th><th style="width:26%">O que mostra</th><th style="width:26%">Pergunta que responde</th><th>Quando basta</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Mapa de processos</strong></td><td>Todos os processos e as ligações entre eles.</td><td>Como a organização funciona?</td><td>Para apresentar o sistema e definir os donos.</td></tr>
+        <tr><td><strong>SIPOC</strong></td><td>Fornecedores, entradas, etapas, saídas e clientes de um processo.</td><td>O que entra, o que sai, e para quem?</td><td>Para entender o fluxo e os requisitos.</td></tr>
+        <tr><td><strong>Diagrama de tartaruga</strong></td><td>Entradas, saídas, recursos, pessoas, métodos e indicadores de um processo.</td><td>O processo tem tudo o que precisa?</td><td>Para gerir o processo e preparar a auditoria.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>O nome vem do desenho. O processo fica no centro, como o casco. As entradas são a cabeça, as saídas são a cauda, e as quatro perguntas são as patas.</p>
+</section>
+
+<!-- ============================ MÓDULO 2 ============================ -->
+<section id="quando">
+  <p class="eyebrow">Módulo 2</p>
+  <h2>Quando usar</h2>
+  <p>O mapa é feito uma vez e revisto quando a organização muda. A tartaruga é feita para cada processo que precisa ser gerido ou auditado. Nenhuma das duas substitui a conversa com quem executa: elas registram o que essa conversa descobre.</p>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:28%">Momento</th><th style="width:36%">O que fazer</th><th>Resultado</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Implantação do sistema de gestão</strong></td><td>Construir o mapa, e a tartaruga dos processos principais.</td><td>O requisito 4.4 atendido, com donos e indicadores.</td></tr>
+        <tr><td><strong>Preparação de uma auditoria</strong></td><td>Ler ou montar a tartaruga do processo a auditar.</td><td>A lista de verificação sai das sete partes da tartaruga.</td></tr>
+        <tr><td><strong>Processo novo ou mudança</strong></td><td>Desenhar a tartaruga antes de começar, e ligar o processo ao mapa.</td><td>Recursos, pessoas e riscos previstos.</td></tr>
+        <tr><td><strong>Problema entre áreas</strong></td><td>Rever a interação no mapa: o que uma área entrega e o que a outra espera.</td><td>Entrada e saída com requisito combinado.</td></tr>
+        <tr><td><strong>Integração de uma pessoa</strong></td><td>Mostrar o mapa e a tartaruga do processo em que ela vai trabalhar.</td><td>A pessoa entende onde o seu trabalho se encaixa.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pair">
+    <div class="box">
+      <h4>Use o mapa e a tartaruga quando</h4>
+      <ul>
+        <li>Ninguém sabe dizer quem é o dono de um resultado.</li>
+        <li>As falhas acontecem na passagem de uma área para outra.</li>
+        <li>O processo não tem indicador, ou tem e ninguém sabe por quê.</li>
+        <li>Uma auditoria de processo está marcada.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h4>Use outra ferramenta quando</h4>
+      <ul>
+        <li>Você precisa do fluxo em detalhe: use o <a href="../SIPOC/treinamento-sipoc.html">SIPOC</a>.</li>
+        <li>Você precisa dos papéis em cada atividade: use a <a href="../RACI/treinamento-raci.html">Matriz RACI</a>.</li>
+        <li>Você precisa medir o resultado: use o estudo de <a href="../Indicadores/treinamento-indicadores.html">Indicadores</a>.</li>
+        <li>Você precisa avaliar o que pode dar errado: use a <a href="../Riscos/treinamento-riscos.html">Matriz de riscos</a>.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 3 ============================ -->
+<section id="mapa">
+  <p class="eyebrow">Módulo 3</p>
+  <h2>Como construir o mapa</h2>
+  <p>O mapa começa e termina no cliente. No meio ficam os processos principais, que transformam o pedido em entrega. Acima ficam os processos de gestão, que dão o rumo. Abaixo, os de apoio, que fornecem os recursos.</p>
+
+  <figure>
+    <div class="scroll">
+<!--MAPA0-->
+    </div>
+    <figcaption><b>Figura 2.</b> O modelo do mapa de processos. Os processos principais são lidos da esquerda para a direita. A divisão em três tipos é a mais usada, mas a norma não a exige.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:20%">Tipo</th><th style="width:34%">O que faz</th><th style="width:22%">Cliente do processo</th><th>Exemplos</th></tr></thead>
+      <tbody>
+        <tr><td><span class="k p">G</span> <strong>Gestão</strong></td><td>Define o rumo, os objetivos e os recursos, e confere os resultados.</td><td>A própria organização.</td><td>Planejamento, análise crítica, auditoria interna, melhoria.</td></tr>
+        <tr><td><span class="k d">P</span> <strong>Principal</strong></td><td>Transforma o pedido do cliente em produto ou serviço entregue.</td><td>O cliente externo.</td><td>Vendas, desenvolvimento, produção, entrega, pós-venda.</td></tr>
+        <tr><td><span class="k c">A</span> <strong>Apoio</strong></td><td>Fornece os recursos de que os outros processos precisam.</td><td>Os outros processos.</td><td>Compras, manutenção, pessoas, tecnologia da informação.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Passo a passo</h3>
+  <ol class="steps">
+    <li><h4>Comece pelo cliente</h4><p>Escreva o que o cliente pede e o que ele recebe. São as duas pontas do mapa. Se a organização tem tipos de cliente muito diferentes, faça a lista de cada um.</p></li>
+    <li><h4>Liste os processos principais</h4><p>Percorra o caminho do pedido até a entrega e dê nome a cada transformação. Use verbo no infinitivo e objeto: registrar o pedido, produzir, entregar.</p></li>
+    <li><h4>Liste os processos de apoio</h4><p>Pergunte de que recursos os processos principais precisam, e quem os fornece: materiais, equipamentos, pessoas, sistemas.</p></li>
+    <li><h4>Liste os processos de gestão</h4><p>Pergunte quem define os objetivos, quem mede os resultados e quem decide as mudanças.</p></li>
+    <li><h4>Ligue os processos</h4><p>Para cada processo, escreva o que ele entrega e a quem. Um processo que não entrega nada a ninguém, ou não recebe nada de ninguém, está mal definido.</p></li>
+    <li><h4>Defina o dono e o indicador</h4><p>Cada processo tem um dono, que responde pelo resultado, e pelo menos um indicador, que mostra se o resultado foi alcançado.</p></li>
+    <li><h4>Valide</h4><p>Mostre o mapa a quem executa e acompanhe um pedido real do início ao fim. Se o pedido passar por um lugar que não está no mapa, o mapa está incompleto.</p></li>
+  </ol>
+
+  <div class="pair">
+    <div class="box">
+      <h4>É um processo quando</h4>
+      <ul>
+        <li>Transforma uma entrada em uma saída diferente.</li>
+        <li>Tem um cliente, interno ou externo, que recebe a saída.</li>
+        <li>Pode ter um dono e um indicador.</li>
+        <li>Repete-se, com o mesmo objetivo.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h4>Não é um processo</h4>
+      <ul>
+        <li>Um setor: “Financeiro” é uma área, que participa de vários processos.</li>
+        <li>Uma tarefa: “emitir a etiqueta” é parte de um processo.</li>
+        <li>Um documento: “procedimento de compras” descreve um processo.</li>
+        <li>Um projeto: tem início e fim, e não se repete.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="note">
+    <h4>Regra prática</h4>
+    <p>Um mapa útil tem de oito a quinze processos. Com menos de oito, os processos ficam grandes demais para ter um dono. Com mais de quinze, o mapa deixa de caber em uma página, e as ligações deixam de ser lidas.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 4 ============================ -->
+<section id="tartaruga">
+  <p class="eyebrow">Módulo 4</p>
+  <h2>Como construir a tartaruga</h2>
+  <p>A tartaruga reúne, em uma página, tudo o que um processo precisa para entregar o que promete. São sete partes ao redor do processo: duas para o fluxo, quatro para os meios e uma para os riscos.</p>
+
+  <figure>
+    <div class="scroll">
+<!--TART0-->
+    </div>
+    <figcaption><b>Figura 3.</b> As partes do diagrama de tartaruga. O desenho clássico tem seis partes. A sétima, dos riscos, foi acrescentada neste material, porque a ISO 9001 pede que os riscos de cada processo sejam considerados.</figcaption>
+  </figure>
+
+<!--PARTES-->
+
+  <h3>Passo a passo</h3>
+  <ol class="steps">
+    <li><h4>Escreva o processo, o dono e o objetivo</h4><p>O objetivo diz o que o processo deve entregar, em uma frase. Ele é a referência para todas as outras partes.</p></li>
+    <li><h4>Preencha as saídas</h4><p>Comece pelo fim: o que o processo entrega, a quem, e com que requisito. É a saída que justifica o processo.</p></li>
+    <li><h4>Preencha as entradas</h4><p>Escreva o que o processo precisa receber para produzir as saídas, e de quem. Cada entrada é a saída de outro processo, ou de um fornecedor.</p></li>
+    <li><h4>Preencha as quatro patas</h4><p>Recursos, pessoas, métodos e indicadores. Escreva o que existe hoje, e marque o que falta. A tartaruga serve para mostrar lacunas, e não para escondê-las.</p></li>
+    <li><h4>Acrescente os riscos</h4><p>Escreva os principais riscos do processo e a resposta de cada um. Eles vêm da <a href="../Riscos/treinamento-riscos.html">Matriz de riscos</a>, quando ela existe.</p></li>
+    <li><h4>Confira com o mapa</h4><p>As entradas e as saídas da tartaruga precisam aparecer como ligações no mapa. Se a tartaruga cita um processo que não está no mapa, um dos dois está errado.</p></li>
+  </ol>
+
+  <div class="note">
+    <h4>A tartaruga na auditoria</h4>
+    <p>Cada parte da tartaruga vira uma pergunta de auditoria. “Com quem?” leva aos registros de competência. “Como?” leva aos procedimentos e à versão em uso. “Quanto?” leva aos indicadores e às decisões. O auditor que chega com a tartaruga na mão não esquece nenhuma parte do processo.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 5 ============================ -->
+<section id="exemplos">
+  <p class="eyebrow">Módulo 5</p>
+  <h2>Exemplos resolvidos</h2>
+  <p>Um mapa, duas tartarugas e uma matriz de interações. As organizações são as dos outros estudos da série, e os dois primeiros exemplos também estão preenchidos na planilha de apoio. Os dados são ilustrativos e foram criados para este treinamento.</p>
+
+  <h3>Exemplo 1. Mapa de processos da pizzaria</h3>
+<!--EX1HEAD-->
+  <figure>
+    <div class="scroll">
+<!--MAPA1-->
+    </div>
+    <figcaption><b>Figura 4.</b> O mapa de processos da pizzaria, com nove processos. Os três primeiros processos principais formam o atendimento de um pedido de delivery, descrito no estudo do SIPOC.</figcaption>
+  </figure>
+<!--EX1PROCS-->
+<!--EX1TART-->
+  <p><strong>O que observar.</strong> O mapa mostrou o que o diagnóstico já indicava: a loja conhecia bem o delivery e quase nada do resto. Quatro processos não têm indicador. O atendimento no salão, que recebe um terço dos clientes, nunca tinha sido descrito. A tartaruga do processo de entrega ficou completa porque ele foi o assunto de todos os estudos anteriores.</p>
+
+  <h3>Exemplo 2. Tartaruga do processo de compras</h3>
+<!--EX2HEAD-->
+  <figure>
+    <div class="scroll">
+<!--TART2-->
+    </div>
+    <figcaption><b>Figura 5.</b> A tartaruga do processo de aquisição. Cada parte traz o que existe depois das ações do RNC 2026-31: o campo obrigatório, o cadastro de itens e a revisão 6 do procedimento.</figcaption>
+  </figure>
+<!--EX2TART-->
+  <p><strong>O que observar.</strong> A tartaruga reúne o que estava espalhado nos outros estudos: os indicadores, os riscos, o procedimento e as competências. A primeira entrada, a requisição com especificação, é a saída de outros processos. Foi nessa ligação que nasceu a não conformidade da auditoria: a requisição chegava incompleta, e compras aceitava.</p>
+
+  <h3>Exemplo 3. Interações dos processos da indústria</h3>
+  <dl class="ficha">
+    <div><dt>Organização</dt><dd>Indústria de embalagens plásticas</dd></div>
+    <div><dt>Processos</dt><dd>Nove, os mesmos do programa de auditoria</dd></div>
+    <div><dt>Uso</dt><dd>Planejar as auditorias e rever as passagens entre áreas</dd></div>
+  </dl>
+  <figure>
+    <div class="scroll">
+<!--INTER-->
+    </div>
+    <figcaption><b>Figura 6.</b> A matriz de interações. Cada ponto é uma entrega de um processo, na linha, a outro, na coluna. A Produção é o processo que mais recebe. Suprimentos vem em seguida.</figcaption>
+  </figure>
+<!--INTERTAB-->
+  <p><strong>O que observar.</strong> A matriz mostra onde estão as passagens, e é nas passagens que as falhas nascem. Os processos com mais ligações pedem mais atenção no programa de auditoria. Um processo sem nenhuma ligação na linha ou na coluna seria um sinal de mapa errado.</p>
+</section>
+
+<!-- ============================ MÓDULO 6 ============================ -->
+<section id="elementos">
+  <p class="eyebrow">Módulo 6</p>
+  <h2>Os oito elementos de um processo</h2>
+  <p>Desenhar o mapa é o começo. Gerir por processos é garantir que cada processo do mapa tenha o que precisa. A ISO 9001 lista oito elementos, no requisito 4.4.1. Eles servem de régua para saber quanto de cada processo já está definido.</p>
+
+<!--ELEMTAB-->
+
+  <figure id="fig-bars">
+    <div class="scroll">
+<!--CHART-->
+    </div>
+    <div class="tip" id="bars-tip" hidden></div>
+    <figcaption><b>Figura 7.</b> Elementos definidos em cada processo da pizzaria, de um total de oito. “Sim” vale um ponto, e “parcial”, meio. Só o processo de entrega tem os oito. Passe o mouse sobre as barras para ver os valores.</figcaption>
+    <details class="data">
+      <summary>Ver os dados em tabela</summary>
+      <div class="tbl">
+<!--CHARTTABLE-->
+      </div>
+    </details>
+  </figure>
+
+  <p>A leitura por coluna também ensina. Na pizzaria, todos os processos têm dono e quase todos têm recursos. O que falta é o que dá trabalho de gestão: indicadores, avaliação e melhoria. É o mesmo retrato do diagnóstico do estudo da <a href="../ISO-9001/treinamento-iso-9001.html#exemplos">ISO 9001</a>, visto por outro ângulo.</p>
+
+  <div class="note">
+    <h4>Por onde começar</h4>
+    <p>Não tente completar os oito elementos de todos os processos ao mesmo tempo. Comece pelos processos principais, e neles pelos elementos que faltam em mais lugares. Na pizzaria, o primeiro passo é dar um indicador a cada processo.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 7 ============================ -->
+<section id="erros">
+  <p class="eyebrow">Módulo 7</p>
+  <h2>Erros comuns</h2>
+  <div class="errs">
+    <div><h4>Copiar o organograma</h4><p>O mapa tem uma caixa para cada setor.</p><p class="fix"><b>Correção:</b> o mapa mostra o caminho do trabalho, que atravessa os setores. Comece pelo pedido do cliente.</p></div>
+    <div><h4>Mapear demais</h4><p>O mapa tem quarenta processos, e ninguém consegue ler.</p><p class="fix"><b>Correção:</b> fique entre oito e quinze. O detalhe vai para o SIPOC e para as instruções.</p></div>
+    <div><h4>Desenhar sem ligar</h4><p>As caixas estão no mapa, e ninguém escreveu o que uma entrega à outra.</p><p class="fix"><b>Correção:</b> descreva cada ligação: o que é entregue, e com que requisito.</p></div>
+    <div><h4>Deixar o processo sem dono</h4><p>“O processo é de todos.”</p><p class="fix"><b>Correção:</b> cada processo tem uma pessoa que responde pelo resultado, mesmo que várias áreas participem.</p></div>
+    <div><h4>Escrever o ideal</h4><p>A tartaruga mostra recursos e treinamentos que não existem.</p><p class="fix"><b>Correção:</b> escreva o que existe hoje, e marque o que falta. A lacuna é a informação mais útil.</p></div>
+    <div><h4>Fazer o mapa na sala</h4><p>O mapa é desenhado pela Qualidade, sem quem executa.</p><p class="fix"><b>Correção:</b> construa com os donos e valide acompanhando um pedido real.</p></div>
+    <div><h4>Guardar o mapa</h4><p>O mapa é de três anos atrás, e a empresa mudou duas vezes.</p><p class="fix"><b>Correção:</b> reveja o mapa a cada mudança de processo, de estrutura ou de sistema.</p></div>
+    <div><h4>Confundir tartaruga com procedimento</h4><p>A tartaruga tem quatro páginas de texto.</p><p class="fix"><b>Correção:</b> a tartaruga cabe em uma página e aponta para os documentos. Ela não os substitui.</p></div>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 8 ============================ -->
+<section id="ferramentas">
+  <p class="eyebrow">Módulo 8</p>
+  <h2>O mapa e outras ferramentas</h2>
+  <p>A tartaruga é o ponto de encontro dos estudos da série. Cada parte dela é o assunto de um estudo, e o mapa é o lugar onde todos os processos se encontram.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 270" role="img" aria-label="As partes da tartaruga e os estudos da série. Entradas e saídas: SIPOC. Com quem: Matriz RACI. Quanto: Indicadores. Riscos: Matriz de riscos. O processo inteiro: auditoria interna, que usa a tartaruga como roteiro, e o estudo da ISO 9001, no requisito 4.4.">
+        <defs>
+          <marker id="a8m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah-mu" d="M0 0 L10 5 L0 10 z"/></marker>
+        </defs>
+        <text class="mono mu" x="20" y="18" font-size="10">PARTE DA TARTARUGA</text>
+        <text class="mono mu" x="480" y="18" font-size="10">ESTUDO DA SÉRIE</text>
+        <g font-size="12">
+          <rect class="bx" x="20" y="28" width="380" height="40"/><text x="34" y="53"><tspan class="b">Entradas e saídas</tspan> · o fluxo do processo</text>
+          <rect class="bx" x="20" y="76" width="380" height="40"/><text x="34" y="101"><tspan class="b">Com quem?</tspan> · pessoas e papéis</text>
+          <rect class="bx" x="20" y="124" width="380" height="40"/><text x="34" y="149"><tspan class="b">Quanto?</tspan> · indicadores e metas</text>
+          <rect class="bx" x="20" y="172" width="380" height="40"/><text x="34" y="197"><tspan class="b">E se?</tspan> · riscos e respostas</text>
+          <rect class="bx-ink" x="20" y="220" width="380" height="40"/><text class="t-ground" x="34" y="245"><tspan class="b">O processo inteiro</tspan> · as sete partes</text>
+
+          <rect class="bx" x="480" y="28" width="400" height="40"/><text x="494" y="53"><tspan class="b">SIPOC</tspan> · fornecedores, etapas e clientes</text>
+          <rect class="bx" x="480" y="76" width="400" height="40"/><text x="494" y="101"><tspan class="b">Matriz RACI</tspan> · quem faz e quem responde</text>
+          <rect class="bx" x="480" y="124" width="400" height="40"/><text x="494" y="149"><tspan class="b">Indicadores</tspan> · ficha, meta e leitura do gráfico</text>
+          <rect class="bx" x="480" y="172" width="400" height="40"/><text x="494" y="197"><tspan class="b">Matriz de riscos</tspan> · nível e resposta</text>
+          <rect class="bx" x="480" y="220" width="400" height="40"/><text x="494" y="245"><tspan class="b">Auditoria interna</tspan> · a tartaruga como roteiro</text>
+        </g>
+        <g>
+          <line class="ln-mu" x1="402" y1="48" x2="476" y2="48" marker-end="url(#a8m)"/><line class="ln-mu" x1="402" y1="96" x2="476" y2="96" marker-end="url(#a8m)"/>
+          <line class="ln-mu" x1="402" y1="144" x2="476" y2="144" marker-end="url(#a8m)"/><line class="ln-mu" x1="402" y1="192" x2="476" y2="192" marker-end="url(#a8m)"/>
+          <line class="ln-mu" x1="402" y1="240" x2="476" y2="240" marker-end="url(#a8m)"/>
+        </g>
+      </svg>
+    </div>
+    <figcaption><b>Figura 8.</b> As partes da tartaruga e o estudo que aprofunda cada uma. As partes “com o quê” e “como” ainda não têm estudo próprio na série.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:26%">Ferramenta</th><th>Relação com o mapa e com a tartaruga</th></tr></thead>
+      <tbody>
+        <tr><td><a href="../ISO-9001/treinamento-iso-9001.html"><strong>ISO 9001 requisito a requisito</strong></a></td><td>O requisito 4.4 pede os processos e os oito elementos de cada um. O mapa e a tartaruga são a forma mais comum de atender.</td></tr>
+        <tr><td><a href="../SWOT/treinamento-swot.html"><strong>Matriz SWOT</strong></a></td><td>As forças e as fraquezas costumam estar em processos. O mapa ajuda a localizar cada uma.</td></tr>
+        <tr><td><a href="../SIPOC/treinamento-sipoc.html"><strong>SIPOC</strong></a></td><td>Detalha as entradas e as saídas da tartaruga, com as etapas do processo e os requisitos.</td></tr>
+        <tr><td><a href="../RACI/treinamento-raci.html"><strong>Matriz RACI</strong></a></td><td>Detalha a parte “com quem”: os papéis de cada pessoa em cada atividade.</td></tr>
+        <tr><td><a href="../Riscos/treinamento-riscos.html"><strong>Matriz de riscos</strong></a></td><td>A análise de riscos é feita por processo. Os riscos mais altos entram na tartaruga.</td></tr>
+        <tr><td><a href="../Indicadores/treinamento-indicadores.html"><strong>Indicadores</strong></a></td><td>Detalha a parte “quanto”: a ficha, a meta e a leitura de cada indicador.</td></tr>
+        <tr><td><a href="../Auditoria/treinamento-auditoria.html"><strong>Auditoria interna</strong></a></td><td>O programa de auditoria parte do mapa. A lista de verificação parte da tartaruga.</td></tr>
+        <tr><td><a href="../Nao-Conformidade/treinamento-nao-conformidade.html"><strong>Não conformidade e ação corretiva</strong></a></td><td>A verificação da abrangência usa o mapa: em que outros processos a mesma falha pode existir?</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 9 ============================ -->
+<section id="iso">
+  <p class="eyebrow">Módulo 9</p>
+  <h2>Nas normas ISO</h2>
+  <p>A abordagem de processo é um dos sete princípios de gestão da qualidade. A ISO 9001:2015 a apresenta na introdução e a transforma em requisito no item 4.4, “Sistema de gestão da qualidade e seus processos”. A norma não cita o mapa nem a tartaruga: pede que a organização determine os processos e os oito elementos de cada um.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 330" role="img" aria-label="Os oito elementos do requisito 4.4.1 da ISO 9001:2015 e a parte da tartaruga que responde a cada um. a, entradas e saídas: entradas e saídas. b, sequência e interação: mapa de processos. c, critérios e métodos: como e quanto. d, recursos: com o quê. e, responsabilidades e autoridades: dono do processo e com quem. f, riscos e oportunidades: riscos. g, avaliação e mudanças: quanto. h, melhoria: resultado dos indicadores e das ações.">
+        <defs>
+          <marker id="a9" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker>
+        </defs>
+        <rect class="hd-ink" x="20" y="14" width="430" height="34"/>
+        <text class="b t-ground" x="36" y="36" font-size="13">ISO 9001:2015, requisito 4.4.1</text>
+        <rect class="hd-ink" x="520" y="14" width="360" height="34"/>
+        <text class="b t-ground" x="536" y="36" font-size="13">Onde está a resposta</text>
+        <g font-size="12">
+          <rect class="bx" x="20" y="54" width="430" height="30"/><text x="36" y="74"><tspan class="b">a</tspan>  Entradas requeridas e saídas esperadas</text>
+          <rect class="bx" x="20" y="88" width="430" height="30"/><text x="36" y="108"><tspan class="b">b</tspan>  Sequência e interação dos processos</text>
+          <rect class="bx" x="20" y="122" width="430" height="30"/><text x="36" y="142"><tspan class="b">c</tspan>  Critérios, métodos, medições e indicadores</text>
+          <rect class="bx" x="20" y="156" width="430" height="30"/><text x="36" y="176"><tspan class="b">d</tspan>  Recursos necessários e disponíveis</text>
+          <rect class="bx" x="20" y="190" width="430" height="30"/><text x="36" y="210"><tspan class="b">e</tspan>  Responsabilidades e autoridades</text>
+          <rect class="bx" x="20" y="224" width="430" height="30"/><text x="36" y="244"><tspan class="b">f</tspan>  Riscos e oportunidades</text>
+          <rect class="bx" x="20" y="258" width="430" height="30"/><text x="36" y="278"><tspan class="b">g</tspan>  Avaliação dos processos e mudanças</text>
+          <rect class="bx" x="20" y="292" width="430" height="30"/><text x="36" y="312"><tspan class="b">h</tspan>  Melhoria dos processos e do sistema</text>
+
+          <rect class="bx" x="520" y="54" width="360" height="30"/><text x="536" y="74">Tartaruga: entradas e saídas</text>
+          <rect class="bx-d" x="520" y="88" width="360" height="30"/><text x="536" y="108">Mapa de processos e matriz de interações</text>
+          <rect class="bx" x="520" y="122" width="360" height="30"/><text x="536" y="142">Tartaruga: como e quanto</text>
+          <rect class="bx" x="520" y="156" width="360" height="30"/><text x="536" y="176">Tartaruga: com o quê</text>
+          <rect class="bx" x="520" y="190" width="360" height="30"/><text x="536" y="210">Tartaruga: dono do processo e com quem</text>
+          <rect class="bx" x="520" y="224" width="360" height="30"/><text x="536" y="244">Tartaruga: riscos</text>
+          <rect class="bx" x="520" y="258" width="360" height="30"/><text x="536" y="278">Reunião de indicadores e análise crítica</text>
+          <rect class="bx" x="520" y="292" width="360" height="30"/><text x="536" y="312">Ações de melhoria e ações corretivas</text>
+        </g>
+        <g>
+          <line class="ln" x1="452" y1="69" x2="516" y2="69" marker-end="url(#a9)"/><line class="ln" x1="452" y1="103" x2="516" y2="103" marker-end="url(#a9)"/>
+          <line class="ln" x1="452" y1="137" x2="516" y2="137" marker-end="url(#a9)"/><line class="ln" x1="452" y1="171" x2="516" y2="171" marker-end="url(#a9)"/>
+          <line class="ln" x1="452" y1="205" x2="516" y2="205" marker-end="url(#a9)"/><line class="ln" x1="452" y1="239" x2="516" y2="239" marker-end="url(#a9)"/>
+          <line class="ln" x1="452" y1="273" x2="516" y2="273" marker-end="url(#a9)"/><line class="ln" x1="452" y1="307" x2="516" y2="307" marker-end="url(#a9)"/>
+        </g>
+      </svg>
+    </div>
+    <figcaption><b>Figura 9.</b> Os oito elementos do requisito 4.4.1 e onde cada um é respondido. O texto da figura é um resumo, com palavras próprias. Os dois últimos elementos não cabem em um desenho: eles aparecem no uso.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:10%">Item</th><th style="width:30%">O que pede, em resumo</th><th style="width:28%">O que isso significa</th><th>Evidências que o auditor procura</th></tr></thead>
+      <tbody>
+        <tr><td class="num">4.4.1</td><td>Estabelecer, implementar, manter e melhorar o sistema, com os processos necessários e as interações entre eles</td><td>A organização sabe quais são os seus processos e como se ligam.</td><td>Mapa de processos, ou outra descrição equivalente.</td></tr>
+        <tr><td class="num">4.4.1 a–h</td><td>Determinar, para cada processo, os oito elementos da figura 9</td><td>Cada processo tem o que precisa para funcionar e ser gerido.</td><td>Tartaruga, SIPOC ou procedimento, com dono, indicador e riscos.</td></tr>
+        <tr><td class="num">4.4.2</td><td>Manter informação documentada para apoiar a operação dos processos, e reter a que mostra que eles são realizados conforme o planejado</td><td>A organização decide quanto documentar, e guarda os registros.</td><td>Documentos na extensão necessária, e registros dos processos.</td></tr>
+        <tr><td class="num">5.1.1</td><td>A alta direção deve promover o uso da abordagem de processo e da mentalidade de risco</td><td>A direção fala em processos, e não só em setores.</td><td>Entrevista com a direção e pauta da análise crítica.</td></tr>
+        <tr><td class="num">5.3</td><td>Atribuir a responsabilidade por assegurar que os processos entreguem as saídas pretendidas</td><td>Cada processo tem um dono, com autoridade.</td><td>Donos dos processos nomeados e conhecidos.</td></tr>
+        <tr><td class="num">9.1.3</td><td>Analisar e avaliar o desempenho dos processos</td><td>Os indicadores dos processos são analisados.</td><td>Indicadores por processo, com decisões registradas.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pair">
+    <div class="box">
+      <h4>O que a ISO 9001 exige</h4>
+      <ul>
+        <li>Determinar os processos necessários.</li>
+        <li>Determinar a sequência e a interação.</li>
+        <li>Determinar os oito elementos de cada processo.</li>
+        <li>Documentar na extensão necessária.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h4>O que a ISO 9001 não exige</h4>
+      <ul>
+        <li>Um mapa de processos desenhado.</li>
+        <li>O diagrama de tartaruga.</li>
+        <li>A divisão em gestão, principais e apoio.</li>
+        <li>Um procedimento para cada processo.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="note">
+    <h4>Pontos de atenção</h4>
+    <p>O diagrama de tartaruga ficou conhecido nas auditorias do setor automotivo, e é muito usado em auditorias de processo. Ele é uma ferramenta, e não um requisito: um auditor não pode apontar não conformidade pela falta do diagrama.</p>
+    <p>Este módulo usa a numeração da ISO 9001:2015 e resume os textos com palavras próprias. Confira sempre a edição vigente da norma antes de citar um requisito em relatório.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 10 ============================ -->
+<section id="oficina">
+  <p class="eyebrow">Módulo 10</p>
+  <h2>A oficina de mapeamento</h2>
+  <p>O mapa de uma organização pequena ou média cabe em uma oficina de duas horas, com a direção e os responsáveis pelas áreas. As tartarugas vêm depois, uma por vez, em reuniões de uma hora com o dono de cada processo.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 136" role="img" aria-label="Distribuição de uma oficina de mapeamento de 120 minutos: 10 minutos para o cliente, 35 minutos para os processos principais, 25 minutos para os processos de apoio e de gestão, 30 minutos para as ligações, 15 minutos para os donos e os indicadores e 5 minutos para o fecho.">
+        <g font-size="11.5" text-anchor="middle">
+          <rect class="bx" x="60" y="24" width="65" height="56"/><text x="92.5" y="56" font-size="10.5">Cliente</text>
+          <rect class="hd-d gap2" x="125" y="24" width="227.5" height="56"/><text class="on b" x="238.8" y="56">Processos principais</text>
+          <rect class="bx" x="352.5" y="24" width="162.5" height="56"/><text x="433.8" y="49">Apoio</text><text x="433.8" y="64">e gestão</text>
+          <rect class="hd-ink gap2" x="515" y="24" width="195" height="56"/><text class="t-ground b" x="612.5" y="56">Ligações</text>
+          <rect class="bx" x="710" y="24" width="97.5" height="56"/><text x="758.8" y="49" font-size="10.5">Donos e</text><text x="758.8" y="64" font-size="10.5">indicadores</text>
+          <rect class="bx" x="807.5" y="24" width="32.5" height="56"/>
+        </g>
+        <g class="ln-mu" stroke-width="1">
+          <line x1="60" y1="82" x2="60" y2="94"/><line x1="125" y1="82" x2="125" y2="94"/><line x1="352.5" y1="82" x2="352.5" y2="94"/>
+          <line x1="515" y1="82" x2="515" y2="94"/><line x1="710" y1="82" x2="710" y2="94"/><line x1="807.5" y1="82" x2="807.5" y2="94"/>
+          <line x1="840" y1="82" x2="840" y2="94"/>
+        </g>
+        <g class="mono" font-size="10.5" text-anchor="middle">
+          <text class="mu" x="60" y="112">0</text><text class="mu" x="125" y="112">10</text><text class="mu" x="352.5" y="112">45</text>
+          <text class="mu" x="515" y="112">70</text><text class="mu" x="710" y="112">100</text><text class="mu" x="800" y="112">115</text>
+          <text class="mu" x="848" y="112">120</text>
+        </g>
+        <text class="mu" x="823.8" y="16" font-size="10.5" text-anchor="middle">fecho</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 10.</b> Uma oficina de mapeamento de duas horas, desenhada em escala. As ligações ocupam um quarto do tempo: é a parte que mais gera discussão, e a que mais vale.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Momento</th><th style="width:42%">O que fazer</th><th>Frases que ajudam</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Cliente</strong></td><td>Escrever o que o cliente pede e o que ele recebe, nas duas pontas do quadro.</td><td>“O que o cliente leva daqui?”</td></tr>
+        <tr><td><strong>Processos principais</strong></td><td>Seguir um pedido real, do início ao fim, e dar nome a cada transformação.</td><td>“E depois, para onde vai?”</td></tr>
+        <tr><td><strong>Apoio e gestão</strong></td><td>Listar o que os processos principais precisam receber, e quem dá o rumo.</td><td>“De que este processo depende?”</td></tr>
+        <tr><td><strong>Ligações</strong></td><td>Escrever, em cada seta, o que é entregue. Marcar as passagens em que há falha.</td><td>“O que você precisa receber, e como?”</td></tr>
+        <tr><td><strong>Donos e indicadores</strong></td><td>Definir quem responde por cada processo e como o resultado é medido.</td><td>“Quem responde quando isso não sai?”</td></tr>
+        <tr><td><strong>Fecho</strong></td><td>Marcar as reuniões das tartarugas e a data de validação do mapa.</td><td>“Que processo começamos a detalhar?”</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Use papéis adesivos em uma parede, um por processo. O mapa vai mudar muitas vezes durante a oficina, e o desenho definitivo fica para depois.</p>
+
+  <h3>Checklist de validação</h3>
+  <p>Marque os itens conforme revisa o seu mapa. As marcações ficam salvas neste navegador.</p>
+  <ol class="check" id="checklist">
+<!--CHECK-->
+  </ol>
+  <div class="bar"><span><b id="ck-count">0</b> de 12 itens marcados</span><button class="btn" id="ck-reset" type="button">Limpar marcações</button></div>
+</section>
+
+<!-- ============================ MÓDULO 11 ============================ -->
+<section id="pratique">
+  <p class="eyebrow">Módulo 11</p>
+  <h2>Pratique</h2>
+  <h3>Exercício 1. Em que parte da tartaruga?</h3>
+  <p>Cada item traz uma informação sobre um processo. Escolha a parte da tartaruga em que ela deve ser escrita.</p>
+  <div class="quiz" id="quiz"></div>
+  <div class="bar"><span>Acertos: <b id="qz-score">0</b> de <b id="qz-total">12</b></span><span>Respondidos: <b id="qz-done">0</b></span><button class="btn" id="qz-reset" type="button">Recomeçar</button></div>
+
+  <h3>Exercício 2. Desenhe o mapa e uma tartaruga</h3>
+  <p>Escolha uma organização ou uma área que você conhece bem. Abra a planilha de apoio e siga o roteiro.</p>
+  <ol>
+    <li>Na aba Processos, liste de oito a doze processos, com tipo, dono e objetivo.</li>
+    <li>Escreva o indicador de cada processo, ou deixe em branco quando não houver.</li>
+    <li>Na aba Interações, escreva o que cada processo entrega aos outros.</li>
+    <li>Na aba Elementos, avalie os oito elementos de cada processo.</li>
+    <li>Escolha o processo principal mais importante e preencha a aba Tartaruga.</li>
+    <li>Confira se as entradas e as saídas da tartaruga aparecem na aba Interações.</li>
+    <li>Passe o checklist do módulo 10.</li>
+  </ol>
+  <p>Depois, escolha um pedido real da semana passada e siga o caminho dele pelo mapa. Anote cada lugar por onde ele passou e que não está no mapa, e cada passagem em que ele ficou parado.</p>
+</section>
+
+<!-- ============================ MÓDULO 12 ============================ -->
+<section id="planilha">
+  <p class="eyebrow">Módulo 12</p>
+  <h2>A planilha de apoio</h2>
+  <p>Este treinamento acompanha o arquivo <a id="xlsx-ref" href="Processos-modelo.xlsx">Processos-modelo.xlsx</a>, que fica na mesma pasta. As células em amarelo-claro são para preenchimento. As células cinza são calculadas.</p>
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Aba</th><th>Para que serve</th><th style="width:36%">O que ela calcula</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Instruções</strong></td><td>Legenda de cores, ordem de preenchimento e regras do modelo.</td><td>Nada. É só leitura.</td></tr>
+        <tr><td><strong>Processos</strong></td><td>Lista de até 12 processos, com tipo, dono, objetivo, entradas, saídas e indicador.</td><td>Conferência dos campos e contagem por tipo.</td></tr>
+        <tr><td><strong>Interações</strong></td><td>Matriz com o que cada processo entrega aos outros.</td><td>Entregas e recebimentos de cada processo, e processos sem ligação.</td></tr>
+        <tr><td><strong>Tartaruga</strong></td><td>As sete partes de um processo, com os dados do processo escolhido.</td><td>Conferência de cada parte e situação da tartaruga.</td></tr>
+        <tr><td><strong>Elementos</strong></td><td>Avaliação dos oito elementos de cada processo.</td><td>Pontos e percentual por processo e por elemento, e gráfico.</td></tr>
+        <tr><td><strong>Checklist</strong></td><td>Os mesmos 12 itens do módulo 10, com status Sim, Parcial ou Não.</td><td>Percentual atendido e situação da validação.</td></tr>
+        <tr><td><strong>Exemplo 1 e Exemplo 2</strong></td><td>O mapa e a tartaruga da pizzaria, e a tartaruga do processo de compras.</td><td>Percentual de elementos por processo e contagens.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ GLOSSÁRIO ============================ -->
+<section id="glossario">
+  <p class="eyebrow">Referência</p>
+  <h2>Glossário</h2>
+  <dl class="gloss">
+    <div><dt>Abordagem de processo</dt><dd>Forma de gerir as atividades como processos ligados, em que a saída de um é a entrada de outro.</dd></div>
+    <div><dt>Cliente do processo</dt><dd>Quem recebe a saída do processo. Pode ser o cliente externo ou outro processo.</dd></div>
+    <div><dt>Diagrama de tartaruga</dt><dd>Desenho de um processo com as entradas, as saídas, os recursos, as pessoas, os métodos e os indicadores.</dd></div>
+    <div><dt>Dono do processo</dt><dd>Pessoa que responde pelo resultado do processo, com autoridade para mudá-lo.</dd></div>
+    <div><dt>Entrada</dt><dd>O que o processo recebe para transformar.</dd></div>
+    <div><dt>Interação</dt><dd>Ligação entre dois processos: o que um entrega e o outro recebe.</dd></div>
+    <div><dt>Macroprocesso</dt><dd>Conjunto de processos que, juntos, entregam um resultado ao cliente.</dd></div>
+    <div><dt>Mapa de processos</dt><dd>Desenho dos processos da organização e das ligações entre eles.</dd></div>
+    <div><dt>Processo</dt><dd>Conjunto de atividades que usa entradas para entregar um resultado pretendido.</dd></div>
+    <div><dt>Processo de apoio</dt><dd>Processo que fornece recursos aos outros processos.</dd></div>
+    <div><dt>Processo de gestão</dt><dd>Processo que define o rumo, os objetivos e os recursos, e confere os resultados.</dd></div>
+    <div><dt>Processo principal</dt><dd>Processo que transforma o pedido do cliente em produto ou serviço entregue.</dd></div>
+    <div><dt>Processo terceirizado</dt><dd>Processo executado por um provedor externo, que continua sob a responsabilidade da organização.</dd></div>
+    <div><dt>Saída</dt><dd>Resultado do processo: produto, serviço ou informação.</dd></div>
+  </dl>
+</section>
+
+</main>
+</div>
+
+<footer>Material de estudo. Os exemplos, documentos e números são ilustrativos e foram criados para fins didáticos. As referências às normas ISO são resumos para estudo e não substituem o texto das normas.</footer>
+</div>
+
+<script>
+(function () {
+  function read(key) { try { return JSON.parse(localStorage.getItem(key) || 'null'); } catch (e) { return null; } }
+  function write(key, val) { try { localStorage.setItem(key, JSON.stringify(val)); } catch (e) {} }
+
+  /* ---------- Checklist ---------- */
+  var boxes = Array.prototype.slice.call(document.querySelectorAll('#checklist input'));
+  var count = document.getElementById('ck-count');
+  var saved = read('processos-checklist') || {};
+  function refreshChecks() {
+    var n = 0, state = {};
+    boxes.forEach(function (b) { if (b.checked) { n++; } state[b.id] = b.checked; });
+    count.textContent = n;
+    return state;
+  }
+  boxes.forEach(function (b) {
+    if (saved[b.id]) { b.checked = true; }
+    b.addEventListener('change', function () { write('processos-checklist', refreshChecks()); });
+  });
+  refreshChecks();
+  document.getElementById('ck-reset').addEventListener('click', function () {
+    boxes.forEach(function (b) { b.checked = false; });
+    write('processos-checklist', refreshChecks());
+  });
+
+  /* ---------- Exercício ---------- */
+  var KEYS = ['E', 'S', 'R', 'P', 'M', 'I'];
+  var LABEL = { E: 'Entrada', S: 'Saída', R: 'Com o quê', P: 'Com quem', M: 'Como', I: 'Quanto' };
+  var NAMES = { E: 'entrada', S: 'saída', R: 'com o quê, os recursos', P: 'com quem, as pessoas', M: 'como, os métodos', I: 'quanto, os indicadores' };
+  var ITEMS = [
+    { t: 'Processo de compras: requisição aprovada, com especificação.', a: 'E', w: 'É o que o processo recebe para trabalhar.' },
+    { t: 'Processo de compras: pedido de compra emitido ao fornecedor.', a: 'S', w: 'É o que o processo entrega.' },
+    { t: 'Processo de compras: sistema de compras e cadastro de fornecedores.', a: 'R', w: 'São recursos: o que o processo usa, e não o que transforma.' },
+    { t: 'Processo de compras: compradores treinados no procedimento.', a: 'P', w: 'São as pessoas, com a competência necessária.' },
+    { t: 'Processo de compras: procedimento PR-SUP-01 e política de alçadas.', a: 'M', w: 'São os métodos: os documentos que dizem como fazer.' },
+    { t: 'Processo de compras: prazo médio de atendimento das requisições.', a: 'I', w: 'É um indicador, com meta.' },
+    { t: 'Processo de entrega: motos revisadas e bolsas térmicas.', a: 'R', w: 'São recursos do processo.' },
+    { t: 'Processo de entrega: pedido entregue ao cliente.', a: 'S', w: 'É a saída que justifica o processo.' },
+    { t: 'Processo de entrega: pedido embalado e conferido.', a: 'E', w: 'É a saída do processo de produção, e a entrada deste.' },
+    { t: 'Processo de entrega: instrução IT-EXP-01, de agrupamento por zona.', a: 'M', w: 'A instrução diz como o trabalho é feito.' },
+    { t: 'Processo de entrega: entregadores com habilitação e treinamento de direção segura.', a: 'P', w: 'É a parte das pessoas e das competências.' },
+    { t: 'Processo de entrega: percentual de entregas em até 40 minutos.', a: 'I', w: 'É o indicador de resultado do processo.' }
+  ];
+  var quiz = document.getElementById('quiz');
+  var score = document.getElementById('qz-score');
+  var done = document.getElementById('qz-done');
+  document.getElementById('qz-total').textContent = ITEMS.length;
+  var hits = 0, answered = 0;
+
+  function render() {
+    hits = 0; answered = 0; score.textContent = 0; done.textContent = 0;
+    quiz.textContent = '';
+    ITEMS.forEach(function (item, idx) {
+      var row = document.createElement('div'); row.className = 'q';
+      var p = document.createElement('p'); p.textContent = (idx + 1) + '. ' + item.t;
+      var opts = document.createElement('div'); opts.className = 'opts';
+      opts.setAttribute('role', 'group'); opts.setAttribute('aria-label', 'Parte da tartaruga do item ' + (idx + 1));
+      var why = document.createElement('p'); why.className = 'why'; why.hidden = true;
+      KEYS.forEach(function (k) {
+        var b = document.createElement('button');
+        b.type = 'button'; b.textContent = LABEL[k]; b.id = 'qz-' + idx + '-' + k;
+        b.setAttribute('data-k', k);
+        b.addEventListener('click', function () {
+          var ok = k === item.a;
+          Array.prototype.forEach.call(opts.children, function (o) {
+            o.disabled = true;
+            if (o.getAttribute('data-k') === item.a) { o.className = 'right'; }
+          });
+          if (!ok) { b.className = 'wrong'; }
+          var lead = document.createElement('b');
+          lead.textContent = (ok ? 'Certo. ' : 'A resposta é ' + NAMES[item.a] + '. ');
+          why.textContent = ''; why.appendChild(lead); why.appendChild(document.createTextNode(item.w));
+          why.className = 'why ' + (ok ? 'ok' : 'no'); why.hidden = false;
+          answered++; if (ok) { hits++; }
+          score.textContent = hits; done.textContent = answered;
+        });
+        opts.appendChild(b);
+      });
+      row.appendChild(p); row.appendChild(opts); row.appendChild(why);
+      quiz.appendChild(row);
+    });
+  }
+  render();
+  document.getElementById('qz-reset').addEventListener('click', render);
+
+  /* ---------- Gráfico: leitura dos valores ---------- */
+  var fig = document.getElementById('fig-bars');
+  var tip = document.getElementById('bars-tip');
+  var svg = document.getElementById('bars');
+  var segs = document.querySelectorAll('#bars .seg');
+  function hide() {
+    tip.hidden = true;
+    Array.prototype.forEach.call(segs, function (b) { b.removeAttribute('opacity'); });
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('#bars .hit'), function (r) {
+    function show() {
+      var d = r.dataset;
+      Array.prototype.forEach.call(segs, function (b) {
+        b.setAttribute('opacity', b.getAttribute('data-k') === d.k ? '1' : '.4');
+      });
+      tip.textContent = '';
+      var strong = document.createElement('b'); strong.textContent = d.pts + ' de 8 elementos';
+      tip.appendChild(strong);
+      tip.appendChild(document.createTextNode(d.id + ' · ' + d.n + ' · ' + d.t));
+      tip.appendChild(document.createElement('br'));
+      tip.appendChild(document.createTextNode('Sim: ' + d.s + ' · Parcial: ' + d.p + ' · Não: ' + d.x));
+      var box = fig.getBoundingClientRect(), rb = r.getBoundingClientRect();
+      var pt = svg.createSVGPoint(); pt.x = parseFloat(d.cx); pt.y = 0;
+      var scr = pt.matrixTransform(svg.getScreenCTM());
+      tip.style.left = Math.min(Math.max(scr.x - box.left, 170), box.width - 170) + 'px';
+      tip.style.top = (rb.top - box.top + 4) + 'px';
+      tip.hidden = false;
+    }
+    r.addEventListener('pointerenter', show);
+    r.addEventListener('focus', show);
+    r.addEventListener('pointerleave', hide);
+    r.addEventListener('blur', hide);
+  });
+})();
+</script>
+</body>
+</html>

@@ -204,7 +204,7 @@ tb.append(f'            <tr class="tot"><td>Total</td><td class="c">{GERAL[0]}</
 tb += ['          </tbody>', '        </table>']
 
 # ---- figura 9: estudos da série × seções da norma
-ORDEM = ["swot", "sipoc", "raci", "riscos", "ind", "gut", "ishikawa", "w5h2", "pdca", "auditoria", "nc"]
+ORDEM = ["swot", "proc", "sipoc", "raci", "riscos", "ind", "gut", "ishikawa", "w5h2", "pdca", "auditoria", "nc"]
 CX = lambda j: 350 + j * 80  # noqa: E731
 HD = {"base": "hd-ink", "p": "hd-p", "d": "hd-d", "c": "hd-c", "a": "hd-a"}
 RY, R0 = 32, 70
@@ -231,7 +231,7 @@ mz.append("      </svg>")
 AJUDA = {
     "4.1": "Organiza as questões internas e externas em forças, fraquezas, oportunidades e ameaças.",
     "4.2": "Registra o que clientes, fornecedores e órgãos reguladores esperam, como parte do ambiente externo.",
-    "4.4": "Descreve cada processo: fornecedores, entradas, etapas, saídas e clientes.",
+    "4.4": "O Mapa de processos mostra os processos e as ligações entre eles. O SIPOC e a tartaruga descrevem cada processo.",
     "5.3": "Mostra quem executa, quem responde, quem é consultado e quem é informado.",
     "6.1": "A SWOT levanta os riscos e as oportunidades. A Matriz de riscos avalia o nível e define a resposta.",
     "6.2": "O estudo de Indicadores liga o objetivo à medida e à meta. O 5W2H transforma a meta em plano.",

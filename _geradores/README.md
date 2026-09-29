@@ -28,6 +28,7 @@ Os nomes curtos dos estudos são:
 | `iso` | ISO 9001 requisito a requisito | `ISO-9001/` |
 | `risk` | Matriz de riscos | `Riscos/` |
 | `ind` | Indicadores | `Indicadores/` |
+| `proc` | Mapa de processos e diagrama de tartaruga | `Processos/` |
 
 ## Preparação
 
@@ -68,7 +69,7 @@ O estudo de SWOT não tem arquivo de dados: os exemplos estão dentro de `build_
 
 ## Testes
 
-A pasta `testes/` tem os roteiros usados para conferir as fórmulas de quatro planilhas. Cada par preenche uma cópia do modelo com dados de teste, inclusive erros propositais, e lê os resultados depois do recálculo.
+A pasta `testes/` tem os roteiros usados para conferir as fórmulas de cinco planilhas. Cada par preenche uma cópia do modelo com dados de teste, inclusive erros propositais, e lê os resultados depois do recálculo.
 
 ```bash
 PY=_geradores/.venv/bin/python
@@ -77,4 +78,4 @@ soffice --headless --convert-to 'xlsx:Calc MS Excel 2007 XML' --outdir /tmp/test
 $PY _geradores/testes/rk_test_read.py /tmp/teste/saida
 ```
 
-Os roteiros importam os arquivos de dados desta pasta. O de indicadores já encontra a pasta sozinho. Para rodar os outros, informe o caminho de `_geradores/` em `PYTHONPATH`.
+Os roteiros importam os arquivos de dados desta pasta. Os de indicadores e de processos já encontram a pasta sozinhos. Para rodar os outros, informe o caminho de `_geradores/` em `PYTHONPATH`.

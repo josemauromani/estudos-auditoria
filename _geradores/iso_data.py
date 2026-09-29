@@ -24,6 +24,7 @@ FASE = {4: "base", 5: "base", 6: "p", 7: "d", 8: "d", 9: "c", 10: "a"}
 # estudos da série: chave -> (nome, caminho a partir da pasta do estudo)
 ESTUDOS = {
     "swot": ("Matriz SWOT", "../SWOT/treinamento-swot.html"),
+    "proc": ("Mapa de processos e tartaruga", "../Processos/treinamento-processos.html"),
     "sipoc": ("SIPOC", "../SIPOC/treinamento-sipoc.html"),
     "raci": ("Matriz RACI", "../RACI/treinamento-raci.html"),
     "riscos": ("Matriz de riscos", "../Riscos/treinamento-riscos.html"),
@@ -64,7 +65,7 @@ REQ = _req([
     ("4.4", "Sistema de gestão da qualidade e seus processos",
      "Determinar os processos necessários, com entradas, saídas, sequência, interação, critérios, recursos, responsáveis, riscos e oportunidades. Avaliar os processos e melhorá-los.",
      "Quais são os processos, como se ligam e como se sabe que funcionam?",
-     "Mapa de processos, SIPOC, indicadores por processo.", ("sipoc",)),
+     "Mapa de processos, SIPOC, indicadores por processo.", ("proc", "sipoc")),
     # ------------------------------------------------------------ 5
     ("5.1.1", "Liderança e comprometimento: generalidades",
      "A alta direção deve demonstrar liderança: responder pela eficácia do sistema, assegurar política e objetivos compatíveis com a estratégia, integrar os requisitos aos processos do negócio, prover recursos e promover a melhoria.",

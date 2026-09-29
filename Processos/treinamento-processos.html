@@ -1,0 +1,1406 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mapa de processos e tartaruga</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<style>
+:root{
+  --ground:#F3F6F7; --surface:#FFFFFF; --sunk:#E9EEF0; --ink:#16242E; --muted:#566672; --rule:#D3DBE0;
+  --accent:#2B5C8A;
+  --p:#2B5C8A; --p-tint:#DCE8F3;
+  --d:#A96A12; --d-tint:#F6E8CF;
+  --c:#1E7B73; --c-tint:#D9EEEB;
+  --a:#B0413E; --a-tint:#F5DEDC;
+  --on-hue:#FFFFFF;
+  --good:#1F7A4D; --good-tint:#DDF1E5;
+  --bad:#B0413E; --bad-tint:#F5DEDC;
+  --display:"Barlow Semi Condensed","Arial Narrow",Arial,sans-serif;
+  --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --ground:#0F171C; --surface:#172229; --sunk:#1E2B33; --ink:#E4EAED; --muted:#9BABB6; --rule:#2B3A44;
+    --accent:#86B7E3;
+    --p:#86B7E3; --p-tint:#1B2F42;
+    --d:#E2AC4F; --d-tint:#3A2C12;
+    --c:#5FC6BA; --c-tint:#15332F;
+    --a:#EC8E89; --a-tint:#3D1F1E;
+    --on-hue:#0F171C;
+    --good:#6FCF9B; --good-tint:#163326;
+    --bad:#EC8E89; --bad-tint:#3D1F1E;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --ground:#0F171C; --surface:#172229; --sunk:#1E2B33; --ink:#E4EAED; --muted:#9BABB6; --rule:#2B3A44;
+  --accent:#86B7E3;
+  --p:#86B7E3; --p-tint:#1B2F42;
+  --d:#E2AC4F; --d-tint:#3A2C12;
+  --c:#5FC6BA; --c-tint:#15332F;
+  --a:#EC8E89; --a-tint:#3D1F1E;
+  --on-hue:#0F171C;
+  --good:#6FCF9B; --good-tint:#163326;
+  --bad:#EC8E89; --bad-tint:#3D1F1E;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--ground);color:var(--ink);font:400 16px/1.65 var(--body);-webkit-text-size-adjust:100%}
+a{color:var(--accent);text-underline-offset:3px}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.page{max-width:1180px;margin-inline:auto;padding-inline:20px;padding-block:36px 80px}
+
+/* Cabeçalho */
+.mast{display:flex;flex-direction:column;gap:18px;padding-bottom:32px;border-bottom:1px solid var(--rule)}
+.tiles{display:flex;gap:6px}
+.tiles span{width:44px;height:44px;display:grid;place-items:center;font:700 24px/1 var(--display);color:var(--on-hue)}
+.tiles .p{background:var(--p)} .tiles .d{background:var(--d)} .tiles .c{background:var(--c)} .tiles .a{background:var(--a)}
+h1{font:700 clamp(2.3rem,6vw,3.6rem)/1.02 var(--display);letter-spacing:-.01em;margin:0;text-wrap:balance}
+.lead{font-size:1.15rem;line-height:1.55;max-width:62ch;margin:0;color:var(--ink)}
+.meta{display:flex;flex-direction:row;flex-wrap:wrap;gap:6px 22px;font:400 .8rem/1.4 var(--mono);color:var(--muted);margin:0;padding:0;list-style:none}
+
+/* Estrutura */
+.layout{display:grid;grid-template-columns:minmax(0,1fr);gap:32px;padding-top:32px}
+.toc{font-size:.92rem}
+.toc h2{font:500 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+.toc ol{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:2px 20px;counter-reset:toc}
+.toc li{counter-increment:toc}
+.toc a{display:flex;gap:10px;padding:5px 0;color:var(--ink);text-decoration:none;line-height:1.35}
+.toc a::before{content:counter(toc,decimal-leading-zero);font:400 .75rem/1.7 var(--mono);color:var(--muted)}
+.toc a:hover{color:var(--accent);text-decoration:underline}
+@media (min-width:1020px){
+  .layout{grid-template-columns:200px minmax(0,1fr);gap:64px}
+  .toc{position:sticky;top:calc(env(safe-area-inset-top,0px) + 24px);align-self:start}
+  .toc ol{grid-template-columns:1fr}
+}
+main{display:flex;flex-direction:column;gap:72px;min-width:0}
+section{display:flex;flex-direction:column;gap:20px;scroll-margin-top:24px}
+.eyebrow{font:500 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0}
+h2{font:700 clamp(1.7rem,4vw,2.2rem)/1.1 var(--display);margin:0;text-wrap:balance}
+h3{font:600 1.3rem/1.2 var(--display);margin:12px 0 0;text-wrap:balance}
+h4{font:600 .95rem/1.3 var(--body);margin:0}
+p{margin:0}
+section > p, section > ul, section > ol, section > h3{max-width:68ch}
+ul,ol{margin:0;padding-left:1.25em;display:flex;flex-direction:column;gap:6px}
+strong{font-weight:600}
+code{font:400 .88em var(--mono);background:var(--sunk);padding:1px 5px;border-radius:3px}
+
+/* Letras coloridas no texto */
+.k{display:inline-grid;place-items:center;width:1.45em;height:1.45em;font:700 .85em/1 var(--display);color:var(--on-hue);vertical-align:.05em}
+.k.p{background:var(--p)} .k.d{background:var(--d)} .k.c{background:var(--c)} .k.a{background:var(--a)}
+
+/* Figuras */
+figure{margin:0;display:flex;flex-direction:column;gap:10px;position:relative}
+.scroll{overflow-x:auto;background:var(--surface);border:1px solid var(--rule);padding:18px}
+.scroll svg{display:block;width:100%;min-width:820px;height:auto;color:var(--ink)}
+figcaption{font-size:.86rem;line-height:1.5;color:var(--muted);max-width:72ch}
+figcaption b{color:var(--ink);font-weight:600}
+svg text{font-family:var(--body);fill:var(--ink)}
+svg .disp{font-family:var(--display);font-weight:700}
+svg .mono{font-family:var(--mono);letter-spacing:.08em}
+svg .on{fill:var(--on-hue)}
+svg .mu{fill:var(--muted)}
+svg .b{font-weight:600}
+svg .ln{stroke:var(--ink);stroke-width:1.5;fill:none}
+svg .ln-mu{stroke:var(--muted);stroke-width:1.5;fill:none}
+svg .ln-bold{stroke:var(--ink);stroke-width:3;fill:none;stroke-linejoin:round;stroke-linecap:round}
+svg .dash{stroke-dasharray:5 4}
+svg .ah{fill:var(--ink)} svg .ah-mu{fill:var(--muted)}
+svg .bx{fill:var(--surface);stroke:var(--rule);stroke-width:1.5}
+svg .bx-ink{fill:var(--ink);stroke:var(--ink)}
+svg .t-ground{fill:var(--ground)}
+svg .bx-out{fill:none;stroke:var(--muted);stroke-width:1.5;stroke-dasharray:5 4}
+svg .bx-p{fill:var(--p-tint);stroke:var(--p);stroke-width:1.5} svg .hd-p{fill:var(--p)}
+svg .bx-d{fill:var(--d-tint);stroke:var(--d);stroke-width:1.5} svg .hd-d{fill:var(--d)}
+svg .bx-c{fill:var(--c-tint);stroke:var(--c);stroke-width:1.5} svg .hd-c{fill:var(--c)}
+svg .bx-a{fill:var(--a-tint);stroke:var(--a);stroke-width:1.5} svg .hd-a{fill:var(--a)}
+svg .gap{stroke:var(--surface);stroke-width:4}
+svg .gap2{stroke:var(--surface);stroke-width:2}
+svg .hub{fill:var(--surface)}
+
+/* Gráfico */
+svg .grid{stroke:var(--rule);stroke-width:1}
+svg .band{fill:var(--sunk)}
+svg .series{stroke:var(--accent);stroke-width:2;fill:none;stroke-linejoin:round;stroke-linecap:round}
+svg .pt{fill:var(--accent);stroke:var(--surface);stroke-width:2}
+svg .pt.on-hit{stroke:var(--ink)}
+svg .goal{stroke:var(--muted);stroke-width:1.5;stroke-dasharray:6 4;fill:none}
+svg .xh{stroke:var(--muted);stroke-width:1}
+svg .hit{fill:transparent;cursor:crosshair;outline:none}
+svg .root{fill:var(--accent);stroke:var(--surface);stroke-width:2}
+.tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--ground);padding:6px 10px;font-size:.78rem;line-height:1.4;transform:translate(-50%,calc(-100% - 14px));white-space:nowrap;z-index:2}
+.tip b{display:block;font:600 1.05rem/1.2 var(--body)}
+details.data{font-size:.88rem}
+details.data summary{cursor:pointer;font:400 .82rem var(--mono);color:var(--muted);padding:4px 0}
+details.data .tbl{margin-top:8px}
+details.data table{min-width:420px}
+
+/* Tabelas */
+.tbl{overflow-x:auto;border:1px solid var(--rule);background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:780px;font-size:.88rem;line-height:1.4}
+th,td{padding:9px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--rule)}
+tr:last-child > td{border-bottom:0}
+thead th{font:600 .8rem/1.3 var(--body);background:var(--sunk)}
+td.num{font-variant-numeric:tabular-nums;white-space:nowrap;font-family:var(--mono);font-size:.82rem}
+
+/* Tipos de processo */
+.chip{display:inline-block;padding:2px 8px;font:600 .76rem/1.45 var(--body);color:var(--on-hue);white-space:nowrap}
+.chip.p{background:var(--p)} .chip.d{background:var(--d)} .chip.c{background:var(--c)} .chip.sl{background:var(--muted)}
+svg .hd-ink{fill:var(--ink)}
+svg .bx-out2{fill:var(--sunk);stroke:var(--rule);stroke-width:1.5}
+svg .band2{fill:var(--sunk)}
+svg .diag{fill:var(--sunk)}
+svg .dot{fill:var(--ink)}
+svg .seg{fill:var(--accent)}
+svg .hit:focus-visible{stroke:var(--accent);stroke-width:2}
+
+/* Tabelas dos exemplos */
+table.aud{font-size:.8rem;min-width:860px;line-height:1.4}
+table.aud th, table.aud td{padding:8px 9px}
+table.aud td.n{white-space:nowrap;font-weight:600;color:var(--muted)}
+table.aud td.c, table.aud th.c{text-align:center;font-variant-numeric:tabular-nums}
+table.aud td.lb{width:17%;font-weight:600}
+table.aud td.lb small{display:block;font:500 .66rem/1 var(--mono);letter-spacing:.1em;color:var(--muted);margin-bottom:4px}
+table.aud td.v0{background:var(--bad-tint)} table.aud td.v1{background:var(--d-tint)}
+table.aud td ul{margin:0;padding-left:1.1em;display:block}
+table.aud td li + li{margin-top:3px}
+table.aud td small{color:var(--muted);font-size:.76rem}
+table.aud caption{caption-side:top;text-align:left;padding:10px 12px;font:500 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);background:var(--sunk)}
+
+/* Ficha do mapa (acima de cada exemplo) */
+.ficha{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:0;border:1px solid var(--rule);background:var(--surface)}
+.ficha div{padding:12px 14px;border-right:1px solid var(--rule);border-bottom:1px solid var(--rule);margin:0 -1px -1px 0}
+.ficha dt{font:500 .68rem/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.ficha dd{margin:0;font-size:.9rem;line-height:1.4}
+dl{margin:0}
+
+/* Blocos */
+.pair{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.box{background:var(--surface);border:1px solid var(--rule);padding:18px 20px;display:flex;flex-direction:column;gap:10px}
+.box h4{font:600 1.1rem/1.2 var(--display)}
+.box ul{font-size:.93rem}
+.note{background:var(--sunk);padding:16px 20px;max-width:72ch;font-size:.94rem;display:flex;flex-direction:column;gap:6px}
+.note h4{font:500 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+
+/* Passo a passo */
+.steps{list-style:none;padding:0;counter-reset:st;gap:0;max-width:none;border-top:1px solid var(--rule)}
+.steps li{counter-increment:st;display:grid;grid-template-columns:44px minmax(0,1fr);gap:4px 12px;padding:16px 0;border-bottom:1px solid var(--rule)}
+.steps li::before{content:counter(st);font:700 1.7rem/1 var(--display);color:var(--muted);grid-row:span 2}
+.steps h4{font:600 1.1rem/1.25 var(--display)}
+.steps p{font-size:.95rem;max-width:64ch;grid-column:2}
+
+/* Erros comuns */
+.errs{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:0 40px;border-top:1px solid var(--rule)}
+.errs div{padding:16px 16px 16px 0;border-bottom:1px solid var(--rule);display:flex;flex-direction:column;gap:4px}
+.errs h4{font:600 1.05rem/1.25 var(--display)}
+.errs p{font-size:.92rem}
+.errs .fix{color:var(--muted)}
+.errs .fix b{color:var(--ink);font-weight:600}
+
+/* Checklist */
+.check{list-style:none;padding:0;gap:0;max-width:none;border:1px solid var(--rule);background:var(--surface)}
+.check li{border-bottom:1px solid var(--rule)}
+.check li:last-child{border-bottom:0}
+.check label{display:grid;grid-template-columns:22px minmax(0,1fr);gap:12px;padding:11px 16px;cursor:pointer;font-size:.94rem;align-items:start}
+.check input{width:18px;height:18px;margin:3px 0 0;accent-color:var(--c)}
+.check input:checked + span{color:var(--muted);text-decoration:line-through}
+.bar{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;font:400 .82rem var(--mono);color:var(--muted)}
+.bar b{color:var(--ink);font-weight:500}
+
+/* Exercício */
+.quiz{display:flex;flex-direction:column;gap:0;border:1px solid var(--rule);background:var(--surface)}
+.q{display:grid;grid-template-columns:minmax(0,1fr);gap:10px;padding:14px 16px;border-bottom:1px solid var(--rule)}
+.q:last-child{border-bottom:0}
+@media (min-width:720px){.q{grid-template-columns:minmax(0,1fr) auto;align-items:center}}
+.q p{font-size:.95rem}
+.q .why{grid-column:1/-1;font-size:.86rem;color:var(--muted)}
+.q .why b{font-weight:600}
+.q .why.ok b{color:var(--good)} .q .why.no b{color:var(--bad)}
+.opts{display:flex;gap:6px}
+.opts button{width:40px;height:40px;border:1.5px solid var(--rule);background:var(--surface);color:var(--ink);font:700 1.1rem/1 var(--display);cursor:pointer;border-radius:0}
+.opts button:hover:not(:disabled){border-color:var(--ink)}
+.opts button:disabled{cursor:default;opacity:.45}
+.opts button.right{background:var(--good-tint);border-color:var(--good);color:var(--good);opacity:1}
+.opts button.wrong{background:var(--bad-tint);border-color:var(--bad);color:var(--bad);opacity:1}
+.btn{border:1.5px solid var(--ink);background:transparent;color:var(--ink);font:500 .82rem var(--mono);padding:7px 14px;cursor:pointer;border-radius:0}
+.btn:hover{background:var(--ink);color:var(--ground)}
+
+/* Glossário */
+.gloss{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:0 40px;border-top:1px solid var(--rule)}
+.gloss div{padding:12px 0;border-bottom:1px solid var(--rule)}
+.gloss dt{font:600 1.02rem/1.3 var(--display)}
+.gloss dd{margin:2px 0 0;font-size:.9rem;color:var(--muted)}
+footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);font-size:.84rem;color:var(--muted);max-width:72ch}
+
+.quiz .opts{flex-wrap:wrap}
+.quiz .opts button{width:auto;min-width:40px;padding:0 11px;font-size:1rem}
+@media (min-width:720px){.q{grid-template-columns:minmax(0,1fr)}}
+</style>
+</head>
+<body>
+<div class="page" lang="pt-BR">
+
+<header class="mast">
+  <div class="tiles" aria-hidden="true"><span class="p">G</span><span class="d">P</span><span class="c">A</span></div>
+  <h1>Mapa de processos e diagrama de tartaruga na prática</h1>
+  <p class="lead">Um guia de estudo para enxergar a organização como um conjunto de processos ligados, e cada processo por inteiro: o que entra, o que sai, com o quê, com quem, como e quanto.</p>
+  <ul class="meta">
+    <li>Treinamento autoinstrucional</li>
+    <li>12 módulos</li>
+    <li>Leitura de cerca de 45 minutos</li>
+    <li>3 exemplos resolvidos e 2 exercícios</li>
+  </ul>
+</header>
+
+<div class="layout">
+
+<nav class="toc" aria-label="Sumário">
+  <h2>Sumário</h2>
+  <ol>
+    <li><a href="#o-que-e">O que é</a></li>
+    <li><a href="#quando">Quando usar</a></li>
+    <li><a href="#mapa">Como construir o mapa</a></li>
+    <li><a href="#tartaruga">Como construir a tartaruga</a></li>
+    <li><a href="#exemplos">Exemplos resolvidos</a></li>
+    <li><a href="#elementos">Os oito elementos de um processo</a></li>
+    <li><a href="#erros">Erros comuns</a></li>
+    <li><a href="#ferramentas">O mapa e outras ferramentas</a></li>
+    <li><a href="#iso">Nas normas ISO</a></li>
+    <li><a href="#oficina">A oficina de mapeamento</a></li>
+    <li><a href="#pratique">Pratique</a></li>
+    <li><a href="#planilha">A planilha de apoio</a></li>
+    <li><a href="#glossario">Glossário</a></li>
+  </ol>
+</nav>
+
+<main>
+
+<!-- ============================ MÓDULO 1 ============================ -->
+<section id="o-que-e">
+  <p class="eyebrow">Módulo 1</p>
+  <h2>O que é</h2>
+  <p>Processo é um conjunto de atividades que transforma entradas em saídas. A organização inteira é feita deles: o que um processo entrega é o que outro recebe. Quando essa ligação falha, o cliente percebe, mesmo que cada área tenha feito a sua parte.</p>
+  <p>Este estudo trata de duas ferramentas que se completam. O <strong>mapa de processos</strong> mostra o conjunto: quais são os processos e como se ligam. O <strong>diagrama de tartaruga</strong> mostra um processo por inteiro, com tudo o que ele precisa para funcionar. As letras do título são os três tipos de processo do mapa: de <span class="k p">G</span> gestão, <span class="k d">P</span> principais e de <span class="k c">A</span> apoio.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 232" role="img" aria-label="Três níveis de detalhe. No primeiro, a organização: o mapa de processos mostra todos os processos e as ligações entre eles. No segundo, o processo: o SIPOC mostra o fluxo, e o diagrama de tartaruga mostra os recursos e os controles. No terceiro, a atividade: a instrução de trabalho e o fluxograma mostram o passo a passo.">
+        <defs>
+          <marker id="a1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker>
+        </defs>
+        <g font-size="11.5">
+          <rect class="bx-ink" x="10" y="20" width="270" height="150"/>
+          <text class="mono t-ground" x="28" y="44" font-size="10">NÍVEL 1 · A ORGANIZAÇÃO</text>
+          <text class="b t-ground" x="28" y="72" font-size="14">Mapa de processos</text>
+          <text class="t-ground" x="28" y="98">Quais são os processos?</text>
+          <text class="t-ground" x="28" y="116">Como se ligam?</text>
+          <text class="t-ground" x="28" y="148">Uma página para a organização.</text>
+
+          <rect class="bx" x="315" y="20" width="270" height="150"/>
+          <text class="mono mu" x="333" y="44" font-size="10">NÍVEL 2 · O PROCESSO</text>
+          <text class="b" x="333" y="72" font-size="14">SIPOC e tartaruga</text>
+          <text x="333" y="98">SIPOC: o fluxo, do fornecedor ao cliente.</text>
+          <text x="333" y="116">Tartaruga: os recursos e os controles.</text>
+          <text class="mu" x="333" y="148">Uma página para cada processo.</text>
+
+          <rect class="bx" x="620" y="20" width="270" height="150"/>
+          <text class="mono mu" x="638" y="44" font-size="10">NÍVEL 3 · A ATIVIDADE</text>
+          <text class="b" x="638" y="72" font-size="14">Instrução e fluxograma</text>
+          <text x="638" y="98">Como a atividade é feita?</text>
+          <text x="638" y="116">Em que ordem, e com que critério?</text>
+          <text class="mu" x="638" y="148">Só onde o passo a passo é necessário.</text>
+        </g>
+        <line class="ln" x1="282" y1="95" x2="311" y2="95" marker-end="url(#a1)"/>
+        <line class="ln" x1="587" y1="95" x2="616" y2="95" marker-end="url(#a1)"/>
+        <text x="450" y="206" font-size="11.5" text-anchor="middle">Do conjunto para o detalhe. Começar pelo nível 3 produz muitos documentos e nenhuma visão do todo.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 1.</b> Os três níveis de detalhe. Este estudo trata do primeiro e de metade do segundo. A outra metade está no estudo do <a href="../SIPOC/treinamento-sipoc.html">SIPOC</a>.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:22%">Ferramenta</th><th style="width:26%">O que mostra</th><th style="width:26%">Pergunta que responde</th><th>Quando basta</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Mapa de processos</strong></td><td>Todos os processos e as ligações entre eles.</td><td>Como a organização funciona?</td><td>Para apresentar o sistema e definir os donos.</td></tr>
+        <tr><td><strong>SIPOC</strong></td><td>Fornecedores, entradas, etapas, saídas e clientes de um processo.</td><td>O que entra, o que sai, e para quem?</td><td>Para entender o fluxo e os requisitos.</td></tr>
+        <tr><td><strong>Diagrama de tartaruga</strong></td><td>Entradas, saídas, recursos, pessoas, métodos e indicadores de um processo.</td><td>O processo tem tudo o que precisa?</td><td>Para gerir o processo e preparar a auditoria.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>O nome vem do desenho. O processo fica no centro, como o casco. As entradas são a cabeça, as saídas são a cauda, e as quatro perguntas são as patas.</p>
+</section>
+
+<!-- ============================ MÓDULO 2 ============================ -->
+<section id="quando">
+  <p class="eyebrow">Módulo 2</p>
+  <h2>Quando usar</h2>
+  <p>O mapa é feito uma vez e revisto quando a organização muda. A tartaruga é feita para cada processo que precisa ser gerido ou auditado. Nenhuma das duas substitui a conversa com quem executa: elas registram o que essa conversa descobre.</p>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:28%">Momento</th><th style="width:36%">O que fazer</th><th>Resultado</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Implantação do sistema de gestão</strong></td><td>Construir o mapa, e a tartaruga dos processos principais.</td><td>O requisito 4.4 atendido, com donos e indicadores.</td></tr>
+        <tr><td><strong>Preparação de uma auditoria</strong></td><td>Ler ou montar a tartaruga do processo a auditar.</td><td>A lista de verificação sai das sete partes da tartaruga.</td></tr>
+        <tr><td><strong>Processo novo ou mudança</strong></td><td>Desenhar a tartaruga antes de começar, e ligar o processo ao mapa.</td><td>Recursos, pessoas e riscos previstos.</td></tr>
+        <tr><td><strong>Problema entre áreas</strong></td><td>Rever a interação no mapa: o que uma área entrega e o que a outra espera.</td><td>Entrada e saída com requisito combinado.</td></tr>
+        <tr><td><strong>Integração de uma pessoa</strong></td><td>Mostrar o mapa e a tartaruga do processo em que ela vai trabalhar.</td><td>A pessoa entende onde o seu trabalho se encaixa.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pair">
+    <div class="box">
+      <h4>Use o mapa e a tartaruga quando</h4>
+      <ul>
+        <li>Ninguém sabe dizer quem é o dono de um resultado.</li>
+        <li>As falhas acontecem na passagem de uma área para outra.</li>
+        <li>O processo não tem indicador, ou tem e ninguém sabe por quê.</li>
+        <li>Uma auditoria de processo está marcada.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h4>Use outra ferramenta quando</h4>
+      <ul>
+        <li>Você precisa do fluxo em detalhe: use o <a href="../SIPOC/treinamento-sipoc.html">SIPOC</a>.</li>
+        <li>Você precisa dos papéis em cada atividade: use a <a href="../RACI/treinamento-raci.html">Matriz RACI</a>.</li>
+        <li>Você precisa medir o resultado: use o estudo de <a href="../Indicadores/treinamento-indicadores.html">Indicadores</a>.</li>
+        <li>Você precisa avaliar o que pode dar errado: use a <a href="../Riscos/treinamento-riscos.html">Matriz de riscos</a>.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 3 ============================ -->
+<section id="mapa">
+  <p class="eyebrow">Módulo 3</p>
+  <h2>Como construir o mapa</h2>
+  <p>O mapa começa e termina no cliente. No meio ficam os processos principais, que transformam o pedido em entrega. Acima ficam os processos de gestão, que dão o rumo. Abaixo, os de apoio, que fornecem os recursos.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 372" role="img" aria-label="Modelo de mapa de processos. À esquerda, o que o cliente pede. À direita, o que o cliente recebe. No centro, três faixas. Na faixa de cima, os processos de gestão: planejar, analisar criticamente e melhorar. Na faixa do meio, os processos principais, em sequência: vender, desenvolver, produzir e entregar. Na faixa de baixo, os processos de apoio: comprar, manter equipamentos e capacitar pessoas.">
+        <defs><marker id="am" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker></defs>
+        <rect class="bx-ink" x="10" y="20" width="80" height="332"/>
+        <text class="mono t-ground" x="36" y="186" font-size="10" text-anchor="middle" transform="rotate(-90 36 186)">ENTRADA</text>
+        <text class="b t-ground" x="60" y="186" font-size="12.5" text-anchor="middle" transform="rotate(-90 60 186)">O que o cliente pede</text>
+        <rect class="bx-ink" x="810" y="20" width="80" height="332"/>
+        <text class="mono t-ground" x="836" y="186" font-size="10" text-anchor="middle" transform="rotate(-90 836 186)">RESULTADO</text>
+        <text class="b t-ground" x="860" y="186" font-size="12.5" text-anchor="middle" transform="rotate(-90 860 186)">O que o cliente recebe</text>
+        <rect class="band2" x="120" y="20" width="660" height="96"/>
+        <text class="mono mu" x="132" y="37" font-size="9.5">PROCESSOS DE GESTÃO</text>
+        <rect class="bx-p" x="132.0" y="48" width="204.0" height="58"/>
+        <text class="b" x="234.0" y="85" font-size="11.5" text-anchor="middle">Planejar</text>
+        <rect class="bx-p" x="348.0" y="48" width="204.0" height="58"/>
+        <text class="b" x="450.0" y="85" font-size="11.5" text-anchor="middle">Analisar criticamente</text>
+        <rect class="bx-p" x="564.0" y="48" width="204.0" height="58"/>
+        <text class="b" x="666.0" y="85" font-size="11.5" text-anchor="middle">Melhorar</text>
+        <rect class="band2" x="120" y="138" width="660" height="96"/>
+        <text class="mono mu" x="132" y="155" font-size="9.5">PROCESSOS PRINCIPAIS</text>
+        <polygon class="bx-d" points="132.0,166 270.0,166 282.0,195 270.0,224 132.0,224"/>
+        <text class="b" x="201.0" y="203" font-size="11.5" text-anchor="middle">Vender</text>
+        <polygon class="bx-d" points="294.0,166 432.0,166 444.0,195 432.0,224 294.0,224 306.0,195"/>
+        <text class="b" x="369.0" y="203" font-size="11.5" text-anchor="middle">Desenvolver</text>
+        <polygon class="bx-d" points="456.0,166 594.0,166 606.0,195 594.0,224 456.0,224 468.0,195"/>
+        <text class="b" x="531.0" y="203" font-size="11.5" text-anchor="middle">Produzir</text>
+        <polygon class="bx-d" points="618.0,166 756.0,166 768.0,195 756.0,224 618.0,224 630.0,195"/>
+        <text class="b" x="693.0" y="203" font-size="11.5" text-anchor="middle">Entregar</text>
+        <rect class="band2" x="120" y="256" width="660" height="96"/>
+        <text class="mono mu" x="132" y="273" font-size="9.5">PROCESSOS DE APOIO</text>
+        <rect class="bx-c" x="132.0" y="284" width="204.0" height="58"/>
+        <text class="b" x="234.0" y="321" font-size="11.5" text-anchor="middle">Comprar</text>
+        <rect class="bx-c" x="348.0" y="284" width="204.0" height="58"/>
+        <text class="b" x="450.0" y="321" font-size="11.5" text-anchor="middle">Manter equipamentos</text>
+        <rect class="bx-c" x="564.0" y="284" width="204.0" height="58"/>
+        <text class="b" x="666.0" y="321" font-size="11.5" text-anchor="middle">Capacitar pessoas</text>
+        <line class="ln" x1="92" y1="195" x2="116" y2="195" marker-end="url(#am)"/>
+        <line class="ln" x1="782" y1="195" x2="806" y2="195" marker-end="url(#am)"/>
+        <line class="ln" x1="450" y1="118" x2="450" y2="134" marker-end="url(#am)"/>
+        <text class="mu" x="462" y="131" font-size="10.5">rumo, objetivos e conferência</text>
+        <line class="ln" x1="450" y1="254" x2="450" y2="238" marker-end="url(#am)"/>
+        <text class="mu" x="462" y="250" font-size="10.5">materiais, equipamentos e pessoas</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 2.</b> O modelo do mapa de processos. Os processos principais são lidos da esquerda para a direita. A divisão em três tipos é a mais usada, mas a norma não a exige.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:20%">Tipo</th><th style="width:34%">O que faz</th><th style="width:22%">Cliente do processo</th><th>Exemplos</th></tr></thead>
+      <tbody>
+        <tr><td><span class="k p">G</span> <strong>Gestão</strong></td><td>Define o rumo, os objetivos e os recursos, e confere os resultados.</td><td>A própria organização.</td><td>Planejamento, análise crítica, auditoria interna, melhoria.</td></tr>
+        <tr><td><span class="k d">P</span> <strong>Principal</strong></td><td>Transforma o pedido do cliente em produto ou serviço entregue.</td><td>O cliente externo.</td><td>Vendas, desenvolvimento, produção, entrega, pós-venda.</td></tr>
+        <tr><td><span class="k c">A</span> <strong>Apoio</strong></td><td>Fornece os recursos de que os outros processos precisam.</td><td>Os outros processos.</td><td>Compras, manutenção, pessoas, tecnologia da informação.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Passo a passo</h3>
+  <ol class="steps">
+    <li><h4>Comece pelo cliente</h4><p>Escreva o que o cliente pede e o que ele recebe. São as duas pontas do mapa. Se a organização tem tipos de cliente muito diferentes, faça a lista de cada um.</p></li>
+    <li><h4>Liste os processos principais</h4><p>Percorra o caminho do pedido até a entrega e dê nome a cada transformação. Use verbo no infinitivo e objeto: registrar o pedido, produzir, entregar.</p></li>
+    <li><h4>Liste os processos de apoio</h4><p>Pergunte de que recursos os processos principais precisam, e quem os fornece: materiais, equipamentos, pessoas, sistemas.</p></li>
+    <li><h4>Liste os processos de gestão</h4><p>Pergunte quem define os objetivos, quem mede os resultados e quem decide as mudanças.</p></li>
+    <li><h4>Ligue os processos</h4><p>Para cada processo, escreva o que ele entrega e a quem. Um processo que não entrega nada a ninguém, ou não recebe nada de ninguém, está mal definido.</p></li>
+    <li><h4>Defina o dono e o indicador</h4><p>Cada processo tem um dono, que responde pelo resultado, e pelo menos um indicador, que mostra se o resultado foi alcançado.</p></li>
+    <li><h4>Valide</h4><p>Mostre o mapa a quem executa e acompanhe um pedido real do início ao fim. Se o pedido passar por um lugar que não está no mapa, o mapa está incompleto.</p></li>
+  </ol>
+
+  <div class="pair">
+    <div class="box">
+      <h4>É um processo quando</h4>
+      <ul>
+        <li>Transforma uma entrada em uma saída diferente.</li>
+        <li>Tem um cliente, interno ou externo, que recebe a saída.</li>
+        <li>Pode ter um dono e um indicador.</li>
+        <li>Repete-se, com o mesmo objetivo.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h4>Não é um processo</h4>
+      <ul>
+        <li>Um setor: “Financeiro” é uma área, que participa de vários processos.</li>
+        <li>Uma tarefa: “emitir a etiqueta” é parte de um processo.</li>
+        <li>Um documento: “procedimento de compras” descreve um processo.</li>
+        <li>Um projeto: tem início e fim, e não se repete.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="note">
+    <h4>Regra prática</h4>
+    <p>Um mapa útil tem de oito a quinze processos. Com menos de oito, os processos ficam grandes demais para ter um dono. Com mais de quinze, o mapa deixa de caber em uma página, e as ligações deixam de ser lidas.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 4 ============================ -->
+<section id="tartaruga">
+  <p class="eyebrow">Módulo 4</p>
+  <h2>Como construir a tartaruga</h2>
+  <p>A tartaruga reúne, em uma página, tudo o que um processo precisa para entregar o que promete. São sete partes ao redor do processo: duas para o fluxo, quatro para os meios e uma para os riscos.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 452" role="img" aria-label="As partes do diagrama de tartaruga, ao redor do processo. Entradas: o que o processo recebe, e de quem. Saídas: o que o processo entrega, e a quem. Recursos: equipamentos, sistemas, materiais e instalações. Pessoas: funções, competências e treinamentos. Métodos: procedimentos, instruções e critérios. Indicadores: medidas de desempenho, com meta. Riscos: o que pode impedir o resultado.">
+        <defs><marker id="at" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker></defs>
+        <line class="ln-mu" x1="265" y1="136" x2="362" y2="180"/><line class="ln-mu" x1="635" y1="136" x2="538" y2="180"/>
+        <line class="ln-mu" x1="222" y1="316" x2="352" y2="270"/><line class="ln-mu" x1="678" y1="316" x2="548" y2="270"/>
+        <line class="ln-mu" x1="450" y1="316" x2="450" y2="286"/>
+        <line class="ln" x1="244" y1="226" x2="276" y2="226" marker-end="url(#at)"/>
+        <line class="ln" x1="622" y1="226" x2="654" y2="226" marker-end="url(#at)"/>
+        <ellipse class="bx-ink" cx="450" cy="226" rx="170" ry="58"/>
+        <text class="mono t-ground" x="450" y="200" font-size="10" text-anchor="middle">PROCESSO</text>
+        <text class="b t-ground" x="450" y="224" font-size="13.5" text-anchor="middle">Nome, com verbo no infinitivo</text>
+        <text class="t-ground" x="450" y="246" font-size="11.5" text-anchor="middle">Dono e objetivo do processo</text>
+        <rect class="bx" x="10" y="156" width="232" height="140"/>
+        <text class="mono mu" x="24" y="177" font-size="10">O QUE ENTRA?</text>
+        <text class="b" x="24" y="197" font-size="12.5">Entradas</text>
+        <text x="24" y="217" font-size="11.5">O que o processo recebe, e de quem.</text>
+        <text class="mu" x="24" y="237" font-size="11">Ex.: requisição aprovada, plano de</text>
+        <text class="mu" x="24" y="252" font-size="11">produção.</text>
+        <rect class="bx" x="658" y="156" width="232" height="140"/>
+        <text class="mono mu" x="672" y="177" font-size="10">O QUE SAI?</text>
+        <text class="b" x="672" y="197" font-size="12.5">Saídas</text>
+        <text x="672" y="217" font-size="11.5">O que o processo entrega, e a quem.</text>
+        <text class="mu" x="672" y="237" font-size="11">Ex.: pedido emitido, material</text>
+        <text class="mu" x="672" y="252" font-size="11">recebido.</text>
+        <rect class="bx" x="100" y="10" width="330" height="124"/>
+        <text class="mono mu" x="114" y="31" font-size="10">COM O QUÊ?</text>
+        <text class="b" x="114" y="51" font-size="12.5">Recursos</text>
+        <text x="114" y="71" font-size="11.5">Equipamentos, sistemas, materiais e instalações.</text>
+        <text class="mu" x="114" y="91" font-size="11">Ex.: sistema de compras, área de recebimento.</text>
+        <rect class="bx" x="470" y="10" width="330" height="124"/>
+        <text class="mono mu" x="484" y="31" font-size="10">COM QUEM?</text>
+        <text class="b" x="484" y="51" font-size="12.5">Pessoas</text>
+        <text x="484" y="71" font-size="11.5">Funções, competências e treinamentos.</text>
+        <text class="mu" x="484" y="91" font-size="11">Ex.: compradores treinados no procedimento.</text>
+        <rect class="bx" x="10" y="318" width="285" height="124"/>
+        <text class="mono mu" x="24" y="339" font-size="10">COMO?</text>
+        <text class="b" x="24" y="359" font-size="12.5">Métodos</text>
+        <text x="24" y="379" font-size="11.5">Procedimentos, instruções e critérios.</text>
+        <text class="mu" x="24" y="399" font-size="11">Ex.: procedimento de compras e política de</text>
+        <text class="mu" x="24" y="414" font-size="11">alçadas.</text>
+        <rect class="bx" x="605" y="318" width="285" height="124"/>
+        <text class="mono mu" x="619" y="339" font-size="10">QUANTO?</text>
+        <text class="b" x="619" y="359" font-size="12.5">Indicadores</text>
+        <text x="619" y="379" font-size="11.5">Medidas de desempenho, com meta.</text>
+        <text class="mu" x="619" y="399" font-size="11">Ex.: prazo de atendimento, com meta de 5</text>
+        <text class="mu" x="619" y="414" font-size="11">dias.</text>
+        <rect class="bx" x="307" y="318" width="286" height="124"/>
+        <text class="mono mu" x="321" y="339" font-size="10">E SE?</text>
+        <text class="b" x="321" y="359" font-size="12.5">Riscos</text>
+        <text x="321" y="379" font-size="11.5">O que pode impedir o resultado.</text>
+        <text class="mu" x="321" y="399" font-size="11">Ex.: o fornecedor único deixa de entregar.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 3.</b> As partes do diagrama de tartaruga. O desenho clássico tem seis partes. A sétima, dos riscos, foi acrescentada neste material, porque a ISO 9001 pede que os riscos de cada processo sejam considerados.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:18%">Parte</th><th style="width:30%">Pergunta</th><th style="width:26%">O que escrever</th><th>Exemplo, em compras</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Entradas</strong></td><td>O que o processo recebe, e de quem?</td><td>O que o processo recebe, e de quem.</td><td>Requisição aprovada, com especificação.</td></tr>
+        <tr><td><strong>Saídas</strong></td><td>O que o processo entrega, e a quem?</td><td>O que o processo entrega, e a quem.</td><td>Material recebido e conferido.</td></tr>
+        <tr><td><strong>Recursos</strong></td><td>Que recursos o processo usa?</td><td>Equipamentos, sistemas, materiais e instalações.</td><td>Sistema de compras, com campo obrigatório.</td></tr>
+        <tr><td><strong>Pessoas</strong></td><td>Quem executa, e que competência precisa ter?</td><td>Funções, competências e treinamentos.</td><td>Compradores treinados no procedimento.</td></tr>
+        <tr><td><strong>Métodos</strong></td><td>Que documentos dizem como fazer?</td><td>Procedimentos, instruções e critérios.</td><td>Procedimento PR-SUP-01 rev. 6.</td></tr>
+        <tr><td><strong>Indicadores</strong></td><td>Como se sabe que o processo funciona?</td><td>Medidas de desempenho, com meta.</td><td>Prazo de atendimento: até 5,0 dias úteis.</td></tr>
+        <tr><td><strong>Riscos</strong></td><td>O que pode impedir o resultado?</td><td>O que pode impedir o resultado.</td><td>O fornecedor único deixa de entregar.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Passo a passo</h3>
+  <ol class="steps">
+    <li><h4>Escreva o processo, o dono e o objetivo</h4><p>O objetivo diz o que o processo deve entregar, em uma frase. Ele é a referência para todas as outras partes.</p></li>
+    <li><h4>Preencha as saídas</h4><p>Comece pelo fim: o que o processo entrega, a quem, e com que requisito. É a saída que justifica o processo.</p></li>
+    <li><h4>Preencha as entradas</h4><p>Escreva o que o processo precisa receber para produzir as saídas, e de quem. Cada entrada é a saída de outro processo, ou de um fornecedor.</p></li>
+    <li><h4>Preencha as quatro patas</h4><p>Recursos, pessoas, métodos e indicadores. Escreva o que existe hoje, e marque o que falta. A tartaruga serve para mostrar lacunas, e não para escondê-las.</p></li>
+    <li><h4>Acrescente os riscos</h4><p>Escreva os principais riscos do processo e a resposta de cada um. Eles vêm da <a href="../Riscos/treinamento-riscos.html">Matriz de riscos</a>, quando ela existe.</p></li>
+    <li><h4>Confira com o mapa</h4><p>As entradas e as saídas da tartaruga precisam aparecer como ligações no mapa. Se a tartaruga cita um processo que não está no mapa, um dos dois está errado.</p></li>
+  </ol>
+
+  <div class="note">
+    <h4>A tartaruga na auditoria</h4>
+    <p>Cada parte da tartaruga vira uma pergunta de auditoria. “Com quem?” leva aos registros de competência. “Como?” leva aos procedimentos e à versão em uso. “Quanto?” leva aos indicadores e às decisões. O auditor que chega com a tartaruga na mão não esquece nenhuma parte do processo.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 5 ============================ -->
+<section id="exemplos">
+  <p class="eyebrow">Módulo 5</p>
+  <h2>Exemplos resolvidos</h2>
+  <p>Um mapa, duas tartarugas e uma matriz de interações. As organizações são as dos outros estudos da série, e os dois primeiros exemplos também estão preenchidos na planilha de apoio. Os dados são ilustrativos e foram criados para este treinamento.</p>
+
+  <h3>Exemplo 1. Mapa de processos da pizzaria</h3>
+  <dl class="ficha">
+    <div><dt>Organização</dt><dd>Pizzaria (loja com salão e delivery)</dd></div>
+    <div><dt>Data e participantes</dt><dd>14/10/2026. Gerente da loja, com os líderes dos dois turnos</dd></div>
+    <div><dt>Origem</dt><dd>Lacuna do requisito 4.4 no diagnóstico de 02/10/2026: só o delivery estava mapeado.</dd></div>
+  </dl>
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 372" role="img" aria-label="Mapa de processos da pizzaria, com nove processos. Gestão: G1 planejar e dirigir a loja, G2 medir e melhorar. Principal: P1 registrar o pedido, P2 produzir e embalar, P3 entregar o pedido, P4 atender no salão. Apoio: A1 comprar e armazenar insumos, A2 manter equipamentos e motos, A3 treinar a equipe.">
+        <defs><marker id="am" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker></defs>
+        <rect class="bx-ink" x="10" y="20" width="80" height="332"/>
+        <text class="mono t-ground" x="36" y="186" font-size="10" text-anchor="middle" transform="rotate(-90 36 186)">ENTRADA</text>
+        <text class="b t-ground" x="60" y="186" font-size="12.5" text-anchor="middle" transform="rotate(-90 60 186)">Cliente com fome</text>
+        <rect class="bx-ink" x="810" y="20" width="80" height="332"/>
+        <text class="mono t-ground" x="836" y="186" font-size="10" text-anchor="middle" transform="rotate(-90 836 186)">RESULTADO</text>
+        <text class="b t-ground" x="860" y="186" font-size="12.5" text-anchor="middle" transform="rotate(-90 860 186)">Cliente atendido</text>
+        <rect class="band2" x="120" y="20" width="660" height="96"/>
+        <text class="mono mu" x="132" y="37" font-size="9.5">PROCESSOS DE GESTÃO</text>
+        <rect class="bx-p" x="132.0" y="48" width="312.0" height="58"/>
+        <text class="mono mu" x="288.0" y="63" font-size="9.5" text-anchor="middle">G1</text>
+        <text class="b" x="288.0" y="89" font-size="11.5" text-anchor="middle">Planejar e dirigir a loja</text>
+        <rect class="bx-p" x="456.0" y="48" width="312.0" height="58"/>
+        <text class="mono mu" x="612.0" y="63" font-size="9.5" text-anchor="middle">G2</text>
+        <text class="b" x="612.0" y="89" font-size="11.5" text-anchor="middle">Medir e melhorar</text>
+        <rect class="band2" x="120" y="138" width="660" height="96"/>
+        <text class="mono mu" x="132" y="155" font-size="9.5">PROCESSOS PRINCIPAIS</text>
+        <polygon class="bx-d" points="132.0,166 270.0,166 282.0,195 270.0,224 132.0,224"/>
+        <text class="mono mu" x="201.0" y="181" font-size="9.5" text-anchor="middle">P1</text>
+        <text class="b" x="201.0" y="207" font-size="11.5" text-anchor="middle">Registrar o pedido</text>
+        <polygon class="bx-d" points="294.0,166 432.0,166 444.0,195 432.0,224 294.0,224 306.0,195"/>
+        <text class="mono mu" x="369.0" y="181" font-size="9.5" text-anchor="middle">P2</text>
+        <text class="b" x="369.0" y="207" font-size="11.5" text-anchor="middle">Produzir e embalar</text>
+        <polygon class="bx-d" points="456.0,166 594.0,166 606.0,195 594.0,224 456.0,224 468.0,195"/>
+        <text class="mono mu" x="531.0" y="181" font-size="9.5" text-anchor="middle">P3</text>
+        <text class="b" x="531.0" y="207" font-size="11.5" text-anchor="middle">Entregar o pedido</text>
+        <polygon class="bx-d" points="618.0,166 756.0,166 768.0,195 756.0,224 618.0,224 630.0,195"/>
+        <text class="mono mu" x="693.0" y="181" font-size="9.5" text-anchor="middle">P4</text>
+        <text class="b" x="693.0" y="207" font-size="11.5" text-anchor="middle">Atender no salão</text>
+        <rect class="band2" x="120" y="256" width="660" height="96"/>
+        <text class="mono mu" x="132" y="273" font-size="9.5">PROCESSOS DE APOIO</text>
+        <rect class="bx-c" x="132.0" y="284" width="204.0" height="58"/>
+        <text class="mono mu" x="234.0" y="299" font-size="9.5" text-anchor="middle">A1</text>
+        <text class="b" x="234.0" y="325" font-size="11.5" text-anchor="middle">Comprar e armazenar insumos</text>
+        <rect class="bx-c" x="348.0" y="284" width="204.0" height="58"/>
+        <text class="mono mu" x="450.0" y="299" font-size="9.5" text-anchor="middle">A2</text>
+        <text class="b" x="450.0" y="325" font-size="11.5" text-anchor="middle">Manter equipamentos e motos</text>
+        <rect class="bx-c" x="564.0" y="284" width="204.0" height="58"/>
+        <text class="mono mu" x="666.0" y="299" font-size="9.5" text-anchor="middle">A3</text>
+        <text class="b" x="666.0" y="325" font-size="11.5" text-anchor="middle">Treinar a equipe</text>
+        <line class="ln" x1="92" y1="195" x2="116" y2="195" marker-end="url(#am)"/>
+        <line class="ln" x1="782" y1="195" x2="806" y2="195" marker-end="url(#am)"/>
+        <line class="ln" x1="450" y1="118" x2="450" y2="134" marker-end="url(#am)"/>
+        <text class="mu" x="462" y="131" font-size="10.5">rumo, objetivos e conferência</text>
+        <line class="ln" x1="450" y1="254" x2="450" y2="238" marker-end="url(#am)"/>
+        <text class="mu" x="462" y="250" font-size="10.5">materiais, equipamentos e pessoas</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 4.</b> O mapa de processos da pizzaria, com nove processos. Os três primeiros processos principais formam o atendimento de um pedido de delivery, descrito no estudo do SIPOC.</figcaption>
+  </figure>
+  <div class="tbl">
+    <table class="aud">
+      <caption>Processos da pizzaria</caption>
+      <thead><tr><th>Nº</th><th style="width:22%">Processo</th><th style="width:11%">Tipo</th><th style="width:16%">Dono</th><th style="width:30%">Objetivo</th><th>Indicador</th></tr></thead>
+      <tbody>
+        <tr><td class="n">G1</td><td><strong>Planejar e dirigir a loja</strong></td><td><span class="chip p">Gestão</span></td><td>Dono da loja</td><td>Definir objetivos, recursos e prioridades.</td><td>Objetivos alcançados no ano</td></tr>
+        <tr><td class="n">G2</td><td><strong>Medir e melhorar</strong></td><td><span class="chip p">Gestão</span></td><td>Gerente da loja</td><td>Acompanhar os resultados e tratar os desvios.</td><td>Indicadores na meta</td></tr>
+        <tr><td class="n">P1</td><td><strong>Registrar o pedido</strong></td><td><span class="chip d">Principal</span></td><td>Atendente líder</td><td>Registrar o pedido certo, com endereço completo.</td><td>Pedidos refeitos por erro</td></tr>
+        <tr><td class="n">P2</td><td><strong>Produzir e embalar</strong></td><td><span class="chip d">Principal</span></td><td>Pizzaiolo líder</td><td>Produzir a pizza pedida, no padrão da receita.</td><td>Desperdício de insumos</td></tr>
+        <tr><td class="n">P3</td><td><strong>Entregar o pedido</strong></td><td><span class="chip d">Principal</span></td><td>Líder da expedição</td><td>Entregar o pedido certo, quente e no prazo.</td><td>Entregas em até 40 minutos</td></tr>
+        <tr><td class="n">P4</td><td><strong>Atender no salão</strong></td><td><span class="chip d">Principal</span></td><td>Gerente da loja</td><td>Servir o cliente da mesa no tempo prometido.</td><td><small>Sem indicador</small></td></tr>
+        <tr><td class="n">A1</td><td><strong>Comprar e armazenar insumos</strong></td><td><span class="chip c">Apoio</span></td><td>Gerente da loja</td><td>Ter os insumos certos, dentro da validade.</td><td><small>Sem indicador</small></td></tr>
+        <tr><td class="n">A2</td><td><strong>Manter equipamentos e motos</strong></td><td><span class="chip c">Apoio</span></td><td>Pizzaiolo líder</td><td>Manter forno, câmara fria e motos disponíveis.</td><td><small>Sem indicador</small></td></tr>
+        <tr><td class="n">A3</td><td><strong>Treinar a equipe</strong></td><td><span class="chip c">Apoio</span></td><td>Gerente da loja</td><td>Ter pessoas treinadas em todas as funções.</td><td><small>Sem indicador</small></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="tbl">
+    <table class="aud">
+      <caption>Tartaruga do processo P3 · Entregar o pedido · dono: Líder da expedição</caption>
+      <tbody>
+        <tr><td class="lb"><small>O QUE ENTRA?</small>Entradas</td><td><ul><li>Pedido embalado e conferido <small>· Produzir e embalar</small></li><li>Endereço completo do cliente <small>· Registrar o pedido</small></li><li>Escala de entregadores do turno <small>· Planejar e dirigir a loja</small></li></ul></td></tr>
+        <tr><td class="lb"><small>O QUE SAI?</small>Saídas</td><td><ul><li>Pedido entregue ao cliente <small>· Cliente</small></li><li>Horário de saída e de chegada <small>· Medir e melhorar</small></li><li>Reclamações e devoluções <small>· Medir e melhorar</small></li></ul></td></tr>
+        <tr><td class="lb"><small>COM O QUÊ?</small>Recursos</td><td><ul><li>Motos revisadas <small>· Revisão mensal</small></li><li>Bolsas térmicas <small>· Uma por entregador</small></li><li>Sistema de pedidos e celular <small>· Com internet móvel</small></li></ul></td></tr>
+        <tr><td class="lb"><small>COM QUEM?</small>Pessoas</td><td><ul><li>Líder da expedição <small>· Conhece a instrução e a escala</small></li><li>Entregadores <small>· Habilitação e direção segura</small></li><li>Atendente <small>· Avisa o cliente sobre atrasos</small></li></ul></td></tr>
+        <tr><td class="lb"><small>COMO?</small>Métodos</td><td><ul><li>Instrução IT-EXP-01 rev. 2 <small>· Agrupamento por zona</small></li><li>Escala padrão de entregadores <small>· Extras nas noites de pico</small></li><li>Conferência do pedido <small>· Rubrica na etiqueta</small></li></ul></td></tr>
+        <tr><td class="lb"><small>QUANTO?</small>Indicadores</td><td><ul><li>Entregas em até 40 minutos <small>· No mínimo 95%</small></li><li>Reclamações por 100 pedidos <small>· Até 2,0</small></li></ul></td></tr>
+        <tr><td class="lb"><small>E SE?</small>Riscos</td><td><ul><li>Faltam entregadores em noite de chuva <small>· Reduzir: sobreaviso</small></li><li>Acidente com o entregador <small>· Compartilhar: seguro</small></li></ul></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p><strong>O que observar.</strong> O mapa mostrou o que o diagnóstico já indicava: a loja conhecia bem o delivery e quase nada do resto. Quatro processos não têm indicador. O atendimento no salão, que recebe um terço dos clientes, nunca tinha sido descrito. A tartaruga do processo de entrega ficou completa porque ele foi o assunto de todos os estudos anteriores.</p>
+
+  <h3>Exemplo 2. Tartaruga do processo de compras</h3>
+  <dl class="ficha">
+    <div><dt>Processo</dt><dd>Adquirir materiais e serviços</dd></div>
+    <div><dt>Objetivo</dt><dd>Fornecer os materiais certos, no prazo, sem parar a produção.</dd></div>
+    <div><dt>Data e participantes</dt><dd>20/10/2026. Gerente de Suprimentos, com compradores e Recebimento</dd></div>
+    <div><dt>Origem</dt><dd>Preparação da auditoria de acompanhamento do processo de aquisição.</dd></div>
+  </dl>
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 452" role="img" aria-label="Diagrama de tartaruga do processo adquirir materiais e serviços. Entradas: requisição aprovada, com especificação; plano de produção do mês; especificação de materiais. Saídas: pedido de compra emitido; material recebido e conferido; avaliação dos fornecedores. Recursos: sistema de compras; cadastro de itens e de fornecedores; área de recebimento e balança. Pessoas: gerente de suprimentos; quatro compradores; líder do recebimento. Métodos: procedimento pr-sup-01 rev. 6; política de compras e alçadas; critérios de homologação. Indicadores: prazo de atendimento; requisições com falha de especificação; fornecedores críticos avaliados; itens devolvidos ao fornecedor. Riscos: o fornecedor único deixa de entregar; o item comprado é diferente do necessário; compra de fornecedor não homologado.">
+        <defs><marker id="at" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker></defs>
+        <line class="ln-mu" x1="265" y1="136" x2="362" y2="180"/><line class="ln-mu" x1="635" y1="136" x2="538" y2="180"/>
+        <line class="ln-mu" x1="222" y1="316" x2="352" y2="270"/><line class="ln-mu" x1="678" y1="316" x2="548" y2="270"/>
+        <line class="ln-mu" x1="450" y1="316" x2="450" y2="286"/>
+        <line class="ln" x1="244" y1="226" x2="276" y2="226" marker-end="url(#at)"/>
+        <line class="ln" x1="622" y1="226" x2="654" y2="226" marker-end="url(#at)"/>
+        <ellipse class="bx-ink" cx="450" cy="226" rx="170" ry="58"/>
+        <text class="mono t-ground" x="450" y="200" font-size="10" text-anchor="middle">PROCESSO</text>
+        <text class="b t-ground" x="450" y="224" font-size="13.5" text-anchor="middle">Adquirir materiais e serviços</text>
+        <text class="t-ground" x="450" y="246" font-size="11.5" text-anchor="middle">Dono: Gerente de Suprimentos</text>
+        <rect class="bx" x="10" y="156" width="232" height="140"/>
+        <text class="mono mu" x="24" y="177" font-size="10">O QUE ENTRA?</text>
+        <text class="b" x="24" y="197" font-size="12.5">Entradas</text>
+        <text x="24" y="217" font-size="11">· Requisição aprovada, com</text>
+        <text x="33" y="232" font-size="11">especificação</text>
+        <text x="24" y="247" font-size="11">· Plano de produção do mês</text>
+        <text x="24" y="262" font-size="11">· Especificação de materiais</text>
+        <rect class="bx" x="658" y="156" width="232" height="140"/>
+        <text class="mono mu" x="672" y="177" font-size="10">O QUE SAI?</text>
+        <text class="b" x="672" y="197" font-size="12.5">Saídas</text>
+        <text x="672" y="217" font-size="11">· Pedido de compra emitido</text>
+        <text x="672" y="232" font-size="11">· Material recebido e conferido</text>
+        <text x="672" y="247" font-size="11">· Avaliação dos fornecedores</text>
+        <rect class="bx" x="100" y="10" width="330" height="124"/>
+        <text class="mono mu" x="114" y="31" font-size="10">COM O QUÊ?</text>
+        <text class="b" x="114" y="51" font-size="12.5">Recursos</text>
+        <text x="114" y="71" font-size="11">· Sistema de compras</text>
+        <text x="114" y="86" font-size="11">· Cadastro de itens e de fornecedores</text>
+        <text x="114" y="101" font-size="11">· Área de recebimento e balança</text>
+        <rect class="bx" x="470" y="10" width="330" height="124"/>
+        <text class="mono mu" x="484" y="31" font-size="10">COM QUEM?</text>
+        <text class="b" x="484" y="51" font-size="12.5">Pessoas</text>
+        <text x="484" y="71" font-size="11">· Gerente de Suprimentos</text>
+        <text x="484" y="86" font-size="11">· Quatro compradores</text>
+        <text x="484" y="101" font-size="11">· Líder do Recebimento</text>
+        <rect class="bx" x="10" y="318" width="285" height="124"/>
+        <text class="mono mu" x="24" y="339" font-size="10">COMO?</text>
+        <text class="b" x="24" y="359" font-size="12.5">Métodos</text>
+        <text x="24" y="379" font-size="11">· Procedimento PR-SUP-01 rev. 6</text>
+        <text x="24" y="394" font-size="11">· Política de compras e alçadas</text>
+        <text x="24" y="409" font-size="11">· Critérios de homologação</text>
+        <rect class="bx" x="605" y="318" width="285" height="124"/>
+        <text class="mono mu" x="619" y="339" font-size="10">QUANTO?</text>
+        <text class="b" x="619" y="359" font-size="12.5">Indicadores</text>
+        <text x="619" y="379" font-size="11">· Prazo de atendimento</text>
+        <text x="619" y="394" font-size="11">· Requisições com falha de especificação</text>
+        <text x="619" y="409" font-size="11">· Fornecedores críticos avaliados</text>
+        <text x="619" y="424" font-size="11">· Itens devolvidos ao fornecedor</text>
+        <rect class="bx" x="307" y="318" width="286" height="124"/>
+        <text class="mono mu" x="321" y="339" font-size="10">E SE?</text>
+        <text class="b" x="321" y="359" font-size="12.5">Riscos</text>
+        <text x="321" y="379" font-size="11">· O fornecedor único deixa de entregar</text>
+        <text x="321" y="394" font-size="11">· O item comprado é diferente do necessário</text>
+        <text x="321" y="409" font-size="11">· Compra de fornecedor não homologado</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 5.</b> A tartaruga do processo de aquisição. Cada parte traz o que existe depois das ações do RNC 2026-31: o campo obrigatório, o cadastro de itens e a revisão 6 do procedimento.</figcaption>
+  </figure>
+  <div class="tbl">
+    <table class="aud">
+      <caption>As sete partes, com a origem, o destino e a meta</caption>
+      <tbody>
+        <tr><td class="lb"><small>O QUE ENTRA?</small>Entradas</td><td><ul><li>Requisição aprovada, com especificação <small>· Áreas requisitantes</small></li><li>Plano de produção do mês <small>· Produção</small></li><li>Especificação de materiais <small>· Desenvolvimento de produto</small></li></ul></td></tr>
+        <tr><td class="lb"><small>O QUE SAI?</small>Saídas</td><td><ul><li>Pedido de compra emitido <small>· Fornecedor</small></li><li>Material recebido e conferido <small>· Produção e Manutenção</small></li><li>Avaliação dos fornecedores <small>· Gestão do sistema da qualidade</small></li></ul></td></tr>
+        <tr><td class="lb"><small>COM O QUÊ?</small>Recursos</td><td><ul><li>Sistema de compras <small>· Campo de especificação obrigatório</small></li><li>Cadastro de itens e de fornecedores <small>· Com especificação padrão</small></li><li>Área de recebimento e balança <small>· Balança verificada</small></li></ul></td></tr>
+        <tr><td class="lb"><small>COM QUEM?</small>Pessoas</td><td><ul><li>Gerente de Suprimentos <small>· Aprova acima da alçada</small></li><li>Quatro compradores <small>· Treinados no PR-SUP-01</small></li><li>Líder do Recebimento <small>· Confere antes de liberar</small></li></ul></td></tr>
+        <tr><td class="lb"><small>COMO?</small>Métodos</td><td><ul><li>Procedimento PR-SUP-01 rev. 6 <small>· Da requisição ao recebimento</small></li><li>Política de compras e alçadas <small>· Três cotações</small></li><li>Critérios de homologação <small>· Documentos legais incluídos</small></li></ul></td></tr>
+        <tr><td class="lb"><small>QUANTO?</small>Indicadores</td><td><ul><li>Prazo de atendimento <small>· Até 5,0 dias úteis</small></li><li>Requisições com falha de especificação <small>· Até 5%</small></li><li>Fornecedores críticos avaliados <small>· 100%</small></li><li>Itens devolvidos ao fornecedor <small>· Nenhum</small></li></ul></td></tr>
+        <tr><td class="lb"><small>E SE?</small>Riscos</td><td><ul><li>O fornecedor único deixa de entregar <small>· Reduzir: segundo fornecedor</small></li><li>O item comprado é diferente do necessário <small>· Reduzir: RNC 2026-31</small></li><li>Compra de fornecedor não homologado <small>· Evitar: bloqueio no sistema</small></li></ul></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p><strong>O que observar.</strong> A tartaruga reúne o que estava espalhado nos outros estudos: os indicadores, os riscos, o procedimento e as competências. A primeira entrada, a requisição com especificação, é a saída de outros processos. Foi nessa ligação que nasceu a não conformidade da auditoria: a requisição chegava incompleta, e compras aceitava.</p>
+
+  <h3>Exemplo 3. Interações dos processos da indústria</h3>
+  <dl class="ficha">
+    <div><dt>Organização</dt><dd>Indústria de embalagens plásticas</dd></div>
+    <div><dt>Processos</dt><dd>Nove, os mesmos do programa de auditoria</dd></div>
+    <div><dt>Uso</dt><dd>Planejar as auditorias e rever as passagens entre áreas</dd></div>
+  </dl>
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 378" role="img" aria-label="Matriz de interações dos nove processos da indústria. 1, comercial e análise de pedidos: entrega a 3 processos e recebe de 1. 2, desenvolvimento de produto: entrega a 3 processos e recebe de 1. 3, suprimentos: entrega a 3 processos e recebe de 5. 4, produção: entrega a 4 processos e recebe de 7. 5, laboratório e controle da qualidade: entrega a 3 processos e recebe de 2. 6, expedição e logística: entrega a 1 processos e recebe de 2. 7, manutenção: entrega a 2 processos e recebe de 2. 8, gestão de pessoas: entrega a 2 processos e recebe de 1. 9, gestão do sistema da qualidade: entrega a 3 processos e recebe de 3.">
+        <text class="mono mu" x="20" y="36" font-size="9.5">QUEM ENTREGA</text>
+        <text class="mono mu" x="537.0" y="16" font-size="9.5" text-anchor="middle">QUEM RECEBE</text>
+        <text class="mono mu" x="800" y="36" font-size="9.5" text-anchor="middle">ENTREGA A</text>
+        <text class="b" x="353.0" y="36" font-size="12" text-anchor="middle">1</text>
+        <text class="b" x="399.0" y="36" font-size="12" text-anchor="middle">2</text>
+        <text class="b" x="445.0" y="36" font-size="12" text-anchor="middle">3</text>
+        <text class="b" x="491.0" y="36" font-size="12" text-anchor="middle">4</text>
+        <text class="b" x="537.0" y="36" font-size="12" text-anchor="middle">5</text>
+        <text class="b" x="583.0" y="36" font-size="12" text-anchor="middle">6</text>
+        <text class="b" x="629.0" y="36" font-size="12" text-anchor="middle">7</text>
+        <text class="b" x="675.0" y="36" font-size="12" text-anchor="middle">8</text>
+        <text class="b" x="721.0" y="36" font-size="12" text-anchor="middle">9</text>
+        <line class="grid" x1="20" y1="50" x2="844" y2="50"/>
+        <text x="20" y="70" font-size="11.5"><tspan class="b">1</tspan> · Comercial e análise de pedidos</text>
+        <rect class="diag" x="331" y="51" width="44" height="28"/>
+        <circle class="dot" cx="399.0" cy="65.0" r="5.5"/>
+        <circle class="dot" cx="491.0" cy="65.0" r="5.5"/>
+        <circle class="dot" cx="583.0" cy="65.0" r="5.5"/>
+        <text class="b" x="800" y="70" font-size="12" text-anchor="middle" style="font-variant-numeric:tabular-nums">3</text>
+        <line class="grid" x1="20" y1="80" x2="844" y2="80"/>
+        <text x="20" y="100" font-size="11.5"><tspan class="b">2</tspan> · Desenvolvimento de produto</text>
+        <rect class="diag" x="377" y="81" width="44" height="28"/>
+        <circle class="dot" cx="445.0" cy="95.0" r="5.5"/>
+        <circle class="dot" cx="491.0" cy="95.0" r="5.5"/>
+        <circle class="dot" cx="537.0" cy="95.0" r="5.5"/>
+        <text class="b" x="800" y="100" font-size="12" text-anchor="middle" style="font-variant-numeric:tabular-nums">3</text>
+        <line class="grid" x1="20" y1="110" x2="844" y2="110"/>
+        <text x="20" y="130" font-size="11.5"><tspan class="b">3</tspan> · Suprimentos</text>
+        <rect class="diag" x="423" y="111" width="44" height="28"/>
+        <circle class="dot" cx="491.0" cy="125.0" r="5.5"/>
+        <circle class="dot" cx="629.0" cy="125.0" r="5.5"/>
+        <circle class="dot" cx="721.0" cy="125.0" r="5.5"/>
+        <text class="b" x="800" y="130" font-size="12" text-anchor="middle" style="font-variant-numeric:tabular-nums">3</text>
+        <line class="grid" x1="20" y1="140" x2="844" y2="140"/>
+        <text x="20" y="160" font-size="11.5"><tspan class="b">4</tspan> · Produção</text>
+        <rect class="diag" x="469" y="141" width="44" height="28"/>
+        <circle class="dot" cx="445.0" cy="155.0" r="5.5"/>
+        <circle class="dot" cx="537.0" cy="155.0" r="5.5"/>
+        <circle class="dot" cx="583.0" cy="155.0" r="5.5"/>
+        <circle class="dot" cx="629.0" cy="155.0" r="5.5"/>
+        <text class="b" x="800" y="160" font-size="12" text-anchor="middle" style="font-variant-numeric:tabular-nums">4</text>
+        <line class="grid" x1="20" y1="170" x2="844" y2="170"/>
+        <text x="20" y="190" font-size="11.5"><tspan class="b">5</tspan> · Laboratório e controle da qualidade</text>
+        <rect class="diag" x="515" y="171" width="44" height="28"/>
+        <circle class="dot" cx="445.0" cy="185.0" r="5.5"/>
+        <circle class="dot" cx="491.0" cy="185.0" r="5.5"/>
+        <circle class="dot" cx="721.0" cy="185.0" r="5.5"/>
+        <text class="b" x="800" y="190" font-size="12" text-anchor="middle" style="font-variant-numeric:tabular-nums">3</text>
+        <line class="grid" x1="20" y1="200" x2="844" y2="200"/>
+        <text x="20" y="220" font-size="11.5"><tspan class="b">6</tspan> · Expedição e logística</text>
+        <rect class="diag" x="561" y="201" width="44" height="28"/>
+        <circle class="dot" cx="353.0" cy="215.0" r="5.5"/>
+        <text class="b" x="800" y="220" font-size="12" text-anchor="middle" style="font-variant-numeric:tabular-nums">1</text>
+        <line class="grid" x1="20" y1="230" x2="844" y2="230"/>
+        <text x="20" y="250" font-size="11.5"><tspan class="b">7</tspan> · Manutenção</text>
+        <rect class="diag" x="607" y="231" width="44" height="28"/>
+        <circle class="dot" cx="445.0" cy="245.0" r="5.5"/>
+        <circle class="dot" cx="491.0" cy="245.0" r="5.5"/>
+        <text class="b" x="800" y="250" font-size="12" text-anchor="middle" style="font-variant-numeric:tabular-nums">2</text>
+        <line class="grid" x1="20" y1="260" x2="844" y2="260"/>
+        <text x="20" y="280" font-size="11.5"><tspan class="b">8</tspan> · Gestão de pessoas</text>
+        <rect class="diag" x="653" y="261" width="44" height="28"/>
+        <circle class="dot" cx="491.0" cy="275.0" r="5.5"/>
+        <circle class="dot" cx="721.0" cy="275.0" r="5.5"/>
+        <text class="b" x="800" y="280" font-size="12" text-anchor="middle" style="font-variant-numeric:tabular-nums">2</text>
+        <line class="grid" x1="20" y1="290" x2="844" y2="290"/>
+        <text x="20" y="310" font-size="11.5"><tspan class="b">9</tspan> · Gestão do sistema da qualidade</text>
+        <rect class="diag" x="699" y="291" width="44" height="28"/>
+        <circle class="dot" cx="445.0" cy="305.0" r="5.5"/>
+        <circle class="dot" cx="491.0" cy="305.0" r="5.5"/>
+        <circle class="dot" cx="675.0" cy="305.0" r="5.5"/>
+        <text class="b" x="800" y="310" font-size="12" text-anchor="middle" style="font-variant-numeric:tabular-nums">3</text>
+        <line class="grid" x1="20" y1="320" x2="844" y2="320"/>
+        <line class="grid" x1="330" y1="50" x2="330" y2="320"/>
+        <line class="grid" x1="376" y1="50" x2="376" y2="320"/>
+        <line class="grid" x1="422" y1="50" x2="422" y2="320"/>
+        <line class="grid" x1="468" y1="50" x2="468" y2="320"/>
+        <line class="grid" x1="514" y1="50" x2="514" y2="320"/>
+        <line class="grid" x1="560" y1="50" x2="560" y2="320"/>
+        <line class="grid" x1="606" y1="50" x2="606" y2="320"/>
+        <line class="grid" x1="652" y1="50" x2="652" y2="320"/>
+        <line class="grid" x1="698" y1="50" x2="698" y2="320"/>
+        <line class="grid" x1="744" y1="50" x2="744" y2="320"/>
+        <text class="mono mu" x="318" y="342" font-size="9.5" text-anchor="end">RECEBE DE</text>
+        <text class="b" x="353.0" y="342" font-size="12" text-anchor="middle" style="font-variant-numeric:tabular-nums">1</text>
+        <text class="b" x="399.0" y="342" font-size="12" text-anchor="middle" style="font-variant-numeric:tabular-nums">1</text>
+        <text class="b" x="445.0" y="342" font-size="12" text-anchor="middle" style="font-variant-numeric:tabular-nums">5</text>
+        <text class="b" x="491.0" y="342" font-size="12" text-anchor="middle" style="font-variant-numeric:tabular-nums">7</text>
+        <text class="b" x="537.0" y="342" font-size="12" text-anchor="middle" style="font-variant-numeric:tabular-nums">2</text>
+        <text class="b" x="583.0" y="342" font-size="12" text-anchor="middle" style="font-variant-numeric:tabular-nums">2</text>
+        <text class="b" x="629.0" y="342" font-size="12" text-anchor="middle" style="font-variant-numeric:tabular-nums">2</text>
+        <text class="b" x="675.0" y="342" font-size="12" text-anchor="middle" style="font-variant-numeric:tabular-nums">1</text>
+        <text class="b" x="721.0" y="342" font-size="12" text-anchor="middle" style="font-variant-numeric:tabular-nums">3</text>
+        <circle class="dot" cx="26" cy="364" r="5.5"/><text x="40" y="368" font-size="11.5">o processo da linha entrega algo ao processo da coluna</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 6.</b> A matriz de interações. Cada ponto é uma entrega de um processo, na linha, a outro, na coluna. A Produção é o processo que mais recebe. Suprimentos vem em seguida.</figcaption>
+  </figure>
+  <div class="tbl">
+    <table class="aud">
+      <caption>Interações do processo 3 · Suprimentos</caption>
+      <thead><tr><th style="width:12%">Sentido</th><th style="width:32%">Processo</th><th>O que é entregue</th></tr></thead>
+      <tbody>
+        <tr><td><span class="chip sl">Recebe de</span></td><td><strong>2 · Desenvolvimento de produto</strong></td><td>Especificação de materiais</td></tr>
+        <tr><td><span class="chip sl">Recebe de</span></td><td><strong>4 · Produção</strong></td><td>Requisição de compra, com especificação</td></tr>
+        <tr><td><span class="chip sl">Recebe de</span></td><td><strong>5 · Laboratório e controle da qualidade</strong></td><td>Resultado da inspeção de recebimento</td></tr>
+        <tr><td><span class="chip sl">Recebe de</span></td><td><strong>7 · Manutenção</strong></td><td>Requisição de compra, com especificação</td></tr>
+        <tr><td><span class="chip sl">Recebe de</span></td><td><strong>9 · Gestão do sistema da qualidade</strong></td><td>Resultados de auditoria e ações</td></tr>
+        <tr><td><span class="chip d">Entrega a</span></td><td><strong>4 · Produção</strong></td><td>Material recebido e conferido</td></tr>
+        <tr><td><span class="chip d">Entrega a</span></td><td><strong>7 · Manutenção</strong></td><td>Peças e serviços de manutenção</td></tr>
+        <tr><td><span class="chip d">Entrega a</span></td><td><strong>9 · Gestão do sistema da qualidade</strong></td><td>Avaliação dos fornecedores</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p><strong>O que observar.</strong> A matriz mostra onde estão as passagens, e é nas passagens que as falhas nascem. Os processos com mais ligações pedem mais atenção no programa de auditoria. Um processo sem nenhuma ligação na linha ou na coluna seria um sinal de mapa errado.</p>
+</section>
+
+<!-- ============================ MÓDULO 6 ============================ -->
+<section id="elementos">
+  <p class="eyebrow">Módulo 6</p>
+  <h2>Os oito elementos de um processo</h2>
+  <p>Desenhar o mapa é o começo. Gerir por processos é garantir que cada processo do mapa tenha o que precisa. A ISO 9001 lista oito elementos, no requisito 4.4.1. Eles servem de régua para saber quanto de cada processo já está definido.</p>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:8%">Item</th><th style="width:26%">Elemento</th><th>Pergunta de avaliação</th><th style="width:22%">Na pizzaria</th></tr></thead>
+      <tbody>
+        <tr><td class="num">4.4.1 a</td><td><strong>Entradas e saídas</strong></td><td>O que o processo recebe e o que ele entrega estão definidos?</td><td>6 sim, 3 parcial, 0 não</td></tr>
+        <tr><td class="num">4.4.1 b</td><td><strong>Sequência e interação</strong></td><td>Está claro de quem o processo recebe e a quem entrega?</td><td>4 sim, 4 parcial, 1 não</td></tr>
+        <tr><td class="num">4.4.1 c</td><td><strong>Critérios e indicadores</strong></td><td>Há critérios de controle e indicadores, com meta?</td><td>3 sim, 1 parcial, 5 não</td></tr>
+        <tr><td class="num">4.4.1 d</td><td><strong>Recursos</strong></td><td>Os recursos necessários estão definidos e disponíveis?</td><td>8 sim, 1 parcial, 0 não</td></tr>
+        <tr><td class="num">4.4.1 e</td><td><strong>Responsabilidades</strong></td><td>O processo tem dono, e os papéis estão atribuídos?</td><td>9 sim, 0 parcial, 0 não</td></tr>
+        <tr><td class="num">4.4.1 f</td><td><strong>Riscos e oportunidades</strong></td><td>Os riscos e as oportunidades do processo foram avaliados?</td><td>2 sim, 5 parcial, 2 não</td></tr>
+        <tr><td class="num">4.4.1 g</td><td><strong>Avaliação e mudanças</strong></td><td>O processo é avaliado, e as mudanças são planejadas?</td><td>2 sim, 2 parcial, 5 não</td></tr>
+        <tr><td class="num">4.4.1 h</td><td><strong>Melhoria</strong></td><td>Há melhoria registrada no processo?</td><td>2 sim, 3 parcial, 4 não</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <figure id="fig-bars">
+    <div class="scroll">
+      <svg id="bars" viewBox="0 0 900 366" role="img" aria-label="Gráfico de barras com os elementos definidos em cada processo da pizzaria, de um total de oito. G1, planejar e dirigir a loja: 4,5. G2, medir e melhorar: 7,0. P1, registrar o pedido: 6,5. P2, produzir e embalar: 7,0. P3, entregar o pedido: 8,0. P4, atender no salão: 2,5. A1, comprar e armazenar insumos: 4,0. A2, manter equipamentos e motos: 3,5. A3, treinar a equipe: 2,5. A média é de 63%.">
+        <line class="grid" x1="300" y1="24" x2="300" y2="318"/>
+        <text class="mu" x="300" y="334" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">0</text>
+        <line class="grid" x1="420" y1="24" x2="420" y2="318"/>
+        <text class="mu" x="420" y="334" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">2</text>
+        <line class="grid" x1="540" y1="24" x2="540" y2="318"/>
+        <text class="mu" x="540" y="334" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">4</text>
+        <line class="grid" x1="660" y1="24" x2="660" y2="318"/>
+        <text class="mu" x="660" y="334" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">6</text>
+        <line class="grid" x1="780" y1="24" x2="780" y2="318"/>
+        <text class="mu" x="780" y="334" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">8</text>
+        <text class="mono mu" x="540" y="354" font-size="10" text-anchor="middle">ELEMENTOS DEFINIDOS, DE 8</text>
+        <text x="20" y="50.0" font-size="11.5"><tspan class="b">G1</tspan> · Planejar e dirigir a loja</text>
+        <path class="seg" data-k="0" d="M300 38.0 H566.0 Q570.0 38.0 570.0 42.0 V50.0 Q570.0 54.0 566.0 54.0 H300 Z"/>
+        <text x="578.0" y="50.0" font-size="11.5"><tspan class="b">4,5</tspan><tspan class="mu"> · 56%</tspan></text>
+        <text x="20" y="82.0" font-size="11.5"><tspan class="b">G2</tspan> · Medir e melhorar</text>
+        <path class="seg" data-k="1" d="M300 70.0 H716.0 Q720.0 70.0 720.0 74.0 V82.0 Q720.0 86.0 716.0 86.0 H300 Z"/>
+        <text x="728.0" y="82.0" font-size="11.5"><tspan class="b">7,0</tspan><tspan class="mu"> · 88%</tspan></text>
+        <text x="20" y="114.0" font-size="11.5"><tspan class="b">P1</tspan> · Registrar o pedido</text>
+        <path class="seg" data-k="2" d="M300 102.0 H686.0 Q690.0 102.0 690.0 106.0 V114.0 Q690.0 118.0 686.0 118.0 H300 Z"/>
+        <text x="698.0" y="114.0" font-size="11.5"><tspan class="b">6,5</tspan><tspan class="mu"> · 81%</tspan></text>
+        <text x="20" y="146.0" font-size="11.5"><tspan class="b">P2</tspan> · Produzir e embalar</text>
+        <path class="seg" data-k="3" d="M300 134.0 H716.0 Q720.0 134.0 720.0 138.0 V146.0 Q720.0 150.0 716.0 150.0 H300 Z"/>
+        <text x="728.0" y="146.0" font-size="11.5"><tspan class="b">7,0</tspan><tspan class="mu"> · 88%</tspan></text>
+        <text x="20" y="178.0" font-size="11.5"><tspan class="b">P3</tspan> · Entregar o pedido</text>
+        <path class="seg" data-k="4" d="M300 166.0 H776.0 Q780.0 166.0 780.0 170.0 V178.0 Q780.0 182.0 776.0 182.0 H300 Z"/>
+        <text x="788.0" y="178.0" font-size="11.5"><tspan class="b">8,0</tspan><tspan class="mu"> · 100%</tspan></text>
+        <text x="20" y="210.0" font-size="11.5"><tspan class="b">P4</tspan> · Atender no salão</text>
+        <path class="seg" data-k="5" d="M300 198.0 H446.0 Q450.0 198.0 450.0 202.0 V210.0 Q450.0 214.0 446.0 214.0 H300 Z"/>
+        <text x="458.0" y="210.0" font-size="11.5"><tspan class="b">2,5</tspan><tspan class="mu"> · 31%</tspan></text>
+        <text x="20" y="242.0" font-size="11.5"><tspan class="b">A1</tspan> · Comprar e armazenar insumos</text>
+        <path class="seg" data-k="6" d="M300 230.0 H536.0 Q540.0 230.0 540.0 234.0 V242.0 Q540.0 246.0 536.0 246.0 H300 Z"/>
+        <text x="548.0" y="242.0" font-size="11.5"><tspan class="b">4,0</tspan><tspan class="mu"> · 50%</tspan></text>
+        <text x="20" y="274.0" font-size="11.5"><tspan class="b">A2</tspan> · Manter equipamentos e motos</text>
+        <path class="seg" data-k="7" d="M300 262.0 H506.0 Q510.0 262.0 510.0 266.0 V274.0 Q510.0 278.0 506.0 278.0 H300 Z"/>
+        <text x="518.0" y="274.0" font-size="11.5"><tspan class="b">3,5</tspan><tspan class="mu"> · 44%</tspan></text>
+        <text x="20" y="306.0" font-size="11.5"><tspan class="b">A3</tspan> · Treinar a equipe</text>
+        <path class="seg" data-k="8" d="M300 294.0 H446.0 Q450.0 294.0 450.0 298.0 V306.0 Q450.0 310.0 446.0 310.0 H300 Z"/>
+        <text x="458.0" y="306.0" font-size="11.5"><tspan class="b">2,5</tspan><tspan class="mu"> · 31%</tspan></text>
+        <rect class="hit" x="14" y="30" width="872" height="32" tabindex="0" role="img" aria-label="G1, Planejar e dirigir a loja: 4,5 de 8 elementos" data-k="0" data-id="G1" data-n="Planejar e dirigir a loja" data-t="gestão" data-pts="4,5" data-s="3" data-p="3" data-x="2" data-cx="435.0"/>
+        <rect class="hit" x="14" y="62" width="872" height="32" tabindex="0" role="img" aria-label="G2, Medir e melhorar: 7,0 de 8 elementos" data-k="1" data-id="G2" data-n="Medir e melhorar" data-t="gestão" data-pts="7,0" data-s="6" data-p="2" data-x="0" data-cx="510.0"/>
+        <rect class="hit" x="14" y="94" width="872" height="32" tabindex="0" role="img" aria-label="P1, Registrar o pedido: 6,5 de 8 elementos" data-k="2" data-id="P1" data-n="Registrar o pedido" data-t="principal" data-pts="6,5" data-s="5" data-p="3" data-x="0" data-cx="495.0"/>
+        <rect class="hit" x="14" y="126" width="872" height="32" tabindex="0" role="img" aria-label="P2, Produzir e embalar: 7,0 de 8 elementos" data-k="3" data-id="P2" data-n="Produzir e embalar" data-t="principal" data-pts="7,0" data-s="6" data-p="2" data-x="0" data-cx="510.0"/>
+        <rect class="hit" x="14" y="158" width="872" height="32" tabindex="0" role="img" aria-label="P3, Entregar o pedido: 8,0 de 8 elementos" data-k="4" data-id="P3" data-n="Entregar o pedido" data-t="principal" data-pts="8,0" data-s="8" data-p="0" data-x="0" data-cx="540.0"/>
+        <rect class="hit" x="14" y="190" width="872" height="32" tabindex="0" role="img" aria-label="P4, Atender no salão: 2,5 de 8 elementos" data-k="5" data-id="P4" data-n="Atender no salão" data-t="principal" data-pts="2,5" data-s="2" data-p="1" data-x="5" data-cx="375.0"/>
+        <rect class="hit" x="14" y="222" width="872" height="32" tabindex="0" role="img" aria-label="A1, Comprar e armazenar insumos: 4,0 de 8 elementos" data-k="6" data-id="A1" data-n="Comprar e armazenar insumos" data-t="apoio" data-pts="4,0" data-s="3" data-p="2" data-x="3" data-cx="420.0"/>
+        <rect class="hit" x="14" y="254" width="872" height="32" tabindex="0" role="img" aria-label="A2, Manter equipamentos e motos: 3,5 de 8 elementos" data-k="7" data-id="A2" data-n="Manter equipamentos e motos" data-t="apoio" data-pts="3,5" data-s="2" data-p="3" data-x="3" data-cx="405.0"/>
+        <rect class="hit" x="14" y="286" width="872" height="32" tabindex="0" role="img" aria-label="A3, Treinar a equipe: 2,5 de 8 elementos" data-k="8" data-id="A3" data-n="Treinar a equipe" data-t="apoio" data-pts="2,5" data-s="1" data-p="3" data-x="4" data-cx="375.0"/>
+      </svg>
+    </div>
+    <div class="tip" id="bars-tip" hidden></div>
+    <figcaption><b>Figura 7.</b> Elementos definidos em cada processo da pizzaria, de um total de oito. “Sim” vale um ponto, e “parcial”, meio. Só o processo de entrega tem os oito. Passe o mouse sobre as barras para ver os valores.</figcaption>
+    <details class="data">
+      <summary>Ver os dados em tabela</summary>
+      <div class="tbl">
+        <table class="aud">
+          <thead><tr><th>Processo</th><th class="c">a<br><small>Entradas</small></th><th class="c">b<br><small>Sequência</small></th><th class="c">c<br><small>Critérios</small></th><th class="c">d<br><small>Recursos</small></th><th class="c">e<br><small>Responsabilidades</small></th><th class="c">f<br><small>Riscos</small></th><th class="c">g<br><small>Avaliação</small></th><th class="c">h<br><small>Melhoria</small></th><th class="c">Pontos</th><th class="c">Percentual</th></tr></thead>
+          <tbody>
+            <tr><td><strong>G1 · Planejar e dirigir a loja</strong></td><td class="c">Sim</td><td class="c v1">Parcial</td><td class="c v0">Não</td><td class="c">Sim</td><td class="c">Sim</td><td class="c v1">Parcial</td><td class="c v0">Não</td><td class="c v1">Parcial</td><td class="c">4,5</td><td class="c">56%</td></tr>
+            <tr><td><strong>G2 · Medir e melhorar</strong></td><td class="c">Sim</td><td class="c">Sim</td><td class="c">Sim</td><td class="c">Sim</td><td class="c">Sim</td><td class="c v1">Parcial</td><td class="c v1">Parcial</td><td class="c">Sim</td><td class="c">7,0</td><td class="c">88%</td></tr>
+            <tr><td><strong>P1 · Registrar o pedido</strong></td><td class="c">Sim</td><td class="c">Sim</td><td class="c v1">Parcial</td><td class="c">Sim</td><td class="c">Sim</td><td class="c">Sim</td><td class="c v1">Parcial</td><td class="c v1">Parcial</td><td class="c">6,5</td><td class="c">81%</td></tr>
+            <tr><td><strong>P2 · Produzir e embalar</strong></td><td class="c">Sim</td><td class="c">Sim</td><td class="c">Sim</td><td class="c">Sim</td><td class="c">Sim</td><td class="c v1">Parcial</td><td class="c">Sim</td><td class="c v1">Parcial</td><td class="c">7,0</td><td class="c">88%</td></tr>
+            <tr><td><strong>P3 · Entregar o pedido</strong></td><td class="c">Sim</td><td class="c">Sim</td><td class="c">Sim</td><td class="c">Sim</td><td class="c">Sim</td><td class="c">Sim</td><td class="c">Sim</td><td class="c">Sim</td><td class="c">8,0</td><td class="c">100%</td></tr>
+            <tr><td><strong>P4 · Atender no salão</strong></td><td class="c v1">Parcial</td><td class="c v0">Não</td><td class="c v0">Não</td><td class="c">Sim</td><td class="c">Sim</td><td class="c v0">Não</td><td class="c v0">Não</td><td class="c v0">Não</td><td class="c">2,5</td><td class="c">31%</td></tr>
+            <tr><td><strong>A1 · Comprar e armazenar insumos</strong></td><td class="c">Sim</td><td class="c v1">Parcial</td><td class="c v0">Não</td><td class="c">Sim</td><td class="c">Sim</td><td class="c v1">Parcial</td><td class="c v0">Não</td><td class="c v0">Não</td><td class="c">4,0</td><td class="c">50%</td></tr>
+            <tr><td><strong>A2 · Manter equipamentos e motos</strong></td><td class="c v1">Parcial</td><td class="c v1">Parcial</td><td class="c v0">Não</td><td class="c">Sim</td><td class="c">Sim</td><td class="c v1">Parcial</td><td class="c v0">Não</td><td class="c v0">Não</td><td class="c">3,5</td><td class="c">44%</td></tr>
+            <tr><td><strong>A3 · Treinar a equipe</strong></td><td class="c v1">Parcial</td><td class="c v1">Parcial</td><td class="c v0">Não</td><td class="c v1">Parcial</td><td class="c">Sim</td><td class="c v0">Não</td><td class="c v0">Não</td><td class="c v0">Não</td><td class="c">2,5</td><td class="c">31%</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </details>
+  </figure>
+
+  <p>A leitura por coluna também ensina. Na pizzaria, todos os processos têm dono e quase todos têm recursos. O que falta é o que dá trabalho de gestão: indicadores, avaliação e melhoria. É o mesmo retrato do diagnóstico do estudo da <a href="../ISO-9001/treinamento-iso-9001.html#exemplos">ISO 9001</a>, visto por outro ângulo.</p>
+
+  <div class="note">
+    <h4>Por onde começar</h4>
+    <p>Não tente completar os oito elementos de todos os processos ao mesmo tempo. Comece pelos processos principais, e neles pelos elementos que faltam em mais lugares. Na pizzaria, o primeiro passo é dar um indicador a cada processo.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 7 ============================ -->
+<section id="erros">
+  <p class="eyebrow">Módulo 7</p>
+  <h2>Erros comuns</h2>
+  <div class="errs">
+    <div><h4>Copiar o organograma</h4><p>O mapa tem uma caixa para cada setor.</p><p class="fix"><b>Correção:</b> o mapa mostra o caminho do trabalho, que atravessa os setores. Comece pelo pedido do cliente.</p></div>
+    <div><h4>Mapear demais</h4><p>O mapa tem quarenta processos, e ninguém consegue ler.</p><p class="fix"><b>Correção:</b> fique entre oito e quinze. O detalhe vai para o SIPOC e para as instruções.</p></div>
+    <div><h4>Desenhar sem ligar</h4><p>As caixas estão no mapa, e ninguém escreveu o que uma entrega à outra.</p><p class="fix"><b>Correção:</b> descreva cada ligação: o que é entregue, e com que requisito.</p></div>
+    <div><h4>Deixar o processo sem dono</h4><p>“O processo é de todos.”</p><p class="fix"><b>Correção:</b> cada processo tem uma pessoa que responde pelo resultado, mesmo que várias áreas participem.</p></div>
+    <div><h4>Escrever o ideal</h4><p>A tartaruga mostra recursos e treinamentos que não existem.</p><p class="fix"><b>Correção:</b> escreva o que existe hoje, e marque o que falta. A lacuna é a informação mais útil.</p></div>
+    <div><h4>Fazer o mapa na sala</h4><p>O mapa é desenhado pela Qualidade, sem quem executa.</p><p class="fix"><b>Correção:</b> construa com os donos e valide acompanhando um pedido real.</p></div>
+    <div><h4>Guardar o mapa</h4><p>O mapa é de três anos atrás, e a empresa mudou duas vezes.</p><p class="fix"><b>Correção:</b> reveja o mapa a cada mudança de processo, de estrutura ou de sistema.</p></div>
+    <div><h4>Confundir tartaruga com procedimento</h4><p>A tartaruga tem quatro páginas de texto.</p><p class="fix"><b>Correção:</b> a tartaruga cabe em uma página e aponta para os documentos. Ela não os substitui.</p></div>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 8 ============================ -->
+<section id="ferramentas">
+  <p class="eyebrow">Módulo 8</p>
+  <h2>O mapa e outras ferramentas</h2>
+  <p>A tartaruga é o ponto de encontro dos estudos da série. Cada parte dela é o assunto de um estudo, e o mapa é o lugar onde todos os processos se encontram.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 270" role="img" aria-label="As partes da tartaruga e os estudos da série. Entradas e saídas: SIPOC. Com quem: Matriz RACI. Quanto: Indicadores. Riscos: Matriz de riscos. O processo inteiro: auditoria interna, que usa a tartaruga como roteiro, e o estudo da ISO 9001, no requisito 4.4.">
+        <defs>
+          <marker id="a8m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah-mu" d="M0 0 L10 5 L0 10 z"/></marker>
+        </defs>
+        <text class="mono mu" x="20" y="18" font-size="10">PARTE DA TARTARUGA</text>
+        <text class="mono mu" x="480" y="18" font-size="10">ESTUDO DA SÉRIE</text>
+        <g font-size="12">
+          <rect class="bx" x="20" y="28" width="380" height="40"/><text x="34" y="53"><tspan class="b">Entradas e saídas</tspan> · o fluxo do processo</text>
+          <rect class="bx" x="20" y="76" width="380" height="40"/><text x="34" y="101"><tspan class="b">Com quem?</tspan> · pessoas e papéis</text>
+          <rect class="bx" x="20" y="124" width="380" height="40"/><text x="34" y="149"><tspan class="b">Quanto?</tspan> · indicadores e metas</text>
+          <rect class="bx" x="20" y="172" width="380" height="40"/><text x="34" y="197"><tspan class="b">E se?</tspan> · riscos e respostas</text>
+          <rect class="bx-ink" x="20" y="220" width="380" height="40"/><text class="t-ground" x="34" y="245"><tspan class="b">O processo inteiro</tspan> · as sete partes</text>
+
+          <rect class="bx" x="480" y="28" width="400" height="40"/><text x="494" y="53"><tspan class="b">SIPOC</tspan> · fornecedores, etapas e clientes</text>
+          <rect class="bx" x="480" y="76" width="400" height="40"/><text x="494" y="101"><tspan class="b">Matriz RACI</tspan> · quem faz e quem responde</text>
+          <rect class="bx" x="480" y="124" width="400" height="40"/><text x="494" y="149"><tspan class="b">Indicadores</tspan> · ficha, meta e leitura do gráfico</text>
+          <rect class="bx" x="480" y="172" width="400" height="40"/><text x="494" y="197"><tspan class="b">Matriz de riscos</tspan> · nível e resposta</text>
+          <rect class="bx" x="480" y="220" width="400" height="40"/><text x="494" y="245"><tspan class="b">Auditoria interna</tspan> · a tartaruga como roteiro</text>
+        </g>
+        <g>
+          <line class="ln-mu" x1="402" y1="48" x2="476" y2="48" marker-end="url(#a8m)"/><line class="ln-mu" x1="402" y1="96" x2="476" y2="96" marker-end="url(#a8m)"/>
+          <line class="ln-mu" x1="402" y1="144" x2="476" y2="144" marker-end="url(#a8m)"/><line class="ln-mu" x1="402" y1="192" x2="476" y2="192" marker-end="url(#a8m)"/>
+          <line class="ln-mu" x1="402" y1="240" x2="476" y2="240" marker-end="url(#a8m)"/>
+        </g>
+      </svg>
+    </div>
+    <figcaption><b>Figura 8.</b> As partes da tartaruga e o estudo que aprofunda cada uma. As partes “com o quê” e “como” ainda não têm estudo próprio na série.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:26%">Ferramenta</th><th>Relação com o mapa e com a tartaruga</th></tr></thead>
+      <tbody>
+        <tr><td><a href="../ISO-9001/treinamento-iso-9001.html"><strong>ISO 9001 requisito a requisito</strong></a></td><td>O requisito 4.4 pede os processos e os oito elementos de cada um. O mapa e a tartaruga são a forma mais comum de atender.</td></tr>
+        <tr><td><a href="../SWOT/treinamento-swot.html"><strong>Matriz SWOT</strong></a></td><td>As forças e as fraquezas costumam estar em processos. O mapa ajuda a localizar cada uma.</td></tr>
+        <tr><td><a href="../SIPOC/treinamento-sipoc.html"><strong>SIPOC</strong></a></td><td>Detalha as entradas e as saídas da tartaruga, com as etapas do processo e os requisitos.</td></tr>
+        <tr><td><a href="../RACI/treinamento-raci.html"><strong>Matriz RACI</strong></a></td><td>Detalha a parte “com quem”: os papéis de cada pessoa em cada atividade.</td></tr>
+        <tr><td><a href="../Riscos/treinamento-riscos.html"><strong>Matriz de riscos</strong></a></td><td>A análise de riscos é feita por processo. Os riscos mais altos entram na tartaruga.</td></tr>
+        <tr><td><a href="../Indicadores/treinamento-indicadores.html"><strong>Indicadores</strong></a></td><td>Detalha a parte “quanto”: a ficha, a meta e a leitura de cada indicador.</td></tr>
+        <tr><td><a href="../Auditoria/treinamento-auditoria.html"><strong>Auditoria interna</strong></a></td><td>O programa de auditoria parte do mapa. A lista de verificação parte da tartaruga.</td></tr>
+        <tr><td><a href="../Nao-Conformidade/treinamento-nao-conformidade.html"><strong>Não conformidade e ação corretiva</strong></a></td><td>A verificação da abrangência usa o mapa: em que outros processos a mesma falha pode existir?</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 9 ============================ -->
+<section id="iso">
+  <p class="eyebrow">Módulo 9</p>
+  <h2>Nas normas ISO</h2>
+  <p>A abordagem de processo é um dos sete princípios de gestão da qualidade. A ISO 9001:2015 a apresenta na introdução e a transforma em requisito no item 4.4, “Sistema de gestão da qualidade e seus processos”. A norma não cita o mapa nem a tartaruga: pede que a organização determine os processos e os oito elementos de cada um.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 330" role="img" aria-label="Os oito elementos do requisito 4.4.1 da ISO 9001:2015 e a parte da tartaruga que responde a cada um. a, entradas e saídas: entradas e saídas. b, sequência e interação: mapa de processos. c, critérios e métodos: como e quanto. d, recursos: com o quê. e, responsabilidades e autoridades: dono do processo e com quem. f, riscos e oportunidades: riscos. g, avaliação e mudanças: quanto. h, melhoria: resultado dos indicadores e das ações.">
+        <defs>
+          <marker id="a9" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker>
+        </defs>
+        <rect class="hd-ink" x="20" y="14" width="430" height="34"/>
+        <text class="b t-ground" x="36" y="36" font-size="13">ISO 9001:2015, requisito 4.4.1</text>
+        <rect class="hd-ink" x="520" y="14" width="360" height="34"/>
+        <text class="b t-ground" x="536" y="36" font-size="13">Onde está a resposta</text>
+        <g font-size="12">
+          <rect class="bx" x="20" y="54" width="430" height="30"/><text x="36" y="74"><tspan class="b">a</tspan>  Entradas requeridas e saídas esperadas</text>
+          <rect class="bx" x="20" y="88" width="430" height="30"/><text x="36" y="108"><tspan class="b">b</tspan>  Sequência e interação dos processos</text>
+          <rect class="bx" x="20" y="122" width="430" height="30"/><text x="36" y="142"><tspan class="b">c</tspan>  Critérios, métodos, medições e indicadores</text>
+          <rect class="bx" x="20" y="156" width="430" height="30"/><text x="36" y="176"><tspan class="b">d</tspan>  Recursos necessários e disponíveis</text>
+          <rect class="bx" x="20" y="190" width="430" height="30"/><text x="36" y="210"><tspan class="b">e</tspan>  Responsabilidades e autoridades</text>
+          <rect class="bx" x="20" y="224" width="430" height="30"/><text x="36" y="244"><tspan class="b">f</tspan>  Riscos e oportunidades</text>
+          <rect class="bx" x="20" y="258" width="430" height="30"/><text x="36" y="278"><tspan class="b">g</tspan>  Avaliação dos processos e mudanças</text>
+          <rect class="bx" x="20" y="292" width="430" height="30"/><text x="36" y="312"><tspan class="b">h</tspan>  Melhoria dos processos e do sistema</text>
+
+          <rect class="bx" x="520" y="54" width="360" height="30"/><text x="536" y="74">Tartaruga: entradas e saídas</text>
+          <rect class="bx-d" x="520" y="88" width="360" height="30"/><text x="536" y="108">Mapa de processos e matriz de interações</text>
+          <rect class="bx" x="520" y="122" width="360" height="30"/><text x="536" y="142">Tartaruga: como e quanto</text>
+          <rect class="bx" x="520" y="156" width="360" height="30"/><text x="536" y="176">Tartaruga: com o quê</text>
+          <rect class="bx" x="520" y="190" width="360" height="30"/><text x="536" y="210">Tartaruga: dono do processo e com quem</text>
+          <rect class="bx" x="520" y="224" width="360" height="30"/><text x="536" y="244">Tartaruga: riscos</text>
+          <rect class="bx" x="520" y="258" width="360" height="30"/><text x="536" y="278">Reunião de indicadores e análise crítica</text>
+          <rect class="bx" x="520" y="292" width="360" height="30"/><text x="536" y="312">Ações de melhoria e ações corretivas</text>
+        </g>
+        <g>
+          <line class="ln" x1="452" y1="69" x2="516" y2="69" marker-end="url(#a9)"/><line class="ln" x1="452" y1="103" x2="516" y2="103" marker-end="url(#a9)"/>
+          <line class="ln" x1="452" y1="137" x2="516" y2="137" marker-end="url(#a9)"/><line class="ln" x1="452" y1="171" x2="516" y2="171" marker-end="url(#a9)"/>
+          <line class="ln" x1="452" y1="205" x2="516" y2="205" marker-end="url(#a9)"/><line class="ln" x1="452" y1="239" x2="516" y2="239" marker-end="url(#a9)"/>
+          <line class="ln" x1="452" y1="273" x2="516" y2="273" marker-end="url(#a9)"/><line class="ln" x1="452" y1="307" x2="516" y2="307" marker-end="url(#a9)"/>
+        </g>
+      </svg>
+    </div>
+    <figcaption><b>Figura 9.</b> Os oito elementos do requisito 4.4.1 e onde cada um é respondido. O texto da figura é um resumo, com palavras próprias. Os dois últimos elementos não cabem em um desenho: eles aparecem no uso.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:10%">Item</th><th style="width:30%">O que pede, em resumo</th><th style="width:28%">O que isso significa</th><th>Evidências que o auditor procura</th></tr></thead>
+      <tbody>
+        <tr><td class="num">4.4.1</td><td>Estabelecer, implementar, manter e melhorar o sistema, com os processos necessários e as interações entre eles</td><td>A organização sabe quais são os seus processos e como se ligam.</td><td>Mapa de processos, ou outra descrição equivalente.</td></tr>
+        <tr><td class="num">4.4.1 a–h</td><td>Determinar, para cada processo, os oito elementos da figura 9</td><td>Cada processo tem o que precisa para funcionar e ser gerido.</td><td>Tartaruga, SIPOC ou procedimento, com dono, indicador e riscos.</td></tr>
+        <tr><td class="num">4.4.2</td><td>Manter informação documentada para apoiar a operação dos processos, e reter a que mostra que eles são realizados conforme o planejado</td><td>A organização decide quanto documentar, e guarda os registros.</td><td>Documentos na extensão necessária, e registros dos processos.</td></tr>
+        <tr><td class="num">5.1.1</td><td>A alta direção deve promover o uso da abordagem de processo e da mentalidade de risco</td><td>A direção fala em processos, e não só em setores.</td><td>Entrevista com a direção e pauta da análise crítica.</td></tr>
+        <tr><td class="num">5.3</td><td>Atribuir a responsabilidade por assegurar que os processos entreguem as saídas pretendidas</td><td>Cada processo tem um dono, com autoridade.</td><td>Donos dos processos nomeados e conhecidos.</td></tr>
+        <tr><td class="num">9.1.3</td><td>Analisar e avaliar o desempenho dos processos</td><td>Os indicadores dos processos são analisados.</td><td>Indicadores por processo, com decisões registradas.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pair">
+    <div class="box">
+      <h4>O que a ISO 9001 exige</h4>
+      <ul>
+        <li>Determinar os processos necessários.</li>
+        <li>Determinar a sequência e a interação.</li>
+        <li>Determinar os oito elementos de cada processo.</li>
+        <li>Documentar na extensão necessária.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h4>O que a ISO 9001 não exige</h4>
+      <ul>
+        <li>Um mapa de processos desenhado.</li>
+        <li>O diagrama de tartaruga.</li>
+        <li>A divisão em gestão, principais e apoio.</li>
+        <li>Um procedimento para cada processo.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="note">
+    <h4>Pontos de atenção</h4>
+    <p>O diagrama de tartaruga ficou conhecido nas auditorias do setor automotivo, e é muito usado em auditorias de processo. Ele é uma ferramenta, e não um requisito: um auditor não pode apontar não conformidade pela falta do diagrama.</p>
+    <p>Este módulo usa a numeração da ISO 9001:2015 e resume os textos com palavras próprias. Confira sempre a edição vigente da norma antes de citar um requisito em relatório.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 10 ============================ -->
+<section id="oficina">
+  <p class="eyebrow">Módulo 10</p>
+  <h2>A oficina de mapeamento</h2>
+  <p>O mapa de uma organização pequena ou média cabe em uma oficina de duas horas, com a direção e os responsáveis pelas áreas. As tartarugas vêm depois, uma por vez, em reuniões de uma hora com o dono de cada processo.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 136" role="img" aria-label="Distribuição de uma oficina de mapeamento de 120 minutos: 10 minutos para o cliente, 35 minutos para os processos principais, 25 minutos para os processos de apoio e de gestão, 30 minutos para as ligações, 15 minutos para os donos e os indicadores e 5 minutos para o fecho.">
+        <g font-size="11.5" text-anchor="middle">
+          <rect class="bx" x="60" y="24" width="65" height="56"/><text x="92.5" y="56" font-size="10.5">Cliente</text>
+          <rect class="hd-d gap2" x="125" y="24" width="227.5" height="56"/><text class="on b" x="238.8" y="56">Processos principais</text>
+          <rect class="bx" x="352.5" y="24" width="162.5" height="56"/><text x="433.8" y="49">Apoio</text><text x="433.8" y="64">e gestão</text>
+          <rect class="hd-ink gap2" x="515" y="24" width="195" height="56"/><text class="t-ground b" x="612.5" y="56">Ligações</text>
+          <rect class="bx" x="710" y="24" width="97.5" height="56"/><text x="758.8" y="49" font-size="10.5">Donos e</text><text x="758.8" y="64" font-size="10.5">indicadores</text>
+          <rect class="bx" x="807.5" y="24" width="32.5" height="56"/>
+        </g>
+        <g class="ln-mu" stroke-width="1">
+          <line x1="60" y1="82" x2="60" y2="94"/><line x1="125" y1="82" x2="125" y2="94"/><line x1="352.5" y1="82" x2="352.5" y2="94"/>
+          <line x1="515" y1="82" x2="515" y2="94"/><line x1="710" y1="82" x2="710" y2="94"/><line x1="807.5" y1="82" x2="807.5" y2="94"/>
+          <line x1="840" y1="82" x2="840" y2="94"/>
+        </g>
+        <g class="mono" font-size="10.5" text-anchor="middle">
+          <text class="mu" x="60" y="112">0</text><text class="mu" x="125" y="112">10</text><text class="mu" x="352.5" y="112">45</text>
+          <text class="mu" x="515" y="112">70</text><text class="mu" x="710" y="112">100</text><text class="mu" x="800" y="112">115</text>
+          <text class="mu" x="848" y="112">120</text>
+        </g>
+        <text class="mu" x="823.8" y="16" font-size="10.5" text-anchor="middle">fecho</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 10.</b> Uma oficina de mapeamento de duas horas, desenhada em escala. As ligações ocupam um quarto do tempo: é a parte que mais gera discussão, e a que mais vale.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Momento</th><th style="width:42%">O que fazer</th><th>Frases que ajudam</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Cliente</strong></td><td>Escrever o que o cliente pede e o que ele recebe, nas duas pontas do quadro.</td><td>“O que o cliente leva daqui?”</td></tr>
+        <tr><td><strong>Processos principais</strong></td><td>Seguir um pedido real, do início ao fim, e dar nome a cada transformação.</td><td>“E depois, para onde vai?”</td></tr>
+        <tr><td><strong>Apoio e gestão</strong></td><td>Listar o que os processos principais precisam receber, e quem dá o rumo.</td><td>“De que este processo depende?”</td></tr>
+        <tr><td><strong>Ligações</strong></td><td>Escrever, em cada seta, o que é entregue. Marcar as passagens em que há falha.</td><td>“O que você precisa receber, e como?”</td></tr>
+        <tr><td><strong>Donos e indicadores</strong></td><td>Definir quem responde por cada processo e como o resultado é medido.</td><td>“Quem responde quando isso não sai?”</td></tr>
+        <tr><td><strong>Fecho</strong></td><td>Marcar as reuniões das tartarugas e a data de validação do mapa.</td><td>“Que processo começamos a detalhar?”</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Use papéis adesivos em uma parede, um por processo. O mapa vai mudar muitas vezes durante a oficina, e o desenho definitivo fica para depois.</p>
+
+  <h3>Checklist de validação</h3>
+  <p>Marque os itens conforme revisa o seu mapa. As marcações ficam salvas neste navegador.</p>
+  <ol class="check" id="checklist">
+    <li><label><input type="checkbox" id="ck-1"><span>O mapa mostra todos os processos necessários para atender ao cliente.</span></label></li>
+    <li><label><input type="checkbox" id="ck-2"><span>Os processos principais estão em sequência, do pedido à entrega.</span></label></li>
+    <li><label><input type="checkbox" id="ck-3"><span>Os processos de gestão e de apoio estão identificados.</span></label></li>
+    <li><label><input type="checkbox" id="ck-4"><span>Cada processo tem um dono, que responde pelo resultado.</span></label></li>
+    <li><label><input type="checkbox" id="ck-5"><span>As entradas e as saídas de cada processo estão definidas.</span></label></li>
+    <li><label><input type="checkbox" id="ck-6"><span>As interações estão descritas: o que um processo entrega ao outro.</span></label></li>
+    <li><label><input type="checkbox" id="ck-7"><span>Os recursos e as competências de cada processo estão definidos.</span></label></li>
+    <li><label><input type="checkbox" id="ck-8"><span>Os métodos e os documentos de cada processo estão identificados.</span></label></li>
+    <li><label><input type="checkbox" id="ck-9"><span>Cada processo tem pelo menos um indicador, com meta.</span></label></li>
+    <li><label><input type="checkbox" id="ck-10"><span>Os riscos e as oportunidades de cada processo foram avaliados.</span></label></li>
+    <li><label><input type="checkbox" id="ck-11"><span>O mapa foi validado por quem executa os processos.</span></label></li>
+    <li><label><input type="checkbox" id="ck-12"><span>O mapa é revisto a cada mudança e pelo menos uma vez por ano.</span></label></li>
+  </ol>
+  <div class="bar"><span><b id="ck-count">0</b> de 12 itens marcados</span><button class="btn" id="ck-reset" type="button">Limpar marcações</button></div>
+</section>
+
+<!-- ============================ MÓDULO 11 ============================ -->
+<section id="pratique">
+  <p class="eyebrow">Módulo 11</p>
+  <h2>Pratique</h2>
+  <h3>Exercício 1. Em que parte da tartaruga?</h3>
+  <p>Cada item traz uma informação sobre um processo. Escolha a parte da tartaruga em que ela deve ser escrita.</p>
+  <div class="quiz" id="quiz"></div>
+  <div class="bar"><span>Acertos: <b id="qz-score">0</b> de <b id="qz-total">12</b></span><span>Respondidos: <b id="qz-done">0</b></span><button class="btn" id="qz-reset" type="button">Recomeçar</button></div>
+
+  <h3>Exercício 2. Desenhe o mapa e uma tartaruga</h3>
+  <p>Escolha uma organização ou uma área que você conhece bem. Abra a planilha de apoio e siga o roteiro.</p>
+  <ol>
+    <li>Na aba Processos, liste de oito a doze processos, com tipo, dono e objetivo.</li>
+    <li>Escreva o indicador de cada processo, ou deixe em branco quando não houver.</li>
+    <li>Na aba Interações, escreva o que cada processo entrega aos outros.</li>
+    <li>Na aba Elementos, avalie os oito elementos de cada processo.</li>
+    <li>Escolha o processo principal mais importante e preencha a aba Tartaruga.</li>
+    <li>Confira se as entradas e as saídas da tartaruga aparecem na aba Interações.</li>
+    <li>Passe o checklist do módulo 10.</li>
+  </ol>
+  <p>Depois, escolha um pedido real da semana passada e siga o caminho dele pelo mapa. Anote cada lugar por onde ele passou e que não está no mapa, e cada passagem em que ele ficou parado.</p>
+</section>
+
+<!-- ============================ MÓDULO 12 ============================ -->
+<section id="planilha">
+  <p class="eyebrow">Módulo 12</p>
+  <h2>A planilha de apoio</h2>
+  <p>Este treinamento acompanha o arquivo <a id="xlsx-ref" href="Processos-modelo.xlsx">Processos-modelo.xlsx</a>, que fica na mesma pasta. As células em amarelo-claro são para preenchimento. As células cinza são calculadas.</p>
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Aba</th><th>Para que serve</th><th style="width:36%">O que ela calcula</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Instruções</strong></td><td>Legenda de cores, ordem de preenchimento e regras do modelo.</td><td>Nada. É só leitura.</td></tr>
+        <tr><td><strong>Processos</strong></td><td>Lista de até 12 processos, com tipo, dono, objetivo, entradas, saídas e indicador.</td><td>Conferência dos campos e contagem por tipo.</td></tr>
+        <tr><td><strong>Interações</strong></td><td>Matriz com o que cada processo entrega aos outros.</td><td>Entregas e recebimentos de cada processo, e processos sem ligação.</td></tr>
+        <tr><td><strong>Tartaruga</strong></td><td>As sete partes de um processo, com os dados do processo escolhido.</td><td>Conferência de cada parte e situação da tartaruga.</td></tr>
+        <tr><td><strong>Elementos</strong></td><td>Avaliação dos oito elementos de cada processo.</td><td>Pontos e percentual por processo e por elemento, e gráfico.</td></tr>
+        <tr><td><strong>Checklist</strong></td><td>Os mesmos 12 itens do módulo 10, com status Sim, Parcial ou Não.</td><td>Percentual atendido e situação da validação.</td></tr>
+        <tr><td><strong>Exemplo 1 e Exemplo 2</strong></td><td>O mapa e a tartaruga da pizzaria, e a tartaruga do processo de compras.</td><td>Percentual de elementos por processo e contagens.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ GLOSSÁRIO ============================ -->
+<section id="glossario">
+  <p class="eyebrow">Referência</p>
+  <h2>Glossário</h2>
+  <dl class="gloss">
+    <div><dt>Abordagem de processo</dt><dd>Forma de gerir as atividades como processos ligados, em que a saída de um é a entrada de outro.</dd></div>
+    <div><dt>Cliente do processo</dt><dd>Quem recebe a saída do processo. Pode ser o cliente externo ou outro processo.</dd></div>
+    <div><dt>Diagrama de tartaruga</dt><dd>Desenho de um processo com as entradas, as saídas, os recursos, as pessoas, os métodos e os indicadores.</dd></div>
+    <div><dt>Dono do processo</dt><dd>Pessoa que responde pelo resultado do processo, com autoridade para mudá-lo.</dd></div>
+    <div><dt>Entrada</dt><dd>O que o processo recebe para transformar.</dd></div>
+    <div><dt>Interação</dt><dd>Ligação entre dois processos: o que um entrega e o outro recebe.</dd></div>
+    <div><dt>Macroprocesso</dt><dd>Conjunto de processos que, juntos, entregam um resultado ao cliente.</dd></div>
+    <div><dt>Mapa de processos</dt><dd>Desenho dos processos da organização e das ligações entre eles.</dd></div>
+    <div><dt>Processo</dt><dd>Conjunto de atividades que usa entradas para entregar um resultado pretendido.</dd></div>
+    <div><dt>Processo de apoio</dt><dd>Processo que fornece recursos aos outros processos.</dd></div>
+    <div><dt>Processo de gestão</dt><dd>Processo que define o rumo, os objetivos e os recursos, e confere os resultados.</dd></div>
+    <div><dt>Processo principal</dt><dd>Processo que transforma o pedido do cliente em produto ou serviço entregue.</dd></div>
+    <div><dt>Processo terceirizado</dt><dd>Processo executado por um provedor externo, que continua sob a responsabilidade da organização.</dd></div>
+    <div><dt>Saída</dt><dd>Resultado do processo: produto, serviço ou informação.</dd></div>
+  </dl>
+</section>
+
+</main>
+</div>
+
+<footer>Material de estudo. Os exemplos, documentos e números são ilustrativos e foram criados para fins didáticos. As referências às normas ISO são resumos para estudo e não substituem o texto das normas.</footer>
+</div>
+
+<script>
+(function () {
+  function read(key) { try { return JSON.parse(localStorage.getItem(key) || 'null'); } catch (e) { return null; } }
+  function write(key, val) { try { localStorage.setItem(key, JSON.stringify(val)); } catch (e) {} }
+
+  /* ---------- Checklist ---------- */
+  var boxes = Array.prototype.slice.call(document.querySelectorAll('#checklist input'));
+  var count = document.getElementById('ck-count');
+  var saved = read('processos-checklist') || {};
+  function refreshChecks() {
+    var n = 0, state = {};
+    boxes.forEach(function (b) { if (b.checked) { n++; } state[b.id] = b.checked; });
+    count.textContent = n;
+    return state;
+  }
+  boxes.forEach(function (b) {
+    if (saved[b.id]) { b.checked = true; }
+    b.addEventListener('change', function () { write('processos-checklist', refreshChecks()); });
+  });
+  refreshChecks();
+  document.getElementById('ck-reset').addEventListener('click', function () {
+    boxes.forEach(function (b) { b.checked = false; });
+    write('processos-checklist', refreshChecks());
+  });
+
+  /* ---------- Exercício ---------- */
+  var KEYS = ['E', 'S', 'R', 'P', 'M', 'I'];
+  var LABEL = { E: 'Entrada', S: 'Saída', R: 'Com o quê', P: 'Com quem', M: 'Como', I: 'Quanto' };
+  var NAMES = { E: 'entrada', S: 'saída', R: 'com o quê, os recursos', P: 'com quem, as pessoas', M: 'como, os métodos', I: 'quanto, os indicadores' };
+  var ITEMS = [
+    { t: 'Processo de compras: requisição aprovada, com especificação.', a: 'E', w: 'É o que o processo recebe para trabalhar.' },
+    { t: 'Processo de compras: pedido de compra emitido ao fornecedor.', a: 'S', w: 'É o que o processo entrega.' },
+    { t: 'Processo de compras: sistema de compras e cadastro de fornecedores.', a: 'R', w: 'São recursos: o que o processo usa, e não o que transforma.' },
+    { t: 'Processo de compras: compradores treinados no procedimento.', a: 'P', w: 'São as pessoas, com a competência necessária.' },
+    { t: 'Processo de compras: procedimento PR-SUP-01 e política de alçadas.', a: 'M', w: 'São os métodos: os documentos que dizem como fazer.' },
+    { t: 'Processo de compras: prazo médio de atendimento das requisições.', a: 'I', w: 'É um indicador, com meta.' },
+    { t: 'Processo de entrega: motos revisadas e bolsas térmicas.', a: 'R', w: 'São recursos do processo.' },
+    { t: 'Processo de entrega: pedido entregue ao cliente.', a: 'S', w: 'É a saída que justifica o processo.' },
+    { t: 'Processo de entrega: pedido embalado e conferido.', a: 'E', w: 'É a saída do processo de produção, e a entrada deste.' },
+    { t: 'Processo de entrega: instrução IT-EXP-01, de agrupamento por zona.', a: 'M', w: 'A instrução diz como o trabalho é feito.' },
+    { t: 'Processo de entrega: entregadores com habilitação e treinamento de direção segura.', a: 'P', w: 'É a parte das pessoas e das competências.' },
+    { t: 'Processo de entrega: percentual de entregas em até 40 minutos.', a: 'I', w: 'É o indicador de resultado do processo.' }
+  ];
+  var quiz = document.getElementById('quiz');
+  var score = document.getElementById('qz-score');
+  var done = document.getElementById('qz-done');
+  document.getElementById('qz-total').textContent = ITEMS.length;
+  var hits = 0, answered = 0;
+
+  function render() {
+    hits = 0; answered = 0; score.textContent = 0; done.textContent = 0;
+    quiz.textContent = '';
+    ITEMS.forEach(function (item, idx) {
+      var row = document.createElement('div'); row.className = 'q';
+      var p = document.createElement('p'); p.textContent = (idx + 1) + '. ' + item.t;
+      var opts = document.createElement('div'); opts.className = 'opts';
+      opts.setAttribute('role', 'group'); opts.setAttribute('aria-label', 'Parte da tartaruga do item ' + (idx + 1));
+      var why = document.createElement('p'); why.className = 'why'; why.hidden = true;
+      KEYS.forEach(function (k) {
+        var b = document.createElement('button');
+        b.type = 'button'; b.textContent = LABEL[k]; b.id = 'qz-' + idx + '-' + k;
+        b.setAttribute('data-k', k);
+        b.addEventListener('click', function () {
+          var ok = k === item.a;
+          Array.prototype.forEach.call(opts.children, function (o) {
+            o.disabled = true;
+            if (o.getAttribute('data-k') === item.a) { o.className = 'right'; }
+          });
+          if (!ok) { b.className = 'wrong'; }
+          var lead = document.createElement('b');
+          lead.textContent = (ok ? 'Certo. ' : 'A resposta é ' + NAMES[item.a] + '. ');
+          why.textContent = ''; why.appendChild(lead); why.appendChild(document.createTextNode(item.w));
+          why.className = 'why ' + (ok ? 'ok' : 'no'); why.hidden = false;
+          answered++; if (ok) { hits++; }
+          score.textContent = hits; done.textContent = answered;
+        });
+        opts.appendChild(b);
+      });
+      row.appendChild(p); row.appendChild(opts); row.appendChild(why);
+      quiz.appendChild(row);
+    });
+  }
+  render();
+  document.getElementById('qz-reset').addEventListener('click', render);
+
+  /* ---------- Gráfico: leitura dos valores ---------- */
+  var fig = document.getElementById('fig-bars');
+  var tip = document.getElementById('bars-tip');
+  var svg = document.getElementById('bars');
+  var segs = document.querySelectorAll('#bars .seg');
+  function hide() {
+    tip.hidden = true;
+    Array.prototype.forEach.call(segs, function (b) { b.removeAttribute('opacity'); });
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('#bars .hit'), function (r) {
+    function show() {
+      var d = r.dataset;
+      Array.prototype.forEach.call(segs, function (b) {
+        b.setAttribute('opacity', b.getAttribute('data-k') === d.k ? '1' : '.4');
+      });
+      tip.textContent = '';
+      var strong = document.createElement('b'); strong.textContent = d.pts + ' de 8 elementos';
+      tip.appendChild(strong);
+      tip.appendChild(document.createTextNode(d.id + ' · ' + d.n + ' · ' + d.t));
+      tip.appendChild(document.createElement('br'));
+      tip.appendChild(document.createTextNode('Sim: ' + d.s + ' · Parcial: ' + d.p + ' · Não: ' + d.x));
+      var box = fig.getBoundingClientRect(), rb = r.getBoundingClientRect();
+      var pt = svg.createSVGPoint(); pt.x = parseFloat(d.cx); pt.y = 0;
+      var scr = pt.matrixTransform(svg.getScreenCTM());
+      tip.style.left = Math.min(Math.max(scr.x - box.left, 170), box.width - 170) + 'px';
+      tip.style.top = (rb.top - box.top + 4) + 'px';
+      tip.hidden = false;
+    }
+    r.addEventListener('pointerenter', show);
+    r.addEventListener('focus', show);
+    r.addEventListener('pointerleave', hide);
+    r.addEventListener('blur', hide);
+  });
+})();
+</script>
+</body>
+</html>
