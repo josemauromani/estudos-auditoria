@@ -17,6 +17,7 @@ Para começar, abra o arquivo `index.html` no navegador.
 | Diagrama de Ishikawa | `Ishikawa/` | `Ishikawa-modelo.xlsx` |
 | 5W2H | `5W2H/` | `5W2H-modelo.xlsx` |
 | PDCA | `PDCA/` | `PDCA-modelo.xlsx` |
+| Indicadores | `Indicadores/` | `Indicadores-modelo.xlsx` |
 | Auditoria interna | `Auditoria/` | `Auditoria-modelo.xlsx` |
 | Não conformidade e ação corretiva | `Nao-Conformidade/` | `RNC-modelo.xlsx` |
 

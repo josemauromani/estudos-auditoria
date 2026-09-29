@@ -204,7 +204,7 @@ tb.append(f'            <tr class="tot"><td>Total</td><td class="c">{GERAL[0]}</
 tb += ['          </tbody>', '        </table>']
 
 # ---- figura 9: estudos da série × seções da norma
-ORDEM = ["swot", "sipoc", "raci", "riscos", "gut", "ishikawa", "w5h2", "pdca", "auditoria", "nc"]
+ORDEM = ["swot", "sipoc", "raci", "riscos", "ind", "gut", "ishikawa", "w5h2", "pdca", "auditoria", "nc"]
 CX = lambda j: 350 + j * 80  # noqa: E731
 HD = {"base": "hd-ink", "p": "hd-p", "d": "hd-d", "c": "hd-c", "a": "hd-a"}
 RY, R0 = 32, 70
@@ -234,13 +234,14 @@ AJUDA = {
     "4.4": "Descreve cada processo: fornecedores, entradas, etapas, saídas e clientes.",
     "5.3": "Mostra quem executa, quem responde, quem é consultado e quem é informado.",
     "6.1": "A SWOT levanta os riscos e as oportunidades. A Matriz de riscos avalia o nível e define a resposta.",
-    "6.2": "Transforma cada objetivo em plano, com responsável, prazo e recursos.",
+    "6.2": "O estudo de Indicadores liga o objetivo à medida e à meta. O 5W2H transforma a meta em plano.",
     "6.3": "A Matriz de riscos avalia o que a mudança pode causar. O 5W2H planeja a execução.",
     "7.4": "As letras C e I da matriz mostram quem precisa ser consultado e informado.",
     "8.1": "Mostra as entradas e as saídas que a operação precisa controlar.",
     "8.7": "Separa a correção da saída não conforme da ação sobre a causa.",
-    "9.1.1": "A fase de verificação do ciclo compara o indicador com a meta.",
-    "9.1.3": "A GUT prioriza o que os dados mostram. O Ishikawa procura as causas.",
+    "9.1.1": "O estudo de Indicadores define o que medir, como e quando. O PDCA compara o resultado com a meta.",
+    "9.1.2": "Traz a satisfação do cliente para o painel, com meta e análise.",
+    "9.1.3": "O painel mostra a situação e a tendência. A GUT prioriza, e o Ishikawa procura as causas.",
     "9.2": "Entrega o programa, o plano, a lista de verificação e as constatações.",
     "10.1": "Conduz a melhoria, do problema até a padronização.",
     "10.2": "Traz o tratamento em sete etapas, com análise de causa, plano e verificação da eficácia.",

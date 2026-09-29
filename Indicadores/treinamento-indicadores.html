@@ -1,0 +1,1211 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Indicadores na prática</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<style>
+:root{
+  --ground:#F3F6F7; --surface:#FFFFFF; --sunk:#E9EEF0; --ink:#16242E; --muted:#566672; --rule:#D3DBE0;
+  --accent:#2B5C8A;
+  --s1:#2A6FB0; --s1-tint:#DCE8F3;
+  --s2:#D19A2E; --s2-tint:#F8EBCB;
+  --s3:#B0413E; --s3-tint:#F5DEDC;
+  --on-s2:#16242E;
+  --p:#2B5C8A; --p-tint:#DCE8F3;
+  --d:#A96A12; --d-tint:#F6E8CF;
+  --c:#1E7B73; --c-tint:#D9EEEB;
+  --a:#B0413E; --a-tint:#F5DEDC;
+  --on-hue:#FFFFFF;
+  --good:#1F7A4D; --good-tint:#DDF1E5;
+  --bad:#B0413E; --bad-tint:#F5DEDC;
+  --display:"Barlow Semi Condensed","Arial Narrow",Arial,sans-serif;
+  --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --ground:#0F171C; --surface:#172229; --sunk:#1E2B33; --ink:#E4EAED; --muted:#9BABB6; --rule:#2B3A44;
+    --accent:#86B7E3;
+  --s1:#4F97DB; --s1-tint:#1B2F42;
+  --s2:#B58E14; --s2-tint:#3A2C12;
+  --s3:#D14B45; --s3-tint:#3D1F1E;
+  --on-s2:#0F171C;
+    --p:#86B7E3; --p-tint:#1B2F42;
+    --d:#E2AC4F; --d-tint:#3A2C12;
+    --c:#5FC6BA; --c-tint:#15332F;
+    --a:#EC8E89; --a-tint:#3D1F1E;
+    --on-hue:#0F171C;
+    --good:#6FCF9B; --good-tint:#163326;
+    --bad:#EC8E89; --bad-tint:#3D1F1E;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --ground:#0F171C; --surface:#172229; --sunk:#1E2B33; --ink:#E4EAED; --muted:#9BABB6; --rule:#2B3A44;
+  --accent:#86B7E3;
+  --s1:#4F97DB; --s1-tint:#1B2F42;
+  --s2:#B58E14; --s2-tint:#3A2C12;
+  --s3:#D14B45; --s3-tint:#3D1F1E;
+  --on-s2:#0F171C;
+  --p:#86B7E3; --p-tint:#1B2F42;
+  --d:#E2AC4F; --d-tint:#3A2C12;
+  --c:#5FC6BA; --c-tint:#15332F;
+  --a:#EC8E89; --a-tint:#3D1F1E;
+  --on-hue:#0F171C;
+  --good:#6FCF9B; --good-tint:#163326;
+  --bad:#EC8E89; --bad-tint:#3D1F1E;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--ground);color:var(--ink);font:400 16px/1.65 var(--body);-webkit-text-size-adjust:100%}
+a{color:var(--accent);text-underline-offset:3px}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.page{max-width:1180px;margin-inline:auto;padding-inline:20px;padding-block:36px 80px}
+
+/* Cabeçalho */
+.mast{display:flex;flex-direction:column;gap:18px;padding-bottom:32px;border-bottom:1px solid var(--rule)}
+.tiles{display:flex;gap:6px}
+.tiles span{width:44px;height:44px;display:grid;place-items:center;font:700 24px/1 var(--display);color:var(--on-hue)}
+.tiles .p{background:var(--p)} .tiles .d{background:var(--d)} .tiles .c{background:var(--c)} .tiles .a{background:var(--a)}
+h1{font:700 clamp(2.3rem,6vw,3.6rem)/1.02 var(--display);letter-spacing:-.01em;margin:0;text-wrap:balance}
+.lead{font-size:1.15rem;line-height:1.55;max-width:62ch;margin:0;color:var(--ink)}
+.meta{display:flex;flex-direction:row;flex-wrap:wrap;gap:6px 22px;font:400 .8rem/1.4 var(--mono);color:var(--muted);margin:0;padding:0;list-style:none}
+
+/* Estrutura */
+.layout{display:grid;grid-template-columns:minmax(0,1fr);gap:32px;padding-top:32px}
+.toc{font-size:.92rem}
+.toc h2{font:500 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+.toc ol{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:2px 20px;counter-reset:toc}
+.toc li{counter-increment:toc}
+.toc a{display:flex;gap:10px;padding:5px 0;color:var(--ink);text-decoration:none;line-height:1.35}
+.toc a::before{content:counter(toc,decimal-leading-zero);font:400 .75rem/1.7 var(--mono);color:var(--muted)}
+.toc a:hover{color:var(--accent);text-decoration:underline}
+@media (min-width:1020px){
+  .layout{grid-template-columns:200px minmax(0,1fr);gap:64px}
+  .toc{position:sticky;top:calc(env(safe-area-inset-top,0px) + 24px);align-self:start}
+  .toc ol{grid-template-columns:1fr}
+}
+main{display:flex;flex-direction:column;gap:72px;min-width:0}
+section{display:flex;flex-direction:column;gap:20px;scroll-margin-top:24px}
+.eyebrow{font:500 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0}
+h2{font:700 clamp(1.7rem,4vw,2.2rem)/1.1 var(--display);margin:0;text-wrap:balance}
+h3{font:600 1.3rem/1.2 var(--display);margin:12px 0 0;text-wrap:balance}
+h4{font:600 .95rem/1.3 var(--body);margin:0}
+p{margin:0}
+section > p, section > ul, section > ol, section > h3{max-width:68ch}
+ul,ol{margin:0;padding-left:1.25em;display:flex;flex-direction:column;gap:6px}
+strong{font-weight:600}
+code{font:400 .88em var(--mono);background:var(--sunk);padding:1px 5px;border-radius:3px}
+
+/* Letras coloridas no texto */
+.k{display:inline-grid;place-items:center;width:1.45em;height:1.45em;font:700 .85em/1 var(--display);color:var(--on-hue);vertical-align:.05em}
+.k.p{background:var(--p)} .k.d{background:var(--d)} .k.c{background:var(--c)} .k.a{background:var(--a)}
+
+/* Figuras */
+figure{margin:0;display:flex;flex-direction:column;gap:10px;position:relative}
+.scroll{overflow-x:auto;background:var(--surface);border:1px solid var(--rule);padding:18px}
+.scroll svg{display:block;width:100%;min-width:820px;height:auto;color:var(--ink)}
+figcaption{font-size:.86rem;line-height:1.5;color:var(--muted);max-width:72ch}
+figcaption b{color:var(--ink);font-weight:600}
+svg text{font-family:var(--body);fill:var(--ink)}
+svg .disp{font-family:var(--display);font-weight:700}
+svg .mono{font-family:var(--mono);letter-spacing:.08em}
+svg .on{fill:var(--on-hue)}
+svg .mu{fill:var(--muted)}
+svg .b{font-weight:600}
+svg .ln{stroke:var(--ink);stroke-width:1.5;fill:none}
+svg .ln-mu{stroke:var(--muted);stroke-width:1.5;fill:none}
+svg .ln-bold{stroke:var(--ink);stroke-width:3;fill:none;stroke-linejoin:round;stroke-linecap:round}
+svg .dash{stroke-dasharray:5 4}
+svg .ah{fill:var(--ink)} svg .ah-mu{fill:var(--muted)}
+svg .bx{fill:var(--surface);stroke:var(--rule);stroke-width:1.5}
+svg .bx-ink{fill:var(--ink);stroke:var(--ink)}
+svg .t-ground{fill:var(--ground)}
+svg .bx-out{fill:none;stroke:var(--muted);stroke-width:1.5;stroke-dasharray:5 4}
+svg .bx-p{fill:var(--p-tint);stroke:var(--p);stroke-width:1.5} svg .hd-p{fill:var(--p)}
+svg .bx-d{fill:var(--d-tint);stroke:var(--d);stroke-width:1.5} svg .hd-d{fill:var(--d)}
+svg .bx-c{fill:var(--c-tint);stroke:var(--c);stroke-width:1.5} svg .hd-c{fill:var(--c)}
+svg .bx-a{fill:var(--a-tint);stroke:var(--a);stroke-width:1.5} svg .hd-a{fill:var(--a)}
+svg .gap{stroke:var(--surface);stroke-width:4}
+svg .gap2{stroke:var(--surface);stroke-width:2}
+svg .hub{fill:var(--surface)}
+
+/* Gráfico */
+svg .grid{stroke:var(--rule);stroke-width:1}
+svg .band{fill:var(--sunk)}
+svg .series{stroke:var(--accent);stroke-width:2;fill:none;stroke-linejoin:round;stroke-linecap:round}
+svg .pt{fill:var(--accent);stroke:var(--surface);stroke-width:2}
+svg .pt.on-hit{stroke:var(--ink)}
+svg .goal{stroke:var(--muted);stroke-width:1.5;stroke-dasharray:6 4;fill:none}
+svg .xh{stroke:var(--muted);stroke-width:1}
+svg .hit{fill:transparent;cursor:crosshair;outline:none}
+svg .root{fill:var(--accent);stroke:var(--surface);stroke-width:2}
+.tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--ground);padding:6px 10px;font-size:.78rem;line-height:1.4;transform:translate(-50%,calc(-100% - 14px));white-space:nowrap;z-index:2}
+.tip b{display:block;font:600 1.05rem/1.2 var(--body)}
+details.data{font-size:.88rem}
+details.data summary{cursor:pointer;font:400 .82rem var(--mono);color:var(--muted);padding:4px 0}
+details.data .tbl{margin-top:8px}
+details.data table{min-width:420px}
+
+/* Tabelas */
+.tbl{overflow-x:auto;border:1px solid var(--rule);background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:780px;font-size:.88rem;line-height:1.4}
+th,td{padding:9px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--rule)}
+tr:last-child > td{border-bottom:0}
+thead th{font:600 .8rem/1.3 var(--body);background:var(--sunk)}
+td.num{font-variant-numeric:tabular-nums;white-space:nowrap;font-family:var(--mono);font-size:.82rem}
+
+/* Situação do indicador */
+.chip{display:inline-block;padding:2px 8px;font:600 .76rem/1.45 var(--body);color:var(--on-hue);white-space:nowrap}
+.chip.s1{background:var(--s1)} .chip.s2{background:var(--s2);color:var(--on-s2)} .chip.s3{background:var(--s3)}
+svg .hd-ink{fill:var(--ink)}
+svg .bx-out2{fill:var(--sunk);stroke:var(--rule);stroke-width:1.5}
+svg .z1{fill:var(--s1-tint);stroke:var(--surface);stroke-width:2}
+svg .z2{fill:var(--s2-tint);stroke:var(--surface);stroke-width:2}
+svg .z3{fill:var(--s3-tint);stroke:var(--surface);stroke-width:2}
+svg .goal2{stroke:var(--muted);stroke-width:1.5;stroke-dasharray:2 4;fill:none}
+svg .hit:focus-visible{stroke:var(--accent);stroke-width:2}
+
+/* Tabelas dos exemplos */
+table.aud{font-size:.8rem;min-width:860px;line-height:1.4}
+table.aud th, table.aud td{padding:8px 9px}
+table.aud td.n{white-space:nowrap;font-weight:600;color:var(--muted)}
+table.aud td.c{text-align:center;font-variant-numeric:tabular-nums;white-space:nowrap}
+table.aud th.c{text-align:center}
+table.aud td.out{background:var(--sunk)}
+table.aud td small{display:block;color:var(--muted);font-size:.76rem;margin-top:3px}
+table.aud caption{caption-side:top;text-align:left;padding:10px 12px;font:500 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);background:var(--sunk)}
+
+/* Ficha do painel (acima de cada exemplo) */
+.ficha{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:0;border:1px solid var(--rule);background:var(--surface)}
+.ficha div{padding:12px 14px;border-right:1px solid var(--rule);border-bottom:1px solid var(--rule);margin:0 -1px -1px 0}
+.ficha dt{font:500 .68rem/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.ficha dd{margin:0;font-size:.9rem;line-height:1.4}
+dl{margin:0}
+
+/* Blocos */
+.pair{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.box{background:var(--surface);border:1px solid var(--rule);padding:18px 20px;display:flex;flex-direction:column;gap:10px}
+.box h4{font:600 1.1rem/1.2 var(--display)}
+.box ul{font-size:.93rem}
+.note{background:var(--sunk);padding:16px 20px;max-width:72ch;font-size:.94rem;display:flex;flex-direction:column;gap:6px}
+.note h4{font:500 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+
+/* Passo a passo */
+.steps{list-style:none;padding:0;counter-reset:st;gap:0;max-width:none;border-top:1px solid var(--rule)}
+.steps li{counter-increment:st;display:grid;grid-template-columns:44px minmax(0,1fr);gap:4px 12px;padding:16px 0;border-bottom:1px solid var(--rule)}
+.steps li::before{content:counter(st);font:700 1.7rem/1 var(--display);color:var(--muted);grid-row:span 2}
+.steps h4{font:600 1.1rem/1.25 var(--display)}
+.steps p{font-size:.95rem;max-width:64ch;grid-column:2}
+
+/* Erros comuns */
+.errs{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:0 40px;border-top:1px solid var(--rule)}
+.errs div{padding:16px 16px 16px 0;border-bottom:1px solid var(--rule);display:flex;flex-direction:column;gap:4px}
+.errs h4{font:600 1.05rem/1.25 var(--display)}
+.errs p{font-size:.92rem}
+.errs .fix{color:var(--muted)}
+.errs .fix b{color:var(--ink);font-weight:600}
+
+/* Checklist */
+.check{list-style:none;padding:0;gap:0;max-width:none;border:1px solid var(--rule);background:var(--surface)}
+.check li{border-bottom:1px solid var(--rule)}
+.check li:last-child{border-bottom:0}
+.check label{display:grid;grid-template-columns:22px minmax(0,1fr);gap:12px;padding:11px 16px;cursor:pointer;font-size:.94rem;align-items:start}
+.check input{width:18px;height:18px;margin:3px 0 0;accent-color:var(--c)}
+.check input:checked + span{color:var(--muted);text-decoration:line-through}
+.bar{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;font:400 .82rem var(--mono);color:var(--muted)}
+.bar b{color:var(--ink);font-weight:500}
+
+/* Exercício */
+.quiz{display:flex;flex-direction:column;gap:0;border:1px solid var(--rule);background:var(--surface)}
+.q{display:grid;grid-template-columns:minmax(0,1fr);gap:10px;padding:14px 16px;border-bottom:1px solid var(--rule)}
+.q:last-child{border-bottom:0}
+@media (min-width:720px){.q{grid-template-columns:minmax(0,1fr) auto;align-items:center}}
+.q p{font-size:.95rem}
+.q .why{grid-column:1/-1;font-size:.86rem;color:var(--muted)}
+.q .why b{font-weight:600}
+.q .why.ok b{color:var(--good)} .q .why.no b{color:var(--bad)}
+.opts{display:flex;gap:6px}
+.opts button{width:40px;height:40px;border:1.5px solid var(--rule);background:var(--surface);color:var(--ink);font:700 1.1rem/1 var(--display);cursor:pointer;border-radius:0}
+.opts button:hover:not(:disabled){border-color:var(--ink)}
+.opts button:disabled{cursor:default;opacity:.45}
+.opts button.right{background:var(--good-tint);border-color:var(--good);color:var(--good);opacity:1}
+.opts button.wrong{background:var(--bad-tint);border-color:var(--bad);color:var(--bad);opacity:1}
+.btn{border:1.5px solid var(--ink);background:transparent;color:var(--ink);font:500 .82rem var(--mono);padding:7px 14px;cursor:pointer;border-radius:0}
+.btn:hover{background:var(--ink);color:var(--ground)}
+
+/* Glossário */
+.gloss{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:0 40px;border-top:1px solid var(--rule)}
+.gloss div{padding:12px 0;border-bottom:1px solid var(--rule)}
+.gloss dt{font:600 1.02rem/1.3 var(--display)}
+.gloss dd{margin:2px 0 0;font-size:.9rem;color:var(--muted)}
+footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);font-size:.84rem;color:var(--muted);max-width:72ch}
+
+.quiz .opts{flex-wrap:wrap}
+.quiz .opts button{width:auto;min-width:40px;padding:0 11px;font-size:1rem}
+</style>
+</head>
+<body>
+<div class="page" lang="pt-BR">
+
+<header class="mast">
+  <div class="tiles" aria-hidden="true"><span class="p">K</span><span class="c">P</span><span class="d">I</span></div>
+  <h1>Indicadores na prática</h1>
+  <p class="lead">Um guia de estudo para medir o que importa: ligar o indicador a um objetivo, escrever a fórmula, definir a meta, ler o gráfico sem se enganar e transformar o número em decisão.</p>
+  <ul class="meta">
+    <li>Treinamento autoinstrucional</li>
+    <li>11 módulos</li>
+    <li>Leitura de cerca de 40 minutos</li>
+    <li>3 exemplos resolvidos e 2 exercícios</li>
+  </ul>
+</header>
+
+<div class="layout">
+
+<nav class="toc" aria-label="Sumário">
+  <h2>Sumário</h2>
+  <ol>
+    <li><a href="#o-que-e">O que é</a></li>
+    <li><a href="#quais">Que indicadores ter</a></li>
+    <li><a href="#como">Como construir</a></li>
+    <li><a href="#exemplos">Exemplos resolvidos</a></li>
+    <li><a href="#leitura">Como ler o gráfico</a></li>
+    <li><a href="#erros">Erros comuns</a></li>
+    <li><a href="#ferramentas">Indicadores e outras ferramentas</a></li>
+    <li><a href="#iso">Nas normas ISO</a></li>
+    <li><a href="#reuniao">A reunião de indicadores</a></li>
+    <li><a href="#pratique">Pratique</a></li>
+    <li><a href="#planilha">A planilha de apoio</a></li>
+    <li><a href="#glossario">Glossário</a></li>
+  </ol>
+</nav>
+
+<main>
+
+<!-- ============================ MÓDULO 1 ============================ -->
+<section id="o-que-e">
+  <p class="eyebrow">Módulo 1</p>
+  <h2>O que é</h2>
+  <p>Indicador é uma medida que mostra se um objetivo está sendo alcançado. Ele transforma uma intenção, como “entregar no prazo”, em um número que pode ser acompanhado, comparado e discutido. Sem indicador, a conversa sobre desempenho é feita de impressões.</p>
+  <p>A sigla KPI, das letras do título, vem do inglês e quer dizer indicador-chave de desempenho. A palavra “chave” é a parte importante: um indicador só merece esse nome quando está ligado a um objetivo que a organização decidiu perseguir.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 196" role="img" aria-label="Do objetivo à decisão, em cinco passos. O objetivo diz o que a organização quer: entregar o pedido no prazo. O indicador diz como medir: entregas em até 40 minutos, em percentual. A meta diz quanto: no mínimo 95%. O resultado diz quanto foi: 95% em setembro. A decisão diz o que fazer: manter o padrão.">
+        <defs>
+          <marker id="a1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker>
+        </defs>
+        <g font-size="11.5">
+          <rect class="bx" x="16" y="20" width="164" height="112"/><text class="mono mu" x="30" y="42" font-size="10">OBJETIVO</text><text class="b" x="30" y="68" font-size="12.5">Entregar o pedido</text><text class="b" x="30" y="85" font-size="12.5">no prazo</text>
+          <rect class="bx-ink" x="192" y="20" width="164" height="112"/><text class="mono t-ground" x="206" y="42" font-size="10">INDICADOR</text><text class="b t-ground" x="206" y="68" font-size="12.5">Entregas em até</text><text class="b t-ground" x="206" y="85" font-size="12.5">40 minutos</text><text class="t-ground" x="206" y="108">em percentual</text>
+          <rect class="bx" x="368" y="20" width="164" height="112"/><text class="mono mu" x="382" y="42" font-size="10">META</text><text class="b" x="382" y="68" font-size="12.5">No mínimo 95%</text><text class="mu" x="382" y="90">a partir de julho</text>
+          <rect class="bx" x="544" y="20" width="164" height="112"/><text class="mono mu" x="558" y="42" font-size="10">RESULTADO</text><text class="b" x="558" y="68" font-size="12.5">95% em setembro</text><text class="mu" x="558" y="90">na meta</text>
+          <rect class="bx" x="720" y="20" width="164" height="112"/><text class="mono mu" x="734" y="42" font-size="10">DECISÃO</text><text class="b" x="734" y="68" font-size="12.5">Manter o padrão</text><text class="mu" x="734" y="90">e acompanhar</text>
+        </g>
+        <line class="ln" x1="181" y1="76" x2="189" y2="76" marker-end="url(#a1)"/><line class="ln" x1="357" y1="76" x2="365" y2="76" marker-end="url(#a1)"/>
+        <line class="ln" x1="533" y1="76" x2="541" y2="76" marker-end="url(#a1)"/><line class="ln" x1="709" y1="76" x2="717" y2="76" marker-end="url(#a1)"/>
+        <g class="mu" font-size="11.5" text-anchor="middle">
+          <text class="mu" x="98" y="158">O que queremos?</text><text class="mu" x="274" y="158">Como medimos?</text><text class="mu" x="450" y="158">Quanto?</text>
+          <text class="mu" x="626" y="158">Quanto foi?</text><text class="mu" x="802" y="158">O que fazemos?</text>
+        </g>
+        <text x="450" y="186" font-size="11.5" text-anchor="middle">Um indicador sem objetivo mede por medir. Um resultado sem decisão só ocupa a parede.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 1.</b> Do objetivo à decisão, com o indicador de entregas da pizzaria. O indicador é só o segundo elo: ele depende do objetivo que vem antes e da decisão que vem depois.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:20%">Termo</th><th style="width:40%">O que é</th><th>Exemplo</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Dado</strong></td><td>O registro de um fato, sem comparação.</td><td>O pedido 4812 saiu às 20h05 e chegou às 20h51.</td></tr>
+        <tr><td><strong>Objetivo</strong></td><td>O resultado que a organização quer alcançar.</td><td>Entregar o pedido no prazo.</td></tr>
+        <tr><td><strong>Indicador</strong></td><td>A medida que mostra se o objetivo está sendo alcançado.</td><td>Percentual de entregas em até 40 minutos.</td></tr>
+        <tr><td><strong>Meta</strong></td><td>O valor que o indicador deve atingir, e até quando.</td><td>No mínimo 95%, a partir de julho.</td></tr>
+        <tr><td><strong>Resultado</strong></td><td>O valor medido no período.</td><td>95% em setembro.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Objetivo, indicador e meta são três coisas diferentes, e costumam aparecer misturados. “Melhorar as entregas” é um objetivo. “Entregas no prazo” é um indicador. “95%” é uma meta. O exercício do módulo 10 treina essa diferença.</p>
+</section>
+
+<!-- ============================ MÓDULO 2 ============================ -->
+<section id="quais">
+  <p class="eyebrow">Módulo 2</p>
+  <h2>Que indicadores ter</h2>
+  <p>A pergunta não é o que dá para medir, e sim o que é preciso saber. Os indicadores vêm de dois lugares: dos objetivos da qualidade, que a direção define, e dos processos, que precisam mostrar que funcionam.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 250" role="img" aria-label="Onde medir ao longo do processo. Na entrada, o indicador mede o que chega do fornecedor: insumos recebidos dentro da especificação. No processo, mede o trabalho: tempo de preparo e pedidos refeitos. Na saída, mede o que é entregue: entregas em até 40 minutos. No cliente, mede a percepção: reclamações por 100 pedidos. Os indicadores de entrada e de processo avisam antes. Os de saída e de cliente confirmam depois.">
+        <defs>
+          <marker id="a2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker>
+        </defs>
+        <g font-size="11.5">
+          <rect class="bx" x="16" y="20" width="204" height="120"/><text class="mono mu" x="30" y="42" font-size="10">ENTRADA</text><text class="b" x="30" y="66" font-size="12.5">O que chega</text>
+          <text x="30" y="92">Insumos recebidos</text><text x="30" y="108">dentro da especificação</text>
+          <rect class="bx" x="236" y="20" width="204" height="120"/><text class="mono mu" x="250" y="42" font-size="10">PROCESSO</text><text class="b" x="250" y="66" font-size="12.5">O trabalho</text>
+          <text x="250" y="92">Tempo de preparo</text><text x="250" y="108">Pedidos refeitos por erro</text>
+          <rect class="bx" x="456" y="20" width="204" height="120"/><text class="mono mu" x="470" y="42" font-size="10">SAÍDA</text><text class="b" x="470" y="66" font-size="12.5">O que é entregue</text>
+          <text x="470" y="92">Entregas em até</text><text x="470" y="108">40 minutos</text>
+          <rect class="bx" x="676" y="20" width="208" height="120"/><text class="mono mu" x="690" y="42" font-size="10">CLIENTE</text><text class="b" x="690" y="66" font-size="12.5">A percepção</text>
+          <text x="690" y="92">Reclamações por</text><text x="690" y="108">100 pedidos</text>
+        </g>
+        <line class="ln" x1="221" y1="80" x2="233" y2="80" marker-end="url(#a2)"/><line class="ln" x1="441" y1="80" x2="453" y2="80" marker-end="url(#a2)"/>
+        <line class="ln" x1="661" y1="80" x2="673" y2="80" marker-end="url(#a2)"/>
+        <path class="ln" d="M16 160 V168 H440 V160"/>
+        <text x="228" y="192" font-size="11.5" text-anchor="middle"><tspan class="b">Indicadores de processo</tspan></text>
+        <text class="mu" x="228" y="210" font-size="11" text-anchor="middle">avisam antes: ainda dá tempo de agir</text>
+        <path class="ln" d="M456 160 V168 H884 V160"/>
+        <text x="670" y="192" font-size="11.5" text-anchor="middle"><tspan class="b">Indicadores de resultado</tspan></text>
+        <text class="mu" x="670" y="210" font-size="11" text-anchor="middle">confirmam depois: mostram o que o cliente recebeu</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 2.</b> Onde medir, ao longo do processo. O <a href="../SIPOC/treinamento-sipoc.html">SIPOC</a> mostra as entradas, as etapas e as saídas que podem receber um indicador. Um bom conjunto tem os dois tipos.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">De onde vem</th><th style="width:38%">Pergunta que o indicador responde</th><th>Exemplo</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Objetivos da qualidade</strong></td><td>Estamos chegando aonde a direção decidiu?</td><td>Reclamações por 100 pedidos.</td></tr>
+        <tr><td><strong>Processos</strong></td><td>O processo entrega o que deveria?</td><td>Prazo de atendimento das requisições.</td></tr>
+        <tr><td><strong>Clientes</strong></td><td>O cliente percebe o que entregamos?</td><td>Índice de satisfação, recompra, devoluções.</td></tr>
+        <tr><td><strong>Fornecedores</strong></td><td>Quem fornece cumpre o combinado?</td><td>Entregas do fornecedor no prazo e sem divergência.</td></tr>
+        <tr><td><strong>Riscos</strong></td><td>O risco que decidimos acompanhar está crescendo?</td><td>Dias de estoque do material de fornecedor único.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pair">
+    <div class="box">
+      <h4>Um bom indicador</h4>
+      <ul>
+        <li>Está ligado a um objetivo ou a um processo.</li>
+        <li>Pode ser calculado com dados que já existem, ou fáceis de obter.</li>
+        <li>Muda quando o processo muda.</li>
+        <li>É entendido por quem executa o trabalho.</li>
+        <li>Leva a uma decisão quando sai da meta.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h4>Quantos indicadores</h4>
+      <ul>
+        <li>De três a cinco por processo costumam bastar.</li>
+        <li>O conjunto deve caber em uma página.</li>
+        <li>Indicador que nunca gerou decisão é candidato a sair.</li>
+        <li>Indicador novo entra quando um objetivo ou um risco novo aparece.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 3 ============================ -->
+<section id="como">
+  <p class="eyebrow">Módulo 3</p>
+  <h2>Como construir</h2>
+  <p>O trabalho tem duas partes. A primeira, de definição, é feita uma vez e revista a cada ano. A segunda, de uso, repete-se a cada período. A lógica é a do ciclo <a href="../PDCA/treinamento-pdca.html">PDCA</a>.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 214" role="img" aria-label="As sete etapas do trabalho com indicadores: 1, partir do objetivo; 2, escolher o que medir; 3, escrever a ficha; 4, definir a meta; 5, coletar os dados; 6, analisar o resultado; 7, decidir e agir. As etapas 1 a 4 são a definição, feita uma vez e revista a cada ano. As etapas 5 a 7 são o uso, repetido a cada período.">
+        <defs>
+          <marker id="a3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker>
+          <marker id="a3m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah-mu" d="M0 0 L10 5 L0 10 z"/></marker>
+        </defs>
+        <path class="ln-mu dash" d="M828 46 V24 H576 V44" marker-end="url(#a3m)"/>
+        <text class="mu" x="702" y="16" font-size="11" text-anchor="middle">a cada período</text>
+        <g font-size="12" text-anchor="middle">
+          <rect class="bx" x="15" y="50" width="114" height="70"/><text class="mono mu" x="25" y="67" font-size="10" text-anchor="start">1</text><text class="b" x="72" y="88">Partir</text><text x="72" y="105">do objetivo</text>
+          <rect class="bx" x="141" y="50" width="114" height="70"/><text class="mono mu" x="151" y="67" font-size="10" text-anchor="start">2</text><text class="b" x="198" y="88">Escolher</text><text x="198" y="105">o que medir</text>
+          <rect class="bx" x="267" y="50" width="114" height="70"/><text class="mono mu" x="277" y="67" font-size="10" text-anchor="start">3</text><text class="b" x="324" y="88">Escrever</text><text x="324" y="105">a ficha</text>
+          <rect class="bx" x="393" y="50" width="114" height="70"/><text class="mono mu" x="403" y="67" font-size="10" text-anchor="start">4</text><text class="b" x="450" y="88">Definir</text><text x="450" y="105">a meta</text>
+          <rect class="bx" x="519" y="50" width="114" height="70"/><text class="mono mu" x="529" y="67" font-size="10" text-anchor="start">5</text><text class="b" x="576" y="88">Coletar</text><text x="576" y="105">os dados</text>
+          <rect class="bx" x="645" y="50" width="114" height="70"/><text class="mono mu" x="655" y="67" font-size="10" text-anchor="start">6</text><text class="b" x="702" y="88">Analisar</text><text x="702" y="105">o resultado</text>
+          <rect class="bx-ink" x="771" y="50" width="114" height="70"/><text class="mono t-ground" x="781" y="67" font-size="10" text-anchor="start">7</text><text class="b t-ground" x="828" y="88">Decidir</text><text class="t-ground" x="828" y="105">e agir</text>
+        </g>
+        <g>
+          <line class="ln" x1="130" y1="85" x2="138" y2="85" marker-end="url(#a3)"/><line class="ln" x1="256" y1="85" x2="264" y2="85" marker-end="url(#a3)"/>
+          <line class="ln" x1="382" y1="85" x2="390" y2="85" marker-end="url(#a3)"/><line class="ln" x1="508" y1="85" x2="516" y2="85" marker-end="url(#a3)"/>
+          <line class="ln" x1="634" y1="85" x2="642" y2="85" marker-end="url(#a3)"/><line class="ln" x1="760" y1="85" x2="768" y2="85" marker-end="url(#a3)"/>
+        </g>
+        <path class="ln" d="M15 140 V148 H507 V140"/>
+        <text x="261" y="170" font-size="11.5" text-anchor="middle"><tspan class="b">Definição</tspan></text>
+        <text class="mu" x="261" y="187" font-size="11" text-anchor="middle">feita uma vez, e revista a cada ano</text>
+        <path class="ln" d="M519 140 V148 H885 V140"/>
+        <text x="702" y="170" font-size="11.5" text-anchor="middle"><tspan class="b">Uso</tspan></text>
+        <text class="mu" x="702" y="187" font-size="11" text-anchor="middle">repetido a cada semana ou a cada mês</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 3.</b> As sete etapas. A maior parte das organizações faz bem as cinco primeiras, e para na sexta.</figcaption>
+  </figure>
+
+  <h3>Passo a passo</h3>
+  <ol class="steps">
+    <li><h4>Parta do objetivo</h4><p>Escreva o que a organização ou o processo quer alcançar. Se não há objetivo, pergunte o que o cliente do processo espera receber. O indicador vem depois.</p></li>
+    <li><h4>Escolha o que medir</h4><p>Procure a medida que mais se aproxima do objetivo. Prefira a que já tem dados. Combine um indicador de resultado com um de processo, que avise antes.</p></li>
+    <li><h4>Escreva a ficha</h4><p>Registre a fórmula, a unidade, a fonte dos dados, a frequência e o responsável. Duas pessoas, com a ficha na mão, precisam chegar ao mesmo número.</p></li>
+    <li><h4>Defina a meta</h4><p>Olhe o histórico, o que o cliente pede e o que a lei exige. Defina o valor, o sentido e o prazo. Defina também o limite de atenção, que separa o pequeno desvio do grande.</p></li>
+    <li><h4>Colete os dados</h4><p>Siga a fonte e a frequência da ficha. Não corrija o número que parece estranho: investigue. O dado ajustado para ficar bonito destrói a confiança no indicador.</p></li>
+    <li><h4>Analise o resultado</h4><p>Compare com a meta e com os períodos anteriores, em um gráfico. Separe o ponto isolado da tendência. O módulo 5 mostra como.</p></li>
+    <li><h4>Decida e aja</h4><p>Registre a decisão de cada indicador fora da meta, com responsável e prazo. Quando o desvio se repete, abra uma análise de causa, como mostra o estudo de <a href="../Nao-Conformidade/treinamento-nao-conformidade.html">Não conformidade e ação corretiva</a>.</p></li>
+  </ol>
+
+  <h3>A ficha do indicador</h3>
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 286" role="img" aria-label="A ficha de um indicador, com dez campos. Nome: prazo de atendimento das requisições. Objetivo: fornecer os materiais no prazo. Fórmula: soma dos dias úteis entre a requisição e o pedido, dividida pelo número de requisições. Fonte dos dados: datas da requisição e do pedido, no sistema. Responsável: comprador sênior. Unidade: dias úteis. Sentido: menor é melhor. Meta: até 5,0. Limite de atenção: 6,0. Frequência: mensal.">
+        <rect class="bx" x="10" y="16" width="880" height="254"/>
+        <rect class="hd-ink" x="10" y="16" width="880" height="38"/>
+        <text class="b t-ground" x="28" y="40" font-size="13.5">Ficha do indicador</text>
+        <text class="mono t-ground" x="872" y="40" font-size="10" text-anchor="end">C1</text>
+        <line class="grid" x1="600" y1="54" x2="600" y2="270"/>
+        <g class="grid"><line x1="10" y1="97" x2="890" y2="97"/><line x1="10" y1="140" x2="890" y2="140"/><line x1="10" y1="183" x2="890" y2="183"/><line x1="10" y1="226" x2="890" y2="226"/></g>
+        <g font-size="12.5">
+          <text class="mono mu" x="28" y="72" font-size="9.5">NOME</text><text class="b" x="28" y="89">Prazo de atendimento das requisições</text>
+          <text class="mono mu" x="28" y="115" font-size="9.5">OBJETIVO</text><text x="28" y="132">Fornecer os materiais no prazo</text>
+          <text class="mono mu" x="28" y="158" font-size="9.5">FÓRMULA</text><text x="28" y="175">Soma dos dias úteis entre a requisição e o pedido ÷ número de requisições</text>
+          <text class="mono mu" x="28" y="201" font-size="9.5">FONTE DOS DADOS</text><text x="28" y="218">Datas da requisição e do pedido, no sistema</text>
+          <text class="mono mu" x="28" y="244" font-size="9.5">RESPONSÁVEL</text><text x="28" y="261">Comprador sênior</text>
+          <text class="mono mu" x="618" y="72" font-size="9.5">UNIDADE</text><text x="618" y="89">Dias úteis</text>
+          <text class="mono mu" x="618" y="115" font-size="9.5">SENTIDO</text><text x="618" y="132">Menor é melhor</text>
+          <text class="mono mu" x="618" y="158" font-size="9.5">META</text><text class="b" x="618" y="175">Até 5,0</text>
+          <text class="mono mu" x="618" y="201" font-size="9.5">LIMITE DE ATENÇÃO</text><text x="618" y="218">6,0</text>
+          <text class="mono mu" x="618" y="244" font-size="9.5">FREQUÊNCIA</text><text x="618" y="261">Mensal</text>
+        </g>
+      </svg>
+    </div>
+    <figcaption><b>Figura 4.</b> A ficha do indicador C1, do exemplo 2. Os campos da esquerda dizem o que é medido e de onde vem o dado. Os da direita dizem como ler o número.</figcaption>
+  </figure>
+
+  <h3>A meta e o limite de atenção</h3>
+  <p>A meta sozinha divide os resultados em dois grupos: atingiu ou não atingiu. O limite de atenção cria um terceiro, para o desvio pequeno. As três situações são uma convenção deste material, e a organização pode usar outra, desde que a escreva.</p>
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 214" role="img" aria-label="As três situações de um indicador. Quando menor é melhor, com meta de até 5 e limite de atenção de 6: até 5 está na meta, entre 5 e 6 está em atenção, e acima de 6 está fora da meta. Quando maior é melhor, com meta de no mínimo 95 e limite de atenção de 90: abaixo de 90 está fora da meta, entre 90 e 95 está em atenção, e a partir de 95 está na meta.">
+        <text class="b" x="20" y="28" font-size="12.5">Menor é melhor</text>
+        <text class="mu" x="20" y="46" font-size="11.5">Prazo de atendimento, em dias úteis</text>
+        <rect class="z1" x="300" y="18" width="232" height="40"/><text class="b" x="416" y="43" font-size="12" text-anchor="middle">Na meta</text>
+        <rect class="z2" x="534" y="18" width="114" height="40"/><text class="b" x="591" y="43" font-size="12" text-anchor="middle">Atenção</text>
+        <rect class="z3" x="650" y="18" width="230" height="40"/><text class="b" x="765" y="43" font-size="12" text-anchor="middle">Fora da meta</text>
+        <g class="ln-mu" stroke-width="1"><line x1="533" y1="60" x2="533" y2="72"/><line x1="649" y1="60" x2="649" y2="72"/></g>
+        <text x="533" y="88" font-size="11.5" text-anchor="middle"><tspan class="b">meta</tspan> 5,0</text>
+        <text x="649" y="88" font-size="11.5" text-anchor="middle"><tspan class="b">limite</tspan> 6,0</text>
+
+        <text class="b" x="20" y="138" font-size="12.5">Maior é melhor</text>
+        <text class="mu" x="20" y="156" font-size="11.5">Entregas em até 40 minutos, em %</text>
+        <rect class="z3" x="300" y="128" width="232" height="40"/><text class="b" x="416" y="153" font-size="12" text-anchor="middle">Fora da meta</text>
+        <rect class="z2" x="534" y="128" width="114" height="40"/><text class="b" x="591" y="153" font-size="12" text-anchor="middle">Atenção</text>
+        <rect class="z1" x="650" y="128" width="230" height="40"/><text class="b" x="765" y="153" font-size="12" text-anchor="middle">Na meta</text>
+        <g class="ln-mu" stroke-width="1"><line x1="533" y1="170" x2="533" y2="182"/><line x1="649" y1="170" x2="649" y2="182"/></g>
+        <text x="533" y="198" font-size="11.5" text-anchor="middle"><tspan class="b">limite</tspan> 90</text>
+        <text x="649" y="198" font-size="11.5" text-anchor="middle"><tspan class="b">meta</tspan> 95</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 5.</b> As três situações, para os dois sentidos. O nome da situação aparece escrito em cada faixa: a cor ajuda, mas não é a única indicação.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">A meta pode vir de</th><th style="width:38%">Como definir</th><th>Exemplo</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Um requisito</strong></td><td>O cliente, o contrato ou a lei dizem o valor.</td><td>O cliente exige entrega em até 48 horas.</td></tr>
+        <tr><td><strong>O histórico</strong></td><td>Parta da média dos últimos períodos e defina uma melhora possível.</td><td>A média foi 82%. A meta do primeiro ciclo foi 95%, com plano.</td></tr>
+        <tr><td><strong>Uma referência</strong></td><td>Compare com outra unidade, outro turno ou o setor.</td><td>O turno do almoço entrega 96% no prazo.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note">
+    <h4>Regra prática</h4>
+    <p>Meta sem plano é desejo. A ISO 9001 pede que cada objetivo tenha o que será feito, os recursos, o responsável, o prazo e a forma de avaliar o resultado. O <a href="../5W2H/treinamento-5w2h.html">5W2H</a> organiza esse plano.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 4 ============================ -->
+<section id="exemplos">
+  <p class="eyebrow">Módulo 4</p>
+  <h2>Exemplos resolvidos</h2>
+  <p>Dois painéis de indicadores e um quadro de objetivos. As organizações são as dos outros estudos da série, e os dois painéis também estão preenchidos na planilha de apoio. Os dados são ilustrativos e foram criados para este treinamento.</p>
+
+  <h3>Exemplo 1. Indicadores da pizzaria</h3>
+  <dl class="ficha">
+    <div><dt>Organização</dt><dd>Pizzaria (loja com salão e delivery)</dd></div>
+    <div><dt>Período</dt><dd>Outubro de 2025 a setembro de 2026</dd></div>
+    <div><dt>Reunião de análise</dt><dd>Toda segunda-feira, com fechamento mensal</dd></div>
+    <div><dt>Responsável</dt><dd>Gerente da loja</dd></div>
+  </dl>
+  <div class="tbl">
+    <table class="aud">
+      <caption>Fichas dos indicadores</caption>
+      <thead><tr><th>Nº</th><th style="width:22%">Indicador e objetivo</th><th style="width:27%">Fórmula</th><th style="width:11%">Meta</th><th style="width:9%">Limite de atenção</th><th style="width:17%">Fonte dos dados</th><th>Responsável</th></tr></thead>
+      <tbody>
+        <tr><td class="n">P1</td><td><strong>Entregas em até 40 minutos</strong><small>Entregar o pedido no prazo prometido</small></td><td>Pedidos entregues em até 40 minutos ÷ pedidos entregues × 100<small>Percentual · maior é melhor</small></td><td>No mínimo 95%</td><td class="c">90%</td><td>Horários de saída e de chegada, no sistema de pedidos</td><td>Líder da expedição</td></tr>
+        <tr><td class="n">P2</td><td><strong>Reclamações por 100 pedidos</strong><small>Reduzir as reclamações dos clientes</small></td><td>Reclamações registradas ÷ pedidos entregues × 100<small>Por 100 pedidos · menor é melhor</small></td><td>Até 2,0</td><td class="c">3,0</td><td>Registro de reclamações do site, do aplicativo e do telefone</td><td>Atendente líder</td></tr>
+        <tr><td class="n">P3</td><td><strong>Pedidos refeitos por erro</strong><small>Entregar o pedido certo na primeira vez</small></td><td>Pedidos refeitos ÷ pedidos produzidos × 100<small>Percentual · menor é melhor</small></td><td>Até 1,5%</td><td class="c">2,5%</td><td>Etiquetas de pedido refeito, contadas no fechamento</td><td>Pizzaiolo líder</td></tr>
+        <tr><td class="n">P4</td><td><strong>Desperdício de insumos</strong><small>Reduzir o custo sem mexer na receita</small></td><td>Custo dos insumos descartados ÷ custo dos insumos comprados × 100<small>Percentual · menor é melhor</small></td><td>Até 4,0%</td><td class="c">5,0%</td><td>Planilha de descarte e notas de compra</td><td>Gerente da loja</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="tbl">
+    <table class="aud">
+      <caption>Resultados · situação em 06/10/2026</caption>
+      <thead><tr><th>Nº</th><th class="c">Abr/26</th><th class="c">Mai/26</th><th class="c">Jun/26</th><th class="c">Jul/26</th><th class="c">Ago/26</th><th class="c">Set/26</th><th class="c" style="width:7%">Média do ano</th><th style="width:11%">Situação</th><th class="c" style="width:8%">Seguidos fora</th><th style="width:10%">Tendência</th><th style="width:28%">Decisão</th></tr></thead>
+      <tbody>
+        <tr><td class="n">P1</td><td class="c out">82</td><td class="c out">84</td><td class="c out">88</td><td class="c out">94</td><td class="c">96</td><td class="c">95</td><td class="c">85,8</td><td><span class="chip s1">Na meta</span></td><td class="c">0</td><td>Melhorando</td><td><strong>Manter.</strong> A escala padrão e o agrupamento por zona, definidos no ciclo PDCA, continuam.</td></tr>
+        <tr><td class="n">P2</td><td class="c out">2,9</td><td class="c out">2,6</td><td class="c out">2,2</td><td class="c">1,8</td><td class="c">1,6</td><td class="c">1,9</td><td class="c">2,7</td><td><span class="chip s1">Na meta</span></td><td class="c">0</td><td>Melhorando</td><td><strong>Manter.</strong> A queda acompanha a melhora das entregas no prazo.</td></tr>
+        <tr><td class="n">P3</td><td class="c">1,4</td><td class="c">1,5</td><td class="c">1,3</td><td class="c out">1,6</td><td class="c out">1,8</td><td class="c out">2,0</td><td class="c">1,8</td><td><span class="chip s2">Atenção</span></td><td class="c">3</td><td>Piorando</td><td><strong>Abrir análise de causa.</strong> A alta começou em julho, junto com a troca do sistema de pedidos.</td></tr>
+        <tr><td class="n">P4</td><td class="c out">4,1</td><td class="c out">4,2</td><td class="c">3,9</td><td class="c">4,0</td><td class="c">3,8</td><td class="c">3,9</td><td class="c">4,3</td><td><span class="chip s1">Na meta</span></td><td class="c">0</td><td>Estável</td><td><strong>Manter.</strong> A meta será revista na análise anual.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="leg"><small>As células com fundo cinza são os meses em que o resultado não atendeu à meta.</small></p>
+  <p><strong>O que observar.</strong> Três indicadores melhoraram depois do ciclo de melhoria das entregas, e estão na meta. O quarto, de pedidos refeitos, ainda está na faixa de atenção, mas sobe há três meses. Quem olha só o último número vê um desvio pequeno. Quem olha a sequência vê uma tendência, e age antes de o indicador sair do limite.</p>
+
+  <h3>Exemplo 2. Indicadores do processo de compras</h3>
+  <dl class="ficha">
+    <div><dt>Organização</dt><dd>Indústria de embalagens plásticas · Suprimentos</dd></div>
+    <div><dt>Período</dt><dd>Outubro de 2025 a setembro de 2026</dd></div>
+    <div><dt>Reunião de análise</dt><dd>Primeira quinta-feira de cada mês</dd></div>
+    <div><dt>Responsável</dt><dd>Gerente de Suprimentos</dd></div>
+  </dl>
+  <div class="tbl">
+    <table class="aud">
+      <caption>Fichas dos indicadores</caption>
+      <thead><tr><th>Nº</th><th style="width:22%">Indicador e objetivo</th><th style="width:27%">Fórmula</th><th style="width:11%">Meta</th><th style="width:9%">Limite de atenção</th><th style="width:17%">Fonte dos dados</th><th>Responsável</th></tr></thead>
+      <tbody>
+        <tr><td class="n">C1</td><td><strong>Prazo de atendimento das requisições</strong><small>Fornecer os materiais no prazo</small></td><td>Soma dos dias úteis entre a requisição e o pedido ÷ número de requisições<small>Dias úteis · menor é melhor</small></td><td>Até 5,0</td><td class="c">6,0</td><td>Datas da requisição e do pedido, no sistema</td><td>Comprador sênior</td></tr>
+        <tr><td class="n">C2</td><td><strong>Requisições com falha de especificação</strong><small>Comprar o item certo na primeira vez</small></td><td>Requisições com especificação ausente ou insuficiente ÷ requisições recebidas × 100<small>Percentual · menor é melhor</small></td><td>Até 5%</td><td class="c">10%</td><td>Conferência do comprador, no recebimento da requisição</td><td>Gerente de Suprimentos</td></tr>
+        <tr><td class="n">C3</td><td><strong>Fornecedores críticos com avaliação em dia</strong><small>Conhecer o desempenho de quem fornece</small></td><td>Fornecedores críticos avaliados no semestre ÷ fornecedores críticos × 100<small>Percentual · maior é melhor</small></td><td>No mínimo 100%</td><td class="c">90%</td><td>Registros de avaliação de desempenho</td><td>Comprador sênior</td></tr>
+        <tr><td class="n">C4</td><td><strong>Itens devolvidos ao fornecedor</strong><small>Comprar o item certo na primeira vez</small></td><td>Número de itens devolvidos por divergência, no mês<small>Itens · menor é melhor</small></td><td>Até 0</td><td class="c">1</td><td>Registros de devolução do Recebimento</td><td>Líder do Recebimento</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="tbl">
+    <table class="aud">
+      <caption>Resultados · situação em 08/10/2026</caption>
+      <thead><tr><th>Nº</th><th class="c">Abr/26</th><th class="c">Mai/26</th><th class="c">Jun/26</th><th class="c">Jul/26</th><th class="c">Ago/26</th><th class="c">Set/26</th><th class="c" style="width:7%">Média do ano</th><th style="width:11%">Situação</th><th class="c" style="width:8%">Seguidos fora</th><th style="width:10%">Tendência</th><th style="width:28%">Decisão</th></tr></thead>
+      <tbody>
+        <tr><td class="n">C1</td><td class="c">4,9</td><td class="c out">5,2</td><td class="c out">5,6</td><td class="c out">5,9</td><td class="c out">6,2</td><td class="c out">5,8</td><td class="c">5,2</td><td><span class="chip s2">Atenção</span></td><td class="c">5</td><td>Piorando</td><td><strong>Abrir análise de causa.</strong> A alta acompanha as requisições devolvidas por falta de especificação.</td></tr>
+        <tr><td class="n">C2</td><td class="c out">29</td><td class="c out">31</td><td class="c out">33</td><td class="c out">30</td><td class="c out">31</td><td class="c out">29</td><td class="c">30,2</td><td><span class="chip s3">Fora da meta</span></td><td class="c">12</td><td>Estável</td><td><strong>Abrir análise de causa.</strong> O tratamento está no RNC 2026-31, aberto depois da auditoria 2026-07.</td></tr>
+        <tr><td class="n">C3</td><td class="c out">83</td><td class="c out">75</td><td class="c out">67</td><td class="c out">67</td><td class="c out">58</td><td class="c out">58</td><td class="c">81,2</td><td><span class="chip s3">Fora da meta</span></td><td class="c">9</td><td>Piorando</td><td><strong>Abrir análise de causa.</strong> O tratamento está na constatação nº 2 da auditoria 2026-07: avaliar os 5 fornecedores pendentes.</td></tr>
+        <tr><td class="n">C4</td><td class="c out">1</td><td class="c out">1</td><td class="c">0</td><td class="c out">2</td><td class="c out">1</td><td class="c out">1</td><td class="c">0,8</td><td><span class="chip s2">Atenção</span></td><td class="c">3</td><td>Piorando</td><td><strong>Abrir análise de causa.</strong> A análise será feita em conjunto com a do indicador C2.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="leg"><small>As células com fundo cinza são os meses em que o resultado não atendeu à meta.</small></p>
+  <div class="tbl">
+    <table class="aud">
+      <caption>Registro da reunião de análise</caption>
+      <thead><tr><th>Nº</th><th style="width:27%">O que os dados mostram</th><th style="width:25%">Causa provável</th><th style="width:25%">Decisão</th><th>Responsável e prazo</th></tr></thead>
+      <tbody>
+        <tr><td class="n">C1</td><td>Cinco meses seguidos acima da meta, com pico de 6,2 dias em agosto.</td><td>Requisições incompletas voltam ao requisitante e entram de novo na fila.</td><td>Tratar junto com o RNC 2026-31.</td><td>Gerente de Suprimentos<small>até 23/10/2026</small></td></tr>
+        <tr><td class="n">C3</td><td>Queda contínua desde janeiro. 5 dos 12 fornecedores críticos sem avaliação.</td><td>A avaliação do segundo semestre de 2025 não foi repetida em 2026.</td><td>Avaliar os 5 fornecedores e marcar as datas no calendário da área.</td><td>Comprador sênior<small>até 30/10/2026</small></td></tr>
+        <tr><td class="n">C4</td><td>Pelo menos uma devolução em 9 dos 12 meses.</td><td>Item comprado diferente do necessário, por falta de especificação.</td><td>Acompanhar depois das ações do RNC 2026-31.</td><td>Líder do Recebimento<small>até 03/12/2026</small></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p><strong>O que observar.</strong> Os quatro indicadores contam a mesma história, vista de pontos diferentes. As requisições chegam incompletas (C2), voltam ao requisitante e atrasam a compra (C1), e parte dos itens chega diferente do necessário (C4). O indicador C2 é de processo: ele avisa antes. Os outros dois são de resultado. A causa foi tratada no estudo de <a href="../Nao-Conformidade/treinamento-nao-conformidade.html#exemplos">Não conformidade e ação corretiva</a>.</p>
+
+  <h3>Exemplo 3. Quadro de objetivos da qualidade</h3>
+  <dl class="ficha">
+    <div><dt>Organização</dt><dd>Indústria de embalagens plásticas</dd></div>
+    <div><dt>Uso</dt><dd>Análise crítica pela direção, requisito 9.3</dd></div>
+    <div><dt>Período</dt><dd>Janeiro a setembro de 2026</dd></div>
+  </dl>
+  <div class="tbl">
+    <table class="aud">
+      <thead><tr><th style="width:20%">Objetivo</th><th style="width:22%">Indicador</th><th style="width:13%">Meta</th><th class="c">Resultado</th><th style="width:12%">Situação</th><th>Decisão</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Entregar no prazo combinado</strong></td><td>Pedidos entregues no prazo</td><td>No mínimo 96%</td><td class="c">97%</td><td><span class="chip s1">Na meta</span></td><td>Manter o planejamento semanal de produção.</td></tr>
+        <tr><td><strong>Reduzir as reclamações</strong></td><td>Reclamações por milhão de peças</td><td>No máximo 50</td><td class="c">62</td><td><span class="chip s2">Atenção</span></td><td>Acompanhar. A alta veio de um só cliente.</td></tr>
+        <tr><td><strong>Reduzir o refugo</strong></td><td>Refugo, em percentual do peso</td><td>No máximo 2,0%</td><td class="c">2,9%</td><td><span class="chip s3">Fora da meta</span></td><td>Projeto de melhoria aberto, com ciclo PDCA.</td></tr>
+        <tr><td><strong>Manter a equipe competente</strong></td><td>Treinamentos realizados no prazo</td><td>No mínimo 90%</td><td class="c">93%</td><td><span class="chip s1">Na meta</span></td><td>Manter o plano anual de treinamento.</td></tr>
+        <tr><td><strong>Conhecer os fornecedores</strong></td><td>Fornecedores críticos avaliados</td><td>100%</td><td class="c">58%</td><td><span class="chip s3">Fora da meta</span></td><td>Ação corretiva da auditoria 2026-07.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p><strong>O que observar.</strong> O quadro cabe em uma página e liga cada objetivo a um indicador, a uma meta e a uma decisão. É o que a direção precisa para a análise crítica: não os vinte indicadores da fábrica, e sim os cinco que mostram se os objetivos estão sendo alcançados.</p>
+</section>
+
+<!-- ============================ MÓDULO 5 ============================ -->
+<section id="leitura">
+  <p class="eyebrow">Módulo 5</p>
+  <h2>Como ler o gráfico</h2>
+  <p>Um número sozinho não diz quase nada. “5,8 dias” é bom ou ruim? Depende da meta, do mês anterior e do caminho até ali. O gráfico de linha, com a meta desenhada, responde às três perguntas de uma vez.</p>
+
+  <figure id="fig-run">
+    <div class="scroll">
+      <svg id="run" viewBox="0 0 900 340" role="img" aria-label="Gráfico de linha com o prazo médio de atendimento das requisições, em dias úteis, de Out/25 a Set/26. A meta é de até 5,0 dias, e o limite de atenção, de 6,0. Em Dez/25, o resultado foi de 5,3, acima da meta, e voltou no mês seguinte. De Mai/26 a Set/26, o resultado ficou acima da meta por 5 meses seguidos, com pico de 6,2 em Ago/26.">
+        <rect class="band" x="70" y="97.5" width="790" height="57.5"/>
+        <line class="grid" x1="70" y1="270.0" x2="860" y2="270.0"/>
+        <text class="mu" x="62" y="274.0" font-size="11" text-anchor="end" style="font-variant-numeric:tabular-nums">3</text>
+        <line class="grid" x1="70" y1="212.5" x2="860" y2="212.5"/>
+        <text class="mu" x="62" y="216.5" font-size="11" text-anchor="end" style="font-variant-numeric:tabular-nums">4</text>
+        <line class="grid" x1="70" y1="155.0" x2="860" y2="155.0"/>
+        <text class="mu" x="62" y="159.0" font-size="11" text-anchor="end" style="font-variant-numeric:tabular-nums">5</text>
+        <line class="grid" x1="70" y1="97.5" x2="860" y2="97.5"/>
+        <text class="mu" x="62" y="101.5" font-size="11" text-anchor="end" style="font-variant-numeric:tabular-nums">6</text>
+        <line class="grid" x1="70" y1="40.0" x2="860" y2="40.0"/>
+        <text class="mu" x="62" y="44.0" font-size="11" text-anchor="end" style="font-variant-numeric:tabular-nums">7</text>
+        <g font-size="10.5" text-anchor="middle"><text class="mu" x="100" y="290">Out/25</text><text class="mu" x="166" y="290">Nov/25</text><text class="mu" x="232" y="290">Dez/25</text><text class="mu" x="298" y="290">Jan/26</text><text class="mu" x="364" y="290">Fev/26</text><text class="mu" x="430" y="290">Mar/26</text><text class="mu" x="496" y="290">Abr/26</text><text class="mu" x="562" y="290">Mai/26</text><text class="mu" x="628" y="290">Jun/26</text><text class="mu" x="694" y="290">Jul/26</text><text class="mu" x="760" y="290">Ago/26</text><text class="mu" x="826" y="290">Set/26</text></g>
+        <line class="goal" x1="70" y1="155.0" x2="860" y2="155.0"/>
+        <text x="856" y="172.0" font-size="11.5" text-anchor="end"><tspan class="b">meta</tspan> até 5,0</text>
+        <line class="goal2" x1="70" y1="97.5" x2="860" y2="97.5"/>
+        <text x="74" y="89.5" font-size="11.5"><tspan class="b">limite de atenção</tspan> 6,0</text>
+        <text class="mu" x="430" y="115.5" font-size="11">faixa de atenção</text>
+        <line class="xh" id="run-xh" x1="0" y1="40" x2="0" y2="270" visibility="hidden"/>
+        <polyline class="series" points="100,178.0 166,166.5 232,137.8 298,172.2 364,183.8 430,166.5 496,160.8 562,143.5 628,120.5 694,103.2 760,86.0 826,109.0"/>
+        <g id="run-pts"><circle class="pt" cx="100" cy="178.0" r="5"/><circle class="pt" cx="166" cy="166.5" r="5"/><circle class="pt" cx="232" cy="137.8" r="5"/><circle class="pt" cx="298" cy="172.2" r="5"/><circle class="pt" cx="364" cy="183.8" r="5"/><circle class="pt" cx="430" cy="166.5" r="5"/><circle class="pt" cx="496" cy="160.8" r="5"/><circle class="pt" cx="562" cy="143.5" r="5"/><circle class="pt" cx="628" cy="120.5" r="5"/><circle class="pt" cx="694" cy="103.2" r="5"/><circle class="pt" cx="760" cy="86.0" r="5"/><circle class="pt" cx="826" cy="109.0" r="5"/></g>
+        <text x="244" y="131.8" font-size="12"><tspan class="b">5,3</tspan> · ponto isolado</text>
+        <text class="b" x="760" y="74.0" font-size="12" text-anchor="middle">6,2</text>
+        <text class="b" x="838" y="113.0" font-size="12">5,8</text>
+        <path class="ln-mu" d="M540 58 V50 H848 V58" stroke-width="1"/>
+        <text x="694.0" y="40" font-size="11.5" text-anchor="middle"><tspan class="b">5 meses seguidos</tspan> acima da meta</text>
+        <line class="series" x1="70" y1="322" x2="98" y2="322"/><circle class="pt" cx="84" cy="322" r="4"/>
+        <text x="106" y="326" font-size="11.5">prazo médio de atendimento, em dias úteis</text>
+        <line class="goal" x1="400" y1="322" x2="428" y2="322"/><text x="436" y="326" font-size="11.5">meta</text>
+        <line class="goal2" x1="500" y1="322" x2="528" y2="322"/><text x="536" y="326" font-size="11.5">limite de atenção</text>
+        <rect class="hit" x="67.0" y="40" width="66" height="230" tabindex="0" role="img" aria-label="Out/25: 4,6 dias úteis, na meta" data-i="0" data-v="4,6" data-p="Out/25" data-s="na meta" data-n="0"/>
+        <rect class="hit" x="133.0" y="40" width="66" height="230" tabindex="0" role="img" aria-label="Nov/25: 4,8 dias úteis, na meta" data-i="1" data-v="4,8" data-p="Nov/25" data-s="na meta" data-n="0"/>
+        <rect class="hit" x="199.0" y="40" width="66" height="230" tabindex="0" role="img" aria-label="Dez/25: 5,3 dias úteis, atenção" data-i="2" data-v="5,3" data-p="Dez/25" data-s="atenção" data-n="1"/>
+        <rect class="hit" x="265.0" y="40" width="66" height="230" tabindex="0" role="img" aria-label="Jan/26: 4,7 dias úteis, na meta" data-i="3" data-v="4,7" data-p="Jan/26" data-s="na meta" data-n="0"/>
+        <rect class="hit" x="331.0" y="40" width="66" height="230" tabindex="0" role="img" aria-label="Fev/26: 4,5 dias úteis, na meta" data-i="4" data-v="4,5" data-p="Fev/26" data-s="na meta" data-n="0"/>
+        <rect class="hit" x="397.0" y="40" width="66" height="230" tabindex="0" role="img" aria-label="Mar/26: 4,8 dias úteis, na meta" data-i="5" data-v="4,8" data-p="Mar/26" data-s="na meta" data-n="0"/>
+        <rect class="hit" x="463.0" y="40" width="66" height="230" tabindex="0" role="img" aria-label="Abr/26: 4,9 dias úteis, na meta" data-i="6" data-v="4,9" data-p="Abr/26" data-s="na meta" data-n="0"/>
+        <rect class="hit" x="529.0" y="40" width="66" height="230" tabindex="0" role="img" aria-label="Mai/26: 5,2 dias úteis, atenção" data-i="7" data-v="5,2" data-p="Mai/26" data-s="atenção" data-n="1"/>
+        <rect class="hit" x="595.0" y="40" width="66" height="230" tabindex="0" role="img" aria-label="Jun/26: 5,6 dias úteis, atenção" data-i="8" data-v="5,6" data-p="Jun/26" data-s="atenção" data-n="2"/>
+        <rect class="hit" x="661.0" y="40" width="66" height="230" tabindex="0" role="img" aria-label="Jul/26: 5,9 dias úteis, atenção" data-i="9" data-v="5,9" data-p="Jul/26" data-s="atenção" data-n="3"/>
+        <rect class="hit" x="727.0" y="40" width="66" height="230" tabindex="0" role="img" aria-label="Ago/26: 6,2 dias úteis, fora da meta" data-i="10" data-v="6,2" data-p="Ago/26" data-s="fora da meta" data-n="4"/>
+        <rect class="hit" x="793.0" y="40" width="66" height="230" tabindex="0" role="img" aria-label="Set/26: 5,8 dias úteis, atenção" data-i="11" data-v="5,8" data-p="Set/26" data-s="atenção" data-n="5"/>
+      </svg>
+    </div>
+    <div class="tip" id="run-tip" hidden></div>
+    <figcaption><b>Figura 6.</b> Prazo de atendimento das requisições, do exemplo 2. Dezembro saiu da meta e voltou: foi um ponto isolado. De maio a setembro, são cinco meses seguidos acima da meta. Passe o mouse sobre o gráfico para ver cada valor.</figcaption>
+    <details class="data">
+      <summary>Ver os dados em tabela</summary>
+      <div class="tbl">
+        <table>
+          <thead><tr><th>Mês</th><th>Prazo médio, em dias úteis</th><th>Situação</th><th>Meses seguidos fora da meta</th></tr></thead>
+          <tbody>
+            <tr><td>Out/25</td><td class="num">4,6</td><td>Na meta</td><td class="num">0</td></tr>
+            <tr><td>Nov/25</td><td class="num">4,8</td><td>Na meta</td><td class="num">0</td></tr>
+            <tr><td>Dez/25</td><td class="num">5,3</td><td>Atenção</td><td class="num">1</td></tr>
+            <tr><td>Jan/26</td><td class="num">4,7</td><td>Na meta</td><td class="num">0</td></tr>
+            <tr><td>Fev/26</td><td class="num">4,5</td><td>Na meta</td><td class="num">0</td></tr>
+            <tr><td>Mar/26</td><td class="num">4,8</td><td>Na meta</td><td class="num">0</td></tr>
+            <tr><td>Abr/26</td><td class="num">4,9</td><td>Na meta</td><td class="num">0</td></tr>
+            <tr><td>Mai/26</td><td class="num">5,2</td><td>Atenção</td><td class="num">1</td></tr>
+            <tr><td>Jun/26</td><td class="num">5,6</td><td>Atenção</td><td class="num">2</td></tr>
+            <tr><td>Jul/26</td><td class="num">5,9</td><td>Atenção</td><td class="num">3</td></tr>
+            <tr><td>Ago/26</td><td class="num">6,2</td><td>Fora da meta</td><td class="num">4</td></tr>
+            <tr><td>Set/26</td><td class="num">5,8</td><td>Atenção</td><td class="num">5</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </details>
+  </figure>
+
+  <h3>Três leituras</h3>
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 262" role="img" aria-label="Três leituras de um gráfico com meta de no máximo 5. Ponto isolado: um período fora da meta, e os outros dentro. Anote o motivo e acompanhe. Tendência: vários períodos seguidos na mesma direção. Analise a causa antes de sair da meta. Mudança de patamar: o resultado muda de nível e fica. Procure o que mudou naquela data.">
+        <rect class="bx" x="20" y="10" width="280" height="242"/>
+        <text class="b" x="36" y="34" font-size="13">Ponto isolado</text>
+        <line class="goal" x1="36" y1="95.0" x2="284" y2="95.0"/>
+        <text class="mu" x="36" y="89.0" font-size="10.5">meta</text>
+        <polyline class="series" points="50,117.0 80,109.7 110,120.7 140,73.0 170,113.3 200,117.0 230,109.7 260,120.7"/>
+        <circle class="pt" cx="50" cy="117.0" r="4.5"/>
+        <circle class="pt" cx="80" cy="109.7" r="4.5"/>
+        <circle class="pt" cx="110" cy="120.7" r="4.5"/>
+        <circle class="pt" cx="140" cy="73.0" r="4.5"/>
+        <circle class="pt" cx="170" cy="113.3" r="4.5"/>
+        <circle class="pt" cx="200" cy="117.0" r="4.5"/>
+        <circle class="pt" cx="230" cy="109.7" r="4.5"/>
+        <circle class="pt" cx="260" cy="120.7" r="4.5"/>
+        <text class="mu" x="36" y="184" font-size="11.5">Um período fora da meta, e os outros dentro.</text>
+        <text x="36" y="204" font-size="11.5">Anote o motivo e acompanhe.</text>
+        <rect class="bx" x="310" y="10" width="280" height="242"/>
+        <text class="b" x="326" y="34" font-size="13">Tendência</text>
+        <line class="goal" x1="326" y1="95.0" x2="574" y2="95.0"/>
+        <text class="mu" x="326" y="89.0" font-size="10.5">meta</text>
+        <polyline class="series" points="340,131.7 370,128.0 400,120.7 430,117.0 460,109.7 490,102.3 520,95.0 550,84.0"/>
+        <circle class="pt" cx="340" cy="131.7" r="4.5"/>
+        <circle class="pt" cx="370" cy="128.0" r="4.5"/>
+        <circle class="pt" cx="400" cy="120.7" r="4.5"/>
+        <circle class="pt" cx="430" cy="117.0" r="4.5"/>
+        <circle class="pt" cx="460" cy="109.7" r="4.5"/>
+        <circle class="pt" cx="490" cy="102.3" r="4.5"/>
+        <circle class="pt" cx="520" cy="95.0" r="4.5"/>
+        <circle class="pt" cx="550" cy="84.0" r="4.5"/>
+        <text class="mu" x="326" y="184" font-size="11.5">Vários períodos seguidos na mesma direção.</text>
+        <text x="326" y="204" font-size="11.5">Analise a causa antes de sair da meta.</text>
+        <rect class="bx" x="600" y="10" width="280" height="242"/>
+        <text class="b" x="616" y="34" font-size="13">Mudança de patamar</text>
+        <line class="goal" x1="616" y1="95.0" x2="864" y2="95.0"/>
+        <text class="mu" x="616" y="89.0" font-size="10.5">meta</text>
+        <polyline class="series" points="630,124.3 660,117.0 690,128.0 720,120.7 750,73.0 780,65.7 810,76.7 840,69.3"/>
+        <circle class="pt" cx="630" cy="124.3" r="4.5"/>
+        <circle class="pt" cx="660" cy="117.0" r="4.5"/>
+        <circle class="pt" cx="690" cy="128.0" r="4.5"/>
+        <circle class="pt" cx="720" cy="120.7" r="4.5"/>
+        <circle class="pt" cx="750" cy="73.0" r="4.5"/>
+        <circle class="pt" cx="780" cy="65.7" r="4.5"/>
+        <circle class="pt" cx="810" cy="76.7" r="4.5"/>
+        <circle class="pt" cx="840" cy="69.3" r="4.5"/>
+        <text class="mu" x="616" y="184" font-size="11.5">O resultado muda de nível e fica.</text>
+        <text x="616" y="204" font-size="11.5">Procure o que mudou naquela data.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 7.</b> Três formas de sair da meta, em desenhos esquemáticos. Cada uma pede uma resposta diferente. Tratar um ponto isolado como tendência gera ação desnecessária. Tratar uma tendência como ponto isolado gera atraso.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">O que o gráfico mostra</th><th style="width:36%">O que fazer</th><th>Regra usada neste material</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Resultado na meta</strong></td><td>Manter, e conferir se a meta ainda desafia.</td><td>O último resultado atende à meta.</td></tr>
+        <tr><td><strong>Um período em atenção</strong></td><td>Acompanhar, e anotar o motivo.</td><td>O último resultado está entre a meta e o limite de atenção.</td></tr>
+        <tr><td><strong>Um período fora da meta</strong></td><td>Analisar na reunião, e decidir se há ação.</td><td>O último resultado passou do limite de atenção.</td></tr>
+        <tr><td><strong>Três períodos seguidos fora da meta</strong></td><td>Abrir análise de causa, com registro.</td><td>Os três últimos resultados não atendem à meta.</td></tr>
+        <tr><td><strong>Piora contínua, ainda na meta</strong></td><td>Investigar antes de sair da meta.</td><td>A média dos três últimos períodos é pior que a dos três anteriores, em mais de 5%.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note">
+    <h4>Cuidado com a escala</h4>
+    <p>O eixo vertical muda a impressão que o gráfico passa. Um eixo que começa perto do menor valor aumenta a variação. Um eixo que começa no zero pode escondê-la. Escolha uma escala, escreva-a no gráfico e mantenha a mesma em todos os períodos.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 6 ============================ -->
+<section id="erros">
+  <p class="eyebrow">Módulo 6</p>
+  <h2>Erros comuns</h2>
+  <div class="errs">
+    <div><h4>Medir o que é fácil</h4><p>O indicador é o número de treinamentos realizados, e não o que as pessoas aprenderam.</p><p class="fix"><b>Correção:</b> comece pelo objetivo, e procure a medida que mais se aproxima dele.</p></div>
+    <div><h4>Ter indicadores demais</h4><p>O painel tem quarenta gráficos, e a reunião não passa do décimo.</p><p class="fix"><b>Correção:</b> fique com os que levam a decisões. O conjunto deve caber em uma página.</p></div>
+    <div><h4>Medir e não analisar</h4><p>Os gráficos são atualizados todo mês, e ninguém registra o que foi decidido.</p><p class="fix"><b>Correção:</b> marque a reunião, e anote a decisão de cada indicador fora da meta.</p></div>
+    <div><h4>Definir a meta sem olhar o histórico</h4><p>“Meta: zero reclamações.” O resultado nunca ficou abaixo de trinta.</p><p class="fix"><b>Correção:</b> parta do que o processo entrega hoje, e defina uma melhora com plano.</p></div>
+    <div><h4>Reagir a cada ponto</h4><p>Um mês ruim gera uma reunião de emergência e uma mudança de procedimento.</p><p class="fix"><b>Correção:</b> separe o ponto isolado da tendência antes de agir.</p></div>
+    <div><h4>Deixar a fórmula na cabeça</h4><p>Cada pessoa calcula o prazo de um jeito, e os números não batem.</p><p class="fix"><b>Correção:</b> escreva a ficha, com a fórmula, a fonte e a unidade.</p></div>
+    <div><h4>Usar o indicador para punir</h4><p>Quem apresenta número ruim é cobrado em público.</p><p class="fix"><b>Correção:</b> o indicador mede o processo. Quando ele vira ameaça, os dados passam a ser ajustados.</p></div>
+    <div><h4>Nunca rever a meta</h4><p>A meta é atingida há dois anos, com folga, e continua a mesma.</p><p class="fix"><b>Correção:</b> reveja os indicadores e as metas pelo menos uma vez por ano.</p></div>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 7 ============================ -->
+<section id="ferramentas">
+  <p class="eyebrow">Módulo 7</p>
+  <h2>Indicadores e outras ferramentas</h2>
+  <p>O indicador aparece em quase todos os estudos da série, porque é ele que mostra se a ferramenta funcionou. Ele recebe o que medir de algumas ferramentas e entrega o que tratar para outras.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 250" role="img" aria-label="As ferramentas ao redor dos indicadores. Dizem o que medir: o estudo da ISO 9001, com os objetivos da qualidade; o SIPOC, com as saídas e os requisitos do processo; e a Matriz de riscos, com os riscos a acompanhar. Os indicadores entregam: ao PDCA, a verificação do resultado; ao tratamento de não conformidades, o indicador fora da meta; ao Diagrama de Ishikawa, o efeito a analisar; e à auditoria interna, a evidência de desempenho.">
+        <defs>
+          <marker id="a7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker>
+        </defs>
+        <text class="mono mu" x="20" y="18" font-size="10">DIZEM O QUE MEDIR</text>
+        <g font-size="12">
+          <rect class="bx" x="20" y="28" width="220" height="56"/><text class="b" x="34" y="52">ISO 9001</text><text class="mu" x="34" y="70" font-size="11">Objetivos da qualidade</text>
+          <rect class="bx" x="20" y="96" width="220" height="56"/><text class="b" x="34" y="120">SIPOC</text><text class="mu" x="34" y="138" font-size="11">Saídas e requisitos do processo</text>
+          <rect class="bx" x="20" y="164" width="220" height="56"/><text class="b" x="34" y="188">Matriz de riscos</text><text class="mu" x="34" y="206" font-size="11">Riscos a acompanhar</text>
+        </g>
+        <path class="ln" d="M242 56 H270 V124 H296" marker-end="url(#a7)"/>
+        <line class="ln" x1="242" y1="124" x2="270" y2="124"/>
+        <path class="ln" d="M242 192 H270 V124"/>
+
+        <rect class="bx-ink" x="300" y="84" width="180" height="80"/>
+        <text class="b t-ground" x="390" y="118" font-size="13.5" text-anchor="middle">Indicadores</text>
+        <text class="t-ground" x="390" y="138" font-size="11.5" text-anchor="middle">resultado e situação</text>
+
+        <path class="ln" d="M482 124 H510 V56 H536" marker-end="url(#a7)"/>
+        <path class="ln" d="M510 124 V192 H536" marker-end="url(#a7)"/>
+        <text class="mono mu" x="540" y="18" font-size="10">RECEBEM O RESULTADO</text>
+        <g font-size="12">
+          <rect class="bx" x="540" y="28" width="166" height="56"/><text class="b" x="554" y="52">PDCA</text><text class="mu" x="554" y="70" font-size="11">Verificação do ciclo</text>
+          <rect class="bx" x="718" y="28" width="166" height="56"/><text class="b" x="732" y="52">Não conformidade</text><text class="mu" x="732" y="70" font-size="11">Indicador fora da meta</text>
+          <rect class="bx" x="540" y="164" width="166" height="56"/><text class="b" x="554" y="188">Ishikawa</text><text class="mu" x="554" y="206" font-size="11">Efeito a analisar</text>
+          <rect class="bx" x="718" y="164" width="166" height="56"/><text class="b" x="732" y="188">Auditoria interna</text><text class="mu" x="732" y="206" font-size="11">Evidência de desempenho</text>
+        </g>
+        <line class="ln" x1="708" y1="56" x2="714" y2="56"/>
+        <line class="ln" x1="708" y1="192" x2="714" y2="192"/>
+      </svg>
+    </div>
+    <figcaption><b>Figura 8.</b> O que diz o que medir e quem recebe o resultado. O indicador fora da meta por três períodos é uma das origens de não conformidade.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:26%">Ferramenta</th><th>Relação com os indicadores</th></tr></thead>
+      <tbody>
+        <tr><td><a href="../ISO-9001/treinamento-iso-9001.html"><strong>ISO 9001 requisito a requisito</strong></a></td><td>Os requisitos 6.2 e 9.1 pedem objetivos mensuráveis e resultados analisados. O diagnóstico mostra se eles são atendidos.</td></tr>
+        <tr><td><a href="../SIPOC/treinamento-sipoc.html"><strong>SIPOC</strong></a></td><td>As saídas e os requisitos de cada saída são os primeiros candidatos a indicador de resultado.</td></tr>
+        <tr><td><a href="../Riscos/treinamento-riscos.html"><strong>Matriz de riscos</strong></a></td><td>Um risco aceito ou em tratamento pode ter um indicador que avise quando ele cresce.</td></tr>
+        <tr><td><a href="../PDCA/treinamento-pdca.html"><strong>PDCA</strong></a></td><td>A fase de verificação compara o indicador com a meta, antes e depois das ações.</td></tr>
+        <tr><td><a href="../GUT/treinamento-gut.html"><strong>Matriz GUT</strong></a></td><td>Quando vários indicadores estão fora da meta, a matriz ajuda a escolher por onde começar.</td></tr>
+        <tr><td><a href="../Ishikawa/treinamento-ishikawa.html"><strong>Diagrama de Ishikawa</strong></a></td><td>O desvio do indicador é o efeito, escrito na cabeça do diagrama.</td></tr>
+        <tr><td><a href="../5W2H/treinamento-5w2h.html"><strong>5W2H</strong></a></td><td>Organiza o plano para alcançar a meta, como pede o requisito 6.2.</td></tr>
+        <tr><td><a href="../Nao-Conformidade/treinamento-nao-conformidade.html"><strong>Não conformidade e ação corretiva</strong></a></td><td>O indicador fora da meta abre o tratamento, e é ele que comprova a eficácia da ação.</td></tr>
+        <tr><td><a href="../Auditoria/treinamento-auditoria.html"><strong>Auditoria interna</strong></a></td><td>O auditor pede os indicadores do processo e as decisões tomadas a partir deles.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 8 ============================ -->
+<section id="iso">
+  <p class="eyebrow">Módulo 8</p>
+  <h2>Nas normas ISO</h2>
+  <p>A ISO 9001:2015 quase não usa a palavra indicador. Ela fala em monitorar, medir, analisar e avaliar, no requisito 9.1, e em objetivos mensuráveis, no requisito 6.2. O indicador é a forma prática de atender aos dois.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 300" role="img" aria-label="O requisito 9.1 da ISO 9001:2015 e os requisitos ligados a ele. Alimentam o 9.1: o requisito 6.2, objetivos da qualidade; o 4.4, processos; e o 8.4, provedores externos. O requisito 9.1.1 pede determinar o que medir, com que método, quando medir e quando analisar. O 9.1.2 pede monitorar a satisfação do cliente. O 9.1.3 pede analisar e avaliar os dados. O resultado segue para o 9.3, análise crítica pela direção; o 10.2, ação corretiva; e o 10.3, melhoria contínua.">
+        <defs>
+          <marker id="a8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker>
+        </defs>
+        <text class="mono mu" x="20" y="18" font-size="10">O QUE ALIMENTA</text>
+        <g font-size="12">
+          <rect class="bx" x="20" y="44" width="200" height="60"/><text class="b" x="34" y="68">6.2</text><text class="mu" x="34" y="88" font-size="11.5">Objetivos da qualidade</text>
+          <rect class="bx" x="20" y="126" width="200" height="60"/><text class="b" x="34" y="150">4.4</text><text class="mu" x="34" y="170" font-size="11.5">Processos do sistema</text>
+          <rect class="bx" x="20" y="208" width="200" height="60"/><text class="b" x="34" y="232">8.4</text><text class="mu" x="34" y="252" font-size="11.5">Provedores externos</text>
+        </g>
+        <line class="ln" x1="222" y1="74" x2="262" y2="74" marker-end="url(#a8)"/>
+        <line class="ln" x1="222" y1="156" x2="262" y2="156" marker-end="url(#a8)"/>
+        <line class="ln" x1="222" y1="238" x2="262" y2="238" marker-end="url(#a8)"/>
+
+        <rect class="bx" x="266" y="28" width="368" height="256"/>
+        <rect class="hd-ink" x="266" y="28" width="368" height="40"/>
+        <text class="b t-ground" x="282" y="53" font-size="13.5">ISO 9001:2015, requisito 9.1</text>
+        <g font-size="11.5">
+          <text class="mono mu" x="282" y="90" font-size="10">9.1.1 · DETERMINAR</text>
+          <text x="282" y="110">O que precisa ser monitorado e medido</text>
+          <text x="282" y="128">Os métodos, para resultados válidos</text>
+          <text x="282" y="146">Quando medir, e quando analisar</text>
+          <text class="mono mu" x="282" y="174" font-size="10">9.1.2 · SATISFAÇÃO DO CLIENTE</text>
+          <text x="282" y="194">Monitorar a percepção do cliente</text>
+          <text class="mono mu" x="282" y="222" font-size="10">9.1.3 · ANÁLISE E AVALIAÇÃO</text>
+          <text x="282" y="242">Analisar os dados e avaliar o desempenho</text>
+          <text class="mu" x="282" y="268" font-size="11">Pede informação documentada dos resultados.</text>
+        </g>
+
+        <text class="mono mu" x="680" y="18" font-size="10">PARA ONDE VAI</text>
+        <g font-size="12">
+          <rect class="bx" x="680" y="44" width="200" height="60"/><text class="b" x="694" y="68">9.3</text><text class="mu" x="694" y="88" font-size="11.5">Análise crítica pela direção</text>
+          <rect class="bx" x="680" y="126" width="200" height="60"/><text class="b" x="694" y="150">10.2</text><text class="mu" x="694" y="170" font-size="11.5">Ação corretiva</text>
+          <rect class="bx" x="680" y="208" width="200" height="60"/><text class="b" x="694" y="232">10.3</text><text class="mu" x="694" y="252" font-size="11.5">Melhoria contínua</text>
+        </g>
+        <line class="ln" x1="636" y1="74" x2="676" y2="74" marker-end="url(#a8)"/>
+        <line class="ln" x1="636" y1="156" x2="676" y2="156" marker-end="url(#a8)"/>
+        <line class="ln" x1="636" y1="238" x2="676" y2="238" marker-end="url(#a8)"/>
+      </svg>
+    </div>
+    <figcaption><b>Figura 9.</b> O requisito 9.1 e os requisitos ligados a ele. O texto da figura é um resumo, com palavras próprias.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:10%">Item</th><th style="width:30%">O que pede, em resumo</th><th style="width:28%">O que isso significa</th><th>Evidências que o auditor procura</th></tr></thead>
+      <tbody>
+        <tr><td class="num">6.2.1</td><td>Estabelecer objetivos da qualidade mensuráveis, coerentes com a política, monitorados, comunicados e atualizados</td><td>Cada objetivo tem uma medida e uma meta.</td><td>Quadro de objetivos, com indicador, meta e resultado.</td></tr>
+        <tr><td class="num">6.2.2</td><td>Planejar como alcançar os objetivos: o que será feito, os recursos, o responsável, o prazo e a avaliação dos resultados</td><td>Toda meta tem um plano.</td><td>Planos de ação ligados aos objetivos.</td></tr>
+        <tr><td class="num">4.4.1 c</td><td>Determinar os critérios e os métodos para assegurar a operação e o controle dos processos, com monitoramento, medições e indicadores de desempenho</td><td>Cada processo tem como mostrar que funciona.</td><td>Indicadores por processo.</td></tr>
+        <tr><td class="num">9.1.1</td><td>Determinar o que medir, os métodos, quando medir e quando analisar. Avaliar o desempenho e a eficácia do sistema</td><td>A ficha e o calendário de análise estão definidos.</td><td>Fichas dos indicadores e resultados guardados.</td></tr>
+        <tr><td class="num">9.1.2</td><td>Monitorar a percepção do cliente sobre o atendimento às suas necessidades e expectativas</td><td>A organização pergunta ao cliente, e não só conta reclamações.</td><td>Pesquisas, elogios, reclamações e recompra, com análise.</td></tr>
+        <tr><td class="num">9.1.3</td><td>Analisar e avaliar os dados de conformidade, satisfação, desempenho, planejamento, riscos, provedores externos e melhoria</td><td>Os dados viram conclusão.</td><td>Atas de reunião, com o que os dados mostram e o que foi decidido.</td></tr>
+        <tr><td class="num">9.3.2 c</td><td>Considerar, na análise crítica pela direção, as informações sobre o desempenho e a eficácia do sistema</td><td>A direção vê os indicadores e decide.</td><td>Ata da análise crítica, com os resultados e as decisões.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pair">
+    <div class="box">
+      <h4>O que a ISO 9001 exige</h4>
+      <ul>
+        <li>Objetivos mensuráveis, com plano.</li>
+        <li>Definição do que medir, como e quando.</li>
+        <li>Análise e avaliação dos resultados.</li>
+        <li>Informação documentada dos resultados.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h4>O que a ISO 9001 não exige</h4>
+      <ul>
+        <li>Um número mínimo de indicadores.</li>
+        <li>Um tipo de gráfico ou de painel.</li>
+        <li>Metas iguais para todos os processos.</li>
+        <li>Um sistema informatizado de indicadores.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="note">
+    <h4>Pontos de atenção</h4>
+    <p>O auditor não reprova um indicador fora da meta. Ele procura o que a organização fez quando o indicador saiu da meta. Resultado ruim com análise e ação é evidência de sistema que funciona. Resultado ruim sem decisão é uma não conformidade.</p>
+    <p>Este módulo usa a numeração da ISO 9001:2015 e resume os textos com palavras próprias. Confira sempre a edição vigente da norma antes de citar um requisito em relatório.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 9 ============================ -->
+<section id="reuniao">
+  <p class="eyebrow">Módulo 9</p>
+  <h2>A reunião de indicadores</h2>
+  <p>O indicador só trabalha quando alguém olha para ele. Uma reunião mensal de uma hora, com data fixa, é suficiente para um processo. Os gráficos chegam prontos: a reunião é para analisar e decidir, e não para calcular.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 136" role="img" aria-label="Distribuição de uma reunião de indicadores de 60 minutos: 5 minutos para as ações da reunião anterior, 15 minutos para o painel, 25 minutos para os indicadores fora da meta, 10 minutos para as decisões e 5 minutos para o fecho.">
+        <g font-size="11.5" text-anchor="middle">
+          <rect class="bx" x="60" y="24" width="65" height="56"/><text x="92.5" y="49" font-size="10">Ações</text><text x="92.5" y="63" font-size="10">anteriores</text>
+          <rect class="bx" x="125" y="24" width="195" height="56"/><text x="222.5" y="56">Painel</text>
+          <rect class="hd-ink gap2" x="320" y="24" width="325" height="56"/><text class="t-ground b" x="482.5" y="56">Indicadores fora da meta</text>
+          <rect class="bx" x="645" y="24" width="130" height="56"/><text x="710" y="56">Decisões</text>
+          <rect class="bx" x="775" y="24" width="65" height="56"/><text x="807.5" y="56" font-size="10.5">Fecho</text>
+        </g>
+        <g class="ln-mu" stroke-width="1">
+          <line x1="60" y1="82" x2="60" y2="94"/><line x1="125" y1="82" x2="125" y2="94"/><line x1="320" y1="82" x2="320" y2="94"/>
+          <line x1="645" y1="82" x2="645" y2="94"/><line x1="775" y1="82" x2="775" y2="94"/><line x1="840" y1="82" x2="840" y2="94"/>
+        </g>
+        <g class="mono" font-size="10.5" text-anchor="middle">
+          <text class="mu" x="60" y="112">0</text><text class="mu" x="125" y="112">5</text><text class="mu" x="320" y="112">20</text>
+          <text class="mu" x="645" y="112">45</text><text class="mu" x="775" y="112">55</text><text class="mu" x="840" y="112">60 min</text>
+        </g>
+      </svg>
+    </div>
+    <figcaption><b>Figura 10.</b> Uma reunião de indicadores de uma hora, desenhada em escala. Os indicadores que estão na meta passam rápido, no painel. O tempo vai para os que não estão.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Momento</th><th style="width:42%">O que fazer</th><th>Frases que ajudam</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Ações anteriores</strong></td><td>Conferir o que foi decidido na reunião passada e o que foi feito.</td><td>“O que combinamos, e o que aconteceu?”</td></tr>
+        <tr><td><strong>Painel</strong></td><td>Passar por todos os indicadores, em um minuto cada, só para ver a situação.</td><td>“Na meta, em atenção ou fora?”</td></tr>
+        <tr><td><strong>Indicadores fora da meta</strong></td><td>Olhar o gráfico de cada um, separar ponto isolado de tendência e levantar o que mudou.</td><td>“O que aconteceu de diferente neste mês?”</td></tr>
+        <tr><td><strong>Decisões</strong></td><td>Registrar a decisão de cada indicador fora da meta, com responsável e prazo.</td><td>“Acompanhar, agir ou abrir análise de causa?”</td></tr>
+        <tr><td><strong>Fecho</strong></td><td>Repassar as decisões e confirmar a data da próxima reunião.</td><td>“Quem faz o quê, até quando?”</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>A análise de causa não cabe nesta reunião. Quando um indicador pede análise, a decisão é marcar a reunião de análise, com as pessoas do processo.</p>
+
+  <h3>Checklist de validação</h3>
+  <p>Marque os itens conforme revisa os seus indicadores. As marcações ficam salvas neste navegador.</p>
+  <ol class="check" id="checklist">
+    <li><label><input type="checkbox" id="ck-1"><span>Cada indicador está ligado a um objetivo ou a um processo.</span></label></li>
+    <li><label><input type="checkbox" id="ck-2"><span>A fórmula está escrita, com o que se divide, por quanto e em que unidade.</span></label></li>
+    <li><label><input type="checkbox" id="ck-3"><span>A fonte dos dados e o responsável pela coleta estão definidos.</span></label></li>
+    <li><label><input type="checkbox" id="ck-4"><span>A frequência de medição acompanha a velocidade do processo.</span></label></li>
+    <li><label><input type="checkbox" id="ck-5"><span>A meta tem valor, sentido e prazo.</span></label></li>
+    <li><label><input type="checkbox" id="ck-6"><span>A meta foi definida a partir do histórico ou de um requisito.</span></label></li>
+    <li><label><input type="checkbox" id="ck-7"><span>O limite de atenção está definido.</span></label></li>
+    <li><label><input type="checkbox" id="ck-8"><span>O conjunto de indicadores cabe em uma página.</span></label></li>
+    <li><label><input type="checkbox" id="ck-9"><span>Os resultados são apresentados em gráfico, com a meta.</span></label></li>
+    <li><label><input type="checkbox" id="ck-10"><span>Os resultados são analisados em reunião, com data marcada.</span></label></li>
+    <li><label><input type="checkbox" id="ck-11"><span>Cada indicador fora da meta tem decisão registrada, com responsável e prazo.</span></label></li>
+    <li><label><input type="checkbox" id="ck-12"><span>Os indicadores e as metas são revistos pelo menos uma vez por ano.</span></label></li>
+  </ol>
+  <div class="bar"><span><b id="ck-count">0</b> de 12 itens marcados</span><button class="btn" id="ck-reset" type="button">Limpar marcações</button></div>
+</section>
+
+<!-- ============================ MÓDULO 10 ============================ -->
+<section id="pratique">
+  <p class="eyebrow">Módulo 10</p>
+  <h2>Pratique</h2>
+  <h3>Exercício 1. Objetivo, indicador ou meta?</h3>
+  <p>Cada item traz uma frase. Escolha o que ela é: objetivo, que diz o que se quer; indicador, que diz como medir; ou meta, que diz quanto.</p>
+  <div class="quiz" id="quiz"></div>
+  <div class="bar"><span>Acertos: <b id="qz-score">0</b> de <b id="qz-total">10</b></span><span>Respondidos: <b id="qz-done">0</b></span><button class="btn" id="qz-reset" type="button">Recomeçar</button></div>
+
+  <h3>Exercício 2. Monte o painel de um processo</h3>
+  <p>Escolha um processo que você conhece bem. Abra a planilha de apoio e siga o roteiro.</p>
+  <ol>
+    <li>Na aba Fichas, escreva de três a cinco indicadores, cada um ligado a um objetivo.</li>
+    <li>Preencha a fórmula, a unidade, o sentido, a meta e o limite de atenção de cada um.</li>
+    <li>Na aba Medições, escreva o nome dos períodos e os resultados que você já tem.</li>
+    <li>Na aba Painel, leia a situação, a tendência e a ação sugerida de cada indicador.</li>
+    <li>Escolha o indicador do gráfico e observe a linha, a meta e o limite.</li>
+    <li>Na aba Análise, registre a decisão de cada indicador fora da meta.</li>
+    <li>Passe o checklist do módulo 9.</li>
+  </ol>
+  <p>Depois, entregue a ficha de um indicador a outra pessoa e peça que ela calcule o resultado do último mês. Se o número dela for diferente do seu, a ficha ainda não está pronta.</p>
+</section>
+
+<!-- ============================ MÓDULO 11 ============================ -->
+<section id="planilha">
+  <p class="eyebrow">Módulo 11</p>
+  <h2>A planilha de apoio</h2>
+  <p>Este treinamento acompanha o arquivo <a id="xlsx-ref" href="Indicadores-modelo.xlsx">Indicadores-modelo.xlsx</a>, que fica na mesma pasta. As células em amarelo-claro são para preenchimento. As células cinza são calculadas.</p>
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Aba</th><th>Para que serve</th><th style="width:36%">O que ela calcula</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Instruções</strong></td><td>Legenda de cores, ordem de preenchimento e regras do modelo.</td><td>Nada. É só leitura.</td></tr>
+        <tr><td><strong>Fichas</strong></td><td>Até 12 indicadores, com objetivo, fórmula, unidade, sentido, meta, limite de atenção, fonte, frequência e responsável.</td><td>Conferência dos campos e da coerência entre a meta e o limite.</td></tr>
+        <tr><td><strong>Medições</strong></td><td>Os resultados de cada indicador, em até 12 períodos.</td><td>Períodos seguidos fora da meta.</td></tr>
+        <tr><td><strong>Painel</strong></td><td>Uma linha por indicador, com a leitura do último resultado, e o gráfico do indicador escolhido.</td><td>Situação, média, tendência, ação sugerida, contagens e gráfico.</td></tr>
+        <tr><td><strong>Análise</strong></td><td>Registro das reuniões: o que os dados mostram, a causa provável, a decisão, o responsável e o prazo.</td><td>Situação de cada decisão e indicadores fora da meta sem registro.</td></tr>
+        <tr><td><strong>Checklist</strong></td><td>Os mesmos 12 itens do módulo 9, com status Sim, Parcial ou Não.</td><td>Percentual atendido e situação da validação.</td></tr>
+        <tr><td><strong>Exemplo 1 e Exemplo 2</strong></td><td>Os painéis da pizzaria e do processo de compras.</td><td>Situação, média, tendência e ação sugerida.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ GLOSSÁRIO ============================ -->
+<section id="glossario">
+  <p class="eyebrow">Referência</p>
+  <h2>Glossário</h2>
+  <dl class="gloss">
+    <div><dt>Dado</dt><dd>Registro de um fato, antes de qualquer comparação.</dd></div>
+    <div><dt>Eficácia</dt><dd>Extensão em que os resultados planejados foram alcançados.</dd></div>
+    <div><dt>Eficiência</dt><dd>Relação entre o resultado alcançado e os recursos usados.</dd></div>
+    <div><dt>Ficha do indicador</dt><dd>Documento que define a fórmula, a unidade, a fonte, a frequência, a meta e o responsável.</dd></div>
+    <div><dt>Indicador</dt><dd>Medida que mostra se um objetivo está sendo alcançado.</dd></div>
+    <div><dt>Indicador de processo</dt><dd>Mede o trabalho enquanto ele acontece, e avisa antes do resultado.</dd></div>
+    <div><dt>Indicador de resultado</dt><dd>Mede o que foi entregue, e confirma depois.</dd></div>
+    <div><dt>Limite de atenção</dt><dd>Valor que separa o desvio pequeno do desvio grande em relação à meta.</dd></div>
+    <div><dt>Linha de base</dt><dd>Resultado do indicador antes da ação, usado como ponto de comparação.</dd></div>
+    <div><dt>Medição</dt><dd>Processo para determinar um valor.</dd></div>
+    <div><dt>Meta</dt><dd>Valor que o indicador deve atingir, com sentido e prazo.</dd></div>
+    <div><dt>Monitoramento</dt><dd>Acompanhamento da situação de um sistema, de um processo ou de uma atividade.</dd></div>
+    <div><dt>Objetivo</dt><dd>Resultado a ser alcançado.</dd></div>
+    <div><dt>Tendência</dt><dd>Direção que os resultados tomam ao longo de vários períodos.</dd></div>
+  </dl>
+</section>
+
+</main>
+</div>
+
+<footer>Material de estudo. Os exemplos, documentos e números são ilustrativos e foram criados para fins didáticos. As referências às normas ISO são resumos para estudo e não substituem o texto das normas.</footer>
+</div>
+
+<script>
+(function () {
+  function read(key) { try { return JSON.parse(localStorage.getItem(key) || 'null'); } catch (e) { return null; } }
+  function write(key, val) { try { localStorage.setItem(key, JSON.stringify(val)); } catch (e) {} }
+
+  /* ---------- Checklist ---------- */
+  var boxes = Array.prototype.slice.call(document.querySelectorAll('#checklist input'));
+  var count = document.getElementById('ck-count');
+  var saved = read('indicadores-checklist') || {};
+  function refreshChecks() {
+    var n = 0, state = {};
+    boxes.forEach(function (b) { if (b.checked) { n++; } state[b.id] = b.checked; });
+    count.textContent = n;
+    return state;
+  }
+  boxes.forEach(function (b) {
+    if (saved[b.id]) { b.checked = true; }
+    b.addEventListener('change', function () { write('indicadores-checklist', refreshChecks()); });
+  });
+  refreshChecks();
+  document.getElementById('ck-reset').addEventListener('click', function () {
+    boxes.forEach(function (b) { b.checked = false; });
+    write('indicadores-checklist', refreshChecks());
+  });
+
+  /* ---------- Exercício ---------- */
+  var KEYS = ['O', 'I', 'M'];
+  var LABEL = { O: 'Objetivo', I: 'Indicador', M: 'Meta' };
+  var NAMES = { O: 'objetivo', I: 'indicador', M: 'meta' };
+  var ITEMS = [
+    { t: 'Reduzir as reclamações dos clientes.', a: 'O', w: 'Diz o que se quer. Não diz como medir nem quanto.' },
+    { t: 'Reclamações por 100 pedidos.', a: 'I', w: 'É a medida. Ainda não diz que valor é bom.' },
+    { t: 'No máximo 2 reclamações por 100 pedidos, até dezembro.', a: 'M', w: 'Tem valor, sentido e prazo.' },
+    { t: 'Percentual de entregas feitas em até 40 minutos.', a: 'I', w: 'É a medida do objetivo de entregar no prazo.' },
+    { t: 'Entregar 95% dos pedidos em até 40 minutos.', a: 'M', w: 'O valor de 95% é o que transforma a medida em meta.' },
+    { t: 'Atender o cliente no prazo combinado.', a: 'O', w: 'É a intenção. O indicador e a meta vêm depois.' },
+    { t: 'Prazo médio de atendimento das requisições, em dias úteis.', a: 'I', w: 'Tem fórmula e unidade, e não tem valor a atingir.' },
+    { t: 'Ter todos os fornecedores críticos avaliados a cada semestre.', a: 'M', w: '“Todos” é o valor, de 100%, e “a cada semestre” é o prazo.' },
+    { t: 'Comprar os materiais certos, sem parar a produção.', a: 'O', w: 'Diz o resultado esperado do processo de compras.' },
+    { t: 'Número de itens devolvidos ao fornecedor por mês.', a: 'I', w: 'É uma contagem, com período definido.' }
+  ];
+  var quiz = document.getElementById('quiz');
+  var score = document.getElementById('qz-score');
+  var done = document.getElementById('qz-done');
+  document.getElementById('qz-total').textContent = ITEMS.length;
+  var hits = 0, answered = 0;
+
+  function render() {
+    hits = 0; answered = 0; score.textContent = 0; done.textContent = 0;
+    quiz.textContent = '';
+    ITEMS.forEach(function (item, idx) {
+      var row = document.createElement('div'); row.className = 'q';
+      var p = document.createElement('p'); p.textContent = (idx + 1) + '. ' + item.t;
+      var opts = document.createElement('div'); opts.className = 'opts';
+      opts.setAttribute('role', 'group'); opts.setAttribute('aria-label', 'Tipo da frase do item ' + (idx + 1));
+      var why = document.createElement('p'); why.className = 'why'; why.hidden = true;
+      KEYS.forEach(function (k) {
+        var b = document.createElement('button');
+        b.type = 'button'; b.textContent = LABEL[k]; b.id = 'qz-' + idx + '-' + k;
+        b.setAttribute('data-k', k);
+        b.addEventListener('click', function () {
+          var ok = k === item.a;
+          Array.prototype.forEach.call(opts.children, function (o) {
+            o.disabled = true;
+            if (o.getAttribute('data-k') === item.a) { o.className = 'right'; }
+          });
+          if (!ok) { b.className = 'wrong'; }
+          var lead = document.createElement('b');
+          lead.textContent = (ok ? 'Certo. ' : 'A resposta é ' + NAMES[item.a] + '. ');
+          why.textContent = ''; why.appendChild(lead); why.appendChild(document.createTextNode(item.w));
+          why.className = 'why ' + (ok ? 'ok' : 'no'); why.hidden = false;
+          answered++; if (ok) { hits++; }
+          score.textContent = hits; done.textContent = answered;
+        });
+        opts.appendChild(b);
+      });
+      row.appendChild(p); row.appendChild(opts); row.appendChild(why);
+      quiz.appendChild(row);
+    });
+  }
+  render();
+  document.getElementById('qz-reset').addEventListener('click', render);
+
+  /* ---------- Gráfico: leitura dos valores ---------- */
+  var svg = document.getElementById('run');
+  var fig = document.getElementById('fig-run');
+  var tip = document.getElementById('run-tip');
+  var xh = document.getElementById('run-xh');
+  var pts = document.querySelectorAll('#run-pts circle');
+  function hide() {
+    tip.hidden = true; xh.setAttribute('visibility', 'hidden');
+    Array.prototype.forEach.call(pts, function (p) { p.setAttribute('class', 'pt'); p.setAttribute('r', 5); });
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('#run .hit'), function (r) {
+    function show() {
+      var d = r.dataset, c = pts[parseInt(d.i, 10)];
+      var x = parseFloat(c.getAttribute('cx')), y = parseFloat(c.getAttribute('cy'));
+      Array.prototype.forEach.call(pts, function (p) { p.setAttribute('class', 'pt'); p.setAttribute('r', 5); });
+      c.setAttribute('class', 'pt on-hit'); c.setAttribute('r', 6);
+      xh.setAttribute('x1', x); xh.setAttribute('x2', x); xh.setAttribute('visibility', 'visible');
+      var pt = svg.createSVGPoint(); pt.x = x; pt.y = y;
+      var scr = pt.matrixTransform(svg.getScreenCTM());
+      var box = fig.getBoundingClientRect();
+      tip.textContent = '';
+      var strong = document.createElement('b'); strong.textContent = d.v + ' dias úteis';
+      tip.appendChild(strong);
+      tip.appendChild(document.createTextNode(d.p + ' · ' + d.s));
+      tip.appendChild(document.createElement('br'));
+      tip.appendChild(document.createTextNode('Seguidos fora da meta: ' + d.n));
+      tip.style.left = Math.min(Math.max(scr.x - box.left, 110), box.width - 110) + 'px';
+      tip.style.top = (scr.y - box.top) + 'px';
+      tip.hidden = false;
+    }
+    r.addEventListener('pointerenter', show);
+    r.addEventListener('focus', show);
+    r.addEventListener('pointerleave', hide);
+    r.addEventListener('blur', hide);
+  });
+})();
+</script>
+</body>
+</html>
