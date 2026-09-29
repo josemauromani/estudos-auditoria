@@ -1,0 +1,1182 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>PDCA na prática</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<style>
+:root{
+  --ground:#F3F6F7; --surface:#FFFFFF; --sunk:#E9EEF0; --ink:#16242E; --muted:#566672; --rule:#D3DBE0;
+  --accent:#2B5C8A;
+  --p:#2B5C8A; --p-tint:#DCE8F3;
+  --d:#A96A12; --d-tint:#F6E8CF;
+  --c:#1E7B73; --c-tint:#D9EEEB;
+  --a:#B0413E; --a-tint:#F5DEDC;
+  --on-hue:#FFFFFF;
+  --good:#1F7A4D; --good-tint:#DDF1E5;
+  --bad:#B0413E; --bad-tint:#F5DEDC;
+  --display:"Barlow Semi Condensed","Arial Narrow",Arial,sans-serif;
+  --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --ground:#0F171C; --surface:#172229; --sunk:#1E2B33; --ink:#E4EAED; --muted:#9BABB6; --rule:#2B3A44;
+    --accent:#86B7E3;
+    --p:#86B7E3; --p-tint:#1B2F42;
+    --d:#E2AC4F; --d-tint:#3A2C12;
+    --c:#5FC6BA; --c-tint:#15332F;
+    --a:#EC8E89; --a-tint:#3D1F1E;
+    --on-hue:#0F171C;
+    --good:#6FCF9B; --good-tint:#163326;
+    --bad:#EC8E89; --bad-tint:#3D1F1E;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --ground:#0F171C; --surface:#172229; --sunk:#1E2B33; --ink:#E4EAED; --muted:#9BABB6; --rule:#2B3A44;
+  --accent:#86B7E3;
+  --p:#86B7E3; --p-tint:#1B2F42;
+  --d:#E2AC4F; --d-tint:#3A2C12;
+  --c:#5FC6BA; --c-tint:#15332F;
+  --a:#EC8E89; --a-tint:#3D1F1E;
+  --on-hue:#0F171C;
+  --good:#6FCF9B; --good-tint:#163326;
+  --bad:#EC8E89; --bad-tint:#3D1F1E;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--ground);color:var(--ink);font:400 16px/1.65 var(--body);-webkit-text-size-adjust:100%}
+a{color:var(--accent);text-underline-offset:3px}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.page{max-width:1180px;margin-inline:auto;padding-inline:20px;padding-block:36px 80px}
+
+/* Cabeçalho */
+.mast{display:flex;flex-direction:column;gap:18px;padding-bottom:32px;border-bottom:1px solid var(--rule)}
+.tiles{display:flex;gap:6px}
+.tiles span{width:44px;height:44px;display:grid;place-items:center;font:700 24px/1 var(--display);color:var(--on-hue)}
+.tiles .p{background:var(--p)} .tiles .d{background:var(--d)} .tiles .c{background:var(--c)} .tiles .a{background:var(--a)}
+h1{font:700 clamp(2.3rem,6vw,3.6rem)/1.02 var(--display);letter-spacing:-.01em;margin:0;text-wrap:balance}
+.lead{font-size:1.15rem;line-height:1.55;max-width:62ch;margin:0;color:var(--ink)}
+.meta{display:flex;flex-direction:row;flex-wrap:wrap;gap:6px 22px;font:400 .8rem/1.4 var(--mono);color:var(--muted);margin:0;padding:0;list-style:none}
+
+/* Estrutura */
+.layout{display:grid;grid-template-columns:minmax(0,1fr);gap:32px;padding-top:32px}
+.toc{font-size:.92rem}
+.toc h2{font:500 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+.toc ol{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:2px 20px;counter-reset:toc}
+.toc li{counter-increment:toc}
+.toc a{display:flex;gap:10px;padding:5px 0;color:var(--ink);text-decoration:none;line-height:1.35}
+.toc a::before{content:counter(toc,decimal-leading-zero);font:400 .75rem/1.7 var(--mono);color:var(--muted)}
+.toc a:hover{color:var(--accent);text-decoration:underline}
+@media (min-width:1020px){
+  .layout{grid-template-columns:200px minmax(0,1fr);gap:64px}
+  .toc{position:sticky;top:calc(env(safe-area-inset-top,0px) + 24px);align-self:start}
+  .toc ol{grid-template-columns:1fr}
+}
+main{display:flex;flex-direction:column;gap:72px;min-width:0}
+section{display:flex;flex-direction:column;gap:20px;scroll-margin-top:24px}
+.eyebrow{font:500 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0}
+h2{font:700 clamp(1.7rem,4vw,2.2rem)/1.1 var(--display);margin:0;text-wrap:balance}
+h3{font:600 1.3rem/1.2 var(--display);margin:12px 0 0;text-wrap:balance}
+h4{font:600 .95rem/1.3 var(--body);margin:0}
+p{margin:0}
+section > p, section > ul, section > ol, section > h3{max-width:68ch}
+ul,ol{margin:0;padding-left:1.25em;display:flex;flex-direction:column;gap:6px}
+strong{font-weight:600}
+code{font:400 .88em var(--mono);background:var(--sunk);padding:1px 5px;border-radius:3px}
+
+/* Letras coloridas no texto */
+.k{display:inline-grid;place-items:center;width:1.45em;height:1.45em;font:700 .85em/1 var(--display);color:var(--on-hue);vertical-align:.05em}
+.k.p{background:var(--p)} .k.d{background:var(--d)} .k.c{background:var(--c)} .k.a{background:var(--a)}
+
+/* Figuras */
+figure{margin:0;display:flex;flex-direction:column;gap:10px;position:relative}
+.scroll{overflow-x:auto;background:var(--surface);border:1px solid var(--rule);padding:18px}
+.scroll svg{display:block;width:100%;min-width:820px;height:auto;color:var(--ink)}
+figcaption{font-size:.86rem;line-height:1.5;color:var(--muted);max-width:72ch}
+figcaption b{color:var(--ink);font-weight:600}
+svg text{font-family:var(--body);fill:var(--ink)}
+svg .disp{font-family:var(--display);font-weight:700}
+svg .mono{font-family:var(--mono);letter-spacing:.08em}
+svg .on{fill:var(--on-hue)}
+svg .mu{fill:var(--muted)}
+svg .b{font-weight:600}
+svg .ln{stroke:var(--ink);stroke-width:1.5;fill:none}
+svg .ln-mu{stroke:var(--muted);stroke-width:1.5;fill:none}
+svg .ln-bold{stroke:var(--ink);stroke-width:3;fill:none;stroke-linejoin:round;stroke-linecap:round}
+svg .dash{stroke-dasharray:5 4}
+svg .ah{fill:var(--ink)} svg .ah-mu{fill:var(--muted)}
+svg .bx{fill:var(--surface);stroke:var(--rule);stroke-width:1.5}
+svg .bx-ink{fill:var(--ink);stroke:var(--ink)}
+svg .t-ground{fill:var(--ground)}
+svg .bx-out{fill:none;stroke:var(--muted);stroke-width:1.5;stroke-dasharray:5 4}
+svg .bx-p{fill:var(--p-tint);stroke:var(--p);stroke-width:1.5} svg .hd-p{fill:var(--p)}
+svg .bx-d{fill:var(--d-tint);stroke:var(--d);stroke-width:1.5} svg .hd-d{fill:var(--d)}
+svg .bx-c{fill:var(--c-tint);stroke:var(--c);stroke-width:1.5} svg .hd-c{fill:var(--c)}
+svg .bx-a{fill:var(--a-tint);stroke:var(--a);stroke-width:1.5} svg .hd-a{fill:var(--a)}
+svg .gap{stroke:var(--surface);stroke-width:4}
+svg .gap2{stroke:var(--surface);stroke-width:2}
+svg .hub{fill:var(--surface)}
+
+/* Gráfico */
+svg .grid{stroke:var(--rule);stroke-width:1}
+svg .band{fill:var(--sunk)}
+svg .series{stroke:var(--accent);stroke-width:2;fill:none;stroke-linejoin:round;stroke-linecap:round}
+svg .pt{fill:var(--accent);stroke:var(--surface);stroke-width:2}
+svg .pt.on-hit{stroke:var(--ink)}
+svg .goal{stroke:var(--muted);stroke-width:1.5;stroke-dasharray:6 4;fill:none}
+svg .xh{stroke:var(--muted);stroke-width:1}
+svg .hit{fill:transparent;cursor:crosshair;outline:none}
+svg .root{fill:var(--accent);stroke:var(--surface);stroke-width:2}
+.tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--ground);padding:6px 10px;font-size:.78rem;line-height:1.4;transform:translate(-50%,calc(-100% - 14px));white-space:nowrap;z-index:2}
+.tip b{display:block;font:600 1.05rem/1.2 var(--body)}
+details.data{font-size:.88rem}
+details.data summary{cursor:pointer;font:400 .82rem var(--mono);color:var(--muted);padding:4px 0}
+details.data .tbl{margin-top:8px}
+details.data table{min-width:420px}
+
+/* Tabelas */
+.tbl{overflow-x:auto;border:1px solid var(--rule);background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:780px;font-size:.88rem;line-height:1.4}
+th,td{padding:9px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--rule)}
+tr:last-child > td{border-bottom:0}
+thead th{font:600 .8rem/1.3 var(--body);background:var(--sunk)}
+table.pdca tbody th{color:var(--on-hue);font:700 1.5rem/1 var(--display);letter-spacing:.02em;width:96px;border-bottom:1px solid var(--surface)}
+table.pdca tbody th small{display:block;font:400 .74rem/1.3 var(--body);letter-spacing:0;margin-top:4px}
+table.pdca td{border-right:1px solid var(--surface);border-bottom:1px solid var(--surface)}
+table.pdca th.p{background:var(--p)} table.pdca td.p{background:var(--p-tint)}
+table.pdca th.d{background:var(--d)} table.pdca td.d{background:var(--d-tint)}
+table.pdca th.c{background:var(--c)} table.pdca td.c{background:var(--c-tint)}
+table.pdca th.a{background:var(--a)} table.pdca td.a{background:var(--a-tint)}
+table.pdca td.st{width:21%;font-weight:600}
+table.pdca td.st b{font:500 .78rem var(--mono);color:var(--muted);margin-right:6px}
+table.pdca td.ev{width:24%}
+td.num{font-variant-numeric:tabular-nums;white-space:nowrap;font-family:var(--mono);font-size:.82rem}
+
+/* Ficha do ciclo (acima de cada exemplo) */
+.ficha{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:0;border:1px solid var(--rule);background:var(--surface)}
+.ficha div{padding:12px 14px;border-right:1px solid var(--rule);border-bottom:1px solid var(--rule);margin:0 -1px -1px 0}
+.ficha dt{font:500 .68rem/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.ficha dd{margin:0;font-size:.9rem;line-height:1.4}
+dl{margin:0}
+
+/* Blocos */
+.pair{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.box{background:var(--surface);border:1px solid var(--rule);padding:18px 20px;display:flex;flex-direction:column;gap:10px}
+.box h4{font:600 1.1rem/1.2 var(--display)}
+.box ul{font-size:.93rem}
+.note{background:var(--sunk);padding:16px 20px;max-width:72ch;font-size:.94rem;display:flex;flex-direction:column;gap:6px}
+.note h4{font:500 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+
+/* Passo a passo */
+.steps{list-style:none;padding:0;counter-reset:st;gap:0;max-width:none;border-top:1px solid var(--rule)}
+.steps li{counter-increment:st;display:grid;grid-template-columns:44px minmax(0,1fr);gap:4px 12px;padding:16px 0;border-bottom:1px solid var(--rule)}
+.steps li::before{content:counter(st);font:700 1.7rem/1 var(--display);color:var(--muted);grid-row:span 2}
+.steps h4{font:600 1.1rem/1.25 var(--display)}
+.steps p{font-size:.95rem;max-width:64ch;grid-column:2}
+
+/* Erros comuns */
+.errs{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:0 40px;border-top:1px solid var(--rule)}
+.errs div{padding:16px 16px 16px 0;border-bottom:1px solid var(--rule);display:flex;flex-direction:column;gap:4px}
+.errs h4{font:600 1.05rem/1.25 var(--display)}
+.errs p{font-size:.92rem}
+.errs .fix{color:var(--muted)}
+.errs .fix b{color:var(--ink);font-weight:600}
+
+/* Checklist */
+.check{list-style:none;padding:0;gap:0;max-width:none;border:1px solid var(--rule);background:var(--surface)}
+.check li{border-bottom:1px solid var(--rule)}
+.check li:last-child{border-bottom:0}
+.check label{display:grid;grid-template-columns:22px minmax(0,1fr);gap:12px;padding:11px 16px;cursor:pointer;font-size:.94rem;align-items:start}
+.check input{width:18px;height:18px;margin:3px 0 0;accent-color:var(--c)}
+.check input:checked + span{color:var(--muted);text-decoration:line-through}
+.bar{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;font:400 .82rem var(--mono);color:var(--muted)}
+.bar b{color:var(--ink);font-weight:500}
+
+/* Exercício */
+.quiz{display:flex;flex-direction:column;gap:0;border:1px solid var(--rule);background:var(--surface)}
+.q{display:grid;grid-template-columns:minmax(0,1fr);gap:10px;padding:14px 16px;border-bottom:1px solid var(--rule)}
+.q:last-child{border-bottom:0}
+@media (min-width:720px){.q{grid-template-columns:minmax(0,1fr) auto;align-items:center}}
+.q p{font-size:.95rem}
+.q .why{grid-column:1/-1;font-size:.86rem;color:var(--muted)}
+.q .why b{font-weight:600}
+.q .why.ok b{color:var(--good)} .q .why.no b{color:var(--bad)}
+.opts{display:flex;gap:6px}
+.opts button{width:40px;height:40px;border:1.5px solid var(--rule);background:var(--surface);color:var(--ink);font:700 1.1rem/1 var(--display);cursor:pointer;border-radius:0}
+.opts button:hover:not(:disabled){border-color:var(--ink)}
+.opts button:disabled{cursor:default;opacity:.45}
+.opts button.right{background:var(--good-tint);border-color:var(--good);color:var(--good);opacity:1}
+.opts button.wrong{background:var(--bad-tint);border-color:var(--bad);color:var(--bad);opacity:1}
+.btn{border:1.5px solid var(--ink);background:transparent;color:var(--ink);font:500 .82rem var(--mono);padding:7px 14px;cursor:pointer;border-radius:0}
+.btn:hover{background:var(--ink);color:var(--ground)}
+
+/* Glossário */
+.gloss{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:0 40px;border-top:1px solid var(--rule)}
+.gloss div{padding:12px 0;border-bottom:1px solid var(--rule)}
+.gloss dt{font:600 1.02rem/1.3 var(--display)}
+.gloss dd{margin:2px 0 0;font-size:.9rem;color:var(--muted)}
+footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);font-size:.84rem;color:var(--muted);max-width:72ch}
+</style>
+</head>
+<body>
+<div class="page" lang="pt-BR">
+
+<header class="mast">
+  <div class="tiles" aria-hidden="true"><span class="p">P</span><span class="d">D</span><span class="c">C</span><span class="a">A</span></div>
+  <h1>PDCA na prática</h1>
+  <p class="lead">Um guia de estudo para resolver problemas e melhorar resultados em ciclos: planejar com base em fatos, executar, verificar se funcionou e transformar em padrão o que deu certo.</p>
+  <ul class="meta">
+    <li>Treinamento autoinstrucional</li>
+    <li>11 módulos</li>
+    <li>Leitura de cerca de 35 minutos</li>
+    <li>3 exemplos resolvidos e 2 exercícios</li>
+  </ul>
+</header>
+
+<div class="layout">
+
+<nav class="toc" aria-label="Sumário">
+  <h2>Sumário</h2>
+  <ol>
+    <li><a href="#o-que-e">O que é o PDCA</a></li>
+    <li><a href="#quando">Quando usar</a></li>
+    <li><a href="#rodar">Como rodar o ciclo</a></li>
+    <li><a href="#exemplos">Exemplos resolvidos</a></li>
+    <li><a href="#metas">Metas e verificação</a></li>
+    <li><a href="#erros">Erros comuns</a></li>
+    <li><a href="#ferramentas">PDCA e outras ferramentas</a></li>
+    <li><a href="#iso">PDCA nas normas ISO</a></li>
+    <li><a href="#conduzir">Como conduzir o ciclo</a></li>
+    <li><a href="#pratique">Pratique</a></li>
+    <li><a href="#planilha">A planilha de apoio</a></li>
+    <li><a href="#glossario">Glossário</a></li>
+  </ol>
+</nav>
+
+<main>
+
+<!-- ============================ MÓDULO 1 ============================ -->
+<section id="o-que-e">
+  <p class="eyebrow">Módulo 1</p>
+  <h2>O que é o PDCA</h2>
+  <p>PDCA é um método de gestão em quatro fases que se repetem. O nome vem das iniciais, em inglês, de <em>Plan, Do, Check, Act</em>. Em português: planejar, executar, verificar e agir.</p>
+  <p>A ideia nasceu com Walter Shewhart, nos anos 1930, e foi difundida por W. Edwards Deming no Japão a partir de 1950. Por isso o PDCA também é chamado de ciclo de Shewhart ou ciclo de Deming. O princípio é o do método científico: formular uma hipótese, testá-la, medir o resultado e aprender com ele antes de seguir adiante.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 380" role="img" aria-label="O ciclo PDCA em forma de roda com quatro quadrantes, percorridos no sentido horário: planejar, executar, verificar e agir. Depois de agir, o ciclo recomeça em planejar.">
+        <defs>
+          <marker id="a1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker>
+        </defs>
+
+        <!-- roda -->
+        <path class="hd-p gap" d="M450 190 L310 190 A140 140 0 0 1 450 50 Z"/>
+        <path class="hd-d gap" d="M450 190 L450 50 A140 140 0 0 1 590 190 Z"/>
+        <path class="hd-c gap" d="M450 190 L590 190 A140 140 0 0 1 450 330 Z"/>
+        <path class="hd-a gap" d="M450 190 L450 330 A140 140 0 0 1 310 190 Z"/>
+        <circle class="hub" cx="450" cy="190" r="30"/>
+        <text class="disp on" x="392" y="148" font-size="46" text-anchor="middle">P</text>
+        <text class="disp on" x="508" y="148" font-size="46" text-anchor="middle">D</text>
+        <text class="disp on" x="508" y="264" font-size="46" text-anchor="middle">C</text>
+        <text class="disp on" x="392" y="264" font-size="46" text-anchor="middle">A</text>
+
+        <!-- sentido de giro -->
+        <path class="ln" d="M409.1 37.4 A158 158 0 0 1 490.9 37.4" marker-end="url(#a1)"/>
+        <path class="ln" d="M602.6 149.1 A158 158 0 0 1 602.6 230.9" marker-end="url(#a1)"/>
+        <path class="ln" d="M490.9 342.6 A158 158 0 0 1 409.1 342.6" marker-end="url(#a1)"/>
+        <path class="ln" d="M297.4 230.9 A158 158 0 0 1 297.4 149.1" marker-end="url(#a1)"/>
+
+        <!-- textos -->
+        <g text-anchor="end">
+          <text class="b" x="268" y="92" font-size="15">Planejar</text>
+          <text class="mu" x="268" y="114" font-size="12">Qual é o problema, qual é a meta</text>
+          <text class="mu" x="268" y="131" font-size="12">e o que vamos fazer?</text>
+          <text class="mono mu" x="268" y="154" font-size="10.5">PLAN</text>
+
+          <text class="b" x="268" y="246" font-size="15">Agir</text>
+          <text class="mu" x="268" y="268" font-size="12">Padronizar o que funcionou,</text>
+          <text class="mu" x="268" y="285" font-size="12">ou corrigir e girar de novo.</text>
+          <text class="mono mu" x="268" y="308" font-size="10.5">ACT</text>
+        </g>
+        <g>
+          <text class="b" x="632" y="92" font-size="15">Executar</text>
+          <text class="mu" x="632" y="114" font-size="12">Treinar as pessoas, fazer o que foi</text>
+          <text class="mu" x="632" y="131" font-size="12">planejado e registrar os desvios.</text>
+          <text class="mono mu" x="632" y="154" font-size="10.5">DO</text>
+
+          <text class="b" x="632" y="246" font-size="15">Verificar</text>
+          <text class="mu" x="632" y="268" font-size="12">O resultado chegou à meta?</text>
+          <text class="mu" x="632" y="285" font-size="12">Houve efeito colateral?</text>
+          <text class="mono mu" x="632" y="308" font-size="10.5">CHECK</text>
+        </g>
+      </svg>
+    </div>
+    <figcaption><b>Figura 1.</b> As quatro fases, no sentido horário. O ciclo não termina em <em>Agir</em>: o que foi aprendido em uma volta é o ponto de partida da seguinte.</figcaption>
+  </figure>
+
+  <p>Repare que só uma das quatro fases é “fazer”. As outras três existem para garantir que se faça a coisa certa (<span class="k p">P</span>), que se saiba se funcionou (<span class="k c">C</span>) e que o ganho não se perca (<span class="k a">A</span>). Pular qualquer uma delas é o erro mais frequente de quem está começando.</p>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:18%">Fase</th><th style="width:30%">Pergunta que responde</th><th style="width:30%">O que fazer</th><th>O que sai da fase</th></tr></thead>
+      <tbody>
+        <tr><td><span class="k p">P</span> Planejar</td><td>Qual é o problema, por que ele acontece e o que faremos?</td><td>Definir problema e meta, observar, encontrar a causa raiz e montar o plano de ação.</td><td>Meta e plano de ação</td></tr>
+        <tr><td><span class="k d">D</span> Executar</td><td>O plano está sendo cumprido?</td><td>Treinar os envolvidos, executar as ações e registrar o que aconteceu.</td><td>Ações executadas e dados coletados</td></tr>
+        <tr><td><span class="k c">C</span> Verificar</td><td>O resultado chegou à meta?</td><td>Medir com o mesmo indicador, comparar com a meta e avaliar efeitos colaterais.</td><td>Conclusão sobre a eficácia</td></tr>
+        <tr><td><span class="k a">A</span> Agir</td><td>Como manter o ganho ou corrigir o rumo?</td><td>Padronizar e treinar, se deu certo. Voltar à análise, se não deu.</td><td>Novo padrão e lições aprendidas</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 2 ============================ -->
+<section id="quando">
+  <p class="eyebrow">Módulo 2</p>
+  <h2>Quando usar</h2>
+  <p>O PDCA serve para <strong>melhorar</strong> um resultado: sair de um patamar e chegar a outro. Para <strong>manter</strong> um resultado já alcançado, usa-se a variação SDCA, em que o <em>P</em> de planejar dá lugar ao <em>S</em> de <em>Standardize</em>, padronizar. Os dois se alternam: um ciclo de melhoria sobe o degrau, e a rotina padronizada segura o degrau.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 300" role="img" aria-label="Gráfico conceitual de desempenho ao longo do tempo. A linha forma uma escada: trechos horizontais de rotina, identificados como SDCA, alternam com trechos de subida, identificados como PDCA. Uma linha tracejada mostra o resultado caindo de volta quando a melhoria não é padronizada.">
+        <defs>
+          <marker id="a2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah-mu" d="M0 0 L10 5 L0 10 z"/></marker>
+        </defs>
+        <!-- eixos -->
+        <line class="ln-mu" x1="80" y1="256" x2="860" y2="256" marker-end="url(#a2)"/>
+        <line class="ln-mu" x1="80" y1="256" x2="80" y2="30" marker-end="url(#a2)"/>
+        <text class="mu" x="860" y="278" font-size="11.5" text-anchor="end">tempo</text>
+        <text class="mu" x="58" y="143" font-size="11.5" text-anchor="middle" transform="rotate(-90 58 143)">desempenho</text>
+
+        <!-- sem padrão -->
+        <path class="ln-mu dash" d="M370 160 L520 204"/>
+        <text class="mu" x="530" y="208" font-size="11.5">sem padrão, o resultado volta ao que era</text>
+
+        <!-- escada -->
+        <path class="ln-bold" d="M100 220 L250 220 L370 160 L520 160 L640 100 L800 100"/>
+        <circle class="ah" cx="250" cy="220" r="4.5"/><circle class="ah" cx="370" cy="160" r="4.5"/>
+        <circle class="ah" cx="520" cy="160" r="4.5"/><circle class="ah" cx="640" cy="100" r="4.5"/>
+
+        <text x="175" y="208" font-size="12" text-anchor="middle"><tspan class="b">SDCA</tspan> manter</text>
+        <text x="445" y="148" font-size="12" text-anchor="middle"><tspan class="b">SDCA</tspan> manter</text>
+        <text x="720" y="88" font-size="12" text-anchor="middle"><tspan class="b">SDCA</tspan> manter</text>
+        <text x="296" y="176" font-size="12" text-anchor="end"><tspan class="b">PDCA</tspan> melhorar</text>
+        <text x="566" y="116" font-size="12" text-anchor="end"><tspan class="b">PDCA</tspan> melhorar</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 2.</b> Melhorar e manter se alternam. Cada subida é um ciclo PDCA; cada patamar é a rotina seguindo o padrão. Sem a fase <em>Agir</em>, a melhoria depende da memória das pessoas e tende a se perder.</figcaption>
+  </figure>
+
+  <div class="pair">
+    <div class="box">
+      <h4>Use quando</h4>
+      <ul>
+        <li>Um indicador está abaixo da meta e a causa não é conhecida.</li>
+        <li>O mesmo problema volta depois de “resolvido”.</li>
+        <li>Uma não conformidade pede ação corretiva.</li>
+        <li>Uma mudança precisa ser testada antes de virar regra.</li>
+        <li>A equipe quer transformar melhoria em hábito, com ciclos curtos.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h4>Procure outro caminho quando</h4>
+      <ul>
+        <li>A causa e a solução são conhecidas e simples: faça, verifique e registre.</li>
+        <li>É uma emergência: contenha o problema primeiro e analise depois.</li>
+        <li>O processo ainda não tem limites claros: comece por um <a href="../SIPOC/treinamento-sipoc.html">SIPOC</a>.</li>
+        <li>O problema exige análise estatística aprofundada: considere um projeto DMAIC.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 3 ============================ -->
+<section id="rodar">
+  <p class="eyebrow">Módulo 3</p>
+  <h2>Como rodar o ciclo</h2>
+  <p>As quatro fases se desdobram em oito etapas. No Brasil, esse desdobramento é conhecido como MASP, o Método de Análise e Solução de Problemas. Metade das etapas pertence ao planejamento, e isso é proposital: o tempo gasto para entender o problema evita ações que atacam o sintoma.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 250" role="img" aria-label="As oito etapas do ciclo. Planejar reúne quatro etapas: identificar o problema, observar, analisar as causas e planejar a ação. Executar tem uma etapa. Verificar tem uma etapa. Agir reúne duas: padronizar e concluir. Se a meta não for atingida na verificação, volta-se à análise das causas. Ao concluir, começa um novo ciclo.">
+        <defs>
+          <marker id="a3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker>
+          <marker id="a3m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah-mu" d="M0 0 L10 5 L0 10 z"/></marker>
+        </defs>
+        <!-- faixas das fases -->
+        <rect class="hd-p" x="15" y="20" width="430" height="30"/>
+        <text class="on" x="27" y="40" font-size="13"><tspan class="disp" font-size="17">P</tspan><tspan dx="8" class="b">Planejar</tspan></text>
+        <rect class="hd-d" x="455" y="20" width="100" height="30"/>
+        <text class="on" x="467" y="40" font-size="13"><tspan class="disp" font-size="17">D</tspan><tspan dx="8" class="b">Executar</tspan></text>
+        <rect class="hd-c" x="565" y="20" width="100" height="30"/>
+        <text class="on" x="577" y="40" font-size="13"><tspan class="disp" font-size="17">C</tspan><tspan dx="8" class="b">Verificar</tspan></text>
+        <rect class="hd-a" x="675" y="20" width="210" height="30"/>
+        <text class="on" x="687" y="40" font-size="13"><tspan class="disp" font-size="17">A</tspan><tspan dx="8" class="b">Agir</tspan></text>
+
+        <!-- etapas -->
+        <g font-size="12" text-anchor="middle">
+          <rect class="bx-p" x="15" y="60" width="100" height="72"/>
+          <text class="mono mu" x="24" y="77" font-size="10" text-anchor="start">1</text>
+          <text x="65" y="98">Identificar</text><text x="65" y="114">o problema</text>
+          <rect class="bx-p" x="125" y="60" width="100" height="72"/>
+          <text class="mono mu" x="134" y="77" font-size="10" text-anchor="start">2</text>
+          <text x="175" y="98">Observar</text><text x="175" y="114">o problema</text>
+          <rect class="bx-p" x="235" y="60" width="100" height="72"/>
+          <text class="mono mu" x="244" y="77" font-size="10" text-anchor="start">3</text>
+          <text x="285" y="98">Analisar</text><text x="285" y="114">as causas</text>
+          <rect class="bx-p" x="345" y="60" width="100" height="72"/>
+          <text class="mono mu" x="354" y="77" font-size="10" text-anchor="start">4</text>
+          <text x="395" y="98">Planejar</text><text x="395" y="114">a ação</text>
+          <rect class="bx-d" x="455" y="60" width="100" height="72"/>
+          <text class="mono mu" x="464" y="77" font-size="10" text-anchor="start">5</text>
+          <text x="505" y="98">Executar</text><text x="505" y="114">o plano</text>
+          <rect class="bx-c" x="565" y="60" width="100" height="72"/>
+          <text class="mono mu" x="574" y="77" font-size="10" text-anchor="start">6</text>
+          <text x="615" y="98">Verificar</text><text x="615" y="114">o resultado</text>
+          <rect class="bx-a" x="675" y="60" width="100" height="72"/>
+          <text class="mono mu" x="684" y="77" font-size="10" text-anchor="start">7</text>
+          <text x="725" y="106">Padronizar</text>
+          <rect class="bx-a" x="785" y="60" width="100" height="72"/>
+          <text class="mono mu" x="794" y="77" font-size="10" text-anchor="start">8</text>
+          <text x="835" y="106">Concluir</text>
+        </g>
+
+        <!-- retornos -->
+        <path class="ln-mu dash" d="M615 134 V172 H285 V140" marker-end="url(#a3m)"/>
+        <text class="mu" x="450" y="190" font-size="11.5" text-anchor="middle">meta não atingida: volte à análise das causas</text>
+        <path class="ln" d="M835 134 V214 H65 V140" marker-end="url(#a3)"/>
+        <text x="450" y="232" font-size="11.5" text-anchor="middle">ciclo concluído: o próximo problema começa uma nova volta</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 3.</b> As oito etapas sobre as quatro fases. Quando a verificação mostra que a meta não foi atingida, o retorno é para a análise das causas, e não para a execução: repetir a mesma ação com mais esforço raramente muda o resultado.</figcaption>
+  </figure>
+
+  <h3>Passo a passo</h3>
+  <ol class="steps">
+    <li><h4>Identifique o problema <span class="k p">P</span></h4><p>Descreva o problema com fatos e dados, sem embutir causa nem solução. Escolha o indicador, meça a situação atual e defina a meta com objetivo, valor e prazo.</p></li>
+    <li><h4>Observe <span class="k p">P</span></h4><p>Vá ao local onde o problema acontece. Separe os dados por horário, dia, turno, produto, equipe ou região até descobrir onde o problema se concentra.</p></li>
+    <li><h4>Analise as causas <span class="k p">P</span></h4><p>Levante as causas possíveis com a equipe, selecione as mais prováveis e confirme com dados. Pergunte “por quê?” até chegar a uma causa sobre a qual se possa agir.</p></li>
+    <li><h4>Planeje a ação <span class="k p">P</span></h4><p>Para cada causa confirmada, defina o que será feito, por quem, até quando, onde, como e a que custo. Cada ação precisa de um único responsável.</p></li>
+    <li><h4>Execute <span class="k d">D</span></h4><p>Comunique o plano e treine quem vai executar. Se possível, comece por um piloto. Registre as datas reais e tudo o que foi feito diferente do planejado.</p></li>
+    <li><h4>Verifique <span class="k c">C</span></h4><p>Meça o resultado com o mesmo indicador e o mesmo método da situação inicial. Compare com a meta e procure efeitos colaterais em custo, prazo, qualidade e segurança.</p></li>
+    <li><h4>Padronize <span class="k a">A</span></h4><p>Atualize procedimentos, instruções e formulários. Treine todas as pessoas afetadas e defina como o novo padrão será acompanhado.</p></li>
+    <li><h4>Conclua <span class="k a">A</span></h4><p>Registre o que funcionou, o que não funcionou e o que ficou pendente. Escolha o próximo problema e reconheça o trabalho da equipe.</p></li>
+  </ol>
+
+  <div class="note">
+    <h4>Regra prática</h4>
+    <p>Problema é resultado indesejado, e não falta de solução. “Falta um sistema de roteirização” é uma solução disfarçada. “18% das entregas chegam depois do prazo” é um problema. Se a frase já diz o que fazer, a análise de causas foi pulada.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 4 ============================ -->
+<section id="exemplos">
+  <p class="eyebrow">Módulo 4</p>
+  <h2>Exemplos resolvidos</h2>
+  <p>Três ciclos de naturezas diferentes. Os dados são ilustrativos e foram criados para este treinamento. Os dois primeiros também estão preenchidos na planilha de apoio.</p>
+
+  <h3>Exemplo 1. Reduzir os atrasos nas entregas da pizzaria</h3>
+  <dl class="ficha">
+    <div><dt>Dono do problema</dt><dd>Gerente da loja</dd></div>
+    <div><dt>Indicador</dt><dd>% de entregas em até 40 minutos</dd></div>
+    <div><dt>Situação inicial</dt><dd>82%, na média de 6 semanas</dd></div>
+    <div><dt>Meta</dt><dd>95% ou mais, em até 12 semanas</dd></div>
+  </dl>
+  <div class="tbl">
+    <table class="pdca">
+      <thead><tr><th>Fase</th><th>Etapa</th><th>O que foi feito</th><th>Ferramenta ou evidência</th></tr></thead>
+      <tbody>
+        <tr><th class="p" rowspan="4" scope="rowgroup">P<small>Planejar</small></th><td class="p st"><b>1</b>Identificar o problema</td><td class="p">18% das entregas chegam depois de 40 minutos. Meta: passar de 82% para 95% de entregas no prazo.</td><td class="p ev">Relatório do aplicativo de delivery</td></tr>
+        <tr><td class="p st"><b>2</b>Observar</td><td class="p">Os atrasos se concentram nas sextas e sábados, das 19h às 22h. Em 46% deles, a pizza pronta ficou esperando entregador.</td><td class="p ev">Estratificação por dia e horário; gráfico de Pareto</td></tr>
+        <tr><td class="p st"><b>3</b>Analisar as causas</td><td class="p">A escala de entregadores é igual em todos os dias, os pedidos saem sem agrupamento por bairro e o formulário aceita endereço sem complemento.</td><td class="p ev">Diagrama de Ishikawa; 5 porquês</td></tr>
+        <tr><td class="p st"><b>4</b>Planejar a ação</td><td class="p">Três ações: reforçar a escala no pico, agrupar pedidos por bairro na expedição e tornar o complemento do endereço obrigatório.</td><td class="p ev">Plano de ação 5W2H</td></tr>
+        <tr><th class="d" scope="row">D<small>Executar</small></th><td class="d st"><b>5</b>Executar</td><td class="d">Ações implantadas nas semanas 7 e 8, com treinamento da expedição. Desvio registrado: o agrupamento por bairro só começou na semana 8.</td><td class="d ev">Plano de ação com datas reais; lista de presença</td></tr>
+        <tr><th class="c" scope="row">C<small>Verificar</small></th><td class="c st"><b>6</b>Verificar</td><td class="c">Média de 95,5% nas semanas 9 a 12. Meta atingida. Efeito colateral: o custo com entregadores subiu R$ 600 por mês.</td><td class="c ev">Gráfico de tendência, antes e depois</td></tr>
+        <tr><th class="a" rowspan="2" scope="rowgroup">A<small>Agir</small></th><td class="a st"><b>7</b>Padronizar</td><td class="a">A nova escala virou padrão, a instrução de trabalho da expedição foi atualizada e o campo obrigatório foi mantido.</td><td class="a ev">Instrução de trabalho revisada; registro de treinamento</td></tr>
+        <tr><td class="a st"><b>8</b>Concluir</td><td class="a">Lição: medir por faixa de horário, e não só pela média do dia. Próximo ciclo: a fila do forno, segundo item do Pareto.</td><td class="a ev">Registro de lições aprendidas</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p><strong>O que observar.</strong> A média do dia escondia o problema: fora do pico, quase tudo chegava no prazo. Foi a estratificação que mostrou onde agir. O ciclo também deixou explícito o custo da melhoria, para que a decisão de manter a nova escala fosse tomada com os dois números na mesa.</p>
+
+  <h3>Exemplo 2. Reduzir o prazo de compra</h3>
+  <dl class="ficha">
+    <div><dt>Dono do problema</dt><dd>Gerente de Suprimentos</dd></div>
+    <div><dt>Indicador</dt><dd>Dias úteis entre a requisição aprovada e o pedido emitido</dd></div>
+    <div><dt>Situação inicial</dt><dd>12 dias úteis, na média do trimestre</dd></div>
+    <div><dt>Meta</dt><dd>7 dias úteis ou menos, em 3 meses</dd></div>
+  </dl>
+  <div class="tbl">
+    <table class="pdca">
+      <thead><tr><th>Fase</th><th>Etapa</th><th>O que foi feito</th><th>Ferramenta ou evidência</th></tr></thead>
+      <tbody>
+        <tr><th class="p" rowspan="4" scope="rowgroup">P<small>Planejar</small></th><td class="p st"><b>1</b>Identificar o problema</td><td class="p">As áreas recebem os itens depois da data de necessidade. O pedido leva, em média, 12 dias úteis para ser emitido.</td><td class="p ev">Relatório do sistema de compras</td></tr>
+        <tr><td class="p st"><b>2</b>Observar</td><td class="p">40% das requisições são devolvidas por especificação incompleta. Compras de baixo valor demoram tanto quanto as de alto valor.</td><td class="p ev">Estratificação por valor e por motivo de devolução</td></tr>
+        <tr><td class="p st"><b>3</b>Analisar as causas</td><td class="p">O formulário de requisição não tem campos obrigatórios, e a política exige três cotações para qualquer valor.</td><td class="p ev">5 porquês; mapa do processo</td></tr>
+        <tr><td class="p st"><b>4</b>Planejar a ação</td><td class="p">Novo formulário com campos obrigatórios e catálogo de itens. Proposta de uma cotação só para compras de até R$ 2.000, aprovada pela Diretoria.</td><td class="p ev">Plano de ação 5W2H; política de compras revisada</td></tr>
+        <tr><th class="d" scope="row">D<small>Executar</small></th><td class="d st"><b>5</b>Executar</td><td class="d">Piloto de 4 semanas em duas áreas requisitantes, com treinamento dos requisitantes e dos compradores.</td><td class="d ev">Registro do piloto</td></tr>
+        <tr><th class="c" scope="row">C<small>Verificar</small></th><td class="c st"><b>6</b>Verificar</td><td class="c">O prazo caiu para 8 dias úteis. Meta não atingida. As devoluções caíram de 40% para 12%. O tempo restante está na revisão de contratos.</td><td class="c ev">Comparação antes e depois; novo Pareto</td></tr>
+        <tr><th class="a" rowspan="2" scope="rowgroup">A<small>Agir</small></th><td class="a st"><b>7</b>Padronizar</td><td class="a">O formulário e a nova alçada foram estendidos a todas as áreas, porque funcionaram. O procedimento de compras foi revisado.</td><td class="a ev">Procedimento revisado; comunicado às áreas</td></tr>
+        <tr><td class="a st"><b>8</b>Concluir</td><td class="a">A meta de 7 dias foi mantida. Novo ciclo aberto, com foco na etapa de revisão de contratos.</td><td class="a ev">Registro de lições aprendidas; novo ciclo</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p><strong>O que observar.</strong> A meta não foi atingida, e ainda assim o ciclo foi bem-sucedido: o ganho obtido foi padronizado, e o novo Pareto mostrou onde está o restante do problema. Um ciclo que não bate a meta pede nova análise, e não um relatório otimista.</p>
+
+  <h3>Exemplo 3. Tratar uma não conformidade de auditoria interna</h3>
+  <dl class="ficha">
+    <div><dt>Dono do problema</dt><dd>Coordenador da Qualidade</dd></div>
+    <div><dt>Indicador</dt><dd>Instrumentos de medição com calibração vencida</dd></div>
+    <div><dt>Situação inicial</dt><dd>3 de 25 instrumentos vencidos</dd></div>
+    <div><dt>Meta</dt><dd>Nenhum instrumento vencido, em 60 dias</dd></div>
+  </dl>
+  <div class="tbl">
+    <table class="pdca">
+      <thead><tr><th>Fase</th><th>Etapa</th><th>O que foi feito</th><th>Ferramenta ou evidência</th></tr></thead>
+      <tbody>
+        <tr><th class="p" rowspan="4" scope="rowgroup">P<small>Planejar</small></th><td class="p st"><b>1</b>Identificar o problema</td><td class="p">A auditoria interna encontrou 3 instrumentos em uso com a calibração vencida. Correção imediata: instrumentos retirados de uso e enviados para calibração.</td><td class="p ev">Relatório de auditoria; registro de não conformidade</td></tr>
+        <tr><td class="p st"><b>2</b>Observar</td><td class="p">Os 3 instrumentos são do laboratório de recebimento, que controla os vencimentos em uma planilha própria. As medições feitas no período foram avaliadas.</td><td class="p ev">Lista de instrumentos; planilha de controle do setor</td></tr>
+        <tr><td class="p st"><b>3</b>Analisar as causas</td><td class="p">A planilha não emite alerta, e a pessoa que a atualizava mudou de área. Causa raiz: o controle depende de uma única pessoa e não avisa sobre o vencimento.</td><td class="p ev">5 porquês</td></tr>
+        <tr><td class="p st"><b>4</b>Planejar a ação</td><td class="p">Centralizar o controle de todos os instrumentos, com aviso 30 dias antes do vencimento, e nomear responsável e suplente.</td><td class="p ev">Plano de ação 5W2H</td></tr>
+        <tr><th class="d" scope="row">D<small>Executar</small></th><td class="d st"><b>5</b>Executar</td><td class="d">Controle centralizado implantado, 25 instrumentos cadastrados, responsável e suplente treinados.</td><td class="d ev">Cadastro de instrumentos; registro de treinamento</td></tr>
+        <tr><th class="c" scope="row">C<small>Verificar</small></th><td class="c st"><b>6</b>Verificar</td><td class="c">Depois de 3 meses, nenhum instrumento vencido. A auditoria de acompanhamento confirmou a eficácia da ação.</td><td class="c ev">Relatório do controle; auditoria de acompanhamento</td></tr>
+        <tr><th class="a" rowspan="2" scope="rowgroup">A<small>Agir</small></th><td class="a st"><b>7</b>Padronizar</td><td class="a">O procedimento de controle de instrumentos foi revisado, e as planilhas locais foram desativadas.</td><td class="a ev">Procedimento revisado</td></tr>
+        <tr><td class="a st"><b>8</b>Concluir</td><td class="a">A mesma fragilidade foi procurada em outros controles com vencimento, como treinamentos obrigatórios e extintores.</td><td class="a ev">Registro de abrangência</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p><strong>O que observar.</strong> Calibrar os três instrumentos resolve o efeito, e é chamado de correção. Mudar o controle para que o vencimento não se repita ataca a causa, e é chamado de ação corretiva. A não conformidade só pôde ser encerrada depois da verificação de eficácia, e não na data em que a ação foi implantada.</p>
+</section>
+
+<!-- ============================ MÓDULO 5 ============================ -->
+<section id="metas">
+  <p class="eyebrow">Módulo 5</p>
+  <h2>Metas e verificação</h2>
+  <p>O PDCA começa e termina em um número. Na primeira etapa, esse número diz onde se está e aonde se quer chegar. Na sexta, diz se o plano funcionou. Sem ele, a fase <span class="k c">C</span> vira opinião.</p>
+  <p>Uma meta completa tem três partes: <strong>objetivo</strong>, <strong>valor</strong> e <strong>prazo</strong>. O objetivo diz o que muda e em que direção. O valor diz quanto. O prazo diz até quando.</p>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:30%">Meta incompleta</th><th style="width:22%">O que falta</th><th>Meta completa</th></tr></thead>
+      <tbody>
+        <tr><td>Melhorar as entregas</td><td>Valor e prazo</td><td>Aumentar de 82% para 95% as entregas em até 40 minutos, até 30 de novembro</td></tr>
+        <tr><td>Reduzir o prazo de compra em 40%</td><td>Prazo e ponto de partida</td><td>Reduzir de 12 para 7 dias úteis o prazo entre requisição e pedido, em 3 meses</td></tr>
+        <tr><td>Implantar o controle de instrumentos até março</td><td>É uma ação, e não um resultado</td><td>Zerar os instrumentos com calibração vencida, em 60 dias</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Antes e depois, no mesmo gráfico</h3>
+  <p>A verificação compara o indicador antes e depois das ações, com o mesmo método de medição. O gráfico de tendência do exemplo 1 mostra as doze semanas do ciclo.</p>
+
+  <figure id="fig-run">
+    <div class="scroll">
+      <svg id="run" viewBox="0 0 900 340" role="img" aria-label="Gráfico de linha com o percentual de entregas em até 40 minutos ao longo de 12 semanas. Nas semanas 1 a 6, antes das ações, o indicador oscila entre 80% e 84%. Nas semanas 7 e 8, durante a execução, sobe para 86% e 90%. Nas semanas 9 a 12, fica entre 94% e 97%, em torno da meta de 95%.">
+        <!-- período de execução -->
+        <rect class="band" x="463" y="40" width="132" height="230"/>
+        <text class="mu" x="265" y="28" font-size="11.5" text-anchor="middle">antes · média de 82%</text>
+        <text class="mu" x="529" y="28" font-size="11.5" text-anchor="middle">execução das ações</text>
+        <text class="mu" x="727" y="28" font-size="11.5" text-anchor="middle">depois · média de 95,5%</text>
+
+        <!-- grade e eixos -->
+        <line class="grid" x1="70" y1="40" x2="860" y2="40"/>
+        <line class="grid" x1="70" y1="116.7" x2="860" y2="116.7"/>
+        <line class="grid" x1="70" y1="193.3" x2="860" y2="193.3"/>
+        <line class="grid" x1="70" y1="270" x2="860" y2="270"/>
+        <g class="mu" font-size="11" text-anchor="end" style="font-variant-numeric:tabular-nums">
+          <text class="mu" x="62" y="44">100%</text><text class="mu" x="62" y="120.7">90%</text>
+          <text class="mu" x="62" y="197.3">80%</text><text class="mu" x="62" y="274">70%</text>
+        </g>
+        <g font-size="11" text-anchor="middle">
+          <text class="mu" x="100" y="290">S1</text><text class="mu" x="166" y="290">S2</text><text class="mu" x="232" y="290">S3</text>
+          <text class="mu" x="298" y="290">S4</text><text class="mu" x="364" y="290">S5</text><text class="mu" x="430" y="290">S6</text>
+          <text class="mu" x="496" y="290">S7</text><text class="mu" x="562" y="290">S8</text><text class="mu" x="628" y="290">S9</text>
+          <text class="mu" x="694" y="290">S10</text><text class="mu" x="760" y="290">S11</text><text class="mu" x="826" y="290">S12</text>
+        </g>
+
+        <!-- meta -->
+        <line class="goal" x1="70" y1="78.3" x2="860" y2="78.3"/>
+        <text x="74" y="70" font-size="11.5"><tspan class="b">meta</tspan> 95%</text>
+
+        <!-- série -->
+        <line class="xh" id="run-xh" x1="0" y1="40" x2="0" y2="270" visibility="hidden"/>
+        <polyline class="series" points="100,185.7 166,170.3 232,193.3 298,162.7 364,178 430,178 496,147.3 562,116.7 628,86 694,70.7 760,78.3 826,63"/>
+        <g id="run-pts">
+          <circle class="pt" cx="100" cy="185.7" r="5"/><circle class="pt" cx="166" cy="170.3" r="5"/><circle class="pt" cx="232" cy="193.3" r="5"/>
+          <circle class="pt" cx="298" cy="162.7" r="5"/><circle class="pt" cx="364" cy="178" r="5"/><circle class="pt" cx="430" cy="178" r="5"/>
+          <circle class="pt" cx="496" cy="147.3" r="5"/><circle class="pt" cx="562" cy="116.7" r="5"/><circle class="pt" cx="628" cy="86" r="5"/>
+          <circle class="pt" cx="694" cy="70.7" r="5"/><circle class="pt" cx="760" cy="78.3" r="5"/><circle class="pt" cx="826" cy="63" r="5"/>
+        </g>
+        <text class="b" x="838" y="58" font-size="12">97%</text>
+        <text class="b" x="232" y="215" font-size="12" text-anchor="middle">80%</text>
+
+        <!-- legenda -->
+        <line class="series" x1="70" y1="322" x2="98" y2="322"/><circle class="pt" cx="84" cy="322" r="4"/>
+        <text x="106" y="326" font-size="11.5">entregas em até 40 minutos</text>
+        <line class="goal" x1="300" y1="322" x2="328" y2="322"/>
+        <text x="336" y="326" font-size="11.5">meta</text>
+
+        <g id="run-hits"></g>
+      </svg>
+    </div>
+    <div class="tip" id="run-tip" hidden></div>
+    <figcaption><b>Figura 4.</b> Entregas em até 40 minutos, por semana. O eixo vertical começa em 70% para que a variação fique visível. Passe o mouse sobre o gráfico para ver cada valor.</figcaption>
+    <details class="data">
+      <summary>Ver os dados em tabela</summary>
+      <div class="tbl">
+        <table>
+          <thead><tr><th>Semana</th><th>Momento</th><th>Entregas no prazo</th><th>Atingiu a meta de 95%?</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td>Antes</td><td class="num">81%</td><td>Não</td></tr>
+            <tr><td>2</td><td>Antes</td><td class="num">83%</td><td>Não</td></tr>
+            <tr><td>3</td><td>Antes</td><td class="num">80%</td><td>Não</td></tr>
+            <tr><td>4</td><td>Antes</td><td class="num">84%</td><td>Não</td></tr>
+            <tr><td>5</td><td>Antes</td><td class="num">82%</td><td>Não</td></tr>
+            <tr><td>6</td><td>Antes</td><td class="num">82%</td><td>Não</td></tr>
+            <tr><td>7</td><td>Durante</td><td class="num">86%</td><td>Não</td></tr>
+            <tr><td>8</td><td>Durante</td><td class="num">90%</td><td>Não</td></tr>
+            <tr><td>9</td><td>Depois</td><td class="num">94%</td><td>Não</td></tr>
+            <tr><td>10</td><td>Depois</td><td class="num">96%</td><td>Sim</td></tr>
+            <tr><td>11</td><td>Depois</td><td class="num">95%</td><td>Sim</td></tr>
+            <tr><td>12</td><td>Depois</td><td class="num">97%</td><td>Sim</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </details>
+  </figure>
+
+  <h3>Como verificar</h3>
+  <ol>
+    <li>Use o mesmo indicador, a mesma fonte e a mesma fórmula da situação inicial.</li>
+    <li>Espere tempo suficiente. Uma semana boa não é tendência; quatro seguidas começam a ser.</li>
+    <li>Compare com a meta, e não só com o ponto de partida. Melhorar é diferente de chegar.</li>
+    <li>Procure efeitos colaterais em custo, prazo, qualidade, segurança e satisfação.</li>
+    <li>Confirme que as ações foram de fato executadas. Resultado bom com plano não executado indica outra causa em jogo.</li>
+  </ol>
+  <p>As metas e os valores acima são exemplos de formato. Os números reais vêm dos dados do processo e da conversa com quem recebe o resultado.</p>
+</section>
+
+<!-- ============================ MÓDULO 6 ============================ -->
+<section id="erros">
+  <p class="eyebrow">Módulo 6</p>
+  <h2>Erros comuns</h2>
+  <div class="errs">
+    <div><h4>Pular direto para a ação</h4><p>A equipe sai da primeira reunião com uma lista de tarefas, sem ter analisado as causas.</p><p class="fix"><b>Correção:</b> nenhuma ação entra no plano sem uma causa confirmada ao lado.</p></div>
+    <div><h4>Descrever o problema como solução</h4><p>“Falta treinamento”, “falta um sistema”, “falta gente”.</p><p class="fix"><b>Correção:</b> descreva o resultado indesejado, com número, local e período.</p></div>
+    <div><h4>Meta sem número ou sem prazo</h4><p>“Melhorar o atendimento”, “reduzir o retrabalho”.</p><p class="fix"><b>Correção:</b> objetivo, valor e prazo. Meça a situação atual antes de definir o valor.</p></div>
+    <div><h4>Parar na primeira causa</h4><p>“Erro do operador” encerra a análise.</p><p class="fix"><b>Correção:</b> continue perguntando por quê. A causa raiz costuma estar no método, e não na pessoa.</p></div>
+    <div><h4>Ação sem dono ou sem data</h4><p>Responsável: “a equipe”. Prazo: “contínuo”.</p><p class="fix"><b>Correção:</b> uma pessoa e uma data por ação. Quem é de todos não é de ninguém.</p></div>
+    <div><h4>Não verificar</h4><p>As ações são concluídas, e o ciclo é dado como encerrado.</p><p class="fix"><b>Correção:</b> ação concluída é diferente de problema resolvido. Meça o indicador depois.</p></div>
+    <div><h4>Não padronizar</h4><p>O resultado melhora e, meses depois, volta ao que era.</p><p class="fix"><b>Correção:</b> atualize o documento, treine as pessoas e acompanhe o novo padrão.</p></div>
+    <div><h4>Girar uma vez só</h4><p>O PDCA vira um projeto com começo e fim.</p><p class="fix"><b>Correção:</b> termine cada ciclo escolhendo o próximo problema.</p></div>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 7 ============================ -->
+<section id="ferramentas">
+  <p class="eyebrow">Módulo 7</p>
+  <h2>PDCA e outras ferramentas</h2>
+  <p>O PDCA é o roteiro. As ferramentas da qualidade são usadas dentro dele, cada uma na etapa em que ajuda a responder a uma pergunta.</p>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:14%">Fase</th><th style="width:22%">Etapa</th><th style="width:30%">Ferramentas úteis</th><th>Para quê</th></tr></thead>
+      <tbody>
+        <tr><td><span class="k p">P</span> Planejar</td><td>Identificar o problema</td><td>Gráfico de tendência, SIPOC</td><td>Medir a situação atual e delimitar o processo</td></tr>
+        <tr><td><span class="k p">P</span> Planejar</td><td>Observar</td><td>Folha de verificação, estratificação, Pareto</td><td>Descobrir onde o problema se concentra</td></tr>
+        <tr><td><span class="k p">P</span> Planejar</td><td>Analisar as causas</td><td>Brainstorming, diagrama de Ishikawa, 5 porquês</td><td>Levantar hipóteses e chegar à causa raiz</td></tr>
+        <tr><td><span class="k p">P</span> Planejar</td><td>Planejar a ação</td><td>5W2H, matriz de esforço e impacto</td><td>Priorizar e detalhar as ações</td></tr>
+        <tr><td><span class="k d">D</span> Executar</td><td>Executar</td><td>Piloto, cronograma, registro de treinamento</td><td>Testar em pequena escala e acompanhar a execução</td></tr>
+        <tr><td><span class="k c">C</span> Verificar</td><td>Verificar</td><td>Gráfico de tendência, Pareto antes e depois</td><td>Comparar o resultado com a meta</td></tr>
+        <tr><td><span class="k a">A</span> Agir</td><td>Padronizar e concluir</td><td>Procedimento, instrução de trabalho, lições aprendidas</td><td>Fixar o ganho e preparar o próximo ciclo</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Da lista de causas à causa raiz</h3>
+  <p>Na etapa de análise, o diagrama de Ishikawa organiza as hipóteses da equipe por categoria. Depois, cada hipótese é confrontada com os dados. Só as confirmadas seguem para o plano de ação.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 330" role="img" aria-label="Diagrama de Ishikawa do exemplo da pizzaria. O efeito é entregas fora do prazo. As causas estão em quatro categorias: método, pessoas, equipamento e informação. Três causas foram confirmadas com dados: pedidos não agrupados por bairro, escala que não acompanha o pico e endereço sem complemento.">
+        <defs>
+          <marker id="a5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker>
+        </defs>
+        <!-- espinha e efeito -->
+        <line class="ln" x1="30" y1="165" x2="696" y2="165" marker-end="url(#a5)" stroke-width="2"/>
+        <rect class="bx-ink" x="702" y="128" width="182" height="74"/>
+        <text class="mono t-ground" x="793" y="150" font-size="10" text-anchor="middle">EFEITO</text>
+        <text class="b t-ground" x="793" y="172" font-size="13" text-anchor="middle">Entregas fora</text>
+        <text class="b t-ground" x="793" y="189" font-size="13" text-anchor="middle">do prazo</text>
+
+        <!-- ossos -->
+        <line class="ln" x1="250" y1="50" x2="320" y2="165"/>
+        <line class="ln" x1="560" y1="50" x2="630" y2="165"/>
+        <line class="ln" x1="250" y1="280" x2="320" y2="165"/>
+        <line class="ln" x1="560" y1="280" x2="630" y2="165"/>
+        <g font-size="12.5" text-anchor="middle">
+          <rect class="bx" x="195" y="24" width="110" height="26"/><text class="b" x="250" y="41.5">Método</text>
+          <rect class="bx" x="505" y="24" width="110" height="26"/><text class="b" x="560" y="41.5">Pessoas</text>
+          <rect class="bx" x="195" y="280" width="110" height="26"/><text class="b" x="250" y="297.5">Equipamento</text>
+          <rect class="bx" x="505" y="280" width="110" height="26"/><text class="b" x="560" y="297.5">Informação</text>
+        </g>
+
+        <!-- causas -->
+        <g class="ln-mu" stroke-width="1">
+          <line x1="273.1" y1="88" x2="58" y2="88"/><line x1="296.3" y1="126" x2="81" y2="126"/>
+          <line x1="583.1" y1="88" x2="368" y2="88"/><line x1="606.3" y1="126" x2="391" y2="126"/>
+          <line x1="296.3" y1="204" x2="81" y2="204"/><line x1="273.1" y1="242" x2="58" y2="242"/>
+          <line x1="606.3" y1="204" x2="391" y2="204"/><line x1="583.1" y1="242" x2="368" y2="242"/>
+        </g>
+        <g font-size="11.5" text-anchor="end">
+          <text class="b" x="262" y="82">Pedidos não agrupados por bairro</text>
+          <text x="285" y="120">Rota escolhida por cada entregador</text>
+          <text class="b" x="572" y="82">Escala não acompanha o pico</text>
+          <text x="595" y="120">Expedição sem responsável definido</text>
+          <text x="285" y="198">Forno único, com fila no pico</text>
+          <text x="262" y="236">Bolsas térmicas insuficientes</text>
+          <text class="b" x="595" y="198">Endereço sem complemento</text>
+          <text x="572" y="236">Mesmo prazo prometido a todos os bairros</text>
+        </g>
+        <circle class="root" cx="273.1" cy="88" r="5"/>
+        <circle class="root" cx="583.1" cy="88" r="5"/>
+        <circle class="root" cx="606.3" cy="204" r="5"/>
+
+        <!-- legenda -->
+        <circle class="root" cx="36" cy="318" r="5"/>
+        <text x="48" y="322" font-size="11.5"><tspan class="b">em negrito:</tspan> causa confirmada com dados, que segue para o plano de ação</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 5.</b> Diagrama de Ishikawa do exemplo 1. Das oito hipóteses levantadas, três foram confirmadas pelos dados da observação. A fila do forno é real, mas pesa menos e ficou para o ciclo seguinte.</figcaption>
+  </figure>
+
+  <h3>PDCA e seus parentes</h3>
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:16%">Método</th><th style="width:30%">Etapas</th><th style="width:27%">Ênfase</th><th>Melhor uso</th></tr></thead>
+      <tbody>
+        <tr><td><strong>PDCA</strong></td><td>Planejar, executar, verificar, agir</td><td>Melhoria em ciclos repetidos</td><td>Problemas do dia a dia e gestão por metas</td></tr>
+        <tr><td><strong>SDCA</strong></td><td>Padronizar, executar, verificar, agir</td><td>Manter o resultado alcançado</td><td>Rotina, depois de cada melhoria</td></tr>
+        <tr><td><strong>PDSA</strong></td><td>Planejar, executar, estudar, agir</td><td>Aprender com o teste, e não só conferir</td><td>Testes de mudança em pequena escala</td></tr>
+        <tr><td><strong>MASP</strong></td><td>As 8 etapas do módulo 3</td><td>PDCA detalhado para solução de problemas</td><td>Problemas crônicos, de causa desconhecida</td></tr>
+        <tr><td><strong>DMAIC</strong></td><td>Definir, medir, analisar, melhorar, controlar</td><td>Medição e análise estatística</td><td>Projetos Seis Sigma, redução de variação</td></tr>
+        <tr><td><strong>8D</strong></td><td>Oito disciplinas, com ação de contenção</td><td>Proteger o cliente enquanto se busca a causa</td><td>Reclamações de clientes e falhas de produto</td></tr>
+        <tr><td><strong>Relatório A3</strong></td><td>O ciclo inteiro em uma folha</td><td>Comunicar o raciocínio</td><td>Apresentar e discutir o ciclo com a liderança</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Todos seguem a mesma lógica: entender antes de agir e verificar antes de concluir. O <a href="../SIPOC/treinamento-sipoc.html">SIPOC</a> entra antes do ciclo, para delimitar o processo em que o problema acontece.</p>
+</section>
+
+<!-- ============================ MÓDULO 8 ============================ -->
+<section id="iso">
+  <p class="eyebrow">Módulo 8</p>
+  <h2>PDCA nas normas ISO</h2>
+  <p>As normas ISO de sistemas de gestão são construídas sobre o PDCA. Na ISO 9001:2015, a introdução apresenta o ciclo no item 0.3.2, e as seções de requisitos, de 4 a 10, seguem a mesma ordem. A estrutura se repete na ISO 14001, na ISO 45001 e na ISO/IEC 27001, o que facilita a integração dos sistemas.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 330" role="img" aria-label="Estrutura da ISO 9001:2015 sobre o ciclo PDCA. O contexto da organização e os requisitos das partes interessadas, seção 4, entram no sistema de gestão. Dentro dele, a liderança, seção 5, fica no centro. Ao redor, em ciclo: planejamento, seção 6, na fase planejar; apoio e operação, seções 7 e 8, na fase executar; avaliação de desempenho, seção 9, na fase verificar; e melhoria, seção 10, na fase agir. O sistema entrega resultados: satisfação do cliente, produtos e serviços.">
+        <defs>
+          <marker id="a7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker>
+        </defs>
+        <!-- entrada e saída -->
+        <rect class="bx" x="14" y="106" width="150" height="118"/>
+        <text class="mono mu" x="26" y="126" font-size="10">ENTRADA</text>
+        <text class="b" x="26" y="148" font-size="12.5">4 Contexto da</text>
+        <text class="b" x="26" y="164" font-size="12.5">organização</text>
+        <text class="mu" x="26" y="186" font-size="11">Requisitos do cliente</text>
+        <text class="mu" x="26" y="201" font-size="11">e das partes</text>
+        <text class="mu" x="26" y="216" font-size="11">interessadas</text>
+
+        <rect class="bx" x="736" y="106" width="150" height="118"/>
+        <text class="mono mu" x="748" y="126" font-size="10">RESULTADO</text>
+        <text class="b" x="748" y="148" font-size="12.5">Satisfação</text>
+        <text class="b" x="748" y="164" font-size="12.5">do cliente</text>
+        <text class="mu" x="748" y="186" font-size="11">Produtos e serviços</text>
+        <text class="mu" x="748" y="201" font-size="11">Resultados do sistema</text>
+        <text class="mu" x="748" y="216" font-size="11">de gestão</text>
+
+        <!-- sistema -->
+        <rect class="bx-out" x="192" y="12" width="516" height="306"/>
+        <line class="ln" x1="166" y1="165" x2="188" y2="165" marker-end="url(#a7)"/>
+        <line class="ln" x1="710" y1="165" x2="732" y2="165" marker-end="url(#a7)"/>
+
+        <!-- P -->
+        <rect class="bx-p" x="210" y="30" width="200" height="92"/><rect class="hd-p" x="210" y="30" width="200" height="28"/>
+        <text class="on" x="222" y="49.5" font-size="12.5"><tspan class="disp" font-size="17">P</tspan><tspan dx="8" class="b">Planejar</tspan></text>
+        <text class="b" x="222" y="79" font-size="12.5">6 Planejamento</text>
+        <text class="mu" x="222" y="97" font-size="11">Riscos, oportunidades</text>
+        <text class="mu" x="222" y="112" font-size="11">e objetivos da qualidade</text>
+        <!-- D -->
+        <rect class="bx-d" x="490" y="30" width="200" height="92"/><rect class="hd-d" x="490" y="30" width="200" height="28"/>
+        <text class="on" x="502" y="49.5" font-size="12.5"><tspan class="disp" font-size="17">D</tspan><tspan dx="8" class="b">Executar</tspan></text>
+        <text class="b" x="502" y="79" font-size="12.5">7 Apoio · 8 Operação</text>
+        <text class="mu" x="502" y="97" font-size="11">Recursos, competência</text>
+        <text class="mu" x="502" y="112" font-size="11">e realização do produto</text>
+        <!-- C -->
+        <rect class="bx-c" x="490" y="208" width="200" height="92"/><rect class="hd-c" x="490" y="208" width="200" height="28"/>
+        <text class="on" x="502" y="227.5" font-size="12.5"><tspan class="disp" font-size="17">C</tspan><tspan dx="8" class="b">Verificar</tspan></text>
+        <text class="b" x="502" y="257" font-size="12.5">9 Avaliação de desempenho</text>
+        <text class="mu" x="502" y="275" font-size="11">Monitoramento, auditoria interna</text>
+        <text class="mu" x="502" y="290" font-size="11">e análise crítica pela direção</text>
+        <!-- A -->
+        <rect class="bx-a" x="210" y="208" width="200" height="92"/><rect class="hd-a" x="210" y="208" width="200" height="28"/>
+        <text class="on" x="222" y="227.5" font-size="12.5"><tspan class="disp" font-size="17">A</tspan><tspan dx="8" class="b">Agir</tspan></text>
+        <text class="b" x="222" y="257" font-size="12.5">10 Melhoria</text>
+        <text class="mu" x="222" y="275" font-size="11">Não conformidade, ação corretiva</text>
+        <text class="mu" x="222" y="290" font-size="11">e melhoria contínua</text>
+
+        <!-- liderança -->
+        <rect class="bx-ink" x="380" y="143" width="140" height="44"/>
+        <text class="b t-ground" x="450" y="170" font-size="13" text-anchor="middle">5 Liderança</text>
+
+        <!-- ciclo -->
+        <line class="ln" x1="414" y1="76" x2="486" y2="76" marker-end="url(#a7)"/>
+        <line class="ln" x1="590" y1="126" x2="590" y2="204" marker-end="url(#a7)"/>
+        <line class="ln" x1="486" y1="254" x2="414" y2="254" marker-end="url(#a7)"/>
+        <line class="ln" x1="310" y1="204" x2="310" y2="126" marker-end="url(#a7)"/>
+      </svg>
+    </div>
+    <figcaption><b>Figura 6.</b> As seções da ISO 9001:2015 sobre o ciclo PDCA, em adaptação livre da figura 2 da norma. A área tracejada é o sistema de gestão da qualidade. A liderança fica no centro porque sustenta as quatro fases.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:14%">Fase</th><th style="width:22%">Seções da ISO 9001:2015</th><th style="width:30%">O que a organização faz</th><th>Evidências que o auditor procura</th></tr></thead>
+      <tbody>
+        <tr><td><span class="k p">P</span> Planejar</td><td>6 Planejamento, apoiado em 4 Contexto e 5 Liderança</td><td>Define objetivos, trata riscos e oportunidades e planeja as mudanças.</td><td>Objetivos mensuráveis, com responsável, prazo e recursos (6.2). Riscos e oportunidades tratados (6.1).</td></tr>
+        <tr><td><span class="k d">D</span> Executar</td><td>7 Apoio e 8 Operação</td><td>Provê recursos e competência, controla os documentos e realiza o produto ou serviço.</td><td>Registros de competência (7.2), informação documentada controlada (7.5) e controles operacionais aplicados (8.1).</td></tr>
+        <tr><td><span class="k c">C</span> Verificar</td><td>9 Avaliação de desempenho</td><td>Monitora, mede, audita e analisa criticamente o sistema.</td><td>Indicadores analisados (9.1), programa e relatórios de auditoria interna (9.2) e análise crítica pela direção (9.3).</td></tr>
+        <tr><td><span class="k a">A</span> Agir</td><td>10 Melhoria</td><td>Trata não conformidades, elimina causas e melhora continuamente.</td><td>Registros de não conformidade com causa, ação e verificação de eficácia (10.2). Melhorias implementadas (10.3).</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>O ciclo dentro da ação corretiva</h3>
+  <p>O requisito 10.2 da ISO 9001:2015, sobre não conformidade e ação corretiva, é um PDCA completo. A reação imediata vem antes do ciclo, como no exemplo 3.</p>
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:18%">Momento</th><th style="width:44%">O que a norma pede, em resumo</th><th>Pergunta do auditor</th></tr></thead>
+      <tbody>
+        <tr><td>Antes do ciclo</td><td>Reagir à não conformidade: controlar, corrigir e lidar com as consequências.</td><td>O que foi feito de imediato com o produto ou serviço afetado?</td></tr>
+        <tr><td><span class="k p">P</span> Planejar</td><td>Analisar a não conformidade, determinar as causas e verificar se existem ou podem ocorrer casos similares.</td><td>Como se chegou a esta causa? Onde mais isso pode acontecer?</td></tr>
+        <tr><td><span class="k d">D</span> Executar</td><td>Implementar as ações necessárias.</td><td>A ação foi executada como planejado? Onde está a evidência?</td></tr>
+        <tr><td><span class="k c">C</span> Verificar</td><td>Analisar criticamente a eficácia das ações tomadas.</td><td>Como se sabe que funcionou? O problema voltou a ocorrer?</td></tr>
+        <tr><td><span class="k a">A</span> Agir</td><td>Atualizar riscos e oportunidades e mudar o sistema de gestão, se necessário. Reter a informação documentada.</td><td>Que documento mudou? As pessoas afetadas foram treinadas?</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>O que o auditor observa</h3>
+  <div class="pair">
+    <div class="box">
+      <h4>Sinais de ciclo completo</h4>
+      <ul>
+        <li>Objetivos com indicador, valor e prazo, acompanhados periodicamente.</li>
+        <li>Ações ligadas a causas, e causas ligadas a dados.</li>
+        <li>Verificação de eficácia com data posterior à implantação.</li>
+        <li>Documentos revisados depois de ações corretivas.</li>
+        <li>Saídas da análise crítica que viram entradas do planejamento seguinte.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h4>Sinais de ciclo quebrado</h4>
+      <ul>
+        <li>Indicadores medidos todo mês e nunca analisados.</li>
+        <li>Ações corretivas encerradas na data da implantação.</li>
+        <li>A mesma não conformidade em auditorias seguidas.</li>
+        <li>Causa registrada como “falha humana” e ação como “reorientar”.</li>
+        <li>Planos de ação sem responsável, sem prazo ou sem recursos.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="note">
+    <h4>A auditoria também gira</h4>
+    <p>A própria auditoria interna é uma atividade da fase <em>Verificar</em> do sistema de gestão. E o programa de auditoria, conforme a ISO 19011:2018, segue o mesmo ciclo: estabelecer o programa, implementá-lo, monitorá-lo, analisá-lo criticamente e melhorá-lo.</p>
+    <p>Este módulo usa a numeração da ISO 9001:2015. Confira sempre a edição vigente da norma antes de citar um requisito em relatório.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 9 ============================ -->
+<section id="conduzir">
+  <p class="eyebrow">Módulo 9</p>
+  <h2>Como conduzir o ciclo</h2>
+  <p>Um ciclo PDCA é trabalho de equipe, com ritmo definido. Reúna de 4 a 7 pessoas: o dono do problema, quem executa o processo e, se possível, alguém que recebe o resultado. Combine um encontro semanal de 30 minutos, sempre com o indicador à vista.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 136" role="img" aria-label="Distribuição de um ciclo típico de 12 semanas: 4 semanas para planejar, uma para cada etapa de identificar, observar, analisar e planejar a ação; 4 semanas para executar; 3 semanas para verificar; e 1 semana para agir.">
+        <g font-size="11.5" text-anchor="middle">
+          <rect class="hd-p gap2" x="54" y="24" width="66" height="56"/><text class="on b" x="87" y="56">Identificar</text>
+          <rect class="hd-p gap2" x="120" y="24" width="66" height="56"/><text class="on b" x="153" y="56">Observar</text>
+          <rect class="hd-p gap2" x="186" y="24" width="66" height="56"/><text class="on b" x="219" y="56">Analisar</text>
+          <rect class="hd-p gap2" x="252" y="24" width="66" height="56"/><text class="on b" x="285" y="56">Planejar</text>
+          <rect class="hd-d gap2" x="318" y="24" width="264" height="56"/><text class="on b" x="450" y="56">Executar o plano</text>
+          <rect class="hd-c gap2" x="582" y="24" width="198" height="56"/><text class="on b" x="681" y="56">Verificar o resultado</text>
+          <rect class="hd-a gap2" x="780" y="24" width="66" height="56"/><text class="on b" x="813" y="56">Agir</text>
+        </g>
+        <g class="ln-mu" stroke-width="1">
+          <line x1="54" y1="82" x2="54" y2="94"/><line x1="120" y1="82" x2="120" y2="94"/><line x1="186" y1="82" x2="186" y2="94"/>
+          <line x1="252" y1="82" x2="252" y2="94"/><line x1="318" y1="82" x2="318" y2="94"/><line x1="582" y1="82" x2="582" y2="94"/>
+          <line x1="780" y1="82" x2="780" y2="94"/><line x1="846" y1="82" x2="846" y2="94"/>
+        </g>
+        <g class="mono" font-size="10.5" text-anchor="middle">
+          <text class="mu" x="54" y="112">0</text><text class="mu" x="120" y="112">1</text><text class="mu" x="186" y="112">2</text>
+          <text class="mu" x="252" y="112">3</text><text class="mu" x="318" y="112">4</text><text class="mu" x="582" y="112">8</text>
+          <text class="mu" x="780" y="112">11</text><text class="mu" x="846" y="112">12</text>
+        </g>
+        <text class="mono mu" x="450" y="130" font-size="10.5" text-anchor="middle">SEMANAS</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 7.</b> Um ciclo típico de 12 semanas, desenhado em escala. Um terço do tempo vai para o planejamento. A verificação precisa de semanas suficientes para separar resultado de coincidência.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:14%">Semanas</th><th style="width:22%">Etapa</th><th>O que fazer nos encontros</th><th style="width:26%">Resultado</th></tr></thead>
+      <tbody>
+        <tr><td class="num">1</td><td>Identificar o problema</td><td>Escrever o problema, escolher o indicador, medir a situação atual e definir a meta.</td><td>Cabeçalho do ciclo preenchido</td></tr>
+        <tr><td class="num">2</td><td>Observar</td><td>Ir ao local, coletar dados e separar por dia, horário, produto ou equipe.</td><td>Foco do problema definido</td></tr>
+        <tr><td class="num">3</td><td>Analisar as causas</td><td>Levantar hipóteses, montar o Ishikawa e confirmar as causas com dados.</td><td>Causas raiz confirmadas</td></tr>
+        <tr><td class="num">4</td><td>Planejar a ação</td><td>Definir as ações, os responsáveis, os prazos e os custos.</td><td>Plano de ação 5W2H</td></tr>
+        <tr><td class="num">5 a 8</td><td>Executar</td><td>Acompanhar o plano toda semana, remover impedimentos e registrar desvios.</td><td>Ações concluídas</td></tr>
+        <tr><td class="num">9 a 11</td><td>Verificar</td><td>Medir o indicador, comparar com a meta e avaliar efeitos colaterais.</td><td>Conclusão sobre a eficácia</td></tr>
+        <tr><td class="num">12</td><td>Padronizar e concluir</td><td>Atualizar documentos, treinar, registrar lições e escolher o próximo problema.</td><td>Novo padrão e próximo ciclo</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Os prazos são uma referência. Problemas simples cabem em ciclos de duas a quatro semanas; problemas que dependem de investimento podem levar mais. O que não muda é a proporção: planejar com calma e verificar com paciência.</p>
+
+  <h3>Checklist de validação</h3>
+  <p>Marque os itens conforme revisa o seu ciclo. As marcações ficam salvas neste navegador.</p>
+  <ol class="check" id="checklist">
+    <li><label><input type="checkbox" id="ck-1"><span>O problema está descrito com fatos e dados, sem causa nem solução embutida.</span></label></li>
+    <li><label><input type="checkbox" id="ck-2"><span>Existe um indicador, e a situação atual foi medida.</span></label></li>
+    <li><label><input type="checkbox" id="ck-3"><span>A meta tem objetivo, valor e prazo.</span></label></li>
+    <li><label><input type="checkbox" id="ck-4"><span>O problema foi observado no local e os dados foram estratificados.</span></label></li>
+    <li><label><input type="checkbox" id="ck-5"><span>A causa raiz foi identificada e confirmada com dados.</span></label></li>
+    <li><label><input type="checkbox" id="ck-6"><span>Cada ação do plano ataca uma causa confirmada e tem responsável e prazo.</span></label></li>
+    <li><label><input type="checkbox" id="ck-7"><span>As pessoas envolvidas foram treinadas, e os desvios da execução foram registrados.</span></label></li>
+    <li><label><input type="checkbox" id="ck-8"><span>O resultado foi medido com o mesmo indicador e o mesmo método da situação inicial.</span></label></li>
+    <li><label><input type="checkbox" id="ck-9"><span>O resultado foi comparado com a meta, e os efeitos colaterais foram avaliados.</span></label></li>
+    <li><label><input type="checkbox" id="ck-10"><span>O que funcionou virou padrão: documentos atualizados e pessoas treinadas.</span></label></li>
+    <li><label><input type="checkbox" id="ck-11"><span>As lições aprendidas e as pendências foram registradas.</span></label></li>
+    <li><label><input type="checkbox" id="ck-12"><span>O próximo ciclo foi definido.</span></label></li>
+  </ol>
+  <div class="bar"><span><b id="ck-count">0</b> de 12 itens marcados</span><button class="btn" id="ck-reset" type="button">Limpar marcações</button></div>
+</section>
+
+<!-- ============================ MÓDULO 10 ============================ -->
+<section id="pratique">
+  <p class="eyebrow">Módulo 10</p>
+  <h2>Pratique</h2>
+  <h3>Exercício 1. Em qual fase está cada atividade?</h3>
+  <p>Um centro de distribuição quer reduzir os erros de separação de pedidos. A equipe abriu um ciclo PDCA. Escolha a fase de cada atividade.</p>
+  <div class="quiz" id="quiz"></div>
+  <div class="bar"><span>Acertos: <b id="qz-score">0</b> de <b id="qz-total">10</b></span><span>Respondidos: <b id="qz-done">0</b></span><button class="btn" id="qz-reset" type="button">Recomeçar</button></div>
+
+  <h3>Exercício 2. Rode um ciclo seu</h3>
+  <p>Escolha um problema que você conhece bem, que se repete e que pode ser medido. Abra a aba PDCA da planilha de apoio e siga o roteiro.</p>
+  <ol>
+    <li>Escreva o problema em uma frase, com número, local e período.</li>
+    <li>Escolha o indicador, registre a situação atual e defina a meta com valor e prazo.</li>
+    <li>Observe o problema no local e anote onde ele se concentra.</li>
+    <li>Aplique os 5 porquês até chegar a uma causa sobre a qual você pode agir.</li>
+    <li>Preencha a aba Plano de ação com pelo menos uma ação para cada causa.</li>
+    <li>Depois de executar, registre as medições na aba Verificação e compare com a meta.</li>
+    <li>Passe o checklist do módulo 9. Anote padrões e pendências na aba Padronização.</li>
+  </ol>
+  <p>Depois, mostre o resultado a alguém que convive com o problema. As perguntas que essa pessoa fizer são a parte mais valiosa do exercício.</p>
+</section>
+
+<!-- ============================ MÓDULO 11 ============================ -->
+<section id="planilha">
+  <p class="eyebrow">Módulo 11</p>
+  <h2>A planilha de apoio</h2>
+  <p>Este treinamento acompanha o arquivo <a id="xlsx-ref" href="PDCA-modelo.xlsx">PDCA-modelo.xlsx</a>, que fica na mesma pasta. As células em amarelo-claro são para preenchimento. As células cinza são calculadas.</p>
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Aba</th><th>Para que serve</th><th style="width:34%">O que ela calcula</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Instruções</strong></td><td>Legenda de cores, ordem de preenchimento e regras do modelo.</td><td>Nada. É só leitura.</td></tr>
+        <tr><td><strong>PDCA</strong></td><td>Cabeçalho do ciclo, com indicador e meta, e o registro das oito etapas.</td><td>Etapas concluídas, fase atual e avisos, como etapa concluída fora de ordem ou sem registro.</td></tr>
+        <tr><td><strong>Plano de ação</strong></td><td>Ações no formato 5W2H, com responsável, prazo, custo e status.</td><td>Situação de cada ação, contagem por status, ações atrasadas e custo total.</td></tr>
+        <tr><td><strong>Verificação</strong></td><td>Medições do indicador antes, durante e depois das ações, com gráfico.</td><td>Puxa indicador e meta da aba PDCA. Calcula as médias, a variação e se a meta foi atingida.</td></tr>
+        <tr><td><strong>Checklist</strong></td><td>Os mesmos 12 itens do módulo 9, com status Sim, Parcial ou Não.</td><td>Percentual atendido e situação da validação.</td></tr>
+        <tr><td><strong>Padronização</strong></td><td>Padrões, treinamentos, pendências e lições aprendidas.</td><td>Contagem por status e padrões ou treinamentos ainda em aberto.</td></tr>
+        <tr><td><strong>Exemplo 1 e Exemplo 2</strong></td><td>Os ciclos da pizzaria e de compras, preenchidos, com as medições e o gráfico.</td><td>Os mesmos resumos das abas PDCA e Verificação.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ GLOSSÁRIO ============================ -->
+<section id="glossario">
+  <p class="eyebrow">Referência</p>
+  <h2>Glossário</h2>
+  <dl class="gloss">
+    <div><dt>5 porquês</dt><dd>Técnica de perguntar “por quê?” em sequência, até chegar a uma causa sobre a qual se pode agir.</dd></div>
+    <div><dt>5W2H</dt><dd>Formato de plano de ação: o quê, por quê, quem, onde, quando, como e quanto custa.</dd></div>
+    <div><dt>Ação corretiva</dt><dd>Ação para eliminar a causa de uma não conformidade e evitar que ela se repita.</dd></div>
+    <div><dt>Causa raiz</dt><dd>Causa que, eliminada, impede o problema de voltar.</dd></div>
+    <div><dt>Correção</dt><dd>Ação para eliminar uma não conformidade já ocorrida. Trata o efeito, e não a causa.</dd></div>
+    <div><dt>Diagrama de Ishikawa</dt><dd>Diagrama de causa e efeito, em forma de espinha de peixe, que organiza as causas por categoria.</dd></div>
+    <div><dt>Eficácia</dt><dd>Grau em que as ações planejadas foram realizadas e os resultados planejados foram alcançados.</dd></div>
+    <div><dt>Estratificação</dt><dd>Separação dos dados em grupos, como dia, turno ou produto, para descobrir onde o problema se concentra.</dd></div>
+    <div><dt>Gráfico de Pareto</dt><dd>Gráfico de barras em ordem decrescente, que separa as poucas causas que mais pesam das muitas que pesam pouco.</dd></div>
+    <div><dt>MASP</dt><dd>Método de Análise e Solução de Problemas. Desdobra o PDCA em oito etapas.</dd></div>
+    <div><dt>Meta</dt><dd>Resultado a alcançar, definido por objetivo, valor e prazo.</dd></div>
+    <div><dt>PDSA</dt><dd>Variação do ciclo em que <em>Check</em> dá lugar a <em>Study</em>, para enfatizar o aprendizado.</dd></div>
+    <div><dt>SDCA</dt><dd>Ciclo de manutenção: padronizar, executar, verificar e agir. Sustenta o resultado entre um PDCA e outro.</dd></div>
+    <div><dt>Situação inicial</dt><dd>Valor do indicador antes das ações. Também chamada de linha de base.</dd></div>
+  </dl>
+</section>
+
+</main>
+</div>
+
+<footer>Material de estudo. Os exemplos, metas e indicadores são ilustrativos e foram criados para fins didáticos. As referências às normas ISO são resumos para estudo e não substituem o texto das normas.</footer>
+</div>
+
+<script>
+(function () {
+  function read(key) { try { return JSON.parse(localStorage.getItem(key) || 'null'); } catch (e) { return null; } }
+  function write(key, val) { try { localStorage.setItem(key, JSON.stringify(val)); } catch (e) {} }
+
+  /* ---------- Checklist ---------- */
+  var boxes = Array.prototype.slice.call(document.querySelectorAll('#checklist input'));
+  var count = document.getElementById('ck-count');
+  var saved = read('pdca-checklist') || {};
+  function refreshChecks() {
+    var n = 0, state = {};
+    boxes.forEach(function (b) { if (b.checked) { n++; } state[b.id] = b.checked; });
+    count.textContent = n;
+    return state;
+  }
+  boxes.forEach(function (b) {
+    if (saved[b.id]) { b.checked = true; }
+    b.addEventListener('change', function () { write('pdca-checklist', refreshChecks()); });
+  });
+  refreshChecks();
+  document.getElementById('ck-reset').addEventListener('click', function () {
+    boxes.forEach(function (b) { b.checked = false; });
+    write('pdca-checklist', refreshChecks());
+  });
+
+  /* ---------- Exercício ---------- */
+  var NAMES = { P: 'Planejar', D: 'Executar', C: 'Verificar', A: 'Agir' };
+  var ITEMS = [
+    { t: 'Levantar quantos pedidos saíram com erro nos últimos três meses', a: 'P', w: 'Medir a situação atual faz parte de identificar o problema.' },
+    { t: 'Treinar os separadores no novo método de conferência', a: 'D', w: 'Treinar quem vai executar é o primeiro passo da execução.' },
+    { t: 'Comparar a taxa de erro depois das ações com a meta', a: 'C', w: 'Comparar resultado e meta é a essência da verificação.' },
+    { t: 'Atualizar a instrução de trabalho com o novo método', a: 'A', w: 'Padronizar o que funcionou é a primeira etapa de agir.' },
+    { t: 'Aplicar os 5 porquês para chegar à causa raiz', a: 'P', w: 'A análise de causas acontece antes de qualquer ação.' },
+    { t: 'Definir quem faz o quê e até quando, no formato 5W2H', a: 'P', w: 'O plano de ação é a última etapa do planejamento.' },
+    { t: 'Implantar a conferência por código de barras em uma linha piloto', a: 'D', w: 'O piloto é a execução do plano em pequena escala.' },
+    { t: 'Avaliar se a mudança reduziu a produtividade da separação', a: 'C', w: 'Procurar efeitos colaterais faz parte da verificação.' },
+    { t: 'Registrar o que foi feito diferente do plano durante a implantação', a: 'D', w: 'Os desvios são registrados enquanto o plano é executado.' },
+    { t: 'Registrar as lições aprendidas e escolher o próximo problema', a: 'A', w: 'Concluir o ciclo e preparar o seguinte é a última etapa de agir.' }
+  ];
+  var quiz = document.getElementById('quiz');
+  var score = document.getElementById('qz-score');
+  var done = document.getElementById('qz-done');
+  document.getElementById('qz-total').textContent = ITEMS.length;
+  var hits = 0, answered = 0;
+
+  function render() {
+    hits = 0; answered = 0; score.textContent = 0; done.textContent = 0;
+    quiz.textContent = '';
+    ITEMS.forEach(function (item, idx) {
+      var row = document.createElement('div'); row.className = 'q';
+      var p = document.createElement('p'); p.textContent = (idx + 1) + '. ' + item.t;
+      var opts = document.createElement('div'); opts.className = 'opts';
+      opts.setAttribute('role', 'group'); opts.setAttribute('aria-label', 'Fase do item ' + (idx + 1));
+      var why = document.createElement('p'); why.className = 'why'; why.hidden = true;
+      ['P', 'D', 'C', 'A'].forEach(function (k) {
+        var b = document.createElement('button');
+        b.type = 'button'; b.textContent = k; b.id = 'qz-' + idx + '-' + k;
+        b.setAttribute('aria-label', NAMES[k]);
+        b.addEventListener('click', function () {
+          var ok = k === item.a;
+          Array.prototype.forEach.call(opts.children, function (o) {
+            o.disabled = true;
+            if (o.textContent === item.a) { o.className = 'right'; }
+          });
+          if (!ok) { b.className = 'wrong'; }
+          var lead = document.createElement('b');
+          lead.textContent = (ok ? 'Certo. ' : 'A resposta é ' + item.a + ', ' + NAMES[item.a] + '. ');
+          why.textContent = ''; why.appendChild(lead); why.appendChild(document.createTextNode(item.w));
+          why.className = 'why ' + (ok ? 'ok' : 'no'); why.hidden = false;
+          answered++; if (ok) { hits++; }
+          score.textContent = hits; done.textContent = answered;
+        });
+        opts.appendChild(b);
+      });
+      row.appendChild(p); row.appendChild(opts); row.appendChild(why);
+      quiz.appendChild(row);
+    });
+  }
+  render();
+  document.getElementById('qz-reset').addEventListener('click', render);
+
+  /* ---------- Gráfico: leitura dos valores ---------- */
+  var SVG = 'http://www.w3.org/2000/svg';
+  var DATA = [
+    { v: 81, m: 'antes' }, { v: 83, m: 'antes' }, { v: 80, m: 'antes' }, { v: 84, m: 'antes' },
+    { v: 82, m: 'antes' }, { v: 82, m: 'antes' }, { v: 86, m: 'durante a execução' }, { v: 90, m: 'durante a execução' },
+    { v: 94, m: 'depois' }, { v: 96, m: 'depois' }, { v: 95, m: 'depois' }, { v: 97, m: 'depois' }
+  ];
+  var META = 95;
+  var svg = document.getElementById('run');
+  var fig = document.getElementById('fig-run');
+  var tip = document.getElementById('run-tip');
+  var xh = document.getElementById('run-xh');
+  var layer = document.getElementById('run-hits');
+  var pts = document.querySelectorAll('#run-pts circle');
+
+  function show(i) {
+    var d = DATA[i], c = pts[i];
+    var x = parseFloat(c.getAttribute('cx')), y = parseFloat(c.getAttribute('cy'));
+    Array.prototype.forEach.call(pts, function (p) { p.setAttribute('class', 'pt'); p.setAttribute('r', 5); });
+    c.setAttribute('class', 'pt on-hit'); c.setAttribute('r', 6);
+    xh.setAttribute('x1', x); xh.setAttribute('x2', x); xh.setAttribute('visibility', 'visible');
+    var pt = svg.createSVGPoint(); pt.x = x; pt.y = y;
+    var scr = pt.matrixTransform(svg.getScreenCTM());
+    var box = fig.getBoundingClientRect();
+    tip.textContent = '';
+    var strong = document.createElement('b'); strong.textContent = d.v + '%';
+    tip.appendChild(strong);
+    tip.appendChild(document.createTextNode('Semana ' + (i + 1) + ' · ' + d.m));
+    tip.appendChild(document.createElement('br'));
+    tip.appendChild(document.createTextNode('Meta de ' + META + '%: ' + (d.v >= META ? 'atingida' : 'não atingida')));
+    tip.style.left = (scr.x - box.left) + 'px';
+    tip.style.top = (scr.y - box.top) + 'px';
+    tip.hidden = false;
+  }
+  function hide() {
+    tip.hidden = true; xh.setAttribute('visibility', 'hidden');
+    Array.prototype.forEach.call(pts, function (p) { p.setAttribute('class', 'pt'); p.setAttribute('r', 5); });
+  }
+  DATA.forEach(function (d, i) {
+    var r = document.createElementNS(SVG, 'rect');
+    r.setAttribute('class', 'hit');
+    r.setAttribute('x', 100 + i * 66 - 33); r.setAttribute('y', 40);
+    r.setAttribute('width', 66); r.setAttribute('height', 230);
+    r.setAttribute('tabindex', '0');
+    r.setAttribute('aria-label', 'Semana ' + (i + 1) + ', ' + d.m + ': ' + d.v + '%');
+    r.addEventListener('pointerenter', function () { show(i); });
+    r.addEventListener('focus', function () { show(i); });
+    r.addEventListener('pointerleave', hide);
+    r.addEventListener('blur', hide);
+    layer.appendChild(r);
+  });
+})();
+</script>
+</body>
+</html>

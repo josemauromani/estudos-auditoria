@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Matriz GUT na prática</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<style>
+:root{
+  --ground:#F3F6F7; --surface:#FFFFFF; --sunk:#E9EEF0; --ink:#16242E; --muted:#566672; --rule:#D3DBE0;
+  --accent:#2B5C8A;
+  --g:#7A4A9A; --g-tint:#E9DEF1;
+  --u:#A96A12; --u-tint:#F6E8CF;
+  --t:#1E7B73; --t-tint:#D9EEEB;
+  --on-hue:#FFFFFF;
+  --good:#1F7A4D; --good-tint:#DDF1E5;
+  --bad:#B0413E; --bad-tint:#F5DEDC;
+  --display:"Barlow Semi Condensed","Arial Narrow",Arial,sans-serif;
+  --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --ground:#0F171C; --surface:#172229; --sunk:#1E2B33; --ink:#E4EAED; --muted:#9BABB6; --rule:#2B3A44;
+    --accent:#86B7E3;
+    --g:#C09ADB; --g-tint:#2E2139;
+    --u:#E2AC4F; --u-tint:#3A2C12;
+    --t:#5FC6BA; --t-tint:#15332F;
+    --on-hue:#0F171C;
+    --good:#6FCF9B; --good-tint:#163326;
+    --bad:#EC8E89; --bad-tint:#3D1F1E;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --ground:#0F171C; --surface:#172229; --sunk:#1E2B33; --ink:#E4EAED; --muted:#9BABB6; --rule:#2B3A44;
+  --accent:#86B7E3;
+  --g:#C09ADB; --g-tint:#2E2139;
+  --u:#E2AC4F; --u-tint:#3A2C12;
+  --t:#5FC6BA; --t-tint:#15332F;
+  --on-hue:#0F171C;
+  --good:#6FCF9B; --good-tint:#163326;
+  --bad:#EC8E89; --bad-tint:#3D1F1E;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--ground);color:var(--ink);font:400 16px/1.65 var(--body);-webkit-text-size-adjust:100%}
+a{color:var(--accent);text-underline-offset:3px}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.page{max-width:1180px;margin-inline:auto;padding-inline:20px;padding-block:36px 80px}
+
+/* Cabeçalho */
+.mast{display:flex;flex-direction:column;gap:18px;padding-bottom:32px;border-bottom:1px solid var(--rule)}
+.tiles{display:flex;gap:6px}
+.tiles span{width:44px;height:44px;display:grid;place-items:center;font:700 24px/1 var(--display);color:var(--on-hue)}
+h1{font:700 clamp(2.3rem,6vw,3.6rem)/1.02 var(--display);letter-spacing:-.01em;margin:0;text-wrap:balance}
+.lead{font-size:1.15rem;line-height:1.55;max-width:62ch;margin:0;color:var(--ink)}
+.meta{display:flex;flex-direction:row;flex-wrap:wrap;gap:6px 22px;font:400 .8rem/1.4 var(--mono);color:var(--muted);margin:0;padding:0;list-style:none}
+
+/* Estrutura */
+.layout{display:grid;grid-template-columns:minmax(0,1fr);gap:32px;padding-top:32px}
+.toc{font-size:.92rem}
+.toc h2{font:500 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+.toc ol{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:2px 20px;counter-reset:toc}
+.toc li{counter-increment:toc}
+.toc a{display:flex;gap:10px;padding:5px 0;color:var(--ink);text-decoration:none;line-height:1.35}
+.toc a::before{content:counter(toc,decimal-leading-zero);font:400 .75rem/1.7 var(--mono);color:var(--muted)}
+.toc a:hover{color:var(--accent);text-decoration:underline}
+@media (min-width:1020px){
+  .layout{grid-template-columns:200px minmax(0,1fr);gap:64px}
+  .toc{position:sticky;top:calc(env(safe-area-inset-top,0px) + 24px);align-self:start}
+  .toc ol{grid-template-columns:1fr}
+}
+main{display:flex;flex-direction:column;gap:72px;min-width:0}
+section{display:flex;flex-direction:column;gap:20px;scroll-margin-top:24px}
+.eyebrow{font:500 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0}
+h2{font:700 clamp(1.7rem,4vw,2.2rem)/1.1 var(--display);margin:0;text-wrap:balance}
+h3{font:600 1.3rem/1.2 var(--display);margin:12px 0 0;text-wrap:balance}
+h4{font:600 .95rem/1.3 var(--body);margin:0}
+p{margin:0}
+section > p, section > ul, section > ol, section > h3{max-width:68ch}
+ul,ol{margin:0;padding-left:1.25em;display:flex;flex-direction:column;gap:6px}
+strong{font-weight:600}
+code{font:400 .88em var(--mono);background:var(--sunk);padding:1px 5px;border-radius:3px}
+
+/* Letras coloridas no texto */
+.k{display:inline-grid;place-items:center;width:1.45em;height:1.45em;font:700 .85em/1 var(--display);color:var(--on-hue);vertical-align:.05em}
+
+/* Figuras */
+figure{margin:0;display:flex;flex-direction:column;gap:10px;position:relative}
+.scroll{overflow-x:auto;background:var(--surface);border:1px solid var(--rule);padding:18px}
+.scroll svg{display:block;width:100%;min-width:820px;height:auto;color:var(--ink)}
+figcaption{font-size:.86rem;line-height:1.5;color:var(--muted);max-width:72ch}
+figcaption b{color:var(--ink);font-weight:600}
+svg text{font-family:var(--body);fill:var(--ink)}
+svg .disp{font-family:var(--display);font-weight:700}
+svg .mono{font-family:var(--mono);letter-spacing:.08em}
+svg .on{fill:var(--on-hue)}
+svg .mu{fill:var(--muted)}
+svg .b{font-weight:600}
+svg .ln{stroke:var(--ink);stroke-width:1.5;fill:none}
+svg .ln-mu{stroke:var(--muted);stroke-width:1.5;fill:none}
+svg .ln-bold{stroke:var(--ink);stroke-width:3;fill:none;stroke-linejoin:round;stroke-linecap:round}
+svg .dash{stroke-dasharray:5 4}
+svg .ah{fill:var(--ink)} svg .ah-mu{fill:var(--muted)}
+svg .bx{fill:var(--surface);stroke:var(--rule);stroke-width:1.5}
+svg .bx-ink{fill:var(--ink);stroke:var(--ink)}
+svg .t-ground{fill:var(--ground)}
+svg .bx-out{fill:none;stroke:var(--muted);stroke-width:1.5;stroke-dasharray:5 4}
+svg .gap{stroke:var(--surface);stroke-width:4}
+svg .gap2{stroke:var(--surface);stroke-width:2}
+svg .hub{fill:var(--surface)}
+
+/* Gráfico */
+svg .grid{stroke:var(--rule);stroke-width:1}
+svg .hit{fill:transparent;cursor:crosshair;outline:none}
+.tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--ground);padding:6px 10px;font-size:.78rem;line-height:1.4;transform:translate(-50%,calc(-100% - 14px));white-space:nowrap;z-index:2}
+.tip b{display:block;font:600 1.05rem/1.2 var(--body)}
+details.data{font-size:.88rem}
+details.data summary{cursor:pointer;font:400 .82rem var(--mono);color:var(--muted);padding:4px 0}
+details.data .tbl{margin-top:8px}
+details.data table{min-width:420px}
+
+/* Tabelas */
+.tbl{overflow-x:auto;border:1px solid var(--rule);background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:780px;font-size:.88rem;line-height:1.4}
+th,td{padding:9px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--rule)}
+tr:last-child > td{border-bottom:0}
+thead th{font:600 .8rem/1.3 var(--body);background:var(--sunk)}
+td.num{font-variant-numeric:tabular-nums;white-space:nowrap;font-family:var(--mono);font-size:.82rem}
+
+/* Critérios */
+.tiles .g{background:var(--g)} .tiles .u{background:var(--u)} .tiles .t{background:var(--t)}
+.k.g{background:var(--g)} .k.u{background:var(--u)} .k.t{background:var(--t)}
+svg .bx-g{fill:var(--g-tint);stroke:var(--g);stroke-width:1.5} svg .hd-g{fill:var(--g)}
+svg .bx-u{fill:var(--u-tint);stroke:var(--u);stroke-width:1.5} svg .hd-u{fill:var(--u)}
+svg .bx-t{fill:var(--t-tint);stroke:var(--t);stroke-width:1.5} svg .hd-t{fill:var(--t)}
+svg .lv-g{fill:var(--g);fill-opacity:.36} svg .lv-u{fill:var(--u);fill-opacity:.36} svg .lv-t{fill:var(--t);fill-opacity:.36}
+svg .bar{fill:var(--accent)}
+svg .ref{stroke:var(--muted);stroke-width:1;stroke-dasharray:4 3}
+svg .hit:focus-visible{stroke:var(--accent);stroke-width:2}
+
+/* Tabela dos exemplos */
+table.gut th.g{background:var(--g);color:var(--on-hue)} table.gut th.u{background:var(--u);color:var(--on-hue)} table.gut th.t{background:var(--t);color:var(--on-hue)}
+table.gut th.n, table.gut td.n{text-align:center;width:7%}
+table.gut td.n{font:400 .86rem var(--mono);font-variant-numeric:tabular-nums}
+table.gut td.g{background:var(--g-tint)} table.gut td.u{background:var(--u-tint)} table.gut td.t{background:var(--t-tint)}
+table.gut td.pts{font-weight:600}
+table.gut td.cod{font-weight:600;color:var(--muted);width:8%}
+table.gut td small{display:block;color:var(--muted);font-size:.8rem}
+
+/* Ficha da matriz (acima de cada exemplo) */
+.ficha{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:0;border:1px solid var(--rule);background:var(--surface)}
+.ficha div{padding:12px 14px;border-right:1px solid var(--rule);border-bottom:1px solid var(--rule);margin:0 -1px -1px 0}
+.ficha dt{font:500 .68rem/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.ficha dd{margin:0;font-size:.9rem;line-height:1.4}
+dl{margin:0}
+
+/* Blocos */
+.pair{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.box{background:var(--surface);border:1px solid var(--rule);padding:18px 20px;display:flex;flex-direction:column;gap:10px}
+.box h4{font:600 1.1rem/1.2 var(--display)}
+.box ul{font-size:.93rem}
+.note{background:var(--sunk);padding:16px 20px;max-width:72ch;font-size:.94rem;display:flex;flex-direction:column;gap:6px}
+.note h4{font:500 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+
+/* Passo a passo */
+.steps{list-style:none;padding:0;counter-reset:st;gap:0;max-width:none;border-top:1px solid var(--rule)}
+.steps li{counter-increment:st;display:grid;grid-template-columns:44px minmax(0,1fr);gap:4px 12px;padding:16px 0;border-bottom:1px solid var(--rule)}
+.steps li::before{content:counter(st);font:700 1.7rem/1 var(--display);color:var(--muted);grid-row:span 2}
+.steps h4{font:600 1.1rem/1.25 var(--display)}
+.steps p{font-size:.95rem;max-width:64ch;grid-column:2}
+
+/* Erros comuns */
+.errs{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:0 40px;border-top:1px solid var(--rule)}
+.errs div{padding:16px 16px 16px 0;border-bottom:1px solid var(--rule);display:flex;flex-direction:column;gap:4px}
+.errs h4{font:600 1.05rem/1.25 var(--display)}
+.errs p{font-size:.92rem}
+.errs .fix{color:var(--muted)}
+.errs .fix b{color:var(--ink);font-weight:600}
+
+/* Checklist */
+.check{list-style:none;padding:0;gap:0;max-width:none;border:1px solid var(--rule);background:var(--surface)}
+.check li{border-bottom:1px solid var(--rule)}
+.check li:last-child{border-bottom:0}
+.check label{display:grid;grid-template-columns:22px minmax(0,1fr);gap:12px;padding:11px 16px;cursor:pointer;font-size:.94rem;align-items:start}
+.check input{width:18px;height:18px;margin:3px 0 0;accent-color:var(--t)}
+.check input:checked + span{color:var(--muted);text-decoration:line-through}
+.bar{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;font:400 .82rem var(--mono);color:var(--muted)}
+.bar b{color:var(--ink);font-weight:500}
+
+/* Exercício */
+.quiz{display:flex;flex-direction:column;gap:0;border:1px solid var(--rule);background:var(--surface)}
+.q{display:grid;grid-template-columns:minmax(0,1fr);gap:10px;padding:14px 16px;border-bottom:1px solid var(--rule)}
+.q:last-child{border-bottom:0}
+@media (min-width:720px){.q{grid-template-columns:minmax(0,1fr) auto;align-items:center}}
+.q p{font-size:.95rem}
+.q .why{grid-column:1/-1;font-size:.86rem;color:var(--muted)}
+.q .why b{font-weight:600}
+.q .why.ok b{color:var(--good)} .q .why.no b{color:var(--bad)}
+.opts{display:flex;gap:6px}
+.opts button{width:40px;height:40px;border:1.5px solid var(--rule);background:var(--surface);color:var(--ink);font:700 1.1rem/1 var(--display);cursor:pointer;border-radius:0}
+.opts button:hover:not(:disabled){border-color:var(--ink)}
+.opts button:disabled{cursor:default;opacity:.45}
+.opts button.right{background:var(--good-tint);border-color:var(--good);color:var(--good);opacity:1}
+.opts button.wrong{background:var(--bad-tint);border-color:var(--bad);color:var(--bad);opacity:1}
+.btn{border:1.5px solid var(--ink);background:transparent;color:var(--ink);font:500 .82rem var(--mono);padding:7px 14px;cursor:pointer;border-radius:0}
+.btn:hover{background:var(--ink);color:var(--ground)}
+
+/* Glossário */
+.gloss{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:0 40px;border-top:1px solid var(--rule)}
+.gloss div{padding:12px 0;border-bottom:1px solid var(--rule)}
+.gloss dt{font:600 1.02rem/1.3 var(--display)}
+.gloss dd{margin:2px 0 0;font-size:.9rem;color:var(--muted)}
+footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);font-size:.84rem;color:var(--muted);max-width:72ch}
+</style>
+</head>
+<body>
+<div class="page" lang="pt-BR">
+
+<header class="mast">
+  <div class="tiles" aria-hidden="true"><span class="g">G</span><span class="u">U</span><span class="t">T</span></div>
+  <h1>Matriz GUT na prática</h1>
+  <p class="lead">Um guia de estudo para decidir por onde começar quando há mais problemas do que tempo: três notas por problema, uma pontuação e uma ordem de tratamento que todos entendem.</p>
+  <ul class="meta">
+    <li>Treinamento autoinstrucional</li>
+    <li>11 módulos</li>
+    <li>Leitura de cerca de 30 minutos</li>
+    <li>3 exemplos resolvidos e 2 exercícios</li>
+  </ul>
+</header>
+
+<div class="layout">
+
+<nav class="toc" aria-label="Sumário">
+  <h2>Sumário</h2>
+  <ol>
+    <li><a href="#o-que-e">O que é a Matriz GUT</a></li>
+    <li><a href="#quando">Quando usar</a></li>
+    <li><a href="#construir">Como construir</a></li>
+    <li><a href="#exemplos">Exemplos resolvidos</a></li>
+    <li><a href="#decisao">Da pontuação à decisão</a></li>
+    <li><a href="#erros">Erros comuns</a></li>
+    <li><a href="#ferramentas">GUT e outras ferramentas</a></li>
+    <li><a href="#iso">GUT nas normas ISO</a></li>
+    <li><a href="#oficina">Como conduzir a oficina</a></li>
+    <li><a href="#pratique">Pratique</a></li>
+    <li><a href="#planilha">A planilha de apoio</a></li>
+    <li><a href="#glossario">Glossário</a></li>
+  </ol>
+</nav>
+
+<main>
+
+<!-- ============================ MÓDULO 1 ============================ -->
+<section id="o-que-e">
+  <p class="eyebrow">Módulo 1</p>
+  <h2>O que é a Matriz GUT</h2>
+  <p>A Matriz GUT é uma ferramenta de priorização. O nome vem das iniciais dos três critérios usados para comparar problemas: gravidade, urgência e tendência. Cada problema recebe uma nota de 1 a 5 em cada critério, e o produto das três notas define a ordem de tratamento.</p>
+  <p>A ferramenta costuma ser atribuída a Charles Kepner e Benjamin Tregoe, autores de um método de análise de problemas e de tomada de decisão. No Brasil, ela se espalhou com os programas de qualidade e é usada sempre que uma equipe precisa escolher, entre muitos problemas, quais tratar primeiro.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 300" role="img" aria-label="Os três critérios da Matriz GUT. Gravidade: qual é o tamanho do dano se nada for feito. Urgência: quanto tempo existe para agir. Tendência: o problema piora com o passar do tempo. Cada critério recebe nota de 1 a 5. A pontuação é o produto das três notas, de 1 a 125. No exemplo, 5 vezes 5 vezes 4 é igual a 100.">
+        <g>
+          <rect class="bx-g" x="18" y="20" width="190" height="196"/><rect class="hd-g" x="18" y="20" width="190" height="46"/>
+          <text class="disp on" x="113" y="53" font-size="28" text-anchor="middle">G</text>
+          <text class="b" x="113" y="94" font-size="14" text-anchor="middle">Gravidade</text>
+          <text class="mu" x="113" y="118" font-size="11.5" text-anchor="middle">Qual é o tamanho do dano,</text>
+          <text class="mu" x="113" y="134" font-size="11.5" text-anchor="middle">se nada for feito?</text>
+          <line class="ln-mu" x1="34" y1="154" x2="192" y2="154" stroke-width="1" opacity=".5"/>
+          <text class="mono" x="113" y="177" font-size="10.5" text-anchor="middle">DANO</text>
+          <text class="mu" x="113" y="198" font-size="11" text-anchor="middle">nota de 1 a 5</text>
+        </g>
+        <text class="disp" x="230" y="128" font-size="26" text-anchor="middle">×</text>
+        <g>
+          <rect class="bx-u" x="252" y="20" width="190" height="196"/><rect class="hd-u" x="252" y="20" width="190" height="46"/>
+          <text class="disp on" x="347" y="53" font-size="28" text-anchor="middle">U</text>
+          <text class="b" x="347" y="94" font-size="14" text-anchor="middle">Urgência</text>
+          <text class="mu" x="347" y="118" font-size="11.5" text-anchor="middle">Quanto tempo existe</text>
+          <text class="mu" x="347" y="134" font-size="11.5" text-anchor="middle">para agir?</text>
+          <line class="ln-mu" x1="268" y1="154" x2="426" y2="154" stroke-width="1" opacity=".5"/>
+          <text class="mono" x="347" y="177" font-size="10.5" text-anchor="middle">PRAZO</text>
+          <text class="mu" x="347" y="198" font-size="11" text-anchor="middle">nota de 1 a 5</text>
+        </g>
+        <text class="disp" x="464" y="128" font-size="26" text-anchor="middle">×</text>
+        <g>
+          <rect class="bx-t" x="486" y="20" width="190" height="196"/><rect class="hd-t" x="486" y="20" width="190" height="46"/>
+          <text class="disp on" x="581" y="53" font-size="28" text-anchor="middle">T</text>
+          <text class="b" x="581" y="94" font-size="14" text-anchor="middle">Tendência</text>
+          <text class="mu" x="581" y="118" font-size="11.5" text-anchor="middle">O problema piora</text>
+          <text class="mu" x="581" y="134" font-size="11.5" text-anchor="middle">com o passar do tempo?</text>
+          <line class="ln-mu" x1="502" y1="154" x2="660" y2="154" stroke-width="1" opacity=".5"/>
+          <text class="mono" x="581" y="177" font-size="10.5" text-anchor="middle">EVOLUÇÃO</text>
+          <text class="mu" x="581" y="198" font-size="11" text-anchor="middle">nota de 1 a 5</text>
+        </g>
+        <text class="disp" x="698" y="128" font-size="26" text-anchor="middle">=</text>
+        <g>
+          <rect class="bx-ink" x="720" y="20" width="162" height="196"/>
+          <text class="b t-ground" x="801" y="94" font-size="14" text-anchor="middle">Pontuação</text>
+          <text class="t-ground" x="801" y="118" font-size="11.5" text-anchor="middle">de 1 a 125</text>
+          <text class="t-ground" x="801" y="160" font-size="11.5" text-anchor="middle">Quanto maior,</text>
+          <text class="t-ground" x="801" y="176" font-size="11.5" text-anchor="middle">mais cedo se trata.</text>
+        </g>
+
+        <g class="disp" font-size="26" text-anchor="middle">
+          <text class="disp" x="113" y="262">5</text><text class="disp mu" x="230" y="262">×</text>
+          <text class="disp" x="347" y="262">5</text><text class="disp mu" x="464" y="262">×</text>
+          <text class="disp" x="581" y="262">4</text><text class="disp mu" x="698" y="262">=</text>
+          <text class="disp" x="801" y="262">100</text>
+        </g>
+        <text class="mu" x="450" y="290" font-size="11.5" text-anchor="middle">Exemplo: câmara fria com falha intermitente de temperatura</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 1.</b> Três perguntas, três notas e uma multiplicação. A gravidade olha para o dano, a urgência para o prazo e a tendência para a evolução do problema.</figcaption>
+  </figure>
+
+  <p>Repare que os três critérios medem coisas diferentes. Um problema pode ser muito grave e pouco urgente, como um risco que só se materializa daqui a um ano. Pode ser urgente e pouco grave, como um prazo curto para uma obrigação simples. A multiplicação faz com que só chegue ao topo o que pesa nos três critérios ao mesmo tempo.</p>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:18%">Critério</th><th style="width:30%">Pergunta</th><th style="width:26%">O que considerar</th><th>Exemplo de justificativa</th></tr></thead>
+      <tbody>
+        <tr><td><span class="k g">G</span> Gravidade</td><td>Qual é o tamanho do dano, se nada for feito?</td><td>Efeito sobre pessoas, clientes, resultados, imagem e conformidade legal</td><td>“Pode contaminar alimentos e fechar a loja.”</td></tr>
+        <tr><td><span class="k u">U</span> Urgência</td><td>Quanto tempo existe para agir?</td><td>Prazos legais, contratuais e o tempo até o dano acontecer</td><td>“A licença vence em 45 dias.”</td></tr>
+        <tr><td><span class="k t">T</span> Tendência</td><td>O problema piora com o passar do tempo?</td><td>A evolução do problema nos últimos meses e o que se espera dele</td><td>“As falhas passaram de uma para quatro por mês.”</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 2 ============================ -->
+<section id="quando">
+  <p class="eyebrow">Módulo 2</p>
+  <h2>Quando usar</h2>
+  <p>A GUT é uma ferramenta de escolha. Ela entra depois que os problemas foram levantados e antes que alguém comece a resolvê-los. Não descobre problemas nem aponta causas: só organiza a fila.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 190" role="img" aria-label="Cinco etapas do tratamento de problemas: levantar, priorizar, analisar, agir e verificar. A Matriz GUT é usada na segunda etapa, priorizar.">
+        <polygon class="bx" points="18,20 166,20 178,52 166,84 18,84"/>
+        <text class="disp mu" x="40" y="60" font-size="24">1</text>
+        <text class="b" x="62" y="57" font-size="13">Levantar</text>
+
+        <polygon class="bx-ink" points="194,20 342,20 354,52 342,84 194,84 206,52"/>
+        <text class="disp t-ground" x="222" y="60" font-size="24">2</text>
+        <text class="b t-ground" x="246" y="57" font-size="13">Priorizar</text>
+
+        <polygon class="bx" points="370,20 518,20 530,52 518,84 370,84 382,52"/>
+        <text class="disp mu" x="398" y="60" font-size="24">3</text>
+        <text class="b" x="422" y="57" font-size="13">Analisar</text>
+
+        <polygon class="bx" points="546,20 694,20 706,52 694,84 546,84 558,52"/>
+        <text class="disp mu" x="574" y="60" font-size="24">4</text>
+        <text class="b" x="598" y="57" font-size="13">Agir</text>
+
+        <polygon class="bx" points="722,20 870,20 882,52 870,84 722,84 734,52"/>
+        <text class="disp mu" x="750" y="60" font-size="24">5</text>
+        <text class="b" x="774" y="57" font-size="13">Verificar</text>
+
+        <text class="mu" x="98" y="106" font-size="11.5" text-anchor="middle">lista de problemas</text>
+        <text class="mu" x="274" y="106" font-size="11.5" text-anchor="middle">ordem de tratamento</text>
+        <text class="mu" x="450" y="106" font-size="11.5" text-anchor="middle">causas</text>
+        <text class="mu" x="626" y="106" font-size="11.5" text-anchor="middle">plano de ação</text>
+        <text class="mu" x="802" y="106" font-size="11.5" text-anchor="middle">resultado</text>
+
+        <line class="ln" x1="274" y1="114" x2="274" y2="138"/>
+        <rect class="bx" x="120" y="138" width="600" height="38"/>
+        <text x="136" y="162" font-size="12.5"><tspan class="b">A Matriz GUT é usada aqui,</tspan> entre a lista de problemas e a análise das causas.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 2.</b> A GUT pertence à etapa de priorização. As etapas 3 a 5 são o ciclo PDCA de cada problema escolhido.</figcaption>
+  </figure>
+
+  <div class="pair">
+    <div class="box">
+      <h4>Use quando</h4>
+      <ul>
+        <li>A lista de problemas é maior do que a capacidade de tratá-los.</li>
+        <li>Cada pessoa da equipe defende uma prioridade diferente.</li>
+        <li>Uma auditoria ou uma análise deixou várias constatações em aberto.</li>
+        <li>Não há dados numéricos suficientes para comparar os problemas.</li>
+        <li>A direção pede um critério claro para a distribuição de recursos.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h4>Procure outra ferramenta quando</h4>
+      <ul>
+        <li>Há dados de frequência ou de custo por problema: use o gráfico de Pareto.</li>
+        <li>É preciso avaliar probabilidade e consequência de eventos: use uma matriz de riscos.</li>
+        <li>A dúvida é entre soluções, e não entre problemas: use a matriz de esforço e impacto.</li>
+        <li>Os problemas ainda não foram levantados: comece por uma <a href="../SWOT/treinamento-swot.html">Matriz SWOT</a> ou pelos indicadores.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 3 ============================ -->
+<section id="construir">
+  <p class="eyebrow">Módulo 3</p>
+  <h2>Como construir</h2>
+  <p>A qualidade da matriz depende de duas coisas: uma lista de problemas bem escrita e uma escala que o grupo entende da mesma forma. A escala abaixo é a mais usada. Ela pode ser adaptada, desde que a adaptação seja combinada antes da pontuação.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 330" role="img" aria-label="Escala de notas de 1 a 5 para os três critérios. Gravidade: sem gravidade, pouco grave, grave, muito grave, extremamente grave. Urgência: pode esperar, pouco urgente, merece atenção, muito urgente, ação imediata. Tendência: estável, piora lenta, piora moderada, piora rápida, piora imediata.">
+        <g class="disp" font-size="20" text-anchor="middle">
+          <text class="disp" x="228" y="42">1</text><text class="disp" x="374" y="42">2</text><text class="disp" x="520" y="42">3</text>
+          <text class="disp" x="666" y="42">4</text><text class="disp" x="812" y="42">5</text>
+        </g>
+
+        <rect class="hd-g" x="18" y="56" width="132" height="80"/>
+        <text class="disp on" x="34" y="92" font-size="24">G</text><text class="on b" x="34" y="116" font-size="12.5">Gravidade</text>
+        <g font-size="11.5" text-anchor="middle">
+          <rect class="lv-g" style="fill-opacity:.08" x="158" y="56" width="140" height="80"/>
+          <rect class="lv-g" style="fill-opacity:.15" x="304" y="56" width="140" height="80"/>
+          <rect class="lv-g" style="fill-opacity:.22" x="450" y="56" width="140" height="80"/>
+          <rect class="lv-g" style="fill-opacity:.29" x="596" y="56" width="140" height="80"/>
+          <rect class="lv-g" x="742" y="56" width="140" height="80"/>
+          <text class="b" x="228" y="92">Sem gravidade</text><text class="mu" x="228" y="110" font-size="10.5">dano desprezível</text>
+          <text class="b" x="374" y="92">Pouco grave</text><text class="mu" x="374" y="110" font-size="10.5">dano pequeno</text>
+          <text class="b" x="520" y="92">Grave</text><text class="mu" x="520" y="110" font-size="10.5">dano considerável</text>
+          <text class="b" x="666" y="92">Muito grave</text><text class="mu" x="666" y="110" font-size="10.5">dano grande</text>
+          <text class="b" x="812" y="92">Extremamente grave</text><text class="mu" x="812" y="110" font-size="10.5">dano difícil de reverter</text>
+        </g>
+
+        <rect class="hd-u" x="18" y="146" width="132" height="80"/>
+        <text class="disp on" x="34" y="182" font-size="24">U</text><text class="on b" x="34" y="206" font-size="12.5">Urgência</text>
+        <g font-size="11.5" text-anchor="middle">
+          <rect class="lv-u" style="fill-opacity:.08" x="158" y="146" width="140" height="80"/>
+          <rect class="lv-u" style="fill-opacity:.15" x="304" y="146" width="140" height="80"/>
+          <rect class="lv-u" style="fill-opacity:.22" x="450" y="146" width="140" height="80"/>
+          <rect class="lv-u" style="fill-opacity:.29" x="596" y="146" width="140" height="80"/>
+          <rect class="lv-u" x="742" y="146" width="140" height="80"/>
+          <text class="b" x="228" y="182">Pode esperar</text><text class="mu" x="228" y="200" font-size="10.5">sem prazo definido</text>
+          <text class="b" x="374" y="182">Pouco urgente</text><text class="mu" x="374" y="200" font-size="10.5">agir em alguns meses</text>
+          <text class="b" x="520" y="182">Merece atenção</text><text class="mu" x="520" y="200" font-size="10.5">agir em algumas semanas</text>
+          <text class="b" x="666" y="182">Muito urgente</text><text class="mu" x="666" y="200" font-size="10.5">agir em alguns dias</text>
+          <text class="b" x="812" y="182">Ação imediata</text><text class="mu" x="812" y="200" font-size="10.5">agir hoje</text>
+        </g>
+
+        <rect class="hd-t" x="18" y="236" width="132" height="80"/>
+        <text class="disp on" x="34" y="272" font-size="24">T</text><text class="on b" x="34" y="296" font-size="12.5">Tendência</text>
+        <g font-size="11.5" text-anchor="middle">
+          <rect class="lv-t" style="fill-opacity:.08" x="158" y="236" width="140" height="80"/>
+          <rect class="lv-t" style="fill-opacity:.15" x="304" y="236" width="140" height="80"/>
+          <rect class="lv-t" style="fill-opacity:.22" x="450" y="236" width="140" height="80"/>
+          <rect class="lv-t" style="fill-opacity:.29" x="596" y="236" width="140" height="80"/>
+          <rect class="lv-t" x="742" y="236" width="140" height="80"/>
+          <text class="b" x="228" y="272">Estável</text><text class="mu" x="228" y="290" font-size="10.5">não vai piorar</text>
+          <text class="b" x="374" y="272">Piora lenta</text><text class="mu" x="374" y="290" font-size="10.5">a longo prazo</text>
+          <text class="b" x="520" y="272">Piora moderada</text><text class="mu" x="520" y="290" font-size="10.5">a médio prazo</text>
+          <text class="b" x="666" y="272">Piora rápida</text><text class="mu" x="666" y="290" font-size="10.5">a curto prazo</text>
+          <text class="b" x="812" y="272">Piora imediata</text><text class="mu" x="812" y="290" font-size="10.5">se nada for feito</text>
+        </g>
+      </svg>
+    </div>
+    <figcaption><b>Figura 3.</b> A escala de notas. Combine com o grupo o que significam “curto”, “médio” e “longo” prazo para a lista em análise: em uma operação diária, curto prazo são dias; em um planejamento anual, são meses.</figcaption>
+  </figure>
+
+  <h3>Antes de tudo: uma lista que possa ser comparada</h3>
+  <p>A GUT compara problemas entre si. Por isso os itens da lista precisam ser do mesmo tipo e do mesmo tamanho. “Câmara fria com falha de temperatura” e “falta de planejamento” não cabem na mesma matriz: o primeiro é um problema, o segundo é uma opinião sobre a causa de vários problemas.</p>
+
+  <h3>Passo a passo</h3>
+  <ol class="steps">
+    <li><h4>Liste os problemas</h4><p>Escreva cada problema como um resultado indesejado, com fato, local e número, quando houver. Retire da lista as causas e as soluções. De 5 a 20 itens é um bom tamanho.</p></li>
+    <li><h4>Combine a escala</h4><p>Leia a escala com o grupo e ajuste os exemplos à realidade da lista. Defina o que é dano grande, o que é prazo curto e o que é piora rápida.</p></li>
+    <li><h4>Dê as notas de gravidade <span class="k g">G</span></h4><p>Percorra a lista inteira dando só a nota de gravidade. Comparar os problemas dentro do mesmo critério mantém as notas coerentes.</p></li>
+    <li><h4>Dê as notas de urgência <span class="k u">U</span></h4><p>Volte ao início da lista e pontue só a urgência. Pergunte qual é o prazo real, e não qual é a vontade de resolver.</p></li>
+    <li><h4>Dê as notas de tendência <span class="k t">T</span></h4><p>Pontue a evolução esperada se nada for feito. Use os dados dos últimos meses, quando existirem.</p></li>
+    <li><h4>Multiplique e ordene</h4><p>Calcule G × U × T e ordene do maior para o menor. Resolva os empates e aplique a regra de exceção para a gravidade máxima. O módulo 5 explica os dois pontos.</p></li>
+    <li><h4>Decida e marque a revisão</h4><p>Defina o que será feito com cada faixa de prioridade. Os problemas do topo recebem responsável e prazo. Use o checklist do módulo 9.</p></li>
+  </ol>
+
+  <div class="note">
+    <h4>Regra prática</h4>
+    <p>Pontue por coluna, e não por linha. Quem dá as três notas de um problema de uma vez tende a repetir a primeira impressão nos três critérios. Quem percorre a lista um critério por vez é obrigado a comparar os problemas entre si.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 4 ============================ -->
+<section id="exemplos">
+  <p class="eyebrow">Módulo 4</p>
+  <h2>Exemplos resolvidos</h2>
+  <p>Três matrizes de naturezas diferentes. Os dados são ilustrativos e foram criados para este treinamento. As tabelas estão em ordem de tratamento, e o código mostra a posição original de cada problema na lista. Os dois primeiros exemplos também estão preenchidos na planilha de apoio.</p>
+
+  <h3>Exemplo 1. Problemas da operação da pizzaria</h3>
+  <dl class="ficha">
+    <div><dt>Tema</dt><dd>Problemas levantados na reunião mensal da loja</dd></div>
+    <div><dt>Objetivo</dt><dd>Escolher os problemas que serão tratados no trimestre</dd></div>
+    <div><dt>Origem da lista</dt><dd>Reclamações, indicadores e reunião da equipe</dd></div>
+    <div><dt>Responsável</dt><dd>Gerente da loja</dd></div>
+  </dl>
+  <div class="tbl">
+    <table class="gut">
+      <thead><tr><th class="n">Ordem</th><th>Código</th><th>Problema</th><th class="n g">G</th><th class="n u">U</th><th class="n t">T</th><th class="n">Pontos</th><th style="width:17%">Prioridade</th></tr></thead>
+      <tbody>
+        <tr><td class="n">1º</td><td class="cod">P3</td><td>Câmara fria com falha intermitente de temperatura</td><td class="n g">5</td><td class="n u">5</td><td class="n t">4</td><td class="n pts">100</td><td>Alta<small>gravidade máxima</small></td></tr>
+        <tr><td class="n">2º</td><td class="cod">P2</td><td>Margem do delivery caiu com o aumento da taxa do aplicativo</td><td class="n g">4</td><td class="n u">4</td><td class="n t">4</td><td class="n pts">64</td><td>Alta</td></tr>
+        <tr><td class="n">3º</td><td class="cod">P1</td><td>Forno único opera no limite no horário de pico</td><td class="n g">4</td><td class="n u">3</td><td class="n t">4</td><td class="n pts">48</td><td>Média</td></tr>
+        <tr><td class="n">4º</td><td class="cod">P6</td><td>Licença sanitária vence em 45 dias</td><td class="n g">5</td><td class="n u">4</td><td class="n t">2</td><td class="n pts">40</td><td>Média<small>gravidade máxima</small></td></tr>
+        <tr><td class="n">5º</td><td class="cod">P7</td><td>Saídas de entregadores subiram de 2 para 5 por trimestre</td><td class="n g">3</td><td class="n u">3</td><td class="n t">4</td><td class="n pts">36</td><td>Média</td></tr>
+        <tr><td class="n">6º</td><td class="cod">P4</td><td>Erros de sabor ou de tamanho em 3% dos pedidos</td><td class="n g">3</td><td class="n u">3</td><td class="n t">2</td><td class="n pts">18</td><td>Baixa</td></tr>
+        <tr><td class="n">7º</td><td class="cod">P5</td><td>Desperdício de ingredientes acima de 8% do consumo</td><td class="n g">3</td><td class="n u">2</td><td class="n t">3</td><td class="n pts">18</td><td>Baixa</td></tr>
+        <tr><td class="n">8º</td><td class="cod">P8</td><td>Fila no balcão de retirada nas noites de sábado</td><td class="n g">2</td><td class="n u">1</td><td class="n t">2</td><td class="n pts">4</td><td>Baixa</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p><strong>O que observar.</strong> A licença sanitária ficou em quarto lugar, com 40 pontos, porque a situação não piora sozinha: o prazo é conhecido e a renovação é simples. Mesmo assim, a gravidade máxima acende o alerta. A equipe decidiu tratá-la junto com os dois primeiros, porque o dano de perder a licença é o fechamento da loja.</p>
+
+  <h3>Exemplo 2. Problemas da área de Suprimentos</h3>
+  <dl class="ficha">
+    <div><dt>Tema</dt><dd>Problemas do processo de compras</dd></div>
+    <div><dt>Objetivo</dt><dd>Definir a ordem dos projetos de melhoria do semestre</dd></div>
+    <div><dt>Origem da lista</dt><dd>Matriz SWOT da área, indicadores e auditoria interna</dd></div>
+    <div><dt>Responsável</dt><dd>Gerente de Suprimentos</dd></div>
+  </dl>
+  <div class="tbl">
+    <table class="gut">
+      <thead><tr><th class="n">Ordem</th><th>Código</th><th>Problema</th><th class="n g">G</th><th class="n u">U</th><th class="n t">T</th><th class="n">Pontos</th><th style="width:17%">Prioridade</th></tr></thead>
+      <tbody>
+        <tr><td class="n">1º</td><td class="cod">P6</td><td>Compras urgentes fora do processo cresceram 30% no semestre</td><td class="n g">4</td><td class="n u">4</td><td class="n t">5</td><td class="n pts">80</td><td>Alta</td></tr>
+        <tr><td class="n">2º</td><td class="cod">P1</td><td>Fornecedor único contratado para três itens críticos</td><td class="n g">5</td><td class="n u">3</td><td class="n t">4</td><td class="n pts">60</td><td>Média<small>gravidade máxima</small></td></tr>
+        <tr><td class="n">3º</td><td class="cod">P3</td><td>Pedido de compra leva 12 dias úteis para ser emitido</td><td class="n g">4</td><td class="n u">4</td><td class="n t">3</td><td class="n pts">48</td><td>Média</td></tr>
+        <tr><td class="n">4º</td><td class="cod">P4</td><td>Contrato de frete vence em 60 dias, sem renegociação iniciada</td><td class="n g">4</td><td class="n u">5</td><td class="n t">2</td><td class="n pts">40</td><td>Média</td></tr>
+        <tr><td class="n">5º</td><td class="cod">P2</td><td>40% das requisições são devolvidas por especificação incompleta</td><td class="n g">3</td><td class="n u">3</td><td class="n t">3</td><td class="n pts">27</td><td>Média</td></tr>
+        <tr><td class="n">6º</td><td class="cod">P7</td><td>Avaliação de fornecedores não distingue bom e mau desempenho</td><td class="n g">3</td><td class="n u">2</td><td class="n t">2</td><td class="n pts">12</td><td>Baixa</td></tr>
+        <tr><td class="n">7º</td><td class="cod">P5</td><td>Cadastro de fornecedores com dados desatualizados</td><td class="n g">2</td><td class="n u">2</td><td class="n t">3</td><td class="n pts">12</td><td>Baixa</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p><strong>O que observar.</strong> A lista veio de três fontes diferentes, e a GUT colocou todas na mesma régua. As compras urgentes ficaram no topo por causa da tendência: cresceram 30% em um semestre. O fornecedor único tem gravidade maior, mas evolui mais devagar. Os dois últimos itens empataram com 12 pontos, e o desempate foi feito pela gravidade.</p>
+
+  <h3>Exemplo 3. Constatações de uma auditoria interna</h3>
+  <dl class="ficha">
+    <div><dt>Tema</dt><dd>Constatações da auditoria interna do sistema de gestão da qualidade</dd></div>
+    <div><dt>Objetivo</dt><dd>Definir a ordem e os prazos de tratamento</dd></div>
+    <div><dt>Origem da lista</dt><dd>Relatório de auditoria interna</dd></div>
+    <div><dt>Responsável</dt><dd>Coordenador da Qualidade</dd></div>
+  </dl>
+  <div class="tbl">
+    <table class="gut">
+      <thead><tr><th class="n">Ordem</th><th>Código</th><th>Problema</th><th class="n g">G</th><th class="n u">U</th><th class="n t">T</th><th class="n">Pontos</th><th style="width:17%">Prioridade</th></tr></thead>
+      <tbody>
+        <tr><td class="n">1º</td><td class="cod">P4</td><td>Produto não conforme sem identificação na área de expedição</td><td class="n g">5</td><td class="n u">5</td><td class="n t">3</td><td class="n pts">75</td><td>Alta<small>gravidade máxima</small></td></tr>
+        <tr><td class="n">2º</td><td class="cod">P6</td><td>Reclamações de clientes respondidas fora do prazo definido</td><td class="n g">4</td><td class="n u">4</td><td class="n t">4</td><td class="n pts">64</td><td>Alta</td></tr>
+        <tr><td class="n">3º</td><td class="cod">P1</td><td>Instrumentos de medição em uso com calibração vencida (3 de 25)</td><td class="n g">4</td><td class="n u">5</td><td class="n t">3</td><td class="n pts">60</td><td>Média</td></tr>
+        <tr><td class="n">4º</td><td class="cod">P2</td><td>Registros de treinamento incompletos para operadores novos</td><td class="n g">3</td><td class="n u">3</td><td class="n t">4</td><td class="n pts">36</td><td>Média</td></tr>
+        <tr><td class="n">5º</td><td class="cod">P5</td><td>Indicadores sem análise registrada nos últimos 6 meses</td><td class="n g">3</td><td class="n u">2</td><td class="n t">3</td><td class="n pts">18</td><td>Baixa</td></tr>
+        <tr><td class="n">6º</td><td class="cod">P3</td><td>Procedimento de compras diferente da prática atual</td><td class="n g">2</td><td class="n u">2</td><td class="n t">2</td><td class="n pts">8</td><td>Baixa</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p><strong>O que observar.</strong> Todas as constatações são tratadas. A matriz definiu a ordem e os prazos: os três primeiros itens receberam prazo de 30 dias, e os demais, de 90 dias. A classificação de cada constatação como não conformidade maior, menor ou oportunidade de melhoria segue os critérios do programa de auditoria, e não a pontuação da GUT.</p>
+</section>
+
+<!-- ============================ MÓDULO 5 ============================ -->
+<section id="decisao">
+  <p class="eyebrow">Módulo 5</p>
+  <h2>Da pontuação à decisão</h2>
+  <p>A pontuação coloca os problemas em ordem. A decisão sobre o que fazer com cada um continua sendo do grupo. Quatro cuidados ajudam a passar de uma coisa à outra.</p>
+
+  <h3>Faixas de prioridade</h3>
+  <p>As faixas transformam a pontuação em encaminhamento. Este material usa dois cortes fáceis de explicar: 27 pontos, que é a pontuação de um problema com nota 3 nos três critérios, e 64 pontos, que corresponde a nota 4 nos três.</p>
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:16%">Faixa</th><th style="width:20%">Pontuação</th><th style="width:30%">Leitura</th><th>Encaminhamento</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Alta</strong></td><td class="num">64 ou mais</td><td>Pesa muito nos três critérios</td><td>Tratar agora, com responsável, prazo e acompanhamento semanal</td></tr>
+        <tr><td><strong>Média</strong></td><td class="num">de 27 a 63</td><td>Pesa em pelo menos dois critérios</td><td>Planejar o tratamento, com data de início definida</td></tr>
+        <tr><td><strong>Baixa</strong></td><td class="num">até 26</td><td>Pesa pouco ou em um critério só</td><td>Registrar e reavaliar na próxima revisão da matriz</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <figure id="fig-bars">
+    <div class="scroll">
+      <svg id="bars" viewBox="0 0 900 304" role="img" aria-label="Gráfico de barras horizontais com a pontuação dos oito problemas do exemplo 1, do maior para o menor: P3 com 100, P2 com 64, P1 com 48, P6 com 40, P7 com 36, P4 com 18, P5 com 18, P8 com 4. A faixa média começa em 27 pontos e a alta em 64.">
+        <line class="grid" x1="360.0" y1="38" x2="360.0" y2="260"/>
+        <text class="mu" x="360.0" y="276" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">0</text>
+        <line class="grid" x1="445.0" y1="38" x2="445.0" y2="260"/>
+        <text class="mu" x="445.0" y="276" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">25</text>
+        <line class="grid" x1="530.0" y1="38" x2="530.0" y2="260"/>
+        <text class="mu" x="530.0" y="276" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">50</text>
+        <line class="grid" x1="615.0" y1="38" x2="615.0" y2="260"/>
+        <text class="mu" x="615.0" y="276" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">75</text>
+        <line class="grid" x1="700.0" y1="38" x2="700.0" y2="260"/>
+        <text class="mu" x="700.0" y="276" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">100</text>
+        <line class="grid" x1="785.0" y1="38" x2="785.0" y2="260"/>
+        <text class="mu" x="785.0" y="276" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">125</text>
+        <text class="mu" x="365.0" y="30" font-size="11">baixa: até 26</text>
+        <line class="ref" x1="451.8" y1="28" x2="451.8" y2="260"/>
+        <text class="mu" x="456.8" y="30" font-size="11">média: de 27 a 63</text>
+        <line class="ref" x1="577.6" y1="28" x2="577.6" y2="260"/>
+        <text class="mu" x="582.6" y="30" font-size="11">alta: 64 ou mais</text>
+        <text class="mono mu" x="572.5" y="296" font-size="10" text-anchor="middle">PONTOS (G × U × T)</text>
+        <text class="b mu" x="20" y="62.0" font-size="11.5">P3</text>
+        <text x="46" y="62.0" font-size="11.5">Câmara fria com falha de temperatura<tspan class="mu"> · gravidade 5</tspan></text>
+        <path class="bar" data-k="P3" d="M360 50.5 H696.0 Q700.0 50.5 700.0 54.5 V60.5 Q700.0 64.5 696.0 64.5 H360 Z"/>
+        <text class="b" x="707.0" y="62.0" font-size="11.5" style="font-variant-numeric:tabular-nums">100</text>
+        <text class="b mu" x="20" y="89.0" font-size="11.5">P2</text>
+        <text x="46" y="89.0" font-size="11.5">Margem do delivery em queda</text>
+        <path class="bar" data-k="P2" d="M360 77.5 H573.6 Q577.6 77.5 577.6 81.5 V87.5 Q577.6 91.5 573.6 91.5 H360 Z"/>
+        <text class="b" x="584.6" y="89.0" font-size="11.5" style="font-variant-numeric:tabular-nums">64</text>
+        <text class="b mu" x="20" y="116.0" font-size="11.5">P1</text>
+        <text x="46" y="116.0" font-size="11.5">Forno único no limite no horário de pico</text>
+        <path class="bar" data-k="P1" d="M360 104.5 H519.2 Q523.2 104.5 523.2 108.5 V114.5 Q523.2 118.5 519.2 118.5 H360 Z"/>
+        <text class="b" x="530.2" y="116.0" font-size="11.5" style="font-variant-numeric:tabular-nums">48</text>
+        <text class="b mu" x="20" y="143.0" font-size="11.5">P6</text>
+        <text x="46" y="143.0" font-size="11.5">Licença sanitária vence em 45 dias<tspan class="mu"> · gravidade 5</tspan></text>
+        <path class="bar" data-k="P6" d="M360 131.5 H492.0 Q496.0 131.5 496.0 135.5 V141.5 Q496.0 145.5 492.0 145.5 H360 Z"/>
+        <text class="b" x="503.0" y="143.0" font-size="11.5" style="font-variant-numeric:tabular-nums">40</text>
+        <text class="b mu" x="20" y="170.0" font-size="11.5">P7</text>
+        <text x="46" y="170.0" font-size="11.5">Saídas de entregadores em alta</text>
+        <path class="bar" data-k="P7" d="M360 158.5 H478.4 Q482.4 158.5 482.4 162.5 V168.5 Q482.4 172.5 478.4 172.5 H360 Z"/>
+        <text class="b" x="489.4" y="170.0" font-size="11.5" style="font-variant-numeric:tabular-nums">36</text>
+        <text class="b mu" x="20" y="197.0" font-size="11.5">P4</text>
+        <text x="46" y="197.0" font-size="11.5">Erros de sabor ou de tamanho em 3% dos pedidos</text>
+        <path class="bar" data-k="P4" d="M360 185.5 H417.2 Q421.2 185.5 421.2 189.5 V195.5 Q421.2 199.5 417.2 199.5 H360 Z"/>
+        <text class="b" x="428.2" y="197.0" font-size="11.5" style="font-variant-numeric:tabular-nums">18</text>
+        <text class="b mu" x="20" y="224.0" font-size="11.5">P5</text>
+        <text x="46" y="224.0" font-size="11.5">Desperdício de ingredientes acima de 8%</text>
+        <path class="bar" data-k="P5" d="M360 212.5 H417.2 Q421.2 212.5 421.2 216.5 V222.5 Q421.2 226.5 417.2 226.5 H360 Z"/>
+        <text class="b" x="428.2" y="224.0" font-size="11.5" style="font-variant-numeric:tabular-nums">18</text>
+        <text class="b mu" x="20" y="251.0" font-size="11.5">P8</text>
+        <text x="46" y="251.0" font-size="11.5">Fila no balcão de retirada aos sábados</text>
+        <path class="bar" data-k="P8" d="M360 239.5 H369.6 Q373.6 239.5 373.6 243.5 V249.5 Q373.6 253.5 369.6 253.5 H360 Z"/>
+        <text class="b" x="380.6" y="251.0" font-size="11.5" style="font-variant-numeric:tabular-nums">4</text>
+        <rect class="hit" x="14" y="44" width="872" height="27" tabindex="0" role="img" aria-label="P3, Câmara fria com falha de temperatura: 100 pontos, prioridade alta" data-k="P3" data-o="1" data-v="100" data-g="5" data-u="5" data-t="4" data-p="alta" data-x="700.0"/>
+        <rect class="hit" x="14" y="71" width="872" height="27" tabindex="0" role="img" aria-label="P2, Margem do delivery em queda: 64 pontos, prioridade alta" data-k="P2" data-o="2" data-v="64" data-g="4" data-u="4" data-t="4" data-p="alta" data-x="577.6"/>
+        <rect class="hit" x="14" y="98" width="872" height="27" tabindex="0" role="img" aria-label="P1, Forno único no limite no horário de pico: 48 pontos, prioridade média" data-k="P1" data-o="3" data-v="48" data-g="4" data-u="3" data-t="4" data-p="média" data-x="523.2"/>
+        <rect class="hit" x="14" y="125" width="872" height="27" tabindex="0" role="img" aria-label="P6, Licença sanitária vence em 45 dias: 40 pontos, prioridade média" data-k="P6" data-o="4" data-v="40" data-g="5" data-u="4" data-t="2" data-p="média" data-x="496.0"/>
+        <rect class="hit" x="14" y="152" width="872" height="27" tabindex="0" role="img" aria-label="P7, Saídas de entregadores em alta: 36 pontos, prioridade média" data-k="P7" data-o="5" data-v="36" data-g="3" data-u="3" data-t="4" data-p="média" data-x="482.4"/>
+        <rect class="hit" x="14" y="179" width="872" height="27" tabindex="0" role="img" aria-label="P4, Erros de sabor ou de tamanho em 3% dos pedidos: 18 pontos, prioridade baixa" data-k="P4" data-o="6" data-v="18" data-g="3" data-u="3" data-t="2" data-p="baixa" data-x="421.2"/>
+        <rect class="hit" x="14" y="206" width="872" height="27" tabindex="0" role="img" aria-label="P5, Desperdício de ingredientes acima de 8%: 18 pontos, prioridade baixa" data-k="P5" data-o="7" data-v="18" data-g="3" data-u="2" data-t="3" data-p="baixa" data-x="421.2"/>
+        <rect class="hit" x="14" y="233" width="872" height="27" tabindex="0" role="img" aria-label="P8, Fila no balcão de retirada aos sábados: 4 pontos, prioridade baixa" data-k="P8" data-o="8" data-v="4" data-g="2" data-u="1" data-t="2" data-p="baixa" data-x="373.6"/>
+      </svg>
+    </div>
+    <div class="tip" id="bars-tip" hidden></div>
+    <figcaption><b>Figura 4.</b> Os oito problemas do exemplo 1, em ordem de pontuação. Dois ficam na faixa alta, três na média e três na baixa. Os dois problemas de gravidade 5 estão marcados ao lado do nome. Passe o mouse sobre as barras para ver as notas.</figcaption>
+    <details class="data">
+      <summary>Ver os dados em tabela</summary>
+      <div class="tbl">
+        <table>
+          <thead><tr><th>Ordem</th><th>Código</th><th>Problema</th><th>G</th><th>U</th><th>T</th><th>Pontos</th><th>Prioridade</th></tr></thead>
+          <tbody>
+            <tr><td>1º</td><td>P3</td><td>Câmara fria com falha intermitente de temperatura</td><td class="num">5</td><td class="num">5</td><td class="num">4</td><td class="num">100</td><td>Alta</td></tr>
+            <tr><td>2º</td><td>P2</td><td>Margem do delivery caiu com o aumento da taxa do aplicativo</td><td class="num">4</td><td class="num">4</td><td class="num">4</td><td class="num">64</td><td>Alta</td></tr>
+            <tr><td>3º</td><td>P1</td><td>Forno único opera no limite no horário de pico</td><td class="num">4</td><td class="num">3</td><td class="num">4</td><td class="num">48</td><td>Média</td></tr>
+            <tr><td>4º</td><td>P6</td><td>Licença sanitária vence em 45 dias</td><td class="num">5</td><td class="num">4</td><td class="num">2</td><td class="num">40</td><td>Média</td></tr>
+            <tr><td>5º</td><td>P7</td><td>Saídas de entregadores subiram de 2 para 5 por trimestre</td><td class="num">3</td><td class="num">3</td><td class="num">4</td><td class="num">36</td><td>Média</td></tr>
+            <tr><td>6º</td><td>P4</td><td>Erros de sabor ou de tamanho em 3% dos pedidos</td><td class="num">3</td><td class="num">3</td><td class="num">2</td><td class="num">18</td><td>Baixa</td></tr>
+            <tr><td>7º</td><td>P5</td><td>Desperdício de ingredientes acima de 8% do consumo</td><td class="num">3</td><td class="num">2</td><td class="num">3</td><td class="num">18</td><td>Baixa</td></tr>
+            <tr><td>8º</td><td>P8</td><td>Fila no balcão de retirada nas noites de sábado</td><td class="num">2</td><td class="num">1</td><td class="num">2</td><td class="num">4</td><td>Baixa</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </details>
+  </figure>
+
+  <h3>A regra de exceção</h3>
+  <p>A multiplicação pode esconder um problema de gravidade máxima que tenha notas baixas nos outros critérios. Por isso, todo problema com gravidade 5 deve ser avaliado pelo grupo, qualquer que seja a pontuação. Risco à vida, à segurança dos alimentos ou ao cumprimento da lei não espera a fila.</p>
+
+  <h3>Empates</h3>
+  <p>Quando dois problemas têm a mesma pontuação, o desempate segue a ordem dos critérios: primeiro a maior gravidade, depois a maior urgência, depois a maior tendência. Se o empate continuar, o grupo decide.</p>
+
+  <h3>O que a pontuação não mostra</h3>
+  <p>Problemas com a mesma pontuação podem pedir respostas muito diferentes. Antes de decidir, olhe para as três notas, e não só para o produto.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 214" role="img" aria-label="Três problemas com 40 pontos e perfis diferentes. Problema A: gravidade 5, urgência 4, tendência 2; é grave e urgente, mas estável. Problema B: gravidade 2, urgência 4, tendência 5; é pouco grave, mas piora depressa. Problema C: gravidade 4, urgência 2, tendência 5; é grave e piora depressa, mas ainda há tempo para agir.">
+        <g>
+          <text class="b" x="20" y="28" font-size="13.5">Problema A</text>
+          <text class="mu" x="20" y="47" font-size="11.5">5 × 4 × 2 = 40</text>
+          <line class="grid" x1="52" y1="62" x2="52" y2="152"/>
+          <rect class="hd-g" x="20" y="68" width="24" height="18"/><text class="disp on" x="32" y="82" font-size="13" text-anchor="middle">G</text>
+          <path class="hd-g" d="M52 70 H248 Q252 70 252 74 V80 Q252 84 248 84 H52 Z"/><text class="b" x="259" y="81.5" font-size="11.5">5</text>
+          <rect class="hd-u" x="20" y="98" width="24" height="18"/><text class="disp on" x="32" y="112" font-size="13" text-anchor="middle">U</text>
+          <path class="hd-u" d="M52 100 H208 Q212 100 212 104 V110 Q212 114 208 114 H52 Z"/><text class="b" x="219" y="111.5" font-size="11.5">4</text>
+          <rect class="hd-t" x="20" y="128" width="24" height="18"/><text class="disp on" x="32" y="142" font-size="13" text-anchor="middle">T</text>
+          <path class="hd-t" d="M52 130 H128 Q132 130 132 134 V140 Q132 144 128 144 H52 Z"/><text class="b" x="139" y="141.5" font-size="11.5">2</text>
+          <text x="20" y="178" font-size="11.5">Grave e urgente, mas estável.</text>
+          <text class="mu" x="20" y="195" font-size="11.5">Resposta: agir logo, com ação pontual.</text>
+        </g>
+        <g>
+          <text class="b" x="320" y="28" font-size="13.5">Problema B</text>
+          <text class="mu" x="320" y="47" font-size="11.5">2 × 4 × 5 = 40</text>
+          <line class="grid" x1="352" y1="62" x2="352" y2="152"/>
+          <rect class="hd-g" x="320" y="68" width="24" height="18"/><text class="disp on" x="332" y="82" font-size="13" text-anchor="middle">G</text>
+          <path class="hd-g" d="M352 70 H428 Q432 70 432 74 V80 Q432 84 428 84 H352 Z"/><text class="b" x="439" y="81.5" font-size="11.5">2</text>
+          <rect class="hd-u" x="320" y="98" width="24" height="18"/><text class="disp on" x="332" y="112" font-size="13" text-anchor="middle">U</text>
+          <path class="hd-u" d="M352 100 H508 Q512 100 512 104 V110 Q512 114 508 114 H352 Z"/><text class="b" x="519" y="111.5" font-size="11.5">4</text>
+          <rect class="hd-t" x="320" y="128" width="24" height="18"/><text class="disp on" x="332" y="142" font-size="13" text-anchor="middle">T</text>
+          <path class="hd-t" d="M352 130 H548 Q552 130 552 134 V140 Q552 144 548 144 H352 Z"/><text class="b" x="559" y="141.5" font-size="11.5">5</text>
+          <text x="320" y="178" font-size="11.5">Pouco grave, mas piora depressa.</text>
+          <text class="mu" x="320" y="195" font-size="11.5">Resposta: conter antes que cresça.</text>
+        </g>
+        <g>
+          <text class="b" x="620" y="28" font-size="13.5">Problema C</text>
+          <text class="mu" x="620" y="47" font-size="11.5">4 × 2 × 5 = 40</text>
+          <line class="grid" x1="652" y1="62" x2="652" y2="152"/>
+          <rect class="hd-g" x="620" y="68" width="24" height="18"/><text class="disp on" x="632" y="82" font-size="13" text-anchor="middle">G</text>
+          <path class="hd-g" d="M652 70 H808 Q812 70 812 74 V80 Q812 84 808 84 H652 Z"/><text class="b" x="819" y="81.5" font-size="11.5">4</text>
+          <rect class="hd-u" x="620" y="98" width="24" height="18"/><text class="disp on" x="632" y="112" font-size="13" text-anchor="middle">U</text>
+          <path class="hd-u" d="M652 100 H728 Q732 100 732 104 V110 Q732 114 728 114 H652 Z"/><text class="b" x="739" y="111.5" font-size="11.5">2</text>
+          <rect class="hd-t" x="620" y="128" width="24" height="18"/><text class="disp on" x="632" y="142" font-size="13" text-anchor="middle">T</text>
+          <path class="hd-t" d="M652 130 H848 Q852 130 852 134 V140 Q852 144 848 144 H652 Z"/><text class="b" x="859" y="141.5" font-size="11.5">5</text>
+          <text x="620" y="178" font-size="11.5">Grave e piorando, com tempo para agir.</text>
+          <text class="mu" x="620" y="195" font-size="11.5">Resposta: planejar uma solução definitiva.</text>
+        </g>
+      </svg>
+    </div>
+    <figcaption><b>Figura 5.</b> Mesma pontuação, perfis diferentes. A ordem da fila é a mesma para os três, mas o tipo de ação muda conforme a nota que mais pesa.</figcaption>
+  </figure>
+
+  <div class="note">
+    <h4>A pontuação ordena, não mede</h4>
+    <p>Um problema com 100 pontos não é duas vezes pior do que um problema com 50. As notas são julgamentos, e a multiplicação amplia as diferenças entre eles. Use o número para definir a ordem e para abrir a conversa, e não como medida exata.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 6 ============================ -->
+<section id="erros">
+  <p class="eyebrow">Módulo 6</p>
+  <h2>Erros comuns</h2>
+  <div class="errs">
+    <div><h4>Misturar problemas, causas e soluções</h4><p>“Atrasos nas entregas”, “falta de treinamento” e “comprar um sistema” na mesma lista.</p><p class="fix"><b>Correção:</b> deixe só os resultados indesejados. Causas e soluções ficam para a análise de cada problema.</p></div>
+    <div><h4>Pontuar sem combinar a escala</h4><p>Cada pessoa entende “muito grave” de um jeito, e as notas não se comparam.</p><p class="fix"><b>Correção:</b> leia a escala em voz alta e ajuste os exemplos antes da primeira nota.</p></div>
+    <div><h4>Dar nota alta para tudo</h4><p>Metade da lista termina com mais de 100 pontos.</p><p class="fix"><b>Correção:</b> se tudo é prioridade, nada é. Compare os problemas entre si e use a escala inteira.</p></div>
+    <div><h4>Pontuar linha por linha</h4><p>As três notas de cada problema saem iguais à primeira impressão.</p><p class="fix"><b>Correção:</b> pontue um critério por vez, para a lista toda.</p></div>
+    <div><h4>Confundir gravidade com urgência</h4><p>O que incomoda mais recebe nota alta nos dois critérios.</p><p class="fix"><b>Correção:</b> gravidade é o tamanho do dano. Urgência é o prazo para agir.</p></div>
+    <div><h4>Tratar a pontuação como verdade</h4><p>Um problema de gravidade máxima fica esquecido no meio da fila.</p><p class="fix"><b>Correção:</b> aplique a regra de exceção e olhe para as três notas antes de decidir.</p></div>
+    <div><h4>Pontuar sozinho</h4><p>O responsável preenche a matriz na própria mesa e apresenta o resultado.</p><p class="fix"><b>Correção:</b> pontue em grupo, com quem convive com os problemas e com quem tem os dados.</p></div>
+    <div><h4>Não revisar</h4><p>A matriz de um ano atrás continua definindo as prioridades.</p><p class="fix"><b>Correção:</b> a tendência muda. Revise as notas a cada ciclo de planejamento ou quando a lista mudar.</p></div>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 7 ============================ -->
+<section id="ferramentas">
+  <p class="eyebrow">Módulo 7</p>
+  <h2>GUT e outras ferramentas</h2>
+  <p>A GUT recebe problemas de várias fontes e entrega uma fila. O que acontece antes e depois dela depende de outras ferramentas.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 250" role="img" aria-label="Fluxo da priorização. Auditorias, reclamações de clientes, indicadores fora da meta, a Matriz SWOT e as reuniões geram a lista de problemas. A lista passa pela Matriz GUT, que define a ordem de tratamento. Os problemas prioritários seguem para ciclos PDCA, os intermediários para o plano de ação e os demais ficam registrados para a próxima revisão.">
+        <defs>
+          <marker id="a6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker>
+        </defs>
+        <text class="mono mu" x="20" y="14" font-size="10">DE ONDE VÊM OS PROBLEMAS</text>
+        <g font-size="12">
+          <rect class="bx" x="20" y="22" width="192" height="34"/><text x="32" y="43.5">Auditorias</text>
+          <rect class="bx" x="20" y="66" width="192" height="34"/><text x="32" y="87.5">Reclamações de clientes</text>
+          <rect class="bx" x="20" y="110" width="192" height="34"/><text x="32" y="131.5">Indicadores fora da meta</text>
+          <rect class="bx" x="20" y="154" width="192" height="34"/><text x="32" y="175.5">Matriz SWOT</text>
+          <rect class="bx" x="20" y="198" width="192" height="34"/><text x="32" y="219.5">Reuniões e sugestões</text>
+        </g>
+        <path class="ln" d="M214 39 H238 M214 83 H238 M214 171 H238 M214 215 H238 M238 39 V215"/>
+        <line class="ln" x1="214" y1="127" x2="274" y2="127" marker-end="url(#a6)"/>
+
+        <rect class="bx-ink" x="278" y="100" width="140" height="54"/>
+        <text class="b t-ground" x="348" y="123" font-size="12.5" text-anchor="middle">Lista de</text>
+        <text class="b t-ground" x="348" y="140" font-size="12.5" text-anchor="middle">problemas</text>
+        <line class="ln" x1="420" y1="127" x2="456" y2="127" marker-end="url(#a6)"/>
+
+        <text class="mu" x="568" y="80" font-size="11.5" text-anchor="middle">Matriz GUT</text>
+        <rect class="hd-g gap2" x="460" y="91" width="72" height="72"/>
+        <rect class="hd-u gap2" x="532" y="91" width="72" height="72"/>
+        <rect class="hd-t gap2" x="604" y="91" width="72" height="72"/>
+        <g font-size="30" text-anchor="middle">
+          <text class="disp on" x="496" y="138">G</text><text class="disp on" x="568" y="138">U</text><text class="disp on" x="640" y="138">T</text>
+        </g>
+        <text class="mu" x="568" y="184" font-size="11.5" text-anchor="middle">ordem de tratamento</text>
+
+        <path class="ln" d="M678 127 H696 V58 H712" marker-end="url(#a6)"/>
+        <line class="ln" x1="696" y1="127" x2="712" y2="127" marker-end="url(#a6)"/>
+        <path class="ln" d="M696 127 V196 H712" marker-end="url(#a6)"/>
+        <g font-size="12">
+          <rect class="bx" x="716" y="36" width="168" height="44"/><text x="728" y="55"><tspan class="b">Alta:</tspan> ciclo PDCA</text><text class="mu" x="728" y="70" font-size="11">de cada problema</text>
+          <rect class="bx" x="716" y="105" width="168" height="44"/><text x="728" y="124"><tspan class="b">Média:</tspan> plano de ação</text><text class="mu" x="728" y="139" font-size="11">com data de início</text>
+          <rect class="bx" x="716" y="174" width="168" height="44"/><text x="728" y="193"><tspan class="b">Baixa:</tspan> registro</text><text class="mu" x="728" y="208" font-size="11">para a próxima revisão</text>
+        </g>
+      </svg>
+    </div>
+    <figcaption><b>Figura 6.</b> O que entra e o que sai da GUT. A matriz coloca na mesma régua problemas que vieram de fontes diferentes.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:22%">Ferramenta</th><th style="width:28%">Critérios</th><th style="width:26%">Pergunta que responde</th><th>Quando preferir</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Matriz GUT</strong></td><td>Gravidade, urgência e tendência, por julgamento do grupo</td><td>Qual problema tratar primeiro?</td><td>Problemas de naturezas diferentes, com poucos dados</td></tr>
+        <tr><td><strong>Gráfico de Pareto</strong></td><td>Frequência ou custo, medidos</td><td>Quais poucos itens concentram a maior parte do efeito?</td><td>Há dados confiáveis por tipo de problema</td></tr>
+        <tr><td><strong>Matriz de riscos</strong></td><td>Probabilidade e consequência</td><td>Quais eventos merecem controle?</td><td>O item ainda não aconteceu</td></tr>
+        <tr><td><strong>FMEA</strong></td><td>Severidade, ocorrência e detecção</td><td>Quais modos de falha tratar primeiro?</td><td>Análise de falhas de produto ou de processo</td></tr>
+        <tr><td><strong>Matriz de esforço e impacto</strong></td><td>Esforço da solução e ganho esperado</td><td>Qual solução implantar primeiro?</td><td>A escolha é entre ações, e não entre problemas</td></tr>
+        <tr><td><strong>Matriz de Eisenhower</strong></td><td>Importância e urgência</td><td>O que fazer, agendar, delegar ou eliminar?</td><td>Organização de tarefas de uma pessoa ou equipe</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Na série de estudos, a GUT faz a ponte entre o diagnóstico e a solução. A <a href="../SWOT/treinamento-swot.html">Matriz SWOT</a> levanta fraquezas e ameaças, a GUT escolhe por onde começar, o <a href="../SIPOC/treinamento-sipoc.html">SIPOC</a> delimita o processo em que o problema acontece, e o <a href="../PDCA/treinamento-pdca.html">PDCA</a> conduz a melhoria.</p>
+</section>
+
+<!-- ============================ MÓDULO 8 ============================ -->
+<section id="iso">
+  <p class="eyebrow">Módulo 8</p>
+  <h2>GUT nas normas ISO</h2>
+  <p>A ISO 9001:2015 não cita a Matriz GUT nem exige um método de priorização. O que a norma pede, em vários requisitos, é que as ações sejam proporcionais ao que está em jogo. A GUT é uma forma simples de mostrar como a organização decide a ordem de tratamento e de manter essa decisão coerente de um caso para outro.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 280" role="img" aria-label="Quatro pontos do sistema de gestão em que a priorização aparece. Requisito 6.1, riscos e oportunidades: quais ações vêm primeiro. Requisito 9.2, programa de auditoria: quais processos auditar antes. Requisito 10.2, ação corretiva: quais não conformidades tratar antes. Requisito 10.3, melhoria contínua: quais oportunidades seguir. A Matriz GUT apoia as quatro decisões.">
+        <defs>
+          <marker id="a7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker>
+        </defs>
+        <rect class="bx" x="20" y="20" width="280" height="70"/>
+        <text class="b" x="34" y="47" font-size="12.5">6.1 Riscos e oportunidades</text>
+        <text class="mu" x="34" y="69" font-size="11.5">Quais ações vêm primeiro?</text>
+        <rect class="bx" x="600" y="20" width="280" height="70"/>
+        <text class="b" x="614" y="47" font-size="12.5">9.2 Programa de auditoria</text>
+        <text class="mu" x="614" y="69" font-size="11.5">Quais processos auditar antes?</text>
+        <rect class="bx" x="20" y="190" width="280" height="70"/>
+        <text class="b" x="34" y="217" font-size="12.5">10.2 Ação corretiva</text>
+        <text class="mu" x="34" y="239" font-size="11.5">Quais não conformidades tratar antes?</text>
+        <rect class="bx" x="600" y="190" width="280" height="70"/>
+        <text class="b" x="614" y="217" font-size="12.5">10.3 Melhoria contínua</text>
+        <text class="mu" x="614" y="239" font-size="11.5">Quais oportunidades seguir?</text>
+
+        <rect class="bx-ink" x="360" y="105" width="180" height="70"/>
+        <text class="b t-ground" x="450" y="135" font-size="13.5" text-anchor="middle">Matriz GUT</text>
+        <text class="t-ground" x="450" y="155" font-size="11.5" text-anchor="middle">ordem de tratamento</text>
+
+        <path class="ln" d="M358 125 H330 V55 H304" marker-end="url(#a7)"/>
+        <path class="ln" d="M358 155 H330 V225 H304" marker-end="url(#a7)"/>
+        <path class="ln" d="M542 125 H570 V55 H596" marker-end="url(#a7)"/>
+        <path class="ln" d="M542 155 H570 V225 H596" marker-end="url(#a7)"/>
+      </svg>
+    </div>
+    <figcaption><b>Figura 7.</b> Quatro pontos do sistema de gestão da qualidade em que é preciso escolher o que vem primeiro. A numeração é a da ISO 9001:2015.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:20%">Requisito</th><th style="width:30%">O que a norma pede, em resumo</th><th style="width:24%">Como a GUT ajuda</th><th>Evidências que o auditor procura</th></tr></thead>
+      <tbody>
+        <tr><td><strong>6.1</strong> Riscos e oportunidades</td><td>As ações devem ser proporcionais ao impacto potencial sobre a conformidade de produtos e serviços.</td><td>Ordena as ações depois que os riscos e as oportunidades foram determinados.</td><td>Critério de priorização definido e aplicado da mesma forma em casos parecidos.</td></tr>
+        <tr><td><strong>9.2</strong> Auditoria interna</td><td>O programa de auditoria deve considerar a importância dos processos, as mudanças na organização e os resultados de auditorias anteriores.</td><td>Ajuda a decidir quais processos auditar antes ou com mais frequência.</td><td>Programa de auditoria com a justificativa das frequências.</td></tr>
+        <tr><td><strong>10.2</strong> Não conformidade e ação corretiva</td><td>As ações corretivas devem ser apropriadas aos efeitos das não conformidades encontradas.</td><td>Define a ordem e os prazos de tratamento.</td><td>Prazos coerentes com a gravidade. Nenhuma não conformidade sem tratamento.</td></tr>
+        <tr><td><strong>10.3</strong> Melhoria contínua</td><td>Considerar os resultados da análise e da avaliação para determinar oportunidades de melhoria.</td><td>Escolhe, entre as oportunidades, as que seguem primeiro.</td><td>Registro das escolhas e dos motivos.</td></tr>
+        <tr><td><strong>9.3</strong> Análise crítica pela direção</td><td>As saídas incluem decisões sobre oportunidades de melhoria e necessidade de recursos.</td><td>Leva à direção uma lista já ordenada, com o critério à vista.</td><td>Decisões e recursos registrados para os itens prioritários.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>O que a GUT não faz</h3>
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:30%">Limite</th><th>Por quê</th></tr></thead>
+      <tbody>
+        <tr><td>Não dispensa o tratamento</td><td>Toda não conformidade pede reação e avaliação da necessidade de ação corretiva. A GUT define a ordem e o prazo, e não se o item será tratado.</td></tr>
+        <tr><td>Não classifica não conformidades</td><td>A classificação em maior ou menor segue os critérios do programa de auditoria ou do organismo de certificação.</td></tr>
+        <tr><td>Não substitui a análise de riscos</td><td>A GUT não avalia a probabilidade de um evento. Para riscos, a matriz de probabilidade e consequência é mais adequada.</td></tr>
+        <tr><td>Não encontra causas</td><td>A pontuação diz qual problema vem primeiro. A causa raiz é assunto da análise, dentro do ciclo PDCA.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>O que o auditor observa</h3>
+  <div class="pair">
+    <div class="box">
+      <h4>Sinais de priorização consistente</h4>
+      <ul>
+        <li>Escala escrita, conhecida por quem dá as notas.</li>
+        <li>Notas acompanhadas de justificativa ou de dados.</li>
+        <li>Prazos de tratamento coerentes com a pontuação.</li>
+        <li>Itens de gravidade máxima avaliados à parte.</li>
+        <li>Matriz revisada, com mudanças de nota ao longo do tempo.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h4>Sinais de priorização de fachada</h4>
+      <ul>
+        <li>Todos os itens com notas altas e parecidas.</li>
+        <li>Ordem de tratamento diferente da ordem da matriz, sem explicação.</li>
+        <li>Itens de baixa pontuação abandonados, sem registro.</li>
+        <li>Matriz preenchida por uma pessoa só, depois da decisão tomada.</li>
+        <li>Não conformidades sem ação, com a justificativa de “baixa prioridade”.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="note">
+    <h4>Pontos de atenção</h4>
+    <p>Este módulo usa a numeração da ISO 9001:2015 e resume os requisitos com palavras próprias. Confira sempre a edição vigente da norma antes de citar um requisito em relatório.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 9 ============================ -->
+<section id="oficina">
+  <p class="eyebrow">Módulo 9</p>
+  <h2>Como conduzir a oficina</h2>
+  <p>Uma matriz de até 20 problemas cabe em 90 minutos. Convide de 4 a 8 pessoas que convivem com os problemas da lista e peça que tragam os dados disponíveis. Envie a lista antes, para que ninguém a veja pela primeira vez na reunião.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 136" role="img" aria-label="Distribuição dos 90 minutos da oficina: 15 para revisar a lista de problemas, 10 para combinar a escala, 15 para as notas de gravidade, 15 para as notas de urgência, 15 para as notas de tendência, 10 para a ordem e as exceções e 10 para os próximos passos.">
+        <g font-size="11.5" text-anchor="middle">
+          <rect class="bx" x="60" y="24" width="130" height="56"/><text x="125" y="56">Lista de problemas</text>
+          <rect class="bx" x="190" y="24" width="86.7" height="56"/><text x="233.3" y="56">Escala</text>
+          <rect class="hd-g gap2" x="276.7" y="24" width="130" height="56"/><text class="on b" x="341.7" y="56">Gravidade</text>
+          <rect class="hd-u gap2" x="406.7" y="24" width="130" height="56"/><text class="on b" x="471.7" y="56">Urgência</text>
+          <rect class="hd-t gap2" x="536.7" y="24" width="130" height="56"/><text class="on b" x="601.7" y="56">Tendência</text>
+          <rect class="bx" x="666.7" y="24" width="86.7" height="56"/><text x="710" y="49">Ordem e</text><text x="710" y="64">exceções</text>
+          <rect class="bx" x="753.3" y="24" width="86.7" height="56"/><text x="796.7" y="49">Próximos</text><text x="796.7" y="64">passos</text>
+        </g>
+        <g class="ln-mu" stroke-width="1">
+          <line x1="60" y1="82" x2="60" y2="94"/><line x1="190" y1="82" x2="190" y2="94"/><line x1="276.7" y1="82" x2="276.7" y2="94"/>
+          <line x1="406.7" y1="82" x2="406.7" y2="94"/><line x1="536.7" y1="82" x2="536.7" y2="94"/><line x1="666.7" y1="82" x2="666.7" y2="94"/>
+          <line x1="753.3" y1="82" x2="753.3" y2="94"/><line x1="840" y1="82" x2="840" y2="94"/>
+        </g>
+        <g class="mono" font-size="10.5" text-anchor="middle">
+          <text class="mu" x="60" y="112">0</text><text class="mu" x="190" y="112">15</text><text class="mu" x="276.7" y="112">25</text>
+          <text class="mu" x="406.7" y="112">40</text><text class="mu" x="536.7" y="112">55</text><text class="mu" x="666.7" y="112">70</text>
+          <text class="mu" x="753.3" y="112">80</text><text class="mu" x="840" y="112">90 min</text>
+        </g>
+      </svg>
+    </div>
+    <figcaption><b>Figura 8.</b> Roteiro de 90 minutos, desenhado em escala. Metade do tempo vai para as notas, um critério por vez.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:14%">Minutos</th><th style="width:22%">Bloco</th><th>O que fazer</th><th style="width:24%">Resultado</th></tr></thead>
+      <tbody>
+        <tr><td class="num">0 a 15</td><td>Lista de problemas</td><td>Ler a lista, juntar os repetidos, reescrever os vagos e retirar causas e soluções.</td><td>Lista comparável</td></tr>
+        <tr><td class="num">15 a 25</td><td>Escala</td><td>Ler a escala e combinar o significado de cada nota para esta lista.</td><td>Escala combinada</td></tr>
+        <tr><td class="num">25 a 40</td><td>Gravidade</td><td>Pontuar a gravidade de todos os problemas. Registrar a justificativa das notas 4 e 5.</td><td>Coluna G</td></tr>
+        <tr><td class="num">40 a 55</td><td>Urgência</td><td>Pontuar a urgência de todos os problemas, com base nos prazos reais.</td><td>Coluna U</td></tr>
+        <tr><td class="num">55 a 70</td><td>Tendência</td><td>Pontuar a tendência de todos os problemas, com base nos dados dos últimos meses.</td><td>Coluna T</td></tr>
+        <tr><td class="num">70 a 80</td><td>Ordem e exceções</td><td>Ordenar, resolver os empates e avaliar os itens de gravidade máxima.</td><td>Ordem de tratamento</td></tr>
+        <tr><td class="num">80 a 90</td><td>Próximos passos</td><td>Definir responsável e prazo para os problemas do topo e marcar a revisão.</td><td>Plano de ação inicial</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Quando o grupo discorda de uma nota, peça a justificativa da nota mais alta e da mais baixa. A diferença costuma vir de informações que só uma das pessoas tem, e a conversa vale mais do que a média das notas.</p>
+
+  <h3>Checklist de validação</h3>
+  <p>Marque os itens conforme revisa a sua matriz. As marcações ficam salvas neste navegador.</p>
+  <ol class="check" id="checklist">
+    <li><label><input type="checkbox" id="ck-1"><span>A lista tem problemas, e não causas nem soluções.</span></label></li>
+    <li><label><input type="checkbox" id="ck-2"><span>Cada problema está descrito com fato, local e número, quando houver.</span></label></li>
+    <li><label><input type="checkbox" id="ck-3"><span>Os problemas da lista são comparáveis: mesmo tipo e mesmo tamanho.</span></label></li>
+    <li><label><input type="checkbox" id="ck-4"><span>A escala de notas foi combinada pelo grupo antes da pontuação.</span></label></li>
+    <li><label><input type="checkbox" id="ck-5"><span>As notas foram dadas em grupo, por pessoas que conhecem os problemas.</span></label></li>
+    <li><label><input type="checkbox" id="ck-6"><span>Cada critério foi pontuado para a lista toda antes de passar ao seguinte.</span></label></li>
+    <li><label><input type="checkbox" id="ck-7"><span>As notas se apoiam em dados, quando eles existem.</span></label></li>
+    <li><label><input type="checkbox" id="ck-8"><span>Os empates foram resolvidos por um critério combinado.</span></label></li>
+    <li><label><input type="checkbox" id="ck-9"><span>Os problemas de gravidade máxima foram avaliados, qualquer que seja a pontuação.</span></label></li>
+    <li><label><input type="checkbox" id="ck-10"><span>Os problemas de maior prioridade têm ação, responsável e prazo.</span></label></li>
+    <li><label><input type="checkbox" id="ck-11"><span>Os problemas de baixa prioridade foram registrados, e não descartados.</span></label></li>
+    <li><label><input type="checkbox" id="ck-12"><span>A data da próxima revisão da matriz está marcada.</span></label></li>
+  </ol>
+  <div class="bar"><span><b id="ck-count">0</b> de 12 itens marcados</span><button class="btn" id="ck-reset" type="button">Limpar marcações</button></div>
+</section>
+
+<!-- ============================ MÓDULO 10 ============================ -->
+<section id="pratique">
+  <p class="eyebrow">Módulo 10</p>
+  <h2>Pratique</h2>
+  <h3>Exercício 1. A justificativa fala de qual critério?</h3>
+  <p>Uma transportadora está pontuando os problemas da operação. Cada frase abaixo foi dita para justificar uma nota. Escolha o critério a que ela se refere.</p>
+  <div class="quiz" id="quiz"></div>
+  <div class="bar"><span>Acertos: <b id="qz-score">0</b> de <b id="qz-total">10</b></span><span>Respondidos: <b id="qz-done">0</b></span><button class="btn" id="qz-reset" type="button">Recomeçar</button></div>
+
+  <h3>Exercício 2. Monte a sua matriz</h3>
+  <p>Escolha uma lista de problemas que você conhece bem: da sua área, de um projeto ou de um relatório de auditoria. Abra a aba GUT da planilha de apoio e siga o roteiro.</p>
+  <ol>
+    <li>Escreva de 5 a 10 problemas, cada um como resultado indesejado.</li>
+    <li>Leia a aba Escala e ajuste os exemplos à sua lista.</li>
+    <li>Dê as notas de gravidade da lista toda. Depois as de urgência. Depois as de tendência.</li>
+    <li>Veja a ordem na aba Priorização. Confira se algum alerta de gravidade máxima apareceu.</li>
+    <li>Compare os três primeiros com a sua impressão inicial. Se a ordem surpreender, releia as notas.</li>
+    <li>Leve os problemas do topo para a aba Plano de ação, com responsável e prazo.</li>
+    <li>Passe o checklist do módulo 9.</li>
+  </ol>
+  <p>Depois, peça a outra pessoa que pontue a mesma lista, sem ver as suas notas. As diferenças entre as duas matrizes são a parte mais valiosa do exercício.</p>
+</section>
+
+<!-- ============================ MÓDULO 11 ============================ -->
+<section id="planilha">
+  <p class="eyebrow">Módulo 11</p>
+  <h2>A planilha de apoio</h2>
+  <p>Este treinamento acompanha o arquivo <a id="xlsx-ref" href="GUT-modelo.xlsx">GUT-modelo.xlsx</a>, que fica na mesma pasta. As células em amarelo-claro são para preenchimento. As células cinza são calculadas.</p>
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Aba</th><th>Para que serve</th><th style="width:36%">O que ela calcula</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Instruções</strong></td><td>Legenda de cores, ordem de preenchimento e regras do modelo.</td><td>Nada. É só leitura.</td></tr>
+        <tr><td><strong>GUT</strong></td><td>Cabeçalho da priorização e lista de até 20 problemas, com as três notas.</td><td>Pontuação, posição, faixa de prioridade, alerta de gravidade máxima e avisos.</td></tr>
+        <tr><td><strong>Priorização</strong></td><td>Os problemas da aba GUT em ordem de tratamento, com gráfico das pontuações.</td><td>Ordena a lista, com desempate por gravidade, urgência e tendência.</td></tr>
+        <tr><td><strong>Escala</strong></td><td>Descrição das notas de 1 a 5 e cortes das faixas de prioridade, que podem ser ajustados.</td><td>Os cortes informados aqui são usados nas outras abas.</td></tr>
+        <tr><td><strong>Plano de ação</strong></td><td>Ações para os problemas escolhidos, com responsável, prazo e status.</td><td>Puxa o problema e a pontuação pelo código. Aponta ações atrasadas e problemas de prioridade alta sem ação.</td></tr>
+        <tr><td><strong>Checklist</strong></td><td>Os mesmos 12 itens do módulo 9, com status Sim, Parcial ou Não.</td><td>Percentual atendido e situação da validação.</td></tr>
+        <tr><td><strong>Exemplo 1 e Exemplo 2</strong></td><td>As matrizes da pizzaria e de Suprimentos, preenchidas, com as decisões tomadas.</td><td>Os mesmos resultados da aba GUT.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ GLOSSÁRIO ============================ -->
+<section id="glossario">
+  <p class="eyebrow">Referência</p>
+  <h2>Glossário</h2>
+  <dl class="gloss">
+    <div><dt>Critério de desempate</dt><dd>Regra combinada para ordenar problemas com a mesma pontuação. Neste material: gravidade, depois urgência, depois tendência.</dd></div>
+    <div><dt>Escala</dt><dd>Descrição do que significa cada nota, de 1 a 5, em cada critério.</dd></div>
+    <div><dt>Faixa de prioridade</dt><dd>Grupo de pontuações que recebe o mesmo encaminhamento: alta, média ou baixa.</dd></div>
+    <div><dt>FMEA</dt><dd>Análise de modos de falha e seus efeitos. Prioriza falhas por severidade, ocorrência e detecção.</dd></div>
+    <div><dt>Gráfico de Pareto</dt><dd>Gráfico de barras em ordem decrescente, que separa os poucos itens que mais pesam dos muitos que pesam pouco.</dd></div>
+    <div><dt>Gravidade</dt><dd>Tamanho do dano que o problema causa ou pode causar, se nada for feito.</dd></div>
+    <div><dt>Matriz de esforço e impacto</dt><dd>Quadro que compara soluções pelo esforço de implantação e pelo ganho esperado.</dd></div>
+    <div><dt>Não conformidade</dt><dd>Não atendimento de um requisito.</dd></div>
+    <div><dt>Pontuação</dt><dd>Produto das três notas. Vai de 1 a 125 e define a ordem de tratamento.</dd></div>
+    <div><dt>Priorização</dt><dd>Definição da ordem em que os problemas serão tratados.</dd></div>
+    <div><dt>Problema</dt><dd>Resultado indesejado de um processo. Não é a causa nem a falta de uma solução.</dd></div>
+    <div><dt>Regra de exceção</dt><dd>Avaliação obrigatória de todo problema com gravidade 5, qualquer que seja a pontuação.</dd></div>
+    <div><dt>Tendência</dt><dd>Evolução esperada do problema com o passar do tempo, se nada for feito.</dd></div>
+    <div><dt>Urgência</dt><dd>Tempo disponível para agir antes que o dano aconteça ou aumente.</dd></div>
+  </dl>
+</section>
+
+</main>
+</div>
+
+<footer>Material de estudo. Os exemplos, notas e pontuações são ilustrativos e foram criados para fins didáticos. As referências às normas ISO são resumos para estudo e não substituem o texto das normas.</footer>
+</div>
+
+<script>
+(function () {
+  function read(key) { try { return JSON.parse(localStorage.getItem(key) || 'null'); } catch (e) { return null; } }
+  function write(key, val) { try { localStorage.setItem(key, JSON.stringify(val)); } catch (e) {} }
+
+  /* ---------- Checklist ---------- */
+  var boxes = Array.prototype.slice.call(document.querySelectorAll('#checklist input'));
+  var count = document.getElementById('ck-count');
+  var saved = read('gut-checklist') || {};
+  function refreshChecks() {
+    var n = 0, state = {};
+    boxes.forEach(function (b) { if (b.checked) { n++; } state[b.id] = b.checked; });
+    count.textContent = n;
+    return state;
+  }
+  boxes.forEach(function (b) {
+    if (saved[b.id]) { b.checked = true; }
+    b.addEventListener('change', function () { write('gut-checklist', refreshChecks()); });
+  });
+  refreshChecks();
+  document.getElementById('ck-reset').addEventListener('click', function () {
+    boxes.forEach(function (b) { b.checked = false; });
+    write('gut-checklist', refreshChecks());
+  });
+
+  /* ---------- Exercício ---------- */
+  var NAMES = { G: 'Gravidade', U: 'Urgência', T: 'Tendência' };
+  var ITEMS = [
+    { t: '“Um acidente com este equipamento pode afastar um funcionário.”', a: 'G', w: 'A frase fala do tamanho do dano.' },
+    { t: '“O prazo para renovar a licença termina em 15 dias.”', a: 'U', w: 'A frase fala do tempo disponível para agir.' },
+    { t: '“As reclamações por atraso dobraram nos últimos três meses.”', a: 'T', w: 'A frase descreve a evolução do problema.' },
+    { t: '“Se o servidor parar, nenhuma filial consegue emitir nota fiscal.”', a: 'G', w: 'A frase descreve o alcance do dano.' },
+    { t: '“O cliente pediu o plano de correção até sexta-feira.”', a: 'U', w: 'Há um prazo definido por quem recebe o resultado.' },
+    { t: '“O desgaste dos pneus aumenta a cada viagem.”', a: 'T', w: 'O problema piora com o passar do tempo.' },
+    { t: '“O erro aparece só em um relatório interno, sem efeito para o cliente.”', a: 'G', w: 'A frase justifica uma nota baixa de gravidade: o dano é pequeno.' },
+    { t: '“O problema existe há anos, sempre no mesmo nível.”', a: 'T', w: 'A frase justifica uma nota baixa de tendência: a situação é estável.' },
+    { t: '“A correção pode ficar para o próximo trimestre, sem prejuízo.”', a: 'U', w: 'A frase justifica uma nota baixa de urgência: há tempo para agir.' },
+    { t: '“A perda estimada é de R$ 80 mil por mês.”', a: 'G', w: 'O valor da perda mede o dano.' }
+  ];
+  var quiz = document.getElementById('quiz');
+  var score = document.getElementById('qz-score');
+  var done = document.getElementById('qz-done');
+  document.getElementById('qz-total').textContent = ITEMS.length;
+  var hits = 0, answered = 0;
+
+  function render() {
+    hits = 0; answered = 0; score.textContent = 0; done.textContent = 0;
+    quiz.textContent = '';
+    ITEMS.forEach(function (item, idx) {
+      var row = document.createElement('div'); row.className = 'q';
+      var p = document.createElement('p'); p.textContent = (idx + 1) + '. ' + item.t;
+      var opts = document.createElement('div'); opts.className = 'opts';
+      opts.setAttribute('role', 'group'); opts.setAttribute('aria-label', 'Critério do item ' + (idx + 1));
+      var why = document.createElement('p'); why.className = 'why'; why.hidden = true;
+      ['G', 'U', 'T'].forEach(function (k) {
+        var b = document.createElement('button');
+        b.type = 'button'; b.textContent = k; b.id = 'qz-' + idx + '-' + k;
+        b.setAttribute('aria-label', NAMES[k]);
+        b.addEventListener('click', function () {
+          var ok = k === item.a;
+          Array.prototype.forEach.call(opts.children, function (o) {
+            o.disabled = true;
+            if (o.textContent === item.a) { o.className = 'right'; }
+          });
+          if (!ok) { b.className = 'wrong'; }
+          var lead = document.createElement('b');
+          lead.textContent = (ok ? 'Certo. ' : 'A resposta é ' + item.a + ', ' + NAMES[item.a] + '. ');
+          why.textContent = ''; why.appendChild(lead); why.appendChild(document.createTextNode(item.w));
+          why.className = 'why ' + (ok ? 'ok' : 'no'); why.hidden = false;
+          answered++; if (ok) { hits++; }
+          score.textContent = hits; done.textContent = answered;
+        });
+        opts.appendChild(b);
+      });
+      row.appendChild(p); row.appendChild(opts); row.appendChild(why);
+      quiz.appendChild(row);
+    });
+  }
+  render();
+  document.getElementById('qz-reset').addEventListener('click', render);
+
+  /* ---------- Gráfico: leitura dos valores ---------- */
+  var fig = document.getElementById('fig-bars');
+  var tip = document.getElementById('bars-tip');
+  var svg = document.getElementById('bars');
+  var bars = document.querySelectorAll('#bars .bar');
+  function hide() {
+    tip.hidden = true;
+    Array.prototype.forEach.call(bars, function (b) { b.removeAttribute('opacity'); });
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('#bars .hit'), function (r) {
+    function show() {
+      var d = r.dataset;
+      Array.prototype.forEach.call(bars, function (b) {
+        b.setAttribute('opacity', b.getAttribute('data-k') === d.k ? '1' : '.45');
+      });
+      tip.textContent = '';
+      var strong = document.createElement('b'); strong.textContent = d.v + ' pontos';
+      tip.appendChild(strong);
+      tip.appendChild(document.createTextNode(d.k + ' · ' + d.o + 'º lugar · prioridade ' + d.p));
+      tip.appendChild(document.createElement('br'));
+      tip.appendChild(document.createTextNode('G ' + d.g + ' × U ' + d.u + ' × T ' + d.t));
+      var box = fig.getBoundingClientRect(), rb = r.getBoundingClientRect();
+      var pt = svg.createSVGPoint(); pt.x = parseFloat(d.x); pt.y = 0;
+      var scr = pt.matrixTransform(svg.getScreenCTM());
+      tip.style.left = Math.min(Math.max(scr.x - box.left, 110), box.width - 110) + 'px';
+      tip.style.top = (rb.top - box.top + 4) + 'px';
+      tip.hidden = false;
+    }
+    r.addEventListener('pointerenter', show);
+    r.addEventListener('focus', show);
+    r.addEventListener('pointerleave', hide);
+    r.addEventListener('blur', hide);
+  });
+})();
+</script>
+</body>
+</html>

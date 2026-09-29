@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Estudos da qualidade</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<style>
+:root{
+  --ground:#F3F6F7; --surface:#FFFFFF; --sunk:#E9EEF0; --ink:#16242E; --muted:#566672; --rule:#D3DBE0;
+  --accent:#2B5C8A;
+  --blue:#2B5C8A; --teal:#1E7B73; --amber:#A96A12; --purple:#7A4A9A; --red:#B0413E; --slate:#5B6B76;
+  --on-hue:#FFFFFF;
+  --good:#1F7A4D; --good-tint:#DDF1E5;
+  --display:"Barlow Semi Condensed","Arial Narrow",Arial,sans-serif;
+  --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --ground:#0F171C; --surface:#172229; --sunk:#1E2B33; --ink:#E4EAED; --muted:#9BABB6; --rule:#2B3A44;
+    --accent:#86B7E3;
+    --blue:#86B7E3; --teal:#5FC6BA; --amber:#E2AC4F; --purple:#C09ADB; --red:#EC8E89; --slate:#9BABB6;
+    --on-hue:#0F171C;
+    --good:#6FCF9B; --good-tint:#163326;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --ground:#0F171C; --surface:#172229; --sunk:#1E2B33; --ink:#E4EAED; --muted:#9BABB6; --rule:#2B3A44;
+  --accent:#86B7E3;
+  --blue:#86B7E3; --teal:#5FC6BA; --amber:#E2AC4F; --purple:#C09ADB; --red:#EC8E89; --slate:#9BABB6;
+  --on-hue:#0F171C;
+  --good:#6FCF9B; --good-tint:#163326;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--ground);color:var(--ink);font:400 16px/1.65 var(--body);-webkit-text-size-adjust:100%}
+a{color:var(--accent);text-underline-offset:3px}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.page{max-width:1180px;margin-inline:auto;padding-inline:20px;padding-block:36px 80px}
+
+/* Cabeçalho */
+.mast{display:flex;flex-direction:column;gap:18px;padding-bottom:32px;border-bottom:1px solid var(--rule)}
+.kicker{font:500 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0}
+h1{font:700 clamp(2.3rem,6vw,3.6rem)/1.02 var(--display);letter-spacing:-.01em;margin:0;text-wrap:balance}
+.lead{font-size:1.15rem;line-height:1.55;max-width:62ch;margin:0}
+.meta{display:flex;flex-wrap:wrap;gap:6px 22px;font:400 .8rem/1.4 var(--mono);color:var(--muted);margin:0;padding:0;list-style:none}
+
+main{display:flex;flex-direction:column;gap:64px;padding-top:40px}
+section{display:flex;flex-direction:column;gap:20px;scroll-margin-top:24px}
+.eyebrow{font:500 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0}
+h2{font:700 clamp(1.7rem,4vw,2.2rem)/1.1 var(--display);margin:0;text-wrap:balance}
+h3{font:600 1.45rem/1.15 var(--display);margin:0;text-wrap:balance}
+h4{font:500 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:8px 0 0}
+p{margin:0}
+section > p{max-width:68ch}
+strong{font-weight:600}
+
+/* Letras */
+.tiles{display:flex;gap:4px}
+.tiles span{width:34px;height:34px;display:grid;place-items:center;font:700 19px/1 var(--display);color:var(--on-hue)}
+.tiles span.w{width:auto;min-width:34px;padding:0 7px}
+.blue{background:var(--blue)} .teal{background:var(--teal)} .amber{background:var(--amber)}
+.purple{background:var(--purple)} .red{background:var(--red)} .slate{background:var(--slate)}
+
+/* Escolha pela necessidade */
+.needs{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:0;border:1px solid var(--rule);background:var(--surface)}
+.needs li{border-right:1px solid var(--rule);border-bottom:1px solid var(--rule);margin:0 -1px -1px 0}
+.needs a{display:flex;flex-direction:column;gap:4px;padding:14px 16px;height:100%;text-decoration:none;color:var(--ink)}
+.needs a:hover{background:var(--sunk)}
+.needs span{font-size:.95rem;line-height:1.4}
+.needs b{font:500 .74rem/1.3 var(--mono);letter-spacing:.06em;color:var(--accent)}
+
+/* Cartões dos estudos */
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.cards.few{grid-template-columns:repeat(auto-fill,minmax(260px,1fr))}
+.card{background:var(--surface);border:1px solid var(--rule);padding:22px 22px 18px;display:flex;flex-direction:column;gap:12px;scroll-margin-top:24px}
+.card:target{border-color:var(--ink);box-shadow:0 0 0 1px var(--ink)}
+.card.done{border-color:var(--good)}
+.card p{font-size:.94rem;line-height:1.5}
+.card .ask{color:var(--muted);font-size:.88rem}
+.card .ask b{color:var(--ink);font-weight:600}
+.card .facts{font:400 .76rem/1.5 var(--mono);color:var(--muted);margin-top:auto;padding-top:6px}
+.actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.btn{display:inline-block;border:1.5px solid var(--ink);background:var(--ink);color:var(--ground);font:500 .82rem var(--mono);padding:8px 14px;text-decoration:none;border-radius:0}
+.btn:hover{background:transparent;color:var(--ink)}
+.btn.ghost{background:transparent;color:var(--ink);border-color:var(--rule)}
+.btn.ghost:hover{border-color:var(--ink)}
+.done-box{display:flex;gap:8px;align-items:center;font-size:.86rem;color:var(--muted);cursor:pointer;border-top:1px solid var(--rule);padding-top:12px}
+.done-box input{width:17px;height:17px;margin:0;accent-color:var(--good)}
+.card.done .done-box{color:var(--good)}
+.bar{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;font:400 .82rem var(--mono);color:var(--muted)}
+.bar b{color:var(--ink);font-weight:500}
+.bar button{border:1.5px solid var(--ink);background:transparent;color:var(--ink);font:500 .82rem var(--mono);padding:7px 14px;cursor:pointer;border-radius:0}
+.bar button:hover{background:var(--ink);color:var(--ground)}
+.track{flex:1 1 200px;max-width:320px;height:6px;background:var(--sunk)}
+.track i{display:block;height:100%;width:0;background:var(--good)}
+
+/* Figura */
+figure{margin:0;display:flex;flex-direction:column;gap:10px}
+.scroll{overflow-x:auto;background:var(--surface);border:1px solid var(--rule);padding:18px}
+.scroll svg{display:block;width:100%;min-width:820px;height:auto}
+figcaption{font-size:.86rem;line-height:1.5;color:var(--muted);max-width:72ch}
+figcaption b{color:var(--ink);font-weight:600}
+svg text{font-family:var(--body);fill:var(--ink)}
+svg a text{fill:var(--ink)}
+svg a:hover rect{stroke:var(--ink)}
+svg .disp{font-family:var(--display);font-weight:700}
+svg .mono{font-family:var(--mono);letter-spacing:.08em}
+svg .mu{fill:var(--muted)}
+svg .b{font-weight:600}
+svg .on{fill:var(--on-hue)}
+svg .t-ground{fill:var(--ground)}
+svg .ln{stroke:var(--ink);stroke-width:1.5;fill:none}
+svg .ah{fill:var(--ink)}
+svg .bx{fill:var(--surface);stroke:var(--rule);stroke-width:1.5}
+svg .bx-ink{fill:var(--ink);stroke:var(--ink)}
+svg .bx-out{fill:none;stroke:var(--muted);stroke-width:1.5;stroke-dasharray:5 4}
+svg .f-blue{fill:var(--blue)} svg .f-teal{fill:var(--teal)} svg .f-amber{fill:var(--amber)}
+svg .f-purple{fill:var(--purple)} svg .f-red{fill:var(--red)} svg .f-slate{fill:var(--slate)}
+
+/* Tabela */
+.tbl{overflow-x:auto;border:1px solid var(--rule);background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:780px;font-size:.88rem;line-height:1.4}
+th,td{padding:9px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--rule)}
+tr:last-child > td{border-bottom:0}
+thead th{font:600 .8rem/1.3 var(--body);background:var(--sunk)}
+td.num{font:400 .82rem var(--mono);white-space:nowrap}
+.note{background:var(--sunk);padding:16px 20px;max-width:72ch;font-size:.94rem;display:flex;flex-direction:column;gap:6px}
+.note h4{margin:0}
+footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);font-size:.84rem;color:var(--muted);max-width:72ch}
+</style>
+</head>
+<body>
+<div class="page" lang="pt-BR">
+
+<header class="mast">
+  <p class="kicker">Estudos ISO · Auditoria</p>
+  <h1>Ferramentas da qualidade na prática</h1>
+  <p class="lead">Onze estudos autoinstrucionais, cada um com um treinamento para ler e uma planilha para usar. Escolha pelo que você precisa fazer, ou siga a sequência em que as ferramentas se encadeiam.</p>
+  <ul class="meta">
+    <li>11 estudos</li>
+    <li>124 módulos</li>
+    <li>Cerca de 6h50 de leitura</li>
+    <li>11 planilhas de apoio</li>
+  </ul>
+</header>
+
+<main>
+
+<!-- ============================ ESCOLHA ============================ -->
+<section id="escolha">
+  <p class="eyebrow">Por onde começar</p>
+  <h2>O que você precisa fazer?</h2>
+  <p>Cada ferramenta responde a uma pergunta diferente. Escolha a necessidade, e o painel leva ao estudo correspondente.</p>
+  <ul class="needs">
+    <li><a href="#iso9001"><span>Entender o que a norma pede, requisito por requisito</span><b>ISO 9001</b></a></li>
+    <li><a href="#swot"><span>Entender a situação da organização, por dentro e por fora</span><b>Matriz SWOT</b></a></li>
+    <li><a href="#sipoc"><span>Enxergar um processo inteiro em uma página</span><b>SIPOC</b></a></li>
+    <li><a href="#raci"><span>Definir quem faz, quem decide e quem precisa saber</span><b>Matriz RACI</b></a></li>
+    <li><a href="#riscos"><span>Avaliar o que pode dar errado, antes que aconteça</span><b>Matriz de riscos</b></a></li>
+    <li><a href="#gut"><span>Escolher, entre muitos problemas, qual tratar primeiro</span><b>Matriz GUT</b></a></li>
+    <li><a href="#ishikawa"><span>Descobrir por que um problema acontece</span><b>Diagrama de Ishikawa</b></a></li>
+    <li><a href="#w5h2"><span>Transformar decisões em um plano com dono, prazo e custo</span><b>5W2H</b></a></li>
+    <li><a href="#pdca"><span>Conduzir uma melhoria do início ao fim, e manter o ganho</span><b>PDCA</b></a></li>
+    <li><a href="#auditoria"><span>Conferir se o sistema funciona como foi combinado</span><b>Auditoria interna</b></a></li>
+    <li><a href="#nc"><span>Tratar o que saiu errado, para que não se repita</span><b>Não conformidade e ação corretiva</b></a></li>
+  </ul>
+</section>
+
+<!-- ============================ ESTUDOS ============================ -->
+<section id="estudos">
+  <p class="eyebrow">Os estudos</p>
+  <h2>Onze estudos, quatro grupos</h2>
+  <p>Marque cada estudo quando terminar. As marcações ficam salvas neste navegador.</p>
+  <div class="bar"><span><b id="done-count">0</b> de 11 estudos concluídos</span><span class="track" aria-hidden="true"><i id="done-bar"></i></span><button id="done-reset" type="button">Limpar marcações</button></div>
+
+  <h4>Conhecer a norma</h4>
+  <div class="cards few">
+    <article class="card" id="iso9001">
+      <div class="tiles" aria-hidden="true"><span class="blue">9</span><span class="amber">0</span><span class="teal">0</span><span class="red">1</span></div>
+      <h3>ISO 9001 requisito a requisito</h3>
+      <p>As sete seções de requisitos, item por item: o que a norma pede, a pergunta do auditor e as evidências. Inclui o diagnóstico de atendimento.</p>
+      <p class="ask"><b>Responde a:</b> o que o sistema deve ter, e quanto já atendemos?</p>
+      <p class="facts">14 módulos · 60 min · 10 figuras · planilha com 8 abas</p>
+      <div class="actions">
+        <a class="btn" href="ISO-9001/treinamento-iso-9001.html">Abrir o treinamento</a>
+        <a class="btn ghost" href="ISO-9001/ISO-9001-modelo.xlsx" download>Planilha .xlsx</a>
+      </div>
+      <label class="done-box"><input type="checkbox" data-k="iso9001"><span>Estudo concluído</span></label>
+    </article>
+  </div>
+
+  <h4>Conhecer a organização e planejar</h4>
+  <div class="cards">
+    <article class="card" id="swot">
+      <div class="tiles" aria-hidden="true"><span class="teal">S</span><span class="amber">W</span><span class="blue">O</span><span class="red">T</span></div>
+      <h3>Matriz SWOT</h3>
+      <p>Diagnóstico em quatro quadrantes: forças, fraquezas, oportunidades e ameaças. Inclui a priorização dos fatores e a SWOT cruzada.</p>
+      <p class="ask"><b>Responde a:</b> o que ajuda e o que atrapalha o nosso objetivo?</p>
+      <p class="facts">11 módulos · 35 min · 8 figuras · planilha com 8 abas</p>
+      <div class="actions">
+        <a class="btn" href="SWOT/treinamento-swot.html">Abrir o treinamento</a>
+        <a class="btn ghost" href="SWOT/SWOT-modelo.xlsx" download>Planilha .xlsx</a>
+      </div>
+      <label class="done-box"><input type="checkbox" data-k="swot"><span>Estudo concluído</span></label>
+    </article>
+
+    <article class="card" id="sipoc">
+      <div class="tiles" aria-hidden="true"><span class="blue">S</span><span class="teal">I</span><span class="amber">P</span><span class="purple">O</span><span class="red">C</span></div>
+      <h3>SIPOC</h3>
+      <p>Mapa de processo em alto nível: fornecedores, entradas, processo, saídas e clientes, com os requisitos de cada entrada e de cada saída.</p>
+      <p class="ask"><b>Responde a:</b> quem fornece, o que entra, o que sai e para quem?</p>
+      <p class="facts">10 módulos · 30 min · 6 figuras · planilha com 7 abas</p>
+      <div class="actions">
+        <a class="btn" href="SIPOC/treinamento-sipoc.html">Abrir o treinamento</a>
+        <a class="btn ghost" href="SIPOC/SIPOC-modelo.xlsx" download>Planilha .xlsx</a>
+      </div>
+      <label class="done-box"><input type="checkbox" data-k="sipoc"><span>Estudo concluído</span></label>
+    </article>
+
+    <article class="card" id="raci">
+      <div class="tiles" aria-hidden="true"><span class="teal">R</span><span class="purple">A</span><span class="amber">C</span><span class="slate">I</span></div>
+      <h3>Matriz RACI</h3>
+      <p>Matriz de responsabilidades: quem executa, quem responde pelo resultado, quem é consultado e quem é informado em cada atividade.</p>
+      <p class="ask"><b>Responde a:</b> quem participa de cada atividade, e de que forma?</p>
+      <p class="facts">11 módulos · 30 min · 8 figuras · planilha com 7 abas</p>
+      <div class="actions">
+        <a class="btn" href="RACI/treinamento-raci.html">Abrir o treinamento</a>
+        <a class="btn ghost" href="RACI/RACI-modelo.xlsx" download>Planilha .xlsx</a>
+      </div>
+      <label class="done-box"><input type="checkbox" data-k="raci"><span>Estudo concluído</span></label>
+    </article>
+
+    <article class="card" id="riscos">
+      <div class="tiles" aria-hidden="true"><span class="teal">P</span><span class="slate">I</span></div>
+      <h3>Matriz de riscos</h3>
+      <p>Avaliação por probabilidade e impacto: descrever o risco, medir o nível, escolher a resposta e acompanhar o risco residual. Inclui as oportunidades.</p>
+      <p class="ask"><b>Responde a:</b> o que pode dar errado, e o que fazer antes?</p>
+      <p class="facts">11 módulos · 40 min · 10 figuras · planilha com 8 abas</p>
+      <div class="actions">
+        <a class="btn" href="Riscos/treinamento-riscos.html">Abrir o treinamento</a>
+        <a class="btn ghost" href="Riscos/Riscos-modelo.xlsx" download>Planilha .xlsx</a>
+      </div>
+      <label class="done-box"><input type="checkbox" data-k="riscos"><span>Estudo concluído</span></label>
+    </article>
+  </div>
+
+  <h4>Resolver problemas e melhorar</h4>
+  <div class="cards">
+    <article class="card" id="pdca">
+      <div class="tiles" aria-hidden="true"><span class="blue">P</span><span class="amber">D</span><span class="teal">C</span><span class="red">A</span></div>
+      <h3>PDCA</h3>
+      <p>Ciclo de melhoria em quatro fases e oito etapas: planejar, executar, verificar e agir. É o roteiro em que as outras ferramentas se encaixam.</p>
+      <p class="ask"><b>Responde a:</b> como sair de um resultado e chegar a outro, sem perder o ganho?</p>
+      <p class="facts">11 módulos · 35 min · 7 figuras · planilha com 8 abas</p>
+      <div class="actions">
+        <a class="btn" href="PDCA/treinamento-pdca.html">Abrir o treinamento</a>
+        <a class="btn ghost" href="PDCA/PDCA-modelo.xlsx" download>Planilha .xlsx</a>
+      </div>
+      <label class="done-box"><input type="checkbox" data-k="pdca"><span>Estudo concluído</span></label>
+    </article>
+
+    <article class="card" id="gut">
+      <div class="tiles" aria-hidden="true"><span class="purple">G</span><span class="amber">U</span><span class="teal">T</span></div>
+      <h3>Matriz GUT</h3>
+      <p>Priorização por gravidade, urgência e tendência. Três notas por problema, uma pontuação e uma ordem de tratamento.</p>
+      <p class="ask"><b>Responde a:</b> qual problema tratar primeiro?</p>
+      <p class="facts">11 módulos · 30 min · 8 figuras · planilha com 8 abas</p>
+      <div class="actions">
+        <a class="btn" href="GUT/treinamento-gut.html">Abrir o treinamento</a>
+        <a class="btn ghost" href="GUT/GUT-modelo.xlsx" download>Planilha .xlsx</a>
+      </div>
+      <label class="done-box"><input type="checkbox" data-k="gut"><span>Estudo concluído</span></label>
+    </article>
+
+    <article class="card" id="ishikawa">
+      <div class="tiles" aria-hidden="true"><span class="blue">6</span><span class="blue">M</span></div>
+      <h3>Diagrama de Ishikawa</h3>
+      <p>Análise de causa e efeito em seis categorias, com verificação de cada hipótese e os 5 porquês até a causa raiz.</p>
+      <p class="ask"><b>Responde a:</b> por que o problema acontece?</p>
+      <p class="facts">11 módulos · 35 min · 11 figuras · planilha com 8 abas</p>
+      <div class="actions">
+        <a class="btn" href="Ishikawa/treinamento-ishikawa.html">Abrir o treinamento</a>
+        <a class="btn ghost" href="Ishikawa/Ishikawa-modelo.xlsx" download>Planilha .xlsx</a>
+      </div>
+      <label class="done-box"><input type="checkbox" data-k="ishikawa"><span>Estudo concluído</span></label>
+    </article>
+
+    <article class="card" id="w5h2">
+      <div class="tiles" aria-hidden="true"><span class="blue">5</span><span class="blue">W</span><span class="amber">2</span><span class="amber">H</span></div>
+      <h3>5W2H</h3>
+      <p>Plano de ação em sete perguntas: o quê, por quê, onde, quando, quem, como e quanto. Com acompanhamento e verificação do resultado.</p>
+      <p class="ask"><b>Responde a:</b> o que será feito, por quem, até quando e a que custo?</p>
+      <p class="facts">11 módulos · 30 min · 7 figuras · planilha com 7 abas</p>
+      <div class="actions">
+        <a class="btn" href="5W2H/treinamento-5w2h.html">Abrir o treinamento</a>
+        <a class="btn ghost" href="5W2H/5W2H-modelo.xlsx" download>Planilha .xlsx</a>
+      </div>
+      <label class="done-box"><input type="checkbox" data-k="w5h2"><span>Estudo concluído</span></label>
+    </article>
+  </div>
+
+  <h4>Verificar e corrigir o sistema</h4>
+  <div class="cards few">
+    <article class="card" id="auditoria">
+      <div class="tiles" aria-hidden="true"><span class="teal">C</span><span class="red w">NC</span><span class="amber w">OM</span></div>
+      <h3>Auditoria interna</h3>
+      <p>Programa, plano, lista de verificação e constatações, com base nas diretrizes da ISO 19011. Inclui a redação da não conformidade em três partes.</p>
+      <p class="ask"><b>Responde a:</b> o que foi combinado está sendo feito, e funciona?</p>
+      <p class="facts">12 módulos · 45 min · 9 figuras · planilha com 8 abas</p>
+      <div class="actions">
+        <a class="btn" href="Auditoria/treinamento-auditoria.html">Abrir o treinamento</a>
+        <a class="btn ghost" href="Auditoria/Auditoria-modelo.xlsx" download>Planilha .xlsx</a>
+      </div>
+      <label class="done-box"><input type="checkbox" data-k="auditoria"><span>Estudo concluído</span></label>
+    </article>
+
+    <article class="card" id="nc">
+      <div class="tiles" aria-hidden="true"><span class="red w">NC</span><span class="teal w">AC</span></div>
+      <h3>Não conformidade e ação corretiva</h3>
+      <p>Tratamento em sete etapas: registrar, corrigir, avaliar a abrangência, analisar a causa, agir, verificar a eficácia e encerrar.</p>
+      <p class="ask"><b>Responde a:</b> o que fazer agora, e o que mudar para não acontecer de novo?</p>
+      <p class="facts">11 módulos · 40 min · 9 figuras · planilha com 8 abas</p>
+      <div class="actions">
+        <a class="btn" href="Nao-Conformidade/treinamento-nao-conformidade.html">Abrir o treinamento</a>
+        <a class="btn ghost" href="Nao-Conformidade/RNC-modelo.xlsx" download>Planilha .xlsx</a>
+      </div>
+      <label class="done-box"><input type="checkbox" data-k="nc"><span>Estudo concluído</span></label>
+    </article>
+  </div>
+</section>
+
+<!-- ============================ SEQUÊNCIA ============================ -->
+<section id="sequencia">
+  <p class="eyebrow">Visão de conjunto</p>
+  <h2>Como as ferramentas se encadeiam</h2>
+  <p>A ISO 9001 é o critério de todos os estudos: diz o que o sistema deve ter. Os outros dez trabalham em sequência. Os quatro primeiros descrevem a organização, os seus processos e os seus riscos. Os quatro seguintes tratam os problemas que essa descrição revela. A auditoria interna confere o resultado, e o tratamento de não conformidades leva os desvios de volta ao ciclo.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 520" role="img" aria-label="Sequência dos estudos. No topo, a ISO 9001 é o critério de todos os estudos. Para conhecer e planejar: a Matriz SWOT faz o diagnóstico, o SIPOC mapeia o processo, a Matriz RACI define os papéis e a Matriz de riscos avalia o que pode acontecer. Os problemas encontrados seguem para a Matriz GUT, e as respostas aos riscos seguem para o 5W2H, no ciclo PDCA. Dentro do ciclo: a Matriz GUT escolhe o problema, o Diagrama de Ishikawa encontra as causas, o 5W2H organiza o plano de ação, e o ciclo se completa com a execução, a verificação e a padronização. Para verificar e corrigir o sistema: a auditoria interna confere os processos e as ações, e entrega constatações ao tratamento de não conformidades, que leva os desvios de volta à Matriz GUT.">
+        <defs>
+          <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker>
+        </defs>
+        <a href="#iso9001">
+          <rect class="bx-ink" x="10" y="12" width="880" height="50"/>
+          <rect class="f-blue" x="24" y="28" width="18" height="18"/><rect class="f-amber" x="44" y="28" width="18" height="18"/>
+          <rect class="f-teal" x="64" y="28" width="18" height="18"/><rect class="f-red" x="84" y="28" width="18" height="18"/>
+          <text class="b t-ground" x="114" y="42" font-size="13.5">ISO 9001 requisito a requisito</text>
+          <text class="t-ground" x="876" y="42" font-size="11.5" text-anchor="end">o critério de todos os estudos: o que o sistema deve ter</text>
+        </a>
+        <g transform="translate(0,74)">
+        <text class="mono mu" x="20" y="22" font-size="10">CONHECER E PLANEJAR</text>
+
+        <a href="#swot">
+          <rect class="bx" x="20" y="34" width="200" height="72"/>
+          <rect class="f-teal" x="32" y="48" width="18" height="18"/><rect class="f-amber" x="52" y="48" width="18" height="18"/>
+          <rect class="f-blue" x="72" y="48" width="18" height="18"/><rect class="f-red" x="92" y="48" width="18" height="18"/>
+          <text class="b" x="120" y="62" font-size="13">Matriz SWOT</text>
+          <text class="mu" x="32" y="90" font-size="11.5">Forças, fraquezas e contexto</text>
+        </a>
+        <a href="#sipoc">
+          <rect class="bx" x="240" y="34" width="200" height="72"/>
+          <rect class="f-blue" x="252" y="48" width="18" height="18"/><rect class="f-teal" x="272" y="48" width="18" height="18"/>
+          <rect class="f-amber" x="292" y="48" width="18" height="18"/><rect class="f-purple" x="312" y="48" width="18" height="18"/>
+          <rect class="f-red" x="332" y="48" width="18" height="18"/>
+          <text class="b" x="360" y="62" font-size="13">SIPOC</text>
+          <text class="mu" x="252" y="90" font-size="11.5">O que entra e o que sai</text>
+        </a>
+        <a href="#raci">
+          <rect class="bx" x="460" y="34" width="200" height="72"/>
+          <rect class="f-teal" x="472" y="48" width="18" height="18"/><rect class="f-purple" x="492" y="48" width="18" height="18"/>
+          <rect class="f-amber" x="512" y="48" width="18" height="18"/><rect class="f-slate" x="532" y="48" width="18" height="18"/>
+          <text class="b" x="560" y="62" font-size="13">Matriz RACI</text>
+          <text class="mu" x="472" y="90" font-size="11.5">Quem faz e quem responde</text>
+        </a>
+        <a href="#riscos">
+          <rect class="bx" x="680" y="34" width="200" height="72"/>
+          <rect class="f-teal" x="692" y="48" width="18" height="18"/><rect class="f-slate" x="712" y="48" width="18" height="18"/>
+          <text class="b" x="740" y="62" font-size="13">Matriz de riscos</text>
+          <text class="mu" x="692" y="90" font-size="11.5">O que pode acontecer</text>
+        </a>
+        <line class="ln" x1="222" y1="70" x2="236" y2="70" marker-end="url(#ar)"/>
+        <line class="ln" x1="442" y1="70" x2="456" y2="70" marker-end="url(#ar)"/>
+        <line class="ln" x1="662" y1="70" x2="676" y2="70" marker-end="url(#ar)"/>
+
+        <path class="ln" d="M340 108 V138 H120 V196" marker-end="url(#ar)"/>
+        <text x="230" y="130" font-size="11.5" text-anchor="middle">problemas e fraquezas a tratar</text>
+        <path class="ln" d="M780 108 V138 H562 V196" marker-end="url(#ar)"/>
+        <text x="671" y="130" font-size="11.5" text-anchor="middle">respostas aos riscos</text>
+
+        <rect class="bx-out" x="10" y="162" width="880" height="156"/>
+        <text class="mono mu" x="876" y="182" font-size="10" text-anchor="end">RESOLVER E MELHORAR · CICLO PDCA</text>
+
+        <a href="#gut">
+          <rect class="bx" x="24" y="200" width="196" height="72"/>
+          <rect class="f-purple" x="38" y="214" width="18" height="18"/><rect class="f-amber" x="58" y="214" width="18" height="18"/>
+          <rect class="f-teal" x="78" y="214" width="18" height="18"/>
+          <text class="b" x="108" y="228" font-size="13.5">Matriz GUT</text>
+          <text class="mu" x="38" y="256" font-size="11.5">Qual problema primeiro</text>
+        </a>
+        <a href="#ishikawa">
+          <rect class="bx" x="244" y="200" width="196" height="72"/>
+          <rect class="f-blue" x="258" y="214" width="18" height="18"/><rect class="f-blue" x="278" y="214" width="18" height="18"/>
+          <text class="b" x="308" y="228" font-size="13.5">Ishikawa</text>
+          <text class="mu" x="258" y="256" font-size="11.5">Por que ele acontece</text>
+        </a>
+        <a href="#w5h2">
+          <rect class="bx" x="464" y="200" width="196" height="72"/>
+          <rect class="f-blue" x="478" y="214" width="18" height="18"/><rect class="f-blue" x="498" y="214" width="18" height="18"/>
+          <rect class="f-amber" x="518" y="214" width="18" height="18"/><rect class="f-amber" x="538" y="214" width="18" height="18"/>
+          <text class="b" x="568" y="228" font-size="13.5">5W2H</text>
+          <text class="mu" x="478" y="256" font-size="11.5">O que fazer, e quem faz</text>
+        </a>
+        <a href="#pdca">
+          <rect class="bx-ink" x="684" y="200" width="192" height="72"/>
+          <rect class="f-blue" x="698" y="214" width="18" height="18"/><rect class="f-amber" x="718" y="214" width="18" height="18"/>
+          <rect class="f-teal" x="738" y="214" width="18" height="18"/><rect class="f-red" x="758" y="214" width="18" height="18"/>
+          <text class="b t-ground" x="788" y="228" font-size="13.5">PDCA</text>
+          <text class="t-ground" x="698" y="256" font-size="11.5">Executar, verificar e manter</text>
+        </a>
+        <line class="ln" x1="222" y1="236" x2="240" y2="236" marker-end="url(#ar)"/>
+        <line class="ln" x1="442" y1="236" x2="460" y2="236" marker-end="url(#ar)"/>
+        <line class="ln" x1="662" y1="236" x2="680" y2="236" marker-end="url(#ar)"/>
+        <text class="mu" x="450" y="300" font-size="11.5" text-anchor="middle">a Matriz GUT, o Ishikawa e o 5W2H são as ferramentas da fase de planejamento do ciclo</text>
+
+        <text class="mono mu" x="170" y="346" font-size="10">VERIFICAR E CORRIGIR O SISTEMA</text>
+        <a href="#nc">
+          <rect class="bx" x="170" y="356" width="250" height="72"/>
+          <rect class="f-red" x="184" y="370" width="18" height="18"/><rect class="f-teal" x="204" y="370" width="18" height="18"/>
+          <text class="b" x="234" y="384" font-size="13.5">Não conformidade</text>
+          <text class="mu" x="184" y="412" font-size="11.5">Corrigir, achar a causa e comprovar</text>
+        </a>
+        <a href="#auditoria">
+          <rect class="bx" x="500" y="356" width="250" height="72"/>
+          <rect class="f-teal" x="514" y="370" width="18" height="18"/><rect class="f-red" x="534" y="370" width="18" height="18"/>
+          <rect class="f-amber" x="554" y="370" width="18" height="18"/>
+          <text class="b" x="584" y="384" font-size="13.5">Auditoria interna</text>
+          <text class="mu" x="514" y="412" font-size="11.5">Conforme ou não, com evidência</text>
+        </a>
+        <path class="ln" d="M780 274 V392 H754" marker-end="url(#ar)"/>
+        <text x="790" y="340" font-size="11.5">processos e</text>
+        <text x="790" y="355" font-size="11.5">ações a conferir</text>
+        <line class="ln" x1="498" y1="392" x2="424" y2="392" marker-end="url(#ar)"/>
+        <text x="461" y="383" font-size="11" text-anchor="middle">constatações</text>
+        <path class="ln" d="M168 392 H120 V276" marker-end="url(#ar)"/>
+        <text x="112" y="340" font-size="11.5" text-anchor="end">desvios</text>
+        <text x="112" y="355" font-size="11.5" text-anchor="end">a tratar</text>
+        </g>
+      </svg>
+    </div>
+    <figcaption><b>Sequência sugerida.</b> Cada caixa leva ao cartão do estudo. A ordem é uma referência: os estudos são independentes e podem ser lidos separadamente.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:6%">#</th><th style="width:20%">Estudo</th><th style="width:34%">O que recebe</th><th>O que entrega</th></tr></thead>
+      <tbody>
+        <tr><td class="num">1</td><td><a href="#iso9001"><strong>ISO 9001 requisito a requisito</strong></a></td><td>A prática da organização e o texto da norma</td><td>Percentual de atendimento por seção e lista de lacunas</td></tr>
+        <tr><td class="num">2</td><td><a href="#swot"><strong>Matriz SWOT</strong></a></td><td>Um objetivo e os fatos do ambiente interno e externo</td><td>Fatores priorizados e estratégias</td></tr>
+        <tr><td class="num">3</td><td><a href="#sipoc"><strong>SIPOC</strong></a></td><td>Um processo, com início e fim definidos</td><td>Fornecedores, entradas, macroetapas, saídas e clientes</td></tr>
+        <tr><td class="num">4</td><td><a href="#raci"><strong>Matriz RACI</strong></a></td><td>As atividades do processo</td><td>Os papéis de cada atividade, com um responsável final</td></tr>
+        <tr><td class="num">5</td><td><a href="#riscos"><strong>Matriz de riscos</strong></a></td><td>Um processo, o objetivo dele e as ameaças do contexto</td><td>Riscos com nível, resposta e risco residual</td></tr>
+        <tr><td class="num">6</td><td><a href="#gut"><strong>Matriz GUT</strong></a></td><td>Uma lista de problemas</td><td>A ordem de tratamento</td></tr>
+        <tr><td class="num">7</td><td><a href="#ishikawa"><strong>Diagrama de Ishikawa</strong></a></td><td>Um problema, com número, local e período</td><td>Causas confirmadas e causa raiz</td></tr>
+        <tr><td class="num">8</td><td><a href="#w5h2"><strong>5W2H</strong></a></td><td>As causas confirmadas ou as decisões a implantar</td><td>Plano de ação, com responsável, prazo e custo</td></tr>
+        <tr><td class="num">9</td><td><a href="#pdca"><strong>PDCA</strong></a></td><td>Um problema e uma meta</td><td>Resultado verificado e novo padrão</td></tr>
+        <tr><td class="num">10</td><td><a href="#auditoria"><strong>Auditoria interna</strong></a></td><td>Um processo, os critérios e o programa de auditoria</td><td>Constatações com evidência e conclusão da auditoria</td></tr>
+        <tr><td class="num">11</td><td><a href="#nc"><strong>Não conformidade e ação corretiva</strong></a></td><td>Uma não conformidade, com requisito e evidência</td><td>Causa eliminada e eficácia comprovada</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ ISO ============================ -->
+<section id="iso">
+  <p class="eyebrow">Para a auditoria</p>
+  <h2>Ligação com a ISO 9001:2015</h2>
+  <p>A auditoria interna e o tratamento de não conformidades são exigidos pela norma, nos requisitos 9.2 e 10.2. As outras ferramentas não são exigidas: elas ajudam a atender a requisitos e a mostrar como a organização decide. A tabela indica os requisitos tratados no módulo sobre as normas de cada estudo. O estudo da ISO 9001 percorre todos.</p>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:20%">Estudo</th><th style="width:30%">Requisitos mais ligados</th><th>Como a ferramenta ajuda</th></tr></thead>
+      <tbody>
+        <tr><td><a href="ISO-9001/treinamento-iso-9001.html"><strong>ISO 9001 requisito a requisito</strong></a></td><td>Seções 4 a 10, com os 45 requisitos do estudo</td><td>Percorre todos os requisitos e avalia o atendimento de cada um.</td></tr>
+        <tr><td><a href="SWOT/treinamento-swot.html#iso"><strong>Matriz SWOT</strong></a></td><td>4.1 Contexto · 4.2 Partes interessadas · 6.1 Riscos e oportunidades</td><td>Organiza as questões internas e externas e alimenta os riscos e as oportunidades.</td></tr>
+        <tr><td><a href="Riscos/treinamento-riscos.html#iso"><strong>Matriz de riscos</strong></a></td><td>6.1 Riscos e oportunidades · 6.3 Mudanças · 10.2 Atualização dos riscos</td><td>Mostra como os riscos foram determinados, que resposta cada um recebeu e se ela funcionou.</td></tr>
+        <tr><td><a href="RACI/treinamento-raci.html#iso"><strong>Matriz RACI</strong></a></td><td>5.3 Papéis, responsabilidades e autoridades · 4.4 Processos</td><td>Mostra quem executa e quem decide, atividade por atividade.</td></tr>
+        <tr><td><a href="PDCA/treinamento-pdca.html#iso"><strong>PDCA</strong></a></td><td>Estrutura das seções 4 a 10 · 10.2 Ação corretiva</td><td>É a lógica da própria norma, e a do tratamento de não conformidades.</td></tr>
+        <tr><td><a href="GUT/treinamento-gut.html#iso"><strong>Matriz GUT</strong></a></td><td>6.1 Riscos e oportunidades · 9.2 Auditoria interna · 10.2 Ação corretiva</td><td>Dá um critério para a ordem e os prazos de tratamento.</td></tr>
+        <tr><td><a href="Ishikawa/treinamento-ishikawa.html#iso"><strong>Diagrama de Ishikawa</strong></a></td><td>10.2 Não conformidade e ação corretiva · 9.1 Análise e avaliação</td><td>Registra a análise de causa: hipóteses, verificação e causas confirmadas.</td></tr>
+        <tr><td><a href="5W2H/treinamento-5w2h.html#iso"><strong>5W2H</strong></a></td><td>6.2 Objetivos e planos · 6.3 Mudanças · 10.2 Ação corretiva</td><td>Registra o que será feito, por quem, até quando e com que recursos.</td></tr>
+        <tr><td><a href="Auditoria/treinamento-auditoria.html#iso"><strong>Auditoria interna</strong></a></td><td>9.2 Auditoria interna · 9.3 Análise crítica pela direção · 10.2 Ação corretiva</td><td>Organiza o programa, o plano e as constatações, com as diretrizes da ISO 19011:2018.</td></tr>
+        <tr><td><a href="Nao-Conformidade/treinamento-nao-conformidade.html#iso"><strong>Não conformidade e ação corretiva</strong></a></td><td>10.2 Não conformidade e ação corretiva · 8.7 Saídas não conformes · 9.3 Análise crítica pela direção</td><td>Organiza o registro, a análise da causa, o plano de ação e a verificação da eficácia.</td></tr>
+        <tr><td><a href="SIPOC/treinamento-sipoc.html"><strong>SIPOC</strong></a></td><td>4.4 Processos do sistema de gestão</td><td>Descreve as entradas e as saídas de cada processo. Este estudo não tem módulo sobre a norma.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note">
+    <h4>Pontos de atenção</h4>
+    <p>Os estudos usam a numeração da ISO 9001:2015 e resumem os requisitos com palavras próprias. Confira sempre a edição vigente da norma antes de citar um requisito em relatório.</p>
+  </div>
+</section>
+
+</main>
+
+<footer>Material de estudo. Os exemplos, números e indicadores dos treinamentos são ilustrativos e foram criados para fins didáticos. As referências às normas ISO são resumos para estudo e não substituem o texto das normas.</footer>
+</div>
+
+<script>
+(function () {
+  var KEY = 'estudos-concluidos';
+  function read() { try { return JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch (e) { return {}; } }
+  function write(v) { try { localStorage.setItem(KEY, JSON.stringify(v)); } catch (e) {} }
+
+  var boxes = Array.prototype.slice.call(document.querySelectorAll('.done-box input'));
+  var count = document.getElementById('done-count');
+  var bar = document.getElementById('done-bar');
+  var state = read();
+
+  function refresh() {
+    var n = 0;
+    boxes.forEach(function (b) {
+      var card = b.closest('.card');
+      if (b.checked) { n++; card.classList.add('done'); } else { card.classList.remove('done'); }
+      state[b.getAttribute('data-k')] = b.checked;
+    });
+    count.textContent = n;
+    bar.style.width = (n / boxes.length * 100) + '%';
+  }
+  boxes.forEach(function (b) {
+    if (state[b.getAttribute('data-k')]) { b.checked = true; }
+    b.addEventListener('change', function () { refresh(); write(state); });
+  });
+  refresh();
+  document.getElementById('done-reset').addEventListener('click', function () {
+    boxes.forEach(function (b) { b.checked = false; });
+    refresh(); write(state);
+  });
+})();
+</script>
+</body>
+</html>

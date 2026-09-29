@@ -1,0 +1,771 @@
+<body>
+<div class="page" lang="pt-BR">
+
+<header class="mast">
+  <div class="tiles" aria-hidden="true"><span class="tp">P</span><span class="ti">I</span></div>
+  <h1>Matriz de riscos na prática</h1>
+  <p class="lead">Um guia de estudo para levantar o que pode dar errado, e o que pode dar certo, antes que aconteça: descrever o risco, avaliar a probabilidade e o impacto, decidir a resposta e conferir se ela funcionou.</p>
+  <ul class="meta">
+    <li>Treinamento autoinstrucional</li>
+    <li>11 módulos</li>
+    <li>Leitura de cerca de 40 minutos</li>
+    <li>3 exemplos resolvidos e 2 exercícios</li>
+  </ul>
+</header>
+
+<div class="layout">
+
+<nav class="toc" aria-label="Sumário">
+  <h2>Sumário</h2>
+  <ol>
+    <li><a href="#o-que-e">O que é</a></li>
+    <li><a href="#quando">Quando usar</a></li>
+    <li><a href="#como">Como construir</a></li>
+    <li><a href="#exemplos">Exemplos resolvidos</a></li>
+    <li><a href="#tratamento">Resposta e risco residual</a></li>
+    <li><a href="#erros">Erros comuns</a></li>
+    <li><a href="#ferramentas">A matriz e outras ferramentas</a></li>
+    <li><a href="#iso">Nas normas ISO</a></li>
+    <li><a href="#oficina">A oficina de riscos</a></li>
+    <li><a href="#pratique">Pratique</a></li>
+    <li><a href="#planilha">A planilha de apoio</a></li>
+    <li><a href="#glossario">Glossário</a></li>
+  </ol>
+</nav>
+
+<main>
+
+<!-- ============================ MÓDULO 1 ============================ -->
+<section id="o-que-e">
+  <p class="eyebrow">Módulo 1</p>
+  <h2>O que é</h2>
+  <p>Risco é o efeito da incerteza sobre um objetivo. Em palavras simples: algo que pode acontecer e, se acontecer, afasta a organização do resultado que ela quer. A matriz de riscos organiza esses eventos por duas medidas, a probabilidade de acontecer e o impacto se acontecer, e mostra onde agir primeiro.</p>
+  <p>A matriz leva o nome das duas medidas. As letras deste estudo são <span class="k tp">P</span>, de probabilidade, e <span class="k ti">I</span>, de impacto. O nível do risco é o produto das duas.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 232" role="img" aria-label="As três partes de um risco. A causa é o que existe hoje: um só fornecedor de resina. O evento é o que pode acontecer: o fornecedor deixa de entregar. A consequência é o efeito sobre o objetivo: parada da produção por falta de material. A frase completa é: por causa de um só fornecedor de resina, o fornecedor pode deixar de entregar, o que leva à parada da produção.">
+        <defs>
+          <marker id="a1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker>
+        </defs>
+        <g>
+          <rect class="bx" x="10" y="20" width="270" height="140"/><rect class="hd-ink" x="10" y="20" width="270" height="40"/>
+          <text class="disp t-ground" x="28" y="49" font-size="22">1</text>
+          <text class="b t-ground" x="52" y="46" font-size="14">Causa</text>
+          <text class="mu" x="28" y="86" font-size="11.5">O que existe hoje.</text>
+          <line class="ln-mu" x1="28" y1="100" x2="262" y2="100" stroke-width="1" opacity=".5"/>
+          <text x="28" y="126" font-size="12">Um só fornecedor de resina.</text>
+        </g>
+        <line class="ln" x1="282" y1="90" x2="311" y2="90" marker-end="url(#a1)"/>
+        <g>
+          <rect class="bx" x="315" y="20" width="270" height="140"/><rect class="hd-ink" x="315" y="20" width="270" height="40"/>
+          <text class="disp t-ground" x="333" y="49" font-size="22">2</text>
+          <text class="b t-ground" x="357" y="46" font-size="14">Evento</text>
+          <text class="mu" x="333" y="86" font-size="11.5">O que pode acontecer.</text>
+          <line class="ln-mu" x1="333" y1="100" x2="567" y2="100" stroke-width="1" opacity=".5"/>
+          <text x="333" y="126" font-size="12">O fornecedor deixa de entregar.</text>
+        </g>
+        <line class="ln" x1="587" y1="90" x2="616" y2="90" marker-end="url(#a1)"/>
+        <g>
+          <rect class="bx" x="620" y="20" width="270" height="140"/><rect class="hd-ink" x="620" y="20" width="270" height="40"/>
+          <text class="disp t-ground" x="638" y="49" font-size="22">3</text>
+          <text class="b t-ground" x="662" y="46" font-size="14">Consequência</text>
+          <text class="mu" x="638" y="86" font-size="11.5">O efeito sobre o objetivo.</text>
+          <line class="ln-mu" x1="638" y1="100" x2="872" y2="100" stroke-width="1" opacity=".5"/>
+          <text x="638" y="126" font-size="12">Parada da produção</text>
+          <text x="638" y="143" font-size="12">por falta de material.</text>
+        </g>
+        <text class="mu" x="145" y="186" font-size="11.5" text-anchor="middle">onde age a prevenção</text>
+        <text class="mu" x="450" y="186" font-size="11.5" text-anchor="middle">o que recebe a probabilidade</text>
+        <text class="mu" x="755" y="186" font-size="11.5" text-anchor="middle">o que recebe o impacto</text>
+        <text x="450" y="216" font-size="12" text-anchor="middle">“Por causa de <tspan class="b">causa</tspan>, pode acontecer <tspan class="b">evento</tspan>, o que leva a <tspan class="b">consequência</tspan>.”</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 1.</b> As três partes de um risco, com um exemplo do processo de compras. “Falta de material” sozinho não é um risco bem descrito: não diz por que pode faltar nem o que acontece se faltar.</figcaption>
+  </figure>
+
+  <p>A palavra incerteza vale para os dois lados. Quando o efeito possível é bom, o evento é uma oportunidade, e a lógica é a mesma: estimar a chance, estimar o benefício e decidir se vale agir. A ISO 9001 trata os dois juntos, no requisito 6.1.</p>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:22%">Termo</th><th style="width:40%">O que é</th><th>Exemplo</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Risco</strong></td><td>Evento incerto que, se acontecer, prejudica um objetivo.</td><td>O fornecedor único pode deixar de entregar.</td></tr>
+        <tr><td><strong>Oportunidade</strong></td><td>Evento incerto que, se acontecer, favorece um objetivo.</td><td>Um cliente pode aumentar os pedidos depois da certificação.</td></tr>
+        <tr><td><strong>Probabilidade</strong></td><td>A chance de o evento acontecer no período analisado.</td><td>Cerca de uma vez por ano.</td></tr>
+        <tr><td><strong>Impacto</strong></td><td>O tamanho da consequência para o objetivo.</td><td>Parada da produção.</td></tr>
+        <tr><td><strong>Nível do risco</strong></td><td>A combinação da probabilidade com o impacto.</td><td>Probabilidade 4 × impacto 5 = 20, crítico.</td></tr>
+        <tr><td><strong>Risco residual</strong></td><td>O nível que sobra depois da resposta ao risco.</td><td>Com um segundo fornecedor e estoque mínimo: 2 × 3 = 6, médio.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 2 ============================ -->
+<section id="quando">
+  <p class="eyebrow">Módulo 2</p>
+  <h2>Quando usar</h2>
+  <p>A matriz olha para a frente. Ela serve para o que ainda não aconteceu, e por isso entra no planejamento e antes das mudanças. O que já aconteceu é outro assunto, com outra ferramenta.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 236" role="img" aria-label="A linha do tempo separa três situações. À esquerda de hoje está o que já aconteceu: é um problema, e o tratamento é o de não conformidade e ação corretiva. À direita de hoje está o que pode acontecer. Se o efeito for ruim, é um risco, e a resposta é tratar. Se o efeito for bom, é uma oportunidade, e a resposta é aproveitar.">
+        <defs>
+          <marker id="a2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker>
+        </defs>
+        <text class="mono mu" x="20" y="20" font-size="10">JÁ ACONTECEU</text>
+        <text class="mono mu" x="400" y="20" font-size="10">PODE ACONTECER</text>
+        <line class="ln-mu dash" x1="370" y1="10" x2="370" y2="226"/>
+        <text class="b" x="370" y="126" font-size="11.5" text-anchor="middle" style="paint-order:stroke;stroke:var(--surface);stroke-width:8px">hoje</text>
+
+        <rect class="bx" x="20" y="78" width="320" height="96"/>
+        <text class="b" x="36" y="104" font-size="13.5">Problema</text>
+        <text class="mu" x="36" y="126" font-size="11.5">Quatro requisições chegaram sem</text>
+        <text class="mu" x="36" y="142" font-size="11.5">especificação na semana passada.</text>
+        <text x="36" y="164" font-size="11.5">Tratar como <tspan class="b">não conformidade</tspan></text>
+
+        <rect class="bx-l3" x="400" y="32" width="300" height="84"/>
+        <text class="b" x="416" y="58" font-size="13.5">Risco</text>
+        <text class="mu" x="416" y="80" font-size="11.5">O fornecedor único pode deixar de entregar.</text>
+        <text class="mu" x="416" y="100" font-size="11.5">Efeito ruim para o objetivo.</text>
+        <line class="ln" x1="702" y1="74" x2="736" y2="74" marker-end="url(#a2)"/>
+        <rect class="bx" x="740" y="46" width="140" height="56"/>
+        <text class="b" x="810" y="70" font-size="12.5" text-anchor="middle">Tratar</text>
+        <text class="mu" x="810" y="88" font-size="11" text-anchor="middle">matriz de riscos</text>
+
+        <rect class="bx-l1" x="400" y="136" width="300" height="84"/>
+        <text class="b" x="416" y="162" font-size="13.5">Oportunidade</text>
+        <text class="mu" x="416" y="184" font-size="11.5">Um cliente pode pedir uma linha nova.</text>
+        <text class="mu" x="416" y="204" font-size="11.5">Efeito bom para o objetivo.</text>
+        <line class="ln" x1="702" y1="178" x2="736" y2="178" marker-end="url(#a2)"/>
+        <rect class="bx" x="740" y="150" width="140" height="56"/>
+        <text class="b" x="810" y="174" font-size="12.5" text-anchor="middle">Aproveitar</text>
+        <text class="mu" x="810" y="192" font-size="11" text-anchor="middle">lista de oportunidades</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 2.</b> Problema, risco e oportunidade. O que já aconteceu segue para o estudo de <a href="../Nao-Conformidade/treinamento-nao-conformidade.html">Não conformidade e ação corretiva</a>. A matriz fica com o que ainda pode acontecer.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:30%">Momento</th><th style="width:36%">Por que usar a matriz</th><th>Exemplo</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Planejamento do sistema</strong></td><td>É o que o requisito 6.1 pede: considerar os riscos e as oportunidades ao planejar.</td><td>Revisão anual dos riscos de cada processo.</td></tr>
+        <tr><td><strong>Antes de uma mudança</strong></td><td>Toda mudança traz riscos novos, e o requisito 6.3 pede que ela seja planejada.</td><td>Troca do sistema de pedidos da loja.</td></tr>
+        <tr><td><strong>Processo, produto ou fornecedor novo</strong></td><td>Falta histórico, e a incerteza é maior.</td><td>Início das vendas por aplicativo.</td></tr>
+        <tr><td><strong>Depois de uma não conformidade</strong></td><td>O que aconteceu mostra que o risco era maior do que se pensava.</td><td>Reavaliação do risco de compra errada, depois do RNC 2026-31.</td></tr>
+        <tr><td><strong>Revisão do contexto</strong></td><td>As ameaças e as oportunidades da SWOT viram riscos e oportunidades a tratar.</td><td>Nova exigência legal, novo concorrente.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pair">
+    <div class="box">
+      <h4>Use a matriz quando</h4>
+      <ul>
+        <li>O evento ainda não aconteceu, ou pode voltar a acontecer.</li>
+        <li>Há vários riscos, e é preciso escolher onde agir.</li>
+        <li>A decisão precisa ficar registrada e ser revista.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h4>Use outra ferramenta quando</h4>
+      <ul>
+        <li>O problema já aconteceu: trate como não conformidade.</li>
+        <li>Você precisa escolher entre problemas atuais: use a <a href="../GUT/treinamento-gut.html">Matriz GUT</a>.</li>
+        <li>Você quer entender as causas de um efeito: use o <a href="../Ishikawa/treinamento-ishikawa.html">Diagrama de Ishikawa</a>.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 3 ============================ -->
+<section id="como">
+  <p class="eyebrow">Módulo 3</p>
+  <h2>Como construir</h2>
+  <p>A construção tem sete etapas. As quatro do meio formam a avaliação do risco. A sequência acompanha o processo descrito na ISO 31000, a norma de diretrizes para gestão de riscos.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 214" role="img" aria-label="As sete etapas da matriz de riscos: 1, definir o escopo e as escalas; 2, identificar os riscos; 3, descrever cada risco; 4, analisar a probabilidade e o impacto; 5, avaliar o nível; 6, responder ao risco; 7, acompanhar e revisar. As etapas 2 a 5 formam a avaliação do risco. A revisão periódica leva de volta da etapa 7 para a etapa 2.">
+        <defs>
+          <marker id="a3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker>
+          <marker id="a3m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah-mu" d="M0 0 L10 5 L0 10 z"/></marker>
+        </defs>
+        <path class="ln-mu dash" d="M828 46 V24 H198 V44" marker-end="url(#a3m)"/>
+        <text class="mu" x="513" y="16" font-size="11" text-anchor="middle">revisão periódica, ou depois de uma mudança</text>
+        <g font-size="12" text-anchor="middle">
+          <rect class="bx" x="15" y="50" width="114" height="70"/><text class="mono mu" x="25" y="67" font-size="10" text-anchor="start">1</text><text class="b" x="72" y="88">Definir</text><text x="72" y="105">escopo e escalas</text>
+          <rect class="bx" x="141" y="50" width="114" height="70"/><text class="mono mu" x="151" y="67" font-size="10" text-anchor="start">2</text><text class="b" x="198" y="88">Identificar</text><text x="198" y="105">os riscos</text>
+          <rect class="bx" x="267" y="50" width="114" height="70"/><text class="mono mu" x="277" y="67" font-size="10" text-anchor="start">3</text><text class="b" x="324" y="88">Descrever</text><text x="324" y="105">cada risco</text>
+          <rect class="bx" x="393" y="50" width="114" height="70"/><text class="mono mu" x="403" y="67" font-size="10" text-anchor="start">4</text><text class="b" x="450" y="88">Analisar</text><text x="450" y="105">P e I</text>
+          <rect class="bx" x="519" y="50" width="114" height="70"/><text class="mono mu" x="529" y="67" font-size="10" text-anchor="start">5</text><text class="b" x="576" y="88">Avaliar</text><text x="576" y="105">o nível</text>
+          <rect class="bx-ink" x="645" y="50" width="114" height="70"/><text class="mono t-ground" x="655" y="67" font-size="10" text-anchor="start">6</text><text class="b t-ground" x="702" y="88">Responder</text><text class="t-ground" x="702" y="105">ao risco</text>
+          <rect class="bx" x="771" y="50" width="114" height="70"/><text class="mono mu" x="781" y="67" font-size="10" text-anchor="start">7</text><text class="b" x="828" y="88">Acompanhar</text><text x="828" y="105">e revisar</text>
+        </g>
+        <g>
+          <line class="ln" x1="130" y1="85" x2="138" y2="85" marker-end="url(#a3)"/><line class="ln" x1="256" y1="85" x2="264" y2="85" marker-end="url(#a3)"/>
+          <line class="ln" x1="382" y1="85" x2="390" y2="85" marker-end="url(#a3)"/><line class="ln" x1="508" y1="85" x2="516" y2="85" marker-end="url(#a3)"/>
+          <line class="ln" x1="634" y1="85" x2="642" y2="85" marker-end="url(#a3)"/><line class="ln" x1="760" y1="85" x2="768" y2="85" marker-end="url(#a3)"/>
+        </g>
+        <path class="ln" d="M141 140 V148 H633 V140"/>
+        <text x="387" y="170" font-size="11.5" text-anchor="middle"><tspan class="b">Avaliação do risco</tspan></text>
+        <text class="mu" x="387" y="187" font-size="11" text-anchor="middle">o que pode acontecer, com que chance e com que efeito</text>
+        <path class="ln" d="M645 140 V148 H759 V140"/>
+        <text x="702" y="170" font-size="11.5" text-anchor="middle"><tspan class="b">Tratamento</tspan></text>
+        <text class="mu" x="702" y="187" font-size="11" text-anchor="middle">o que fazer</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 3.</b> As sete etapas. A seta tracejada é a revisão: a matriz não é um documento que se faz uma vez.</figcaption>
+  </figure>
+
+  <h3>Passo a passo</h3>
+  <ol class="steps">
+    <li><h4>Defina o escopo e as escalas</h4><p>Escolha o processo e o objetivo que ele precisa alcançar. Escreva as escalas de probabilidade e de impacto antes de levantar os riscos, para que todos deem a mesma nota ao mesmo fato.</p></li>
+    <li><h4>Identifique os riscos</h4><p>Reúna quem executa o processo e pergunte o que pode impedir o objetivo. Percorra as etapas do <a href="../SIPOC/treinamento-sipoc.html">SIPOC</a> e as ameaças da <a href="../SWOT/treinamento-swot.html">Matriz SWOT</a>. Nesta etapa, vale quantidade.</p></li>
+    <li><h4>Descreva cada risco</h4><p>Escreva a causa, o evento e a consequência. Separe o que já aconteceu, que é problema, e junte os riscos repetidos.</p></li>
+    <li><h4>Analise a probabilidade e o impacto</h4><p>Dê as duas notas com base em fatos: quantas vezes aconteceu, aqui ou em empresas parecidas, e o que custou. Anote a justificativa de cada nota.</p></li>
+    <li><h4>Avalie o nível</h4><p>Multiplique as duas notas e leia o nível na matriz. Olhe com atenção os riscos de impacto 5, mesmo com probabilidade baixa.</p></li>
+    <li><h4>Responda ao risco</h4><p>Escolha entre evitar, reduzir, compartilhar e aceitar. Para as três primeiras, defina a ação, o responsável e o prazo, com o <a href="../5W2H/treinamento-5w2h.html">5W2H</a>. Estime o risco residual.</p></li>
+    <li><h4>Acompanhe e revise</h4><p>Confira se as ações foram feitas e se o risco caiu. Revise a matriz em data marcada e sempre que houver mudança, não conformidade ou fato novo.</p></li>
+  </ol>
+
+  <h3>As escalas</h3>
+  <p>As escalas abaixo são uma convenção deste material, pensada para uma organização pequena ou média. Cada organização deve ajustar as descrições à sua realidade, e manter as mesmas em todos os processos.</p>
+<!--ESCALAS-->
+
+  <h3>A matriz</h3>
+  <figure>
+    <div class="scroll">
+<!--MATRIZ-->
+    </div>
+    <figcaption><b>Figura 4.</b> A matriz de probabilidade e impacto, com os pontos e o nível de cada combinação. O nível aparece escrito em cada célula: a cor ajuda, mas não é a única indicação.</figcaption>
+  </figure>
+<!--CONDUTA-->
+
+  <div class="note">
+    <h4>Regra prática</h4>
+    <p>A multiplicação trata como iguais um risco raro e grave e um risco frequente e leve. Eles não são iguais: o primeiro pode fechar a empresa. Por isso, todo risco de impacto 5 pede um plano de contingência, qualquer que seja o nível.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 4 ============================ -->
+<section id="exemplos">
+  <p class="eyebrow">Módulo 4</p>
+  <h2>Exemplos resolvidos</h2>
+  <p>Duas matrizes de riscos e uma lista de oportunidades. As organizações são as dos outros estudos da série, e as duas matrizes também estão preenchidas na planilha de apoio. Os dados são ilustrativos e foram criados para este treinamento.</p>
+
+  <h3>Exemplo 1. Riscos do delivery da pizzaria</h3>
+<!--EX1-->
+  <p><strong>O que observar.</strong> Três riscos têm impacto 5: a câmara fria, o acidente e o alergênico. Depois das ações, os três caem para o nível médio, mas continuam com impacto 5, porque a ação reduz a chance, e não a gravidade. São os riscos que pedem plano de contingência. O risco do preço dos insumos foi aceito: a loja não tem como agir sobre a causa, e registrou a decisão.</p>
+
+  <h3>Exemplo 2. Riscos do processo de compras</h3>
+<!--EX2-->
+  <figure>
+    <div class="scroll">
+<!--MAPA2-->
+    </div>
+    <figcaption><b>Figura 5.</b> Os oito riscos do exemplo 2 na matriz, antes das respostas. Cinco estão nas faixas alta e crítica.</figcaption>
+  </figure>
+  <p><strong>O que observar.</strong> O risco C2 é o mesmo tratado no estudo de <a href="../Nao-Conformidade/treinamento-nao-conformidade.html#exemplos">Não conformidade e ação corretiva</a>: a falha aconteceu, virou RNC, e o requisito 10.2 mandou atualizar o risco. O risco C6 tem impacto 5 e foi aceito, porque os controles que existem já levam a probabilidade ao mínimo. Aceitar não é esquecer: a decisão está registrada, e a auditoria confere o controle.</p>
+
+  <h3>Exemplo 3. Oportunidades da indústria</h3>
+  <dl class="ficha">
+    <div><dt>Organização</dt><dd>Indústria de embalagens plásticas</dd></div>
+    <div><dt>Origem</dt><dd>Oportunidades da Matriz SWOT e reunião de análise crítica</dd></div>
+    <div><dt>Medidas</dt><dd>Probabilidade de se concretizar e benefício, de 1 a 5</dd></div>
+  </dl>
+<!--OPORT-->
+  <p><strong>O que observar.</strong> A oportunidade usa a mesma conta do risco, com o benefício no lugar do impacto. A decisão de não agir na quarta oportunidade também é uma resposta, e fica registrada. As duas primeiras geram projetos, com os riscos deles: aproveitar uma oportunidade quase sempre cria riscos novos.</p>
+</section>
+
+<!-- ============================ MÓDULO 5 ============================ -->
+<section id="tratamento">
+  <p class="eyebrow">Módulo 5</p>
+  <h2>Resposta e risco residual</h2>
+  <p>Avaliar o risco não muda nada. O que muda é a resposta. Há quatro respostas possíveis, e a escolha depende de onde a organização consegue agir: na causa, na consequência ou em nenhuma das duas.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 300" role="img" aria-label="As quatro respostas no plano de probabilidade e impacto. A partir do risco inicial, reduzir a probabilidade desloca o risco para a esquerda, agindo sobre a causa. Reduzir o impacto ou compartilhar desloca o risco para baixo, agindo sobre a consequência. Evitar leva a probabilidade ao mínimo. Aceitar mantém o risco onde está, com acompanhamento.">
+        <defs>
+          <marker id="a5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker>
+          <marker id="a5m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah-mu" d="M0 0 L10 5 L0 10 z"/></marker>
+        </defs>
+        <line class="ln-mu" x1="90" y1="250" x2="470" y2="250" marker-end="url(#a5m)"/>
+        <line class="ln-mu" x1="90" y1="250" x2="90" y2="26" marker-end="url(#a5m)"/>
+        <text class="mono mu" x="280" y="278" font-size="10" text-anchor="middle">PROBABILIDADE</text>
+        <text class="mono mu" x="60" y="140" font-size="10" text-anchor="middle" transform="rotate(-90 60 140)">IMPACTO</text>
+
+        <circle cx="400" cy="80" r="9" fill="none" stroke="var(--ink)" stroke-width="2"/>
+        <text class="b" x="416" y="72" font-size="12">risco inicial</text>
+
+        <line class="ln" x1="388" y1="80" x2="236" y2="80" marker-end="url(#a5)"/>
+        <circle class="root" cx="222" cy="80" r="8"/>
+        <text class="b" x="312" y="52" font-size="11.5" text-anchor="middle">Reduzir a probabilidade</text>
+        <text class="mu" x="312" y="68" font-size="11" text-anchor="middle">agir sobre a causa</text>
+
+        <line class="ln" x1="400" y1="92" x2="400" y2="186" marker-end="url(#a5)"/>
+        <circle class="root" cx="400" cy="200" r="8"/>
+        <text class="b" x="414" y="140" font-size="11.5">Reduzir o impacto</text>
+        <text class="mu" x="414" y="156" font-size="11">ou compartilhar</text>
+
+        <path class="ln dash" d="M392 88 Q250 150 124 86" marker-end="url(#a5)"/>
+        <circle class="root" cx="112" cy="80" r="8"/>
+        <text class="b" x="112" y="60" font-size="11.5" text-anchor="middle">Evitar</text>
+        <text class="mu" x="250" y="146" font-size="11" text-anchor="middle">impedir que aconteça</text>
+
+        <g font-size="12">
+          <rect class="bx" x="520" y="20" width="360" height="58"/><text class="b" x="536" y="44">Evitar</text><text class="mu" x="536" y="64" font-size="11.5">Não fazer, ou impedir que aconteça.</text>
+          <rect class="bx" x="520" y="88" width="360" height="58"/><text class="b" x="536" y="112">Reduzir</text><text class="mu" x="536" y="132" font-size="11.5">Agir sobre a causa ou sobre a consequência.</text>
+          <rect class="bx" x="520" y="156" width="360" height="58"/><text class="b" x="536" y="180">Compartilhar</text><text class="mu" x="536" y="200" font-size="11.5">Dividir o efeito, por contrato ou seguro.</text>
+          <rect class="bx" x="520" y="224" width="360" height="58"/><text class="b" x="536" y="248">Aceitar</text><text class="mu" x="536" y="268" font-size="11.5">Não agir agora, registrar a decisão e acompanhar.</text>
+        </g>
+      </svg>
+    </div>
+    <figcaption><b>Figura 6.</b> As quatro respostas. Agir sobre a causa desloca o risco para a esquerda. Agir sobre a consequência desloca para baixo. O ponto preenchido é o risco residual.</figcaption>
+  </figure>
+
+<!--RESPOSTAS-->
+
+  <h3>O risco residual</h3>
+  <p>Depois de definir a resposta, o grupo estima de novo a probabilidade e o impacto, já contando com a ação. O resultado é o risco residual. Se ele continua alto, a resposta foi pequena para o risco.</p>
+
+  <figure id="fig-dots">
+    <div class="scroll">
+<!--CHART-->
+    </div>
+    <div class="tip" id="dots-tip" hidden></div>
+    <figcaption><b>Figura 7.</b> Risco inicial e risco residual dos oito riscos do exemplo 2, em pontos. Nenhum risco fica nas faixas alta ou crítica depois das respostas. Os dois riscos aceitos não se movem. Passe o mouse sobre o gráfico para ver os valores.</figcaption>
+    <details class="data">
+      <summary>Ver os dados em tabela</summary>
+      <div class="tbl">
+<!--CHARTTABLE-->
+      </div>
+    </details>
+  </figure>
+
+  <div class="note">
+    <h4>Estimativa e fato</h4>
+    <p>O risco residual é uma estimativa, feita antes de a ação existir. A ISO 9001 pede que a organização avalie a eficácia das ações. Quando a ação estiver implantada, confira com fatos se a probabilidade ou o impacto caíram, e ajuste as notas.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 6 ============================ -->
+<section id="erros">
+  <p class="eyebrow">Módulo 6</p>
+  <h2>Erros comuns</h2>
+  <div class="errs">
+    <div><h4>Descrever o risco em duas palavras</h4><p>“Falta de material.”</p><p class="fix"><b>Correção:</b> escreva a causa, o evento e a consequência. É a causa que mostra onde agir.</p></div>
+    <div><h4>Listar problemas como riscos</h4><p>“Risco: requisições chegam sem especificação.”</p><p class="fix"><b>Correção:</b> o que já acontece é não conformidade. Trate a falha, e avalie o risco de ela voltar.</p></div>
+    <div><h4>Dar nota por impressão</h4><p>Cada pessoa dá uma nota diferente para o mesmo risco.</p><p class="fix"><b>Correção:</b> escreva as escalas antes, e peça o fato que sustenta cada nota.</p></div>
+    <div><h4>Confiar só na multiplicação</h4><p>O risco de acidente recebe 5 pontos e fica no fim da lista.</p><p class="fix"><b>Correção:</b> olhe o impacto 5 em separado. Risco raro e grave pede plano de contingência.</p></div>
+    <div><h4>Fazer a matriz para a auditoria</h4><p>A planilha é preenchida uma vez e guardada.</p><p class="fix"><b>Correção:</b> marque a data de revisão, e reavalie a cada mudança ou não conformidade.</p></div>
+    <div><h4>Responder com o que já existe</h4><p>“Ação: manter os controles atuais.”</p><p class="fix"><b>Correção:</b> se o controle atual bastasse, o nível não seria alto. Defina o que muda.</p></div>
+    <div><h4>Esquecer as oportunidades</h4><p>A matriz só tem eventos ruins.</p><p class="fix"><b>Correção:</b> o requisito 6.1 fala em riscos e oportunidades. Levante as duas listas.</p></div>
+    <div><h4>Aceitar sem registrar</h4><p>O risco alto fica sem ação, e ninguém sabe por quê.</p><p class="fix"><b>Correção:</b> aceitar é uma decisão. Registre quem decidiu, e com que justificativa.</p></div>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 7 ============================ -->
+<section id="ferramentas">
+  <p class="eyebrow">Módulo 7</p>
+  <h2>A matriz e outras ferramentas</h2>
+  <p>A matriz recebe informação de outras ferramentas e entrega ações para outras. Ela é a ponte entre conhecer a organização e planejar o que fazer.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 250" role="img" aria-label="As ferramentas ao redor da matriz de riscos. Alimentam a matriz: a Matriz SWOT, com as ameaças e as oportunidades; o SIPOC, com as etapas do processo; e o tratamento de não conformidades, com o que já aconteceu. A matriz entrega: ao Diagrama de Ishikawa, o evento cujas causas serão analisadas; ao 5W2H, o plano de resposta; ao PDCA, a verificação da eficácia; e à auditoria interna, os processos que pedem mais atenção no programa.">
+        <defs>
+          <marker id="a7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker>
+        </defs>
+        <text class="mono mu" x="20" y="18" font-size="10">O QUE ALIMENTA</text>
+        <g font-size="12">
+          <rect class="bx" x="20" y="28" width="220" height="56"/><text class="b" x="34" y="52">Matriz SWOT</text><text class="mu" x="34" y="70" font-size="11">Ameaças e oportunidades</text>
+          <rect class="bx" x="20" y="96" width="220" height="56"/><text class="b" x="34" y="120">SIPOC</text><text class="mu" x="34" y="138" font-size="11">Etapas, entradas e saídas do processo</text>
+          <rect class="bx" x="20" y="164" width="220" height="56"/><text class="b" x="34" y="188">Não conformidade</text><text class="mu" x="34" y="206" font-size="11">O que já aconteceu uma vez</text>
+        </g>
+        <path class="ln" d="M242 56 H270 V124 H296" marker-end="url(#a7)"/>
+        <line class="ln" x1="242" y1="124" x2="270" y2="124"/>
+        <path class="ln" d="M242 192 H270 V124"/>
+
+        <rect class="bx-ink" x="300" y="84" width="180" height="80"/>
+        <text class="b t-ground" x="390" y="118" font-size="13.5" text-anchor="middle">Matriz de riscos</text>
+        <text class="t-ground" x="390" y="138" font-size="11.5" text-anchor="middle">nível e resposta</text>
+
+        <path class="ln" d="M482 124 H510 V56 H536" marker-end="url(#a7)"/>
+        <path class="ln" d="M510 124 V192 H536" marker-end="url(#a7)"/>
+        <text class="mono mu" x="540" y="18" font-size="10">O QUE ELA ENTREGA</text>
+        <g font-size="12">
+          <rect class="bx" x="540" y="28" width="166" height="56"/><text class="b" x="554" y="52">Ishikawa</text><text class="mu" x="554" y="70" font-size="11">Causas do evento</text>
+          <rect class="bx" x="718" y="28" width="166" height="56"/><text class="b" x="732" y="52">5W2H</text><text class="mu" x="732" y="70" font-size="11">Plano de resposta</text>
+          <rect class="bx" x="540" y="164" width="166" height="56"/><text class="b" x="554" y="188">PDCA</text><text class="mu" x="554" y="206" font-size="11">Eficácia da resposta</text>
+          <rect class="bx" x="718" y="164" width="166" height="56"/><text class="b" x="732" y="188">Auditoria interna</text><text class="mu" x="732" y="206" font-size="11">Programa pelo risco</text>
+        </g>
+        <line class="ln" x1="708" y1="56" x2="714" y2="56"/>
+        <line class="ln" x1="708" y1="192" x2="714" y2="192"/>
+      </svg>
+    </div>
+    <figcaption><b>Figura 8.</b> O que alimenta a matriz e o que ela entrega. A não conformidade aparece na entrada porque uma falha que aconteceu uma vez pode acontecer de novo.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:26%">Ferramenta</th><th style="width:36%">Relação com a matriz</th><th>Diferença</th></tr></thead>
+      <tbody>
+        <tr><td><a href="../SWOT/treinamento-swot.html"><strong>Matriz SWOT</strong></a></td><td>As ameaças e as oportunidades são a primeira lista de riscos e oportunidades.</td><td>A SWOT descreve o contexto. A matriz mede e decide a resposta.</td></tr>
+        <tr><td><a href="../GUT/treinamento-gut.html"><strong>Matriz GUT</strong></a></td><td>As duas priorizam com notas de 1 a 5.</td><td>A GUT ordena problemas que já existem. A matriz ordena o que pode acontecer.</td></tr>
+        <tr><td><a href="../Ishikawa/treinamento-ishikawa.html"><strong>Diagrama de Ishikawa</strong></a></td><td>Ajuda a encontrar as causas de um evento de risco alto.</td><td>No Ishikawa, o efeito já aconteceu. Aqui, ele é imaginado.</td></tr>
+        <tr><td><a href="../5W2H/treinamento-5w2h.html"><strong>5W2H</strong></a></td><td>Transforma a resposta em plano, com responsável, prazo e custo.</td><td>A matriz diz o que tratar. O 5W2H diz como.</td></tr>
+        <tr><td><a href="../Auditoria/treinamento-auditoria.html"><strong>Auditoria interna</strong></a></td><td>Os processos com mais riscos altos são auditados com mais frequência.</td><td>A auditoria confere se as respostas existem e funcionam.</td></tr>
+        <tr><td><a href="../Nao-Conformidade/treinamento-nao-conformidade.html"><strong>Não conformidade e ação corretiva</strong></a></td><td>Ao encerrar um tratamento, a organização atualiza os riscos.</td><td>A ação corretiva parte de um fato. A resposta ao risco parte de uma possibilidade.</td></tr>
+        <tr><td><a href="../ISO-9001/treinamento-iso-9001.html"><strong>ISO 9001 requisito a requisito</strong></a></td><td>O diagnóstico mostra se o requisito 6.1 é atendido.</td><td>A matriz é uma forma de atender, e não a única.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Para riscos de produto e de processo de fabricação, alguns setores usam a FMEA, a análise de modos de falha e efeitos. Ela acrescenta uma terceira medida, a chance de detectar a falha antes que ela chegue ao cliente.</p>
+</section>
+
+<!-- ============================ MÓDULO 8 ============================ -->
+<section id="iso">
+  <p class="eyebrow">Módulo 8</p>
+  <h2>Nas normas ISO</h2>
+  <p>A ISO 9001:2015 trata os riscos no requisito 6.1, “Ações para abordar riscos e oportunidades”, e fala em mentalidade de risco desde a introdução. A ISO 31000:2018 é a norma de diretrizes para gestão de riscos: explica como fazer e não tem requisitos.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 300" role="img" aria-label="O requisito 6.1 da ISO 9001:2015 e os requisitos ligados a ele. Alimentam o 6.1: o requisito 4.1, contexto; o 4.2, partes interessadas; e o 4.4, processos. O requisito 6.1.1 pede determinar os riscos e as oportunidades para assegurar os resultados do sistema, aumentar os efeitos desejáveis, prevenir ou reduzir os efeitos indesejáveis e alcançar a melhoria. O requisito 6.1.2 pede planejar as ações, integrá-las aos processos e avaliar a eficácia delas. O resultado segue para o 9.1.3, análise e avaliação; o 9.3, análise crítica pela direção; e o 10.2, que manda atualizar os riscos depois de uma não conformidade.">
+        <defs>
+          <marker id="a8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker>
+        </defs>
+        <text class="mono mu" x="20" y="18" font-size="10">O QUE ALIMENTA</text>
+        <g font-size="12">
+          <rect class="bx" x="20" y="44" width="200" height="60"/><text class="b" x="34" y="68">4.1</text><text class="mu" x="34" y="88" font-size="11.5">Questões internas e externas</text>
+          <rect class="bx" x="20" y="126" width="200" height="60"/><text class="b" x="34" y="150">4.2</text><text class="mu" x="34" y="170" font-size="11.5">Partes interessadas</text>
+          <rect class="bx" x="20" y="208" width="200" height="60"/><text class="b" x="34" y="232">4.4</text><text class="mu" x="34" y="252" font-size="11.5">Processos do sistema</text>
+        </g>
+        <line class="ln" x1="222" y1="74" x2="262" y2="74" marker-end="url(#a8)"/>
+        <line class="ln" x1="222" y1="156" x2="262" y2="156" marker-end="url(#a8)"/>
+        <line class="ln" x1="222" y1="238" x2="262" y2="238" marker-end="url(#a8)"/>
+
+        <rect class="bx" x="266" y="28" width="368" height="256"/>
+        <rect class="hd-ink" x="266" y="28" width="368" height="40"/>
+        <text class="b t-ground" x="282" y="53" font-size="13.5">ISO 9001:2015, requisito 6.1</text>
+        <g font-size="11.5">
+          <text class="mono mu" x="282" y="90" font-size="10">6.1.1 · DETERMINAR, PARA</text>
+          <text x="282" y="110">Assegurar que o sistema alcance os resultados</text>
+          <text x="282" y="128">Aumentar os efeitos desejáveis</text>
+          <text x="282" y="146">Prevenir ou reduzir os efeitos indesejáveis</text>
+          <text x="282" y="164">Alcançar a melhoria</text>
+          <text class="mono mu" x="282" y="192" font-size="10">6.1.2 · PLANEJAR</text>
+          <text x="282" y="212">As ações para abordar os riscos e as oportunidades</text>
+          <text x="282" y="230">Como integrar as ações aos processos</text>
+          <text x="282" y="248">Como avaliar a eficácia das ações</text>
+          <text class="mu" x="282" y="272" font-size="11">As ações devem ser proporcionais ao impacto.</text>
+        </g>
+
+        <text class="mono mu" x="680" y="18" font-size="10">PARA ONDE VAI</text>
+        <g font-size="12">
+          <rect class="bx" x="680" y="44" width="200" height="60"/><text class="b" x="694" y="68">9.1.3</text><text class="mu" x="694" y="88" font-size="11.5">Análise e avaliação</text>
+          <rect class="bx" x="680" y="126" width="200" height="60"/><text class="b" x="694" y="150">9.3</text><text class="mu" x="694" y="170" font-size="11.5">Análise crítica pela direção</text>
+          <rect class="bx" x="680" y="208" width="200" height="60"/><text class="b" x="694" y="232">10.2</text><text class="mu" x="694" y="252" font-size="11.5">Atualização depois da falha</text>
+        </g>
+        <line class="ln" x1="636" y1="74" x2="676" y2="74" marker-end="url(#a8)"/>
+        <line class="ln" x1="636" y1="156" x2="676" y2="156" marker-end="url(#a8)"/>
+        <line class="ln" x1="636" y1="238" x2="676" y2="238" marker-end="url(#a8)"/>
+      </svg>
+    </div>
+    <figcaption><b>Figura 9.</b> O requisito 6.1 e os requisitos ligados a ele. O texto da figura é um resumo, com palavras próprias.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:10%">Item</th><th style="width:30%">O que pede, em resumo</th><th style="width:28%">O que isso significa</th><th>Evidências que o auditor procura</th></tr></thead>
+      <tbody>
+        <tr><td class="num">6.1.1</td><td>Ao planejar o sistema, considerar o contexto e as partes interessadas e determinar os riscos e as oportunidades que precisam ser abordados</td><td>Os riscos saem do contexto da organização, e não de uma lista pronta.</td><td>Riscos ligados às questões do requisito 4.1 e aos processos.</td></tr>
+        <tr><td class="num">6.1.2 a</td><td>Planejar ações para abordar os riscos e as oportunidades</td><td>Cada risco que pede resposta tem uma ação.</td><td>Ações com responsável e prazo, ou decisão de aceitar registrada.</td></tr>
+        <tr><td class="num">6.1.2 b</td><td>Planejar como integrar as ações aos processos e como avaliar a eficácia delas</td><td>A ação entra no procedimento, no sistema ou na rotina, e o resultado é conferido.</td><td>Documentos alterados, e nível do risco revisto depois da ação.</td></tr>
+        <tr><td class="num">6.1.2</td><td>As ações devem ser proporcionais ao impacto potencial sobre a conformidade de produtos e serviços</td><td>Risco pequeno não pede projeto grande.</td><td>Respostas coerentes com o nível de cada risco.</td></tr>
+        <tr><td class="num">4.4.1 f</td><td>Abordar os riscos e as oportunidades de cada processo</td><td>A análise é feita por processo.</td><td>Riscos identificados nos processos do sistema.</td></tr>
+        <tr><td class="num">9.3.2 e</td><td>Considerar, na análise crítica pela direção, a eficácia das ações tomadas para abordar riscos e oportunidades</td><td>A direção acompanha os riscos.</td><td>Ata da análise crítica com o assunto tratado.</td></tr>
+        <tr><td class="num">10.2.1 e</td><td>Depois de uma não conformidade, atualizar os riscos e as oportunidades, se necessário</td><td>O que aconteceu muda a avaliação do que pode acontecer.</td><td>Matriz revista depois de não conformidades relevantes.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pair">
+    <div class="box">
+      <h4>O que a ISO 9001 exige</h4>
+      <ul>
+        <li>Determinar os riscos e as oportunidades.</li>
+        <li>Planejar ações proporcionais.</li>
+        <li>Integrar as ações aos processos.</li>
+        <li>Avaliar a eficácia das ações.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h4>O que a ISO 9001 não exige</h4>
+      <ul>
+        <li>Um método formal de gestão de riscos.</li>
+        <li>Uma matriz, ou qualquer outra ferramenta.</li>
+        <li>Um procedimento documentado de riscos.</li>
+        <li>A aplicação da ISO 31000.</li>
+      </ul>
+    </div>
+  </div>
+  <p>A norma não pede a matriz, mas pede que a organização mostre como determinou os riscos e o que fez com eles. A matriz é a forma mais simples de mostrar.</p>
+
+  <div class="note">
+    <h4>Pontos de atenção</h4>
+    <p>A ação preventiva, que era um requisito separado na edição de 2008, deixou de existir na edição de 2015. A prevenção passou a fazer parte do planejamento, por meio do requisito 6.1.</p>
+    <p>Este módulo usa a numeração da ISO 9001:2015 e da ISO 31000:2018 e resume os textos com palavras próprias. Confira sempre a edição vigente das normas antes de citar um requisito em relatório.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 9 ============================ -->
+<section id="oficina">
+  <p class="eyebrow">Módulo 9</p>
+  <h2>A oficina de riscos</h2>
+  <p>A matriz de um processo cabe em uma oficina de duas horas, com cinco a oito pessoas que conhecem o trabalho. O facilitador leva o SIPOC do processo, o objetivo e as escalas impressas.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 136" role="img" aria-label="Distribuição de uma oficina de riscos de 120 minutos: 15 minutos para o escopo e as escalas, 30 minutos para o levantamento, 20 minutos para a descrição, 25 minutos para as notas de probabilidade e impacto, 20 minutos para as respostas e 10 minutos para o fecho.">
+        <g font-size="11.5" text-anchor="middle">
+          <rect class="bx" x="60" y="24" width="97.5" height="56"/><text x="108.8" y="49" font-size="10.5">Escopo</text><text x="108.8" y="64" font-size="10.5">e escalas</text>
+          <rect class="hd-ink gap2" x="157.5" y="24" width="195" height="56"/><text class="t-ground b" x="255" y="56">Levantamento</text>
+          <rect class="bx" x="352.5" y="24" width="130" height="56"/><text x="417.5" y="56">Descrição</text>
+          <rect class="bx" x="482.5" y="24" width="162.5" height="56"/><text x="563.8" y="56">Notas de P e I</text>
+          <rect class="bx" x="645" y="24" width="130" height="56"/><text x="710" y="56">Respostas</text>
+          <rect class="bx" x="775" y="24" width="65" height="56"/><text x="807.5" y="56" font-size="10.5">Fecho</text>
+        </g>
+        <g class="ln-mu" stroke-width="1">
+          <line x1="60" y1="82" x2="60" y2="94"/><line x1="157.5" y1="82" x2="157.5" y2="94"/><line x1="352.5" y1="82" x2="352.5" y2="94"/>
+          <line x1="482.5" y1="82" x2="482.5" y2="94"/><line x1="645" y1="82" x2="645" y2="94"/><line x1="775" y1="82" x2="775" y2="94"/>
+          <line x1="840" y1="82" x2="840" y2="94"/>
+        </g>
+        <g class="mono" font-size="10.5" text-anchor="middle">
+          <text class="mu" x="60" y="112">0</text><text class="mu" x="157.5" y="112">15</text><text class="mu" x="352.5" y="112">45</text>
+          <text class="mu" x="482.5" y="112">65</text><text class="mu" x="645" y="112">90</text><text class="mu" x="775" y="112">110</text>
+          <text class="mu" x="840" y="112">120 min</text>
+        </g>
+      </svg>
+    </div>
+    <figcaption><b>Figura 10.</b> Uma oficina de riscos de duas horas, desenhada em escala. O levantamento é a maior etapa: risco que não entra na lista não recebe resposta.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:22%">Momento</th><th style="width:42%">O que fazer</th><th>Frases que ajudam</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Escopo e escalas</strong></td><td>Apresentar o processo, o objetivo e as escalas. Dar nota, juntos, a um risco conhecido, para calibrar.</td><td>“O que este processo precisa entregar?”</td></tr>
+        <tr><td><strong>Levantamento</strong></td><td>Percorrer as etapas do processo e anotar tudo o que pode impedir o objetivo, sem discutir notas.</td><td>“O que pode dar errado nesta etapa?”</td></tr>
+        <tr><td><strong>Descrição</strong></td><td>Juntar os repetidos, separar os problemas e escrever causa, evento e consequência.</td><td>“Isso já acontece, ou pode acontecer?”</td></tr>
+        <tr><td><strong>Notas de P e I</strong></td><td>Dar as duas notas a cada risco, com o fato que sustenta cada uma.</td><td>“Quantas vezes aconteceu nos últimos dois anos?”</td></tr>
+        <tr><td><strong>Respostas</strong></td><td>Escolher a resposta dos riscos altos e críticos, com responsável e prazo.</td><td>“Conseguimos agir na causa?”</td></tr>
+        <tr><td><strong>Fecho</strong></td><td>Repassar as ações e marcar a data da revisão.</td><td>“Quando olhamos esta matriz de novo?”</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Quando o grupo discorda da nota, a diferença costuma estar no entendimento do risco, e não na nota. Volte à descrição antes de votar.</p>
+
+  <h3>Checklist de validação</h3>
+  <p>Marque os itens conforme revisa a sua matriz. As marcações ficam salvas neste navegador.</p>
+  <ol class="check" id="checklist">
+<!--CHECK-->
+  </ol>
+  <div class="bar"><span><b id="ck-count">0</b> de 12 itens marcados</span><button class="btn" id="ck-reset" type="button">Limpar marcações</button></div>
+</section>
+
+<!-- ============================ MÓDULO 10 ============================ -->
+<section id="pratique">
+  <p class="eyebrow">Módulo 10</p>
+  <h2>Pratique</h2>
+  <h3>Exercício 1. Risco, problema ou oportunidade?</h3>
+  <p>Cada item descreve uma situação. Escolha o tipo: risco, que pode acontecer e prejudica; problema, que já aconteceu; ou oportunidade, que pode acontecer e favorece.</p>
+  <div class="quiz" id="quiz"></div>
+  <div class="bar"><span>Acertos: <b id="qz-score">0</b> de <b id="qz-total">10</b></span><span>Respondidos: <b id="qz-done">0</b></span><button class="btn" id="qz-reset" type="button">Recomeçar</button></div>
+
+  <h3>Exercício 2. Monte a matriz de um processo</h3>
+  <p>Escolha um processo que você conhece bem e o objetivo que ele precisa alcançar. Abra a planilha de apoio e siga o roteiro.</p>
+  <ol>
+    <li>Na aba Escalas, leia as descrições e veja se elas servem para o seu processo.</li>
+    <li>Na aba Riscos, escreva de 6 a 10 riscos, cada um com causa, evento e consequência.</li>
+    <li>Dê as notas de probabilidade e de impacto, e leia o nível calculado.</li>
+    <li>Escolha a resposta de cada risco e escreva a ação, o responsável e o prazo.</li>
+    <li>Estime a probabilidade e o impacto residuais.</li>
+    <li>Na aba Mapa, compare a matriz inicial com a residual.</li>
+    <li>Na aba Oportunidades, registre pelo menos duas oportunidades do processo.</li>
+  </ol>
+  <p>Depois, escolha o risco de maior nível e pergunte a quem executa o processo se a ação proposta teria evitado a última falha parecida. Se não teria, a ação está agindo no lugar errado.</p>
+</section>
+
+<!-- ============================ MÓDULO 11 ============================ -->
+<section id="planilha">
+  <p class="eyebrow">Módulo 11</p>
+  <h2>A planilha de apoio</h2>
+  <p>Este treinamento acompanha o arquivo <a id="xlsx-ref" href="Riscos-modelo.xlsx">Riscos-modelo.xlsx</a>, que fica na mesma pasta. As células em amarelo-claro são para preenchimento. As células cinza são calculadas.</p>
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Aba</th><th>Para que serve</th><th style="width:36%">O que ela calcula</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Instruções</strong></td><td>Legenda de cores, ordem de preenchimento e regras do modelo.</td><td>Nada. É só leitura.</td></tr>
+        <tr><td><strong>Riscos</strong></td><td>Até 20 riscos, com causa, evento, consequência, notas, resposta, ação e notas residuais.</td><td>Pontos e nível, inicial e residual. Situação da ação, conferência e alertas.</td></tr>
+        <tr><td><strong>Mapa</strong></td><td>As duas matrizes, inicial e residual, com o número de riscos em cada célula.</td><td>Contagem por nível, redução média dos pontos e gráfico.</td></tr>
+        <tr><td><strong>Oportunidades</strong></td><td>Até 10 oportunidades, com probabilidade, benefício, decisão e ação.</td><td>Pontos, prioridade e situação de cada ação.</td></tr>
+        <tr><td><strong>Escalas</strong></td><td>As escalas de probabilidade, de impacto e de benefício, os níveis e as respostas.</td><td>Nada. É a referência das outras abas.</td></tr>
+        <tr><td><strong>Checklist</strong></td><td>Os mesmos 12 itens do módulo 9, com status Sim, Parcial ou Não.</td><td>Percentual atendido e situação da validação.</td></tr>
+        <tr><td><strong>Exemplo 1 e Exemplo 2</strong></td><td>As matrizes da pizzaria e do processo de compras.</td><td>Níveis, contagens e redução média dos pontos.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ GLOSSÁRIO ============================ -->
+<section id="glossario">
+  <p class="eyebrow">Referência</p>
+  <h2>Glossário</h2>
+  <dl class="gloss">
+    <div><dt>Apetite a risco</dt><dd>Quanto risco a organização aceita correr para alcançar os objetivos.</dd></div>
+    <div><dt>Causa</dt><dd>Condição que existe hoje e que pode dar origem ao evento.</dd></div>
+    <div><dt>Consequência</dt><dd>Efeito do evento sobre o objetivo.</dd></div>
+    <div><dt>Controle</dt><dd>Medida que mantém ou modifica o risco: procedimento, conferência, bloqueio, alarme.</dd></div>
+    <div><dt>Evento</dt><dd>O que pode acontecer. É a parte do risco que recebe a nota de probabilidade.</dd></div>
+    <div><dt>Impacto</dt><dd>Tamanho da consequência para o objetivo.</dd></div>
+    <div><dt>Mentalidade de risco</dt><dd>Hábito de considerar o que pode dar errado ou certo antes de decidir.</dd></div>
+    <div><dt>Nível do risco</dt><dd>Resultado da combinação da probabilidade com o impacto.</dd></div>
+    <div><dt>Oportunidade</dt><dd>Evento incerto que, se acontecer, favorece um objetivo.</dd></div>
+    <div><dt>Plano de contingência</dt><dd>O que fazer se o evento acontecer, definido com antecedência.</dd></div>
+    <div><dt>Probabilidade</dt><dd>Chance de o evento acontecer no período analisado.</dd></div>
+    <div><dt>Resposta ao risco</dt><dd>Decisão sobre o que fazer com o risco: evitar, reduzir, compartilhar ou aceitar.</dd></div>
+    <div><dt>Risco</dt><dd>Efeito da incerteza sobre um objetivo.</dd></div>
+    <div><dt>Risco residual</dt><dd>Nível do risco que sobra depois da resposta.</dd></div>
+  </dl>
+</section>
+
+</main>
+</div>
+
+<footer>Material de estudo. Os exemplos, documentos e números são ilustrativos e foram criados para fins didáticos. As referências às normas ISO são resumos para estudo e não substituem o texto das normas.</footer>
+</div>
+
+<script>
+(function () {
+  function read(key) { try { return JSON.parse(localStorage.getItem(key) || 'null'); } catch (e) { return null; } }
+  function write(key, val) { try { localStorage.setItem(key, JSON.stringify(val)); } catch (e) {} }
+
+  /* ---------- Checklist ---------- */
+  var boxes = Array.prototype.slice.call(document.querySelectorAll('#checklist input'));
+  var count = document.getElementById('ck-count');
+  var saved = read('riscos-checklist') || {};
+  function refreshChecks() {
+    var n = 0, state = {};
+    boxes.forEach(function (b) { if (b.checked) { n++; } state[b.id] = b.checked; });
+    count.textContent = n;
+    return state;
+  }
+  boxes.forEach(function (b) {
+    if (saved[b.id]) { b.checked = true; }
+    b.addEventListener('change', function () { write('riscos-checklist', refreshChecks()); });
+  });
+  refreshChecks();
+  document.getElementById('ck-reset').addEventListener('click', function () {
+    boxes.forEach(function (b) { b.checked = false; });
+    write('riscos-checklist', refreshChecks());
+  });
+
+  /* ---------- Exercício ---------- */
+  var KEYS = ['R', 'P', 'O'];
+  var LABEL = { R: 'Risco', P: 'Problema', O: 'Oportunidade' };
+  var NAMES = { R: 'risco', P: 'problema', O: 'oportunidade' };
+  var ITEMS = [
+    { t: 'O fornecedor único de resina pode atrasar a entrega no período de chuvas.', a: 'R', w: 'O evento ainda não aconteceu, e o efeito seria ruim.' },
+    { t: 'Quatro requisições chegaram sem especificação técnica na semana passada.', a: 'P', w: 'Já aconteceu. É uma não conformidade, e o risco é ela voltar.' },
+    { t: 'Um cliente pode aumentar os pedidos se a empresa obtiver a certificação.', a: 'O', w: 'O evento é incerto, e o efeito seria bom.' },
+    { t: 'O termômetro da câmara fria está quebrado desde segunda-feira.', a: 'P', w: 'É um fato de hoje. Pede correção imediata.' },
+    { t: 'A câmara fria pode falhar em um fim de semana, sem ninguém na loja.', a: 'R', w: 'O evento é possível e ainda não ocorreu.' },
+    { t: 'O novo aplicativo de pedidos pode atrair clientes de outros bairros.', a: 'O', w: 'O efeito possível favorece o objetivo.' },
+    { t: 'O único pizzaiolo que sabe regular o forno pode sair da empresa.', a: 'R', w: 'A causa existe hoje, e o evento ainda não aconteceu.' },
+    { t: 'O indicador de entregas ficou abaixo da meta nos últimos três meses.', a: 'P', w: 'O resultado já está fora da meta. É assunto para análise de causa.' },
+    { t: 'A troca do sistema, marcada para dezembro, pode deixar a loja sem registrar pedidos por algumas horas.', a: 'R', w: 'É um risco de mudança, a ser tratado antes da troca.' },
+    { t: 'Um fornecedor ofereceu um insumo novo, que pode reduzir o tempo de preparo.', a: 'O', w: 'O benefício é possível, e ainda precisa ser testado.' }
+  ];
+  var quiz = document.getElementById('quiz');
+  var score = document.getElementById('qz-score');
+  var done = document.getElementById('qz-done');
+  document.getElementById('qz-total').textContent = ITEMS.length;
+  var hits = 0, answered = 0;
+
+  function render() {
+    hits = 0; answered = 0; score.textContent = 0; done.textContent = 0;
+    quiz.textContent = '';
+    ITEMS.forEach(function (item, idx) {
+      var row = document.createElement('div'); row.className = 'q';
+      var p = document.createElement('p'); p.textContent = (idx + 1) + '. ' + item.t;
+      var opts = document.createElement('div'); opts.className = 'opts';
+      opts.setAttribute('role', 'group'); opts.setAttribute('aria-label', 'Tipo da situação do item ' + (idx + 1));
+      var why = document.createElement('p'); why.className = 'why'; why.hidden = true;
+      KEYS.forEach(function (k) {
+        var b = document.createElement('button');
+        b.type = 'button'; b.textContent = LABEL[k]; b.id = 'qz-' + idx + '-' + k;
+        b.setAttribute('data-k', k);
+        b.addEventListener('click', function () {
+          var ok = k === item.a;
+          Array.prototype.forEach.call(opts.children, function (o) {
+            o.disabled = true;
+            if (o.getAttribute('data-k') === item.a) { o.className = 'right'; }
+          });
+          if (!ok) { b.className = 'wrong'; }
+          var lead = document.createElement('b');
+          lead.textContent = (ok ? 'Certo. ' : 'A resposta é ' + NAMES[item.a] + '. ');
+          why.textContent = ''; why.appendChild(lead); why.appendChild(document.createTextNode(item.w));
+          why.className = 'why ' + (ok ? 'ok' : 'no'); why.hidden = false;
+          answered++; if (ok) { hits++; }
+          score.textContent = hits; done.textContent = answered;
+        });
+        opts.appendChild(b);
+      });
+      row.appendChild(p); row.appendChild(opts); row.appendChild(why);
+      quiz.appendChild(row);
+    });
+  }
+  render();
+  document.getElementById('qz-reset').addEventListener('click', render);
+
+  /* ---------- Gráfico: leitura dos valores ---------- */
+  var fig = document.getElementById('fig-dots');
+  var tip = document.getElementById('dots-tip');
+  var svg = document.getElementById('dots');
+  var marks = document.querySelectorAll('#dots .mk');
+  function hide() {
+    tip.hidden = true;
+    Array.prototype.forEach.call(marks, function (b) { b.removeAttribute('opacity'); });
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('#dots .hit'), function (r) {
+    function show() {
+      var d = r.dataset;
+      Array.prototype.forEach.call(marks, function (b) {
+        b.setAttribute('opacity', b.getAttribute('data-k') === d.k ? '1' : '.35');
+      });
+      tip.textContent = '';
+      var strong = document.createElement('b'); strong.textContent = d.a + ' → ' + d.b + ' pontos';
+      tip.appendChild(strong);
+      tip.appendChild(document.createTextNode(d.id + ' · ' + d.ev));
+      tip.appendChild(document.createElement('br'));
+      tip.appendChild(document.createTextNode('Inicial: ' + d.na + ' · Residual: ' + d.nb + ' · Resposta: ' + d.r));
+      var box = fig.getBoundingClientRect(), rb = r.getBoundingClientRect();
+      var pt = svg.createSVGPoint(); pt.x = parseFloat(d.cx); pt.y = 0;
+      var scr = pt.matrixTransform(svg.getScreenCTM());
+      tip.style.left = Math.min(Math.max(scr.x - box.left, 200), box.width - 200) + 'px';
+      tip.style.top = (rb.top - box.top + 4) + 'px';
+      tip.hidden = false;
+    }
+    r.addEventListener('pointerenter', show);
+    r.addEventListener('focus', show);
+    r.addEventListener('pointerleave', hide);
+    r.addEventListener('blur', hide);
+  });
+})();
+</script>
+</body>
+</html>

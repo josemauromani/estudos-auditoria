@@ -1,0 +1,847 @@
+<body>
+<div class="page" lang="pt-BR">
+
+<header class="mast">
+  <div class="tiles" aria-hidden="true"><span class="p">9</span><span class="d">0</span><span class="c">0</span><span class="a">1</span></div>
+  <h1>ISO 9001 requisito a requisito</h1>
+  <p class="lead">Um guia de estudo para ler a norma inteira: o que cada requisito pede, que pergunta o auditor faz, que evidência responde e como avaliar, item por item, o quanto a organização já atende.</p>
+  <ul class="meta">
+    <li>Treinamento autoinstrucional</li>
+    <li>14 módulos</li>
+    <li>Leitura de cerca de 60 minutos</li>
+    <li>3 exemplos resolvidos e 2 exercícios</li>
+  </ul>
+</header>
+
+<div class="layout">
+
+<nav class="toc" aria-label="Sumário">
+  <h2>Sumário</h2>
+  <ol>
+    <li><a href="#o-que-e">O que é a ISO 9001</a></li>
+    <li><a href="#estrutura">Como a norma é organizada</a></li>
+    <li><a href="#s4">Seção 4 · Contexto</a></li>
+    <li><a href="#s5">Seções 5 e 6 · Liderança e planejamento</a></li>
+    <li><a href="#s7">Seção 7 · Apoio</a></li>
+    <li><a href="#s8">Seção 8 · Operação</a></li>
+    <li><a href="#s9">Seções 9 e 10 · Avaliação e melhoria</a></li>
+    <li><a href="#documentos">Informação documentada</a></li>
+    <li><a href="#exemplos">Exemplos resolvidos</a></li>
+    <li><a href="#erros">Erros comuns</a></li>
+    <li><a href="#ferramentas">A norma e as ferramentas da série</a></li>
+    <li><a href="#implantacao">O caminho da implantação</a></li>
+    <li><a href="#pratique">Pratique</a></li>
+    <li><a href="#planilha">A planilha de apoio</a></li>
+    <li><a href="#glossario">Glossário</a></li>
+  </ol>
+</nav>
+
+<main>
+
+<!-- ============================ MÓDULO 1 ============================ -->
+<section id="o-que-e">
+  <p class="eyebrow">Módulo 1</p>
+  <h2>O que é a ISO 9001</h2>
+  <p>A ISO 9001 é a norma internacional que define os requisitos de um sistema de gestão da qualidade. Ela não diz como o produto deve ser. Diz o que a organização precisa ter e fazer para entregar, de forma consistente, produtos e serviços que atendam ao cliente e à lei, e para melhorar com o tempo.</p>
+  <p>A norma serve a qualquer organização, de qualquer porte ou setor. Por isso os requisitos são genéricos: dizem o que alcançar, e não como. Uma pizzaria e uma indústria atendem ao mesmo requisito de formas muito diferentes.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 176" role="img" aria-label="A família de normas. A ISO 9000 traz os fundamentos e o vocabulário. A ISO 9001 traz os requisitos e é a única usada para certificação. A ISO 9004 traz orientações para o sucesso sustentado, além dos requisitos. A ISO 19011 traz as diretrizes de auditoria.">
+        <g font-size="11.5">
+          <rect class="bx" x="20" y="20" width="205" height="136"/>
+          <text class="mono mu" x="36" y="42" font-size="10">VOCABULÁRIO</text>
+          <text class="disp" x="36" y="74" font-size="24">ISO 9000</text>
+          <text class="mu" x="36" y="102">Fundamentos e termos.</text>
+          <text class="mu" x="36" y="118">Define o que as palavras</text>
+          <text class="mu" x="36" y="134">da norma querem dizer.</text>
+
+          <rect class="bx-ink" x="241" y="20" width="205" height="136"/>
+          <text class="mono t-ground" x="257" y="42" font-size="10">REQUISITOS</text>
+          <text class="disp t-ground" x="257" y="74" font-size="24">ISO 9001</text>
+          <text class="t-ground" x="257" y="102">O que o sistema deve ter.</text>
+          <text class="t-ground" x="257" y="118">É a única da família usada</text>
+          <text class="t-ground" x="257" y="134">para certificação.</text>
+
+          <rect class="bx" x="462" y="20" width="205" height="136"/>
+          <text class="mono mu" x="478" y="42" font-size="10">ORIENTAÇÃO</text>
+          <text class="disp" x="478" y="74" font-size="24">ISO 9004</text>
+          <text class="mu" x="478" y="102">Como ir além dos requisitos</text>
+          <text class="mu" x="478" y="118">e buscar o sucesso</text>
+          <text class="mu" x="478" y="134">sustentado.</text>
+
+          <rect class="bx" x="683" y="20" width="205" height="136"/>
+          <text class="mono mu" x="699" y="42" font-size="10">AUDITORIA</text>
+          <text class="disp" x="699" y="74" font-size="24">ISO 19011</text>
+          <text class="mu" x="699" y="102">Diretrizes para auditar</text>
+          <text class="mu" x="699" y="118">sistemas de gestão.</text>
+          <text class="mu" x="699" y="134">Não tem requisitos.</text>
+        </g>
+      </svg>
+    </div>
+    <figcaption><b>Figura 1.</b> As normas que acompanham a ISO 9001. Este estudo trata da ISO 9001. A ISO 19011 é o assunto do estudo de <a href="../Auditoria/treinamento-auditoria.html">Auditoria interna</a>.</figcaption>
+  </figure>
+
+  <h3>Os sete princípios</h3>
+  <p>A norma se apoia em sete princípios de gestão da qualidade, descritos na ISO 9000. Eles não são requisitos, mas explicam por que os requisitos existem.</p>
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:26%">Princípio</th><th style="width:40%">Ideia central</th><th>Onde aparece na norma</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Foco no cliente</strong></td><td>Atender aos requisitos do cliente e buscar superar as expectativas.</td><td>5.1.2, 8.2 e 9.1.2</td></tr>
+        <tr><td><strong>Liderança</strong></td><td>A direção define o rumo e cria as condições para as pessoas contribuírem.</td><td>Seção 5</td></tr>
+        <tr><td><strong>Engajamento das pessoas</strong></td><td>Pessoas competentes e envolvidas geram resultado.</td><td>7.2, 7.3 e 7.4</td></tr>
+        <tr><td><strong>Abordagem de processo</strong></td><td>Resultados consistentes vêm de atividades geridas como processos ligados.</td><td>4.4 e seção 8</td></tr>
+        <tr><td><strong>Melhoria</strong></td><td>A organização bem-sucedida mantém o foco em melhorar.</td><td>Seção 10</td></tr>
+        <tr><td><strong>Decisão baseada em evidência</strong></td><td>Decisões apoiadas em dados têm mais chance de dar certo.</td><td>9.1 e 9.3</td></tr>
+        <tr><td><strong>Gestão de relacionamento</strong></td><td>O resultado depende também de fornecedores e parceiros.</td><td>4.2 e 8.4</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Certificação</h3>
+  <p>A organização pode aplicar a norma sem se certificar. Quando busca o certificado, contrata um organismo de certificação, que audita o sistema em duas fases: a primeira avalia a documentação e a prontidão, e a segunda avalia a implementação. O certificado vale por três anos, com auditorias de manutenção a cada ano. No Brasil, os organismos de certificação são acreditados pela Coordenação Geral de Acreditação do Inmetro.</p>
+
+  <div class="note">
+    <h4>Edição da norma</h4>
+    <p>Este estudo usa a ISO 9001:2015, com a emenda de 2024 sobre mudança climática. Uma nova edição estava em preparação quando este material foi escrito. Confira qual é a edição vigente antes de usar a numeração em um relatório.</p>
+    <p>Os resumos de requisitos foram escritos com palavras próprias e não substituem o texto da norma. Para implantar ou auditar, tenha a norma em mãos.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 2 ============================ -->
+<section id="estrutura">
+  <p class="eyebrow">Módulo 2</p>
+  <h2>Como a norma é organizada</h2>
+  <p>A norma tem onze seções, numeradas de 0 a 10. As quatro primeiras apresentam e definem. Os requisitos estão nas sete últimas, de 4 a 10. É sobre elas que a auditoria trabalha.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 184" role="img" aria-label="As onze seções da ISO 9001:2015. As seções 0 a 3 não têm requisitos: introdução, escopo, referência normativa e termos e definições. As seções 4 a 10 trazem os requisitos: 4 contexto e 5 liderança formam a base; 6 planejamento corresponde à fase planejar; 7 apoio e 8 operação, à fase executar; 9 avaliação de desempenho, à fase verificar; e 10 melhoria, à fase agir.">
+        <g class="mono" font-size="9.5" text-anchor="middle">
+          <text class="mu" x="410" y="20">BASE</text><text class="mu" x="530" y="20">PLANEJAR</text><text class="mu" x="650" y="20">EXECUTAR</text>
+          <text class="mu" x="770" y="20">VERIFICAR</text><text class="mu" x="850" y="20">AGIR</text>
+        </g>
+        <g text-anchor="middle" font-size="9.5">
+          <rect class="bx" x="14" y="30" width="72" height="84"/><text class="disp mu" x="50" y="66" font-size="26">0</text><text class="mu" x="50" y="92">Introdução</text>
+          <rect class="bx" x="94" y="30" width="72" height="84"/><text class="disp mu" x="130" y="66" font-size="26">1</text><text class="mu" x="130" y="92">Escopo</text>
+          <rect class="bx" x="174" y="30" width="72" height="84"/><text class="disp mu" x="210" y="66" font-size="26">2</text><text class="mu" x="210" y="88">Referência</text><text class="mu" x="210" y="101">normativa</text>
+          <rect class="bx" x="254" y="30" width="72" height="84"/><text class="disp mu" x="290" y="66" font-size="26">3</text><text class="mu" x="290" y="88">Termos e</text><text class="mu" x="290" y="101">definições</text>
+          <rect class="hd-ink" x="334" y="30" width="72" height="84"/><text class="disp t-ground" x="370" y="66" font-size="26">4</text><text class="t-ground" x="370" y="92">Contexto</text>
+          <rect class="hd-ink" x="414" y="30" width="72" height="84"/><text class="disp t-ground" x="450" y="66" font-size="26">5</text><text class="t-ground" x="450" y="92">Liderança</text>
+          <rect class="hd-p" x="494" y="30" width="72" height="84"/><text class="disp on" x="530" y="66" font-size="26">6</text><text class="on" x="530" y="92">Planejamento</text>
+          <rect class="hd-d" x="574" y="30" width="72" height="84"/><text class="disp on" x="610" y="66" font-size="26">7</text><text class="on" x="610" y="92">Apoio</text>
+          <rect class="hd-d" x="654" y="30" width="72" height="84"/><text class="disp on" x="690" y="66" font-size="26">8</text><text class="on" x="690" y="92">Operação</text>
+          <rect class="hd-c" x="734" y="30" width="72" height="84"/><text class="disp on" x="770" y="66" font-size="26">9</text><text class="on" x="770" y="88">Avaliação de</text><text class="on" x="770" y="101">desempenho</text>
+          <rect class="hd-a" x="814" y="30" width="72" height="84"/><text class="disp on" x="850" y="66" font-size="26">10</text><text class="on" x="850" y="92">Melhoria</text>
+        </g>
+        <path class="ln-mu" d="M14 124 V132 H326 V124"/>
+        <text x="170" y="154" font-size="11.5" text-anchor="middle"><tspan class="b">Sem requisitos</tspan></text>
+        <text class="mu" x="170" y="171" font-size="11" text-anchor="middle">apresentam e definem</text>
+        <path class="ln" d="M334 124 V132 H886 V124"/>
+        <text x="610" y="154" font-size="11.5" text-anchor="middle"><tspan class="b">Requisitos</tspan></text>
+        <text class="mu" x="610" y="171" font-size="11" text-anchor="middle">onde a norma diz “deve”, e o que a auditoria confere</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 2.</b> As seções da norma. As cores das seções 6 a 10 são as do ciclo <a href="../PDCA/treinamento-pdca.html">PDCA</a>, usadas em todo este estudo.</figcaption>
+  </figure>
+
+<!--SECOES-->
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 330" role="img" aria-label="As seções de requisitos sobre o ciclo PDCA. A seção 4, contexto, é a entrada do planejamento. A seção 6, planejamento, é a fase planejar. As seções 7, apoio, e 8, operação, são a fase executar, e entregam produtos e serviços ao cliente. A seção 9, avaliação de desempenho, é a fase verificar. A seção 10, melhoria, é a fase agir, e devolve ao planejamento. A seção 5, liderança, fica no centro e sustenta as quatro fases.">
+        <defs>
+          <marker id="a3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker>
+        </defs>
+        <rect class="bx" x="10" y="20" width="230" height="60"/>
+        <text class="mono mu" x="24" y="40" font-size="10">ENTRADA</text>
+        <text class="b" x="24" y="62" font-size="12.5">4 · Contexto da organização</text>
+        <line class="ln" x1="242" y1="50" x2="336" y2="50" marker-end="url(#a3)"/>
+
+        <rect class="bx-p" x="340" y="20" width="220" height="64"/>
+        <text class="mono mu" x="354" y="40" font-size="10">PLANEJAR</text>
+        <text class="b" x="354" y="64" font-size="12.5">6 · Planejamento</text>
+
+        <rect class="bx-d" x="550" y="133" width="170" height="64"/>
+        <text class="mono mu" x="564" y="153" font-size="10">EXECUTAR</text>
+        <text class="b" x="564" y="177" font-size="12.5">7 · Apoio  8 · Operação</text>
+
+        <rect class="bx-c" x="340" y="246" width="220" height="64"/>
+        <text class="mono mu" x="354" y="266" font-size="10">VERIFICAR</text>
+        <text class="b" x="354" y="290" font-size="12.5">9 · Avaliação de desempenho</text>
+
+        <rect class="bx-a" x="180" y="133" width="170" height="64"/>
+        <text class="mono mu" x="194" y="153" font-size="10">AGIR</text>
+        <text class="b" x="194" y="177" font-size="12.5">10 · Melhoria</text>
+
+        <rect class="bx-ink" x="385" y="133" width="130" height="64"/>
+        <text class="mono t-ground" x="450" y="153" font-size="10" text-anchor="middle">NO CENTRO</text>
+        <text class="b t-ground" x="450" y="177" font-size="12.5" text-anchor="middle">5 · Liderança</text>
+
+        <path class="ln" d="M562 52 H635 V129" marker-end="url(#a3)"/>
+        <path class="ln" d="M635 199 V278 H564" marker-end="url(#a3)"/>
+        <path class="ln" d="M338 278 H265 V201" marker-end="url(#a3)"/>
+        <path class="ln" d="M265 131 V108 H400 V88" marker-end="url(#a3)"/>
+        <line class="ln-mu" x1="450" y1="86" x2="450" y2="131"/><line class="ln-mu" x1="450" y1="199" x2="450" y2="244"/>
+        <line class="ln-mu" x1="352" y1="165" x2="383" y2="165"/><line class="ln-mu" x1="517" y1="165" x2="548" y2="165"/>
+
+        <line class="ln" x1="722" y1="165" x2="746" y2="165" marker-end="url(#a3)"/>
+        <rect class="bx" x="750" y="125" width="140" height="80"/>
+        <text class="mono mu" x="764" y="145" font-size="10">RESULTADO</text>
+        <text class="b" x="764" y="167" font-size="12">Produtos e serviços</text>
+        <text class="mu" x="764" y="185" font-size="11.5">Cliente satisfeito</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 3.</b> As seções de requisitos sobre o ciclo PDCA, em adaptação livre da figura da própria norma. A numeração das seções não é a ordem de implantação: a liderança vem antes de tudo, e o apoio acompanha todas as fases.</figcaption>
+  </figure>
+
+  <h3>Como ler um requisito</h3>
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Quando a norma diz</th><th style="width:38%">Significa</th><th>Exemplo</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Deve</strong></td><td>É um requisito. O não atendimento é uma não conformidade.</td><td>A organização deve estabelecer objetivos da qualidade.</td></tr>
+        <tr><td><strong>Convém</strong> e <strong>pode</strong></td><td>É recomendação ou permissão. Aparecem nas notas, que não são requisitos.</td><td>As notas que explicam o que o contexto pode incluir.</td></tr>
+        <tr><td><strong>Determinar</strong></td><td>Decidir e saber mostrar como decidiu. Nem sempre exige documento.</td><td>Determinar as partes interessadas pertinentes.</td></tr>
+        <tr><td><strong>Manter</strong> informação documentada</td><td>Ter um documento atualizado.</td><td>Manter o escopo do sistema.</td></tr>
+        <tr><td><strong>Reter</strong> informação documentada</td><td>Guardar um registro do que foi feito.</td><td>Reter evidência de competência.</td></tr>
+        <tr><td><strong>Na extensão necessária</strong></td><td>A organização decide quanto, e precisa saber justificar.</td><td>Documentar os processos na extensão necessária.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>O que mudou em relação à edição de 2008</h3>
+  <p>Muitos procedimentos em uso ainda carregam o vocabulário antigo. A tabela ajuda a reconhecê-lo.</p>
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:34%">Edição de 2008</th><th style="width:34%">Edição de 2015</th><th>O que muda na prática</th></tr></thead>
+      <tbody>
+        <tr><td>Documentos e registros</td><td>Informação documentada</td><td>Um só termo, para qualquer formato e meio.</td></tr>
+        <tr><td>Manual da qualidade e seis procedimentos obrigatórios</td><td>Não são mais exigidos</td><td>A organização decide que documentos precisa ter.</td></tr>
+        <tr><td>Representante da direção</td><td>Não é mais exigido</td><td>As responsabilidades são atribuídas pela alta direção, a quem decidir.</td></tr>
+        <tr><td>Ação preventiva</td><td>Riscos e oportunidades</td><td>A prevenção passa para o planejamento, no requisito 6.1.</td></tr>
+        <tr><td>Exclusões</td><td>Aplicabilidade</td><td>Qualquer requisito pode ser não aplicável, com justificativa.</td></tr>
+        <tr><td>Fornecedor e produto adquirido</td><td>Provedor externo e processos, produtos e serviços providos externamente</td><td>Inclui a terceirização de processos.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 3 ============================ -->
+<section id="s4">
+  <p class="eyebrow">Módulo 3</p>
+  <h2>Seção 4 · Contexto da organização</h2>
+  <p>A seção 4 é o alicerce. Antes de planejar, a organização olha para dentro e para fora, identifica quem depende do sistema, decide até onde ele vai e define os processos que o compõem. Um sistema copiado de outra empresa falha justamente aqui.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 210" role="img" aria-label="A lógica da seção 4. As questões internas e externas, do requisito 4.1, e as partes interessadas, do requisito 4.2, definem o escopo do sistema, no requisito 4.3. O escopo delimita os processos do sistema, no requisito 4.4. As questões e as partes interessadas também alimentam os riscos e as oportunidades, do requisito 6.1.">
+        <defs>
+          <marker id="a4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker>
+          <marker id="a4m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah-mu" d="M0 0 L10 5 L0 10 z"/></marker>
+        </defs>
+        <rect class="bx" x="20" y="20" width="240" height="64"/>
+        <text class="mono mu" x="36" y="40" font-size="10">4.1</text>
+        <text class="b" x="36" y="62" font-size="13">Questões internas e externas</text>
+        <rect class="bx" x="20" y="108" width="240" height="64"/>
+        <text class="mono mu" x="36" y="128" font-size="10">4.2</text>
+        <text class="b" x="36" y="150" font-size="13">Partes interessadas</text>
+        <path class="ln" d="M262 52 H296 V96 H326" marker-end="url(#a4)"/>
+        <path class="ln" d="M262 140 H296 V96"/>
+
+        <rect class="bx" x="330" y="64" width="230" height="64"/>
+        <text class="mono mu" x="346" y="84" font-size="10">4.3</text>
+        <text class="b" x="346" y="106" font-size="13">Escopo do sistema</text>
+        <line class="ln" x1="562" y1="96" x2="626" y2="96" marker-end="url(#a4)"/>
+
+        <rect class="bx-ink" x="630" y="64" width="250" height="64"/>
+        <text class="mono t-ground" x="646" y="84" font-size="10">4.4</text>
+        <text class="b t-ground" x="646" y="106" font-size="13">Processos do sistema</text>
+
+        <path class="ln-mu dash" d="M296 140 V188 H326" marker-end="url(#a4m)"/>
+        <text class="mu" x="334" y="192" font-size="11.5">também alimentam os riscos e as oportunidades, no requisito 6.1</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 4.</b> A lógica da seção 4. A <a href="../SWOT/treinamento-swot.html">Matriz SWOT</a> organiza as questões do requisito 4.1. O <a href="../SIPOC/treinamento-sipoc.html">SIPOC</a> descreve cada processo do requisito 4.4.</figcaption>
+  </figure>
+
+<!--REQ4-->
+
+  <div class="pair">
+    <div class="box">
+      <h4>O escopo deve dizer</h4>
+      <ul>
+        <li>Que produtos e serviços o sistema cobre.</li>
+        <li>Que locais e unidades estão incluídos.</li>
+        <li>Que requisitos da norma não se aplicam, e por quê.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h4>Um requisito só é não aplicável quando</h4>
+      <ul>
+        <li>A atividade não existe na organização.</li>
+        <li>A falta dele não afeta a conformidade do produto ou do serviço.</li>
+        <li>A falta dele não afeta a satisfação do cliente.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 4 ============================ -->
+<section id="s5">
+  <p class="eyebrow">Módulo 4</p>
+  <h2>Seções 5 e 6 · Liderança e planejamento</h2>
+  <p>A seção 5 trata de quem conduz. A seção 6 trata de para onde. As duas são curtas e decidem o resto: sem compromisso da direção, o sistema vira papel, e sem objetivos, não há o que medir.</p>
+
+  <h3>Seção 5 · Liderança</h3>
+  <p>Os requisitos da seção 5 são dirigidos à alta direção. Eles não podem ser delegados, embora as tarefas possam. O auditor confere esta seção conversando com a direção, e não lendo documentos.</p>
+<!--REQ5-->
+
+  <h3>Seção 6 · Planejamento</h3>
+  <p>A seção 6 responde a três perguntas: o que pode atrapalhar ou ajudar, aonde se quer chegar e como mudar sem quebrar o que funciona. A norma não exige um método formal de gestão de riscos. Exige que os riscos e as oportunidades sejam considerados e que exista ação proporcional.</p>
+<!--REQ6-->
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:30%">Um objetivo da qualidade precisa</th><th style="width:34%">Exemplo que atende</th><th>Exemplo que não atende</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Ser mensurável</strong></td><td>Entregar 95% dos pedidos em até 40 minutos.</td><td>Melhorar as entregas.</td></tr>
+        <tr><td><strong>Ser coerente com a política</strong></td><td>A política fala em pontualidade, e o objetivo mede o prazo.</td><td>A política fala em pontualidade, e só se mede o faturamento.</td></tr>
+        <tr><td><strong>Ter plano</strong></td><td>Ações, responsável, recursos e prazo definidos.</td><td>Meta no quadro, sem ninguém responsável.</td></tr>
+        <tr><td><strong>Ser monitorado</strong></td><td>Indicador semanal, analisado em reunião.</td><td>Resultado calculado só na véspera da auditoria.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 5 ============================ -->
+<section id="s7">
+  <p class="eyebrow">Módulo 5</p>
+  <h2>Seção 7 · Apoio</h2>
+  <p>A seção 7 reúne o que sustenta todos os processos: recursos, pessoas, conhecimento, comunicação e documentos. Ela não produz nada para o cliente, mas nada é produzido sem ela.</p>
+<!--REQ7-->
+
+  <div class="pair">
+    <div class="box">
+      <h4>Competência (7.2)</h4>
+      <ul>
+        <li>É saber fazer.</li>
+        <li>Vem de educação, treinamento ou experiência.</li>
+        <li>Pede evidência documentada.</li>
+        <li>Pede avaliação da eficácia do treinamento.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h4>Conscientização (7.3)</h4>
+      <ul>
+        <li>É saber por que faz.</li>
+        <li>Vem de comunicação e de exemplo.</li>
+        <li>Não pede registro.</li>
+        <li>É conferida em entrevista com quem executa.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="note">
+    <h4>Calibração</h4>
+    <p>O requisito 7.1.5 só exige calibração quando a rastreabilidade da medição é um requisito, ou quando a organização a considera necessária para confiar no resultado. Uma régua usada para conferir a embalagem não precisa do mesmo tratamento que o instrumento que aprova a peça.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 6 ============================ -->
+<section id="s8">
+  <p class="eyebrow">Módulo 6</p>
+  <h2>Seção 8 · Operação</h2>
+  <p>A seção 8 é a maior da norma e acompanha o caminho do produto ou do serviço: do pedido do cliente até a entrega e o que vem depois. É a seção que mais muda de uma organização para outra.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 250" role="img" aria-label="O fluxo da seção 8. O requisito 8.1, planejamento e controle operacionais, cobre todas as etapas. A sequência é: 8.2, requisitos do cliente; 8.3, projeto e desenvolvimento; 8.4, provedores externos; 8.5, produção e provisão de serviço; e 8.6, liberação. Quando algo sai errado na produção ou na liberação, aplica-se o requisito 8.7, controle de saídas não conformes.">
+        <defs>
+          <marker id="a5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker>
+          <marker id="a5m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah-mu" d="M0 0 L10 5 L0 10 z"/></marker>
+        </defs>
+        <rect class="bx-out2" x="10" y="16" width="880" height="38"/>
+        <text x="26" y="40" font-size="12.5"><tspan class="b">8.1</tspan>  Planejamento e controle operacionais</text>
+        <text class="mu" x="874" y="40" font-size="11.5" text-anchor="end">vale para todas as etapas</text>
+        <g font-size="12">
+          <rect class="bx" x="10" y="78" width="160" height="76"/><text class="mono mu" x="24" y="98" font-size="10">8.2</text><text class="b" x="24" y="120">Requisitos</text><text x="24" y="137">do cliente</text>
+          <rect class="bx" x="190" y="78" width="160" height="76"/><text class="mono mu" x="204" y="98" font-size="10">8.3</text><text class="b" x="204" y="120">Projeto e</text><text x="204" y="137">desenvolvimento</text>
+          <rect class="bx" x="370" y="78" width="160" height="76"/><text class="mono mu" x="384" y="98" font-size="10">8.4</text><text class="b" x="384" y="120">Provedores</text><text x="384" y="137">externos</text>
+          <rect class="bx-d" x="550" y="78" width="160" height="76"/><text class="mono mu" x="564" y="98" font-size="10">8.5</text><text class="b" x="564" y="120">Produção e</text><text x="564" y="137">provisão de serviço</text>
+          <rect class="bx-ink" x="730" y="78" width="160" height="76"/><text class="mono t-ground" x="744" y="98" font-size="10">8.6</text><text class="b t-ground" x="744" y="120">Liberação</text><text class="t-ground" x="744" y="137">ao cliente</text>
+        </g>
+        <line class="ln" x1="172" y1="116" x2="186" y2="116" marker-end="url(#a5)"/><line class="ln" x1="352" y1="116" x2="366" y2="116" marker-end="url(#a5)"/>
+        <line class="ln" x1="532" y1="116" x2="546" y2="116" marker-end="url(#a5)"/><line class="ln" x1="712" y1="116" x2="726" y2="116" marker-end="url(#a5)"/>
+
+        <line class="ln-mu dash" x1="630" y1="156" x2="630" y2="182" marker-end="url(#a5m)"/>
+        <line class="ln-mu dash" x1="810" y1="156" x2="810" y2="182" marker-end="url(#a5m)"/>
+        <rect class="bx-a" x="550" y="186" width="340" height="50"/>
+        <text x="564" y="216" font-size="12.5"><tspan class="b">8.7</tspan>  Controle de saídas não conformes</text>
+        <text class="mu" x="10" y="182" font-size="11.5">O pedido entra pela esquerda</text>
+        <text class="mu" x="10" y="199" font-size="11.5">e sai, como produto ou serviço,</text>
+        <text class="mu" x="10" y="216" font-size="11.5">pela direita.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 5.</b> O fluxo da seção 8. Nem toda organização passa por todas as caixas: quem não desenvolve produtos ou serviços pode declarar o requisito 8.3 não aplicável, com justificativa.</figcaption>
+  </figure>
+
+<!--REQ8-->
+
+  <p>Quando uma saída não conforme se repete, ou chega ao cliente, o assunto deixa de ser só do requisito 8.7 e passa a pedir ação corretiva, no requisito 10.2. O estudo de <a href="../Nao-Conformidade/treinamento-nao-conformidade.html">Não conformidade e ação corretiva</a> mostra a diferença.</p>
+</section>
+
+<!-- ============================ MÓDULO 7 ============================ -->
+<section id="s9">
+  <p class="eyebrow">Módulo 7</p>
+  <h2>Seções 9 e 10 · Avaliação de desempenho e melhoria</h2>
+  <p>As duas últimas seções fecham o ciclo. A seção 9 pergunta se o sistema funciona. A seção 10 age sobre a resposta. Sistemas que param na seção 8 produzem, mas não aprendem.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 232" role="img" aria-label="O fluxo das seções 9 e 10. Os resultados do monitoramento e da medição, do requisito 9.1, os resultados das auditorias internas, do requisito 9.2, e as não conformidades e ações corretivas, do requisito 10.2, são entradas da análise crítica pela direção, no requisito 9.3. As saídas da análise crítica são decisões sobre oportunidades de melhoria, mudanças no sistema e recursos.">
+        <defs>
+          <marker id="a6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker>
+        </defs>
+        <text class="mono mu" x="20" y="16" font-size="10">ENTRADAS</text>
+        <g font-size="12">
+          <rect class="bx-c" x="20" y="26" width="240" height="56"/><text class="mono mu" x="34" y="46" font-size="10">9.1</text><text class="b" x="34" y="66">Indicadores e satisfação do cliente</text>
+          <rect class="bx-c" x="20" y="94" width="240" height="56"/><text class="mono mu" x="34" y="114" font-size="10">9.2</text><text class="b" x="34" y="134">Auditorias internas</text>
+          <rect class="bx-a" x="20" y="162" width="240" height="56"/><text class="mono mu" x="34" y="182" font-size="10">10.2</text><text class="b" x="34" y="202">Não conformidades e ações</text>
+        </g>
+        <path class="ln" d="M262 54 H296 V122 H326" marker-end="url(#a6)"/>
+        <line class="ln" x1="262" y1="122" x2="296" y2="122"/>
+        <path class="ln" d="M262 190 H296 V122"/>
+
+        <rect class="bx-ink" x="330" y="82" width="240" height="80"/>
+        <text class="mono t-ground" x="346" y="104" font-size="10">9.3</text>
+        <text class="b t-ground" x="346" y="128" font-size="13.5">Análise crítica pela direção</text>
+        <text class="t-ground" x="346" y="147" font-size="11.5">a intervalos planejados</text>
+
+        <path class="ln" d="M572 122 H606 V54 H636" marker-end="url(#a6)"/>
+        <line class="ln" x1="606" y1="122" x2="636" y2="122" marker-end="url(#a6)"/>
+        <path class="ln" d="M606 122 V190 H636" marker-end="url(#a6)"/>
+        <text class="mono mu" x="640" y="16" font-size="10">SAÍDAS</text>
+        <g font-size="12">
+          <rect class="bx" x="640" y="26" width="240" height="56"/><text class="b" x="654" y="50">Oportunidades de melhoria</text><text class="mu" x="654" y="68" font-size="11">seção 10</text>
+          <rect class="bx" x="640" y="94" width="240" height="56"/><text class="b" x="654" y="118">Mudanças no sistema</text><text class="mu" x="654" y="136" font-size="11">requisito 6.3</text>
+          <rect class="bx" x="640" y="162" width="240" height="56"/><text class="b" x="654" y="186">Necessidade de recursos</text><text class="mu" x="654" y="204" font-size="11">requisito 7.1</text>
+        </g>
+      </svg>
+    </div>
+    <figcaption><b>Figura 6.</b> A análise crítica pela direção é o ponto em que os resultados viram decisão. A figura mostra as entradas principais. A lista completa está no quadro abaixo.</figcaption>
+  </figure>
+
+  <h3>Seção 9 · Avaliação de desempenho</h3>
+<!--REQ9-->
+
+  <div class="pair">
+    <div class="box">
+      <h4>O que a análise crítica considera</h4>
+      <ul>
+        <li>A situação das ações decididas nas análises anteriores.</li>
+        <li>As mudanças nas questões internas e externas.</li>
+        <li>A satisfação do cliente e o retorno das partes interessadas.</li>
+        <li>O grau em que os objetivos foram alcançados.</li>
+        <li>O desempenho dos processos e a conformidade dos produtos.</li>
+        <li>As não conformidades e as ações corretivas.</li>
+        <li>Os resultados de medição e de auditoria.</li>
+        <li>O desempenho dos provedores externos.</li>
+        <li>A suficiência dos recursos.</li>
+        <li>A eficácia das ações sobre riscos e oportunidades.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h4>O que a análise crítica decide</h4>
+      <ul>
+        <li>Que oportunidades de melhoria serão tratadas.</li>
+        <li>Que mudanças o sistema precisa.</li>
+        <li>Que recursos são necessários.</li>
+      </ul>
+      <p>Uma ata que só registra “o sistema está adequado” mostra que a reunião aconteceu, mas não mostra análise. O auditor procura as decisões, com responsável e prazo.</p>
+    </div>
+  </div>
+
+  <h3>Seção 10 · Melhoria</h3>
+<!--REQ10-->
+</section>
+
+<!-- ============================ MÓDULO 8 ============================ -->
+<section id="documentos">
+  <p class="eyebrow">Módulo 8</p>
+  <h2>Informação documentada</h2>
+  <p>A edição de 2015 trocou “documentos” e “registros” por um só termo, informação documentada, e passou a usar dois verbos. Manter é ter um documento atualizado, que diz o que fazer. Reter é guardar um registro, que mostra o que foi feito.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 176" role="img" aria-label="Manter e reter. O documento mantido orienta a atividade: diz o que fazer e muda por revisão, como uma política, um procedimento ou uma instrução. A atividade gera o registro retido: mostra o que foi feito e não se altera depois, como um certificado de calibração, um relatório de auditoria ou uma ata.">
+        <defs>
+          <marker id="a7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker>
+        </defs>
+        <rect class="bx-p" x="20" y="20" width="260" height="136"/><rect class="hd-p" x="20" y="20" width="260" height="36"/>
+        <text class="b on" x="36" y="43" font-size="13.5">Manter</text>
+        <text class="mono on" x="264" y="43" font-size="10" text-anchor="end">DOCUMENTO</text>
+        <text x="36" y="80" font-size="11.5">Diz o que fazer.</text>
+        <text x="36" y="98" font-size="11.5">Muda por revisão controlada.</text>
+        <text class="mu" x="36" y="124" font-size="11.5">Política, procedimento,</text>
+        <text class="mu" x="36" y="140" font-size="11.5">instrução, especificação.</text>
+
+        <line class="ln" x1="282" y1="88" x2="336" y2="88" marker-end="url(#a7)"/>
+        <text x="309" y="78" font-size="11" text-anchor="middle">orienta</text>
+        <rect class="bx" x="340" y="48" width="220" height="80"/>
+        <text class="b" x="450" y="84" font-size="13.5" text-anchor="middle">Atividade</text>
+        <text class="mu" x="450" y="104" font-size="11.5" text-anchor="middle">o trabalho sendo feito</text>
+        <line class="ln" x1="562" y1="88" x2="616" y2="88" marker-end="url(#a7)"/>
+        <text x="589" y="78" font-size="11" text-anchor="middle">gera</text>
+
+        <rect class="bx-c" x="620" y="20" width="260" height="136"/><rect class="hd-c" x="620" y="20" width="260" height="36"/>
+        <text class="b on" x="636" y="43" font-size="13.5">Reter</text>
+        <text class="mono on" x="864" y="43" font-size="10" text-anchor="end">REGISTRO</text>
+        <text x="636" y="80" font-size="11.5">Mostra o que foi feito.</text>
+        <text x="636" y="98" font-size="11.5">Não se altera depois de pronto.</text>
+        <text class="mu" x="636" y="124" font-size="11.5">Certificado de calibração,</text>
+        <text class="mu" x="636" y="140" font-size="11.5">relatório de auditoria, ata.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 7.</b> Manter e reter. O documento vem antes da atividade, e o registro vem depois.</figcaption>
+  </figure>
+
+  <h3>O que a norma exige que exista</h3>
+  <p>A lista abaixo reúne os pontos em que a norma pede informação documentada. A coluna de exemplos mostra formas comuns de atender. A organização escolhe o formato e o nome.</p>
+<!--DOCS-->
+
+  <div class="note">
+    <h4>O que a norma não exige</h4>
+    <p>A edição de 2015 não exige manual da qualidade nem uma lista fixa de procedimentos. Exige os itens da tabela e a informação que a própria organização considerar necessária para o sistema funcionar. Documento demais também é um problema: ninguém lê, ninguém atualiza, e o auditor encontra a diferença entre o papel e a prática.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 9 ============================ -->
+<section id="exemplos">
+  <p class="eyebrow">Módulo 9</p>
+  <h2>Exemplos resolvidos</h2>
+  <p>Dois diagnósticos e um exercício de aplicabilidade. Os diagnósticos usam as organizações dos outros estudos da série e também estão preenchidos na planilha de apoio. Os dados são ilustrativos e foram criados para este treinamento.</p>
+
+  <h3>Exemplo 1. Diagnóstico da pizzaria, nas sete seções</h3>
+<!--EX1HEAD-->
+
+  <figure id="fig-bars">
+    <div class="scroll">
+<!--CHART-->
+    </div>
+    <div class="tip" id="bars-tip" hidden></div>
+    <figcaption><b>Figura 8.</b> Situação dos 45 requisitos da pizzaria, por seção. O comprimento da barra é o número de requisitos da seção. Passe o mouse sobre as barras para ver os valores.</figcaption>
+    <details class="data">
+      <summary>Ver os dados em tabela</summary>
+      <div class="tbl">
+<!--CHARTTABLE-->
+      </div>
+    </details>
+  </figure>
+
+<!--EX1-->
+  <p><strong>O que observar.</strong> A pizzaria opera bem: a seção 8 tem 11 dos 17 requisitos atendidos. As lacunas estão nas seções de gestão, que pedem coisas que uma empresa pequena costuma fazer de cabeça: escopo, política, planejamento de mudanças e análise crítica. Dos cinco requisitos não atendidos, quatro se resolvem com decisões da direção, e não com investimento.</p>
+
+  <h3>Exemplo 2. O processo de compras diante da norma</h3>
+<!--EX2-->
+  <p><strong>O que observar.</strong> Um processo não responde só pelo “seu” requisito. Compras atende ao 8.4, mas também aparece em riscos, competência, documentos, análise de dados e melhoria. As duas lacunas do requisito 8.4 são as não conformidades da auditoria 2026-07, tratadas nos estudos de <a href="../Auditoria/treinamento-auditoria.html#exemplos">Auditoria interna</a> e de <a href="../Nao-Conformidade/treinamento-nao-conformidade.html#exemplos">Não conformidade e ação corretiva</a>.</p>
+
+  <h3>Exemplo 3. Aplicabilidade em três organizações</h3>
+  <dl class="ficha">
+    <div><dt>Requisito</dt><dd>4.3, escopo do sistema</dd></div>
+    <div><dt>Pergunta</dt><dd>Que requisitos podem ser declarados não aplicáveis?</dd></div>
+  </dl>
+  <div class="tbl">
+    <table class="aud">
+      <thead><tr><th style="width:18%">Organização</th><th style="width:26%">Escopo</th><th style="width:20%">Requisito em dúvida</th><th style="width:12%">Decisão</th><th>Justificativa</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Pizzaria</strong></td><td>Produção e entrega de pizzas, no salão e por delivery.</td><td>8.3 · Projeto e desenvolvimento</td><td><span class="chip p">Aplicável</span></td><td>A loja cria sabores novos e define as receitas. O requisito é atendido de forma simples: teste, aprovação e registro da receita.</td></tr>
+        <tr><td><strong>Transportadora</strong></td><td>Transporte rodoviário de cargas secas, em rotas definidas pelo cliente.</td><td>8.3 · Projeto e desenvolvimento</td><td><span class="chip sl">Não aplicável</span></td><td>O serviço é prestado conforme a especificação do cliente, e a empresa não desenvolve serviços novos. A justificativa fica no escopo.</td></tr>
+        <tr><td><strong>Escritório de contabilidade</strong></td><td>Serviços contábeis e fiscais para pequenas empresas.</td><td>7.1.5 · Rastreabilidade de medição</td><td><span class="chip sl">Não aplicável</span></td><td>O serviço não usa instrumentos de medição. O monitoramento é feito por conferência de documentos.</td></tr>
+        <tr><td><strong>Escritório de contabilidade</strong></td><td>O mesmo.</td><td>8.4 · Provedores externos</td><td><span class="chip p">Aplicável</span></td><td>O escritório contrata o sistema contábil e um serviço de guarda de documentos. Os dois afetam o que o cliente recebe.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p><strong>O que observar.</strong> A decisão não depende do porte nem da vontade, e sim do que a organização faz. Requisitos como 9.2, auditoria interna, e 9.3, análise crítica, aplicam-se a todas.</p>
+</section>
+
+<!-- ============================ MÓDULO 10 ============================ -->
+<section id="erros">
+  <p class="eyebrow">Módulo 10</p>
+  <h2>Erros comuns</h2>
+  <div class="errs">
+    <div><h4>Documentar tudo</h4><p>Um procedimento para cada requisito, com vinte páginas cada.</p><p class="fix"><b>Correção:</b> documente o que a norma exige e o que o processo precisa. O resto é peso.</p></div>
+    <div><h4>Copiar a norma</h4><p>A política e os procedimentos repetem as frases da norma.</p><p class="fix"><b>Correção:</b> escreva como a sua organização atende, com as palavras que a equipe usa.</p></div>
+    <div><h4>Deixar o sistema com o setor da Qualidade</h4><p>“Isso é com o pessoal da ISO.”</p><p class="fix"><b>Correção:</b> cada processo tem um dono, e a seção 5 é da direção. A Qualidade apoia.</p></div>
+    <div><h4>Excluir o que dá trabalho</h4><p>O requisito 8.3 é declarado não aplicável, mas a empresa cria produtos.</p><p class="fix"><b>Correção:</b> a não aplicabilidade depende do que a organização faz, e precisa de justificativa.</p></div>
+    <div><h4>Ler a norma como lista de tarefas</h4><p>Cada requisito é atendido isoladamente, por um documento.</p><p class="fix"><b>Correção:</b> comece pelos processos e veja que requisitos cada um atende.</p></div>
+    <div><h4>Preparar o sistema para a auditoria</h4><p>Os registros são preenchidos na semana anterior.</p><p class="fix"><b>Correção:</b> o registro nasce junto com a atividade. Datas concentradas denunciam o atraso.</p></div>
+    <div><h4>Medir sem analisar</h4><p>Doze indicadores atualizados todo mês, e nenhuma decisão tomada.</p><p class="fix"><b>Correção:</b> tenha menos indicadores, e registre o que foi decidido a partir de cada um.</p></div>
+    <div><h4>Confundir sistema com produto</h4><p>“Produto com certificação ISO 9001.”</p><p class="fix"><b>Correção:</b> a norma certifica o sistema de gestão da organização, e não o produto.</p></div>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 11 ============================ -->
+<section id="ferramentas">
+  <p class="eyebrow">Módulo 11</p>
+  <h2>A norma e as ferramentas da série</h2>
+  <p>A norma diz o que alcançar. As ferramentas são formas de chegar lá. Nenhuma delas é exigida, mas cada uma ajuda a atender a requisitos e a mostrar ao auditor como a organização decide.</p>
+
+  <figure>
+    <div class="scroll">
+<!--MATRIZ-->
+    </div>
+    <figcaption><b>Figura 9.</b> Os estudos da série e as seções da norma que cada um ajuda a atender. As seções 7 e 8 são as menos cobertas: elas dependem mais dos processos de cada organização do que de ferramentas.</figcaption>
+  </figure>
+
+<!--MAPA-->
+</section>
+
+<!-- ============================ MÓDULO 12 ============================ -->
+<section id="implantacao">
+  <p class="eyebrow">Módulo 12</p>
+  <h2>O caminho da implantação</h2>
+  <p>A implantação começa por saber onde a organização está. O diagnóstico compara a prática com cada requisito e mostra o tamanho do trabalho. O prazo abaixo, de doze meses, é uma referência para uma organização pequena ou média. Ele varia com o porte e com o que já existe.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 136" role="img" aria-label="Uma implantação em doze meses: 1 mês de diagnóstico, 2 meses de planejamento, 5 meses de implantação, 2 meses de verificação, com auditoria interna e análise crítica, e 2 meses de certificação, com as duas fases da auditoria externa.">
+        <g font-size="11.5" text-anchor="middle">
+          <rect class="bx" x="60" y="24" width="65" height="56"/><text x="92.5" y="49" font-size="10">Diag-</text><text x="92.5" y="63" font-size="10">nóstico</text>
+          <rect class="hd-p gap2" x="125" y="24" width="130" height="56"/><text class="on b" x="190" y="56">Planejamento</text>
+          <rect class="hd-d gap2" x="255" y="24" width="325" height="56"/><text class="on b" x="417.5" y="56">Implantação</text>
+          <rect class="hd-c gap2" x="580" y="24" width="130" height="56"/><text class="on b" x="645" y="56">Verificação</text>
+          <rect class="hd-ink gap2" x="710" y="24" width="130" height="56"/><text class="t-ground b" x="775" y="56">Certificação</text>
+        </g>
+        <g class="ln-mu" stroke-width="1">
+          <line x1="60" y1="82" x2="60" y2="94"/><line x1="125" y1="82" x2="125" y2="94"/><line x1="255" y1="82" x2="255" y2="94"/>
+          <line x1="580" y1="82" x2="580" y2="94"/><line x1="710" y1="82" x2="710" y2="94"/><line x1="840" y1="82" x2="840" y2="94"/>
+        </g>
+        <g class="mono" font-size="10.5" text-anchor="middle">
+          <text class="mu" x="60" y="112">início</text><text class="mu" x="125" y="112">mês 1</text><text class="mu" x="255" y="112">mês 3</text>
+          <text class="mu" x="580" y="112">mês 8</text><text class="mu" x="710" y="112">mês 10</text><text class="mu" x="840" y="112">mês 12</text>
+        </g>
+      </svg>
+    </div>
+    <figcaption><b>Figura 10.</b> Uma implantação de doze meses, desenhada em escala. A implantação ocupa a maior parte, porque os registros precisam de tempo para existir: não se audita um sistema que ainda não rodou.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:18%">Etapa</th><th style="width:40%">O que fazer</th><th>O que fica pronto</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Diagnóstico</strong></td><td>Comparar a prática com cada requisito e registrar a evidência e o que falta.</td><td>Percentual de atendimento por seção e lista de lacunas.</td></tr>
+        <tr><td><strong>Planejamento</strong></td><td>Definir contexto, partes interessadas, escopo, processos, política, objetivos e riscos.</td><td>Seções 4, 5 e 6 atendidas, e plano de ação para as lacunas.</td></tr>
+        <tr><td><strong>Implantação</strong></td><td>Escrever os documentos necessários, treinar as pessoas e começar a gerar os registros.</td><td>Seções 7 e 8 em operação, com pelo menos três meses de registros.</td></tr>
+        <tr><td><strong>Verificação</strong></td><td>Auditar todos os requisitos aplicáveis, tratar as não conformidades e fazer a análise crítica.</td><td>Seções 9 e 10 atendidas, com um ciclo completo.</td></tr>
+        <tr><td><strong>Certificação</strong></td><td>Contratar o organismo de certificação e passar pelas duas fases da auditoria.</td><td>Certificado, válido por três anos, com auditorias anuais de manutenção.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>As lacunas do diagnóstico viram ações. A <a href="../GUT/treinamento-gut.html">Matriz GUT</a> ajuda a ordená-las, e o <a href="../5W2H/treinamento-5w2h.html">5W2H</a>, a planejá-las.</p>
+
+  <h3>Checklist de validação</h3>
+  <p>Marque os itens conforme revisa o seu sistema. As marcações ficam salvas neste navegador.</p>
+  <ol class="check" id="checklist">
+<!--CHECK-->
+  </ol>
+  <div class="bar"><span><b id="ck-count">0</b> de 12 itens marcados</span><button class="btn" id="ck-reset" type="button">Limpar marcações</button></div>
+</section>
+
+<!-- ============================ MÓDULO 13 ============================ -->
+<section id="pratique">
+  <p class="eyebrow">Módulo 13</p>
+  <h2>Pratique</h2>
+  <h3>Exercício 1. Em que seção está?</h3>
+  <p>Cada item descreve uma atividade. Escolha a seção da norma que trata dela, de 4 a 10.</p>
+  <div class="quiz" id="quiz"></div>
+  <div class="bar"><span>Acertos: <b id="qz-score">0</b> de <b id="qz-total">12</b></span><span>Respondidos: <b id="qz-done">0</b></span><button class="btn" id="qz-reset" type="button">Recomeçar</button></div>
+
+  <h3>Exercício 2. Faça o diagnóstico de um processo</h3>
+  <p>Escolha um processo que você conhece bem. Abra a planilha de apoio e siga o roteiro.</p>
+  <ol>
+    <li>Na aba Diagnóstico, marque como não aplicáveis os requisitos que não têm relação com o processo.</li>
+    <li>Para cada requisito aplicável, leia a pergunta e procure a evidência.</li>
+    <li>Registre a situação: atende, atende em parte ou não atende.</li>
+    <li>Escreva a evidência encontrada e, quando houver lacuna, o que falta.</li>
+    <li>Na aba Resumo, veja o percentual por seção e identifique a seção mais fraca.</li>
+    <li>Na aba Plano de ação, escreva uma ação para cada lacuna.</li>
+    <li>Na aba Documentos, confira se a informação documentada exigida existe.</li>
+  </ol>
+  <p>Depois, mostre o diagnóstico a quem executa o processo e pergunte se a evidência registrada corresponde ao que acontece todos os dias. Diagnóstico feito só com documentos mede o papel.</p>
+</section>
+
+<!-- ============================ MÓDULO 14 ============================ -->
+<section id="planilha">
+  <p class="eyebrow">Módulo 14</p>
+  <h2>A planilha de apoio</h2>
+  <p>Este treinamento acompanha o arquivo <a id="xlsx-ref" href="ISO-9001-modelo.xlsx">ISO-9001-modelo.xlsx</a>, que fica na mesma pasta. As células em amarelo-claro são para preenchimento. As células cinza são calculadas.</p>
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Aba</th><th>Para que serve</th><th style="width:36%">O que ela calcula</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Instruções</strong></td><td>Legenda de cores, ordem de preenchimento e regras do modelo.</td><td>Nada. É só leitura.</td></tr>
+        <tr><td><strong>Diagnóstico</strong></td><td>Os 45 requisitos deste estudo, com a pergunta de cada um, a situação, a evidência e o que falta.</td><td>Pontos de cada requisito e conferência do preenchimento.</td></tr>
+        <tr><td><strong>Resumo</strong></td><td>Resultado do diagnóstico por seção.</td><td>Contagens, percentual de atendimento, estágio do sistema e gráfico.</td></tr>
+        <tr><td><strong>Plano de ação</strong></td><td>Até 20 ações para as lacunas, com requisito, responsável, prazo e status.</td><td>Título do requisito, situação de cada ação, percentual concluído e lacunas sem ação.</td></tr>
+        <tr><td><strong>Documentos</strong></td><td>A informação documentada exigida pela norma, com o documento ou o registro da organização.</td><td>Itens existentes, em elaboração e ausentes.</td></tr>
+        <tr><td><strong>Checklist</strong></td><td>Os mesmos 12 itens do módulo 12, com status Sim, Parcial ou Não.</td><td>Percentual atendido e situação da validação.</td></tr>
+        <tr><td><strong>Exemplo 1 e Exemplo 2</strong></td><td>Os diagnósticos da pizzaria e do processo de compras.</td><td>Percentual de atendimento por seção e geral.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ GLOSSÁRIO ============================ -->
+<section id="glossario">
+  <p class="eyebrow">Referência</p>
+  <h2>Glossário</h2>
+  <dl class="gloss">
+    <div><dt>Abordagem de processo</dt><dd>Forma de gerir as atividades como processos ligados, em que a saída de um é a entrada de outro.</dd></div>
+    <div><dt>Alta direção</dt><dd>Pessoa ou grupo que dirige e controla a organização no nível mais alto.</dd></div>
+    <div><dt>Aplicabilidade</dt><dd>Decisão, justificada no escopo, sobre que requisitos da norma valem para a organização.</dd></div>
+    <div><dt>Certificação</dt><dd>Declaração de um organismo independente de que o sistema atende à norma.</dd></div>
+    <div><dt>Escopo</dt><dd>Limites do sistema: produtos, serviços, locais e requisitos aplicáveis.</dd></div>
+    <div><dt>Informação documentada</dt><dd>Informação que a organização precisa controlar e manter, e o meio em que ela está.</dd></div>
+    <div><dt>Mentalidade de risco</dt><dd>Hábito de considerar o que pode dar errado ou certo antes de decidir.</dd></div>
+    <div><dt>Parte interessada</dt><dd>Pessoa ou organização que pode afetar uma decisão ou atividade, ou ser afetada por ela.</dd></div>
+    <div><dt>Política da qualidade</dt><dd>Intenções e direção da organização quanto à qualidade, declaradas pela alta direção.</dd></div>
+    <div><dt>Provedor externo</dt><dd>Fornecedor de processos, produtos ou serviços que não faz parte da organização.</dd></div>
+    <div><dt>Requisito</dt><dd>Necessidade ou expectativa declarada, implícita ou obrigatória.</dd></div>
+    <div><dt>Saída</dt><dd>Resultado de um processo: produto, serviço ou informação.</dd></div>
+    <div><dt>Sistema de gestão da qualidade</dt><dd>Conjunto de processos, recursos e responsabilidades com que a organização dirige a qualidade.</dd></div>
+    <div><dt>Validação</dt><dd>Confirmação de que o produto ou o serviço atende ao uso pretendido.</dd></div>
+    <div><dt>Verificação</dt><dd>Confirmação de que os requisitos especificados foram atendidos.</dd></div>
+  </dl>
+</section>
+
+</main>
+</div>
+
+<footer>Material de estudo. Os exemplos, documentos e números são ilustrativos e foram criados para fins didáticos. As referências às normas ISO são resumos para estudo e não substituem o texto das normas.</footer>
+</div>
+
+<script>
+(function () {
+  function read(key) { try { return JSON.parse(localStorage.getItem(key) || 'null'); } catch (e) { return null; } }
+  function write(key, val) { try { localStorage.setItem(key, JSON.stringify(val)); } catch (e) {} }
+
+  /* ---------- Checklist ---------- */
+  var boxes = Array.prototype.slice.call(document.querySelectorAll('#checklist input'));
+  var count = document.getElementById('ck-count');
+  var saved = read('iso-9001-checklist') || {};
+  function refreshChecks() {
+    var n = 0, state = {};
+    boxes.forEach(function (b) { if (b.checked) { n++; } state[b.id] = b.checked; });
+    count.textContent = n;
+    return state;
+  }
+  boxes.forEach(function (b) {
+    if (saved[b.id]) { b.checked = true; }
+    b.addEventListener('change', function () { write('iso-9001-checklist', refreshChecks()); });
+  });
+  refreshChecks();
+  document.getElementById('ck-reset').addEventListener('click', function () {
+    boxes.forEach(function (b) { b.checked = false; });
+    write('iso-9001-checklist', refreshChecks());
+  });
+
+  /* ---------- Exercício ---------- */
+  var KEYS = ['4', '5', '6', '7', '8', '9', '10'];
+  var NAMES = { '4': 'contexto da organização', '5': 'liderança', '6': 'planejamento', '7': 'apoio', '8': 'operação',
+                '9': 'avaliação de desempenho', '10': 'melhoria' };
+  var ITEMS = [
+    { t: 'Definir quem são as partes interessadas e o que elas esperam.', a: '4', w: 'É o requisito 4.2, parte do entendimento do contexto.' },
+    { t: 'Escrever e comunicar a política da qualidade.', a: '5', w: 'É o requisito 5.2. A política é responsabilidade da alta direção.' },
+    { t: 'Definir objetivos mensuráveis e o plano para alcançá-los.', a: '6', w: 'É o requisito 6.2.' },
+    { t: 'Calibrar os instrumentos de medição.', a: '7', w: 'É o requisito 7.1.5. Os instrumentos são um recurso de apoio.' },
+    { t: 'Avaliar e selecionar fornecedores.', a: '8', w: 'É o requisito 8.4.1. Os provedores externos fazem parte da operação.' },
+    { t: 'Medir a satisfação do cliente.', a: '9', w: 'É o requisito 9.1.2. A comunicação com o cliente está na seção 8, e a medição da satisfação, na 9.' },
+    { t: 'Eliminar a causa de uma reclamação, para que ela não se repita.', a: '10', w: 'É o requisito 10.2, de ação corretiva.' },
+    { t: 'Controlar a revisão dos procedimentos.', a: '7', w: 'É o requisito 7.5, de informação documentada.' },
+    { t: 'Identificar e separar o produto reprovado.', a: '8', w: 'É o requisito 8.7, de saídas não conformes. A ação sobre a causa fica na seção 10.' },
+    { t: 'Apresentar os resultados das auditorias à direção, para decisão.', a: '9', w: 'É o requisito 9.3, de análise crítica. A auditoria, no 9.2, está na mesma seção.' },
+    { t: 'Decidir que unidades, produtos e processos o sistema cobre.', a: '4', w: 'É o requisito 4.3, o escopo.' },
+    { t: 'Planejar a troca de um sistema antes de fazê-la.', a: '6', w: 'É o requisito 6.3, de planejamento de mudanças. As mudanças na produção estão no 8.5.6.' }
+  ];
+  var quiz = document.getElementById('quiz');
+  var score = document.getElementById('qz-score');
+  var done = document.getElementById('qz-done');
+  document.getElementById('qz-total').textContent = ITEMS.length;
+  var hits = 0, answered = 0;
+
+  function render() {
+    hits = 0; answered = 0; score.textContent = 0; done.textContent = 0;
+    quiz.textContent = '';
+    ITEMS.forEach(function (item, idx) {
+      var row = document.createElement('div'); row.className = 'q';
+      var p = document.createElement('p'); p.textContent = (idx + 1) + '. ' + item.t;
+      var opts = document.createElement('div'); opts.className = 'opts';
+      opts.setAttribute('role', 'group'); opts.setAttribute('aria-label', 'Seção do item ' + (idx + 1));
+      var why = document.createElement('p'); why.className = 'why'; why.hidden = true;
+      KEYS.forEach(function (k) {
+        var b = document.createElement('button');
+        b.type = 'button'; b.textContent = k; b.id = 'qz-' + idx + '-' + k;
+        b.setAttribute('data-k', k);
+        b.setAttribute('aria-label', 'Seção ' + k + ', ' + NAMES[k]);
+        b.addEventListener('click', function () {
+          var ok = k === item.a;
+          Array.prototype.forEach.call(opts.children, function (o) {
+            o.disabled = true;
+            if (o.getAttribute('data-k') === item.a) { o.className = 'right'; }
+          });
+          if (!ok) { b.className = 'wrong'; }
+          var lead = document.createElement('b');
+          lead.textContent = (ok ? 'Certo. ' : 'A resposta é a seção ' + item.a + ', ' + NAMES[item.a] + '. ');
+          why.textContent = ''; why.appendChild(lead); why.appendChild(document.createTextNode(item.w));
+          why.className = 'why ' + (ok ? 'ok' : 'no'); why.hidden = false;
+          answered++; if (ok) { hits++; }
+          score.textContent = hits; done.textContent = answered;
+        });
+        opts.appendChild(b);
+      });
+      row.appendChild(p); row.appendChild(opts); row.appendChild(why);
+      quiz.appendChild(row);
+    });
+  }
+  render();
+  document.getElementById('qz-reset').addEventListener('click', render);
+
+  /* ---------- Gráfico: leitura dos valores ---------- */
+  var fig = document.getElementById('fig-bars');
+  var tip = document.getElementById('bars-tip');
+  var svg = document.getElementById('bars');
+  var segs = document.querySelectorAll('#bars .seg');
+  function hide() {
+    tip.hidden = true;
+    Array.prototype.forEach.call(segs, function (b) { b.removeAttribute('opacity'); });
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('#bars .hit'), function (r) {
+    function show() {
+      var d = r.dataset;
+      Array.prototype.forEach.call(segs, function (b) {
+        b.setAttribute('opacity', b.getAttribute('data-k') === d.k ? '1' : '.4');
+      });
+      tip.textContent = '';
+      var strong = document.createElement('b'); strong.textContent = d.pc + '% de atendimento';
+      tip.appendChild(strong);
+      tip.appendChild(document.createTextNode('Seção ' + d.s + ' · ' + d.n + ' · ' + d.t + ' requisitos'));
+      tip.appendChild(document.createElement('br'));
+      tip.appendChild(document.createTextNode('Atende: ' + d.a + ' · Em parte: ' + d.p + ' · Não atende: ' + d.x));
+      var box = fig.getBoundingClientRect(), rb = r.getBoundingClientRect();
+      var pt = svg.createSVGPoint(); pt.x = parseFloat(d.cx); pt.y = 0;
+      var scr = pt.matrixTransform(svg.getScreenCTM());
+      tip.style.left = Math.min(Math.max(scr.x - box.left, 190), box.width - 190) + 'px';
+      tip.style.top = (rb.top - box.top + 4) + 'px';
+      tip.hidden = false;
+    }
+    r.addEventListener('pointerenter', show);
+    r.addEventListener('focus', show);
+    r.addEventListener('pointerleave', hide);
+    r.addEventListener('blur', hide);
+  });
+})();
+</script>
+</body>
+</html>

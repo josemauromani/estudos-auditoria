@@ -1,0 +1,864 @@
+<body>
+<div class="page" lang="pt-BR">
+
+<header class="mast">
+  <div class="tiles" aria-hidden="true"><span class="c">C</span><span class="n">NC</span><span class="o">OM</span></div>
+  <h1>Auditoria interna na prática</h1>
+  <p class="lead">Um guia de estudo para planejar, conduzir e relatar auditorias internas de sistemas de gestão: comparar o que se vê com o que foi combinado, registrar a evidência e escrever constatações que levem à melhoria.</p>
+  <ul class="meta">
+    <li>Treinamento autoinstrucional</li>
+    <li>12 módulos</li>
+    <li>Leitura de cerca de 45 minutos</li>
+    <li>3 exemplos resolvidos e 2 exercícios</li>
+  </ul>
+</header>
+
+<div class="layout">
+
+<nav class="toc" aria-label="Sumário">
+  <h2>Sumário</h2>
+  <ol>
+    <li><a href="#o-que-e">O que é a auditoria interna</a></li>
+    <li><a href="#principios">Princípios e papéis</a></li>
+    <li><a href="#programa">O programa de auditoria</a></li>
+    <li><a href="#etapas">As etapas da auditoria</a></li>
+    <li><a href="#exemplos">Exemplos resolvidos</a></li>
+    <li><a href="#constatacoes">Evidências e constatações</a></li>
+    <li><a href="#erros">Erros comuns</a></li>
+    <li><a href="#ferramentas">Auditoria e outras ferramentas</a></li>
+    <li><a href="#iso">Auditoria nas normas ISO</a></li>
+    <li><a href="#dia">O dia da auditoria</a></li>
+    <li><a href="#pratique">Pratique</a></li>
+    <li><a href="#planilha">A planilha de apoio</a></li>
+    <li><a href="#glossario">Glossário</a></li>
+  </ol>
+</nav>
+
+<main>
+
+<!-- ============================ MÓDULO 1 ============================ -->
+<section id="o-que-e">
+  <p class="eyebrow">Módulo 1</p>
+  <h2>O que é a auditoria interna</h2>
+  <p>Auditoria é um processo sistemático, independente e documentado para obter evidências e avaliá-las de forma objetiva, a fim de determinar em que medida os critérios combinados são atendidos. A auditoria interna é feita pela própria organização, ou em nome dela, para saber se o sistema de gestão está conforme e se funciona.</p>
+  <p>As diretrizes para auditar sistemas de gestão estão na ISO 19011. Ela é uma norma de orientação, e não de requisitos: não certifica ninguém, mas descreve como gerenciar um programa de auditoria, como conduzir cada auditoria e que competência se espera de quem audita.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 250" role="img" aria-label="A lógica da auditoria. O critério é o que foi combinado: a norma, o procedimento, o contrato. A evidência é o que foi encontrado: registros, fatos observados, declarações. A comparação entre os dois gera a constatação, que pode ser conformidade, não conformidade ou oportunidade de melhoria. O conjunto das constatações leva à conclusão da auditoria.">
+        <defs>
+          <marker id="a1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker>
+        </defs>
+        <rect class="bx" x="20" y="20" width="250" height="88"/>
+        <text class="mono mu" x="36" y="42" font-size="10">CRITÉRIO</text>
+        <text class="b" x="36" y="66" font-size="14">O que foi combinado</text>
+        <text class="mu" x="36" y="88" font-size="11.5">Norma, procedimento, contrato, lei</text>
+
+        <rect class="bx" x="20" y="142" width="250" height="88"/>
+        <text class="mono mu" x="36" y="164" font-size="10">EVIDÊNCIA</text>
+        <text class="b" x="36" y="188" font-size="14">O que foi encontrado</text>
+        <text class="mu" x="36" y="210" font-size="11.5">Registros, fatos observados, declarações</text>
+
+        <path class="ln" d="M272 64 H312 V125 H350" marker-end="url(#a1)"/>
+        <path class="ln" d="M272 186 H312 V125"/>
+        <text x="312" y="50" font-size="11" text-anchor="middle">comparar</text>
+
+        <rect class="bx-ink" x="354" y="81" width="220" height="88"/>
+        <text class="mono t-ground" x="370" y="103" font-size="10">CONSTATAÇÃO</text>
+        <text class="b t-ground" x="370" y="127" font-size="14">O resultado da comparação</text>
+        <rect class="hd-c" x="370" y="140" width="22" height="18"/><text class="disp on" x="381" y="154" font-size="12" text-anchor="middle">C</text>
+        <rect class="hd-n" x="396" y="140" width="28" height="18"/><text class="disp on" x="410" y="154" font-size="12" text-anchor="middle">NC</text>
+        <rect class="hd-o" x="428" y="140" width="30" height="18"/><text class="disp on" x="443" y="154" font-size="12" text-anchor="middle">OM</text>
+
+        <line class="ln" x1="576" y1="125" x2="626" y2="125" marker-end="url(#a1)"/>
+        <text x="601" y="115" font-size="11" text-anchor="middle">reunir</text>
+
+        <rect class="bx" x="630" y="81" width="250" height="88"/>
+        <text class="mono mu" x="646" y="103" font-size="10">CONCLUSÃO</text>
+        <text class="b" x="646" y="127" font-size="14">O que a auditoria mostrou</text>
+        <text class="mu" x="646" y="149" font-size="11.5">O sistema está conforme e funciona?</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 1.</b> A lógica de toda auditoria. Sem critério, a constatação é opinião. Sem evidência, é suspeita. As três letras são os tipos de constatação: conformidade, não conformidade e oportunidade de melhoria.</figcaption>
+  </figure>
+
+  <p>Repare que o auditor não julga pessoas nem dá a sua opinião sobre como o trabalho deveria ser feito. Ele compara o que encontra com o que foi combinado. Esquecer o critério e auditar pela própria experiência é o erro mais frequente de quem está começando.</p>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:20%">Tipo de auditoria</th><th style="width:26%">Quem audita</th><th style="width:26%">Quem é auditado</th><th>Para quê</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Primeira parte</strong><br>Auditoria interna</td><td>A própria organização</td><td>Os seus processos e áreas</td><td>Saber se o sistema está conforme e funciona, e melhorar</td></tr>
+        <tr><td><strong>Segunda parte</strong><br>Auditoria de fornecedor</td><td>O cliente, ou alguém em nome dele</td><td>O fornecedor</td><td>Qualificar ou acompanhar o fornecedor</td></tr>
+        <tr><td><strong>Terceira parte</strong><br>Auditoria de certificação</td><td>Um organismo independente</td><td>A organização que busca o certificado</td><td>Conceder ou manter a certificação</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 2 ============================ -->
+<section id="principios">
+  <p class="eyebrow">Módulo 2</p>
+  <h2>Princípios e papéis</h2>
+  <p>A ISO 19011 apoia a auditoria em sete princípios. Eles explicam por que as conclusões de dois auditores diferentes, diante dos mesmos fatos, devem ser parecidas.</p>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:26%">Princípio</th><th style="width:36%">O que significa</th><th>Na prática</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Integridade</strong></td><td>Agir com ética, honestidade e responsabilidade.</td><td>Não aceitar pressão para mudar uma constatação.</td></tr>
+        <tr><td><strong>Apresentação justa</strong></td><td>Relatar com verdade e exatidão.</td><td>Registrar também o que está conforme, e os pontos de discordância.</td></tr>
+        <tr><td><strong>Devido cuidado profissional</strong></td><td>Aplicar diligência e bom julgamento.</td><td>Preparar-se, conferir a evidência e não concluir por impressão.</td></tr>
+        <tr><td><strong>Confidencialidade</strong></td><td>Proteger as informações obtidas.</td><td>Não comentar fora da auditoria o que foi visto.</td></tr>
+        <tr><td><strong>Independência</strong></td><td>Não ter interesse na atividade auditada.</td><td>Não auditar o próprio trabalho nem o do próprio chefe.</td></tr>
+        <tr><td><strong>Abordagem baseada em evidência</strong></td><td>Concluir só a partir do que pode ser verificado.</td><td>Anotar o documento, o local, a data e a amostra de cada evidência.</td></tr>
+        <tr><td><strong>Abordagem baseada em risco</strong></td><td>Dedicar mais atenção ao que mais importa.</td><td>Gastar mais tempo nos processos críticos e nas mudanças recentes.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 260" role="img" aria-label="Os papéis da auditoria. O gestor do programa define o que será auditado e escolhe a equipe. A equipe auditora tem um auditor líder, auditores e, quando necessário, um especialista. O auditado é o gestor da área, com a sua equipe e um guia. A equipe auditora coleta evidências com o auditado e entrega o relatório ao gestor do programa e ao auditado.">
+        <defs>
+          <marker id="a2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker>
+        </defs>
+        <rect class="bx" x="300" y="16" width="300" height="62"/>
+        <text class="mono mu" x="316" y="36" font-size="10">QUEM ENCOMENDA</text>
+        <text class="b" x="316" y="58" font-size="13.5">Gestor do programa de auditoria</text>
+
+        <rect class="bx-ink" x="40" y="136" width="330" height="108"/>
+        <text class="mono t-ground" x="56" y="156" font-size="10">QUEM AUDITA</text>
+        <text class="b t-ground" x="56" y="178" font-size="13.5">Equipe auditora</text>
+        <text class="t-ground" x="56" y="200" font-size="11.5">Auditor líder: conduz e responde pelo relatório</text>
+        <text class="t-ground" x="56" y="217" font-size="11.5">Auditores: coletam e avaliam as evidências</text>
+        <text class="t-ground" x="56" y="234" font-size="11.5">Especialista: apoia com conhecimento técnico</text>
+
+        <rect class="bx" x="530" y="136" width="330" height="108"/>
+        <text class="mono mu" x="546" y="156" font-size="10">QUEM É AUDITADO</text>
+        <text class="b" x="546" y="178" font-size="13.5">Auditado</text>
+        <text class="mu" x="546" y="200" font-size="11.5">Gestor da área: responde pelo processo</text>
+        <text class="mu" x="546" y="217" font-size="11.5">Equipe: mostra o trabalho e os registros</text>
+        <text class="mu" x="546" y="234" font-size="11.5">Guia: acompanha a equipe auditora</text>
+
+        <path class="ln" d="M370 80 V108 H205 V132" marker-end="url(#a2)"/>
+        <text x="288" y="102" font-size="11" text-anchor="middle">escolhe a equipe</text>
+        <path class="ln" d="M530 80 V108 H695 V132" marker-end="url(#a2)"/>
+        <text x="612" y="102" font-size="11" text-anchor="middle">informa a auditoria</text>
+        <line class="ln" x1="374" y1="190" x2="526" y2="190" marker-start="url(#a2)" marker-end="url(#a2)"/>
+        <text x="450" y="180" font-size="11" text-anchor="middle">evidências</text>
+        <text class="mu" x="450" y="208" font-size="11" text-anchor="middle">e constatações</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 2.</b> Os papéis da auditoria. Em organizações pequenas, uma pessoa pode acumular papéis, desde que não audite o próprio trabalho.</figcaption>
+  </figure>
+
+  <div class="note">
+    <h4>Independência em empresas pequenas</h4>
+    <p>Quando todos se conhecem e a equipe é reduzida, a independência total é difícil. A saída é a troca: quem trabalha na produção audita compras, e quem trabalha em compras audita a produção. O que não pode acontecer é alguém auditar a atividade pela qual responde.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 3 ============================ -->
+<section id="programa">
+  <p class="eyebrow">Módulo 3</p>
+  <h2>O programa de auditoria</h2>
+  <p>O programa é o conjunto das auditorias planejadas para um período, em geral um ano. Ele diz o que será auditado, quando, por quem e com que critérios. O programa segue o mesmo ciclo do <a href="../PDCA/treinamento-pdca.html">PDCA</a>: é estabelecido, implementado, monitorado e melhorado.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 214" role="img" aria-label="O ciclo do programa de auditoria em quatro etapas: estabelecer, implementar, monitorar e melhorar. Para estabelecer o programa, consideram-se a importância dos processos, as mudanças que afetam a organização e os resultados das auditorias anteriores.">
+        <defs>
+          <marker id="a3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker>
+          <marker id="a3m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah-mu" d="M0 0 L10 5 L0 10 z"/></marker>
+        </defs>
+        <polygon class="bx-ink" points="18,20 222,20 236,52 222,84 18,84"/>
+        <text class="disp t-ground" x="40" y="60" font-size="24">1</text>
+        <text class="b t-ground" x="64" y="57" font-size="13">Estabelecer</text>
+        <polygon class="bx" points="250,20 440,20 454,52 440,84 250,84 264,52"/>
+        <text class="disp mu" x="282" y="60" font-size="24">2</text>
+        <text class="b" x="306" y="57" font-size="13">Implementar</text>
+        <polygon class="bx" points="468,20 658,20 672,52 658,84 468,84 482,52"/>
+        <text class="disp mu" x="500" y="60" font-size="24">3</text>
+        <text class="b" x="524" y="57" font-size="13">Monitorar</text>
+        <polygon class="bx" points="686,20 876,20 890,52 876,84 686,84 700,52"/>
+        <text class="disp mu" x="718" y="60" font-size="24">4</text>
+        <text class="b" x="742" y="57" font-size="13">Melhorar</text>
+
+        <text class="mu" x="122" y="106" font-size="11.5" text-anchor="middle">objetivos, riscos e calendário</text>
+        <text class="mu" x="352" y="106" font-size="11.5" text-anchor="middle">auditorias realizadas</text>
+        <text class="mu" x="570" y="106" font-size="11.5" text-anchor="middle">cumprimento e resultados</text>
+        <text class="mu" x="788" y="106" font-size="11.5" text-anchor="middle">ajustes para o próximo ciclo</text>
+
+        <path class="ln-mu dash" d="M788 116 V140 H500" marker-end="url(#a3m)"/>
+        <rect class="bx" x="18" y="122" width="478" height="76"/>
+        <text class="b" x="34" y="144" font-size="12">O que define a frequência de cada auditoria</text>
+        <text x="34" y="164" font-size="11.5">A importância do processo para o cliente e para a conformidade.</text>
+        <text x="34" y="181" font-size="11.5">As mudanças recentes e os resultados das auditorias anteriores.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 3.</b> O ciclo do programa. Os três fatores da caixa vêm do requisito 9.2 da ISO 9001:2015: o programa não precisa auditar tudo com a mesma frequência.</figcaption>
+  </figure>
+
+  <h3>Como priorizar os processos</h3>
+  <p>Este material usa uma pontuação simples, que soma os três fatores. Ela é uma convenção do modelo, para tornar o critério visível. A organização pode adotar outra, desde que a aplique a todos os processos.</p>
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:26%">Fator</th><th style="width:44%">Pontos</th><th>Pergunta</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Importância do processo</strong></td><td>Alta: 3 · Média: 2 · Baixa: 1</td><td>Quanto o processo afeta o cliente e a conformidade?</td></tr>
+        <tr><td><strong>Mudanças recentes</strong></td><td>Sim: 2 · Não: 0</td><td>Houve mudança de pessoas, de método, de sistema ou de volume?</td></tr>
+        <tr><td><strong>Resultado anterior</strong></td><td>Não conformidade maior: 3 · Menor: 2 · Processo nunca auditado: 2 · Sem não conformidade: 0</td><td>O que a última auditoria encontrou?</td></tr>
+        <tr><td><strong>Prioridade</strong></td><td>6 ou mais: alta · de 3 a 5: média · até 2: baixa</td><td>Alta: a cada 6 meses. Média: a cada 12. Baixa: a cada 18.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pair">
+    <div class="box">
+      <h4>O programa deve definir</h4>
+      <ul>
+        <li>Os objetivos do programa e de cada auditoria.</li>
+        <li>O escopo e os critérios de cada auditoria.</li>
+        <li>A frequência e o mês de cada uma.</li>
+        <li>O auditor líder e a equipe, com independência conferida.</li>
+        <li>O método: presencial, remoto ou misto.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h4>O programa deve ser revisto quando</h4>
+      <ul>
+        <li>Um processo novo entra em operação.</li>
+        <li>Uma reclamação grave ou um acidente acontece.</li>
+        <li>A estrutura muda: fusão de áreas, novo sistema, nova unidade.</li>
+        <li>Uma auditoria encontra uma não conformidade maior.</li>
+        <li>As auditorias planejadas deixam de ser cumpridas.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 4 ============================ -->
+<section id="etapas">
+  <p class="eyebrow">Módulo 4</p>
+  <h2>As etapas da auditoria</h2>
+  <p>Cada auditoria do programa percorre seis etapas. A terceira, a condução, é a que todos imaginam quando pensam em auditoria. As outras cinco decidem se ela será útil.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 250" role="img" aria-label="As seis etapas de uma auditoria: iniciar, preparar, conduzir, relatar, concluir e acompanhar. A condução se divide em cinco atividades: reunião de abertura, coleta de evidências, constatações, conclusões e reunião de encerramento.">
+        <defs>
+          <marker id="a4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker>
+        </defs>
+        <g font-size="12.5" text-anchor="middle">
+          <rect class="bx" x="10" y="20" width="130" height="64"/><text class="mono mu" x="22" y="37" font-size="10" text-anchor="start">1</text><text class="b" x="75" y="60">Iniciar</text>
+          <rect class="bx" x="160" y="20" width="130" height="64"/><text class="mono mu" x="172" y="37" font-size="10" text-anchor="start">2</text><text class="b" x="225" y="60">Preparar</text>
+          <rect class="bx-ink" x="310" y="20" width="130" height="64"/><text class="mono t-ground" x="322" y="37" font-size="10" text-anchor="start">3</text><text class="b t-ground" x="375" y="60">Conduzir</text>
+          <rect class="bx" x="460" y="20" width="130" height="64"/><text class="mono mu" x="472" y="37" font-size="10" text-anchor="start">4</text><text class="b" x="525" y="60">Relatar</text>
+          <rect class="bx" x="610" y="20" width="130" height="64"/><text class="mono mu" x="622" y="37" font-size="10" text-anchor="start">5</text><text class="b" x="675" y="60">Concluir</text>
+          <rect class="bx" x="760" y="20" width="130" height="64"/><text class="mono mu" x="772" y="37" font-size="10" text-anchor="start">6</text><text class="b" x="825" y="60">Acompanhar</text>
+        </g>
+        <line class="ln" x1="142" y1="52" x2="156" y2="52" marker-end="url(#a4)"/>
+        <line class="ln" x1="292" y1="52" x2="306" y2="52" marker-end="url(#a4)"/>
+        <line class="ln" x1="442" y1="52" x2="456" y2="52" marker-end="url(#a4)"/>
+        <line class="ln" x1="592" y1="52" x2="606" y2="52" marker-end="url(#a4)"/>
+        <line class="ln" x1="742" y1="52" x2="756" y2="52" marker-end="url(#a4)"/>
+        <g font-size="11" text-anchor="middle">
+          <text class="mu" x="75" y="104">contato com</text><text class="mu" x="75" y="119">o auditado</text>
+          <text class="mu" x="225" y="104">plano e lista</text><text class="mu" x="225" y="119">de verificação</text>
+          <text class="mu" x="525" y="104">relatório</text><text class="mu" x="525" y="119">distribuído</text>
+          <text class="mu" x="675" y="104">registros</text><text class="mu" x="675" y="119">guardados</text>
+          <text class="mu" x="825" y="104">ações e eficácia</text><text class="mu" x="825" y="119">verificadas</text>
+        </g>
+
+        <path class="ln" d="M375 86 V150"/>
+        <path class="ln" d="M100 176 V150 H800 V176"/>
+        <g font-size="11.5" text-anchor="middle">
+          <rect class="bx" x="20" y="176" width="160" height="56"/><text x="100" y="200">Reunião</text><text x="100" y="216">de abertura</text>
+          <rect class="bx" x="195" y="176" width="160" height="56"/><text x="275" y="200">Coleta de</text><text x="275" y="216">evidências</text>
+          <rect class="bx" x="370" y="176" width="160" height="56"/><text x="450" y="208">Constatações</text>
+          <rect class="bx" x="545" y="176" width="160" height="56"/><text x="625" y="208">Conclusões</text>
+          <rect class="bx" x="720" y="176" width="160" height="56"/><text x="800" y="200">Reunião de</text><text x="800" y="216">encerramento</text>
+        </g>
+        <line class="ln" x1="275" y1="150" x2="275" y2="176"/><line class="ln" x1="450" y1="150" x2="450" y2="176"/><line class="ln" x1="625" y1="150" x2="625" y2="176"/>
+      </svg>
+    </div>
+    <figcaption><b>Figura 4.</b> As seis etapas de uma auditoria, com a condução aberta em cinco atividades. A sequência acompanha a seção 6 da ISO 19011:2018.</figcaption>
+  </figure>
+
+  <h3>Passo a passo</h3>
+  <ol class="steps">
+    <li><h4>Inicie a auditoria</h4><p>O auditor líder faz contato com o gestor da área auditada, confirma o objetivo, o escopo, os critérios e a data, e pede os documentos necessários. Se a auditoria não for viável na data, é melhor remarcar do que improvisar.</p></li>
+    <li><h4>Prepare-se</h4><p>Leia os procedimentos, os indicadores e o relatório da auditoria anterior. Monte o plano, com horários e responsáveis, e a lista de verificação, com o que será conferido em cada requisito e o tamanho da amostra.</p></li>
+    <li><h4>Conduza a auditoria</h4><p>Faça a reunião de abertura, colete as evidências por entrevista, observação e análise de registros, compare com os critérios e escreva as constatações. Apresente tudo na reunião de encerramento.</p></li>
+    <li><h4>Relate</h4><p>Escreva o relatório com o objetivo, o escopo, os critérios, as constatações com as evidências e a conclusão. Distribua no prazo combinado, de preferência em até uma semana.</p></li>
+    <li><h4>Conclua</h4><p>Guarde o plano, a lista de verificação, as anotações e o relatório, conforme as regras da organização. A auditoria termina quando as atividades planejadas foram realizadas e o relatório foi entregue.</p></li>
+    <li><h4>Acompanhe</h4><p>A área auditada analisa as causas e define as ações, como mostra o estudo de <a href="../Nao-Conformidade/treinamento-nao-conformidade.html">Não conformidade e ação corretiva</a>. A auditoria seguinte, ou um acompanhamento específico, verifica se as ações foram feitas e se funcionaram.</p></li>
+  </ol>
+
+  <div class="note">
+    <h4>Regra prática</h4>
+    <p>O auditor aponta o desvio, e a área auditada decide a solução. Quando o auditor dita a ação corretiva, passa a ser dono dela e perde a independência para verificar, depois, se ela funcionou.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 5 ============================ -->
+<section id="exemplos">
+  <p class="eyebrow">Módulo 5</p>
+  <h2>Exemplos resolvidos</h2>
+  <p>Duas auditorias e um programa anual. Os dados são ilustrativos e foram criados para este treinamento. As duas auditorias também estão preenchidas na planilha de apoio.</p>
+
+  <h3>Exemplo 1. Auditoria do processo de delivery da pizzaria</h3>
+  <dl class="ficha">
+    <div><dt>Objetivo</dt><dd>Verificar se os padrões definidos no ciclo de melhoria das entregas estão sendo seguidos</dd></div>
+    <div><dt>Critérios</dt><dd>Instrução IT-EXP-01, escala padrão e rotina de controle de temperatura</dd></div>
+    <div><dt>Equipe auditora</dt><dd>Atendente e pizzaiolo do turno do almoço</dd></div>
+    <div><dt>Auditado</dt><dd>Líder da expedição e atendentes da noite</dd></div>
+  </dl>
+<!--LV1-->
+<!--CT1-->
+  <p><strong>O que observar.</strong> O critério aqui não é uma norma, e sim os padrões da própria loja. A equipe auditora veio de outro turno, para não auditar o próprio trabalho. As duas saídas avulsas não viraram não conformidade, porque a instrução prevê a exceção: a evidência foi comparada com o critério, e não com a expectativa do auditor.</p>
+
+  <h3>Exemplo 2. Auditoria do processo de compras</h3>
+  <dl class="ficha">
+    <div><dt>Objetivo</dt><dd>Verificar a conformidade do processo com o procedimento interno e com o requisito 8.4 da ISO 9001:2015</dd></div>
+    <div><dt>Critérios</dt><dd>ISO 9001:2015, 8.4. Procedimento PR-SUP-01. Política de compras</dd></div>
+    <div><dt>Equipe auditora</dt><dd>Analista da Qualidade e engenheiro de processos</dd></div>
+    <div><dt>Auditado</dt><dd>Gerente de Suprimentos e compradores</dd></div>
+  </dl>
+<!--LV2-->
+<!--CT2-->
+  <p><strong>O que observar.</strong> Cada não conformidade cita o requisito, os registros que a comprovam e o tamanho da amostra. Quem ler o relatório daqui a um ano consegue encontrar as quatro requisições. A redigitação do recebimento atende ao requisito e, por isso, entrou como oportunidade de melhoria.</p>
+
+  <h3>Exemplo 3. Programa anual de auditoria de uma indústria</h3>
+  <dl class="ficha">
+    <div><dt>Organização</dt><dd>Indústria de embalagens plásticas, com sistema de gestão certificado</dd></div>
+    <div><dt>Período</dt><dd>Janeiro a dezembro</dd></div>
+    <div><dt>Gestor do programa</dt><dd>Coordenador da Qualidade</dd></div>
+    <div><dt>Auditorias no ano</dt><dd>12, em 9 processos</dd></div>
+  </dl>
+<!--PROG-->
+  <p><strong>O que observar.</strong> Três processos de prioridade alta são auditados duas vezes no ano. O laboratório e a gestão do sistema da qualidade pertencem ao coordenador da Qualidade, que é também o gestor do programa: nessas duas auditorias, o auditor líder vem de outra área. Quem cuida das auditorias também precisa ser auditado por alguém independente.</p>
+</section>
+
+<!-- ============================ MÓDULO 6 ============================ -->
+<section id="constatacoes">
+  <p class="eyebrow">Módulo 6</p>
+  <h2>Evidências e constatações</h2>
+  <p>A qualidade de uma auditoria se mede pelas constatações. Uma constatação bem escrita pode ser entendida por quem não estava na sala, conferida por quem duvidar e tratada por quem recebeu.</p>
+
+  <h3>Como coletar evidências</h3>
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:22%">Método</th><th style="width:34%">O que fazer</th><th>Frases que ajudam</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Entrevista</strong></td><td>Conversar com quem executa, no local de trabalho, com perguntas abertas.</td><td>“Como você faz?” “Mostre-me o último que você fez.” “Como você sabe que ficou certo?”</td></tr>
+        <tr><td><strong>Observação</strong></td><td>Acompanhar a atividade enquanto ela acontece.</td><td>“Posso acompanhar a próxima saída?”</td></tr>
+        <tr><td><strong>Análise de registros</strong></td><td>Conferir documentos e registros por amostragem.</td><td>“Escolha a pasta, e eu escolho os registros.”</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>A amostra precisa ser escolhida pelo auditor, e não oferecida pelo auditado. Registre sempre o tamanho: “4 de 10 requisições” diz muito mais do que “algumas requisições”. E lembre que a auditoria trabalha com amostras: não encontrar desvios não prova que eles não existem.</p>
+
+  <h3>Anatomia de uma não conformidade</h3>
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 250" role="img" aria-label="As três partes de uma não conformidade. Primeira, o requisito: o que foi combinado e onde está escrito. Exemplo: procedimento PR-SUP-01, item 4.2, toda requisição deve conter a especificação técnica do item. Segunda, a evidência: o que foi encontrado, com identificação e amostra. Exemplo: requisições RC-0412, RC-0433, RC-0457 e RC-0461 sem especificação, em amostra de 10. Terceira, a declaração: o desvio, em uma frase. Exemplo: requisições são aceitas sem a especificação técnica exigida pelo procedimento.">
+        <g>
+          <rect class="bx" x="10" y="20" width="285" height="210"/><rect class="hd-ink" x="10" y="20" width="285" height="44"/>
+          <text class="disp t-ground" x="28" y="51" font-size="24">1</text>
+          <text class="b t-ground" x="54" y="48" font-size="14">Requisito</text>
+          <text class="mu" x="28" y="90" font-size="11.5">O que foi combinado,</text>
+          <text class="mu" x="28" y="106" font-size="11.5">e onde está escrito.</text>
+          <line class="ln-mu" x1="28" y1="124" x2="277" y2="124" stroke-width="1" opacity=".5"/>
+          <text x="28" y="148" font-size="11.5">PR-SUP-01 rev. 5, item 4.2:</text>
+          <text x="28" y="166" font-size="11.5">“Toda requisição deve conter</text>
+          <text x="28" y="182" font-size="11.5">a especificação técnica do item.”</text>
+        </g>
+        <g>
+          <rect class="bx" x="307" y="20" width="285" height="210"/><rect class="hd-ink" x="307" y="20" width="285" height="44"/>
+          <text class="disp t-ground" x="325" y="51" font-size="24">2</text>
+          <text class="b t-ground" x="351" y="48" font-size="14">Evidência</text>
+          <text class="mu" x="325" y="90" font-size="11.5">O que foi encontrado,</text>
+          <text class="mu" x="325" y="106" font-size="11.5">com identificação e amostra.</text>
+          <line class="ln-mu" x1="325" y1="124" x2="574" y2="124" stroke-width="1" opacity=".5"/>
+          <text x="325" y="148" font-size="11.5">Requisições RC-0412, RC-0433,</text>
+          <text x="325" y="166" font-size="11.5">RC-0457 e RC-0461 sem especificação</text>
+          <text x="325" y="182" font-size="11.5">técnica, em amostra de 10.</text>
+        </g>
+        <g>
+          <rect class="bx-n" x="604" y="20" width="286" height="210"/><rect class="hd-n" x="604" y="20" width="286" height="44"/>
+          <text class="disp on" x="622" y="51" font-size="24">3</text>
+          <text class="b on" x="648" y="48" font-size="14">Declaração</text>
+          <text class="mu" x="622" y="90" font-size="11.5">O desvio, em uma frase,</text>
+          <text class="mu" x="622" y="106" font-size="11.5">sem causa e sem solução.</text>
+          <line class="ln-mu" x1="622" y1="124" x2="872" y2="124" stroke-width="1" opacity=".5"/>
+          <text x="622" y="148" font-size="11.5">Requisições de compra são aceitas</text>
+          <text x="622" y="166" font-size="11.5">sem a especificação técnica</text>
+          <text x="622" y="182" font-size="11.5">exigida pelo procedimento.</text>
+        </g>
+      </svg>
+    </div>
+    <figcaption><b>Figura 5.</b> As três partes de uma não conformidade, com o texto do exemplo 2. Se faltar o requisito, é opinião. Se faltar a evidência, é suspeita. Se faltar a declaração, o leitor precisa adivinhar qual é o problema.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:30%">Como costuma ser escrita</th><th style="width:24%">O que falta</th><th>Como deveria ser escrita</th></tr></thead>
+      <tbody>
+        <tr><td>“Falta controle nos treinamentos.”</td><td>Requisito e evidência</td><td>O procedimento PR-RH-02 pede registro de treinamento antes do início da operação. 3 dos 8 operadores admitidos em 2026 não têm registro. Operadores iniciam a atividade sem o treinamento registrado.</td></tr>
+        <tr><td>“O operador não preencheu o formulário.”</td><td>Aponta a pessoa, e não o sistema</td><td>A instrução IT-05 pede o registro da temperatura a cada turno. Não há registro nos turnos da noite de 12, 13 e 20 de setembro. O registro de temperatura não é feito em todos os turnos.</td></tr>
+        <tr><td>“Recomenda-se comprar um sistema de calibração.”</td><td>É uma solução, e não uma constatação</td><td>O requisito 7.1.5 pede instrumentos calibrados em intervalos definidos. 3 de 25 instrumentos em uso estão com a calibração vencida. Instrumentos são usados depois do vencimento da calibração.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Tipos de constatação</h3>
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:26%">Tipo</th><th style="width:40%">Quando usar</th><th>O que a área auditada faz</th></tr></thead>
+      <tbody>
+        <tr><td><span class="k c">C</span> Conformidade</td><td>A evidência mostra que o requisito é atendido.</td><td>Mantém o padrão.</td></tr>
+        <tr><td><span class="k n">NC</span> Não conformidade maior</td><td>Falha que compromete o sistema ou o resultado para o cliente: requisito não implantado, falha generalizada, produto não conforme liberado.</td><td>Corrige de imediato, analisa a causa e implanta ação corretiva, com prazo curto.</td></tr>
+        <tr><td><span class="k n">NC</span> Não conformidade menor</td><td>Falha pontual ou parcial, que não compromete o sistema.</td><td>Corrige, analisa a causa e implanta ação corretiva.</td></tr>
+        <tr><td><span class="k o">OM</span> Oportunidade de melhoria</td><td>O requisito é atendido, mas há uma forma melhor de atender.</td><td>Avalia e decide se vai agir. Não há obrigação.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>A ISO 19011 admite que as não conformidades sejam classificadas, mas deixa os critérios para a organização. A divisão em maior e menor é a usada nas auditorias de certificação. Em auditorias internas, o que importa é que o critério esteja escrito e seja aplicado da mesma forma por todos os auditores.</p>
+
+  <figure id="fig-bars">
+    <div class="scroll">
+<!--RESULT-->
+    </div>
+    <div class="tip" id="bars-tip" hidden></div>
+    <figcaption><b>Figura 6.</b> Constatações do ciclo anual do exemplo 3, por processo. A Produção e o Laboratório concentram metade das não conformidades e continuam com prioridade alta no programa seguinte. Passe o mouse sobre as barras para ver os valores.</figcaption>
+    <details class="data">
+      <summary>Ver os dados em tabela</summary>
+      <div class="tbl">
+<!--RESULTTABLE-->
+      </div>
+    </details>
+  </figure>
+</section>
+
+<!-- ============================ MÓDULO 7 ============================ -->
+<section id="erros">
+  <p class="eyebrow">Módulo 7</p>
+  <h2>Erros comuns</h2>
+  <div class="errs">
+    <div><h4>Auditar sem critério</h4><p>“Na minha experiência, isso deveria ser feito de outro jeito.”</p><p class="fix"><b>Correção:</b> toda não conformidade cita o requisito. Se não há requisito, é oportunidade de melhoria.</p></div>
+    <div><h4>Auditar o papel, e não o processo</h4><p>O auditor passa o dia na sala de reuniões, conferindo procedimentos.</p><p class="fix"><b>Correção:</b> vá ao local. Peça para ver o trabalho sendo feito e os últimos registros.</p></div>
+    <div><h4>Fazer perguntas fechadas</h4><p>“Vocês calibram os instrumentos, certo?”</p><p class="fix"><b>Correção:</b> pergunte como, quando e quem. E peça para ver.</p></div>
+    <div><h4>Aceitar a amostra oferecida</h4><p>O auditado entrega os três registros que separou de manhã.</p><p class="fix"><b>Correção:</b> o auditor escolhe a amostra, no período e no local que definir.</p></div>
+    <div><h4>Procurar culpados</h4><p>A constatação cita o nome de quem errou.</p><p class="fix"><b>Correção:</b> descreva o que o sistema permitiu. O nome da pessoa não entra no relatório.</p></div>
+    <div><h4>Dar a solução</h4><p>O auditor explica como a área deve resolver o problema.</p><p class="fix"><b>Correção:</b> aponte o desvio. A causa e a ação são responsabilidade da área auditada.</p></div>
+    <div><h4>Surpreender no encerramento</h4><p>O auditado só conhece as não conformidades na reunião final.</p><p class="fix"><b>Correção:</b> mostre a evidência na hora em que a encontrar, e confirme o entendimento.</p></div>
+    <div><h4>Encerrar sem verificar a eficácia</h4><p>A não conformidade é fechada quando a ação é implantada.</p><p class="fix"><b>Correção:</b> o encerramento depende da verificação de que o problema não voltou.</p></div>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 8 ============================ -->
+<section id="ferramentas">
+  <p class="eyebrow">Módulo 8</p>
+  <h2>Auditoria e outras ferramentas</h2>
+  <p>A auditoria usa as ferramentas da série antes, durante e depois. Antes, para entender o processo. Depois, para tratar o que foi encontrado.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 250" role="img" aria-label="As ferramentas ao redor da auditoria. Na preparação: o SIPOC mostra as entradas e as saídas do processo, e a Matriz RACI mostra os papéis e a independência do auditor. Depois da auditoria: a Matriz GUT define a ordem de tratamento das constatações, o Diagrama de Ishikawa encontra as causas, o 5W2H organiza a ação corretiva e o PDCA verifica a eficácia.">
+        <defs>
+          <marker id="a7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker>
+        </defs>
+        <text class="mono mu" x="20" y="18" font-size="10">PARA PREPARAR</text>
+        <g font-size="12">
+          <rect class="bx" x="20" y="28" width="200" height="60"/><text class="b" x="34" y="52">SIPOC</text><text class="mu" x="34" y="72" font-size="11">Entradas e saídas do processo</text>
+          <rect class="bx" x="20" y="124" width="200" height="60"/><text class="b" x="34" y="148">Matriz RACI</text><text class="mu" x="34" y="168" font-size="11">Papéis e independência</text>
+        </g>
+        <path class="ln" d="M222 58 H250 V106 H276" marker-end="url(#a7)"/>
+        <path class="ln" d="M222 154 H250 V106"/>
+
+        <rect class="bx-ink" x="280" y="72" width="150" height="68"/>
+        <text class="b t-ground" x="355" y="102" font-size="13.5" text-anchor="middle">Auditoria</text>
+        <text class="t-ground" x="355" y="122" font-size="11.5" text-anchor="middle">constatações</text>
+        <path class="ln" d="M432 106 H450 V58 H466" marker-end="url(#a7)"/>
+
+        <text class="mono mu" x="470" y="18" font-size="10">PARA TRATAR AS CONSTATAÇÕES</text>
+        <g font-size="12">
+          <rect class="bx" x="470" y="28" width="200" height="60"/><text class="b" x="484" y="52">Matriz GUT</text><text class="mu" x="484" y="72" font-size="11">Ordem e prazo de tratamento</text>
+          <rect class="bx" x="470" y="124" width="200" height="60"/><text class="b" x="484" y="148">Diagrama de Ishikawa</text><text class="mu" x="484" y="168" font-size="11">Causas da não conformidade</text>
+          <rect class="bx" x="690" y="28" width="200" height="60"/><text class="b" x="704" y="52">5W2H</text><text class="mu" x="704" y="72" font-size="11">Plano da ação corretiva</text>
+          <rect class="bx" x="690" y="124" width="200" height="60"/><text class="b" x="704" y="148">PDCA</text><text class="mu" x="704" y="168" font-size="11">Verificação da eficácia</text>
+        </g>
+        <line class="ln" x1="570" y1="90" x2="570" y2="120" marker-end="url(#a7)"/>
+        <path class="ln" d="M672 154 H680 V58 H686" marker-end="url(#a7)"/>
+        <line class="ln" x1="790" y1="90" x2="790" y2="120" marker-end="url(#a7)"/>
+        <path class="ln" d="M790 186 V214 H355 V144" marker-end="url(#a7)"/>
+        <text x="572" y="234" font-size="11.5" text-anchor="middle">a auditoria seguinte confere se a ação funcionou</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 7.</b> As ferramentas ao redor da auditoria. O auditor usa as duas da esquerda. A área auditada usa as quatro da direita.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:22%">Ferramenta</th><th style="width:20%">Quem usa</th><th style="width:30%">Para quê</th><th>Momento</th></tr></thead>
+      <tbody>
+        <tr><td><a href="../SIPOC/treinamento-sipoc.html"><strong>SIPOC</strong></a></td><td>Auditor</td><td>Entender o processo e montar a lista de verificação pelas entradas, etapas e saídas</td><td>Preparação</td></tr>
+        <tr><td><a href="../RACI/treinamento-raci.html"><strong>Matriz RACI</strong></a></td><td>Auditor e gestor do programa</td><td>Saber quem entrevistar e conferir se o auditor é independente da atividade</td><td>Preparação</td></tr>
+        <tr><td><a href="../SWOT/treinamento-swot.html"><strong>Matriz SWOT</strong></a></td><td>Gestor do programa</td><td>Conhecer as mudanças de contexto que pedem mais atenção no programa</td><td>Programa</td></tr>
+        <tr><td><a href="../GUT/treinamento-gut.html"><strong>Matriz GUT</strong></a></td><td>Área auditada</td><td>Definir a ordem e os prazos de tratamento das constatações</td><td>Depois da auditoria</td></tr>
+        <tr><td><a href="../Ishikawa/treinamento-ishikawa.html"><strong>Diagrama de Ishikawa</strong></a></td><td>Área auditada</td><td>Encontrar e confirmar a causa da não conformidade</td><td>Depois da auditoria</td></tr>
+        <tr><td><a href="../5W2H/treinamento-5w2h.html"><strong>5W2H</strong></a></td><td>Área auditada</td><td>Organizar a correção e a ação corretiva, com responsável e prazo</td><td>Depois da auditoria</td></tr>
+        <tr><td><a href="../PDCA/treinamento-pdca.html"><strong>PDCA</strong></a></td><td>Todos</td><td>Conduzir a ação até a verificação da eficácia e a padronização</td><td>Depois da auditoria</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 9 ============================ -->
+<section id="iso">
+  <p class="eyebrow">Módulo 9</p>
+  <h2>Auditoria nas normas ISO</h2>
+  <p>Duas normas tratam da auditoria interna, com papéis diferentes. A ISO 9001:2015 exige que a auditoria interna exista, no requisito 9.2. A ISO 19011:2018 orienta como fazer, e não tem requisitos obrigatórios. Uma terceira, a ISO/IEC 17021-1, traz as regras dos organismos que fazem auditoria de certificação.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 260" role="img" aria-label="Relação entre as normas. A ISO 9001, no requisito 9.2, diz o que é exigido: auditar a intervalos planejados, ter um programa, definir critérios e escopo, selecionar auditores com objetividade e imparcialidade, relatar à gestão, agir sem demora indevida e reter registros. A ISO 19011 diz como fazer: princípios na seção 4, programa na seção 5, condução na seção 6 e competência dos auditores na seção 7.">
+        <defs>
+          <marker id="a8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker>
+        </defs>
+        <rect class="bx" x="20" y="20" width="390" height="220"/>
+        <rect class="hd-ink" x="20" y="20" width="390" height="40"/>
+        <text class="b t-ground" x="36" y="45" font-size="13.5">ISO 9001:2015, requisito 9.2</text>
+        <text class="mono t-ground" x="394" y="45" font-size="10" text-anchor="end">O QUE É EXIGIDO</text>
+        <g font-size="12">
+          <text x="36" y="86">Auditar a intervalos planejados</text>
+          <text x="36" y="108">Manter um programa de auditoria</text>
+          <text x="36" y="130">Definir critérios e escopo de cada auditoria</text>
+          <text x="36" y="152">Selecionar auditores com objetividade e imparcialidade</text>
+          <text x="36" y="174">Relatar os resultados à gestão pertinente</text>
+          <text x="36" y="196">Corrigir e agir sem demora indevida</text>
+          <text x="36" y="218">Reter informação documentada</text>
+        </g>
+
+        <line class="ln" x1="412" y1="130" x2="486" y2="130" marker-end="url(#a8)"/>
+        <text x="449" y="120" font-size="11" text-anchor="middle">como fazer</text>
+
+        <rect class="bx" x="490" y="20" width="390" height="220"/>
+        <rect class="hd-ink" x="490" y="20" width="390" height="40"/>
+        <text class="b t-ground" x="506" y="45" font-size="13.5">ISO 19011:2018</text>
+        <text class="mono t-ground" x="864" y="45" font-size="10" text-anchor="end">COMO FAZER</text>
+        <g font-size="12">
+          <text x="506" y="92"><tspan class="b">Seção 4</tspan> · Princípios de auditoria</text>
+          <text x="506" y="126"><tspan class="b">Seção 5</tspan> · Gestão do programa de auditoria</text>
+          <text x="506" y="160"><tspan class="b">Seção 6</tspan> · Condução de uma auditoria</text>
+          <text x="506" y="194"><tspan class="b">Seção 7</tspan> · Competência e avaliação de auditores</text>
+          <text class="mu" x="506" y="224" font-size="11">Anexo A · Orientações adicionais para os auditores</text>
+        </g>
+      </svg>
+    </div>
+    <figcaption><b>Figura 8.</b> O que cada norma faz. A organização é auditada contra a ISO 9001, e usa a ISO 19011 como guia para organizar as próprias auditorias.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:28%">O que o requisito 9.2 pede, em resumo</th><th style="width:34%">O que isso significa</th><th>Evidências que o auditor externo procura</th></tr></thead>
+      <tbody>
+        <tr><td>Auditar a intervalos planejados, para saber se o sistema está conforme e se está implementado e mantido de forma eficaz</td><td>A auditoria confere a norma, os requisitos da própria organização e o funcionamento do sistema.</td><td>Auditorias que cobrem os requisitos da norma e os procedimentos internos.</td></tr>
+        <tr><td>Planejar o programa, considerando a importância dos processos, as mudanças e os resultados anteriores</td><td>A frequência não precisa ser igual para todos os processos, mas precisa ter critério.</td><td>Programa com a justificativa das frequências e com o registro do que foi cumprido.</td></tr>
+        <tr><td>Definir os critérios e o escopo de cada auditoria</td><td>Cada auditoria sabe o que vai conferir, onde e contra o quê.</td><td>Plano de auditoria com objetivo, escopo e critérios.</td></tr>
+        <tr><td>Selecionar auditores e conduzir as auditorias com objetividade e imparcialidade</td><td>Ninguém audita o próprio trabalho.</td><td>Auditores de áreas diferentes da auditada, com competência registrada.</td></tr>
+        <tr><td>Relatar os resultados à gestão pertinente</td><td>O relatório chega a quem pode agir.</td><td>Relatórios distribuídos, e resultados levados à análise crítica pela direção.</td></tr>
+        <tr><td>Executar correção e ações corretivas sem demora indevida</td><td>As constatações têm dono, prazo e acompanhamento.</td><td>Ações com causa analisada, e eficácia verificada depois da implantação.</td></tr>
+        <tr><td>Reter informação documentada do programa e dos resultados</td><td>O que foi planejado e o que foi encontrado fica registrado.</td><td>Programa, planos, listas de verificação e relatórios guardados.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Competência do auditor</h3>
+  <p>A seção 7 da ISO 19011 trata de quem audita. A competência combina comportamento, conhecimento e habilidade, e deve ser avaliada e mantida pela organização.</p>
+  <div class="pair">
+    <div class="box">
+      <h4>Comportamento</h4>
+      <ul>
+        <li>Ético, discreto e imparcial.</li>
+        <li>Mente aberta para ouvir outros pontos de vista.</li>
+        <li>Diplomático no trato e firme na conclusão.</li>
+        <li>Observador e atento ao que acontece ao redor.</li>
+        <li>Capaz de decidir com base na evidência.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h4>Conhecimento e habilidade</h4>
+      <ul>
+        <li>Princípios, etapas e métodos de auditoria.</li>
+        <li>A norma e os documentos usados como critério.</li>
+        <li>O contexto da organização e os seus processos.</li>
+        <li>Requisitos legais aplicáveis à atividade auditada.</li>
+        <li>Redação clara de constatações e de relatórios.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="note">
+    <h4>Pontos de atenção</h4>
+    <p>A ISO 19011 é uma norma de diretrizes. Nenhuma organização é “certificada na ISO 19011”, e um auditor externo não aponta não conformidade contra ela. O que pode ser apontado é o não atendimento ao requisito 9.2 da ISO 9001.</p>
+    <p>Este módulo usa a numeração da ISO 9001:2015 e da ISO 19011:2018 e resume os textos com palavras próprias. Confira sempre a edição vigente das normas antes de citar um requisito em relatório.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 10 ============================ -->
+<section id="dia">
+  <p class="eyebrow">Módulo 10</p>
+  <h2>O dia da auditoria</h2>
+  <p>Uma auditoria de processo cabe em um dia. A maior parte do tempo deve ser gasta no local de trabalho, com quem executa. O roteiro abaixo é o do exemplo 2.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 136" role="img" aria-label="Distribuição de um dia de auditoria, das 8h30 às 17h: 30 minutos de reunião de abertura, 3 horas de coleta de evidências pela manhã, 1 hora de intervalo, 2 horas e 30 minutos de coleta à tarde, 45 minutos de reunião da equipe auditora e 45 minutos de reunião de encerramento.">
+        <g font-size="11.5" text-anchor="middle">
+          <rect class="bx" x="60" y="24" width="45.9" height="56"/><text x="83" y="56" font-size="10">Abert.</text>
+          <rect class="hd-ink gap2" x="105.9" y="24" width="275.3" height="56"/><text class="t-ground b" x="243.5" y="56">Coleta de evidências</text>
+          <rect class="bx-out2" x="381.2" y="24" width="91.8" height="56"/><text class="mu" x="427.1" y="56">Intervalo</text>
+          <rect class="hd-ink gap2" x="473" y="24" width="229.4" height="56"/><text class="t-ground b" x="587.7" y="56">Coleta de evidências</text>
+          <rect class="bx" x="702.4" y="24" width="68.8" height="56"/><text x="736.8" y="49">Reunião</text><text x="736.8" y="64">da equipe</text>
+          <rect class="bx" x="771.2" y="24" width="68.8" height="56"/><text x="805.6" y="49">Encerra-</text><text x="805.6" y="64">mento</text>
+        </g>
+        <g class="ln-mu" stroke-width="1">
+          <line x1="60" y1="82" x2="60" y2="94"/><line x1="105.9" y1="82" x2="105.9" y2="94"/><line x1="381.2" y1="82" x2="381.2" y2="94"/>
+          <line x1="473" y1="82" x2="473" y2="94"/><line x1="702.4" y1="82" x2="702.4" y2="94"/><line x1="771.2" y1="82" x2="771.2" y2="94"/>
+          <line x1="840" y1="82" x2="840" y2="94"/>
+        </g>
+        <g class="mono" font-size="10.5" text-anchor="middle">
+          <text class="mu" x="60" y="112">8h30</text><text class="mu" x="110" y="112">9h</text><text class="mu" x="381.2" y="112">12h</text>
+          <text class="mu" x="473" y="112">13h</text><text class="mu" x="702.4" y="112">15h30</text><text class="mu" x="771.2" y="112">16h15</text>
+          <text class="mu" x="840" y="112">17h</text>
+        </g>
+      </svg>
+    </div>
+    <figcaption><b>Figura 9.</b> Um dia de auditoria, desenhado em escala. Cinco horas e meia, de sete e meia de trabalho, vão para a coleta de evidências.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:22%">Momento</th><th style="width:40%">O que fazer</th><th>Frases que ajudam</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Reunião de abertura</strong></td><td>Apresentar a equipe, confirmar objetivo, escopo, critérios e agenda, e explicar como as constatações serão comunicadas.</td><td>“Vamos trabalhar por amostragem. Se encontrarmos um desvio, mostramos na hora.”</td></tr>
+        <tr><td><strong>Coleta de evidências</strong></td><td>Seguir a lista de verificação, no local de trabalho. Anotar documento, data, local e amostra de cada evidência.</td><td>“Mostre-me o último pedido que você emitiu.”</td></tr>
+        <tr><td><strong>Reunião da equipe</strong></td><td>Comparar as anotações, classificar as constatações e redigir as não conformidades.</td><td>“Qual é o requisito? Qual é a evidência?”</td></tr>
+        <tr><td><strong>Reunião de encerramento</strong></td><td>Apresentar os pontos fortes, as constatações e a conclusão. Combinar o prazo do relatório e das ações.</td><td>“Alguma constatação não ficou clara ou não corresponde ao que acontece?”</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Comece o encerramento pelo que está funcionando. Uma auditoria que só relata desvios ensina a área a esconder problemas na próxima vez.</p>
+
+  <h3>Checklist de validação</h3>
+  <p>Marque os itens conforme revisa a sua auditoria. As marcações ficam salvas neste navegador.</p>
+  <ol class="check" id="checklist">
+    <li><label><input type="checkbox" id="ck-1"><span>A auditoria está prevista no programa, com objetivo, escopo e critérios definidos.</span></label></li>
+    <li><label><input type="checkbox" id="ck-2"><span>A equipe auditora é independente da atividade auditada.</span></label></li>
+    <li><label><input type="checkbox" id="ck-3"><span>O plano foi enviado ao auditado antes da auditoria.</span></label></li>
+    <li><label><input type="checkbox" id="ck-4"><span>A lista de verificação cobre os critérios e indica o tamanho das amostras.</span></label></li>
+    <li><label><input type="checkbox" id="ck-5"><span>Houve reunião de abertura e reunião de encerramento.</span></label></li>
+    <li><label><input type="checkbox" id="ck-6"><span>As evidências foram coletadas no local, por entrevista, observação e análise de registros.</span></label></li>
+    <li><label><input type="checkbox" id="ck-7"><span>As amostras foram escolhidas pelo auditor.</span></label></li>
+    <li><label><input type="checkbox" id="ck-8"><span>Cada não conformidade tem requisito, evidência e declaração.</span></label></li>
+    <li><label><input type="checkbox" id="ck-9"><span>As constatações não citam nomes de pessoas nem propõem soluções.</span></label></li>
+    <li><label><input type="checkbox" id="ck-10"><span>O auditado conheceu as constatações antes do relatório.</span></label></li>
+    <li><label><input type="checkbox" id="ck-11"><span>O relatório foi distribuído no prazo combinado.</span></label></li>
+    <li><label><input type="checkbox" id="ck-12"><span>As constatações têm responsável, prazo e verificação de eficácia prevista.</span></label></li>
+  </ol>
+  <div class="bar"><span><b id="ck-count">0</b> de 12 itens marcados</span><button class="btn" id="ck-reset" type="button">Limpar marcações</button></div>
+</section>
+
+<!-- ============================ MÓDULO 11 ============================ -->
+<section id="pratique">
+  <p class="eyebrow">Módulo 11</p>
+  <h2>Pratique</h2>
+  <h3>Exercício 1. Qual é a constatação?</h3>
+  <p>Cada item traz um critério e uma evidência. Escolha o tipo de constatação: conformidade, não conformidade ou oportunidade de melhoria.</p>
+  <div class="quiz" id="quiz"></div>
+  <div class="bar"><span>Acertos: <b id="qz-score">0</b> de <b id="qz-total">10</b></span><span>Respondidos: <b id="qz-done">0</b></span><button class="btn" id="qz-reset" type="button">Recomeçar</button></div>
+
+  <h3>Exercício 2. Audite um processo</h3>
+  <p>Escolha um processo que você conhece, mas pelo qual não responde. Abra a planilha de apoio e siga o roteiro.</p>
+  <ol>
+    <li>Na aba Plano, escreva o objetivo, o escopo e os critérios da auditoria.</li>
+    <li>Monte a agenda, com pelo menos dois terços do tempo no local de trabalho.</li>
+    <li>Na aba Lista de verificação, escreva de 6 a 10 itens, cada um com o requisito e a amostra.</li>
+    <li>Conduza a auditoria e registre a evidência encontrada em cada item.</li>
+    <li>Na aba Constatações, escreva cada não conformidade com as três partes.</li>
+    <li>Confira a coluna de conferência: ela aponta o que falta em cada constatação.</li>
+    <li>Passe o checklist do módulo 10.</li>
+  </ol>
+  <p>Depois, entregue as constatações a alguém que não participou da auditoria e pergunte se ela conseguiria encontrar a evidência sozinha. Se não conseguir, a constatação ainda não está pronta.</p>
+</section>
+
+<!-- ============================ MÓDULO 12 ============================ -->
+<section id="planilha">
+  <p class="eyebrow">Módulo 12</p>
+  <h2>A planilha de apoio</h2>
+  <p>Este treinamento acompanha o arquivo <a id="xlsx-ref" href="Auditoria-modelo.xlsx">Auditoria-modelo.xlsx</a>, que fica na mesma pasta. As células em amarelo-claro são para preenchimento. As células cinza são calculadas.</p>
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Aba</th><th>Para que serve</th><th style="width:36%">O que ela calcula</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Instruções</strong></td><td>Legenda de cores, ordem de preenchimento e regras do modelo.</td><td>Nada. É só leitura.</td></tr>
+        <tr><td><strong>Programa</strong></td><td>Programa anual, com até 12 processos, fatores de prioridade, data planejada, auditor líder e status.</td><td>Pontos, prioridade e frequência sugerida. Conferência de independência, cumprimento do programa e auditorias atrasadas.</td></tr>
+        <tr><td><strong>Plano</strong></td><td>Plano de uma auditoria: objetivo, escopo, critérios, equipe e agenda.</td><td>Duração de cada atividade, tempo total e parte do tempo dedicada à coleta de evidências.</td></tr>
+        <tr><td><strong>Lista de verificação</strong></td><td>Até 20 itens, com requisito, o que verificar, amostra, evidência e resultado.</td><td>Contagem por resultado, percentual verificado e itens não conformes sem constatação registrada.</td></tr>
+        <tr><td><strong>Constatações</strong></td><td>Registro das constatações, com as três partes, responsável, prazo e status.</td><td>Conferência das três partes, situação de cada constatação, contagem por tipo e gráfico.</td></tr>
+        <tr><td><strong>Checklist</strong></td><td>Os mesmos 12 itens do módulo 10, com status Sim, Parcial ou Não.</td><td>Percentual atendido e situação da validação.</td></tr>
+        <tr><td><strong>Exemplo 1 e Exemplo 2</strong></td><td>As auditorias da pizzaria e de compras, com plano, lista de verificação e constatações.</td><td>Contagens por resultado e por tipo.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ GLOSSÁRIO ============================ -->
+<section id="glossario">
+  <p class="eyebrow">Referência</p>
+  <h2>Glossário</h2>
+  <dl class="gloss">
+    <div><dt>Ação corretiva</dt><dd>Ação para eliminar a causa de uma não conformidade e evitar que ela se repita.</dd></div>
+    <div><dt>Auditado</dt><dd>Organização, área ou processo que é objeto da auditoria.</dd></div>
+    <div><dt>Auditor líder</dt><dd>Quem conduz a equipe auditora e responde pelo relatório.</dd></div>
+    <div><dt>Conclusão da auditoria</dt><dd>Resultado da auditoria, depois de considerados os objetivos e todas as constatações.</dd></div>
+    <div><dt>Constatação</dt><dd>Resultado da comparação entre a evidência e o critério. Pode indicar conformidade, não conformidade ou oportunidade de melhoria.</dd></div>
+    <div><dt>Correção</dt><dd>Ação para eliminar uma não conformidade já ocorrida. Trata o efeito, e não a causa.</dd></div>
+    <div><dt>Critério de auditoria</dt><dd>Conjunto de requisitos usados como referência: normas, procedimentos, contratos, leis.</dd></div>
+    <div><dt>Escopo da auditoria</dt><dd>Abrangência e limites da auditoria: locais, áreas, processos e período.</dd></div>
+    <div><dt>Evidência de auditoria</dt><dd>Registros, fatos ou outras informações pertinentes aos critérios, que podem ser verificados.</dd></div>
+    <div><dt>Lista de verificação</dt><dd>Roteiro do auditor, com o que conferir em cada requisito e o tamanho da amostra.</dd></div>
+    <div><dt>Não conformidade</dt><dd>Não atendimento de um requisito.</dd></div>
+    <div><dt>Oportunidade de melhoria</dt><dd>Situação que atende ao requisito e pode ser aprimorada.</dd></div>
+    <div><dt>Plano de auditoria</dt><dd>Descrição das atividades e dos arranjos de uma auditoria: agenda, equipe, locais.</dd></div>
+    <div><dt>Programa de auditoria</dt><dd>Conjunto de auditorias planejadas para um período, com um propósito definido.</dd></div>
+  </dl>
+</section>
+
+</main>
+</div>
+
+<footer>Material de estudo. Os exemplos, documentos e números são ilustrativos e foram criados para fins didáticos. As referências às normas ISO são resumos para estudo e não substituem o texto das normas.</footer>
+</div>
+
+<script>
+(function () {
+  function read(key) { try { return JSON.parse(localStorage.getItem(key) || 'null'); } catch (e) { return null; } }
+  function write(key, val) { try { localStorage.setItem(key, JSON.stringify(val)); } catch (e) {} }
+
+  /* ---------- Checklist ---------- */
+  var boxes = Array.prototype.slice.call(document.querySelectorAll('#checklist input'));
+  var count = document.getElementById('ck-count');
+  var saved = read('auditoria-checklist') || {};
+  function refreshChecks() {
+    var n = 0, state = {};
+    boxes.forEach(function (b) { if (b.checked) { n++; } state[b.id] = b.checked; });
+    count.textContent = n;
+    return state;
+  }
+  boxes.forEach(function (b) {
+    if (saved[b.id]) { b.checked = true; }
+    b.addEventListener('change', function () { write('auditoria-checklist', refreshChecks()); });
+  });
+  refreshChecks();
+  document.getElementById('ck-reset').addEventListener('click', function () {
+    boxes.forEach(function (b) { b.checked = false; });
+    write('auditoria-checklist', refreshChecks());
+  });
+
+  /* ---------- Exercício ---------- */
+  var NAMES = { C: 'conformidade', NC: 'não conformidade', OM: 'oportunidade de melhoria' };
+  var ITEMS = [
+    { t: 'O procedimento pede calibração anual. O paquímetro P-07, em uso, foi calibrado há 14 meses.', a: 'NC', w: 'O requisito existe e a evidência mostra que não foi atendido.' },
+    { t: 'O procedimento pede registro de treinamento. Os 5 operadores da amostra têm o registro completo.', a: 'C', w: 'A evidência mostra que o requisito é atendido.' },
+    { t: 'O procedimento é seguido, mas o formulário é preenchido à mão e redigitado no sistema.', a: 'OM', w: 'O requisito é atendido. Há uma forma melhor de atender.' },
+    { t: 'A instrução pede conferência de todo lote recebido. 2 dos 12 lotes da amostra foram liberados sem conferência.', a: 'NC', w: 'A conferência é obrigatória, e parte dos lotes ficou sem ela.' },
+    { t: 'A norma pede objetivos mensuráveis. Os 6 objetivos da área têm indicador, meta e prazo.', a: 'C', w: 'Os objetivos atendem ao que o requisito pede.' },
+    { t: 'O auditor acha que o arquivo deveria ser organizado por cliente. O procedimento define a organização por data, e ela é seguida.', a: 'C', w: 'O critério é o procedimento, e não a preferência do auditor. No máximo, caberia uma sugestão.' },
+    { t: 'O procedimento pede análise mensal dos indicadores. Não há registro de análise nos últimos 6 meses.', a: 'NC', w: 'A análise é exigida e não foi feita no período.' },
+    { t: 'As reclamações são respondidas no prazo definido. A área não classifica as reclamações por tipo.', a: 'OM', w: 'O prazo é atendido. A classificação ajudaria a análise, mas não é exigida.' },
+    { t: 'O procedimento pede aprovação do gerente em compras acima de R$ 5.000. Os 8 pedidos da amostra acima desse valor estão aprovados.', a: 'C', w: 'A amostra mostra que a alçada é respeitada.' },
+    { t: 'O produto reprovado deve ser identificado e separado. Havia 3 caixas reprovadas, sem identificação, ao lado das aprovadas.', a: 'NC', w: 'O requisito de identificação e separação não foi atendido, com risco de envio ao cliente.' }
+  ];
+  var quiz = document.getElementById('quiz');
+  var score = document.getElementById('qz-score');
+  var done = document.getElementById('qz-done');
+  document.getElementById('qz-total').textContent = ITEMS.length;
+  var hits = 0, answered = 0;
+
+  function render() {
+    hits = 0; answered = 0; score.textContent = 0; done.textContent = 0;
+    quiz.textContent = '';
+    ITEMS.forEach(function (item, idx) {
+      var row = document.createElement('div'); row.className = 'q';
+      var p = document.createElement('p'); p.textContent = (idx + 1) + '. ' + item.t;
+      var opts = document.createElement('div'); opts.className = 'opts';
+      opts.setAttribute('role', 'group'); opts.setAttribute('aria-label', 'Constatação do item ' + (idx + 1));
+      var why = document.createElement('p'); why.className = 'why'; why.hidden = true;
+      ['C', 'NC', 'OM'].forEach(function (k) {
+        var b = document.createElement('button');
+        b.type = 'button'; b.textContent = k; b.id = 'qz-' + idx + '-' + k;
+        b.setAttribute('aria-label', NAMES[k]);
+        b.addEventListener('click', function () {
+          var ok = k === item.a;
+          Array.prototype.forEach.call(opts.children, function (o) {
+            o.disabled = true;
+            if (o.textContent === item.a) { o.className = 'right'; }
+          });
+          if (!ok) { b.className = 'wrong'; }
+          var lead = document.createElement('b');
+          lead.textContent = (ok ? 'Certo. ' : 'A resposta é ' + item.a + ', ' + NAMES[item.a] + '. ');
+          why.textContent = ''; why.appendChild(lead); why.appendChild(document.createTextNode(item.w));
+          why.className = 'why ' + (ok ? 'ok' : 'no'); why.hidden = false;
+          answered++; if (ok) { hits++; }
+          score.textContent = hits; done.textContent = answered;
+        });
+        opts.appendChild(b);
+      });
+      row.appendChild(p); row.appendChild(opts); row.appendChild(why);
+      quiz.appendChild(row);
+    });
+  }
+  render();
+  document.getElementById('qz-reset').addEventListener('click', render);
+
+  /* ---------- Gráfico: leitura dos valores ---------- */
+  var fig = document.getElementById('fig-bars');
+  var tip = document.getElementById('bars-tip');
+  var svg = document.getElementById('bars');
+  var segs = document.querySelectorAll('#bars .seg');
+  function hide() {
+    tip.hidden = true;
+    Array.prototype.forEach.call(segs, function (b) { b.removeAttribute('opacity'); });
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('#bars .hit'), function (r) {
+    function show() {
+      var d = r.dataset;
+      Array.prototype.forEach.call(segs, function (b) {
+        b.setAttribute('opacity', b.getAttribute('data-k') === d.k ? '1' : '.4');
+      });
+      tip.textContent = '';
+      var strong = document.createElement('b'); strong.textContent = d.t + ' constatações';
+      tip.appendChild(strong);
+      tip.appendChild(document.createTextNode(d.p));
+      tip.appendChild(document.createElement('br'));
+      tip.appendChild(document.createTextNode('Não conformidades: ' + d.n + ' · Oportunidades de melhoria: ' + d.o));
+      var box = fig.getBoundingClientRect(), rb = r.getBoundingClientRect();
+      var pt = svg.createSVGPoint(); pt.x = parseFloat(d.x); pt.y = 0;
+      var scr = pt.matrixTransform(svg.getScreenCTM());
+      tip.style.left = Math.min(Math.max(scr.x - box.left, 170), box.width - 170) + 'px';
+      tip.style.top = (rb.top - box.top + 4) + 'px';
+      tip.hidden = false;
+    }
+    r.addEventListener('pointerenter', show);
+    r.addEventListener('focus', show);
+    r.addEventListener('pointerleave', hide);
+    r.addEventListener('blur', hide);
+  });
+})();
+</script>
+</body>
+</html>

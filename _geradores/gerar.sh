@@ -1,0 +1,60 @@
+#!/usr/bin/env bash
+# Gera de novo o treinamento (HTML) e a planilha (XLSX) de um estudo.
+#
+#   _geradores/gerar.sh <estudo> [pasta de saída]
+#   _geradores/gerar.sh todos   [pasta de saída]
+#
+# Estudos: pdca swot gut w5 ish raci aud nc iso risk
+# Sem a pasta de saída, os arquivos são gravados na pasta do próprio estudo.
+set -euo pipefail
+
+AQUI="$(cd "$(dirname "$0")" && pwd)"
+RAIZ="$(dirname "$AQUI")"
+if [ -n "${PYTHON:-}" ]; then PY="$PYTHON"
+elif [ -x "$AQUI/.venv/bin/python" ]; then PY="$AQUI/.venv/bin/python"
+else PY="python3"; fi
+
+# estudo | pasta | arquivo HTML | arquivo XLSX
+TABELA="
+pdca|PDCA||PDCA-modelo.xlsx
+swot|SWOT|treinamento-swot.html|SWOT-modelo.xlsx
+gut|GUT|treinamento-gut.html|GUT-modelo.xlsx
+w5|5W2H|treinamento-5w2h.html|5W2H-modelo.xlsx
+ish|Ishikawa|treinamento-ishikawa.html|Ishikawa-modelo.xlsx
+raci|RACI|treinamento-raci.html|RACI-modelo.xlsx
+aud|Auditoria|treinamento-auditoria.html|Auditoria-modelo.xlsx
+nc|Nao-Conformidade|treinamento-nao-conformidade.html|RNC-modelo.xlsx
+iso|ISO-9001|treinamento-iso-9001.html|ISO-9001-modelo.xlsx
+risk|Riscos|treinamento-riscos.html|Riscos-modelo.xlsx
+"
+
+gerar() {
+  local nome="$1" saida="${2:-}" linha pasta html xlsx destino tmp
+  linha="$(printf '%s\n' "$TABELA" | grep "^$nome|" || true)"
+  if [ -z "$linha" ]; then echo "Estudo desconhecido: $nome" >&2; exit 1; fi
+  IFS='|' read -r _ pasta html xlsx <<< "$linha"
+  destino="${saida:-$RAIZ/$pasta}"
+  mkdir -p "$destino"
+  tmp="$(mktemp -d)"
+
+  if [ -n "$html" ]; then
+    # o CSS de todos os estudos vem do treinamento de PDCA, que é escrito à mão
+    "$PY" "$AQUI/build_${nome}_html.py" "$RAIZ/PDCA/treinamento-pdca.html" "$AQUI/${nome}_body.html" "$destino/$html" > /dev/null
+    echo "ok  $destino/$html"
+  fi
+
+  "$PY" "$AQUI/build_${nome}.py" "$tmp/$xlsx" > /dev/null
+  # o LibreOffice recalcula as fórmulas e grava os valores, para a planilha abrir já calculada
+  soffice --headless --norestore "-env:UserInstallation=file://$tmp/perfil" \
+    --convert-to 'xlsx:Calc MS Excel 2007 XML' --outdir "$tmp/saida" "$tmp/$xlsx" > /dev/null 2>&1
+  if [ ! -s "$tmp/saida/$xlsx" ]; then echo "Falha ao recalcular $xlsx no LibreOffice" >&2; exit 1; fi
+  cp "$tmp/saida/$xlsx" "$destino/$xlsx"
+  echo "ok  $destino/$xlsx"
+}
+
+if [ $# -lt 1 ]; then sed -n '2,9p' "$0" | sed 's/^# \{0,1\}//'; exit 1; fi
+if [ "$1" = "todos" ]; then
+  for n in pdca swot gut w5 ish raci aud nc iso risk; do gerar "$n" "${2:-}"; done
+else
+  gerar "$1" "${2:-}"
+fi

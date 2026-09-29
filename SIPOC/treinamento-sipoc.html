@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SIPOC na prática</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<style>
+:root{
+  --ground:#F3F6F7; --surface:#FFFFFF; --sunk:#E9EEF0; --ink:#16242E; --muted:#566672; --rule:#D3DBE0;
+  --accent:#2B5C8A;
+  --s:#2B5C8A; --s-tint:#DCE8F3;
+  --i:#1E7B73; --i-tint:#D9EEEB;
+  --p:#A96A12; --p-tint:#F6E8CF;
+  --o:#7A4A9A; --o-tint:#E9DEF1;
+  --c:#B0413E; --c-tint:#F5DEDC;
+  --on-hue:#FFFFFF;
+  --good:#1F7A4D; --good-tint:#DDF1E5;
+  --bad:#B0413E; --bad-tint:#F5DEDC;
+  --display:"Barlow Semi Condensed","Arial Narrow",Arial,sans-serif;
+  --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --ground:#0F171C; --surface:#172229; --sunk:#1E2B33; --ink:#E4EAED; --muted:#9BABB6; --rule:#2B3A44;
+    --accent:#86B7E3;
+    --s:#86B7E3; --s-tint:#1B2F42;
+    --i:#5FC6BA; --i-tint:#15332F;
+    --p:#E2AC4F; --p-tint:#3A2C12;
+    --o:#C09ADB; --o-tint:#2E2139;
+    --c:#EC8E89; --c-tint:#3D1F1E;
+    --on-hue:#0F171C;
+    --good:#6FCF9B; --good-tint:#163326;
+    --bad:#EC8E89; --bad-tint:#3D1F1E;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --ground:#0F171C; --surface:#172229; --sunk:#1E2B33; --ink:#E4EAED; --muted:#9BABB6; --rule:#2B3A44;
+  --accent:#86B7E3;
+  --s:#86B7E3; --s-tint:#1B2F42;
+  --i:#5FC6BA; --i-tint:#15332F;
+  --p:#E2AC4F; --p-tint:#3A2C12;
+  --o:#C09ADB; --o-tint:#2E2139;
+  --c:#EC8E89; --c-tint:#3D1F1E;
+  --on-hue:#0F171C;
+  --good:#6FCF9B; --good-tint:#163326;
+  --bad:#EC8E89; --bad-tint:#3D1F1E;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--ground);color:var(--ink);font:400 16px/1.65 var(--body);-webkit-text-size-adjust:100%}
+a{color:var(--accent);text-underline-offset:3px}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.page{max-width:1180px;margin-inline:auto;padding-inline:20px;padding-block:36px 80px}
+
+/* Cabeçalho */
+.mast{display:flex;flex-direction:column;gap:18px;padding-bottom:32px;border-bottom:1px solid var(--rule)}
+.tiles{display:flex;gap:6px}
+.tiles span{width:44px;height:44px;display:grid;place-items:center;font:700 24px/1 var(--display);color:var(--on-hue)}
+.tiles .s{background:var(--s)} .tiles .i{background:var(--i)} .tiles .p{background:var(--p)}
+.tiles .o{background:var(--o)} .tiles .c{background:var(--c)}
+h1{font:700 clamp(2.3rem,6vw,3.6rem)/1.02 var(--display);letter-spacing:-.01em;margin:0;text-wrap:balance}
+.lead{font-size:1.15rem;line-height:1.55;max-width:62ch;margin:0;color:var(--ink)}
+.meta{display:flex;flex-direction:row;flex-wrap:wrap;gap:6px 22px;font:400 .8rem/1.4 var(--mono);color:var(--muted);margin:0;padding:0;list-style:none}
+
+/* Estrutura */
+.layout{display:grid;grid-template-columns:minmax(0,1fr);gap:32px;padding-top:32px}
+.toc{font-size:.92rem}
+.toc h2{font:500 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+.toc ol{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:2px 20px;counter-reset:toc}
+.toc li{counter-increment:toc}
+.toc a{display:flex;gap:10px;padding:5px 0;color:var(--ink);text-decoration:none;line-height:1.35}
+.toc a::before{content:counter(toc,decimal-leading-zero);font:400 .75rem/1.7 var(--mono);color:var(--muted)}
+.toc a:hover{color:var(--accent);text-decoration:underline}
+@media (min-width:1020px){
+  .layout{grid-template-columns:200px minmax(0,1fr);gap:64px}
+  .toc{position:sticky;top:calc(env(safe-area-inset-top,0px) + 24px);align-self:start}
+  .toc ol{grid-template-columns:1fr}
+}
+main{display:flex;flex-direction:column;gap:72px;min-width:0}
+section{display:flex;flex-direction:column;gap:20px;scroll-margin-top:24px}
+.eyebrow{font:500 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0}
+h2{font:700 clamp(1.7rem,4vw,2.2rem)/1.1 var(--display);margin:0;text-wrap:balance}
+h3{font:600 1.3rem/1.2 var(--display);margin:12px 0 0;text-wrap:balance}
+h4{font:600 .95rem/1.3 var(--body);margin:0}
+p{margin:0}
+section > p, section > ul, section > ol, section > h3{max-width:68ch}
+ul,ol{margin:0;padding-left:1.25em;display:flex;flex-direction:column;gap:6px}
+strong{font-weight:600}
+code{font:400 .88em var(--mono);background:var(--sunk);padding:1px 5px;border-radius:3px}
+
+/* Letras coloridas no texto */
+.k{display:inline-grid;place-items:center;width:1.45em;height:1.45em;font:700 .85em/1 var(--display);color:var(--on-hue);vertical-align:.05em}
+.k.s{background:var(--s)} .k.i{background:var(--i)} .k.p{background:var(--p)} .k.o{background:var(--o)} .k.c{background:var(--c)}
+
+/* Figuras */
+figure{margin:0;display:flex;flex-direction:column;gap:10px}
+.scroll{overflow-x:auto;background:var(--surface);border:1px solid var(--rule);padding:18px}
+.scroll svg{display:block;width:100%;min-width:820px;height:auto;color:var(--ink)}
+figcaption{font-size:.86rem;line-height:1.5;color:var(--muted);max-width:72ch}
+figcaption b{color:var(--ink);font-weight:600}
+svg text{font-family:var(--body);fill:var(--ink)}
+svg .disp{font-family:var(--display);font-weight:700}
+svg .mono{font-family:var(--mono);letter-spacing:.08em}
+svg .on{fill:var(--on-hue)}
+svg .mu{fill:var(--muted)}
+svg .b{font-weight:600}
+svg .ln{stroke:var(--ink);stroke-width:1.5;fill:none}
+svg .ln-mu{stroke:var(--muted);stroke-width:1.5;fill:none}
+svg .dash{stroke-dasharray:5 4}
+svg .ah{fill:var(--ink)} svg .ah-mu{fill:var(--muted)}
+svg .bx{fill:var(--surface);stroke:var(--rule);stroke-width:1.5}
+svg .bx-ink{fill:var(--ink);stroke:var(--ink)}
+svg .t-ground{fill:var(--ground)}
+svg .bx-out{fill:none;stroke:var(--muted);stroke-width:1.5;stroke-dasharray:5 4}
+svg .bx-s{fill:var(--s-tint);stroke:var(--s);stroke-width:1.5} svg .hd-s{fill:var(--s)}
+svg .bx-i{fill:var(--i-tint);stroke:var(--i);stroke-width:1.5} svg .hd-i{fill:var(--i)}
+svg .bx-p{fill:var(--p-tint);stroke:var(--p);stroke-width:1.5} svg .hd-p{fill:var(--p)}
+svg .bx-o{fill:var(--o-tint);stroke:var(--o);stroke-width:1.5} svg .hd-o{fill:var(--o)}
+svg .bx-c{fill:var(--c-tint);stroke:var(--c);stroke-width:1.5} svg .hd-c{fill:var(--c)}
+svg .fan{fill:var(--p-tint);opacity:.6}
+
+/* Tabelas */
+.tbl{overflow-x:auto;border:1px solid var(--rule);background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:780px;font-size:.88rem;line-height:1.4}
+th,td{padding:9px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--rule)}
+tr:last-child > td{border-bottom:0}
+thead th{font:600 .8rem/1.3 var(--body);background:var(--sunk)}
+table.sipoc{table-layout:fixed}
+table.sipoc th{color:var(--on-hue);font:700 1rem/1.2 var(--display);letter-spacing:.02em}
+table.sipoc th small{display:block;font:400 .72rem/1.3 var(--body);opacity:.9;letter-spacing:0}
+table.sipoc td{border-right:1px solid var(--surface);border-bottom:1px solid var(--surface)}
+table.sipoc th.s{background:var(--s)} table.sipoc td.s{background:var(--s-tint)}
+table.sipoc th.i{background:var(--i)} table.sipoc td.i{background:var(--i-tint)}
+table.sipoc th.p{background:var(--p)} table.sipoc td.p{background:var(--p-tint)}
+table.sipoc th.o{background:var(--o)} table.sipoc td.o{background:var(--o-tint)}
+table.sipoc th.c{background:var(--c)} table.sipoc td.c{background:var(--c-tint)}
+table.sipoc td.p b{font:500 .78rem var(--mono);color:var(--muted);margin-right:6px}
+td.num{font-variant-numeric:tabular-nums;white-space:nowrap;font-family:var(--mono);font-size:.82rem}
+
+/* Ficha do processo (acima de cada exemplo) */
+.ficha{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:0;border:1px solid var(--rule);background:var(--surface)}
+.ficha div{padding:12px 14px;border-right:1px solid var(--rule);border-bottom:1px solid var(--rule);margin:0 -1px -1px 0}
+.ficha dt{font:500 .68rem/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.ficha dd{margin:0;font-size:.9rem;line-height:1.4}
+dl{margin:0}
+
+/* Blocos */
+.pair{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.box{background:var(--surface);border:1px solid var(--rule);padding:18px 20px;display:flex;flex-direction:column;gap:10px}
+.box h4{font:600 1.1rem/1.2 var(--display)}
+.box ul{font-size:.93rem}
+.note{background:var(--sunk);padding:16px 20px;max-width:72ch;font-size:.94rem;display:flex;flex-direction:column;gap:6px}
+.note h4{font:500 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+
+/* Passo a passo */
+.steps{list-style:none;padding:0;counter-reset:st;gap:0;max-width:none;border-top:1px solid var(--rule)}
+.steps li{counter-increment:st;display:grid;grid-template-columns:44px minmax(0,1fr);gap:4px 12px;padding:16px 0;border-bottom:1px solid var(--rule)}
+.steps li::before{content:counter(st);font:700 1.7rem/1 var(--display);color:var(--muted);grid-row:span 2}
+.steps h4{font:600 1.1rem/1.25 var(--display)}
+.steps p{font-size:.95rem;max-width:64ch;grid-column:2}
+
+/* Erros comuns */
+.errs{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:0 40px;border-top:1px solid var(--rule)}
+.errs div{padding:16px 16px 16px 0;border-bottom:1px solid var(--rule);display:flex;flex-direction:column;gap:4px}
+.errs h4{font:600 1.05rem/1.25 var(--display)}
+.errs p{font-size:.92rem}
+.errs .fix{color:var(--muted)}
+.errs .fix b{color:var(--ink);font-weight:600}
+
+/* Checklist */
+.check{list-style:none;padding:0;gap:0;max-width:none;border:1px solid var(--rule);background:var(--surface)}
+.check li{border-bottom:1px solid var(--rule)}
+.check li:last-child{border-bottom:0}
+.check label{display:grid;grid-template-columns:22px minmax(0,1fr);gap:12px;padding:11px 16px;cursor:pointer;font-size:.94rem;align-items:start}
+.check input{width:18px;height:18px;margin:3px 0 0;accent-color:var(--i)}
+.check input:checked + span{color:var(--muted);text-decoration:line-through}
+.bar{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;font:400 .82rem var(--mono);color:var(--muted)}
+.bar b{color:var(--ink);font-weight:500}
+
+/* Exercício */
+.quiz{display:flex;flex-direction:column;gap:0;border:1px solid var(--rule);background:var(--surface)}
+.q{display:grid;grid-template-columns:minmax(0,1fr);gap:10px;padding:14px 16px;border-bottom:1px solid var(--rule)}
+.q:last-child{border-bottom:0}
+@media (min-width:720px){.q{grid-template-columns:minmax(0,1fr) auto;align-items:center}}
+.q p{font-size:.95rem}
+.q .why{grid-column:1/-1;font-size:.86rem;color:var(--muted)}
+.q .why b{font-weight:600}
+.q .why.ok b{color:var(--good)} .q .why.no b{color:var(--bad)}
+.opts{display:flex;gap:6px}
+.opts button{width:40px;height:40px;border:1.5px solid var(--rule);background:var(--surface);color:var(--ink);font:700 1.1rem/1 var(--display);cursor:pointer;border-radius:0}
+.opts button:hover:not(:disabled){border-color:var(--ink)}
+.opts button:disabled{cursor:default;opacity:.45}
+.opts button.right{background:var(--good-tint);border-color:var(--good);color:var(--good);opacity:1}
+.opts button.wrong{background:var(--bad-tint);border-color:var(--bad);color:var(--bad);opacity:1}
+.btn{border:1.5px solid var(--ink);background:transparent;color:var(--ink);font:500 .82rem var(--mono);padding:7px 14px;cursor:pointer;border-radius:0}
+.btn:hover{background:var(--ink);color:var(--ground)}
+
+/* Glossário */
+.gloss{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:0 40px;border-top:1px solid var(--rule)}
+.gloss div{padding:12px 0;border-bottom:1px solid var(--rule)}
+.gloss dt{font:600 1.02rem/1.3 var(--display)}
+.gloss dd{margin:2px 0 0;font-size:.9rem;color:var(--muted)}
+footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);font-size:.84rem;color:var(--muted);max-width:72ch}
+</style>
+</head>
+<body>
+<div class="page" lang="pt-BR">
+
+<header class="mast">
+  <div class="tiles" aria-hidden="true"><span class="s">S</span><span class="i">I</span><span class="p">P</span><span class="o">O</span><span class="c">C</span></div>
+  <h1>SIPOC na prática</h1>
+  <p class="lead">Um guia de estudo para mapear qualquer processo em uma página: quem fornece, o que entra, o que é feito, o que sai e quem recebe.</p>
+  <ul class="meta">
+    <li>Treinamento autoinstrucional</li>
+    <li>10 módulos</li>
+    <li>Leitura de cerca de 30 minutos</li>
+    <li>3 exemplos resolvidos e 1 exercício</li>
+  </ul>
+</header>
+
+<div class="layout">
+
+<nav class="toc" aria-label="Sumário">
+  <h2>Sumário</h2>
+  <ol>
+    <li><a href="#o-que-e">O que é o SIPOC</a></li>
+    <li><a href="#quando">Quando usar</a></li>
+    <li><a href="#construir">Como construir</a></li>
+    <li><a href="#exemplos">Exemplos resolvidos</a></li>
+    <li><a href="#requisitos">Requisitos</a></li>
+    <li><a href="#erros">Erros comuns</a></li>
+    <li><a href="#ferramentas">SIPOC e outras ferramentas</a></li>
+    <li><a href="#oficina">Como conduzir a oficina</a></li>
+    <li><a href="#pratique">Pratique</a></li>
+    <li><a href="#planilha">A planilha de apoio</a></li>
+    <li><a href="#glossario">Glossário</a></li>
+  </ol>
+</nav>
+
+<main>
+
+<!-- ============================ MÓDULO 1 ============================ -->
+<section id="o-que-e">
+  <p class="eyebrow">Módulo 1</p>
+  <h2>O que é o SIPOC</h2>
+  <p>SIPOC é um mapa de processo em alto nível. O nome vem das iniciais, em inglês, das cinco colunas que o compõem: <em>Suppliers, Inputs, Process, Outputs, Customers</em>. Em português: fornecedores, entradas, processo, saídas e clientes.</p>
+  <p>A ferramenta ganhou espaço nos programas de Qualidade Total dos anos 1980 e hoje é parte do repertório do Lean Seis Sigma. O objetivo é que todas as pessoas envolvidas enxerguem o mesmo processo, com os mesmos limites, antes de discutir problemas ou soluções.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 310" role="img" aria-label="As cinco colunas do SIPOC em sequência. O trabalho flui de fornecedores para clientes; os requisitos fluem no sentido inverso, do cliente para as saídas e do processo para as entradas.">
+        <defs>
+          <marker id="a1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker>
+          <marker id="a1m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah-mu" d="M0 0 L10 5 L0 10 z"/></marker>
+        </defs>
+
+        <g>
+          <rect class="bx-s" x="18" y="24" width="128" height="170"/><rect class="hd-s" x="18" y="24" width="128" height="46"/>
+          <text class="disp on" x="82" y="57" font-size="28" text-anchor="middle">S</text>
+          <text class="b" x="82" y="98" font-size="13" text-anchor="middle">Fornecedores</text>
+          <text class="mu" x="82" y="122" font-size="11.5" text-anchor="middle">Quem fornece</text>
+          <text class="mu" x="82" y="138" font-size="11.5" text-anchor="middle">as entradas?</text>
+          <line class="ln-mu" x1="34" y1="156" x2="130" y2="156" stroke-width="1" opacity=".5"/>
+          <text class="mono" x="82" y="179" font-size="10.5" text-anchor="middle">QUEM</text>
+        </g>
+        <g>
+          <rect class="bx-i" x="202" y="24" width="128" height="170"/><rect class="hd-i" x="202" y="24" width="128" height="46"/>
+          <text class="disp on" x="266" y="57" font-size="28" text-anchor="middle">I</text>
+          <text class="b" x="266" y="98" font-size="13" text-anchor="middle">Entradas</text>
+          <text class="mu" x="266" y="122" font-size="11.5" text-anchor="middle">O que o processo</text>
+          <text class="mu" x="266" y="138" font-size="11.5" text-anchor="middle">recebe?</text>
+          <line class="ln-mu" x1="218" y1="156" x2="314" y2="156" stroke-width="1" opacity=".5"/>
+          <text class="mono" x="266" y="179" font-size="10.5" text-anchor="middle">O QUÊ</text>
+        </g>
+        <g>
+          <rect class="bx-p" x="386" y="24" width="128" height="170"/><rect class="hd-p" x="386" y="24" width="128" height="46"/>
+          <text class="disp on" x="450" y="57" font-size="28" text-anchor="middle">P</text>
+          <text class="b" x="450" y="98" font-size="13" text-anchor="middle">Processo</text>
+          <text class="mu" x="450" y="122" font-size="11.5" text-anchor="middle">O que é feito,</text>
+          <text class="mu" x="450" y="138" font-size="11.5" text-anchor="middle">em 4 a 7 etapas?</text>
+          <line class="ln-mu" x1="402" y1="156" x2="498" y2="156" stroke-width="1" opacity=".5"/>
+          <text class="mono" x="450" y="179" font-size="10.5" text-anchor="middle">COMO</text>
+        </g>
+        <g>
+          <rect class="bx-o" x="570" y="24" width="128" height="170"/><rect class="hd-o" x="570" y="24" width="128" height="46"/>
+          <text class="disp on" x="634" y="57" font-size="28" text-anchor="middle">O</text>
+          <text class="b" x="634" y="98" font-size="13" text-anchor="middle">Saídas</text>
+          <text class="mu" x="634" y="122" font-size="11.5" text-anchor="middle">O que o processo</text>
+          <text class="mu" x="634" y="138" font-size="11.5" text-anchor="middle">entrega?</text>
+          <line class="ln-mu" x1="586" y1="156" x2="682" y2="156" stroke-width="1" opacity=".5"/>
+          <text class="mono" x="634" y="179" font-size="10.5" text-anchor="middle">O QUÊ</text>
+        </g>
+        <g>
+          <rect class="bx-c" x="754" y="24" width="128" height="170"/><rect class="hd-c" x="754" y="24" width="128" height="46"/>
+          <text class="disp on" x="818" y="57" font-size="28" text-anchor="middle">C</text>
+          <text class="b" x="818" y="98" font-size="13" text-anchor="middle">Clientes</text>
+          <text class="mu" x="818" y="122" font-size="11.5" text-anchor="middle">Quem recebe</text>
+          <text class="mu" x="818" y="138" font-size="11.5" text-anchor="middle">as saídas?</text>
+          <line class="ln-mu" x1="770" y1="156" x2="866" y2="156" stroke-width="1" opacity=".5"/>
+          <text class="mono" x="818" y="179" font-size="10.5" text-anchor="middle">QUEM</text>
+        </g>
+
+        <!-- fluxo do trabalho -->
+        <line class="ln" x1="152" y1="112" x2="196" y2="112" marker-end="url(#a1)"/>
+        <line class="ln" x1="336" y1="112" x2="380" y2="112" marker-end="url(#a1)"/>
+        <line class="ln" x1="520" y1="112" x2="564" y2="112" marker-end="url(#a1)"/>
+        <line class="ln" x1="704" y1="112" x2="748" y2="112" marker-end="url(#a1)"/>
+        <text x="174" y="102" font-size="10.5" text-anchor="middle">fornecem</text>
+        <text x="358" y="102" font-size="10.5" text-anchor="middle">entram</text>
+        <text x="542" y="102" font-size="10.5" text-anchor="middle">gera</text>
+        <text x="726" y="102" font-size="10.5" text-anchor="middle">vão para</text>
+
+        <!-- fluxo de requisitos -->
+        <path class="ln-mu dash" d="M818 196 V236 H634 V202" marker-end="url(#a1m)"/>
+        <text class="mu" x="726" y="256" font-size="11.5" text-anchor="middle">requisitos do cliente</text>
+        <path class="ln-mu dash" d="M450 196 V236 H266 V202" marker-end="url(#a1m)"/>
+        <text class="mu" x="358" y="256" font-size="11.5" text-anchor="middle">requisitos do processo</text>
+
+        <!-- legenda -->
+        <line class="ln" x1="18" y1="292" x2="58" y2="292"/>
+        <text x="66" y="296" font-size="11.5">fluxo do trabalho</text>
+        <line class="ln-mu dash" x1="200" y1="292" x2="240" y2="292"/>
+        <text class="mu" x="248" y="296" font-size="11.5">fluxo de requisitos, no sentido inverso</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 1.</b> O trabalho corre da esquerda para a direita. Os requisitos correm ao contrário: o cliente define o que espera das saídas, e o processo define o que precisa receber dos fornecedores.</figcaption>
+  </figure>
+
+  <p>Repare na linha de baixo da figura. As colunas das pontas respondem a <strong>quem</strong>: pessoas, áreas, empresas ou sistemas. As colunas <span class="k i">I</span> e <span class="k o">O</span> respondem a <strong>o quê</strong>: materiais, informações ou serviços. Misturar as duas coisas é o erro mais frequente de quem está começando.</p>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:18%">Coluna</th><th style="width:34%">O que registrar</th><th style="width:24%">Como escrever</th><th>Exemplo</th></tr></thead>
+      <tbody>
+        <tr><td><span class="k s">S</span> Fornecedores</td><td>Quem entrega cada entrada. Pode ser interno ou externo.</td><td>Substantivo: nome da área, papel ou empresa</td><td>Área requisitante</td></tr>
+        <tr><td><span class="k i">I</span> Entradas</td><td>O que o processo consome ou transforma.</td><td>Substantivo, com qualificador se ajudar</td><td>Requisição de compra aprovada</td></tr>
+        <tr><td><span class="k p">P</span> Processo</td><td>As macroetapas, na ordem em que acontecem.</td><td>Verbo no infinitivo + objeto</td><td>Cotar com fornecedores</td></tr>
+        <tr><td><span class="k o">O</span> Saídas</td><td>O que o processo entrega ao final ou ao longo do caminho.</td><td>Substantivo, de preferência com o estado final</td><td>Pedido de compra emitido</td></tr>
+        <tr><td><span class="k c">C</span> Clientes</td><td>Quem recebe cada saída. Pode ser interno ou externo.</td><td>Substantivo: nome da área, papel ou empresa</td><td>Contas a pagar</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 2 ============================ -->
+<section id="quando">
+  <p class="eyebrow">Módulo 2</p>
+  <h2>Quando usar</h2>
+  <p>O SIPOC é uma ferramenta de início de conversa. Em projetos Lean Seis Sigma ele aparece na primeira fase do ciclo DMAIC, junto com a definição do problema e do escopo.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 190" role="img" aria-label="As cinco fases do DMAIC: Definir, Medir, Analisar, Melhorar e Controlar. O SIPOC é construído na fase Definir.">
+        <polygon class="bx-ink" points="18,20 166,20 178,52 166,84 18,84"/>
+        <text class="disp t-ground" x="40" y="60" font-size="24">D</text>
+        <text class="b t-ground" x="66" y="57" font-size="13">Definir</text>
+
+        <polygon class="bx" points="194,20 342,20 354,52 342,84 194,84 206,52"/>
+        <text class="disp mu" x="222" y="60" font-size="24">M</text>
+        <text class="b" x="250" y="57" font-size="13">Medir</text>
+
+        <polygon class="bx" points="370,20 518,20 530,52 518,84 370,84 382,52"/>
+        <text class="disp mu" x="398" y="60" font-size="24">A</text>
+        <text class="b" x="424" y="57" font-size="13">Analisar</text>
+
+        <polygon class="bx" points="546,20 694,20 706,52 694,84 546,84 558,52"/>
+        <text class="disp mu" x="574" y="60" font-size="24">I</text>
+        <text class="b" x="594" y="57" font-size="13">Melhorar</text>
+
+        <polygon class="bx" points="722,20 870,20 882,52 870,84 722,84 734,52"/>
+        <text class="disp mu" x="750" y="60" font-size="24">C</text>
+        <text class="b" x="776" y="57" font-size="13">Controlar</text>
+
+        <text class="mu" x="98" y="106" font-size="11.5" text-anchor="middle">escopo e metas</text>
+        <text class="mu" x="274" y="106" font-size="11.5" text-anchor="middle">dados do processo</text>
+        <text class="mu" x="450" y="106" font-size="11.5" text-anchor="middle">causas do problema</text>
+        <text class="mu" x="626" y="106" font-size="11.5" text-anchor="middle">soluções testadas</text>
+        <text class="mu" x="802" y="106" font-size="11.5" text-anchor="middle">ganho sustentado</text>
+
+        <line class="ln" x1="98" y1="114" x2="98" y2="138"/>
+        <rect class="bx" x="18" y="138" width="430" height="38"/>
+        <text x="34" y="162" font-size="12.5"><tspan class="b">O SIPOC é feito aqui,</tspan> junto com a definição do problema.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 2.</b> No DMAIC, o SIPOC pertence à fase Definir. As letras I e C do DMAIC vêm de <em>Improve</em> e <em>Control</em> e não têm relação com as colunas do SIPOC.</figcaption>
+  </figure>
+
+  <div class="pair">
+    <div class="box">
+      <h4>Use quando</h4>
+      <ul>
+        <li>Um projeto de melhoria está começando e o escopo ainda não é consenso.</li>
+        <li>O processo nunca foi documentado.</li>
+        <li>Há dúvida sobre quem são os clientes ou sobre o que eles recebem.</li>
+        <li>Uma pessoa nova precisa entender o processo rapidamente.</li>
+        <li>Várias áreas participam e cada uma enxerga só a sua parte.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h4>Procure outra ferramenta quando</h4>
+      <ul>
+        <li>Você precisa ver decisões, desvios e retrabalho: use um fluxograma.</li>
+        <li>Você precisa medir tempos e esperas: use o mapa de fluxo de valor.</li>
+        <li>Você precisa padronizar a execução de uma tarefa: use uma instrução de trabalho.</li>
+        <li>O processo já está mapeado em detalhe e todos concordam com o escopo.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 3 ============================ -->
+<section id="construir">
+  <p class="eyebrow">Módulo 3</p>
+  <h2>Como construir</h2>
+  <p>O SIPOC é lido da esquerda para a direita, mas costuma ser preenchido em outra ordem. Começa-se pelo processo, segue-se para o lado do cliente e só depois se volta para o lado do fornecedor. Assim a equipe discute primeiro o que o processo existe para entregar.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 260" role="img" aria-label="Ordem de preenchimento do SIPOC: primeiro o processo, depois saídas, clientes, entradas e, por último, fornecedores.">
+        <defs>
+          <marker id="a2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker>
+        </defs>
+        <rect class="bx-s" x="18" y="96" width="128" height="64"/>
+        <text class="disp" x="82" y="126" font-size="22" text-anchor="middle">S</text>
+        <text x="82" y="146" font-size="12" text-anchor="middle">Fornecedores</text>
+        <rect class="bx-i" x="202" y="96" width="128" height="64"/>
+        <text class="disp" x="266" y="126" font-size="22" text-anchor="middle">I</text>
+        <text x="266" y="146" font-size="12" text-anchor="middle">Entradas</text>
+        <rect class="bx-p" x="386" y="96" width="128" height="64"/>
+        <text class="disp" x="450" y="126" font-size="22" text-anchor="middle">P</text>
+        <text x="450" y="146" font-size="12" text-anchor="middle">Processo</text>
+        <rect class="bx-o" x="570" y="96" width="128" height="64"/>
+        <text class="disp" x="634" y="126" font-size="22" text-anchor="middle">O</text>
+        <text x="634" y="146" font-size="12" text-anchor="middle">Saídas</text>
+        <rect class="bx-c" x="754" y="96" width="128" height="64"/>
+        <text class="disp" x="818" y="126" font-size="22" text-anchor="middle">C</text>
+        <text x="818" y="146" font-size="12" text-anchor="middle">Clientes</text>
+
+        <!-- ordem -->
+        <circle class="bx-ink" cx="82" cy="78" r="13"/><text class="b t-ground" x="82" y="82.5" font-size="12.5" text-anchor="middle">5</text>
+        <circle class="bx-ink" cx="266" cy="78" r="13"/><text class="b t-ground" x="266" y="82.5" font-size="12.5" text-anchor="middle">4</text>
+        <circle class="bx-ink" cx="450" cy="78" r="13"/><text class="b t-ground" x="450" y="82.5" font-size="12.5" text-anchor="middle">1</text>
+        <circle class="bx-ink" cx="634" cy="78" r="13"/><text class="b t-ground" x="634" y="82.5" font-size="12.5" text-anchor="middle">2</text>
+        <circle class="bx-ink" cx="818" cy="78" r="13"/><text class="b t-ground" x="818" y="82.5" font-size="12.5" text-anchor="middle">3</text>
+
+        <path class="ln" d="M462 62 Q542 22 620 64" marker-end="url(#a2)"/>
+        <text x="542" y="30" font-size="11.5" text-anchor="middle">o que sai?</text>
+        <path class="ln" d="M646 62 Q726 22 804 64" marker-end="url(#a2)"/>
+        <text x="726" y="30" font-size="11.5" text-anchor="middle">para quem?</text>
+        <path class="ln" d="M818 164 C818 244 266 244 266 168" marker-end="url(#a2)"/>
+        <text x="542" y="246" font-size="11.5" text-anchor="middle">o que precisa entrar?</text>
+        <path class="ln" d="M254 62 Q174 22 96 64" marker-end="url(#a2)"/>
+        <text x="174" y="30" font-size="11.5" text-anchor="middle">de quem?</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 3.</b> Os números indicam a ordem de preenchimento. Algumas equipes invertem tudo e começam pelo cliente; essa variação é conhecida como COPIS.</figcaption>
+  </figure>
+
+  <h3>Antes de tudo: os limites do processo</h3>
+  <p>Um SIPOC sem início e fim definidos vira uma discussão interminável sobre o que entra no mapa. Defina o evento que dispara o processo, o evento que o encerra e o que fica de fora.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 204" role="img" aria-label="Limites do processo de atender pedido de delivery. Começa quando o cliente confirma o pedido e termina com a pizza entregue e o pagamento confirmado. Compra de ingredientes e pós-venda ficam fora do escopo.">
+        <defs>
+          <marker id="a3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path class="ah-mu" d="M0 0 L10 5 L0 10 z"/></marker>
+        </defs>
+        <text x="166" y="36" font-size="12"><tspan class="b">Início:</tspan> cliente confirma o pedido</text>
+        <text x="744" y="36" font-size="12" text-anchor="end"><tspan class="b">Fim:</tspan> pizza entregue e pagamento confirmado</text>
+        <line class="ln" x1="166" y1="46" x2="166" y2="146"/><circle class="ah" cx="166" cy="46" r="4"/>
+        <line class="ln" x1="744" y1="46" x2="744" y2="146"/><circle class="ah" cx="744" cy="46" r="4"/>
+
+        <rect class="bx-out" x="14" y="70" width="128" height="60"/>
+        <text class="mu" x="78" y="96" font-size="11.5" text-anchor="middle">Compra de</text>
+        <text class="mu" x="78" y="112" font-size="11.5" text-anchor="middle">ingredientes</text>
+        <text class="mu" x="78" y="150" font-size="11" text-anchor="middle" font-style="italic">fora do escopo</text>
+        <line class="ln-mu dash" x1="144" y1="100" x2="162" y2="100"/>
+
+        <rect class="bx-out" x="768" y="70" width="118" height="60"/>
+        <text class="mu" x="827" y="104" font-size="11.5" text-anchor="middle">Pós-venda</text>
+        <text class="mu" x="827" y="150" font-size="11" text-anchor="middle" font-style="italic">fora do escopo</text>
+        <line class="ln-mu dash" x1="748" y1="100" x2="766" y2="100"/>
+
+        <g font-size="11.5" text-anchor="middle">
+          <rect class="bx-p" x="178" y="70" width="84" height="60"/>
+          <text class="mono mu" x="186" y="85" font-size="10" text-anchor="start">1</text>
+          <text x="220" y="104">Registrar</text><text x="220" y="119">o pedido</text>
+          <rect class="bx-p" x="272" y="70" width="84" height="60"/>
+          <text class="mono mu" x="280" y="85" font-size="10" text-anchor="start">2</text>
+          <text x="314" y="104">Montar</text><text x="314" y="119">a pizza</text>
+          <rect class="bx-p" x="366" y="70" width="84" height="60"/>
+          <text class="mono mu" x="374" y="85" font-size="10" text-anchor="start">3</text>
+          <text x="408" y="111">Assar</text>
+          <rect class="bx-p" x="460" y="70" width="84" height="60"/>
+          <text class="mono mu" x="468" y="85" font-size="10" text-anchor="start">4</text>
+          <text x="502" y="104">Embalar</text><text x="502" y="119">e conferir</text>
+          <rect class="bx-p" x="554" y="70" width="84" height="60"/>
+          <text class="mono mu" x="562" y="85" font-size="10" text-anchor="start">5</text>
+          <text x="596" y="104">Entregar</text><text x="596" y="119">ao cliente</text>
+          <rect class="bx-p" x="648" y="70" width="84" height="60"/>
+          <text class="mono mu" x="656" y="85" font-size="10" text-anchor="start">6</text>
+          <text x="690" y="104">Confirmar</text><text x="690" y="119">o pagamento</text>
+        </g>
+
+        <path class="ln" d="M166 160 V168 H744 V160"/>
+        <text x="455" y="188" font-size="12" text-anchor="middle">escopo do SIPOC: 6 macroetapas</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 4.</b> Limites do processo de delivery de uma pizzaria. O que está nas caixas tracejadas existe, mas pertence a outros processos.</figcaption>
+  </figure>
+
+  <h3>Passo a passo</h3>
+  <ol class="steps">
+    <li><h4>Nomeie o processo e defina os limites</h4><p>Use verbo + objeto no nome, como “Atender pedido de delivery”. Registre o gatilho de início, a entrega final e o que fica fora do escopo.</p></li>
+    <li><h4>Liste as macroetapas <span class="k p">P</span></h4><p>De 4 a 7 etapas, na ordem em que acontecem, cada uma com verbo no infinitivo. Descreva o processo como ele é hoje. Se passar de 7, agrupe.</p></li>
+    <li><h4>Liste as saídas <span class="k o">O</span></h4><p>Tudo o que o processo entrega: produto, serviço, documento, informação. Inclua saídas intermediárias relevantes, como um comprovante ou um registro.</p></li>
+    <li><h4>Identifique os clientes <span class="k c">C</span></h4><p>Para cada saída, quem recebe? Lembre dos clientes internos: outra área, a gestão, o processo seguinte.</p></li>
+    <li><h4>Liste as entradas <span class="k i">I</span></h4><p>O que o processo precisa receber para funcionar: materiais, informações, sistemas, autorizações. Fique no que é essencial.</p></li>
+    <li><h4>Identifique os fornecedores <span class="k s">S</span></h4><p>Para cada entrada, quem fornece? O próprio cliente costuma aparecer aqui, porque é ele quem fornece o pedido.</p></li>
+    <li><h4>Valide</h4><p>Revise com quem executa o processo e com o dono do processo. Use o checklist do módulo 8.</p></li>
+  </ol>
+
+  <div class="note">
+    <h4>Regra prática</h4>
+    <p>Escreva cada entrada na mesma linha do seu fornecedor e cada saída na mesma linha do seu cliente. A leitura na horizontal passa a mostrar os pares, e fica fácil notar uma entrada sem fornecedor ou uma saída sem cliente.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 4 ============================ -->
+<section id="exemplos">
+  <p class="eyebrow">Módulo 4</p>
+  <h2>Exemplos resolvidos</h2>
+  <p>Três processos de naturezas diferentes. Os dados são ilustrativos e foram criados para este treinamento. Os dois primeiros também estão preenchidos na planilha de apoio.</p>
+
+  <h3>Exemplo 1. Atender pedido de delivery</h3>
+  <dl class="ficha">
+    <div><dt>Dono do processo</dt><dd>Gerente da loja</dd></div>
+    <div><dt>Início</dt><dd>Cliente confirma o pedido</dd></div>
+    <div><dt>Fim</dt><dd>Pizza entregue e pagamento confirmado</dd></div>
+    <div><dt>Fora do escopo</dt><dd>Compra de ingredientes, salão e pós-venda</dd></div>
+  </dl>
+  <div class="tbl">
+    <table class="sipoc">
+      <thead><tr>
+        <th class="s">S<small>Fornecedores</small></th><th class="i">I<small>Entradas</small></th><th class="p">P<small>Processo</small></th><th class="o">O<small>Saídas</small></th><th class="c">C<small>Clientes</small></th>
+      </tr></thead>
+      <tbody>
+        <tr><td class="s">Cliente</td><td class="i">Pedido: sabor, tamanho, endereço e forma de pagamento</td><td class="p"><b>1</b>Registrar o pedido</td><td class="o">Pizza quente, conforme o pedido</td><td class="c">Cliente final</td></tr>
+        <tr><td class="s">Aplicativo de delivery</td><td class="i">Dados do pedido e confirmação de pagamento</td><td class="p"><b>2</b>Montar a pizza</td><td class="o">Comprovante ou nota fiscal</td><td class="c">Cliente final</td></tr>
+        <tr><td class="s">Fornecedor de ingredientes</td><td class="i">Massa, molho, queijo e recheios</td><td class="p"><b>3</b>Assar</td><td class="o">Pagamento recebido</td><td class="c">Caixa da pizzaria</td></tr>
+        <tr><td class="s">Fabricante de embalagens</td><td class="i">Caixas de pizza</td><td class="p"><b>4</b>Embalar e conferir</td><td class="o">Status do pedido atualizado</td><td class="c">Aplicativo de delivery</td></tr>
+        <tr><td class="s">Distribuidora de gás</td><td class="i">Gás para o forno</td><td class="p"><b>5</b>Entregar ao cliente</td><td class="o">Registro de tempos de preparo e entrega</td><td class="c">Gerente da loja</td></tr>
+        <tr><td class="s">Entregador parceiro</td><td class="i">Disponibilidade para a rota</td><td class="p"><b>6</b>Confirmar o pagamento</td><td></td><td></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p><strong>O que observar.</strong> O cliente aparece nas duas pontas: fornece o pedido e recebe a pizza. O aplicativo de delivery também: envia os dados do pedido e recebe a atualização de status. Isso é normal e vale registrar nas duas colunas.</p>
+
+  <h3>Exemplo 2. Adquirir materiais e serviços</h3>
+  <dl class="ficha">
+    <div><dt>Dono do processo</dt><dd>Gerente de Suprimentos</dd></div>
+    <div><dt>Início</dt><dd>Requisição de compra aprovada pelo gestor da área</dd></div>
+    <div><dt>Fim</dt><dd>Item recebido, conferido e nota fiscal liberada para pagamento</dd></div>
+    <div><dt>Fora do escopo</dt><dd>Homologação de fornecedores, pagamento e gestão de estoque</dd></div>
+  </dl>
+  <div class="tbl">
+    <table class="sipoc">
+      <thead><tr>
+        <th class="s">S<small>Fornecedores</small></th><th class="i">I<small>Entradas</small></th><th class="p">P<small>Processo</small></th><th class="o">O<small>Saídas</small></th><th class="c">C<small>Clientes</small></th>
+      </tr></thead>
+      <tbody>
+        <tr><td class="s">Área requisitante</td><td class="i">Requisição de compra com especificação técnica</td><td class="p"><b>1</b>Analisar a requisição</td><td class="o">Pedido de compra ou contrato emitido</td><td class="c">Fornecedor selecionado</td></tr>
+        <tr><td class="s">Fornecedores homologados</td><td class="i">Propostas comerciais</td><td class="p"><b>2</b>Cotar com fornecedores</td><td class="o">Material ou serviço entregue conforme a especificação</td><td class="c">Área requisitante</td></tr>
+        <tr><td class="s">Controladoria</td><td class="i">Orçamento disponível no centro de custo</td><td class="p"><b>3</b>Negociar e selecionar a proposta</td><td class="o">Nota fiscal conferida e liberada</td><td class="c">Contas a pagar</td></tr>
+        <tr><td class="s">Jurídico</td><td class="i">Minutas contratuais padrão</td><td class="p"><b>4</b>Emitir o pedido de compra ou contrato</td><td class="o">Avaliação de desempenho do fornecedor</td><td class="c">Gestão de fornecedores</td></tr>
+        <tr><td class="s">Diretoria</td><td class="i">Política de compras e alçadas de aprovação</td><td class="p"><b>5</b>Receber e conferir o item</td><td class="o">Registro da economia obtida na negociação</td><td class="c">Controladoria</td></tr>
+        <tr><td></td><td></td><td class="p"><b>6</b>Liberar a nota fiscal para pagamento</td><td></td><td></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p><strong>O que observar.</strong> Quase todos os fornecedores e clientes são internos. Regras e políticas entram como entradas, porque orientam o processo sem serem transformadas por ele. O fornecedor externo é cliente do pedido de compra: ele precisa receber um pedido claro para entregar certo.</p>
+
+  <h3>Exemplo 3. Atender chamado de suporte de TI</h3>
+  <dl class="ficha">
+    <div><dt>Dono do processo</dt><dd>Coordenador de suporte</dd></div>
+    <div><dt>Início</dt><dd>Usuário abre um chamado ou o monitoramento gera um alerta</dd></div>
+    <div><dt>Fim</dt><dd>Chamado encerrado com a confirmação do usuário</dd></div>
+    <div><dt>Fora do escopo</dt><dd>Projetos de TI, compras de equipamentos e gestão de mudanças</dd></div>
+  </dl>
+  <div class="tbl">
+    <table class="sipoc">
+      <thead><tr>
+        <th class="s">S<small>Fornecedores</small></th><th class="i">I<small>Entradas</small></th><th class="p">P<small>Processo</small></th><th class="o">O<small>Saídas</small></th><th class="c">C<small>Clientes</small></th>
+      </tr></thead>
+      <tbody>
+        <tr><td class="s">Usuário</td><td class="i">Chamado com a descrição do problema</td><td class="p"><b>1</b>Registrar e classificar o chamado</td><td class="o">Serviço restabelecido</td><td class="c">Usuário</td></tr>
+        <tr><td class="s">Ferramenta de monitoramento</td><td class="i">Alertas automáticos</td><td class="p"><b>2</b>Priorizar por impacto e urgência</td><td class="o">Comunicações de andamento</td><td class="c">Usuário</td></tr>
+        <tr><td class="s">Fabricantes de software e hardware</td><td class="i">Documentação técnica, atualizações e garantia</td><td class="p"><b>3</b>Diagnosticar a causa</td><td class="o">Chamado encerrado e documentado</td><td class="c">Gestão de TI</td></tr>
+        <tr><td class="s">Equipe de suporte</td><td class="i">Base de conhecimento</td><td class="p"><b>4</b>Resolver ou escalar</td><td class="o">Artigo novo ou atualizado na base de conhecimento</td><td class="c">Equipe de suporte</td></tr>
+        <tr><td class="s">Segurança da informação</td><td class="i">Políticas de acesso</td><td class="p"><b>5</b>Validar a solução com o usuário</td><td class="o">Indicadores de atendimento</td><td class="c">Gestão de TI e áreas de negócio</td></tr>
+        <tr><td></td><td></td><td class="p"><b>6</b>Encerrar e documentar</td><td></td><td></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p><strong>O que observar.</strong> Em serviços, a principal saída é um estado: o serviço restabelecido. Um sistema também pode ser fornecedor, como a ferramenta de monitoramento. E a própria equipe de suporte é cliente do processo, porque a base de conhecimento que ela alimenta hoje é a entrada que ela usa amanhã.</p>
+</section>
+
+<!-- ============================ MÓDULO 5 ============================ -->
+<section id="requisitos">
+  <p class="eyebrow">Módulo 5</p>
+  <h2>Requisitos</h2>
+  <p>O SIPOC básico diz o que entra e o que sai. A extensão mais útil é registrar também o que se exige de cada item. O caminho é o das setas tracejadas da figura 1: começa no cliente e termina no fornecedor.</p>
+  <ol>
+    <li>Para cada saída, pergunte ao cliente o que ele considera uma boa entrega. Prazo, qualidade, custo, formato.</li>
+    <li>Transforme a resposta em algo mensurável: um indicador e uma meta.</li>
+    <li>Para cada entrada, registre o que o processo exige do fornecedor para conseguir cumprir essas metas.</li>
+  </ol>
+  <p>No Seis Sigma, os requisitos mensuráveis que mais pesam para o cliente são chamados de CTQ, do inglês <em>Critical to Quality</em>.</p>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th>Saída</th><th>Cliente</th><th>Requisito do cliente</th><th>Indicador</th><th>Meta</th></tr></thead>
+      <tbody>
+        <tr><td>Pizza quente, conforme o pedido</td><td>Cliente final</td><td>Chegar no prazo informado</td><td>% de entregas em até 40 minutos</td><td class="num">95% ou mais</td></tr>
+        <tr><td>Pizza quente, conforme o pedido</td><td>Cliente final</td><td>Sabor e tamanho corretos</td><td>% de pedidos com erro</td><td class="num">até 1%</td></tr>
+        <tr><td>Status do pedido atualizado</td><td>Aplicativo de delivery</td><td>Atualização a cada mudança de etapa</td><td>% de pedidos com status completo</td><td class="num">98% ou mais</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="tbl">
+    <table>
+      <thead><tr><th>Entrada</th><th>Fornecedor</th><th>Requisito da entrada</th><th>Como verificar</th></tr></thead>
+      <tbody>
+        <tr><td>Pedido</td><td>Cliente</td><td>Endereço completo, com complemento e ponto de referência</td><td>Campos obrigatórios no formulário</td></tr>
+        <tr><td>Massa, molho, queijo e recheios</td><td>Fornecedor de ingredientes</td><td>Dentro da validade e refrigerados até 5 °C</td><td>Conferência no recebimento</td></tr>
+        <tr><td>Disponibilidade para a rota</td><td>Entregador parceiro</td><td>Entregador na loja quando a pizza sai do forno</td><td>Tempo de espera na expedição</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>As metas acima são exemplos de formato. Os valores reais vêm da conversa com o cliente e dos dados do processo.</p>
+</section>
+
+<!-- ============================ MÓDULO 6 ============================ -->
+<section id="erros">
+  <p class="eyebrow">Módulo 6</p>
+  <h2>Erros comuns</h2>
+  <div class="errs">
+    <div><h4>Detalhar demais o processo</h4><p>Quinze etapas, decisões e exceções na coluna P.</p><p class="fix"><b>Correção:</b> agrupe em 4 a 7 macroetapas. O detalhe vai para o fluxograma.</p></div>
+    <div><h4>Não definir início e fim</h4><p>Cada participante imagina um processo de tamanho diferente.</p><p class="fix"><b>Correção:</b> registre gatilho, entrega final e fora do escopo antes de preencher as colunas.</p></div>
+    <div><h4>Trocar coisa por pessoa</h4><p>“Cliente” na coluna de entradas, “nota fiscal” na coluna de clientes.</p><p class="fix"><b>Correção:</b> S e C respondem a quem. I e O respondem a o quê.</p></div>
+    <div><h4>Esquecer os clientes internos</h4><p>Só o cliente final aparece na coluna C.</p><p class="fix"><b>Correção:</b> pergunte quem mais usa o que o processo produz: financeiro, gestão, o processo seguinte.</p></div>
+    <div><h4>Escrever etapas como áreas</h4><p>“Financeiro”, “Jurídico”, “Logística” na coluna P.</p><p class="fix"><b>Correção:</b> etapa é ação. Comece com verbo no infinitivo.</p></div>
+    <div><h4>Mapear o processo ideal</h4><p>O mapa mostra como deveria ser, e os problemas reais somem.</p><p class="fix"><b>Correção:</b> mapeie primeiro como é hoje. O processo desejado vem depois da análise.</p></div>
+    <div><h4>Fazer sozinho</h4><p>Uma pessoa preenche na própria mesa e apresenta pronto.</p><p class="fix"><b>Correção:</b> construa em grupo, com quem executa, quem fornece e quem recebe.</p></div>
+    <div><h4>Deixar itens soltos</h4><p>Entradas que nenhuma etapa usa, saídas que ninguém recebe.</p><p class="fix"><b>Correção:</b> leia linha por linha. O que não tem par deve ser questionado ou removido.</p></div>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 7 ============================ -->
+<section id="ferramentas">
+  <p class="eyebrow">Módulo 7</p>
+  <h2>SIPOC e outras ferramentas</h2>
+  <p>As ferramentas de mapeamento trabalham em altitudes diferentes. O SIPOC é a vista mais alta. Cada macroetapa dele pode ser aberta em um fluxograma, e cada atividade do fluxograma pode ser aberta em uma instrução de trabalho.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 366" role="img" aria-label="Três níveis de detalhe. No SIPOC, o processo de delivery tem seis macroetapas. A etapa Montar a pizza se abre em um fluxograma com cinco atividades e uma decisão. A atividade Distribuir o recheio se abre em uma instrução de trabalho com três passos.">
+        <defs>
+          <marker id="a5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker>
+        </defs>
+        <!-- rótulos -->
+        <text class="b" x="10" y="44" font-size="13">SIPOC</text>
+        <text class="mu" x="10" y="61" font-size="11.5">visão macro</text>
+        <text class="b" x="10" y="154" font-size="13">Fluxograma</text>
+        <text class="mu" x="10" y="171" font-size="11.5">atividades e decisões</text>
+        <text class="b" x="10" y="292" font-size="13">Instrução de trabalho</text>
+        <text class="mu" x="10" y="309" font-size="11.5">como executar</text>
+
+        <!-- zoom -->
+        <polygon class="fan" points="296,68 400,68 872,128 178,128"/>
+        <polygon class="fan" points="650,188 754,188 872,248 178,248"/>
+
+        <!-- nível 1 -->
+        <g font-size="12" text-anchor="middle">
+          <rect class="bx" x="178" y="24" width="104" height="44"/><text x="230" y="50">Registrar</text>
+          <rect class="bx-p" x="296" y="24" width="104" height="44"/><text class="b" x="348" y="50">Montar a pizza</text>
+          <rect class="bx" x="414" y="24" width="104" height="44"/><text x="466" y="50">Assar</text>
+          <rect class="bx" x="532" y="24" width="104" height="44"/><text x="584" y="50">Embalar</text>
+          <rect class="bx" x="650" y="24" width="104" height="44"/><text x="702" y="50">Entregar</text>
+          <rect class="bx" x="768" y="24" width="104" height="44"/><text x="820" y="50">Confirmar</text>
+        </g>
+
+        <!-- nível 2 -->
+        <g font-size="11" text-anchor="middle">
+          <rect class="bx" x="178" y="128" width="104" height="60"/><text x="230" y="155">Abrir</text><text x="230" y="170">a massa</text>
+          <rect class="bx" x="296" y="128" width="104" height="60"/><text x="348" y="155">Espalhar</text><text x="348" y="170">o molho</text>
+          <polygon class="bx" points="414,158 466,128 518,158 466,188"/><text x="466" y="155">Borda</text><text x="466" y="169">recheada?</text>
+          <rect class="bx" x="532" y="128" width="104" height="60"/><text x="584" y="155">Rechear</text><text x="584" y="170">a borda</text>
+          <rect class="bx-p" x="650" y="128" width="104" height="60"/><text class="b" x="702" y="155">Distribuir</text><text class="b" x="702" y="170">o recheio</text>
+          <rect class="bx" x="768" y="128" width="104" height="60"/><text x="820" y="155">Conferir com</text><text x="820" y="170">o pedido</text>
+        </g>
+        <line class="ln" x1="283" y1="158" x2="294" y2="158" marker-end="url(#a5)"/>
+        <line class="ln" x1="401" y1="158" x2="412" y2="158" marker-end="url(#a5)"/>
+        <line class="ln" x1="519" y1="158" x2="530" y2="158" marker-end="url(#a5)"/>
+        <line class="ln" x1="637" y1="158" x2="648" y2="158" marker-end="url(#a5)"/>
+        <line class="ln" x1="755" y1="158" x2="766" y2="158" marker-end="url(#a5)"/>
+        <text class="mu" x="529" y="145" font-size="9.5" text-anchor="end">sim</text>
+        <path class="ln" d="M466 188 V206 H702 V190" marker-end="url(#a5)"/>
+        <text class="mu" x="584" y="220" font-size="9.5" text-anchor="middle">não</text>
+
+        <!-- nível 3 -->
+        <rect class="bx" x="178" y="248" width="694" height="104"/>
+        <text class="b" x="196" y="274" font-size="12.5">Distribuir o recheio</text>
+        <text x="196" y="298" font-size="12">1. Pesar o queijo conforme o tamanho da pizza.</text>
+        <text x="196" y="318" font-size="12">2. Espalhar do centro para a borda, deixando a borda livre.</text>
+        <text x="196" y="338" font-size="12">3. Dispor o recheio conforme a ficha técnica do sabor.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 5.</b> A mesma pizzaria em três altitudes. No SIPOC, “Montar a pizza” é uma caixa. No fluxograma, ela vira cinco atividades e uma decisão. Na instrução de trabalho, uma dessas atividades vira passos de execução.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:20%">Ferramenta</th><th style="width:24%">Nível de detalhe</th><th style="width:30%">Pergunta que responde</th><th>Melhor momento</th></tr></thead>
+      <tbody>
+        <tr><td><strong>SIPOC</strong></td><td>Macro: 4 a 7 etapas</td><td>Quem fornece, o que entra, o que sai e para quem?</td><td>Início do projeto, alinhamento de escopo</td></tr>
+        <tr><td><strong>Fluxograma</strong></td><td>Médio: atividades e decisões</td><td>Como o trabalho flui, passo a passo?</td><td>Entender a sequência, os desvios e o retrabalho</td></tr>
+        <tr><td><strong>BPMN</strong></td><td>Médio a alto: atividades, eventos e papéis</td><td>Quem faz o quê, em que ordem e sob quais regras?</td><td>Documentar formalmente ou automatizar</td></tr>
+        <tr><td><strong>Mapa de fluxo de valor</strong></td><td>Médio: etapas com tempos e estoques</td><td>Onde estão as esperas e os desperdícios?</td><td>Reduzir o tempo total de atravessamento</td></tr>
+        <tr><td><strong>Instrução de trabalho</strong></td><td>Alto: tarefa a tarefa</td><td>Como executar esta atividade?</td><td>Padronizar e treinar</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 8 ============================ -->
+<section id="oficina">
+  <p class="eyebrow">Módulo 8</p>
+  <h2>Como conduzir a oficina</h2>
+  <p>Um SIPOC bem feito sai de uma reunião de trabalho, com as pessoas certas na sala. Reserve 90 minutos e convide o dono do processo, quem executa as etapas e, se possível, um representante dos principais clientes e fornecedores. De 5 a 8 pessoas é um bom tamanho.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 132" role="img" aria-label="Distribuição dos 90 minutos da oficina: 10 para escopo, 15 para macroetapas, 15 para saídas e clientes, 15 para entradas e fornecedores, 15 para requisitos, 10 para validação e 10 para próximos passos.">
+        <g font-size="11.5" text-anchor="middle">
+          <rect class="bx" x="90" y="24" width="80" height="56"/><text x="130" y="56">Escopo</text>
+          <rect class="hd-p" x="170" y="24" width="120" height="56"/><text class="on b" x="230" y="56">Macroetapas</text>
+          <rect class="hd-o" x="290" y="24" width="120" height="56"/><text class="on b" x="350" y="49">Saídas</text><text class="on b" x="350" y="64">e clientes</text>
+          <rect class="hd-i" x="410" y="24" width="120" height="56"/><text class="on b" x="470" y="49">Entradas</text><text class="on b" x="470" y="64">e fornecedores</text>
+          <rect class="bx" x="530" y="24" width="120" height="56"/><text x="590" y="56">Requisitos</text>
+          <rect class="bx" x="650" y="24" width="80" height="56"/><text x="690" y="56">Validação</text>
+          <rect class="bx" x="730" y="24" width="80" height="56"/><text x="770" y="49">Próximos</text><text x="770" y="64">passos</text>
+        </g>
+        <g class="ln-mu" stroke-width="1">
+          <line x1="90" y1="80" x2="90" y2="92"/><line x1="170" y1="80" x2="170" y2="92"/><line x1="290" y1="80" x2="290" y2="92"/>
+          <line x1="410" y1="80" x2="410" y2="92"/><line x1="530" y1="80" x2="530" y2="92"/><line x1="650" y1="80" x2="650" y2="92"/>
+          <line x1="730" y1="80" x2="730" y2="92"/><line x1="810" y1="80" x2="810" y2="92"/>
+        </g>
+        <g class="mono" font-size="10.5" text-anchor="middle">
+          <text class="mu" x="90" y="110">0</text><text class="mu" x="170" y="110">10</text><text class="mu" x="290" y="110">25</text>
+          <text class="mu" x="410" y="110">40</text><text class="mu" x="530" y="110">55</text><text class="mu" x="650" y="110">70</text>
+          <text class="mu" x="730" y="110">80</text><text class="mu" x="810" y="110">90 min</text>
+        </g>
+      </svg>
+    </div>
+    <figcaption><b>Figura 6.</b> Roteiro de 90 minutos, desenhado em escala. Metade do tempo vai para as cinco colunas, na ordem de preenchimento do módulo 3.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:14%">Minutos</th><th style="width:26%">Bloco</th><th>O que fazer</th><th style="width:26%">Resultado</th></tr></thead>
+      <tbody>
+        <tr><td class="num">0 a 10</td><td>Escopo</td><td>Combinar o nome do processo, o gatilho de início, a entrega final e o que fica de fora.</td><td>Cabeçalho preenchido</td></tr>
+        <tr><td class="num">10 a 25</td><td>Macroetapas</td><td>Cada pessoa escreve etapas em notas adesivas. O grupo ordena e agrupa até chegar a 4 a 7.</td><td>Coluna P</td></tr>
+        <tr><td class="num">25 a 40</td><td>Saídas e clientes</td><td>Listar o que o processo entrega e quem recebe cada entrega.</td><td>Colunas O e C</td></tr>
+        <tr><td class="num">40 a 55</td><td>Entradas e fornecedores</td><td>Listar o que o processo precisa receber e de quem.</td><td>Colunas I e S</td></tr>
+        <tr><td class="num">55 a 70</td><td>Requisitos</td><td>Para as saídas e entradas mais importantes, registrar o que é exigido.</td><td>Requisitos principais</td></tr>
+        <tr><td class="num">70 a 80</td><td>Validação</td><td>Ler o mapa em voz alta, linha por linha, e passar o checklist.</td><td>SIPOC validado</td></tr>
+        <tr><td class="num">80 a 90</td><td>Próximos passos</td><td>Registrar lacunas percebidas, responsáveis e prazos.</td><td>Lista de oportunidades</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Checklist de validação</h3>
+  <p>Marque os itens conforme revisa o seu SIPOC. As marcações ficam salvas neste navegador.</p>
+  <ol class="check" id="checklist">
+    <li><label><input type="checkbox" id="ck-1"><span>O processo tem nome claro, no formato verbo + objeto.</span></label></li>
+    <li><label><input type="checkbox" id="ck-2"><span>Os limites estão definidos: evento de início e entrega final.</span></label></li>
+    <li><label><input type="checkbox" id="ck-3"><span>O processo tem de 4 a 7 macroetapas.</span></label></li>
+    <li><label><input type="checkbox" id="ck-4"><span>Cada etapa começa com verbo no infinitivo e descreve o que é feito, não quem faz.</span></label></li>
+    <li><label><input type="checkbox" id="ck-5"><span>As etapas retratam o processo como ele é hoje.</span></label></li>
+    <li><label><input type="checkbox" id="ck-6"><span>Toda saída tem pelo menos um cliente identificado.</span></label></li>
+    <li><label><input type="checkbox" id="ck-7"><span>Clientes internos e externos foram considerados.</span></label></li>
+    <li><label><input type="checkbox" id="ck-8"><span>Toda entrada tem pelo menos um fornecedor identificado.</span></label></li>
+    <li><label><input type="checkbox" id="ck-9"><span>Toda entrada é usada por alguma etapa do processo.</span></label></li>
+    <li><label><input type="checkbox" id="ck-10"><span>Os requisitos das principais saídas foram levantados com os clientes.</span></label></li>
+    <li><label><input type="checkbox" id="ck-11"><span>O SIPOC foi construído com a participação de quem executa o processo.</span></label></li>
+    <li><label><input type="checkbox" id="ck-12"><span>O dono do processo validou o resultado.</span></label></li>
+  </ol>
+  <div class="bar"><span><b id="ck-count">0</b> de 12 itens marcados</span><button class="btn" id="ck-reset" type="button">Limpar marcações</button></div>
+</section>
+
+<!-- ============================ MÓDULO 9 ============================ -->
+<section id="pratique">
+  <p class="eyebrow">Módulo 9</p>
+  <h2>Pratique</h2>
+  <h3>Exercício 1. Em qual coluna vai cada item?</h3>
+  <p>O processo é “Recrutar e selecionar colaboradores”. Começa com a requisição de vaga aprovada e termina com o candidato contratado. Escolha a coluna de cada item.</p>
+  <div class="quiz" id="quiz"></div>
+  <div class="bar"><span>Acertos: <b id="qz-score">0</b> de <b id="qz-total">10</b></span><span>Respondidos: <b id="qz-done">0</b></span><button class="btn" id="qz-reset" type="button">Recomeçar</button></div>
+
+  <h3>Exercício 2. Mapeie um processo seu</h3>
+  <p>Escolha um processo que você conhece bem e que se repete com frequência. Abra a aba SIPOC da planilha de apoio e siga o roteiro.</p>
+  <ol>
+    <li>Escreva o nome do processo com verbo + objeto.</li>
+    <li>Defina o gatilho de início e a entrega final. Anote uma coisa que fica fora do escopo.</li>
+    <li>Liste as macroetapas. Se passar de 7, agrupe.</li>
+    <li>Preencha saídas e clientes, depois entradas e fornecedores, sempre em pares na mesma linha.</li>
+    <li>Escolha a saída mais importante e escreva um requisito, um indicador e uma meta.</li>
+    <li>Passe o checklist do módulo 8. Anote o que ficou pendente na aba Oportunidades.</li>
+  </ol>
+  <p>Depois, mostre o resultado a alguém que participa do processo. As correções que essa pessoa fizer são a parte mais valiosa do exercício.</p>
+</section>
+
+<!-- ============================ MÓDULO 10 ============================ -->
+<section id="planilha">
+  <p class="eyebrow">Módulo 10</p>
+  <h2>A planilha de apoio</h2>
+  <p>Este treinamento acompanha o arquivo <a id="xlsx-ref" href="SIPOC-modelo.xlsx">SIPOC-modelo.xlsx</a>, que fica na mesma pasta. As células em amarelo-claro são para preenchimento. As células cinza são calculadas.</p>
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Aba</th><th>Para que serve</th><th style="width:34%">O que ela calcula</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Instruções</strong></td><td>Legenda de cores, ordem de preenchimento e regras do modelo.</td><td>Nada. É só leitura.</td></tr>
+        <tr><td><strong>SIPOC</strong></td><td>Cabeçalho do processo e tabela com as cinco colunas, com 12 linhas.</td><td>Quantidade de itens por coluna e avisos, como etapas fora da faixa de 4 a 7 ou pares incompletos.</td></tr>
+        <tr><td><strong>Requisitos</strong></td><td>Requisito de cada entrada e de cada saída, com indicador e meta.</td><td>Puxa entradas, saídas, fornecedores e clientes da aba SIPOC. Conta requisitos atendidos e pendentes.</td></tr>
+        <tr><td><strong>Checklist</strong></td><td>Os mesmos 12 itens do módulo 8, com status Sim, Parcial ou Não.</td><td>Percentual atendido e situação da validação.</td></tr>
+        <tr><td><strong>Oportunidades</strong></td><td>Lacunas percebidas no mapeamento, com ação, responsável e prazo.</td><td>Contagem por status e itens de alto impacto em aberto.</td></tr>
+        <tr><td><strong>Exemplo 1 e Exemplo 2</strong></td><td>Os SIPOC da pizzaria e de compras, preenchidos.</td><td>Os mesmos resumos da aba SIPOC.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ GLOSSÁRIO ============================ -->
+<section id="glossario">
+  <p class="eyebrow">Referência</p>
+  <h2>Glossário</h2>
+  <dl class="gloss">
+    <div><dt>Cliente interno</dt><dd>Pessoa ou área da própria organização que recebe uma saída do processo.</dd></div>
+    <div><dt>COPIS</dt><dd>Variação do SIPOC preenchida a partir do cliente: clientes, saídas, processo, entradas, fornecedores.</dd></div>
+    <div><dt>CTQ</dt><dd><em>Critical to Quality</em>. Requisito mensurável que pesa na percepção de qualidade do cliente.</dd></div>
+    <div><dt>DMAIC</dt><dd>Roteiro de projetos Seis Sigma: Definir, Medir, Analisar, Melhorar e Controlar.</dd></div>
+    <div><dt>Dono do processo</dt><dd>Quem responde pelo resultado do processo de ponta a ponta.</dd></div>
+    <div><dt>Gatilho</dt><dd>Evento que dispara o início do processo.</dd></div>
+    <div><dt>Macroetapa</dt><dd>Grande bloco de trabalho do processo. Um SIPOC tem de 4 a 7.</dd></div>
+    <div><dt>Processo atual e futuro</dt><dd>Em inglês, <em>as-is</em> e <em>to-be</em>. O SIPOC inicial retrata o processo atual.</dd></div>
+    <div><dt>Requisito</dt><dd>Condição que uma entrada ou saída precisa cumprir para ser aceita.</dd></div>
+    <div><dt>Voz do cliente</dt><dd>Conjunto de necessidades e expectativas declaradas pelo cliente. Em inglês, VOC.</dd></div>
+  </dl>
+</section>
+
+</main>
+</div>
+
+<footer>Material de estudo. Os exemplos, metas e indicadores são ilustrativos e foram criados para fins didáticos.</footer>
+</div>
+
+<script>
+(function () {
+  function read(key) { try { return JSON.parse(localStorage.getItem(key) || 'null'); } catch (e) { return null; } }
+  function write(key, val) { try { localStorage.setItem(key, JSON.stringify(val)); } catch (e) {} }
+
+  /* ---------- Checklist ---------- */
+  var boxes = Array.prototype.slice.call(document.querySelectorAll('#checklist input'));
+  var count = document.getElementById('ck-count');
+  var saved = read('sipoc-checklist') || {};
+  function refreshChecks() {
+    var n = 0, state = {};
+    boxes.forEach(function (b) { if (b.checked) { n++; } state[b.id] = b.checked; });
+    count.textContent = n;
+    return state;
+  }
+  boxes.forEach(function (b) {
+    if (saved[b.id]) { b.checked = true; }
+    b.addEventListener('change', function () { write('sipoc-checklist', refreshChecks()); });
+  });
+  refreshChecks();
+  document.getElementById('ck-reset').addEventListener('click', function () {
+    boxes.forEach(function (b) { b.checked = false; });
+    write('sipoc-checklist', refreshChecks());
+  });
+
+  /* ---------- Exercício ---------- */
+  var NAMES = { S: 'Fornecedores', I: 'Entradas', P: 'Processo', O: 'Saídas', C: 'Clientes' };
+  var ITEMS = [
+    { t: 'Currículos dos candidatos', a: 'I', w: 'É algo que o processo recebe e analisa.' },
+    { t: 'Triar currículos', a: 'P', w: 'Verbo no infinitivo + objeto: é uma etapa.' },
+    { t: 'Plataforma de vagas, que envia os currículos', a: 'S', w: 'É quem fornece. Os currículos são a entrada.' },
+    { t: 'Candidato contratado, com contrato assinado', a: 'O', w: 'É a principal entrega do processo.' },
+    { t: 'Gestor da área, que recebe o novo colaborador', a: 'C', w: 'Recebe a saída principal.' },
+    { t: 'Requisição de vaga aprovada', a: 'I', w: 'É o documento que dispara o processo.' },
+    { t: 'Gestor da área, que envia a requisição de vaga', a: 'S', w: 'A mesma pessoa pode ser fornecedora e cliente. Aqui ela fornece uma entrada.' },
+    { t: 'Realizar entrevistas', a: 'P', w: 'É uma ação executada dentro do processo.' },
+    { t: 'Relatório do processo seletivo', a: 'O', w: 'É uma informação produzida pelo processo.' },
+    { t: 'Diretoria, que recebe o relatório do processo seletivo', a: 'C', w: 'Cliente interno: recebe uma saída de informação.' }
+  ];
+  var quiz = document.getElementById('quiz');
+  var score = document.getElementById('qz-score');
+  var done = document.getElementById('qz-done');
+  document.getElementById('qz-total').textContent = ITEMS.length;
+  var hits = 0, answered = 0;
+
+  function render() {
+    hits = 0; answered = 0; score.textContent = 0; done.textContent = 0;
+    quiz.textContent = '';
+    ITEMS.forEach(function (item, idx) {
+      var row = document.createElement('div'); row.className = 'q';
+      var p = document.createElement('p'); p.textContent = (idx + 1) + '. ' + item.t;
+      var opts = document.createElement('div'); opts.className = 'opts';
+      opts.setAttribute('role', 'group'); opts.setAttribute('aria-label', 'Coluna do item ' + (idx + 1));
+      var why = document.createElement('p'); why.className = 'why'; why.hidden = true;
+      ['S', 'I', 'P', 'O', 'C'].forEach(function (k) {
+        var b = document.createElement('button');
+        b.type = 'button'; b.textContent = k; b.id = 'qz-' + idx + '-' + k;
+        b.setAttribute('aria-label', NAMES[k]);
+        b.addEventListener('click', function () {
+          var ok = k === item.a;
+          Array.prototype.forEach.call(opts.children, function (o) {
+            o.disabled = true;
+            if (o.textContent === item.a) { o.className = 'right'; }
+          });
+          if (!ok) { b.className = 'wrong'; }
+          var lead = document.createElement('b');
+          lead.textContent = (ok ? 'Certo. ' : 'A resposta é ' + item.a + ', ' + NAMES[item.a] + '. ');
+          why.textContent = ''; why.appendChild(lead); why.appendChild(document.createTextNode(item.w));
+          why.className = 'why ' + (ok ? 'ok' : 'no'); why.hidden = false;
+          answered++; if (ok) { hits++; }
+          score.textContent = hits; done.textContent = answered;
+        });
+        opts.appendChild(b);
+      });
+      row.appendChild(p); row.appendChild(opts); row.appendChild(why);
+      quiz.appendChild(row);
+    });
+  }
+  render();
+  document.getElementById('qz-reset').addEventListener('click', render);
+})();
+</script>
+</body>
+</html>

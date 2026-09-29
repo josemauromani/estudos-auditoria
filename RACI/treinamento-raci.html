@@ -1,0 +1,1170 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Matriz RACI na prática</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<style>
+:root{
+  --ground:#F3F6F7; --surface:#FFFFFF; --sunk:#E9EEF0; --ink:#16242E; --muted:#566672; --rule:#D3DBE0;
+  --accent:#2B5C8A;
+  --r:#1E7B73; --r-tint:#D9EEEB;
+  --a:#7A4A9A; --a-tint:#E9DEF1;
+  --c:#A96A12; --c-tint:#F6E8CF;
+  --i:#5B6B76; --i-tint:#E3E8EB;
+  --on-hue:#FFFFFF;
+  --good:#1F7A4D; --good-tint:#DDF1E5;
+  --bad:#B0413E; --bad-tint:#F5DEDC;
+  --display:"Barlow Semi Condensed","Arial Narrow",Arial,sans-serif;
+  --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --ground:#0F171C; --surface:#172229; --sunk:#1E2B33; --ink:#E4EAED; --muted:#9BABB6; --rule:#2B3A44;
+    --accent:#86B7E3;
+  --r:#5FC6BA; --r-tint:#15332F;
+  --a:#C09ADB; --a-tint:#2E2139;
+  --c:#E2AC4F; --c-tint:#3A2C12;
+  --i:#9BABB6; --i-tint:#26343D;
+    --on-hue:#0F171C;
+    --good:#6FCF9B; --good-tint:#163326;
+    --bad:#EC8E89; --bad-tint:#3D1F1E;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --ground:#0F171C; --surface:#172229; --sunk:#1E2B33; --ink:#E4EAED; --muted:#9BABB6; --rule:#2B3A44;
+  --accent:#86B7E3;
+  --r:#5FC6BA; --r-tint:#15332F;
+  --a:#C09ADB; --a-tint:#2E2139;
+  --c:#E2AC4F; --c-tint:#3A2C12;
+  --i:#9BABB6; --i-tint:#26343D;
+  --on-hue:#0F171C;
+  --good:#6FCF9B; --good-tint:#163326;
+  --bad:#EC8E89; --bad-tint:#3D1F1E;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--ground);color:var(--ink);font:400 16px/1.65 var(--body);-webkit-text-size-adjust:100%}
+a{color:var(--accent);text-underline-offset:3px}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.page{max-width:1180px;margin-inline:auto;padding-inline:20px;padding-block:36px 80px}
+
+/* Cabeçalho */
+.mast{display:flex;flex-direction:column;gap:18px;padding-bottom:32px;border-bottom:1px solid var(--rule)}
+.tiles{display:flex;gap:6px}
+.tiles span{width:44px;height:44px;display:grid;place-items:center;font:700 24px/1 var(--display);color:var(--on-hue)}
+h1{font:700 clamp(2.3rem,6vw,3.6rem)/1.02 var(--display);letter-spacing:-.01em;margin:0;text-wrap:balance}
+.lead{font-size:1.15rem;line-height:1.55;max-width:62ch;margin:0;color:var(--ink)}
+.meta{display:flex;flex-direction:row;flex-wrap:wrap;gap:6px 22px;font:400 .8rem/1.4 var(--mono);color:var(--muted);margin:0;padding:0;list-style:none}
+
+/* Estrutura */
+.layout{display:grid;grid-template-columns:minmax(0,1fr);gap:32px;padding-top:32px}
+.toc{font-size:.92rem}
+.toc h2{font:500 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+.toc ol{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:2px 20px;counter-reset:toc}
+.toc li{counter-increment:toc}
+.toc a{display:flex;gap:10px;padding:5px 0;color:var(--ink);text-decoration:none;line-height:1.35}
+.toc a::before{content:counter(toc,decimal-leading-zero);font:400 .75rem/1.7 var(--mono);color:var(--muted)}
+.toc a:hover{color:var(--accent);text-decoration:underline}
+@media (min-width:1020px){
+  .layout{grid-template-columns:200px minmax(0,1fr);gap:64px}
+  .toc{position:sticky;top:calc(env(safe-area-inset-top,0px) + 24px);align-self:start}
+  .toc ol{grid-template-columns:1fr}
+}
+main{display:flex;flex-direction:column;gap:72px;min-width:0}
+section{display:flex;flex-direction:column;gap:20px;scroll-margin-top:24px}
+.eyebrow{font:500 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0}
+h2{font:700 clamp(1.7rem,4vw,2.2rem)/1.1 var(--display);margin:0;text-wrap:balance}
+h3{font:600 1.3rem/1.2 var(--display);margin:12px 0 0;text-wrap:balance}
+h4{font:600 .95rem/1.3 var(--body);margin:0}
+p{margin:0}
+section > p, section > ul, section > ol, section > h3{max-width:68ch}
+ul,ol{margin:0;padding-left:1.25em;display:flex;flex-direction:column;gap:6px}
+strong{font-weight:600}
+code{font:400 .88em var(--mono);background:var(--sunk);padding:1px 5px;border-radius:3px}
+
+/* Letras coloridas no texto */
+.k{display:inline-grid;place-items:center;width:1.45em;height:1.45em;font:700 .85em/1 var(--display);color:var(--on-hue);vertical-align:.05em}
+
+/* Figuras */
+figure{margin:0;display:flex;flex-direction:column;gap:10px;position:relative}
+.scroll{overflow-x:auto;background:var(--surface);border:1px solid var(--rule);padding:18px}
+.scroll svg{display:block;width:100%;min-width:820px;height:auto;color:var(--ink)}
+figcaption{font-size:.86rem;line-height:1.5;color:var(--muted);max-width:72ch}
+figcaption b{color:var(--ink);font-weight:600}
+svg text{font-family:var(--body);fill:var(--ink)}
+svg .disp{font-family:var(--display);font-weight:700}
+svg .mono{font-family:var(--mono);letter-spacing:.08em}
+svg .on{fill:var(--on-hue)}
+svg .mu{fill:var(--muted)}
+svg .b{font-weight:600}
+svg .ln{stroke:var(--ink);stroke-width:1.5;fill:none}
+svg .ln-mu{stroke:var(--muted);stroke-width:1.5;fill:none}
+svg .ln-bold{stroke:var(--ink);stroke-width:3;fill:none;stroke-linejoin:round;stroke-linecap:round}
+svg .dash{stroke-dasharray:5 4}
+svg .ah{fill:var(--ink)} svg .ah-mu{fill:var(--muted)}
+svg .bx{fill:var(--surface);stroke:var(--rule);stroke-width:1.5}
+svg .bx-ink{fill:var(--ink);stroke:var(--ink)}
+svg .t-ground{fill:var(--ground)}
+svg .bx-out{fill:none;stroke:var(--muted);stroke-width:1.5;stroke-dasharray:5 4}
+svg .gap{stroke:var(--surface);stroke-width:4}
+svg .gap2{stroke:var(--surface);stroke-width:2}
+svg .hub{fill:var(--surface)}
+
+/* Gráfico */
+svg .grid{stroke:var(--rule);stroke-width:1}
+svg .hit{fill:transparent;cursor:crosshair;outline:none}
+.tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--ground);padding:6px 10px;font-size:.78rem;line-height:1.4;transform:translate(-50%,calc(-100% - 14px));white-space:nowrap;z-index:2}
+.tip b{display:block;font:600 1.05rem/1.2 var(--body)}
+details.data{font-size:.88rem}
+details.data summary{cursor:pointer;font:400 .82rem var(--mono);color:var(--muted);padding:4px 0}
+details.data .tbl{margin-top:8px}
+details.data table{min-width:420px}
+
+/* Tabelas */
+.tbl{overflow-x:auto;border:1px solid var(--rule);background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:780px;font-size:.88rem;line-height:1.4}
+th,td{padding:9px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--rule)}
+tr:last-child > td{border-bottom:0}
+thead th{font:600 .8rem/1.3 var(--body);background:var(--sunk)}
+td.num{font-variant-numeric:tabular-nums;white-space:nowrap;font-family:var(--mono);font-size:.82rem}
+
+/* Papéis */
+.tiles .r{background:var(--r)} .tiles .a{background:var(--a)} .tiles .c{background:var(--c)} .tiles .i{background:var(--i)}
+.k.r{background:var(--r)} .k.a{background:var(--a)} .k.c{background:var(--c)} .k.i{background:var(--i)}
+.k + .k{margin-left:2px}
+svg .bx-r{fill:var(--r-tint);stroke:var(--r);stroke-width:1.5} svg .hd-r{fill:var(--r)}
+svg .bx-a{fill:var(--a-tint);stroke:var(--a);stroke-width:1.5} svg .hd-a{fill:var(--a)}
+svg .bx-c{fill:var(--c-tint);stroke:var(--c);stroke-width:1.5} svg .hd-c{fill:var(--c)}
+svg .bx-i{fill:var(--i-tint);stroke:var(--i);stroke-width:1.5} svg .hd-i{fill:var(--i)}
+svg .hit:focus-visible{stroke:var(--accent);stroke-width:2}
+
+/* Matriz dos exemplos */
+table.raci{min-width:760px;font-size:.86rem}
+table.raci th.p{text-align:center;font-size:.76rem;line-height:1.25;width:11%}
+table.raci td.n{width:5%;font-weight:600;color:var(--muted)}
+table.raci td.l{text-align:center;white-space:nowrap}
+table.raci td.l .k{width:1.7em;height:1.7em;font-size:.9em}
+.leg{display:flex;flex-wrap:wrap;gap:6px 20px;font-size:.84rem;color:var(--muted);margin:0;padding:0;list-style:none;flex-direction:row}
+.leg .k{margin-right:6px}
+
+/* Ficha da matriz (acima de cada exemplo) */
+.ficha{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:0;border:1px solid var(--rule);background:var(--surface)}
+.ficha div{padding:12px 14px;border-right:1px solid var(--rule);border-bottom:1px solid var(--rule);margin:0 -1px -1px 0}
+.ficha dt{font:500 .68rem/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.ficha dd{margin:0;font-size:.9rem;line-height:1.4}
+dl{margin:0}
+
+/* Blocos */
+.pair{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.box{background:var(--surface);border:1px solid var(--rule);padding:18px 20px;display:flex;flex-direction:column;gap:10px}
+.box h4{font:600 1.1rem/1.2 var(--display)}
+.box ul{font-size:.93rem}
+.note{background:var(--sunk);padding:16px 20px;max-width:72ch;font-size:.94rem;display:flex;flex-direction:column;gap:6px}
+.note h4{font:500 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+
+/* Passo a passo */
+.steps{list-style:none;padding:0;counter-reset:st;gap:0;max-width:none;border-top:1px solid var(--rule)}
+.steps li{counter-increment:st;display:grid;grid-template-columns:44px minmax(0,1fr);gap:4px 12px;padding:16px 0;border-bottom:1px solid var(--rule)}
+.steps li::before{content:counter(st);font:700 1.7rem/1 var(--display);color:var(--muted);grid-row:span 2}
+.steps h4{font:600 1.1rem/1.25 var(--display)}
+.steps p{font-size:.95rem;max-width:64ch;grid-column:2}
+
+/* Erros comuns */
+.errs{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:0 40px;border-top:1px solid var(--rule)}
+.errs div{padding:16px 16px 16px 0;border-bottom:1px solid var(--rule);display:flex;flex-direction:column;gap:4px}
+.errs h4{font:600 1.05rem/1.25 var(--display)}
+.errs p{font-size:.92rem}
+.errs .fix{color:var(--muted)}
+.errs .fix b{color:var(--ink);font-weight:600}
+
+/* Checklist */
+.check{list-style:none;padding:0;gap:0;max-width:none;border:1px solid var(--rule);background:var(--surface)}
+.check li{border-bottom:1px solid var(--rule)}
+.check li:last-child{border-bottom:0}
+.check label{display:grid;grid-template-columns:22px minmax(0,1fr);gap:12px;padding:11px 16px;cursor:pointer;font-size:.94rem;align-items:start}
+.check input{width:18px;height:18px;margin:3px 0 0;accent-color:var(--r)}
+.check input:checked + span{color:var(--muted);text-decoration:line-through}
+.bar{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;font:400 .82rem var(--mono);color:var(--muted)}
+.bar b{color:var(--ink);font-weight:500}
+
+/* Exercício */
+.quiz{display:flex;flex-direction:column;gap:0;border:1px solid var(--rule);background:var(--surface)}
+.q{display:grid;grid-template-columns:minmax(0,1fr);gap:10px;padding:14px 16px;border-bottom:1px solid var(--rule)}
+.q:last-child{border-bottom:0}
+@media (min-width:720px){.q{grid-template-columns:minmax(0,1fr) auto;align-items:center}}
+.q p{font-size:.95rem}
+.q .why{grid-column:1/-1;font-size:.86rem;color:var(--muted)}
+.q .why b{font-weight:600}
+.q .why.ok b{color:var(--good)} .q .why.no b{color:var(--bad)}
+.opts{display:flex;gap:6px}
+.opts button{width:40px;height:40px;border:1.5px solid var(--rule);background:var(--surface);color:var(--ink);font:700 1.1rem/1 var(--display);cursor:pointer;border-radius:0}
+.opts button:hover:not(:disabled){border-color:var(--ink)}
+.opts button:disabled{cursor:default;opacity:.45}
+.opts button.right{background:var(--good-tint);border-color:var(--good);color:var(--good);opacity:1}
+.opts button.wrong{background:var(--bad-tint);border-color:var(--bad);color:var(--bad);opacity:1}
+.btn{border:1.5px solid var(--ink);background:transparent;color:var(--ink);font:500 .82rem var(--mono);padding:7px 14px;cursor:pointer;border-radius:0}
+.btn:hover{background:var(--ink);color:var(--ground)}
+
+/* Glossário */
+.gloss{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:0 40px;border-top:1px solid var(--rule)}
+.gloss div{padding:12px 0;border-bottom:1px solid var(--rule)}
+.gloss dt{font:600 1.02rem/1.3 var(--display)}
+.gloss dd{margin:2px 0 0;font-size:.9rem;color:var(--muted)}
+footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);font-size:.84rem;color:var(--muted);max-width:72ch}
+</style>
+</head>
+<body>
+<div class="page" lang="pt-BR">
+
+<header class="mast">
+  <div class="tiles" aria-hidden="true"><span class="r">R</span><span class="a">A</span><span class="c">C</span><span class="i">I</span></div>
+  <h1>Matriz RACI na prática</h1>
+  <p class="lead">Um guia de estudo para acabar com o “achei que era com você”: cada atividade com quem executa, quem responde pelo resultado, quem precisa ser ouvido e quem precisa saber.</p>
+  <ul class="meta">
+    <li>Treinamento autoinstrucional</li>
+    <li>11 módulos</li>
+    <li>Leitura de cerca de 30 minutos</li>
+    <li>3 exemplos resolvidos e 2 exercícios</li>
+  </ul>
+</header>
+
+<div class="layout">
+
+<nav class="toc" aria-label="Sumário">
+  <h2>Sumário</h2>
+  <ol>
+    <li><a href="#o-que-e">O que é a Matriz RACI</a></li>
+    <li><a href="#quando">Quando usar</a></li>
+    <li><a href="#construir">Como construir</a></li>
+    <li><a href="#exemplos">Exemplos resolvidos</a></li>
+    <li><a href="#leitura">Como ler a matriz</a></li>
+    <li><a href="#erros">Erros comuns</a></li>
+    <li><a href="#ferramentas">RACI e outras ferramentas</a></li>
+    <li><a href="#iso">RACI nas normas ISO</a></li>
+    <li><a href="#oficina">Como conduzir a oficina</a></li>
+    <li><a href="#pratique">Pratique</a></li>
+    <li><a href="#planilha">A planilha de apoio</a></li>
+    <li><a href="#glossario">Glossário</a></li>
+  </ol>
+</nav>
+
+<main>
+
+<!-- ============================ MÓDULO 1 ============================ -->
+<section id="o-que-e">
+  <p class="eyebrow">Módulo 1</p>
+  <h2>O que é a Matriz RACI</h2>
+  <p>A Matriz RACI é uma tabela que cruza atividades com papéis. Nas linhas ficam as atividades de um processo ou de um projeto. Nas colunas, os papéis de quem participa. Em cada cruzamento, uma letra diz qual é a participação daquele papel naquela atividade.</p>
+  <p>O nome vem das iniciais, em inglês, dos quatro tipos de participação: <em>Responsible, Accountable, Consulted, Informed</em>. A RACI é a versão mais difundida da matriz de responsabilidades, usada há décadas na gestão de projetos. O objetivo é que cada pessoa saiba o que se espera dela, e que nenhuma atividade fique sem dono.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 250" role="img" aria-label="Os quatro papéis da Matriz RACI. R, responsável: quem executa o trabalho; pelo menos um por atividade. A, aprovador: quem responde pelo resultado; só um por atividade. C, consultado: quem precisa ser ouvido antes; a conversa é de mão dupla. I, informado: quem precisa saber depois; o aviso é de mão única.">
+        <g>
+          <rect class="bx-r" x="10" y="20" width="205" height="210"/><rect class="hd-r" x="10" y="20" width="205" height="46"/>
+          <text class="disp on" x="28" y="53" font-size="28">R</text>
+          <text class="mono on" x="201" y="48" font-size="10.5" text-anchor="end">RESPONSIBLE</text>
+          <text class="b" x="28" y="96" font-size="14.5">Responsável</text>
+          <text class="mu" x="28" y="120" font-size="12">Quem executa</text>
+          <text class="mu" x="28" y="137" font-size="12">o trabalho?</text>
+          <line class="ln-mu" x1="28" y1="158" x2="197" y2="158" stroke-width="1" opacity=".5"/>
+          <text class="mono" x="28" y="181" font-size="10">PELO MENOS UM</text>
+          <text class="mu" x="28" y="204" font-size="11.5">faz ou coordena a execução</text>
+        </g>
+        <g>
+          <rect class="bx-a" x="235" y="20" width="205" height="210"/><rect class="hd-a" x="235" y="20" width="205" height="46"/>
+          <text class="disp on" x="253" y="53" font-size="28">A</text>
+          <text class="mono on" x="426" y="48" font-size="10.5" text-anchor="end">ACCOUNTABLE</text>
+          <text class="b" x="253" y="96" font-size="14.5">Aprovador</text>
+          <text class="mu" x="253" y="120" font-size="12">Quem responde</text>
+          <text class="mu" x="253" y="137" font-size="12">pelo resultado?</text>
+          <line class="ln-mu" x1="253" y1="158" x2="422" y2="158" stroke-width="1" opacity=".5"/>
+          <text class="mono" x="253" y="181" font-size="10">SÓ UM</text>
+          <text class="mu" x="253" y="204" font-size="11.5">decide e presta contas</text>
+        </g>
+        <g>
+          <rect class="bx-c" x="460" y="20" width="205" height="210"/><rect class="hd-c" x="460" y="20" width="205" height="46"/>
+          <text class="disp on" x="478" y="53" font-size="28">C</text>
+          <text class="mono on" x="651" y="48" font-size="10.5" text-anchor="end">CONSULTED</text>
+          <text class="b" x="478" y="96" font-size="14.5">Consultado</text>
+          <text class="mu" x="478" y="120" font-size="12">Quem precisa ser</text>
+          <text class="mu" x="478" y="137" font-size="12">ouvido antes?</text>
+          <line class="ln-mu" x1="478" y1="158" x2="647" y2="158" stroke-width="1" opacity=".5"/>
+          <text class="mono" x="478" y="181" font-size="10">SÓ OS NECESSÁRIOS</text>
+          <text class="mu" x="478" y="204" font-size="11.5">conversa de mão dupla</text>
+        </g>
+        <g>
+          <rect class="bx-i" x="685" y="20" width="205" height="210"/><rect class="hd-i" x="685" y="20" width="205" height="46"/>
+          <text class="disp on" x="703" y="53" font-size="28">I</text>
+          <text class="mono on" x="876" y="48" font-size="10.5" text-anchor="end">INFORMED</text>
+          <text class="b" x="703" y="96" font-size="14.5">Informado</text>
+          <text class="mu" x="703" y="120" font-size="12">Quem precisa saber</text>
+          <text class="mu" x="703" y="137" font-size="12">depois?</text>
+          <line class="ln-mu" x1="703" y1="158" x2="872" y2="158" stroke-width="1" opacity=".5"/>
+          <text class="mono" x="703" y="181" font-size="10">SÓ OS NECESSÁRIOS</text>
+          <text class="mu" x="703" y="204" font-size="11.5">aviso de mão única</text>
+        </g>
+      </svg>
+    </div>
+    <figcaption><b>Figura 1.</b> Os quatro papéis. Os dois primeiros tratam de quem faz e de quem responde. Os dois últimos tratam de comunicação: antes da decisão, com resposta, ou depois dela, sem resposta.</figcaption>
+  </figure>
+
+  <p>Repare na diferença entre <span class="k r">R</span> e <span class="k a">A</span>. Quem tem o R põe a mão na massa. Quem tem o A responde pelo resultado, tem autoridade para decidir e presta contas se algo der errado. Em atividades simples, a mesma pessoa pode ter os dois. Em português, os dois papéis costumam ser traduzidos como “responsável”, e essa é a maior fonte de confusão de quem está começando.</p>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:20%">Papel</th><th style="width:30%">O que faz</th><th style="width:22%">Quantos por atividade</th><th>Exemplo</th></tr></thead>
+      <tbody>
+        <tr><td><span class="k r">R</span> Responsável</td><td>Executa a atividade ou coordena a execução.</td><td>Pelo menos um</td><td>O comprador faz a cotação com os fornecedores.</td></tr>
+        <tr><td><span class="k a">A</span> Aprovador</td><td>Responde pelo resultado, decide e aprova.</td><td>Um, e só um</td><td>O gerente de Suprimentos responde pela escolha da proposta.</td></tr>
+        <tr><td><span class="k c">C</span> Consultado</td><td>Dá opinião ou informação antes da decisão.</td><td>Só os necessários</td><td>O Jurídico opina sobre o contrato antes da emissão.</td></tr>
+        <tr><td><span class="k i">I</span> Informado</td><td>Recebe a notícia do que foi decidido ou feito.</td><td>Só os necessários</td><td>O Recebimento é avisado do pedido emitido.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 2 ============================ -->
+<section id="quando">
+  <p class="eyebrow">Módulo 2</p>
+  <h2>Quando usar</h2>
+  <p>A RACI é uma ferramenta de organização. Ela entra depois que as atividades são conhecidas e antes que os procedimentos sejam escritos ou que as tarefas sejam distribuídas. Quem tenta definir papéis sem saber o que precisa ser feito discute cargos, e não trabalho.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 190" role="img" aria-label="Cinco etapas da organização de um processo: mapear, listar as atividades, definir os papéis, documentar e comunicar. A Matriz RACI é usada na terceira etapa, definir os papéis.">
+        <polygon class="bx" points="18,20 166,20 178,52 166,84 18,84"/>
+        <text class="disp mu" x="40" y="60" font-size="24">1</text>
+        <text class="b" x="62" y="57" font-size="13">Mapear</text>
+
+        <polygon class="bx" points="194,20 342,20 354,52 342,84 194,84 206,52"/>
+        <text class="disp mu" x="222" y="60" font-size="24">2</text>
+        <text class="b" x="246" y="57" font-size="13">Listar</text>
+
+        <polygon class="bx-ink" points="370,20 518,20 530,52 518,84 370,84 382,52"/>
+        <text class="disp t-ground" x="398" y="60" font-size="24">3</text>
+        <text class="b t-ground" x="422" y="57" font-size="13">Definir</text>
+
+        <polygon class="bx" points="546,20 694,20 706,52 694,84 546,84 558,52"/>
+        <text class="disp mu" x="574" y="60" font-size="24">4</text>
+        <text class="b" x="598" y="57" font-size="13">Documentar</text>
+
+        <polygon class="bx" points="722,20 870,20 882,52 870,84 722,84 734,52"/>
+        <text class="disp mu" x="750" y="60" font-size="24">5</text>
+        <text class="b" x="774" y="57" font-size="13">Comunicar</text>
+
+        <text class="mu" x="98" y="106" font-size="11.5" text-anchor="middle">limites do processo</text>
+        <text class="mu" x="274" y="106" font-size="11.5" text-anchor="middle">atividades</text>
+        <text class="mu" x="450" y="106" font-size="11.5" text-anchor="middle">papéis</text>
+        <text class="mu" x="626" y="106" font-size="11.5" text-anchor="middle">procedimentos</text>
+        <text class="mu" x="802" y="106" font-size="11.5" text-anchor="middle">pessoas cientes</text>
+
+        <line class="ln" x1="450" y1="114" x2="450" y2="138"/>
+        <rect class="bx" x="170" y="138" width="560" height="38"/>
+        <text x="186" y="162" font-size="12.5"><tspan class="b">A Matriz RACI é construída aqui,</tspan> a partir das atividades já listadas.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 2.</b> A RACI fica entre o mapeamento e a documentação. As atividades vêm do mapa do processo, e os papéis definidos seguem para os procedimentos e para os planos.</figcaption>
+  </figure>
+
+  <div class="pair">
+    <div class="box">
+      <h4>Use quando</h4>
+      <ul>
+        <li>Uma atividade fica sem dono, ou duas pessoas fazem a mesma coisa.</li>
+        <li>Um processo novo ou um projeto está começando.</li>
+        <li>A estrutura mudou: fusão de áreas, novo gestor, novo sistema.</li>
+        <li>As decisões demoram porque ninguém sabe quem aprova.</li>
+        <li>O sistema de gestão precisa mostrar as responsabilidades e as autoridades.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h4>Procure outra ferramenta quando</h4>
+      <ul>
+        <li>As atividades ainda não são conhecidas: comece por um <a href="../SIPOC/treinamento-sipoc.html">SIPOC</a>.</li>
+        <li>É preciso definir prazos e custos das ações: use o <a href="../5W2H/treinamento-5w2h.html">5W2H</a>.</li>
+        <li>É preciso descrever como executar a tarefa: escreva uma instrução de trabalho.</li>
+        <li>A equipe é pequena, e todos fazem tudo: uma conversa resolve.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 3 ============================ -->
+<section id="construir">
+  <p class="eyebrow">Módulo 3</p>
+  <h2>Como construir</h2>
+  <p>A matriz é preenchida linha por linha. Para cada atividade, o grupo percorre os papéis e faz quatro perguntas, sempre na mesma ordem. Começar pelo A evita a armadilha mais comum: distribuir tarefas sem definir quem responde por elas.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 300" role="img" aria-label="Sequência de perguntas para definir a letra de um papel em uma atividade. Responde pelo resultado? Se sim, A. Se não: executa o trabalho? Se sim, R. Se não: precisa ser ouvido antes? Se sim, C. Se não: precisa saber depois? Se sim, I. Se não, a célula fica em branco. Quem responde pelo resultado e também executa recebe A e R.">
+        <defs>
+          <marker id="a3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker>
+        </defs>
+        <text x="20" y="26" font-size="12"><tspan class="b">Para cada papel, em cada atividade:</tspan></text>
+
+        <g font-size="11.5" text-anchor="middle">
+          <polygon class="bx" points="35,100 120,55 205,100 120,145"/>
+          <text x="120" y="96">Responde pelo</text><text x="120" y="112">resultado?</text>
+          <polygon class="bx" points="235,100 320,55 405,100 320,145"/>
+          <text x="320" y="96">Executa</text><text x="320" y="112">o trabalho?</text>
+          <polygon class="bx" points="435,100 520,55 605,100 520,145"/>
+          <text x="520" y="96">Precisa ser</text><text x="520" y="112">ouvido antes?</text>
+          <polygon class="bx" points="635,100 720,55 805,100 720,145"/>
+          <text x="720" y="96">Precisa saber</text><text x="720" y="112">depois?</text>
+        </g>
+        <line class="ln" x1="207" y1="100" x2="231" y2="100" marker-end="url(#a3)"/>
+        <line class="ln" x1="407" y1="100" x2="431" y2="100" marker-end="url(#a3)"/>
+        <line class="ln" x1="607" y1="100" x2="631" y2="100" marker-end="url(#a3)"/>
+        <line class="ln" x1="807" y1="100" x2="827" y2="100" marker-end="url(#a3)"/>
+        <g font-size="10.5" text-anchor="middle">
+          <text x="219" y="90">não</text><text x="419" y="90">não</text><text x="619" y="90">não</text><text x="817" y="90">não</text>
+        </g>
+        <rect class="bx-out" x="831" y="78" width="60" height="44"/>
+        <text class="mu" x="861" y="97" font-size="10.5" text-anchor="middle">em</text>
+        <text class="mu" x="861" y="111" font-size="10.5" text-anchor="middle">branco</text>
+
+        <line class="ln" x1="120" y1="147" x2="120" y2="196" marker-end="url(#a3)"/>
+        <line class="ln" x1="320" y1="147" x2="320" y2="196" marker-end="url(#a3)"/>
+        <line class="ln" x1="520" y1="147" x2="520" y2="196" marker-end="url(#a3)"/>
+        <line class="ln" x1="720" y1="147" x2="720" y2="196" marker-end="url(#a3)"/>
+        <g font-size="10.5">
+          <text x="128" y="176">sim</text><text x="328" y="176">sim</text><text x="528" y="176">sim</text><text x="728" y="176">sim</text>
+        </g>
+
+        <rect class="hd-a" x="55" y="200" width="130" height="40"/>
+        <text class="on" x="69" y="226" font-size="12.5"><tspan class="disp" font-size="19">A</tspan><tspan dx="9" class="b">Aprovador</tspan></text>
+        <rect class="hd-r" x="255" y="200" width="130" height="40"/>
+        <text class="on" x="269" y="226" font-size="12.5"><tspan class="disp" font-size="19">R</tspan><tspan dx="9" class="b">Responsável</tspan></text>
+        <rect class="hd-c" x="455" y="200" width="130" height="40"/>
+        <text class="on" x="469" y="226" font-size="12.5"><tspan class="disp" font-size="19">C</tspan><tspan dx="9" class="b">Consultado</tspan></text>
+        <rect class="hd-i" x="655" y="200" width="130" height="40"/>
+        <text class="on" x="669" y="226" font-size="12.5"><tspan class="disp" font-size="19">I</tspan><tspan dx="9" class="b">Informado</tspan></text>
+
+        <text class="mu" x="20" y="278" font-size="11.5">Quem responde pelo resultado e também executa recebe as duas letras: A/R.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 3.</b> As quatro perguntas, na ordem. A última resposta possível é a célula em branco: nem todo papel precisa participar de toda atividade.</figcaption>
+  </figure>
+
+  <h3>Antes de tudo: atividades e papéis</h3>
+  <p>As linhas da matriz são atividades, escritas com verbo no infinitivo e objeto, todas no mesmo nível de detalhe. As colunas são papéis ou cargos, e não nomes de pessoas: pessoas mudam de função, e a matriz não pode envelhecer a cada troca.</p>
+
+  <h3>Passo a passo</h3>
+  <ol class="steps">
+    <li><h4>Defina o escopo</h4><p>Escolha o processo ou o projeto e registre onde ele começa e onde termina. Uma matriz cobre um processo. Tentar cobrir a empresa inteira produz uma tabela que ninguém lê.</p></li>
+    <li><h4>Liste as atividades</h4><p>Use as macroetapas do SIPOC ou as atividades do fluxograma. De 8 a 15 linhas é um bom tamanho. Inclua as atividades de decisão e de controle, que costumam ficar sem dono.</p></li>
+    <li><h4>Liste os papéis</h4><p>Escreva os cargos ou as funções que participam, de dentro e de fora da área. De 4 a 8 colunas é um bom tamanho.</p></li>
+    <li><h4>Defina o <span class="k a">A</span> de cada atividade</h4><p>Percorra as linhas e marque quem responde pelo resultado de cada uma. Um por linha. Quando duas pessoas disputam o A, a atividade provavelmente precisa ser dividida.</p></li>
+    <li><h4>Defina os <span class="k r">R</span></h4><p>Marque quem executa cada atividade. Pode haver mais de um R, mas cada R a mais pede uma combinação sobre quem faz qual parte.</p></li>
+    <li><h4>Defina os <span class="k c">C</span> e os <span class="k i">I</span></h4><p>Marque quem precisa ser ouvido antes e quem precisa saber depois. Na dúvida entre C e I, escolha I: consultar custa tempo.</p></li>
+    <li><h4>Leia, valide e comunique</h4><p>Leia a matriz na horizontal e na vertical, como mostra o módulo 5. Valide com quem ocupa os papéis e comunique a todos. Use o checklist do módulo 9.</p></li>
+  </ol>
+
+  <div class="note">
+    <h4>Regra prática</h4>
+    <p>Um A por atividade, sem exceção. Quando o grupo insiste em dois, pergunte: se der errado, quem será chamado para explicar? A resposta costuma vir rápido, e é o nome do A. Responsabilidade dividida entre dois acaba sem nenhum.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 4 ============================ -->
+<section id="exemplos">
+  <p class="eyebrow">Módulo 4</p>
+  <h2>Exemplos resolvidos</h2>
+  <p>Três matrizes de naturezas diferentes. Os dados são ilustrativos e foram criados para este treinamento. Os dois primeiros exemplos usam os processos mapeados no estudo de SIPOC e também estão preenchidos na planilha de apoio.</p>
+
+  <h3>Exemplo 1. Atender pedido de delivery</h3>
+  <dl class="ficha">
+    <div><dt>Processo</dt><dd>Atender pedido de delivery</dd></div>
+    <div><dt>Escopo</dt><dd>Do pedido confirmado ao pagamento recebido, mais a escala e o acompanhamento</dd></div>
+    <div><dt>Origem das atividades</dt><dd>Macroetapas do SIPOC</dd></div>
+    <div><dt>Dono do processo</dt><dd>Gerente da loja</dd></div>
+  </dl>
+  <div class="tbl">
+    <table class="raci">
+      <thead><tr><th>#</th><th>Atividade</th><th class="p">Gerente da loja</th><th class="p">Atendente</th><th class="p">Pizzaiolo</th><th class="p">Líder da expedição</th><th class="p">Entregador</th></tr></thead>
+      <tbody>
+        <tr><td class="n">1</td><td>Registrar o pedido</td><td class="l"></td><td class="l"><span class="k a">A</span><span class="k r">R</span></td><td class="l"><span class="k i">I</span></td><td class="l"><span class="k i">I</span></td><td class="l"></td></tr>
+        <tr><td class="n">2</td><td>Montar e assar a pizza</td><td class="l"></td><td class="l"><span class="k c">C</span></td><td class="l"><span class="k a">A</span><span class="k r">R</span></td><td class="l"><span class="k i">I</span></td><td class="l"></td></tr>
+        <tr><td class="n">3</td><td>Embalar e conferir o pedido</td><td class="l"></td><td class="l"></td><td class="l"><span class="k c">C</span></td><td class="l"><span class="k a">A</span><span class="k r">R</span></td><td class="l"></td></tr>
+        <tr><td class="n">4</td><td>Agrupar os pedidos por bairro e despachar</td><td class="l"><span class="k i">I</span></td><td class="l"></td><td class="l"></td><td class="l"><span class="k a">A</span><span class="k r">R</span></td><td class="l"><span class="k i">I</span></td></tr>
+        <tr><td class="n">5</td><td>Entregar ao cliente</td><td class="l"></td><td class="l"><span class="k i">I</span></td><td class="l"></td><td class="l"><span class="k a">A</span></td><td class="l"><span class="k r">R</span></td></tr>
+        <tr><td class="n">6</td><td>Confirmar o pagamento</td><td class="l"><span class="k i">I</span></td><td class="l"><span class="k a">A</span></td><td class="l"></td><td class="l"></td><td class="l"><span class="k r">R</span></td></tr>
+        <tr><td class="n">7</td><td>Tratar a reclamação do cliente</td><td class="l"><span class="k a">A</span></td><td class="l"><span class="k r">R</span></td><td class="l"><span class="k c">C</span></td><td class="l"><span class="k c">C</span></td><td class="l"></td></tr>
+        <tr><td class="n">8</td><td>Definir a escala de entregadores</td><td class="l"><span class="k a">A</span><span class="k r">R</span></td><td class="l"></td><td class="l"></td><td class="l"><span class="k c">C</span></td><td class="l"><span class="k i">I</span></td></tr>
+        <tr><td class="n">9</td><td>Acompanhar o indicador de entregas no prazo</td><td class="l"><span class="k a">A</span></td><td class="l"></td><td class="l"><span class="k i">I</span></td><td class="l"><span class="k r">R</span></td><td class="l"><span class="k i">I</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <ul class="leg"><li><span class="k r">R</span>Responsável</li><li><span class="k a">A</span>Aprovador</li><li><span class="k c">C</span>Consultado</li><li><span class="k i">I</span>Informado</li><li>Duas letras na mesma célula: o papel executa e responde pelo resultado.</li></ul>
+  <p><strong>O que observar.</strong> Nas atividades do dia a dia, quem executa também responde pelo resultado, e aparece com A/R. O gerente só tem o A onde há decisão que afeta a loja: reclamações, escala e indicador. Se ele tivesse o A de todas as linhas, cada pizza dependeria dele para sair.</p>
+
+  <h3>Exemplo 2. Adquirir materiais e serviços</h3>
+  <dl class="ficha">
+    <div><dt>Processo</dt><dd>Adquirir materiais e serviços</dd></div>
+    <div><dt>Escopo</dt><dd>Da requisição de compra à liberação da nota fiscal, mais a avaliação do fornecedor</dd></div>
+    <div><dt>Origem das atividades</dt><dd>Macroetapas do SIPOC</dd></div>
+    <div><dt>Dono do processo</dt><dd>Gerente de Suprimentos</dd></div>
+  </dl>
+  <div class="tbl">
+    <table class="raci">
+      <thead><tr><th>#</th><th>Atividade</th><th class="p">Requisitante</th><th class="p">Comprador</th><th class="p">Gerente de Suprimentos</th><th class="p">Controladoria</th><th class="p">Jurídico</th><th class="p">Recebimento</th></tr></thead>
+      <tbody>
+        <tr><td class="n">1</td><td>Emitir a requisição de compra</td><td class="l"><span class="k a">A</span><span class="k r">R</span></td><td class="l"><span class="k i">I</span></td><td class="l"></td><td class="l"><span class="k c">C</span></td><td class="l"></td><td class="l"></td></tr>
+        <tr><td class="n">2</td><td>Analisar a requisição</td><td class="l"><span class="k c">C</span></td><td class="l"><span class="k r">R</span></td><td class="l"><span class="k a">A</span></td><td class="l"></td><td class="l"></td><td class="l"></td></tr>
+        <tr><td class="n">3</td><td>Cotar com fornecedores</td><td class="l"><span class="k c">C</span></td><td class="l"><span class="k a">A</span><span class="k r">R</span></td><td class="l"></td><td class="l"></td><td class="l"></td><td class="l"></td></tr>
+        <tr><td class="n">4</td><td>Selecionar a proposta</td><td class="l"><span class="k c">C</span></td><td class="l"><span class="k r">R</span></td><td class="l"><span class="k a">A</span></td><td class="l"><span class="k i">I</span></td><td class="l"></td><td class="l"></td></tr>
+        <tr><td class="n">5</td><td>Aprovar a compra, conforme a alçada</td><td class="l"><span class="k i">I</span></td><td class="l"><span class="k i">I</span></td><td class="l"><span class="k a">A</span><span class="k r">R</span></td><td class="l"><span class="k c">C</span></td><td class="l"></td><td class="l"></td></tr>
+        <tr><td class="n">6</td><td>Emitir o pedido de compra ou o contrato</td><td class="l"><span class="k i">I</span></td><td class="l"><span class="k r">R</span></td><td class="l"><span class="k a">A</span></td><td class="l"></td><td class="l"><span class="k c">C</span></td><td class="l"><span class="k i">I</span></td></tr>
+        <tr><td class="n">7</td><td>Receber e conferir o item</td><td class="l"><span class="k c">C</span></td><td class="l"><span class="k i">I</span></td><td class="l"></td><td class="l"></td><td class="l"></td><td class="l"><span class="k a">A</span><span class="k r">R</span></td></tr>
+        <tr><td class="n">8</td><td>Liberar a nota fiscal para pagamento</td><td class="l"></td><td class="l"><span class="k r">R</span></td><td class="l"><span class="k a">A</span></td><td class="l"><span class="k i">I</span></td><td class="l"></td><td class="l"><span class="k c">C</span></td></tr>
+        <tr><td class="n">9</td><td>Avaliar o desempenho do fornecedor</td><td class="l"><span class="k c">C</span></td><td class="l"><span class="k r">R</span></td><td class="l"><span class="k a">A</span></td><td class="l"></td><td class="l"></td><td class="l"><span class="k c">C</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <ul class="leg"><li><span class="k r">R</span>Responsável</li><li><span class="k a">A</span>Aprovador</li><li><span class="k c">C</span>Consultado</li><li><span class="k i">I</span>Informado</li><li>Duas letras na mesma célula: o papel executa e responde pelo resultado.</li></ul>
+  <p><strong>O que observar.</strong> O processo atravessa seis áreas, e a matriz mostra onde cada uma entra. O requisitante responde pela requisição que emite, e o Recebimento, pela conferência do item. O gerente de Suprimentos tem o A em seis das nove atividades, e o comprador tem o R em seis. O módulo 5 usa esta matriz para discutir o que essa concentração significa.</p>
+
+  <h3>Exemplo 3. Realizar auditoria interna</h3>
+  <dl class="ficha">
+    <div><dt>Processo</dt><dd>Realizar auditoria interna e tratar as constatações</dd></div>
+    <div><dt>Escopo</dt><dd>Da aprovação do programa anual à análise crítica dos resultados</dd></div>
+    <div><dt>Origem das atividades</dt><dd>Procedimento de auditoria interna</dd></div>
+    <div><dt>Dono do processo</dt><dd>Gestor do programa de auditoria</dd></div>
+  </dl>
+  <div class="tbl">
+    <table class="raci">
+      <thead><tr><th>#</th><th>Atividade</th><th class="p">Alta direção</th><th class="p">Gestor do programa</th><th class="p">Auditor líder</th><th class="p">Auditor</th><th class="p">Gestor da área auditada</th></tr></thead>
+      <tbody>
+        <tr><td class="n">1</td><td>Aprovar o programa anual de auditoria</td><td class="l"><span class="k a">A</span></td><td class="l"><span class="k r">R</span></td><td class="l"></td><td class="l"></td><td class="l"><span class="k c">C</span></td></tr>
+        <tr><td class="n">2</td><td>Selecionar a equipe auditora</td><td class="l"></td><td class="l"><span class="k a">A</span><span class="k r">R</span></td><td class="l"><span class="k c">C</span></td><td class="l"><span class="k i">I</span></td><td class="l"><span class="k i">I</span></td></tr>
+        <tr><td class="n">3</td><td>Preparar o plano de auditoria</td><td class="l"></td><td class="l"><span class="k i">I</span></td><td class="l"><span class="k a">A</span><span class="k r">R</span></td><td class="l"><span class="k c">C</span></td><td class="l"><span class="k c">C</span></td></tr>
+        <tr><td class="n">4</td><td>Conduzir a auditoria</td><td class="l"></td><td class="l"><span class="k i">I</span></td><td class="l"><span class="k a">A</span></td><td class="l"><span class="k r">R</span></td><td class="l"><span class="k c">C</span></td></tr>
+        <tr><td class="n">5</td><td>Relatar as constatações</td><td class="l"><span class="k i">I</span></td><td class="l"><span class="k i">I</span></td><td class="l"><span class="k a">A</span><span class="k r">R</span></td><td class="l"><span class="k c">C</span></td><td class="l"><span class="k i">I</span></td></tr>
+        <tr><td class="n">6</td><td>Analisar as causas e definir a ação corretiva</td><td class="l"></td><td class="l"><span class="k c">C</span></td><td class="l"><span class="k i">I</span></td><td class="l"></td><td class="l"><span class="k a">A</span><span class="k r">R</span></td></tr>
+        <tr><td class="n">7</td><td>Implementar a ação corretiva</td><td class="l"><span class="k i">I</span></td><td class="l"><span class="k i">I</span></td><td class="l"></td><td class="l"></td><td class="l"><span class="k a">A</span><span class="k r">R</span></td></tr>
+        <tr><td class="n">8</td><td>Verificar a eficácia da ação</td><td class="l"><span class="k i">I</span></td><td class="l"><span class="k a">A</span></td><td class="l"></td><td class="l"><span class="k r">R</span></td><td class="l"><span class="k c">C</span></td></tr>
+        <tr><td class="n">9</td><td>Levar os resultados à análise crítica</td><td class="l"><span class="k a">A</span></td><td class="l"><span class="k r">R</span></td><td class="l"></td><td class="l"></td><td class="l"><span class="k i">I</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <ul class="leg"><li><span class="k r">R</span>Responsável</li><li><span class="k a">A</span>Aprovador</li><li><span class="k c">C</span>Consultado</li><li><span class="k i">I</span>Informado</li><li>Duas letras na mesma célula: o papel executa e responde pelo resultado.</li></ul>
+  <p><strong>O que observar.</strong> A matriz deixa visível a independência da auditoria. Os auditores conduzem a auditoria e relatam as constatações, mas não definem nem implementam a ação corretiva: essas linhas pertencem ao gestor da área auditada. Na verificação da eficácia, os papéis se invertem de novo, e a área auditada passa a ser consultada.</p>
+</section>
+
+<!-- ============================ MÓDULO 5 ============================ -->
+<section id="leitura">
+  <p class="eyebrow">Módulo 5</p>
+  <h2>Como ler a matriz</h2>
+  <p>A matriz preenchida ainda é um rascunho. O valor da RACI aparece na leitura: cada linha e cada coluna contam uma história, e é nessa hora que os problemas de organização ficam visíveis.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 310" role="img" aria-label="Matriz de exemplo com cinco atividades e quatro papéis. A leitura na horizontal confere a linha tratar reclamação, que tem um A, um R e dois C. A leitura na vertical confere a coluna gerente, que tem o A das cinco atividades: possível gargalo.">
+        <defs>
+          <marker id="a4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker>
+        </defs>
+        <g font-size="11.5" text-anchor="middle">
+          <text class="b" x="265" y="38">Gerente</text><text class="b" x="335" y="38">Atendente</text>
+          <text class="b" x="405" y="38">Pizzaiolo</text><text class="b" x="475" y="38">Expedição</text>
+        </g>
+        <g font-size="11.5">
+          <text x="20" y="73">Registrar o pedido</text>
+          <text x="20" y="109">Montar e assar a pizza</text>
+          <text x="20" y="145">Embalar e conferir</text>
+          <text x="20" y="181">Entregar ao cliente</text>
+          <text x="20" y="217">Tratar reclamação</text>
+        </g>
+        <g class="grid">
+          <line x1="14" y1="50" x2="510" y2="50"/><line x1="14" y1="86" x2="510" y2="86"/><line x1="14" y1="122" x2="510" y2="122"/>
+          <line x1="14" y1="158" x2="510" y2="158"/><line x1="14" y1="194" x2="510" y2="194"/><line x1="14" y1="230" x2="510" y2="230"/>
+        </g>
+        <g class="disp" font-size="15" text-anchor="middle">
+          <rect class="hd-a" x="252" y="55" width="26" height="26"/><text class="disp on" x="265" y="74">A</text>
+          <rect class="hd-r" x="322" y="55" width="26" height="26"/><text class="disp on" x="335" y="74">R</text>
+          <rect class="hd-i" x="392" y="55" width="26" height="26"/><text class="disp on" x="405" y="74">I</text>
+          <rect class="hd-i" x="462" y="55" width="26" height="26"/><text class="disp on" x="475" y="74">I</text>
+
+          <rect class="hd-a" x="252" y="91" width="26" height="26"/><text class="disp on" x="265" y="110">A</text>
+          <rect class="hd-c" x="322" y="91" width="26" height="26"/><text class="disp on" x="335" y="110">C</text>
+          <rect class="hd-r" x="392" y="91" width="26" height="26"/><text class="disp on" x="405" y="110">R</text>
+          <rect class="hd-i" x="462" y="91" width="26" height="26"/><text class="disp on" x="475" y="110">I</text>
+
+          <rect class="hd-a" x="252" y="127" width="26" height="26"/><text class="disp on" x="265" y="146">A</text>
+          <rect class="hd-c" x="392" y="127" width="26" height="26"/><text class="disp on" x="405" y="146">C</text>
+          <rect class="hd-r" x="462" y="127" width="26" height="26"/><text class="disp on" x="475" y="146">R</text>
+
+          <rect class="hd-a" x="252" y="163" width="26" height="26"/><text class="disp on" x="265" y="182">A</text>
+          <rect class="hd-i" x="322" y="163" width="26" height="26"/><text class="disp on" x="335" y="182">I</text>
+          <rect class="hd-r" x="462" y="163" width="26" height="26"/><text class="disp on" x="475" y="182">R</text>
+
+          <rect class="hd-a" x="252" y="199" width="26" height="26"/><text class="disp on" x="265" y="218">A</text>
+          <rect class="hd-r" x="322" y="199" width="26" height="26"/><text class="disp on" x="335" y="218">R</text>
+          <rect class="hd-c" x="392" y="199" width="26" height="26"/><text class="disp on" x="405" y="218">C</text>
+          <rect class="hd-c" x="462" y="199" width="26" height="26"/><text class="disp on" x="475" y="218">C</text>
+        </g>
+
+        <rect class="bx-out" x="10" y="196" width="504" height="32"/>
+        <line class="ln" x1="516" y1="212" x2="548" y2="212" marker-end="url(#a4)"/>
+        <text class="b" x="556" y="206" font-size="12">Leitura na horizontal</text>
+        <text class="mu" x="556" y="223" font-size="11.5">Um A, um R e dois C: a linha está completa.</text>
+
+        <rect class="bx-out" x="232" y="20" width="66" height="214"/>
+        <line class="ln" x1="265" y1="236" x2="265" y2="262" marker-end="url(#a4)"/>
+        <text class="b" x="20" y="284" font-size="12">Leitura na vertical</text>
+        <text class="mu" x="158" y="284" font-size="11.5">O gerente tem o A das cinco atividades: possível gargalo. Quem executa poderia responder por parte delas.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 4.</b> Duas leituras da mesma matriz. Na horizontal, confere-se se cada atividade tem dono e executor. Na vertical, se a carga de cada papel é possível.</figcaption>
+  </figure>
+
+  <h3>Leitura na horizontal: a atividade</h3>
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">O que a linha mostra</th><th style="width:36%">O que significa</th><th>O que fazer</th></tr></thead>
+      <tbody>
+        <tr><td>Nenhum A</td><td>Ninguém responde pelo resultado. A atividade tende a ficar para depois.</td><td>Definir quem decide e presta contas.</td></tr>
+        <tr><td>Mais de um A</td><td>Responsabilidade dividida. Cada um espera que o outro decida.</td><td>Escolher um, ou dividir a atividade em duas.</td></tr>
+        <tr><td>Nenhum R</td><td>A atividade tem dono, mas ninguém para executar.</td><td>Definir quem faz, ou questionar se a atividade existe.</td></tr>
+        <tr><td>Muitos R</td><td>Várias pessoas executam, e o trabalho pode se sobrepor.</td><td>Combinar quem faz qual parte, ou detalhar a atividade.</td></tr>
+        <tr><td>Muitos C</td><td>A decisão depende de muitas opiniões e demora.</td><td>Passar para I quem só precisa saber do resultado.</td></tr>
+        <tr><td>Todas as células preenchidas</td><td>Todos participam de tudo, e a matriz perde o sentido.</td><td>Deixar em branco quem não precisa participar.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Leitura na vertical: o papel</h3>
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">O que a coluna mostra</th><th style="width:36%">O que significa</th><th>O que fazer</th></tr></thead>
+      <tbody>
+        <tr><td>Muitos R</td><td>O papel executa quase tudo. Risco de sobrecarga.</td><td>Redistribuir a execução ou rever a quantidade de pessoas.</td></tr>
+        <tr><td>Muitos A</td><td>Todas as decisões passam pelo mesmo papel. Risco de gargalo.</td><td>Passar o A das atividades de rotina a quem executa.</td></tr>
+        <tr><td>Nenhum R e nenhum A</td><td>O papel só é consultado ou informado.</td><td>Confirmar se ele precisa estar na matriz.</td></tr>
+        <tr><td>Coluna vazia</td><td>O papel não participa do processo.</td><td>Retirar a coluna.</td></tr>
+        <tr><td>Só A, sem R</td><td>O papel responde sem executar. É comum na gestão.</td><td>Confirmar se ele acompanha o suficiente para responder.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <figure id="fig-bars">
+    <div class="scroll">
+      <svg id="bars" viewBox="0 0 900 304" role="img" aria-label="Gráfico de barras empilhadas com a carga de cada papel na matriz do exemplo 2: Requisitante, R 1, A 1, C 5, I 2; Comprador, R 6, A 1, C 0, I 3; Gerente de Suprimentos, R 1, A 6, C 0, I 0; Controladoria, R 0, A 0, C 2, I 2; Jurídico, R 0, A 0, C 1, I 0; Recebimento, R 1, A 1, C 2, I 1.">
+        <line class="grid" x1="230" y1="24" x2="230" y2="234"/>
+        <text class="mu" x="230" y="250" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">0</text>
+        <line class="grid" x1="350" y1="24" x2="350" y2="234"/>
+        <text class="mu" x="350" y="250" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">2</text>
+        <line class="grid" x1="470" y1="24" x2="470" y2="234"/>
+        <text class="mu" x="470" y="250" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">4</text>
+        <line class="grid" x1="590" y1="24" x2="590" y2="234"/>
+        <text class="mu" x="590" y="250" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">6</text>
+        <line class="grid" x1="710" y1="24" x2="710" y2="234"/>
+        <text class="mu" x="710" y="250" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">8</text>
+        <line class="grid" x1="830" y1="24" x2="830" y2="234"/>
+        <text class="mu" x="830" y="250" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">10</text>
+        <text class="mono mu" x="530" y="270" font-size="10" text-anchor="middle">PARTICIPAÇÕES NAS 9 ATIVIDADES</text>
+        <text x="20" y="51.0" font-size="11.5">Requisitante</text>
+        <rect class="seg hd-r" data-k="0" x="230" y="38.0" width="58" height="18"/>
+        <text class="on b" x="259.0" y="51.0" font-size="11" text-anchor="middle">R 1</text>
+        <rect class="seg hd-a" data-k="0" x="290" y="38.0" width="58" height="18"/>
+        <text class="on b" x="319.0" y="51.0" font-size="11" text-anchor="middle">A 1</text>
+        <rect class="seg hd-c" data-k="0" x="350" y="38.0" width="298" height="18"/>
+        <text class="on b" x="499.0" y="51.0" font-size="11" text-anchor="middle">C 5</text>
+        <path class="seg hd-i" data-k="0" d="M650 38.0 H764 Q768 38.0 768 42.0 V52.0 Q768 56.0 764 56.0 H650 Z"/>
+        <text class="on b" x="709.0" y="51.0" font-size="11" text-anchor="middle">I 2</text>
+        <text x="20" y="85.0" font-size="11.5">Comprador</text>
+        <rect class="seg hd-r" data-k="1" x="230" y="72.0" width="358" height="18"/>
+        <text class="on b" x="409.0" y="85.0" font-size="11" text-anchor="middle">R 6</text>
+        <rect class="seg hd-a" data-k="1" x="590" y="72.0" width="58" height="18"/>
+        <text class="on b" x="619.0" y="85.0" font-size="11" text-anchor="middle">A 1</text>
+        <path class="seg hd-i" data-k="1" d="M650 72.0 H824 Q828 72.0 828 76.0 V86.0 Q828 90.0 824 90.0 H650 Z"/>
+        <text class="on b" x="739.0" y="85.0" font-size="11" text-anchor="middle">I 3</text>
+        <text x="20" y="119.0" font-size="11.5">Gerente de Suprimentos</text>
+        <rect class="seg hd-r" data-k="2" x="230" y="106.0" width="58" height="18"/>
+        <text class="on b" x="259.0" y="119.0" font-size="11" text-anchor="middle">R 1</text>
+        <path class="seg hd-a" data-k="2" d="M290 106.0 H644 Q648 106.0 648 110.0 V120.0 Q648 124.0 644 124.0 H290 Z"/>
+        <text class="on b" x="469.0" y="119.0" font-size="11" text-anchor="middle">A 6</text>
+        <text x="20" y="153.0" font-size="11.5">Controladoria</text>
+        <rect class="seg hd-c" data-k="3" x="230" y="140.0" width="118" height="18"/>
+        <text class="on b" x="289.0" y="153.0" font-size="11" text-anchor="middle">C 2</text>
+        <path class="seg hd-i" data-k="3" d="M350 140.0 H464 Q468 140.0 468 144.0 V154.0 Q468 158.0 464 158.0 H350 Z"/>
+        <text class="on b" x="409.0" y="153.0" font-size="11" text-anchor="middle">I 2</text>
+        <text x="20" y="187.0" font-size="11.5">Jurídico</text>
+        <path class="seg hd-c" data-k="4" d="M230 174.0 H284 Q288 174.0 288 178.0 V188.0 Q288 192.0 284 192.0 H230 Z"/>
+        <text class="on b" x="259.0" y="187.0" font-size="11" text-anchor="middle">C 1</text>
+        <text x="20" y="221.0" font-size="11.5">Recebimento</text>
+        <rect class="seg hd-r" data-k="5" x="230" y="208.0" width="58" height="18"/>
+        <text class="on b" x="259.0" y="221.0" font-size="11" text-anchor="middle">R 1</text>
+        <rect class="seg hd-a" data-k="5" x="290" y="208.0" width="58" height="18"/>
+        <text class="on b" x="319.0" y="221.0" font-size="11" text-anchor="middle">A 1</text>
+        <rect class="seg hd-c" data-k="5" x="350" y="208.0" width="118" height="18"/>
+        <text class="on b" x="409.0" y="221.0" font-size="11" text-anchor="middle">C 2</text>
+        <path class="seg hd-i" data-k="5" d="M470 208.0 H524 Q528 208.0 528 212.0 V222.0 Q528 226.0 524 226.0 H470 Z"/>
+        <text class="on b" x="499.0" y="221.0" font-size="11" text-anchor="middle">I 1</text>
+        <rect class="hd-r" x="20" y="284" width="14" height="12"/>
+        <text x="41" y="294" font-size="11.5">R · Responsável</text>
+        <rect class="hd-a" x="170" y="284" width="14" height="12"/>
+        <text x="191" y="294" font-size="11.5">A · Aprovador</text>
+        <rect class="hd-c" x="320" y="284" width="14" height="12"/>
+        <text x="341" y="294" font-size="11.5">C · Consultado</text>
+        <rect class="hd-i" x="470" y="284" width="14" height="12"/>
+        <text x="491" y="294" font-size="11.5">I · Informado</text>
+        <rect class="hit" x="14" y="30" width="872" height="34" tabindex="0" role="img" aria-label="Requisitante: R 1, A 1, C 5, I 2" data-k="0" data-p="Requisitante" data-r="1" data-a="1" data-c="5" data-i="2" data-n="Participa de 8 das 9 atividades" data-x="500.0"/>
+        <rect class="hit" x="14" y="64" width="872" height="34" tabindex="0" role="img" aria-label="Comprador: R 6, A 1, C 0, I 3" data-k="1" data-p="Comprador" data-r="6" data-a="1" data-c="0" data-i="3" data-n="Participa de 9 das 9 atividades" data-x="530.0"/>
+        <rect class="hit" x="14" y="98" width="872" height="34" tabindex="0" role="img" aria-label="Gerente de Suprimentos: R 1, A 6, C 0, I 0" data-k="2" data-p="Gerente de Suprimentos" data-r="1" data-a="6" data-c="0" data-i="0" data-n="Participa de 6 das 9 atividades" data-x="440.0"/>
+        <rect class="hit" x="14" y="132" width="872" height="34" tabindex="0" role="img" aria-label="Controladoria: R 0, A 0, C 2, I 2" data-k="3" data-p="Controladoria" data-r="0" data-a="0" data-c="2" data-i="2" data-n="Participa de 4 das 9 atividades" data-x="350.0"/>
+        <rect class="hit" x="14" y="166" width="872" height="34" tabindex="0" role="img" aria-label="Jurídico: R 0, A 0, C 1, I 0" data-k="4" data-p="Jurídico" data-r="0" data-a="0" data-c="1" data-i="0" data-n="Participa de 1 das 9 atividades" data-x="260.0"/>
+        <rect class="hit" x="14" y="200" width="872" height="34" tabindex="0" role="img" aria-label="Recebimento: R 1, A 1, C 2, I 1" data-k="5" data-p="Recebimento" data-r="1" data-a="1" data-c="2" data-i="1" data-n="Participa de 4 das 9 atividades" data-x="380.0"/>
+      </svg>
+    </div>
+    <div class="tip" id="bars-tip" hidden></div>
+    <figcaption><b>Figura 5.</b> Carga por papel na matriz do exemplo 2, que tem nove atividades. A célula A/R conta nas duas letras. Passe o mouse sobre as barras para ver os detalhes.</figcaption>
+    <details class="data">
+      <summary>Ver os dados em tabela</summary>
+      <div class="tbl">
+        <table>
+          <thead><tr><th>Papel</th><th>R</th><th>A</th><th>C</th><th>I</th><th>Atividades de que participa</th></tr></thead>
+          <tbody>
+            <tr><td>Requisitante</td><td class="num">1</td><td class="num">1</td><td class="num">5</td><td class="num">2</td><td class="num">8 de 9</td></tr>
+            <tr><td>Comprador</td><td class="num">6</td><td class="num">1</td><td class="num">0</td><td class="num">3</td><td class="num">9 de 9</td></tr>
+            <tr><td>Gerente de Suprimentos</td><td class="num">1</td><td class="num">6</td><td class="num">0</td><td class="num">0</td><td class="num">6 de 9</td></tr>
+            <tr><td>Controladoria</td><td class="num">0</td><td class="num">0</td><td class="num">2</td><td class="num">2</td><td class="num">4 de 9</td></tr>
+            <tr><td>Jurídico</td><td class="num">0</td><td class="num">0</td><td class="num">1</td><td class="num">0</td><td class="num">1 de 9</td></tr>
+            <tr><td>Recebimento</td><td class="num">1</td><td class="num">1</td><td class="num">2</td><td class="num">1</td><td class="num">4 de 9</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </details>
+  </figure>
+
+  <p>No exemplo 2, a leitura na vertical levanta três perguntas. O comprador executa seis das nove atividades: a equipe de compras tem tamanho para isso? O gerente de Suprimentos aprova seis: a análise da requisição e a liberação da nota fiscal, que são rotina, precisam passar por ele? O requisitante é consultado cinco vezes: em todas elas a opinião dele muda a decisão?</p>
+  <p>A matriz não responde a essas perguntas. Ela as coloca na mesa, com números, para que o grupo decida.</p>
+</section>
+
+<!-- ============================ MÓDULO 6 ============================ -->
+<section id="erros">
+  <p class="eyebrow">Módulo 6</p>
+  <h2>Erros comuns</h2>
+  <div class="errs">
+    <div><h4>Marcar mais de um A</h4><p>“A responsabilidade é compartilhada entre a Qualidade e a Produção.”</p><p class="fix"><b>Correção:</b> um A por atividade. Se dois disputam, divida a atividade.</p></div>
+    <div><h4>Confundir R com A</h4><p>Quem executa recebe o A, e quem decide recebe o R.</p><p class="fix"><b>Correção:</b> R faz. A responde pelo resultado e tem autoridade para decidir.</p></div>
+    <div><h4>Dar o A de tudo ao gestor</h4><p>A coluna do gerente tem A em todas as linhas.</p><p class="fix"><b>Correção:</b> nas atividades de rotina, o A pode ficar com quem executa.</p></div>
+    <div><h4>Consultar todo mundo</h4><p>Cada linha tem quatro ou cinco C, para ninguém se sentir de fora.</p><p class="fix"><b>Correção:</b> C só para quem muda a decisão. Os demais recebem I.</p></div>
+    <div><h4>Usar nomes de pessoas</h4><p>As colunas trazem “Ana”, “Carlos” e “Rui”.</p><p class="fix"><b>Correção:</b> use cargos ou funções. A relação entre papel e pessoa fica em outro lugar.</p></div>
+    <div><h4>Misturar níveis de atividade</h4><p>“Gerir fornecedores” e “carimbar a nota fiscal” na mesma matriz.</p><p class="fix"><b>Correção:</b> mantenha as linhas no mesmo nível de detalhe. Use o mapa do processo como base.</p></div>
+    <div><h4>Dar o A a quem não tem autoridade</h4><p>O analista responde por uma decisão que só o diretor pode tomar.</p><p class="fix"><b>Correção:</b> confira se o A pode, de fato, decidir. Responsabilidade sem autoridade não funciona.</p></div>
+    <div><h4>Fazer e guardar</h4><p>A matriz é aprovada e nunca chega a quem ocupa os papéis.</p><p class="fix"><b>Correção:</b> comunique, confirme o entendimento e revise a cada mudança de estrutura.</p></div>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 7 ============================ -->
+<section id="ferramentas">
+  <p class="eyebrow">Módulo 7</p>
+  <h2>RACI e outras ferramentas</h2>
+  <p>A RACI responde a uma pergunta só: quem participa de cada atividade, e de que forma. O que é feito, como e quando são perguntas de outras ferramentas, que a matriz recebe como entrada ou alimenta como saída.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 150" role="img" aria-label="Sequência da organização de um processo. Processo mapeado, com o SIPOC. Atividades listadas, com o fluxograma. Papéis definidos, com a Matriz RACI. Trabalho documentado, com procedimentos e planos 5W2H. Pessoas preparadas, com treinamento e descrição de cargo.">
+        <defs>
+          <marker id="a6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker>
+        </defs>
+        <g font-size="12.5" text-anchor="middle">
+          <rect class="bx" x="10" y="30" width="160" height="64"/><text class="b" x="90" y="58">Processo</text><text class="b" x="90" y="75">mapeado</text>
+          <rect class="bx" x="190" y="30" width="160" height="64"/><text class="b" x="270" y="58">Atividades</text><text class="b" x="270" y="75">listadas</text>
+          <rect class="bx-ink" x="370" y="30" width="160" height="64"/><text class="b t-ground" x="450" y="58">Papéis</text><text class="b t-ground" x="450" y="75">definidos</text>
+          <rect class="bx" x="550" y="30" width="160" height="64"/><text class="b" x="630" y="58">Trabalho</text><text class="b" x="630" y="75">documentado</text>
+          <rect class="bx" x="730" y="30" width="160" height="64"/><text class="b" x="810" y="58">Pessoas</text><text class="b" x="810" y="75">preparadas</text>
+        </g>
+        <line class="ln" x1="172" y1="62" x2="186" y2="62" marker-end="url(#a6)"/>
+        <line class="ln" x1="352" y1="62" x2="366" y2="62" marker-end="url(#a6)"/>
+        <line class="ln" x1="532" y1="62" x2="546" y2="62" marker-end="url(#a6)"/>
+        <line class="ln" x1="712" y1="62" x2="726" y2="62" marker-end="url(#a6)"/>
+        <g class="mono" font-size="9.5" text-anchor="middle">
+          <text class="mu" x="90" y="116">SIPOC</text>
+          <text class="mu" x="270" y="116">FLUXOGRAMA</text>
+          <text class="mu" x="450" y="116">MATRIZ RACI</text>
+          <text class="mu" x="630" y="116">PROCEDIMENTO · 5W2H</text>
+          <text class="mu" x="810" y="116">TREINAMENTO</text>
+        </g>
+      </svg>
+    </div>
+    <figcaption><b>Figura 6.</b> O caminho do mapa do processo às pessoas preparadas. A RACI transforma uma lista de atividades em um acordo sobre quem faz o quê.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:20%">Ferramenta</th><th style="width:30%">O que acrescenta ou muda</th><th style="width:26%">Pergunta que responde</th><th>Quando preferir</th></tr></thead>
+      <tbody>
+        <tr><td><strong>RACI</strong></td><td>Quatro papéis: executa, responde, é consultado, é informado</td><td>Quem participa, e como?</td><td>Processos e projetos em geral</td></tr>
+        <tr><td><strong>RASCI</strong></td><td>Acrescenta o S, de suporte: quem ajuda o R a executar</td><td>Quem apoia a execução?</td><td>Atividades com equipes de apoio bem definidas</td></tr>
+        <tr><td><strong>RACI-VS</strong></td><td>Acrescenta quem verifica e quem dá o aceite final</td><td>Quem confere, e quem aceita?</td><td>Entregas com etapa formal de verificação</td></tr>
+        <tr><td><strong>DACI</strong></td><td>Troca o foco da execução para a decisão: condutor, aprovador, contribuintes e informados</td><td>Quem decide, e com a ajuda de quem?</td><td>Decisões, e não atividades</td></tr>
+        <tr><td><strong>Organograma</strong></td><td>Mostra a hierarquia entre os cargos</td><td>Quem se reporta a quem?</td><td>Estrutura da organização</td></tr>
+        <tr><td><strong>Descrição de cargo</strong></td><td>Reúne as atribuições de um cargo em todos os processos</td><td>O que se espera deste cargo?</td><td>Contratação, treinamento e avaliação</td></tr>
+        <tr><td><strong>5W2H</strong></td><td>Define o “quem” de cada ação, com prazo e custo</td><td>Quem faz esta ação, e até quando?</td><td>Planos de ação</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Na série de estudos, a RACI completa o mapa do processo. O <a href="../SIPOC/treinamento-sipoc.html">SIPOC</a> mostra o que o processo recebe e entrega, e a RACI mostra quem responde por cada etapa. Quando um problema aparece, a sequência é a de sempre: a <a href="../GUT/treinamento-gut.html">Matriz GUT</a> prioriza, o <a href="../Ishikawa/treinamento-ishikawa.html">Ishikawa</a> encontra as causas, e o <a href="../5W2H/treinamento-5w2h.html">5W2H</a> organiza as ações, dentro de um ciclo <a href="../PDCA/treinamento-pdca.html">PDCA</a>. Papéis mal definidos são causa frequente nos diagramas, e a RACI costuma aparecer entre as ações.</p>
+</section>
+
+<!-- ============================ MÓDULO 8 ============================ -->
+<section id="iso">
+  <p class="eyebrow">Módulo 8</p>
+  <h2>RACI nas normas ISO</h2>
+  <p>A ISO 9001:2015 pede, no requisito 5.3, que a Alta Direção assegure que as responsabilidades e as autoridades dos papéis pertinentes sejam atribuídas, comunicadas e entendidas na organização. A norma não cita a Matriz RACI nem exige um formato. A matriz ajuda porque separa as duas coisas que o requisito menciona: a responsabilidade de executar e a autoridade de decidir.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 280" role="img" aria-label="Quatro pontos do sistema de gestão da qualidade em que a definição de papéis aparece. Requisito 5.3: papéis, responsabilidades e autoridades atribuídos, comunicados e entendidos. Requisito 4.4: responsabilidades e autoridades de cada processo. Requisito 8.6: quem autoriza a liberação de produtos e serviços. Requisito 9.2: auditores independentes da atividade auditada. A Matriz RACI apoia os quatro.">
+        <defs>
+          <marker id="a7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker>
+        </defs>
+        <rect class="bx" x="20" y="20" width="290" height="70"/>
+        <text class="b" x="34" y="47" font-size="12.5">5.3 Papéis, responsabilidades e autoridades</text>
+        <text class="mu" x="34" y="69" font-size="11.5">Atribuídos, comunicados e entendidos</text>
+        <rect class="bx" x="590" y="20" width="290" height="70"/>
+        <text class="b" x="604" y="47" font-size="12.5">4.4 Processos do sistema de gestão</text>
+        <text class="mu" x="604" y="69" font-size="11.5">Responsabilidades e autoridades de cada processo</text>
+        <rect class="bx" x="20" y="190" width="290" height="70"/>
+        <text class="b" x="34" y="217" font-size="12.5">8.6 Liberação de produtos e serviços</text>
+        <text class="mu" x="34" y="239" font-size="11.5">Quem autoriza a liberação</text>
+        <rect class="bx" x="590" y="190" width="290" height="70"/>
+        <text class="b" x="604" y="217" font-size="12.5">9.2 Auditoria interna</text>
+        <text class="mu" x="604" y="239" font-size="11.5">Auditores independentes da atividade auditada</text>
+
+        <rect class="bx-ink" x="365" y="105" width="170" height="70"/>
+        <text class="b t-ground" x="450" y="135" font-size="13.5" text-anchor="middle">Matriz RACI</text>
+        <text class="t-ground" x="450" y="155" font-size="11.5" text-anchor="middle">quem faz e quem responde</text>
+
+        <path class="ln" d="M363 125 H338 V55 H314" marker-end="url(#a7)"/>
+        <path class="ln" d="M363 155 H338 V225 H314" marker-end="url(#a7)"/>
+        <path class="ln" d="M537 125 H562 V55 H586" marker-end="url(#a7)"/>
+        <path class="ln" d="M537 155 H562 V225 H586" marker-end="url(#a7)"/>
+      </svg>
+    </div>
+    <figcaption><b>Figura 7.</b> Quatro pontos da ISO 9001:2015 em que é preciso mostrar quem faz e quem decide. A numeração é a da edição de 2015.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:22%">Requisito</th><th style="width:30%">O que a norma pede, em resumo</th><th style="width:22%">Como a RACI ajuda</th><th>Evidências que o auditor procura</th></tr></thead>
+      <tbody>
+        <tr><td><strong>5.3</strong> Papéis, responsabilidades e autoridades</td><td>Atribuir, comunicar e fazer entender as responsabilidades e as autoridades dos papéis pertinentes.</td><td>Registra quem executa e quem decide, atividade por atividade.</td><td>Pessoas que sabem explicar o próprio papel. Registro da comunicação.</td></tr>
+        <tr><td><strong>4.4</strong> Sistema de gestão e seus processos</td><td>Atribuir as responsabilidades e as autoridades de cada processo.</td><td>Uma matriz por processo mostra o dono e os participantes.</td><td>Processos com dono definido e com papéis coerentes com a prática.</td></tr>
+        <tr><td><strong>7.2</strong> Competência</td><td>Determinar a competência necessária de quem afeta o desempenho do sistema.</td><td>Mostra o que cada papel executa e decide, base para definir a competência.</td><td>Requisitos de competência ligados às atividades do papel.</td></tr>
+        <tr><td><strong>8.6</strong> Liberação de produtos e serviços</td><td>Manter a rastreabilidade a quem autorizou a liberação.</td><td>O A da atividade de liberação é quem autoriza.</td><td>Liberações assinadas por quem tem a autoridade definida.</td></tr>
+        <tr><td><strong>9.2</strong> Auditoria interna</td><td>Selecionar auditores de forma a assegurar objetividade e imparcialidade.</td><td>Mostra se o auditor tem R ou A na atividade que vai auditar.</td><td>Auditores que não auditam o próprio trabalho.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Responsabilidade e autoridade</h3>
+  <p>A norma usa duas palavras, e a matriz tem uma letra para cada uma.</p>
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:20%">Palavra da norma</th><th style="width:16%">Letra</th><th style="width:32%">O que significa</th><th>Pergunta do auditor</th></tr></thead>
+      <tbody>
+        <tr><td>Responsabilidade</td><td><span class="k r">R</span> e <span class="k a">A</span></td><td>A obrigação de executar a atividade e de responder pelo resultado.</td><td>O que você faz nesta atividade? Por qual resultado você responde?</td></tr>
+        <tr><td>Autoridade</td><td><span class="k a">A</span></td><td>O poder de decidir: aprovar, liberar, interromper, recusar.</td><td>Quem pode parar a linha? Quem pode liberar o produto?</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>O que o auditor observa</h3>
+  <div class="pair">
+    <div class="box">
+      <h4>Sinais de papéis claros</h4>
+      <ul>
+        <li>As pessoas explicam o próprio papel sem consultar o documento.</li>
+        <li>A matriz bate com o que acontece: quem assina é quem tem o A.</li>
+        <li>Substitutos definidos para os papéis que decidem.</li>
+        <li>Matriz revisada depois de mudanças de estrutura.</li>
+        <li>Auditores sem R nem A nas atividades que auditam.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h4>Sinais de papéis no papel</h4>
+      <ul>
+        <li>Duas pessoas indicam aprovadores diferentes para a mesma atividade.</li>
+        <li>Decisões tomadas por quem não tem a autoridade definida.</li>
+        <li>Matriz com cargos que não existem mais.</li>
+        <li>Atividades críticas, como a liberação, sem A na matriz.</li>
+        <li>Pessoas que nunca viram a matriz do próprio processo.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="note">
+    <h4>Pontos de atenção</h4>
+    <p>A edição de 2015 deixou de exigir a figura do representante da direção. As responsabilidades que eram dele continuam no requisito 5.3 e podem ser distribuídas entre várias pessoas. A matriz é uma forma de mostrar essa distribuição.</p>
+    <p>Este módulo usa a numeração da ISO 9001:2015 e resume os requisitos com palavras próprias. Confira sempre a edição vigente da norma antes de citar um requisito em relatório.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 9 ============================ -->
+<section id="oficina">
+  <p class="eyebrow">Módulo 9</p>
+  <h2>Como conduzir a oficina</h2>
+  <p>A matriz precisa ser construída com quem ocupa os papéis. Reserve 90 minutos e convide o dono do processo e um representante de cada papel. Leve a lista de atividades pronta, tirada do mapa do processo, para que a reunião comece pelas letras.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 136" role="img" aria-label="Distribuição dos 90 minutos da oficina: 15 para o escopo e as atividades, 10 para os papéis, 15 para os A, 15 para os R, 15 para os C e os I, 10 para a leitura e 10 para a validação.">
+        <g font-size="11.5" text-anchor="middle">
+          <rect class="bx" x="60" y="24" width="130" height="56"/><text x="125" y="49">Escopo e</text><text x="125" y="64">atividades</text>
+          <rect class="bx" x="190" y="24" width="86.7" height="56"/><text x="233.3" y="56">Papéis</text>
+          <rect class="hd-a gap2" x="276.7" y="24" width="130" height="56"/><text class="on b" x="341.7" y="56">Quem responde</text>
+          <rect class="hd-r gap2" x="406.7" y="24" width="130" height="56"/><text class="on b" x="471.7" y="56">Quem executa</text>
+          <rect class="hd-c gap2" x="536.7" y="24" width="65" height="56"/><text class="on b" x="569.2" y="56">Ouvir</text>
+          <rect class="hd-i gap2" x="601.7" y="24" width="65" height="56"/><text class="on b" x="634.2" y="56">Avisar</text>
+          <rect class="bx" x="666.7" y="24" width="86.7" height="56"/><text x="710" y="56">Leitura</text>
+          <rect class="bx" x="753.3" y="24" width="86.7" height="56"/><text x="796.7" y="56">Validação</text>
+        </g>
+        <g class="ln-mu" stroke-width="1">
+          <line x1="60" y1="82" x2="60" y2="94"/><line x1="190" y1="82" x2="190" y2="94"/><line x1="276.7" y1="82" x2="276.7" y2="94"/>
+          <line x1="406.7" y1="82" x2="406.7" y2="94"/><line x1="536.7" y1="82" x2="536.7" y2="94"/><line x1="666.7" y1="82" x2="666.7" y2="94"/>
+          <line x1="753.3" y1="82" x2="753.3" y2="94"/><line x1="840" y1="82" x2="840" y2="94"/>
+        </g>
+        <g class="mono" font-size="10.5" text-anchor="middle">
+          <text class="mu" x="60" y="112">0</text><text class="mu" x="190" y="112">15</text><text class="mu" x="276.7" y="112">25</text>
+          <text class="mu" x="406.7" y="112">40</text><text class="mu" x="536.7" y="112">55</text><text class="mu" x="666.7" y="112">70</text>
+          <text class="mu" x="753.3" y="112">80</text><text class="mu" x="840" y="112">90 min</text>
+        </g>
+      </svg>
+    </div>
+    <figcaption><b>Figura 8.</b> Roteiro de 90 minutos, desenhado em escala. Metade do tempo vai para as letras, na ordem do módulo 3: primeiro o A, depois o R, por último o C e o I.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:14%">Minutos</th><th style="width:22%">Bloco</th><th>O que fazer</th><th style="width:24%">Resultado</th></tr></thead>
+      <tbody>
+        <tr><td class="num">0 a 15</td><td>Escopo e atividades</td><td>Combinar os limites do processo e revisar a lista de atividades.</td><td>Linhas da matriz</td></tr>
+        <tr><td class="num">15 a 25</td><td>Papéis</td><td>Listar os cargos e as funções que participam. Retirar nomes de pessoas.</td><td>Colunas da matriz</td></tr>
+        <tr><td class="num">25 a 40</td><td>Quem responde</td><td>Definir o A de cada atividade. Um por linha.</td><td>Letras A</td></tr>
+        <tr><td class="num">40 a 55</td><td>Quem executa</td><td>Definir os R de cada atividade. Marcar A/R onde a mesma pessoa faz e responde.</td><td>Letras R</td></tr>
+        <tr><td class="num">55 a 70</td><td>Ouvir e avisar</td><td>Definir os C e os I. Na dúvida entre os dois, escolher I.</td><td>Letras C e I</td></tr>
+        <tr><td class="num">70 a 80</td><td>Leitura</td><td>Ler cada linha e cada coluna. Discutir os avisos de gargalo e de sobrecarga.</td><td>Matriz ajustada</td></tr>
+        <tr><td class="num">80 a 90</td><td>Validação</td><td>Confirmar o acordo de cada participante e combinar a comunicação e a revisão.</td><td>Matriz validada</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>As discussões mais difíceis costumam ser sobre o A. Quando o grupo não chega a um acordo, registre a dúvida e leve ao dono do processo. Uma matriz com um ponto em aberto é melhor do que uma matriz com dois A.</p>
+
+  <h3>Checklist de validação</h3>
+  <p>Marque os itens conforme revisa a sua matriz. As marcações ficam salvas neste navegador.</p>
+  <ol class="check" id="checklist">
+    <li><label><input type="checkbox" id="ck-1"><span>O escopo da matriz está definido: um processo ou um projeto, com início e fim.</span></label></li>
+    <li><label><input type="checkbox" id="ck-2"><span>As atividades estão escritas com verbo no infinitivo e objeto.</span></label></li>
+    <li><label><input type="checkbox" id="ck-3"><span>As atividades têm o mesmo nível de detalhe.</span></label></li>
+    <li><label><input type="checkbox" id="ck-4"><span>As colunas trazem papéis ou cargos, e não nomes de pessoas.</span></label></li>
+    <li><label><input type="checkbox" id="ck-5"><span>Cada atividade tem um único A.</span></label></li>
+    <li><label><input type="checkbox" id="ck-6"><span>Cada atividade tem pelo menos um R.</span></label></li>
+    <li><label><input type="checkbox" id="ck-7"><span>Os consultados de cada atividade são só os necessários.</span></label></li>
+    <li><label><input type="checkbox" id="ck-8"><span>Nenhum papel concentra R ou A a ponto de virar sobrecarga ou gargalo.</span></label></li>
+    <li><label><input type="checkbox" id="ck-9"><span>Quem tem o A tem autoridade para decidir sobre a atividade.</span></label></li>
+    <li><label><input type="checkbox" id="ck-10"><span>A matriz foi construída com a participação de quem ocupa os papéis.</span></label></li>
+    <li><label><input type="checkbox" id="ck-11"><span>A matriz foi comunicada, e as pessoas entendem o próprio papel.</span></label></li>
+    <li><label><input type="checkbox" id="ck-12"><span>A data da próxima revisão está marcada.</span></label></li>
+  </ol>
+  <div class="bar"><span><b id="ck-count">0</b> de 12 itens marcados</span><button class="btn" id="ck-reset" type="button">Limpar marcações</button></div>
+</section>
+
+<!-- ============================ MÓDULO 10 ============================ -->
+<section id="pratique">
+  <p class="eyebrow">Módulo 10</p>
+  <h2>Pratique</h2>
+  <h3>Exercício 1. Qual é a letra?</h3>
+  <p>Uma empresa está montando a matriz do processo de contratação de pessoal. Cada frase descreve a participação de um papel em uma atividade. Escolha a letra.</p>
+  <div class="quiz" id="quiz"></div>
+  <div class="bar"><span>Acertos: <b id="qz-score">0</b> de <b id="qz-total">10</b></span><span>Respondidos: <b id="qz-done">0</b></span><button class="btn" id="qz-reset" type="button">Recomeçar</button></div>
+
+  <h3>Exercício 2. Monte a sua matriz</h3>
+  <p>Escolha um processo que você conhece bem e que envolve pelo menos três papéis. Abra a aba RACI da planilha de apoio e siga o roteiro.</p>
+  <ol>
+    <li>Escreva o processo e o escopo: onde começa e onde termina.</li>
+    <li>Liste de 6 a 10 atividades, com verbo no infinitivo.</li>
+    <li>Escreva os papéis nas colunas. Use cargos, e não nomes.</li>
+    <li>Marque o A de cada atividade. Depois os R. Depois os C e os I.</li>
+    <li>Confira a coluna de avisos de cada linha e corrija o que aparecer.</li>
+    <li>Veja a carga de cada papel na aba Análise. Anote as perguntas que os números levantam.</li>
+    <li>Passe o checklist do módulo 9.</li>
+  </ol>
+  <p>Depois, mostre a matriz a uma pessoa que ocupa um dos papéis e pergunte se ela se reconhece na própria coluna. As correções que essa pessoa fizer são a parte mais valiosa do exercício.</p>
+</section>
+
+<!-- ============================ MÓDULO 11 ============================ -->
+<section id="planilha">
+  <p class="eyebrow">Módulo 11</p>
+  <h2>A planilha de apoio</h2>
+  <p>Este treinamento acompanha o arquivo <a id="xlsx-ref" href="RACI-modelo.xlsx">RACI-modelo.xlsx</a>, que fica na mesma pasta. As células em amarelo-claro são para preenchimento. As células cinza são calculadas.</p>
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Aba</th><th>Para que serve</th><th style="width:36%">O que ela calcula</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Instruções</strong></td><td>Legenda de cores, ordem de preenchimento e regras do modelo.</td><td>Nada. É só leitura.</td></tr>
+        <tr><td><strong>RACI</strong></td><td>Cabeçalho do processo e matriz com até 15 atividades e 8 papéis.</td><td>Conferência de cada linha, com avisos como falta de A, mais de um A ou falta de R. Contagem por papel.</td></tr>
+        <tr><td><strong>Análise</strong></td><td>Carga de cada papel, com gráfico e leitura da coluna.</td><td>Contagem de R, A, C e I por papel, participação e avisos de sobrecarga, de gargalo e de papel só informado.</td></tr>
+        <tr><td><strong>Comunicação</strong></td><td>Quem ocupa cada papel, quem substitui, e como e quando a matriz foi comunicada.</td><td>Puxa os papéis da aba RACI. Conta os papéis comunicados e os que entenderam.</td></tr>
+        <tr><td><strong>Checklist</strong></td><td>Os mesmos 12 itens do módulo 9, com status Sim, Parcial ou Não.</td><td>Percentual atendido e situação da validação.</td></tr>
+        <tr><td><strong>Exemplo 1 e Exemplo 2</strong></td><td>As matrizes da pizzaria e de Suprimentos, preenchidas.</td><td>As mesmas conferências da aba RACI.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ GLOSSÁRIO ============================ -->
+<section id="glossario">
+  <p class="eyebrow">Referência</p>
+  <h2>Glossário</h2>
+  <dl class="gloss">
+    <div><dt>Aprovador</dt><dd>Papel A. Responde pelo resultado da atividade e tem autoridade para decidir. Um por atividade.</dd></div>
+    <div><dt>Atividade</dt><dd>Linha da matriz. Trabalho com começo, fim e resultado, escrito com verbo no infinitivo.</dd></div>
+    <div><dt>Autoridade</dt><dd>Poder de decidir: aprovar, liberar, interromper ou recusar.</dd></div>
+    <div><dt>Consultado</dt><dd>Papel C. É ouvido antes da decisão ou da execução. A comunicação é de mão dupla.</dd></div>
+    <div><dt>DACI</dt><dd>Variação voltada a decisões: condutor, aprovador, contribuintes e informados.</dd></div>
+    <div><dt>Dono do processo</dt><dd>Quem responde pelo resultado do processo de ponta a ponta.</dd></div>
+    <div><dt>Gargalo</dt><dd>Ponto em que o trabalho se acumula. Na matriz, aparece como um papel com A em quase todas as atividades.</dd></div>
+    <div><dt>Informado</dt><dd>Papel I. Recebe a notícia do que foi decidido ou feito. A comunicação é de mão única.</dd></div>
+    <div><dt>Matriz de responsabilidades</dt><dd>Nome genérico das tabelas que cruzam atividades e papéis. A RACI é a mais conhecida.</dd></div>
+    <div><dt>Papel</dt><dd>Coluna da matriz. Cargo ou função que participa do processo, e não o nome de uma pessoa.</dd></div>
+    <div><dt>RASCI</dt><dd>Variação que acrescenta o S, de suporte: quem ajuda o responsável a executar.</dd></div>
+    <div><dt>Responsabilidade</dt><dd>Obrigação de executar uma atividade ou de responder pelo resultado dela.</dd></div>
+    <div><dt>Responsável</dt><dd>Papel R. Executa a atividade ou coordena a execução. Pelo menos um por atividade.</dd></div>
+    <div><dt>Sobrecarga</dt><dd>Carga de trabalho maior do que a capacidade. Na matriz, aparece como um papel com R em quase todas as atividades.</dd></div>
+  </dl>
+</section>
+
+</main>
+</div>
+
+<footer>Material de estudo. Os exemplos, papéis e atribuições são ilustrativos e foram criados para fins didáticos. As referências às normas ISO são resumos para estudo e não substituem o texto das normas.</footer>
+</div>
+
+<script>
+(function () {
+  function read(key) { try { return JSON.parse(localStorage.getItem(key) || 'null'); } catch (e) { return null; } }
+  function write(key, val) { try { localStorage.setItem(key, JSON.stringify(val)); } catch (e) {} }
+
+  /* ---------- Checklist ---------- */
+  var boxes = Array.prototype.slice.call(document.querySelectorAll('#checklist input'));
+  var count = document.getElementById('ck-count');
+  var saved = read('raci-checklist') || {};
+  function refreshChecks() {
+    var n = 0, state = {};
+    boxes.forEach(function (b) { if (b.checked) { n++; } state[b.id] = b.checked; });
+    count.textContent = n;
+    return state;
+  }
+  boxes.forEach(function (b) {
+    if (saved[b.id]) { b.checked = true; }
+    b.addEventListener('change', function () { write('raci-checklist', refreshChecks()); });
+  });
+  refreshChecks();
+  document.getElementById('ck-reset').addEventListener('click', function () {
+    boxes.forEach(function (b) { b.checked = false; });
+    write('raci-checklist', refreshChecks());
+  });
+
+  /* ---------- Exercício ---------- */
+  var NAMES = { R: 'Responsável', A: 'Aprovador', C: 'Consultado', I: 'Informado' };
+  var ITEMS = [
+    { t: 'O analista de RH faz a triagem dos currículos.', a: 'R', w: 'Ele executa a atividade.' },
+    { t: 'O gestor da vaga decide quem será contratado e responde pela escolha.', a: 'A', w: 'Decidir e responder pelo resultado é o papel do aprovador.' },
+    { t: 'O Jurídico opina sobre o contrato antes da assinatura.', a: 'C', w: 'A opinião vem antes da decisão e pode mudá-la.' },
+    { t: 'A portaria recebe, na sexta-feira, a lista de novos colaboradores.', a: 'I', w: 'É um aviso de mão única, depois da decisão.' },
+    { t: 'O gestor da vaga conduz as entrevistas técnicas.', a: 'R', w: 'Conduzir a entrevista é executar. O mesmo papel pode ter letras diferentes em atividades diferentes.' },
+    { t: 'O gerente de RH aprova a proposta salarial e responde por ela.', a: 'A', w: 'Aprovar e prestar contas é o papel do A.' },
+    { t: 'A Segurança do Trabalho é ouvida sobre os exames exigidos para o cargo.', a: 'C', w: 'A área dá informação antes da definição dos exames.' },
+    { t: 'A equipe da área é avisada da data de início do novo colega.', a: 'I', w: 'A equipe só precisa saber. Não executa nem opina.' },
+    { t: 'O analista de RH agenda os exames admissionais.', a: 'R', w: 'Agendar é executar a atividade.' },
+    { t: 'A Controladoria recebe, todo mês, o relatório de contratações.', a: 'I', w: 'Receber um relatório é ser informado.' }
+  ];
+  var quiz = document.getElementById('quiz');
+  var score = document.getElementById('qz-score');
+  var done = document.getElementById('qz-done');
+  document.getElementById('qz-total').textContent = ITEMS.length;
+  var hits = 0, answered = 0;
+
+  function render() {
+    hits = 0; answered = 0; score.textContent = 0; done.textContent = 0;
+    quiz.textContent = '';
+    ITEMS.forEach(function (item, idx) {
+      var row = document.createElement('div'); row.className = 'q';
+      var p = document.createElement('p'); p.textContent = (idx + 1) + '. ' + item.t;
+      var opts = document.createElement('div'); opts.className = 'opts';
+      opts.setAttribute('role', 'group'); opts.setAttribute('aria-label', 'Letra do item ' + (idx + 1));
+      var why = document.createElement('p'); why.className = 'why'; why.hidden = true;
+      ['R', 'A', 'C', 'I'].forEach(function (k) {
+        var b = document.createElement('button');
+        b.type = 'button'; b.textContent = k; b.id = 'qz-' + idx + '-' + k;
+        b.setAttribute('aria-label', NAMES[k]);
+        b.addEventListener('click', function () {
+          var ok = k === item.a;
+          Array.prototype.forEach.call(opts.children, function (o) {
+            o.disabled = true;
+            if (o.textContent === item.a) { o.className = 'right'; }
+          });
+          if (!ok) { b.className = 'wrong'; }
+          var lead = document.createElement('b');
+          lead.textContent = (ok ? 'Certo. ' : 'A resposta é ' + item.a + ', ' + NAMES[item.a] + '. ');
+          why.textContent = ''; why.appendChild(lead); why.appendChild(document.createTextNode(item.w));
+          why.className = 'why ' + (ok ? 'ok' : 'no'); why.hidden = false;
+          answered++; if (ok) { hits++; }
+          score.textContent = hits; done.textContent = answered;
+        });
+        opts.appendChild(b);
+      });
+      row.appendChild(p); row.appendChild(opts); row.appendChild(why);
+      quiz.appendChild(row);
+    });
+  }
+  render();
+  document.getElementById('qz-reset').addEventListener('click', render);
+
+  /* ---------- Gráfico: leitura dos valores ---------- */
+  var fig = document.getElementById('fig-bars');
+  var tip = document.getElementById('bars-tip');
+  var svg = document.getElementById('bars');
+  var segs = document.querySelectorAll('#bars .seg');
+  function hide() {
+    tip.hidden = true;
+    Array.prototype.forEach.call(segs, function (b) { b.removeAttribute('opacity'); });
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('#bars .hit'), function (r) {
+    function show() {
+      var d = r.dataset;
+      Array.prototype.forEach.call(segs, function (b) {
+        b.setAttribute('opacity', b.getAttribute('data-k') === d.k ? '1' : '.4');
+      });
+      tip.textContent = '';
+      var strong = document.createElement('b'); strong.textContent = d.p;
+      tip.appendChild(strong);
+      tip.appendChild(document.createTextNode('R ' + d.r + ' · A ' + d.a + ' · C ' + d.c + ' · I ' + d.i));
+      tip.appendChild(document.createElement('br'));
+      tip.appendChild(document.createTextNode(d.n));
+      var box = fig.getBoundingClientRect(), rb = r.getBoundingClientRect();
+      var pt = svg.createSVGPoint(); pt.x = parseFloat(d.x); pt.y = 0;
+      var scr = pt.matrixTransform(svg.getScreenCTM());
+      tip.style.left = Math.min(Math.max(scr.x - box.left, 130), box.width - 130) + 'px';
+      tip.style.top = (rb.top - box.top + 4) + 'px';
+      tip.hidden = false;
+    }
+    r.addEventListener('pointerenter', show);
+    r.addEventListener('focus', show);
+    r.addEventListener('pointerleave', hide);
+    r.addEventListener('blur', hide);
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,1294 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Matriz SWOT na prática</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<style>
+:root{
+  --ground:#F3F6F7; --surface:#FFFFFF; --sunk:#E9EEF0; --ink:#16242E; --muted:#566672; --rule:#D3DBE0;
+  --accent:#2B5C8A;
+  --s:#1E7B73; --s-tint:#D9EEEB;
+  --w:#A96A12; --w-tint:#F6E8CF;
+  --o:#2B5C8A; --o-tint:#DCE8F3;
+  --t:#B0413E; --t-tint:#F5DEDC;
+  --on-hue:#FFFFFF;
+  --good:#1F7A4D; --good-tint:#DDF1E5;
+  --bad:#B0413E; --bad-tint:#F5DEDC;
+  --display:"Barlow Semi Condensed","Arial Narrow",Arial,sans-serif;
+  --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --ground:#0F171C; --surface:#172229; --sunk:#1E2B33; --ink:#E4EAED; --muted:#9BABB6; --rule:#2B3A44;
+    --accent:#86B7E3;
+    --s:#5FC6BA; --s-tint:#15332F;
+    --w:#E2AC4F; --w-tint:#3A2C12;
+    --o:#86B7E3; --o-tint:#1B2F42;
+    --t:#EC8E89; --t-tint:#3D1F1E;
+    --on-hue:#0F171C;
+    --good:#6FCF9B; --good-tint:#163326;
+    --bad:#EC8E89; --bad-tint:#3D1F1E;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --ground:#0F171C; --surface:#172229; --sunk:#1E2B33; --ink:#E4EAED; --muted:#9BABB6; --rule:#2B3A44;
+  --accent:#86B7E3;
+  --s:#5FC6BA; --s-tint:#15332F;
+  --w:#E2AC4F; --w-tint:#3A2C12;
+  --o:#86B7E3; --o-tint:#1B2F42;
+  --t:#EC8E89; --t-tint:#3D1F1E;
+  --on-hue:#0F171C;
+  --good:#6FCF9B; --good-tint:#163326;
+  --bad:#EC8E89; --bad-tint:#3D1F1E;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--ground);color:var(--ink);font:400 16px/1.65 var(--body);-webkit-text-size-adjust:100%}
+a{color:var(--accent);text-underline-offset:3px}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.page{max-width:1180px;margin-inline:auto;padding-inline:20px;padding-block:36px 80px}
+
+/* Cabeçalho */
+.mast{display:flex;flex-direction:column;gap:18px;padding-bottom:32px;border-bottom:1px solid var(--rule)}
+.tiles{display:flex;gap:6px}
+.tiles span{width:44px;height:44px;display:grid;place-items:center;font:700 24px/1 var(--display);color:var(--on-hue)}
+h1{font:700 clamp(2.3rem,6vw,3.6rem)/1.02 var(--display);letter-spacing:-.01em;margin:0;text-wrap:balance}
+.lead{font-size:1.15rem;line-height:1.55;max-width:62ch;margin:0;color:var(--ink)}
+.meta{display:flex;flex-direction:row;flex-wrap:wrap;gap:6px 22px;font:400 .8rem/1.4 var(--mono);color:var(--muted);margin:0;padding:0;list-style:none}
+
+/* Estrutura */
+.layout{display:grid;grid-template-columns:minmax(0,1fr);gap:32px;padding-top:32px}
+.toc{font-size:.92rem}
+.toc h2{font:500 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+.toc ol{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:2px 20px;counter-reset:toc}
+.toc li{counter-increment:toc}
+.toc a{display:flex;gap:10px;padding:5px 0;color:var(--ink);text-decoration:none;line-height:1.35}
+.toc a::before{content:counter(toc,decimal-leading-zero);font:400 .75rem/1.7 var(--mono);color:var(--muted)}
+.toc a:hover{color:var(--accent);text-decoration:underline}
+@media (min-width:1020px){
+  .layout{grid-template-columns:200px minmax(0,1fr);gap:64px}
+  .toc{position:sticky;top:calc(env(safe-area-inset-top,0px) + 24px);align-self:start}
+  .toc ol{grid-template-columns:1fr}
+}
+main{display:flex;flex-direction:column;gap:72px;min-width:0}
+section{display:flex;flex-direction:column;gap:20px;scroll-margin-top:24px}
+.eyebrow{font:500 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0}
+h2{font:700 clamp(1.7rem,4vw,2.2rem)/1.1 var(--display);margin:0;text-wrap:balance}
+h3{font:600 1.3rem/1.2 var(--display);margin:12px 0 0;text-wrap:balance}
+h4{font:600 .95rem/1.3 var(--body);margin:0}
+p{margin:0}
+section > p, section > ul, section > ol, section > h3{max-width:68ch}
+ul,ol{margin:0;padding-left:1.25em;display:flex;flex-direction:column;gap:6px}
+strong{font-weight:600}
+code{font:400 .88em var(--mono);background:var(--sunk);padding:1px 5px;border-radius:3px}
+
+/* Letras coloridas no texto */
+.k{display:inline-grid;place-items:center;width:1.45em;height:1.45em;font:700 .85em/1 var(--display);color:var(--on-hue);vertical-align:.05em}
+
+/* Figuras */
+figure{margin:0;display:flex;flex-direction:column;gap:10px;position:relative}
+.scroll{overflow-x:auto;background:var(--surface);border:1px solid var(--rule);padding:18px}
+.scroll svg{display:block;width:100%;min-width:820px;height:auto;color:var(--ink)}
+figcaption{font-size:.86rem;line-height:1.5;color:var(--muted);max-width:72ch}
+figcaption b{color:var(--ink);font-weight:600}
+svg text{font-family:var(--body);fill:var(--ink)}
+svg .disp{font-family:var(--display);font-weight:700}
+svg .mono{font-family:var(--mono);letter-spacing:.08em}
+svg .on{fill:var(--on-hue)}
+svg .mu{fill:var(--muted)}
+svg .b{font-weight:600}
+svg .ln{stroke:var(--ink);stroke-width:1.5;fill:none}
+svg .ln-mu{stroke:var(--muted);stroke-width:1.5;fill:none}
+svg .ln-bold{stroke:var(--ink);stroke-width:3;fill:none;stroke-linejoin:round;stroke-linecap:round}
+svg .dash{stroke-dasharray:5 4}
+svg .ah{fill:var(--ink)} svg .ah-mu{fill:var(--muted)}
+svg .bx{fill:var(--surface);stroke:var(--rule);stroke-width:1.5}
+svg .bx-ink{fill:var(--ink);stroke:var(--ink)}
+svg .t-ground{fill:var(--ground)}
+svg .bx-out{fill:none;stroke:var(--muted);stroke-width:1.5;stroke-dasharray:5 4}
+svg .gap{stroke:var(--surface);stroke-width:4}
+svg .gap2{stroke:var(--surface);stroke-width:2}
+svg .hub{fill:var(--surface)}
+
+/* Gráfico */
+svg .grid{stroke:var(--rule);stroke-width:1}
+svg .hit{fill:transparent;cursor:crosshair;outline:none}
+.tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--ground);padding:6px 10px;font-size:.78rem;line-height:1.4;transform:translate(-50%,calc(-100% - 14px));white-space:nowrap;z-index:2}
+.tip b{display:block;font:600 1.05rem/1.2 var(--body)}
+details.data{font-size:.88rem}
+details.data summary{cursor:pointer;font:400 .82rem var(--mono);color:var(--muted);padding:4px 0}
+details.data .tbl{margin-top:8px}
+details.data table{min-width:420px}
+
+/* Tabelas */
+.tbl{overflow-x:auto;border:1px solid var(--rule);background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:780px;font-size:.88rem;line-height:1.4}
+th,td{padding:9px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--rule)}
+tr:last-child > td{border-bottom:0}
+thead th{font:600 .8rem/1.3 var(--body);background:var(--sunk)}
+td.num{font-variant-numeric:tabular-nums;white-space:nowrap;font-family:var(--mono);font-size:.82rem}
+
+/* Quadrantes */
+.tiles .s{background:var(--s)} .tiles .w{background:var(--w)} .tiles .o{background:var(--o)} .tiles .t{background:var(--t)}
+.k.s{background:var(--s)} .k.w{background:var(--w)} .k.o{background:var(--o)} .k.t{background:var(--t)}
+.k + .k{margin-left:2px}
+svg .bx-s{fill:var(--s-tint);stroke:var(--s);stroke-width:1.5} svg .hd-s{fill:var(--s)}
+svg .bx-w{fill:var(--w-tint);stroke:var(--w);stroke-width:1.5} svg .hd-w{fill:var(--w)}
+svg .bx-o{fill:var(--o-tint);stroke:var(--o);stroke-width:1.5} svg .hd-o{fill:var(--o)}
+svg .bx-t{fill:var(--t-tint);stroke:var(--t);stroke-width:1.5} svg .hd-t{fill:var(--t)}
+svg .ref{stroke:var(--muted);stroke-width:1;stroke-dasharray:4 3}
+svg .hit:focus-visible{stroke:var(--accent);stroke-width:2}
+
+/* Matriz dos exemplos */
+.swot{display:grid;grid-template-columns:minmax(0,1fr);gap:2px;border:1px solid var(--rule);background:var(--surface);padding:2px}
+@media (min-width:680px){.swot{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.quad{display:flex;flex-direction:column}
+.quad.s{background:var(--s-tint)} .quad.w{background:var(--w-tint)} .quad.o{background:var(--o-tint)} .quad.t{background:var(--t-tint)}
+.qh{display:flex;align-items:baseline;gap:10px;padding:9px 14px;color:var(--on-hue)}
+.quad.s .qh{background:var(--s)} .quad.w .qh{background:var(--w)} .quad.o .qh{background:var(--o)} .quad.t .qh{background:var(--t)}
+.qh b{font:700 1.5rem/1 var(--display)}
+.qh span{font:600 1rem/1.2 var(--body)}
+.qh small{margin-left:auto;font:400 .68rem/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;opacity:.9}
+.quad ol{list-style:none;padding:12px 14px 14px;margin:0;gap:8px;font-size:.88rem;line-height:1.4}
+.quad li{display:grid;grid-template-columns:30px minmax(0,1fr) 28px;gap:6px;align-items:baseline}
+.quad li b{font:600 .8rem var(--body);color:var(--muted)}
+.quad li i{font:500 .8rem var(--mono);font-style:normal;text-align:right;font-variant-numeric:tabular-nums}
+
+/* Ficha da análise (acima de cada exemplo) */
+.ficha{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:0;border:1px solid var(--rule);background:var(--surface)}
+.ficha div{padding:12px 14px;border-right:1px solid var(--rule);border-bottom:1px solid var(--rule);margin:0 -1px -1px 0}
+.ficha dt{font:500 .68rem/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.ficha dd{margin:0;font-size:.9rem;line-height:1.4}
+dl{margin:0}
+
+/* Blocos */
+.pair{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.box{background:var(--surface);border:1px solid var(--rule);padding:18px 20px;display:flex;flex-direction:column;gap:10px}
+.box h4{font:600 1.1rem/1.2 var(--display)}
+.box ul{font-size:.93rem}
+.note{background:var(--sunk);padding:16px 20px;max-width:72ch;font-size:.94rem;display:flex;flex-direction:column;gap:6px}
+.note h4{font:500 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+
+/* Passo a passo */
+.steps{list-style:none;padding:0;counter-reset:st;gap:0;max-width:none;border-top:1px solid var(--rule)}
+.steps li{counter-increment:st;display:grid;grid-template-columns:44px minmax(0,1fr);gap:4px 12px;padding:16px 0;border-bottom:1px solid var(--rule)}
+.steps li::before{content:counter(st);font:700 1.7rem/1 var(--display);color:var(--muted);grid-row:span 2}
+.steps h4{font:600 1.1rem/1.25 var(--display)}
+.steps p{font-size:.95rem;max-width:64ch;grid-column:2}
+
+/* Erros comuns */
+.errs{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:0 40px;border-top:1px solid var(--rule)}
+.errs div{padding:16px 16px 16px 0;border-bottom:1px solid var(--rule);display:flex;flex-direction:column;gap:4px}
+.errs h4{font:600 1.05rem/1.25 var(--display)}
+.errs p{font-size:.92rem}
+.errs .fix{color:var(--muted)}
+.errs .fix b{color:var(--ink);font-weight:600}
+
+/* Checklist */
+.check{list-style:none;padding:0;gap:0;max-width:none;border:1px solid var(--rule);background:var(--surface)}
+.check li{border-bottom:1px solid var(--rule)}
+.check li:last-child{border-bottom:0}
+.check label{display:grid;grid-template-columns:22px minmax(0,1fr);gap:12px;padding:11px 16px;cursor:pointer;font-size:.94rem;align-items:start}
+.check input{width:18px;height:18px;margin:3px 0 0;accent-color:var(--s)}
+.check input:checked + span{color:var(--muted);text-decoration:line-through}
+.bar{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;font:400 .82rem var(--mono);color:var(--muted)}
+.bar b{color:var(--ink);font-weight:500}
+
+/* Exercício */
+.quiz{display:flex;flex-direction:column;gap:0;border:1px solid var(--rule);background:var(--surface)}
+.q{display:grid;grid-template-columns:minmax(0,1fr);gap:10px;padding:14px 16px;border-bottom:1px solid var(--rule)}
+.q:last-child{border-bottom:0}
+@media (min-width:720px){.q{grid-template-columns:minmax(0,1fr) auto;align-items:center}}
+.q p{font-size:.95rem}
+.q .why{grid-column:1/-1;font-size:.86rem;color:var(--muted)}
+.q .why b{font-weight:600}
+.q .why.ok b{color:var(--good)} .q .why.no b{color:var(--bad)}
+.opts{display:flex;gap:6px}
+.opts button{width:40px;height:40px;border:1.5px solid var(--rule);background:var(--surface);color:var(--ink);font:700 1.1rem/1 var(--display);cursor:pointer;border-radius:0}
+.opts button:hover:not(:disabled){border-color:var(--ink)}
+.opts button:disabled{cursor:default;opacity:.45}
+.opts button.right{background:var(--good-tint);border-color:var(--good);color:var(--good);opacity:1}
+.opts button.wrong{background:var(--bad-tint);border-color:var(--bad);color:var(--bad);opacity:1}
+.btn{border:1.5px solid var(--ink);background:transparent;color:var(--ink);font:500 .82rem var(--mono);padding:7px 14px;cursor:pointer;border-radius:0}
+.btn:hover{background:var(--ink);color:var(--ground)}
+
+/* Glossário */
+.gloss{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:0 40px;border-top:1px solid var(--rule)}
+.gloss div{padding:12px 0;border-bottom:1px solid var(--rule)}
+.gloss dt{font:600 1.02rem/1.3 var(--display)}
+.gloss dd{margin:2px 0 0;font-size:.9rem;color:var(--muted)}
+footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);font-size:.84rem;color:var(--muted);max-width:72ch}
+</style>
+</head>
+<body>
+<div class="page" lang="pt-BR">
+
+<header class="mast">
+  <div class="tiles" aria-hidden="true"><span class="s">S</span><span class="w">W</span><span class="o">O</span><span class="t">T</span></div>
+  <h1>Matriz SWOT na prática</h1>
+  <p class="lead">Um guia de estudo para enxergar, em uma página, o que ajuda e o que atrapalha um objetivo, dentro e fora da organização, e transformar esse diagnóstico em estratégia.</p>
+  <ul class="meta">
+    <li>Treinamento autoinstrucional</li>
+    <li>11 módulos</li>
+    <li>Leitura de cerca de 35 minutos</li>
+    <li>3 exemplos resolvidos e 2 exercícios</li>
+  </ul>
+</header>
+
+<div class="layout">
+
+<nav class="toc" aria-label="Sumário">
+  <h2>Sumário</h2>
+  <ol>
+    <li><a href="#o-que-e">O que é a Matriz SWOT</a></li>
+    <li><a href="#quando">Quando usar</a></li>
+    <li><a href="#construir">Como construir</a></li>
+    <li><a href="#exemplos">Exemplos resolvidos</a></li>
+    <li><a href="#estrategia">Da matriz à estratégia</a></li>
+    <li><a href="#erros">Erros comuns</a></li>
+    <li><a href="#ferramentas">SWOT e outras ferramentas</a></li>
+    <li><a href="#iso">SWOT nas normas ISO</a></li>
+    <li><a href="#oficina">Como conduzir a oficina</a></li>
+    <li><a href="#pratique">Pratique</a></li>
+    <li><a href="#planilha">A planilha de apoio</a></li>
+    <li><a href="#glossario">Glossário</a></li>
+  </ol>
+</nav>
+
+<main>
+
+<!-- ============================ MÓDULO 1 ============================ -->
+<section id="o-que-e">
+  <p class="eyebrow">Módulo 1</p>
+  <h2>O que é a Matriz SWOT</h2>
+  <p>A Matriz SWOT é um quadro de diagnóstico com quatro quadrantes. O nome vem das iniciais, em inglês, de <em>Strengths, Weaknesses, Opportunities, Threats</em>. Em português: forças, fraquezas, oportunidades e ameaças. No Brasil, a mesma ferramenta também é chamada de Matriz FOFA.</p>
+  <p>A ferramenta surgiu nos anos 1960, em estudos sobre planejamento empresarial, e costuma ser atribuída a Albert Humphrey, do Stanford Research Institute. O objetivo é que as pessoas envolvidas em uma decisão enxerguem a mesma situação, com os fatores separados por origem e por efeito, antes de discutir o que fazer.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 400" role="img" aria-label="A matriz SWOT. As colunas separam o que ajuda do que atrapalha o objetivo. As linhas separam o ambiente interno, que a organização controla, do ambiente externo, que ela não controla. Forças são internas e ajudam. Fraquezas são internas e atrapalham. Oportunidades são externas e ajudam. Ameaças são externas e atrapalham.">
+        <text class="b" x="305" y="32" font-size="13" text-anchor="middle">Ajuda a alcançar o objetivo</text>
+        <text class="b" x="695" y="32" font-size="13" text-anchor="middle">Atrapalha o objetivo</text>
+        <text class="b" x="58" y="130" font-size="13" text-anchor="middle" transform="rotate(-90 58 130)">Interno</text>
+        <text class="mu" x="80" y="130" font-size="11.5" text-anchor="middle" transform="rotate(-90 80 130)">a organização controla</text>
+        <text class="b" x="58" y="310" font-size="13" text-anchor="middle" transform="rotate(-90 58 310)">Externo</text>
+        <text class="mu" x="80" y="310" font-size="11.5" text-anchor="middle" transform="rotate(-90 80 310)">a organização não controla</text>
+
+        <g>
+          <rect class="bx-s" x="120" y="50" width="370" height="160"/><rect class="hd-s" x="120" y="50" width="370" height="44"/>
+          <text class="disp on" x="140" y="82" font-size="28">S</text>
+          <text class="on b" x="172" y="78" font-size="15">Forças</text>
+          <text class="mono on" x="474" y="77" font-size="10.5" text-anchor="end">STRENGTHS</text>
+          <text x="140" y="124" font-size="12.5">O que fazemos bem e está sob nosso controle?</text>
+          <text class="mu" x="140" y="152" font-size="11.5">Equipe experiente, marca conhecida,</text>
+          <text class="mu" x="140" y="169" font-size="11.5">processo eficiente, caixa saudável</text>
+        </g>
+        <g>
+          <rect class="bx-w" x="510" y="50" width="370" height="160"/><rect class="hd-w" x="510" y="50" width="370" height="44"/>
+          <text class="disp on" x="530" y="82" font-size="28">W</text>
+          <text class="on b" x="566" y="78" font-size="15">Fraquezas</text>
+          <text class="mono on" x="864" y="77" font-size="10.5" text-anchor="end">WEAKNESSES</text>
+          <text x="530" y="124" font-size="12.5">O que fazemos mal ou nos falta, e poderíamos mudar?</text>
+          <text class="mu" x="530" y="152" font-size="11.5">Processo manual, alta rotatividade,</text>
+          <text class="mu" x="530" y="169" font-size="11.5">dependência de um único cliente</text>
+        </g>
+        <g>
+          <rect class="bx-o" x="120" y="230" width="370" height="160"/><rect class="hd-o" x="120" y="230" width="370" height="44"/>
+          <text class="disp on" x="140" y="262" font-size="28">O</text>
+          <text class="on b" x="172" y="258" font-size="15">Oportunidades</text>
+          <text class="mono on" x="474" y="257" font-size="10.5" text-anchor="end">OPPORTUNITIES</text>
+          <text x="140" y="304" font-size="12.5">O que acontece lá fora e pode nos favorecer?</text>
+          <text class="mu" x="140" y="332" font-size="11.5">Novo mercado, mudança de hábito,</text>
+          <text class="mu" x="140" y="349" font-size="11.5">tecnologia acessível, incentivo fiscal</text>
+        </g>
+        <g>
+          <rect class="bx-t" x="510" y="230" width="370" height="160"/><rect class="hd-t" x="510" y="230" width="370" height="44"/>
+          <text class="disp on" x="530" y="262" font-size="28">T</text>
+          <text class="on b" x="562" y="258" font-size="15">Ameaças</text>
+          <text class="mono on" x="864" y="257" font-size="10.5" text-anchor="end">THREATS</text>
+          <text x="530" y="304" font-size="12.5">O que acontece lá fora e pode nos prejudicar?</text>
+          <text class="mu" x="530" y="332" font-size="11.5">Novo concorrente, alta de custos,</text>
+          <text class="mu" x="530" y="349" font-size="11.5">mudança na legislação, variação do câmbio</text>
+        </g>
+      </svg>
+    </div>
+    <figcaption><b>Figura 1.</b> Duas perguntas definem o quadrante de cada fator. A organização controla? Se sim, é interno. Ajuda ou atrapalha o objetivo? A resposta separa forças de fraquezas e oportunidades de ameaças.</figcaption>
+  </figure>
+
+  <p>Repare nas linhas da figura. Forças e fraquezas descrevem a organização como ela é <strong>hoje</strong>. Oportunidades e ameaças descrevem o ambiente: existiriam mesmo que a organização não existisse. Misturar as duas coisas é o erro mais frequente de quem está começando.</p>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:20%">Quadrante</th><th style="width:30%">O que registrar</th><th style="width:24%">Como escrever</th><th>Exemplo</th></tr></thead>
+      <tbody>
+        <tr><td><span class="k s">S</span> Forças</td><td>Características internas que favorecem o objetivo.</td><td>Fato atual, de preferência com número</td><td>95% das entregas no prazo</td></tr>
+        <tr><td><span class="k w">W</span> Fraquezas</td><td>Características internas que dificultam o objetivo.</td><td>Fato atual, sem culpados e sem solução</td><td>Forno único, que limita a produção no pico</td></tr>
+        <tr><td><span class="k o">O</span> Oportunidades</td><td>Fatos ou tendências do ambiente que podem favorecer.</td><td>Algo que acontece fora da organização</td><td>Novos condomínios em construção no bairro</td></tr>
+        <tr><td><span class="k t">T</span> Ameaças</td><td>Fatos ou tendências do ambiente que podem prejudicar.</td><td>Algo que acontece fora da organização</td><td>Aumento da taxa cobrada pelo aplicativo</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 2 ============================ -->
+<section id="quando">
+  <p class="eyebrow">Módulo 2</p>
+  <h2>Quando usar</h2>
+  <p>A SWOT é uma ferramenta de diagnóstico. Ela vem antes das decisões: primeiro se entende a situação, depois se escolhe o caminho. No planejamento, ocupa a primeira etapa e volta a ser consultada na última, quando se verifica o que mudou.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 190" role="img" aria-label="Cinco etapas do planejamento: diagnóstico, estratégia, objetivos, ações e revisão. A SWOT é construída no diagnóstico e revisitada na revisão.">
+        <polygon class="bx-ink" points="18,20 166,20 178,52 166,84 18,84"/>
+        <text class="disp t-ground" x="40" y="60" font-size="24">1</text>
+        <text class="b t-ground" x="62" y="57" font-size="13">Diagnóstico</text>
+
+        <polygon class="bx" points="194,20 342,20 354,52 342,84 194,84 206,52"/>
+        <text class="disp mu" x="222" y="60" font-size="24">2</text>
+        <text class="b" x="246" y="57" font-size="13">Estratégia</text>
+
+        <polygon class="bx" points="370,20 518,20 530,52 518,84 370,84 382,52"/>
+        <text class="disp mu" x="398" y="60" font-size="24">3</text>
+        <text class="b" x="422" y="57" font-size="13">Objetivos</text>
+
+        <polygon class="bx" points="546,20 694,20 706,52 694,84 546,84 558,52"/>
+        <text class="disp mu" x="574" y="60" font-size="24">4</text>
+        <text class="b" x="598" y="57" font-size="13">Ações</text>
+
+        <polygon class="bx" points="722,20 870,20 882,52 870,84 722,84 734,52"/>
+        <text class="disp mu" x="750" y="60" font-size="24">5</text>
+        <text class="b" x="774" y="57" font-size="13">Revisão</text>
+
+        <text class="mu" x="98" y="106" font-size="11.5" text-anchor="middle">onde estamos</text>
+        <text class="mu" x="274" y="106" font-size="11.5" text-anchor="middle">que caminho seguir</text>
+        <text class="mu" x="450" y="106" font-size="11.5" text-anchor="middle">quanto e até quando</text>
+        <text class="mu" x="626" y="106" font-size="11.5" text-anchor="middle">quem faz o quê</text>
+        <text class="mu" x="802" y="106" font-size="11.5" text-anchor="middle">o que mudou</text>
+
+        <line class="ln" x1="98" y1="114" x2="98" y2="138"/>
+        <rect class="bx" x="18" y="138" width="520" height="38"/>
+        <text x="34" y="162" font-size="12.5"><tspan class="b">A SWOT é feita aqui</tspan> e é atualizada a cada revisão do planejamento.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 2.</b> A SWOT pertence ao diagnóstico. Ela não decide nada sozinha: organiza os fatos para que a estratégia, os objetivos e as ações tenham de onde partir.</figcaption>
+  </figure>
+
+  <div class="pair">
+    <div class="box">
+      <h4>Use quando</h4>
+      <ul>
+        <li>O planejamento do ano ou de um novo ciclo está começando.</li>
+        <li>A organização precisa determinar o seu contexto para o sistema de gestão.</li>
+        <li>Uma decisão importante está em discussão: novo produto, nova unidade, novo mercado.</li>
+        <li>Uma área quer entender a própria situação antes de propor mudanças.</li>
+        <li>O ambiente mudou: nova lei, novo concorrente, nova tecnologia.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h4>Procure outra ferramenta quando</h4>
+      <ul>
+        <li>O problema já é conhecido e pede solução: use um ciclo <a href="../PDCA/treinamento-pdca.html">PDCA</a>.</li>
+        <li>Você precisa entender como um processo funciona: use um <a href="../SIPOC/treinamento-sipoc.html">SIPOC</a>.</li>
+        <li>Você precisa escolher entre problemas já listados: use a Matriz GUT.</li>
+        <li>Você precisa avaliar probabilidade e consequência de eventos: use uma matriz de riscos.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 3 ============================ -->
+<section id="construir">
+  <p class="eyebrow">Módulo 3</p>
+  <h2>Como construir</h2>
+  <p>A matriz é lida por quadrantes, mas nasce de uma lista. Primeiro a equipe levanta os fatores, sem se preocupar com a classificação. Depois, cada fator passa por duas perguntas, sempre na mesma ordem.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 300" role="img" aria-label="Árvore de decisão para classificar um fator. Primeira pergunta: a organização controla? Se sim, o fator é interno; se não, é externo. Segunda pergunta: ajuda ou atrapalha o objetivo? Interno que ajuda é força. Interno que atrapalha é fraqueza. Externo que ajuda é oportunidade. Externo que atrapalha é ameaça.">
+        <defs>
+          <marker id="a3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker>
+        </defs>
+        <rect class="bx-ink" x="20" y="125" width="150" height="50"/>
+        <text class="b t-ground" x="95" y="155" font-size="13" text-anchor="middle">Fator levantado</text>
+        <line class="ln" x1="172" y1="150" x2="212" y2="150" marker-end="url(#a3)"/>
+
+        <polygon class="bx" points="215,150 295,102 375,150 295,198"/>
+        <text x="295" y="146" font-size="12" text-anchor="middle">A organização</text>
+        <text x="295" y="162" font-size="12" text-anchor="middle">controla?</text>
+
+        <path class="ln" d="M295 100 V80 H462" marker-end="url(#a3)"/>
+        <text x="308" y="72" font-size="11.5"><tspan class="b">sim:</tspan> é interno</text>
+        <path class="ln" d="M295 200 V220 H462" marker-end="url(#a3)"/>
+        <text x="308" y="238" font-size="11.5"><tspan class="b">não:</tspan> é externo</text>
+
+        <polygon class="bx" points="465,80 540,38 615,80 540,122"/>
+        <text x="540" y="76" font-size="12" text-anchor="middle">Ajuda ou</text>
+        <text x="540" y="92" font-size="12" text-anchor="middle">atrapalha?</text>
+        <polygon class="bx" points="465,220 540,178 615,220 540,262"/>
+        <text x="540" y="216" font-size="12" text-anchor="middle">Ajuda ou</text>
+        <text x="540" y="232" font-size="12" text-anchor="middle">atrapalha?</text>
+
+        <path class="ln" d="M617 80 H680 V50 H756" marker-end="url(#a3)"/>
+        <path class="ln" d="M680 80 V110 H756" marker-end="url(#a3)"/>
+        <path class="ln" d="M617 220 H680 V190 H756" marker-end="url(#a3)"/>
+        <path class="ln" d="M680 220 V250 H756" marker-end="url(#a3)"/>
+        <text x="718" y="43" font-size="11" text-anchor="middle">ajuda</text>
+        <text x="718" y="103" font-size="11" text-anchor="middle">atrapalha</text>
+        <text x="718" y="183" font-size="11" text-anchor="middle">ajuda</text>
+        <text x="718" y="243" font-size="11" text-anchor="middle">atrapalha</text>
+
+        <rect class="hd-s" x="760" y="30" width="124" height="40"/>
+        <text class="on" x="774" y="56" font-size="12.5"><tspan class="disp" font-size="19">S</tspan><tspan dx="9" class="b">Força</tspan></text>
+        <rect class="hd-w" x="760" y="90" width="124" height="40"/>
+        <text class="on" x="774" y="116" font-size="12.5"><tspan class="disp" font-size="19">W</tspan><tspan dx="9" class="b">Fraqueza</tspan></text>
+        <rect class="hd-o" x="760" y="170" width="124" height="40"/>
+        <text class="on" x="774" y="196" font-size="12.5"><tspan class="disp" font-size="19">O</tspan><tspan dx="9" class="b">Oportunidade</tspan></text>
+        <rect class="hd-t" x="760" y="230" width="124" height="40"/>
+        <text class="on" x="774" y="256" font-size="12.5"><tspan class="disp" font-size="19">T</tspan><tspan dx="9" class="b">Ameaça</tspan></text>
+
+        <text class="mu" x="20" y="290" font-size="11.5">Se o fator começa com verbo no infinitivo, como “investir” ou “contratar”, ele é uma ação. Guarde para a etapa de estratégia.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 3.</b> O teste das duas perguntas. A primeira separa o que é da organização do que é do ambiente. A segunda depende do objetivo: o mesmo fato pode ajudar um objetivo e atrapalhar outro.</figcaption>
+  </figure>
+
+  <h3>Antes de tudo: o objetivo da análise</h3>
+  <p>Uma SWOT sem objetivo vira uma lista de opiniões. “Ajuda” e “atrapalha” só fazem sentido em relação a alguma coisa. Defina o objeto da análise, que pode ser a organização, uma área, um produto ou um projeto, o objetivo que se quer alcançar e o horizonte de tempo.</p>
+
+  <h3>Passo a passo</h3>
+  <ol class="steps">
+    <li><h4>Defina o objeto, o objetivo e o horizonte</h4><p>Exemplo: “Operação de delivery da pizzaria. Aumentar o faturamento em 20%. Próximos 12 meses.” Registre também o que fica fora da análise.</p></li>
+    <li><h4>Olhe para fora: oportunidades <span class="k o">O</span> e ameaças <span class="k t">T</span></h4><p>Levante fatos e tendências de mercado, clientes, concorrentes, fornecedores, tecnologia, legislação e economia. Comece pelo ambiente, porque é ele que dá a medida do que é força ou fraqueza.</p></li>
+    <li><h4>Olhe para dentro: forças <span class="k s">S</span> e fraquezas <span class="k w">W</span></h4><p>Levante fatos sobre pessoas, processos, produtos, finanças, tecnologia e reputação. Use indicadores, auditorias e reclamações como fonte, e não só a memória do grupo.</p></li>
+    <li><h4>Classifique e enxugue</h4><p>Passe cada fator pelo teste das duas perguntas. Junte os repetidos, reescreva os vagos e descarte os que não têm relação com o objetivo. De 3 a 8 fatores por quadrante é um bom tamanho.</p></li>
+    <li><h4>Priorize</h4><p>Dê a cada fator uma nota de impacto e uma nota de intensidade. O produto das duas mostra o que merece atenção primeiro. O módulo 5 explica o critério.</p></li>
+    <li><h4>Cruze os quadrantes</h4><p>Combine os fatores internos com os externos para gerar estratégias. É a SWOT cruzada, também explicada no módulo 5.</p></li>
+    <li><h4>Transforme em ação e marque a revisão</h4><p>Cada estratégia escolhida vira ação, com responsável, prazo e indicador. Defina quando a matriz será revista. Use o checklist do módulo 9.</p></li>
+  </ol>
+
+  <div class="note">
+    <h4>Regra prática</h4>
+    <p>Na dúvida entre interno e externo, imagine que a organização fechou as portas. Se o fator continua existindo, ele é externo. A alta do preço do queijo continua. O forno único desaparece junto com a pizzaria.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 4 ============================ -->
+<section id="exemplos">
+  <p class="eyebrow">Módulo 4</p>
+  <h2>Exemplos resolvidos</h2>
+  <p>Três análises de naturezas diferentes. Os dados são ilustrativos e foram criados para este treinamento. O número ao lado de cada fator é a pontuação de prioridade, de 1 a 25. Os dois primeiros exemplos também estão preenchidos na planilha de apoio.</p>
+
+  <h3>Exemplo 1. Crescer no delivery da pizzaria</h3>
+  <dl class="ficha">
+    <div><dt>Objeto</dt><dd>Operação de delivery de uma pizzaria de bairro</dd></div>
+    <div><dt>Objetivo</dt><dd>Aumentar em 20% o faturamento do delivery</dd></div>
+    <div><dt>Horizonte</dt><dd>12 meses</dd></div>
+    <div><dt>Responsável</dt><dd>Gerente da loja</dd></div>
+  </dl>
+  <div class="swot">
+    <div class="quad s"><div class="qh"><b>S</b><span>Forças</span><small>interno · ajuda</small></div><ol>
+      <li><b>S1</b><span>Receita própria e massa de fermentação longa, elogiadas nas avaliações</span><i>20</i></li>
+      <li><b>S2</b><span>Entrega própria, com 95% dos pedidos no prazo</span><i>16</i></li>
+      <li><b>S3</b><span>Clientela fiel no bairro, com alta recompra</span><i>12</i></li>
+      <li><b>S4</b><span>Equipe estável, com baixa rotatividade</span><i>9</i></li>
+    </ol></div>
+    <div class="quad w"><div class="qh"><b>W</b><span>Fraquezas</span><small>interno · atrapalha</small></div><ol>
+      <li><b>W1</b><span>Forno único, que limita a produção no horário de pico</span><i>20</i></li>
+      <li><b>W2</b><span>Dependência de um aplicativo para 70% dos pedidos</span><i>20</i></li>
+      <li><b>W3</b><span>Sem controle de custo por pizza</span><i>9</i></li>
+      <li><b>W4</b><span>Pouca presença nas redes sociais</span><i>6</i></li>
+    </ol></div>
+    <div class="quad o"><div class="qh"><b>O</b><span>Oportunidades</span><small>externo · ajuda</small></div><ol>
+      <li><b>O1</b><span>Novos condomínios em construção no bairro</span><i>20</i></li>
+      <li><b>O2</b><span>Procura crescente por opções vegetarianas e sem glúten</span><i>9</i></li>
+      <li><b>O3</b><span>Empresas da região buscando fornecedores para eventos</span><i>6</i></li>
+      <li><b>O4</b><span>Pedido por aplicativo de mensagens, com custo menor por venda</span><i>16</i></li>
+    </ol></div>
+    <div class="quad t"><div class="qh"><b>T</b><span>Ameaças</span><small>externo · atrapalha</small></div><ol>
+      <li><b>T1</b><span>Aumento da taxa cobrada pelo aplicativo de delivery</span><i>16</i></li>
+      <li><b>T2</b><span>Chegada de uma rede de pizzarias ao bairro</span><i>12</i></li>
+      <li><b>T3</b><span>Alta do preço do queijo e da farinha</span><i>12</i></li>
+      <li><b>T4</b><span>Obras na avenida principal, que atrasam as entregas</span><i>4</i></li>
+    </ol></div>
+  </div>
+  <p><strong>O que observar.</strong> A dependência do aplicativo é fraqueza, porque a pizzaria escolheu concentrar as vendas nele. O aumento da taxa é ameaça, porque quem decide é o aplicativo. Os dois fatores falam do mesmo assunto, mas pedem respostas diferentes: uma está nas mãos da pizzaria, a outra não.</p>
+
+  <h3>Exemplo 2. Reduzir o custo de aquisição em Suprimentos</h3>
+  <dl class="ficha">
+    <div><dt>Objeto</dt><dd>Área de Suprimentos de uma indústria</dd></div>
+    <div><dt>Objetivo</dt><dd>Reduzir em 8% o custo total de aquisição, sem aumentar as faltas de material</dd></div>
+    <div><dt>Horizonte</dt><dd>12 meses</dd></div>
+    <div><dt>Responsável</dt><dd>Gerente de Suprimentos</dd></div>
+  </dl>
+  <div class="swot">
+    <div class="quad s"><div class="qh"><b>S</b><span>Forças</span><small>interno · ajuda</small></div><ol>
+      <li><b>S1</b><span>Compradores experientes, com conhecimento técnico dos itens</span><i>16</i></li>
+      <li><b>S2</b><span>Base de fornecedores homologados para todos os itens críticos</span><i>16</i></li>
+      <li><b>S3</b><span>Contratos de longo prazo para os principais insumos</span><i>15</i></li>
+    </ol></div>
+    <div class="quad w"><div class="qh"><b>W</b><span>Fraquezas</span><small>interno · atrapalha</small></div><ol>
+      <li><b>W1</b><span>Requisições chegam com especificação incompleta</span><i>16</i></li>
+      <li><b>W2</b><span>Processo manual, em planilhas e e‑mails</span><i>16</i></li>
+      <li><b>W3</b><span>Fornecedor único contratado para três itens críticos</span><i>20</i></li>
+      <li><b>W4</b><span>Avaliação de fornecedores sem indicadores objetivos</span><i>9</i></li>
+    </ol></div>
+    <div class="quad o"><div class="qh"><b>O</b><span>Oportunidades</span><small>externo · ajuda</small></div><ol>
+      <li><b>O1</b><span>Novos fabricantes nacionais de itens hoje importados</span><i>12</i></li>
+      <li><b>O2</b><span>Plataformas de cotação eletrônica com custo acessível</span><i>16</i></li>
+      <li><b>O3</b><span>Outras unidades do grupo dispostas a comprar em conjunto</span><i>9</i></li>
+    </ol></div>
+    <div class="quad t"><div class="qh"><b>T</b><span>Ameaças</span><small>externo · atrapalha</small></div><ol>
+      <li><b>T1</b><span>Variação do câmbio nos insumos importados</span><i>20</i></li>
+      <li><b>T2</b><span>Aumento do frete e dos prazos logísticos</span><i>12</i></li>
+      <li><b>T3</b><span>Exigências ambientais e sociais sobre a cadeia de fornecedores</span><i>9</i></li>
+      <li><b>T4</b><span>Oferta de um insumo crítico concentrada em poucos fabricantes</span><i>16</i></li>
+    </ol></div>
+  </div>
+  <p><strong>O que observar.</strong> O objeto da análise é uma área, e não a empresa. Por isso as outras unidades do grupo aparecem como ambiente externo: a área de Suprimentos não as controla. Aqui as fraquezas pesam mais que as forças, e as ameaças mais que as oportunidades. A postura sugerida é a de sobrevivência, que aqui significa proteção: reduzir a exposição antes de buscar ganhos.</p>
+
+  <h3>Exemplo 3. Atualizar o contexto da organização para o sistema de gestão</h3>
+  <dl class="ficha">
+    <div><dt>Objeto</dt><dd>Indústria de embalagens plásticas, com sistema de gestão da qualidade certificado</dd></div>
+    <div><dt>Objetivo</dt><dd>Manter a capacidade de atender aos requisitos dos clientes e crescer 10% em volume</dd></div>
+    <div><dt>Horizonte</dt><dd>12 meses, até a próxima análise crítica</dd></div>
+    <div><dt>Responsável</dt><dd>Diretor industrial</dd></div>
+  </dl>
+  <div class="swot">
+    <div class="quad s"><div class="qh"><b>S</b><span>Forças</span><small>interno · ajuda</small></div><ol>
+      <li><b>S1</b><span>Sistema de gestão certificado há 8 anos, com auditores internos formados</span><i>16</i></li>
+      <li><b>S2</b><span>Laboratório próprio para ensaios de matéria-prima e de produto</span><i>16</i></li>
+      <li><b>S3</b><span>Entregas no prazo acima de 97% nos últimos 12 meses</span><i>20</i></li>
+    </ol></div>
+    <div class="quad w"><div class="qh"><b>W</b><span>Fraquezas</span><small>interno · atrapalha</small></div><ol>
+      <li><b>W1</b><span>Conhecimento de regulagem das máquinas concentrado em dois técnicos</span><i>20</i></li>
+      <li><b>W2</b><span>Rotatividade de 35% ao ano na produção</span><i>16</i></li>
+      <li><b>W3</b><span>Indicadores analisados só uma vez por ano</span><i>12</i></li>
+    </ol></div>
+    <div class="quad o"><div class="qh"><b>O</b><span>Oportunidades</span><small>externo · ajuda</small></div><ol>
+      <li><b>O1</b><span>Clientes pedindo embalagens com material reciclado</span><i>20</i></li>
+      <li><b>O2</b><span>Linha de crédito para modernização de máquinas</span><i>9</i></li>
+      <li><b>O3</b><span>Clientes valorizando fornecedores com certificação ambiental</span><i>12</i></li>
+    </ol></div>
+    <div class="quad t"><div class="qh"><b>T</b><span>Ameaças</span><small>externo · atrapalha</small></div><ol>
+      <li><b>T1</b><span>Legislação restringindo plásticos de uso único</span><i>15</i></li>
+      <li><b>T2</b><span>Oferta de resina concentrada em poucos fabricantes</span><i>16</i></li>
+      <li><b>T3</b><span>Concorrentes importados com preço menor</span><i>12</i></li>
+      <li><b>T4</b><span>Chuvas intensas mais frequentes, com risco de interrupção das rodovias</span><i>9</i></li>
+    </ol></div>
+  </div>
+  <p><strong>O que observar.</strong> Cada fator de alta prioridade foi levado ao planejamento do sistema de gestão como risco ou oportunidade, com ação definida. A fraqueza W1, por exemplo, gerou uma matriz de competências e um plano de treinamento. O fator T4 mostra que questões climáticas também entram na análise de contexto. O módulo 8 detalha essa ligação.</p>
+</section>
+
+<!-- ============================ MÓDULO 5 ============================ -->
+<section id="estrategia">
+  <p class="eyebrow">Módulo 5</p>
+  <h2>Da matriz à estratégia</h2>
+  <p>A matriz preenchida é só o diagnóstico. O valor da SWOT aparece em dois passos seguintes: escolher os fatores que mais pesam e combiná-los em estratégias.</p>
+
+  <h3>Priorizar: impacto × intensidade</h3>
+  <p>Cada fator recebe duas notas, de 1 a 5. O <strong>impacto</strong> diz quanto o fator pesa no objetivo. A <strong>intensidade</strong> diz quanto o fator está presente: para forças e fraquezas, o quanto a característica é marcante hoje; para oportunidades e ameaças, a chance de acontecer dentro do horizonte da análise. A pontuação é o produto das duas notas.</p>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:12%">Nota</th><th style="width:30%">Impacto no objetivo</th><th style="width:29%">Intensidade de força ou fraqueza</th><th>Intensidade de oportunidade ou ameaça</th></tr></thead>
+      <tbody>
+        <tr><td class="num">1</td><td>Quase não afeta</td><td>Pouco perceptível</td><td>Improvável no horizonte</td></tr>
+        <tr><td class="num">2</td><td>Afeta pouco</td><td>Aparece em casos isolados</td><td>Pouco provável</td></tr>
+        <tr><td class="num">3</td><td>Afeta de forma moderada</td><td>Aparece com frequência</td><td>Pode acontecer ou não</td></tr>
+        <tr><td class="num">4</td><td>Afeta muito</td><td>Marca a rotina</td><td>Provável</td></tr>
+        <tr><td class="num">5</td><td>Decide o resultado</td><td>Define a organização</td><td>Já está acontecendo</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Com as notas, os fatores se separam em três faixas: <strong>alta</strong> prioridade, com 15 pontos ou mais; <strong>média</strong>, de 8 a 14; e <strong>baixa</strong>, até 7. As notas devem ser dadas pelo grupo, depois de combinar o significado de cada uma.</p>
+
+  <figure id="fig-bars">
+    <div class="scroll">
+      <svg id="bars" viewBox="0 0 900 508" role="img" aria-label="Gráfico de barras horizontais com a pontuação dos 16 fatores do exemplo 1, do maior para o menor. Quatro fatores têm 20 pontos: S1, W1, W2 e O1. Três têm 16 pontos: S2, O4 e T1. O menor é T4, com 4 pontos. As faixas de prioridade começam em 8 pontos, para média, e em 15 pontos, para alta.">
+        <line class="grid" x1="400" y1="38" x2="400" y2="444"/>
+        <text class="mu" x="400" y="460" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">0</text>
+        <line class="grid" x1="490" y1="38" x2="490" y2="444"/>
+        <text class="mu" x="490" y="460" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">5</text>
+        <line class="grid" x1="580" y1="38" x2="580" y2="444"/>
+        <text class="mu" x="580" y="460" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">10</text>
+        <line class="grid" x1="760" y1="38" x2="760" y2="444"/>
+        <text class="mu" x="760" y="460" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">20</text>
+        <line class="grid" x1="850" y1="38" x2="850" y2="444"/>
+        <text class="mu" x="850" y="460" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">25</text>
+        <line class="ref" x1="544" y1="28" x2="544" y2="444"/>
+        <text class="mu" x="549" y="30" font-size="11">média: de 8 a 14</text>
+        <line class="ref" x1="670" y1="28" x2="670" y2="444"/>
+        <text class="mu" x="675" y="30" font-size="11">alta: 15 ou mais</text>
+        <text class="mu" x="405" y="30" font-size="11">baixa: até 7</text>
+        <text class="mono mu" x="625.0" y="478" font-size="10" text-anchor="middle">PONTOS (IMPACTO × INTENSIDADE)</text>
+        <rect class="hd-s" x="20" y="47.5" width="26" height="18"/>
+        <text class="b on" x="33" y="60.5" font-size="10.5" text-anchor="middle">S1</text>
+        <text x="54" y="61.0" font-size="11.5">Receita própria, elogiada nas avaliações</text>
+        <path class="bar hd-s" data-k="S1" d="M400 49.5 H756 Q760 49.5 760 53.5 V59.5 Q760 63.5 756 63.5 H400 Z"/>
+        <text class="b" x="767" y="61.0" font-size="11.5" style="font-variant-numeric:tabular-nums">20</text>
+        <rect class="hd-w" x="20" y="72.5" width="26" height="18"/>
+        <text class="b on" x="33" y="85.5" font-size="10.5" text-anchor="middle">W1</text>
+        <text x="54" y="86.0" font-size="11.5">Forno único, que limita a produção no pico</text>
+        <path class="bar hd-w" data-k="W1" d="M400 74.5 H756 Q760 74.5 760 78.5 V84.5 Q760 88.5 756 88.5 H400 Z"/>
+        <text class="b" x="767" y="86.0" font-size="11.5" style="font-variant-numeric:tabular-nums">20</text>
+        <rect class="hd-w" x="20" y="97.5" width="26" height="18"/>
+        <text class="b on" x="33" y="110.5" font-size="10.5" text-anchor="middle">W2</text>
+        <text x="54" y="111.0" font-size="11.5">Dependência de um aplicativo para 70% dos pedidos</text>
+        <path class="bar hd-w" data-k="W2" d="M400 99.5 H756 Q760 99.5 760 103.5 V109.5 Q760 113.5 756 113.5 H400 Z"/>
+        <text class="b" x="767" y="111.0" font-size="11.5" style="font-variant-numeric:tabular-nums">20</text>
+        <rect class="hd-o" x="20" y="122.5" width="26" height="18"/>
+        <text class="b on" x="33" y="135.5" font-size="10.5" text-anchor="middle">O1</text>
+        <text x="54" y="136.0" font-size="11.5">Novos condomínios em construção no bairro</text>
+        <path class="bar hd-o" data-k="O1" d="M400 124.5 H756 Q760 124.5 760 128.5 V134.5 Q760 138.5 756 138.5 H400 Z"/>
+        <text class="b" x="767" y="136.0" font-size="11.5" style="font-variant-numeric:tabular-nums">20</text>
+        <rect class="hd-s" x="20" y="147.5" width="26" height="18"/>
+        <text class="b on" x="33" y="160.5" font-size="10.5" text-anchor="middle">S2</text>
+        <text x="54" y="161.0" font-size="11.5">Entrega própria, com 95% no prazo</text>
+        <path class="bar hd-s" data-k="S2" d="M400 149.5 H684 Q688 149.5 688 153.5 V159.5 Q688 163.5 684 163.5 H400 Z"/>
+        <text class="b" x="695" y="161.0" font-size="11.5" style="font-variant-numeric:tabular-nums">16</text>
+        <rect class="hd-o" x="20" y="172.5" width="26" height="18"/>
+        <text class="b on" x="33" y="185.5" font-size="10.5" text-anchor="middle">O4</text>
+        <text x="54" y="186.0" font-size="11.5">Pedido por aplicativo de mensagens</text>
+        <path class="bar hd-o" data-k="O4" d="M400 174.5 H684 Q688 174.5 688 178.5 V184.5 Q688 188.5 684 188.5 H400 Z"/>
+        <text class="b" x="695" y="186.0" font-size="11.5" style="font-variant-numeric:tabular-nums">16</text>
+        <rect class="hd-t" x="20" y="197.5" width="26" height="18"/>
+        <text class="b on" x="33" y="210.5" font-size="10.5" text-anchor="middle">T1</text>
+        <text x="54" y="211.0" font-size="11.5">Aumento da taxa cobrada pelo aplicativo</text>
+        <path class="bar hd-t" data-k="T1" d="M400 199.5 H684 Q688 199.5 688 203.5 V209.5 Q688 213.5 684 213.5 H400 Z"/>
+        <text class="b" x="695" y="211.0" font-size="11.5" style="font-variant-numeric:tabular-nums">16</text>
+        <rect class="hd-s" x="20" y="222.5" width="26" height="18"/>
+        <text class="b on" x="33" y="235.5" font-size="10.5" text-anchor="middle">S3</text>
+        <text x="54" y="236.0" font-size="11.5">Clientela fiel no bairro</text>
+        <path class="bar hd-s" data-k="S3" d="M400 224.5 H612 Q616 224.5 616 228.5 V234.5 Q616 238.5 612 238.5 H400 Z"/>
+        <text class="b" x="623" y="236.0" font-size="11.5" style="font-variant-numeric:tabular-nums">12</text>
+        <rect class="hd-t" x="20" y="247.5" width="26" height="18"/>
+        <text class="b on" x="33" y="260.5" font-size="10.5" text-anchor="middle">T2</text>
+        <text x="54" y="261.0" font-size="11.5">Chegada de uma rede de pizzarias ao bairro</text>
+        <path class="bar hd-t" data-k="T2" d="M400 249.5 H612 Q616 249.5 616 253.5 V259.5 Q616 263.5 612 263.5 H400 Z"/>
+        <text class="b" x="623" y="261.0" font-size="11.5" style="font-variant-numeric:tabular-nums">12</text>
+        <rect class="hd-t" x="20" y="272.5" width="26" height="18"/>
+        <text class="b on" x="33" y="285.5" font-size="10.5" text-anchor="middle">T3</text>
+        <text x="54" y="286.0" font-size="11.5">Alta do preço do queijo e da farinha</text>
+        <path class="bar hd-t" data-k="T3" d="M400 274.5 H612 Q616 274.5 616 278.5 V284.5 Q616 288.5 612 288.5 H400 Z"/>
+        <text class="b" x="623" y="286.0" font-size="11.5" style="font-variant-numeric:tabular-nums">12</text>
+        <rect class="hd-s" x="20" y="297.5" width="26" height="18"/>
+        <text class="b on" x="33" y="310.5" font-size="10.5" text-anchor="middle">S4</text>
+        <text x="54" y="311.0" font-size="11.5">Equipe estável</text>
+        <path class="bar hd-s" data-k="S4" d="M400 299.5 H558 Q562 299.5 562 303.5 V309.5 Q562 313.5 558 313.5 H400 Z"/>
+        <text class="b" x="569" y="311.0" font-size="11.5" style="font-variant-numeric:tabular-nums">9</text>
+        <rect class="hd-w" x="20" y="322.5" width="26" height="18"/>
+        <text class="b on" x="33" y="335.5" font-size="10.5" text-anchor="middle">W3</text>
+        <text x="54" y="336.0" font-size="11.5">Sem controle de custo por pizza</text>
+        <path class="bar hd-w" data-k="W3" d="M400 324.5 H558 Q562 324.5 562 328.5 V334.5 Q562 338.5 558 338.5 H400 Z"/>
+        <text class="b" x="569" y="336.0" font-size="11.5" style="font-variant-numeric:tabular-nums">9</text>
+        <rect class="hd-o" x="20" y="347.5" width="26" height="18"/>
+        <text class="b on" x="33" y="360.5" font-size="10.5" text-anchor="middle">O2</text>
+        <text x="54" y="361.0" font-size="11.5">Procura por opções vegetarianas e sem glúten</text>
+        <path class="bar hd-o" data-k="O2" d="M400 349.5 H558 Q562 349.5 562 353.5 V359.5 Q562 363.5 558 363.5 H400 Z"/>
+        <text class="b" x="569" y="361.0" font-size="11.5" style="font-variant-numeric:tabular-nums">9</text>
+        <rect class="hd-w" x="20" y="372.5" width="26" height="18"/>
+        <text class="b on" x="33" y="385.5" font-size="10.5" text-anchor="middle">W4</text>
+        <text x="54" y="386.0" font-size="11.5">Pouca presença nas redes sociais</text>
+        <path class="bar hd-w" data-k="W4" d="M400 374.5 H504 Q508 374.5 508 378.5 V384.5 Q508 388.5 504 388.5 H400 Z"/>
+        <text class="b" x="515" y="386.0" font-size="11.5" style="font-variant-numeric:tabular-nums">6</text>
+        <rect class="hd-o" x="20" y="397.5" width="26" height="18"/>
+        <text class="b on" x="33" y="410.5" font-size="10.5" text-anchor="middle">O3</text>
+        <text x="54" y="411.0" font-size="11.5">Empresas buscando fornecedores para eventos</text>
+        <path class="bar hd-o" data-k="O3" d="M400 399.5 H504 Q508 399.5 508 403.5 V409.5 Q508 413.5 504 413.5 H400 Z"/>
+        <text class="b" x="515" y="411.0" font-size="11.5" style="font-variant-numeric:tabular-nums">6</text>
+        <rect class="hd-t" x="20" y="422.5" width="26" height="18"/>
+        <text class="b on" x="33" y="435.5" font-size="10.5" text-anchor="middle">T4</text>
+        <text x="54" y="436.0" font-size="11.5">Obras na avenida principal</text>
+        <path class="bar hd-t" data-k="T4" d="M400 424.5 H468 Q472 424.5 472 428.5 V434.5 Q472 438.5 468 438.5 H400 Z"/>
+        <text class="b" x="479" y="436.0" font-size="11.5" style="font-variant-numeric:tabular-nums">4</text>
+        <rect class="hd-s" x="20" y="488" width="14" height="12"/>
+        <text x="41" y="498" font-size="11.5">S · Forças</text>
+        <rect class="hd-w" x="170" y="488" width="14" height="12"/>
+        <text x="191" y="498" font-size="11.5">W · Fraquezas</text>
+        <rect class="hd-o" x="320" y="488" width="14" height="12"/>
+        <text x="341" y="498" font-size="11.5">O · Oportunidades</text>
+        <rect class="hd-t" x="470" y="488" width="14" height="12"/>
+        <text x="491" y="498" font-size="11.5">T · Ameaças</text>
+        <rect class="hit" x="14" y="44" width="872" height="25" tabindex="0" role="img" aria-label="S1, Receita própria, elogiada nas avaliações: 20 pontos, prioridade alta" data-k="S1" data-q="Força" data-v="20" data-i="5" data-n="4" data-p="alta" data-x="760" data-y="44"/>
+        <rect class="hit" x="14" y="69" width="872" height="25" tabindex="0" role="img" aria-label="W1, Forno único, que limita a produção no pico: 20 pontos, prioridade alta" data-k="W1" data-q="Fraqueza" data-v="20" data-i="5" data-n="4" data-p="alta" data-x="760" data-y="69"/>
+        <rect class="hit" x="14" y="94" width="872" height="25" tabindex="0" role="img" aria-label="W2, Dependência de um aplicativo para 70% dos pedidos: 20 pontos, prioridade alta" data-k="W2" data-q="Fraqueza" data-v="20" data-i="4" data-n="5" data-p="alta" data-x="760" data-y="94"/>
+        <rect class="hit" x="14" y="119" width="872" height="25" tabindex="0" role="img" aria-label="O1, Novos condomínios em construção no bairro: 20 pontos, prioridade alta" data-k="O1" data-q="Oportunidade" data-v="20" data-i="5" data-n="4" data-p="alta" data-x="760" data-y="119"/>
+        <rect class="hit" x="14" y="144" width="872" height="25" tabindex="0" role="img" aria-label="S2, Entrega própria, com 95% no prazo: 16 pontos, prioridade alta" data-k="S2" data-q="Força" data-v="16" data-i="4" data-n="4" data-p="alta" data-x="688" data-y="144"/>
+        <rect class="hit" x="14" y="169" width="872" height="25" tabindex="0" role="img" aria-label="O4, Pedido por aplicativo de mensagens: 16 pontos, prioridade alta" data-k="O4" data-q="Oportunidade" data-v="16" data-i="4" data-n="4" data-p="alta" data-x="688" data-y="169"/>
+        <rect class="hit" x="14" y="194" width="872" height="25" tabindex="0" role="img" aria-label="T1, Aumento da taxa cobrada pelo aplicativo: 16 pontos, prioridade alta" data-k="T1" data-q="Ameaça" data-v="16" data-i="4" data-n="4" data-p="alta" data-x="688" data-y="194"/>
+        <rect class="hit" x="14" y="219" width="872" height="25" tabindex="0" role="img" aria-label="S3, Clientela fiel no bairro: 12 pontos, prioridade média" data-k="S3" data-q="Força" data-v="12" data-i="4" data-n="3" data-p="média" data-x="616" data-y="219"/>
+        <rect class="hit" x="14" y="244" width="872" height="25" tabindex="0" role="img" aria-label="T2, Chegada de uma rede de pizzarias ao bairro: 12 pontos, prioridade média" data-k="T2" data-q="Ameaça" data-v="12" data-i="4" data-n="3" data-p="média" data-x="616" data-y="244"/>
+        <rect class="hit" x="14" y="269" width="872" height="25" tabindex="0" role="img" aria-label="T3, Alta do preço do queijo e da farinha: 12 pontos, prioridade média" data-k="T3" data-q="Ameaça" data-v="12" data-i="3" data-n="4" data-p="média" data-x="616" data-y="269"/>
+        <rect class="hit" x="14" y="294" width="872" height="25" tabindex="0" role="img" aria-label="S4, Equipe estável: 9 pontos, prioridade média" data-k="S4" data-q="Força" data-v="9" data-i="3" data-n="3" data-p="média" data-x="562" data-y="294"/>
+        <rect class="hit" x="14" y="319" width="872" height="25" tabindex="0" role="img" aria-label="W3, Sem controle de custo por pizza: 9 pontos, prioridade média" data-k="W3" data-q="Fraqueza" data-v="9" data-i="3" data-n="3" data-p="média" data-x="562" data-y="319"/>
+        <rect class="hit" x="14" y="344" width="872" height="25" tabindex="0" role="img" aria-label="O2, Procura por opções vegetarianas e sem glúten: 9 pontos, prioridade média" data-k="O2" data-q="Oportunidade" data-v="9" data-i="3" data-n="3" data-p="média" data-x="562" data-y="344"/>
+        <rect class="hit" x="14" y="369" width="872" height="25" tabindex="0" role="img" aria-label="W4, Pouca presença nas redes sociais: 6 pontos, prioridade baixa" data-k="W4" data-q="Fraqueza" data-v="6" data-i="2" data-n="3" data-p="baixa" data-x="508" data-y="369"/>
+        <rect class="hit" x="14" y="394" width="872" height="25" tabindex="0" role="img" aria-label="O3, Empresas buscando fornecedores para eventos: 6 pontos, prioridade baixa" data-k="O3" data-q="Oportunidade" data-v="6" data-i="2" data-n="3" data-p="baixa" data-x="508" data-y="394"/>
+        <rect class="hit" x="14" y="419" width="872" height="25" tabindex="0" role="img" aria-label="T4, Obras na avenida principal: 4 pontos, prioridade baixa" data-k="T4" data-q="Ameaça" data-v="4" data-i="2" data-n="2" data-p="baixa" data-x="472" data-y="419"/>
+      </svg>
+    </div>
+    <div class="tip" id="bars-tip" hidden></div>
+    <figcaption><b>Figura 4.</b> Os 16 fatores do exemplo 1, em ordem de pontuação. Sete ficam na faixa de alta prioridade e seguem para o cruzamento. Passe o mouse sobre as barras para ver as notas.</figcaption>
+    <details class="data">
+      <summary>Ver os dados em tabela</summary>
+      <div class="tbl">
+        <table>
+          <thead><tr><th>Código</th><th>Fator</th><th>Impacto</th><th>Intensidade</th><th>Pontos</th><th>Prioridade</th></tr></thead>
+          <tbody>
+            <tr><td>S1</td><td>Receita própria, elogiada nas avaliações</td><td class="num">5</td><td class="num">4</td><td class="num">20</td><td>Alta</td></tr>
+            <tr><td>W1</td><td>Forno único, que limita a produção no pico</td><td class="num">5</td><td class="num">4</td><td class="num">20</td><td>Alta</td></tr>
+            <tr><td>W2</td><td>Dependência de um aplicativo para 70% dos pedidos</td><td class="num">4</td><td class="num">5</td><td class="num">20</td><td>Alta</td></tr>
+            <tr><td>O1</td><td>Novos condomínios em construção no bairro</td><td class="num">5</td><td class="num">4</td><td class="num">20</td><td>Alta</td></tr>
+            <tr><td>S2</td><td>Entrega própria, com 95% no prazo</td><td class="num">4</td><td class="num">4</td><td class="num">16</td><td>Alta</td></tr>
+            <tr><td>O4</td><td>Pedido por aplicativo de mensagens</td><td class="num">4</td><td class="num">4</td><td class="num">16</td><td>Alta</td></tr>
+            <tr><td>T1</td><td>Aumento da taxa cobrada pelo aplicativo</td><td class="num">4</td><td class="num">4</td><td class="num">16</td><td>Alta</td></tr>
+            <tr><td>S3</td><td>Clientela fiel no bairro</td><td class="num">4</td><td class="num">3</td><td class="num">12</td><td>Média</td></tr>
+            <tr><td>T2</td><td>Chegada de uma rede de pizzarias ao bairro</td><td class="num">4</td><td class="num">3</td><td class="num">12</td><td>Média</td></tr>
+            <tr><td>T3</td><td>Alta do preço do queijo e da farinha</td><td class="num">3</td><td class="num">4</td><td class="num">12</td><td>Média</td></tr>
+            <tr><td>S4</td><td>Equipe estável</td><td class="num">3</td><td class="num">3</td><td class="num">9</td><td>Média</td></tr>
+            <tr><td>W3</td><td>Sem controle de custo por pizza</td><td class="num">3</td><td class="num">3</td><td class="num">9</td><td>Média</td></tr>
+            <tr><td>O2</td><td>Procura por opções vegetarianas e sem glúten</td><td class="num">3</td><td class="num">3</td><td class="num">9</td><td>Média</td></tr>
+            <tr><td>W4</td><td>Pouca presença nas redes sociais</td><td class="num">2</td><td class="num">3</td><td class="num">6</td><td>Baixa</td></tr>
+            <tr><td>O3</td><td>Empresas buscando fornecedores para eventos</td><td class="num">2</td><td class="num">3</td><td class="num">6</td><td>Baixa</td></tr>
+            <tr><td>T4</td><td>Obras na avenida principal</td><td class="num">2</td><td class="num">2</td><td class="num">4</td><td>Baixa</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </details>
+  </figure>
+
+  <h3>Cruzar: a SWOT cruzada</h3>
+  <p>O cruzamento combina um fator interno com um fator externo e pergunta o que fazer diante do par. São quatro combinações, e cada uma leva a um tipo de estratégia. Em inglês, esse quadro é conhecido como matriz TOWS.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 370" role="img" aria-label="A SWOT cruzada. Forças com oportunidades geram estratégias de desenvolvimento. Fraquezas com oportunidades geram estratégias de crescimento. Forças com ameaças geram estratégias de manutenção. Fraquezas com ameaças geram estratégias de sobrevivência.">
+        <rect class="hd-s" x="210" y="20" width="330" height="50"/>
+        <text class="on" x="226" y="53" font-size="14"><tspan class="disp" font-size="24">S</tspan><tspan dx="10" class="b">Forças</tspan></text>
+        <rect class="hd-w" x="550" y="20" width="330" height="50"/>
+        <text class="on" x="566" y="53" font-size="14"><tspan class="disp" font-size="24">W</tspan><tspan dx="10" class="b">Fraquezas</tspan></text>
+        <rect class="hd-o" x="20" y="80" width="180" height="130"/>
+        <text class="disp on" x="36" y="118" font-size="24">O</text>
+        <text class="on b" x="36" y="142" font-size="14">Oportunidades</text>
+        <rect class="hd-t" x="20" y="220" width="180" height="130"/>
+        <text class="disp on" x="36" y="258" font-size="24">T</text>
+        <text class="on b" x="36" y="282" font-size="14">Ameaças</text>
+
+        <g>
+          <rect class="bx" x="210" y="80" width="330" height="130"/>
+          <text class="b mu" x="226" y="104" font-size="11">S × O</text>
+          <text class="b" x="226" y="127" font-size="15">Desenvolvimento</text>
+          <text x="226" y="149" font-size="12">Usar as forças para aproveitar</text>
+          <text x="226" y="165" font-size="12">as oportunidades.</text>
+          <text class="mu" x="226" y="193" font-size="11">S3 × O4: pedido por mensagem, com fidelidade</text>
+        </g>
+        <g>
+          <rect class="bx" x="550" y="80" width="330" height="130"/>
+          <text class="b mu" x="566" y="104" font-size="11">W × O</text>
+          <text class="b" x="566" y="127" font-size="15">Crescimento</text>
+          <text x="566" y="149" font-size="12">Corrigir as fraquezas para aproveitar</text>
+          <text x="566" y="165" font-size="12">as oportunidades.</text>
+          <text class="mu" x="566" y="193" font-size="11">W2 × O4: levar pedidos para o canal próprio</text>
+        </g>
+        <g>
+          <rect class="bx" x="210" y="220" width="330" height="130"/>
+          <text class="b mu" x="226" y="244" font-size="11">S × T</text>
+          <text class="b" x="226" y="267" font-size="15">Manutenção</text>
+          <text x="226" y="289" font-size="12">Usar as forças para reduzir</text>
+          <text x="226" y="305" font-size="12">o efeito das ameaças.</text>
+          <text class="mu" x="226" y="333" font-size="11">S2 × T2: divulgar a entrega no prazo</text>
+        </g>
+        <g>
+          <rect class="bx" x="550" y="220" width="330" height="130"/>
+          <text class="b mu" x="566" y="244" font-size="11">W × T</text>
+          <text class="b" x="566" y="267" font-size="15">Sobrevivência</text>
+          <text x="566" y="289" font-size="12">Reduzir as fraquezas e proteger-se</text>
+          <text x="566" y="305" font-size="12">das ameaças.</text>
+          <text class="mu" x="566" y="333" font-size="11">W3 × T3: ficha técnica e custo por pizza</text>
+        </g>
+      </svg>
+    </div>
+    <figcaption><b>Figura 5.</b> As quatro combinações da SWOT cruzada, com uma estratégia do exemplo 1 em cada célula. Os nomes das posturas variam entre os autores; a lógica das combinações é a mesma.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:16%">Cruzamento</th><th style="width:34%">Fatores combinados</th><th>Estratégia</th></tr></thead>
+      <tbody>
+        <tr><td><span class="k s">S</span><span class="k o">O</span> Desenvolvimento</td><td>S3 clientela fiel × O4 pedido por aplicativo de mensagens</td><td>Lançar o pedido por mensagem, com programa de fidelidade para os clientes do bairro.</td></tr>
+        <tr><td><span class="k s">S</span><span class="k o">O</span> Desenvolvimento</td><td>S1 receita elogiada × O1 novos condomínios</td><td>Fazer uma ação de boas-vindas nos novos condomínios, com degustação.</td></tr>
+        <tr><td><span class="k w">W</span><span class="k o">O</span> Crescimento</td><td>W2 dependência do aplicativo × O4 pedido por aplicativo de mensagens</td><td>Levar 30% dos pedidos do aplicativo para o canal próprio.</td></tr>
+        <tr><td><span class="k w">W</span><span class="k o">O</span> Crescimento</td><td>W1 forno único × O1 novos condomínios</td><td>Avaliar a compra do segundo forno antes da entrega dos condomínios.</td></tr>
+        <tr><td><span class="k s">S</span><span class="k t">T</span> Manutenção</td><td>S2 entrega no prazo × T2 rede concorrente</td><td>Divulgar a entrega no prazo como diferencial diante da rede.</td></tr>
+        <tr><td><span class="k w">W</span><span class="k t">T</span> Sobrevivência</td><td>W3 sem custo por pizza × T3 alta dos insumos</td><td>Implantar ficha técnica e custo por pizza, para reagir às altas de preço.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Ler a postura geral</h3>
+  <p>A soma dos pontos de cada quadrante indica a postura predominante. Se as forças superam as fraquezas e as oportunidades superam as ameaças, o momento é de desenvolvimento. No exemplo 1, as somas são 57 para forças, 55 para fraquezas, 51 para oportunidades e 44 para ameaças. A postura sugerida é de desenvolvimento, mas por margem pequena no ambiente interno: vale tratar as duas fraquezas de 20 pontos antes de acelerar.</p>
+  <p>A postura é uma leitura de apoio. Ela depende das notas dadas pelo grupo e não substitui a discussão sobre cada estratégia.</p>
+</section>
+
+<!-- ============================ MÓDULO 6 ============================ -->
+<section id="erros">
+  <p class="eyebrow">Módulo 6</p>
+  <h2>Erros comuns</h2>
+  <div class="errs">
+    <div><h4>Trocar interno por externo</h4><p>“Oportunidade: melhorar o atendimento.” “Ameaça: equipe desmotivada.”</p><p class="fix"><b>Correção:</b> o que a organização controla é força ou fraqueza. Oportunidade e ameaça vêm de fora.</p></div>
+    <div><h4>Escrever ações no lugar de fatores</h4><p>“Investir em marketing”, “contratar mais um entregador”.</p><p class="fix"><b>Correção:</b> o fator descreve a situação. A ação nasce depois, no cruzamento.</p></div>
+    <div><h4>Usar fatores vagos</h4><p>“Boa equipe”, “crise”, “concorrência”.</p><p class="fix"><b>Correção:</b> escreva o fato, com número se houver. “Rotatividade de 35% ao ano” pode ser verificada.</p></div>
+    <div><h4>Analisar sem objetivo</h4><p>A matriz tenta descrever tudo, e cada pessoa julga os fatores por um critério diferente.</p><p class="fix"><b>Correção:</b> defina objeto, objetivo e horizonte antes de levantar os fatores.</p></div>
+    <div><h4>Fazer listas longas, sem prioridade</h4><p>Vinte itens por quadrante, todos com o mesmo peso.</p><p class="fix"><b>Correção:</b> enxugue para 3 a 8 por quadrante e pontue impacto e intensidade.</p></div>
+    <div><h4>Parar no diagnóstico</h4><p>A matriz fica bonita, vai para a apresentação, e nada muda.</p><p class="fix"><b>Correção:</b> cruze os fatores prioritários e leve cada estratégia a um plano de ação.</p></div>
+    <div><h4>Ouvir só a direção</h4><p>A análise reflete a visão de poucas pessoas, e as fraquezas somem.</p><p class="fix"><b>Correção:</b> reúna áreas e níveis diferentes. Use dados para confirmar as percepções.</p></div>
+    <div><h4>Tratar a matriz como fotografia</h4><p>A SWOT é feita uma vez e guardada, enquanto o ambiente muda.</p><p class="fix"><b>Correção:</b> marque a revisão. No mínimo, uma vez por ano e a cada mudança relevante.</p></div>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 7 ============================ -->
+<section id="ferramentas">
+  <p class="eyebrow">Módulo 7</p>
+  <h2>SWOT e outras ferramentas</h2>
+  <p>A SWOT é um quadro de síntese. Ela não levanta os fatos sozinha: recebe o que outras análises produzem e entrega o material para as decisões seguintes.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 320" role="img" aria-label="Fluxo de informações da SWOT. Indicadores de desempenho, auditorias e reclamações e a análise de recursos alimentam forças e fraquezas. A análise PESTEL, as cinco forças de Porter e a análise de partes interessadas alimentam oportunidades e ameaças. A matriz alimenta a SWOT cruzada, que gera objetivos, riscos e oportunidades e planos de ação.">
+        <defs>
+          <marker id="a6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker>
+        </defs>
+        <text class="mono mu" x="20" y="18" font-size="10">FONTES INTERNAS</text>
+        <g font-size="12">
+          <rect class="bx" x="20" y="26" width="196" height="34"/><text x="32" y="47.5">Indicadores de desempenho</text>
+          <rect class="bx" x="20" y="68" width="196" height="34"/><text x="32" y="89.5">Auditorias e reclamações</text>
+          <rect class="bx" x="20" y="110" width="196" height="34"/><text x="32" y="131.5">Recursos e competências</text>
+        </g>
+        <text class="mono mu" x="20" y="174" font-size="10">FONTES EXTERNAS</text>
+        <g font-size="12">
+          <rect class="bx" x="20" y="182" width="196" height="34"/><text x="32" y="203.5">Análise PESTEL</text>
+          <rect class="bx" x="20" y="224" width="196" height="34"/><text x="32" y="245.5">5 forças de Porter</text>
+          <rect class="bx" x="20" y="266" width="196" height="34"/><text x="32" y="287.5">Partes interessadas</text>
+        </g>
+
+        <path class="ln" d="M218 85 H270 V117 H326" marker-end="url(#a6)"/>
+        <path class="ln" d="M218 241 H270 V209 H326" marker-end="url(#a6)"/>
+
+        <rect class="hd-s gap2" x="330" y="72" width="92" height="90"/>
+        <rect class="hd-w gap2" x="422" y="72" width="92" height="90"/>
+        <rect class="hd-o gap2" x="330" y="162" width="92" height="90"/>
+        <rect class="hd-t gap2" x="422" y="162" width="92" height="90"/>
+        <g class="disp on" font-size="34" text-anchor="middle">
+          <text class="disp on" x="376" y="129">S</text><text class="disp on" x="468" y="129">W</text>
+          <text class="disp on" x="376" y="219">O</text><text class="disp on" x="468" y="219">T</text>
+        </g>
+        <text class="mu" x="422" y="60" font-size="11.5" text-anchor="middle">matriz SWOT</text>
+
+        <line class="ln" x1="516" y1="162" x2="574" y2="162" marker-end="url(#a6)"/>
+        <rect class="bx-ink" x="578" y="136" width="130" height="52"/>
+        <text class="b t-ground" x="643" y="158" font-size="12.5" text-anchor="middle">SWOT</text>
+        <text class="b t-ground" x="643" y="175" font-size="12.5" text-anchor="middle">cruzada</text>
+
+        <path class="ln" d="M710 162 H736 V78 H762" marker-end="url(#a6)"/>
+        <line class="ln" x1="736" y1="162" x2="762" y2="162" marker-end="url(#a6)"/>
+        <path class="ln" d="M736 162 V246 H762" marker-end="url(#a6)"/>
+        <g font-size="12">
+          <rect class="bx" x="766" y="56" width="120" height="44"/><text x="778" y="82.5">Objetivos</text>
+          <rect class="bx" x="766" y="140" width="120" height="44"/><text x="778" y="159">Riscos e</text><text x="778" y="174">oportunidades</text>
+          <rect class="bx" x="766" y="224" width="120" height="44"/><text x="778" y="250.5">Planos de ação</text>
+        </g>
+      </svg>
+    </div>
+    <figcaption><b>Figura 6.</b> O que entra e o que sai da SWOT. Quanto melhores as fontes, menos a matriz depende da opinião de quem está na sala.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:22%">Ferramenta</th><th style="width:30%">Pergunta que responde</th><th style="width:22%">Relação com a SWOT</th><th>Melhor momento</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Análise PESTEL</strong></td><td>O que muda no ambiente político, econômico, social, tecnológico, ambiental e legal?</td><td>Alimenta oportunidades e ameaças</td><td>Antes da SWOT</td></tr>
+        <tr><td><strong>5 forças de Porter</strong></td><td>Quem disputa o resultado do setor: concorrentes, clientes, fornecedores, novos entrantes e substitutos?</td><td>Alimenta oportunidades e ameaças</td><td>Antes da SWOT</td></tr>
+        <tr><td><strong>Análise de partes interessadas</strong></td><td>Quem afeta ou é afetado pela organização, e o que espera dela?</td><td>Alimenta os quatro quadrantes</td><td>Antes da SWOT</td></tr>
+        <tr><td><strong>SWOT cruzada</strong></td><td>O que fazer diante de cada combinação de fatores?</td><td>Continuação direta</td><td>Logo depois da matriz</td></tr>
+        <tr><td><strong>Matriz de riscos</strong></td><td>Qual é a probabilidade e a consequência de cada evento?</td><td>Aprofunda ameaças e fraquezas</td><td>Depois da SWOT</td></tr>
+        <tr><td><strong>Matriz GUT</strong></td><td>Qual problema tratar primeiro, por gravidade, urgência e tendência?</td><td>Alternativa para priorizar</td><td>Depois da SWOT</td></tr>
+        <tr><td><strong>Balanced Scorecard</strong></td><td>Como traduzir a estratégia em objetivos e indicadores?</td><td>Recebe as estratégias</td><td>Depois do cruzamento</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Na série de estudos, as três ferramentas trabalham em sequência. A SWOT aponta uma fraqueza prioritária, o <a href="../SIPOC/treinamento-sipoc.html">SIPOC</a> delimita o processo em que ela aparece, e o <a href="../PDCA/treinamento-pdca.html">PDCA</a> conduz a melhoria até o resultado.</p>
+</section>
+
+<!-- ============================ MÓDULO 8 ============================ -->
+<section id="iso">
+  <p class="eyebrow">Módulo 8</p>
+  <h2>SWOT nas normas ISO</h2>
+  <p>A ISO 9001:2015 pede, no requisito 4.1, que a organização determine as questões externas e internas pertinentes ao seu propósito e ao seu direcionamento estratégico, e que monitore e analise criticamente as informações sobre elas. A norma não cita a SWOT nem exige um método. A matriz é uma das formas mais usadas de atender ao requisito, porque separa exatamente o que ele pede: o interno do externo, o favorável do desfavorável.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 260" role="img" aria-label="Ligação entre os requisitos da ISO 9001:2015. O contexto da organização, requisito 4.1, e as partes interessadas, requisito 4.2, alimentam os riscos e oportunidades, requisito 6.1, que alimentam os objetivos da qualidade, requisito 6.2. A análise crítica pela direção, requisito 9.3, avalia as mudanças nas questões internas e externas, que voltam à análise de contexto. A SWOT organiza as entradas dos requisitos 4.1 e 4.2.">
+        <defs>
+          <marker id="a7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker>
+          <marker id="a7m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah-mu" d="M0 0 L10 5 L0 10 z"/></marker>
+        </defs>
+        <rect class="bx-out" x="10" y="26" width="232" height="164"/>
+        <text class="mu" x="126" y="18" font-size="11.5" text-anchor="middle">onde a SWOT organiza as entradas</text>
+
+        <rect class="bx" x="22" y="40" width="208" height="62"/>
+        <text class="b" x="34" y="64" font-size="12.5">4.1 Contexto da organização</text>
+        <text class="mu" x="34" y="84" font-size="11">Questões internas e externas</text>
+        <rect class="bx" x="22" y="116" width="208" height="62"/>
+        <text class="b" x="34" y="140" font-size="12.5">4.2 Partes interessadas</text>
+        <text class="mu" x="34" y="160" font-size="11">Necessidades e expectativas</text>
+
+        <path class="ln" d="M232 71 H256 V109 H282" marker-end="url(#a7)"/>
+        <path class="ln" d="M232 147 H256 V109"/>
+
+        <rect class="bx" x="286" y="78" width="176" height="62"/>
+        <text class="b" x="298" y="102" font-size="12.5">6.1 Riscos e oportunidades</text>
+        <text class="mu" x="298" y="122" font-size="11">Ações para abordá-los</text>
+        <line class="ln" x1="464" y1="109" x2="494" y2="109" marker-end="url(#a7)"/>
+
+        <rect class="bx" x="498" y="78" width="176" height="62"/>
+        <text class="b" x="510" y="102" font-size="12.5">6.2 Objetivos da qualidade</text>
+        <text class="mu" x="510" y="122" font-size="11">E planos para alcançá-los</text>
+        <line class="ln" x1="676" y1="109" x2="706" y2="109" marker-end="url(#a7)"/>
+
+        <rect class="bx" x="710" y="78" width="176" height="62"/>
+        <text class="b" x="722" y="102" font-size="12.5">9.3 Análise crítica</text>
+        <text class="mu" x="722" y="122" font-size="11">Avalia o que mudou</text>
+
+        <path class="ln-mu dash" d="M798 142 V222 H126 V196" marker-end="url(#a7m)"/>
+        <text class="mu" x="462" y="242" font-size="11.5" text-anchor="middle">mudanças nas questões internas e externas voltam à análise de contexto</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 7.</b> O caminho do contexto dentro da ISO 9001:2015. A SWOT organiza o que entra pelos requisitos 4.1 e 4.2. O retorno tracejado é o que mantém a análise viva.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:20%">Requisito</th><th style="width:28%">O que a norma pede, em resumo</th><th style="width:24%">Como a SWOT ajuda</th><th>Evidências que o auditor procura</th></tr></thead>
+      <tbody>
+        <tr><td><strong>4.1</strong> Contexto da organização</td><td>Determinar, monitorar e analisar criticamente as questões externas e internas pertinentes.</td><td>Forças e fraquezas são as questões internas; oportunidades e ameaças, as externas.</td><td>Análise com data, participantes e fontes. Coerência com o que se vê na organização.</td></tr>
+        <tr><td><strong>4.2</strong> Partes interessadas</td><td>Determinar as partes interessadas pertinentes e os seus requisitos.</td><td>As expectativas das partes interessadas alimentam oportunidades e ameaças.</td><td>Lista de partes interessadas e de requisitos, acompanhada ao longo do tempo.</td></tr>
+        <tr><td><strong>6.1</strong> Riscos e oportunidades</td><td>Considerar o contexto e as partes interessadas, determinar riscos e oportunidades e planejar ações.</td><td>Os fatores prioritários viram riscos e oportunidades. A SWOT cruzada gera as ações.</td><td>Ações ligadas aos fatores, integradas aos processos, com avaliação de eficácia.</td></tr>
+        <tr><td><strong>6.2</strong> Objetivos da qualidade</td><td>Estabelecer objetivos mensuráveis e planejar como alcançá-los.</td><td>As estratégias escolhidas dão origem aos objetivos.</td><td>Objetivos coerentes com o contexto, com responsável, prazo e recursos.</td></tr>
+        <tr><td><strong>9.3</strong> Análise crítica pela direção</td><td>Considerar as mudanças em questões externas e internas pertinentes ao sistema de gestão.</td><td>A matriz revista mostra o que entrou, o que saiu e o que mudou de peso.</td><td>Registro da discussão das mudanças e das decisões tomadas.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Três sentidos para a mesma palavra</h3>
+  <p>A palavra “oportunidade” aparece com significados diferentes, e a confusão costuma chegar aos relatórios.</p>
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:26%">Expressão</th><th style="width:22%">Onde aparece</th><th>O que significa</th></tr></thead>
+      <tbody>
+        <tr><td>Oportunidade</td><td>Matriz SWOT</td><td>Fato ou tendência do ambiente externo que pode favorecer o objetivo.</td></tr>
+        <tr><td>Riscos e oportunidades</td><td>ISO 9001:2015, requisito 6.1</td><td>Situações, internas ou externas, que podem afastar ou aproximar a organização dos resultados pretendidos.</td></tr>
+        <tr><td>Oportunidade de melhoria</td><td>Relatório de auditoria</td><td>Observação do auditor sobre algo que atende ao requisito, mas pode ser aprimorado.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Na prática, os quatro quadrantes alimentam o requisito 6.1. Uma fraqueza prioritária pode gerar um risco, e uma força pode abrir uma oportunidade, mesmo sendo internas.</p>
+
+  <h3>O que o auditor observa</h3>
+  <div class="pair">
+    <div class="box">
+      <h4>Sinais de análise viva</h4>
+      <ul>
+        <li>Fatores específicos, que só fazem sentido para aquela organização.</li>
+        <li>Data de revisão recente e mudanças visíveis entre as versões.</li>
+        <li>Riscos, oportunidades e objetivos que citam os fatores da matriz.</li>
+        <li>Pessoas de áreas diferentes que conhecem a análise e participaram dela.</li>
+        <li>Mudanças de contexto discutidas na análise crítica pela direção.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h4>Sinais de análise de gaveta</h4>
+      <ul>
+        <li>Fatores genéricos, que serviriam para qualquer empresa.</li>
+        <li>A mesma matriz há anos, sem nenhuma alteração.</li>
+        <li>Riscos e oportunidades sem relação com o contexto descrito.</li>
+        <li>Análise feita por uma pessoa só, desconhecida pela liderança.</li>
+        <li>Fatos relevantes, como a perda de um grande cliente, ausentes da matriz.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="note">
+    <h4>Pontos de atenção</h4>
+    <p>O requisito 4.1 não exige informação documentada, mas a organização precisa demonstrar que determinou e acompanha o seu contexto. Uma matriz datada e revisada é uma evidência simples de apresentar.</p>
+    <p>A emenda de 2024 à ISO 9001:2015 acrescentou ao requisito 4.1 a determinação de que a organização avalie se a mudança climática é uma questão pertinente. O mesmo texto entrou nas outras normas de sistemas de gestão, como a ISO 14001 e a ISO 45001.</p>
+    <p>Este módulo usa a numeração da ISO 9001:2015. Confira sempre a edição vigente da norma antes de citar um requisito em relatório.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 9 ============================ -->
+<section id="oficina">
+  <p class="eyebrow">Módulo 9</p>
+  <h2>Como conduzir a oficina</h2>
+  <p>Uma boa SWOT sai de uma reunião de trabalho, com visões diferentes na sala. Reserve duas horas e convide de 6 a 10 pessoas, de áreas e níveis variados. Envie antes o objetivo da análise e peça que cada pessoa traga dados da sua área.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 136" role="img" aria-label="Distribuição dos 120 minutos da oficina: 10 para o objetivo, 25 para oportunidades e ameaças, 25 para forças e fraquezas, 20 para a priorização, 25 para a SWOT cruzada e 15 para os próximos passos.">
+        <g font-size="11.5" text-anchor="middle">
+          <rect class="bx" x="60" y="24" width="65" height="56"/><text x="92.5" y="56">Objetivo</text>
+          <rect class="hd-o gap2" x="125" y="24" width="81.25" height="56"/>
+          <rect class="hd-t gap2" x="206.25" y="24" width="81.25" height="56"/>
+          <text class="on b" x="165.6" y="49">Oportu-</text><text class="on b" x="165.6" y="64">nidades</text>
+          <text class="on b" x="246.9" y="56">Ameaças</text>
+          <rect class="hd-s gap2" x="287.5" y="24" width="81.25" height="56"/>
+          <rect class="hd-w gap2" x="368.75" y="24" width="81.25" height="56"/>
+          <text class="on b" x="328.1" y="56">Forças</text>
+          <text class="on b" x="409.4" y="56">Fraquezas</text>
+          <rect class="bx" x="450" y="24" width="130" height="56"/><text x="515" y="56">Priorização</text>
+          <rect class="bx" x="580" y="24" width="162.5" height="56"/><text x="661.25" y="56">SWOT cruzada</text>
+          <rect class="bx" x="742.5" y="24" width="97.5" height="56"/><text x="791.25" y="49">Próximos</text><text x="791.25" y="64">passos</text>
+        </g>
+        <g class="ln-mu" stroke-width="1">
+          <line x1="60" y1="82" x2="60" y2="94"/><line x1="125" y1="82" x2="125" y2="94"/><line x1="287.5" y1="82" x2="287.5" y2="94"/>
+          <line x1="450" y1="82" x2="450" y2="94"/><line x1="580" y1="82" x2="580" y2="94"/><line x1="742.5" y1="82" x2="742.5" y2="94"/>
+          <line x1="840" y1="82" x2="840" y2="94"/>
+        </g>
+        <g class="mono" font-size="10.5" text-anchor="middle">
+          <text class="mu" x="60" y="112">0</text><text class="mu" x="125" y="112">10</text><text class="mu" x="287.5" y="112">35</text>
+          <text class="mu" x="450" y="112">60</text><text class="mu" x="580" y="112">80</text><text class="mu" x="742.5" y="112">105</text>
+          <text class="mu" x="840" y="112">120 min</text>
+        </g>
+      </svg>
+    </div>
+    <figcaption><b>Figura 8.</b> Roteiro de 120 minutos, desenhado em escala. A primeira hora é dedicada ao objetivo e ao levantamento dos fatores, e o ambiente externo vem primeiro.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:14%">Minutos</th><th style="width:24%">Bloco</th><th>O que fazer</th><th style="width:24%">Resultado</th></tr></thead>
+      <tbody>
+        <tr><td class="num">0 a 10</td><td>Objetivo</td><td>Combinar o objeto, o objetivo, o horizonte e o que fica de fora.</td><td>Cabeçalho preenchido</td></tr>
+        <tr><td class="num">10 a 35</td><td>Oportunidades e ameaças</td><td>Cada pessoa escreve fatores em notas adesivas, em silêncio. O grupo lê, agrupa e classifica.</td><td>Quadrantes O e T</td></tr>
+        <tr><td class="num">35 a 60</td><td>Forças e fraquezas</td><td>Mesma dinâmica, com os dados que cada área trouxe.</td><td>Quadrantes S e W</td></tr>
+        <tr><td class="num">60 a 80</td><td>Priorização</td><td>Combinar o significado das notas e pontuar impacto e intensidade de cada fator.</td><td>Fatores em ordem de prioridade</td></tr>
+        <tr><td class="num">80 a 105</td><td>SWOT cruzada</td><td>Combinar os fatores de alta prioridade e escrever as estratégias.</td><td>Lista de estratégias</td></tr>
+        <tr><td class="num">105 a 120</td><td>Próximos passos</td><td>Escolher as estratégias que seguem, definir responsáveis e marcar a revisão.</td><td>Plano de ação inicial</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Checklist de validação</h3>
+  <p>Marque os itens conforme revisa a sua matriz. As marcações ficam salvas neste navegador.</p>
+  <ol class="check" id="checklist">
+    <li><label><input type="checkbox" id="ck-1"><span>O objeto, o objetivo e o horizonte da análise estão definidos.</span></label></li>
+    <li><label><input type="checkbox" id="ck-2"><span>Participaram pessoas de áreas e níveis diferentes.</span></label></li>
+    <li><label><input type="checkbox" id="ck-3"><span>Cada fator é um fato ou uma tendência que pode ser verificada.</span></label></li>
+    <li><label><input type="checkbox" id="ck-4"><span>Forças e fraquezas são internas: a organização controla.</span></label></li>
+    <li><label><input type="checkbox" id="ck-5"><span>Oportunidades e ameaças são externas: existiriam sem a organização.</span></label></li>
+    <li><label><input type="checkbox" id="ck-6"><span>Nenhum fator é uma ação ou uma solução disfarçada.</span></label></li>
+    <li><label><input type="checkbox" id="ck-7"><span>Cada quadrante tem de 3 a 8 fatores.</span></label></li>
+    <li><label><input type="checkbox" id="ck-8"><span>Os fatores foram pontuados pelo grupo, com critérios combinados antes.</span></label></li>
+    <li><label><input type="checkbox" id="ck-9"><span>Os fatores de alta prioridade foram cruzados em estratégias.</span></label></li>
+    <li><label><input type="checkbox" id="ck-10"><span>Cada estratégia escolhida virou ação, com responsável, prazo e indicador.</span></label></li>
+    <li><label><input type="checkbox" id="ck-11"><span>As expectativas das partes interessadas foram consideradas.</span></label></li>
+    <li><label><input type="checkbox" id="ck-12"><span>A data da próxima revisão está marcada.</span></label></li>
+  </ol>
+  <div class="bar"><span><b id="ck-count">0</b> de 12 itens marcados</span><button class="btn" id="ck-reset" type="button">Limpar marcações</button></div>
+</section>
+
+<!-- ============================ MÓDULO 10 ============================ -->
+<section id="pratique">
+  <p class="eyebrow">Módulo 10</p>
+  <h2>Pratique</h2>
+  <h3>Exercício 1. Em qual quadrante vai cada fator?</h3>
+  <p>Uma escola de idiomas de bairro quer aumentar em 15% o número de alunos nos próximos 12 meses. Escolha o quadrante de cada fator.</p>
+  <div class="quiz" id="quiz"></div>
+  <div class="bar"><span>Acertos: <b id="qz-score">0</b> de <b id="qz-total">10</b></span><span>Respondidos: <b id="qz-done">0</b></span><button class="btn" id="qz-reset" type="button">Recomeçar</button></div>
+
+  <h3>Exercício 2. Monte a sua matriz</h3>
+  <p>Escolha uma organização, uma área ou um projeto que você conhece bem. Abra a aba SWOT da planilha de apoio e siga o roteiro.</p>
+  <ol>
+    <li>Escreva o objeto, o objetivo e o horizonte da análise.</li>
+    <li>Liste pelo menos três oportunidades e três ameaças. Aplique o teste da organização que fechou as portas.</li>
+    <li>Liste pelo menos três forças e três fraquezas, cada uma com um fato que a sustente.</li>
+    <li>Dê as notas de impacto e de intensidade. Veja a ordem dos fatores na aba Priorização.</li>
+    <li>Na aba SWOT cruzada, combine os fatores de alta prioridade e escreva ao menos uma estratégia de cada tipo.</li>
+    <li>Leve duas estratégias para a aba Plano de ação, com responsável, prazo e indicador.</li>
+    <li>Passe o checklist do módulo 9.</li>
+  </ol>
+  <p>Depois, mostre o resultado a alguém de outra área. Os fatores que essa pessoa acrescentar ou mudar de quadrante são a parte mais valiosa do exercício.</p>
+</section>
+
+<!-- ============================ MÓDULO 11 ============================ -->
+<section id="planilha">
+  <p class="eyebrow">Módulo 11</p>
+  <h2>A planilha de apoio</h2>
+  <p>Este treinamento acompanha o arquivo <a id="xlsx-ref" href="SWOT-modelo.xlsx">SWOT-modelo.xlsx</a>, que fica na mesma pasta. As células em amarelo-claro são para preenchimento. As células cinza são calculadas.</p>
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Aba</th><th>Para que serve</th><th style="width:36%">O que ela calcula</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Instruções</strong></td><td>Legenda de cores, escala das notas, ordem de preenchimento e regras do modelo.</td><td>Nada. É só leitura.</td></tr>
+        <tr><td><strong>SWOT</strong></td><td>Cabeçalho da análise e os quatro quadrantes, com 8 linhas cada e notas de impacto e intensidade.</td><td>Pontos de cada fator, totais por quadrante, avisos e postura estratégica sugerida.</td></tr>
+        <tr><td><strong>Priorização</strong></td><td>Os fatores da aba SWOT em ordem de pontuação, com gráfico dos pontos por quadrante.</td><td>Posição, faixa de prioridade e participação de cada quadrante no total.</td></tr>
+        <tr><td><strong>SWOT cruzada</strong></td><td>Estratégias que combinam um fator interno com um fator externo.</td><td>Puxa o texto dos fatores pelo código, identifica o tipo de cruzamento e conta as estratégias.</td></tr>
+        <tr><td><strong>Plano de ação</strong></td><td>Ações de cada estratégia, com responsável, prazo, indicador e status.</td><td>Situação de cada ação, contagem por status e ações atrasadas.</td></tr>
+        <tr><td><strong>Checklist</strong></td><td>Os mesmos 12 itens do módulo 9, com status Sim, Parcial ou Não.</td><td>Percentual atendido e situação da validação.</td></tr>
+        <tr><td><strong>Exemplo 1 e Exemplo 2</strong></td><td>As matrizes da pizzaria e de Suprimentos, preenchidas, com as estratégias do cruzamento.</td><td>Os mesmos resumos da aba SWOT.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ GLOSSÁRIO ============================ -->
+<section id="glossario">
+  <p class="eyebrow">Referência</p>
+  <h2>Glossário</h2>
+  <dl class="gloss">
+    <div><dt>5 forças de Porter</dt><dd>Modelo de análise da concorrência em um setor: rivais, clientes, fornecedores, novos entrantes e substitutos.</dd></div>
+    <div><dt>Ambiente externo</dt><dd>Tudo o que afeta a organização e não é controlado por ela: mercado, legislação, economia, tecnologia.</dd></div>
+    <div><dt>Ambiente interno</dt><dd>O que a organização controla: pessoas, processos, recursos, produtos e cultura.</dd></div>
+    <div><dt>Ameaça</dt><dd>Fato ou tendência do ambiente externo que pode prejudicar o objetivo.</dd></div>
+    <div><dt>Contexto da organização</dt><dd>Conjunto de questões internas e externas que afetam a capacidade da organização de alcançar os seus resultados.</dd></div>
+    <div><dt>Fator</dt><dd>Cada item da matriz. Descreve uma situação, e não uma ação.</dd></div>
+    <div><dt>FOFA</dt><dd>Nome da SWOT em português: forças, oportunidades, fraquezas e ameaças.</dd></div>
+    <div><dt>Força</dt><dd>Característica interna que favorece o objetivo.</dd></div>
+    <div><dt>Fraqueza</dt><dd>Característica interna que dificulta o objetivo.</dd></div>
+    <div><dt>Oportunidade</dt><dd>Fato ou tendência do ambiente externo que pode favorecer o objetivo.</dd></div>
+    <div><dt>Partes interessadas</dt><dd>Pessoas ou organizações que afetam ou são afetadas pelas decisões: clientes, colaboradores, fornecedores, órgãos reguladores, comunidade.</dd></div>
+    <div><dt>PESTEL</dt><dd>Roteiro de análise do ambiente externo por seis dimensões: política, econômica, social, tecnológica, ambiental e legal.</dd></div>
+    <div><dt>Postura estratégica</dt><dd>Orientação geral sugerida pelo peso dos quadrantes: desenvolvimento, crescimento, manutenção ou sobrevivência.</dd></div>
+    <div><dt>SWOT cruzada</dt><dd>Quadro que combina fatores internos e externos para gerar estratégias. Em inglês, matriz TOWS.</dd></div>
+  </dl>
+</section>
+
+</main>
+</div>
+
+<footer>Material de estudo. Os exemplos, notas e pontuações são ilustrativos e foram criados para fins didáticos. As referências às normas ISO são resumos para estudo e não substituem o texto das normas.</footer>
+</div>
+
+<script>
+(function () {
+  function read(key) { try { return JSON.parse(localStorage.getItem(key) || 'null'); } catch (e) { return null; } }
+  function write(key, val) { try { localStorage.setItem(key, JSON.stringify(val)); } catch (e) {} }
+
+  /* ---------- Checklist ---------- */
+  var boxes = Array.prototype.slice.call(document.querySelectorAll('#checklist input'));
+  var count = document.getElementById('ck-count');
+  var saved = read('swot-checklist') || {};
+  function refreshChecks() {
+    var n = 0, state = {};
+    boxes.forEach(function (b) { if (b.checked) { n++; } state[b.id] = b.checked; });
+    count.textContent = n;
+    return state;
+  }
+  boxes.forEach(function (b) {
+    if (saved[b.id]) { b.checked = true; }
+    b.addEventListener('change', function () { write('swot-checklist', refreshChecks()); });
+  });
+  refreshChecks();
+  document.getElementById('ck-reset').addEventListener('click', function () {
+    boxes.forEach(function (b) { b.checked = false; });
+    write('swot-checklist', refreshChecks());
+  });
+
+  /* ---------- Exercício ---------- */
+  var NAMES = { S: 'Forças', W: 'Fraquezas', O: 'Oportunidades', T: 'Ameaças' };
+  var ITEMS = [
+    { t: 'Professores com certificação internacional', a: 'S', w: 'É uma característica da escola e favorece a captação de alunos.' },
+    { t: 'Abertura de um polo empresarial a duas quadras da escola', a: 'O', w: 'Acontece fora da escola e pode trazer novos alunos.' },
+    { t: 'Aplicativos gratuitos de ensino de idiomas', a: 'T', w: 'São uma alternativa externa, que disputa o mesmo aluno.' },
+    { t: 'Salas sem isolamento acústico', a: 'W', w: 'É uma condição da escola, que ela pode mudar.' },
+    { t: 'Material didático próprio, atualizado todo ano', a: 'S', w: 'Foi construído pela escola e a diferencia.' },
+    { t: 'Queda da renda das famílias da região', a: 'T', w: 'A escola não controla a economia da região.' },
+    { t: 'Matrícula feita só presencialmente, em horário comercial', a: 'W', w: 'É uma regra interna, que dificulta a entrada de novos alunos.' },
+    { t: 'Empresas da região passam a exigir inglês nas contratações', a: 'O', w: 'É uma tendência do mercado, que aumenta a procura.' },
+    { t: 'Poucos seguidores nas redes sociais da escola', a: 'W', w: 'As redes são da escola. O resultado depende do que ela faz.' },
+    { t: 'Nova unidade de uma rede concorrente no mesmo bairro', a: 'T', w: 'A decisão foi do concorrente. A escola só controla a própria reação.' }
+  ];
+  var quiz = document.getElementById('quiz');
+  var score = document.getElementById('qz-score');
+  var done = document.getElementById('qz-done');
+  document.getElementById('qz-total').textContent = ITEMS.length;
+  var hits = 0, answered = 0;
+
+  function render() {
+    hits = 0; answered = 0; score.textContent = 0; done.textContent = 0;
+    quiz.textContent = '';
+    ITEMS.forEach(function (item, idx) {
+      var row = document.createElement('div'); row.className = 'q';
+      var p = document.createElement('p'); p.textContent = (idx + 1) + '. ' + item.t;
+      var opts = document.createElement('div'); opts.className = 'opts';
+      opts.setAttribute('role', 'group'); opts.setAttribute('aria-label', 'Quadrante do item ' + (idx + 1));
+      var why = document.createElement('p'); why.className = 'why'; why.hidden = true;
+      ['S', 'W', 'O', 'T'].forEach(function (k) {
+        var b = document.createElement('button');
+        b.type = 'button'; b.textContent = k; b.id = 'qz-' + idx + '-' + k;
+        b.setAttribute('aria-label', NAMES[k]);
+        b.addEventListener('click', function () {
+          var ok = k === item.a;
+          Array.prototype.forEach.call(opts.children, function (o) {
+            o.disabled = true;
+            if (o.textContent === item.a) { o.className = 'right'; }
+          });
+          if (!ok) { b.className = 'wrong'; }
+          var lead = document.createElement('b');
+          lead.textContent = (ok ? 'Certo. ' : 'A resposta é ' + item.a + ', ' + NAMES[item.a] + '. ');
+          why.textContent = ''; why.appendChild(lead); why.appendChild(document.createTextNode(item.w));
+          why.className = 'why ' + (ok ? 'ok' : 'no'); why.hidden = false;
+          answered++; if (ok) { hits++; }
+          score.textContent = hits; done.textContent = answered;
+        });
+        opts.appendChild(b);
+      });
+      row.appendChild(p); row.appendChild(opts); row.appendChild(why);
+      quiz.appendChild(row);
+    });
+  }
+  render();
+  document.getElementById('qz-reset').addEventListener('click', render);
+
+  /* ---------- Gráfico: leitura dos valores ---------- */
+  var fig = document.getElementById('fig-bars');
+  var tip = document.getElementById('bars-tip');
+  var rows = document.querySelectorAll('#bars .hit');
+  function hide() {
+    tip.hidden = true;
+    Array.prototype.forEach.call(document.querySelectorAll('#bars .bar'), function (b) { b.removeAttribute('opacity'); });
+  }
+  Array.prototype.forEach.call(rows, function (r) {
+    function show() {
+      var d = r.dataset;
+      Array.prototype.forEach.call(document.querySelectorAll('#bars .bar'), function (b) {
+        b.setAttribute('opacity', b.getAttribute('data-k') === d.k ? '1' : '.45');
+      });
+      tip.textContent = '';
+      var strong = document.createElement('b'); strong.textContent = d.v + ' pontos';
+      tip.appendChild(strong);
+      tip.appendChild(document.createTextNode(d.k + ' · ' + d.q + ' · prioridade ' + d.p));
+      tip.appendChild(document.createElement('br'));
+      tip.appendChild(document.createTextNode('Impacto ' + d.i + ' × intensidade ' + d.n));
+      var box = fig.getBoundingClientRect(), rb = r.getBoundingClientRect();
+      var svg = document.getElementById('bars');
+      var pt = svg.createSVGPoint(); pt.x = parseFloat(d.x); pt.y = parseFloat(d.y);
+      var scr = pt.matrixTransform(svg.getScreenCTM());
+      tip.style.left = Math.min(Math.max(scr.x - box.left, 110), box.width - 110) + 'px';
+      tip.style.top = (rb.top - box.top + 4) + 'px';
+      tip.hidden = false;
+    }
+    r.addEventListener('pointerenter', show);
+    r.addEventListener('focus', show);
+    r.addEventListener('pointerleave', hide);
+    r.addEventListener('blur', hide);
+  });
+})();
+</script>
+</body>
+</html>

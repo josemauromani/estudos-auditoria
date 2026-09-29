@@ -1,0 +1,1330 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Diagrama de Ishikawa na prática</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<style>
+:root{
+  --ground:#F3F6F7; --surface:#FFFFFF; --sunk:#E9EEF0; --ink:#16242E; --muted:#566672; --rule:#D3DBE0;
+  --accent:#2B5C8A;
+  --m:#2B5C8A; --m-tint:#DCE8F3;
+  --on-hue:#FFFFFF;
+  --good:#1F7A4D; --good-tint:#DDF1E5;
+  --bad:#B0413E; --bad-tint:#F5DEDC;
+  --display:"Barlow Semi Condensed","Arial Narrow",Arial,sans-serif;
+  --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --ground:#0F171C; --surface:#172229; --sunk:#1E2B33; --ink:#E4EAED; --muted:#9BABB6; --rule:#2B3A44;
+    --accent:#86B7E3;
+    --m:#86B7E3; --m-tint:#1B2F42;
+    --on-hue:#0F171C;
+    --good:#6FCF9B; --good-tint:#163326;
+    --bad:#EC8E89; --bad-tint:#3D1F1E;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --ground:#0F171C; --surface:#172229; --sunk:#1E2B33; --ink:#E4EAED; --muted:#9BABB6; --rule:#2B3A44;
+  --accent:#86B7E3;
+  --m:#86B7E3; --m-tint:#1B2F42;
+  --on-hue:#0F171C;
+  --good:#6FCF9B; --good-tint:#163326;
+  --bad:#EC8E89; --bad-tint:#3D1F1E;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--ground);color:var(--ink);font:400 16px/1.65 var(--body);-webkit-text-size-adjust:100%}
+a{color:var(--accent);text-underline-offset:3px}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.page{max-width:1180px;margin-inline:auto;padding-inline:20px;padding-block:36px 80px}
+
+/* Cabeçalho */
+.mast{display:flex;flex-direction:column;gap:18px;padding-bottom:32px;border-bottom:1px solid var(--rule)}
+.tiles{display:flex;gap:6px}
+.tiles span{width:44px;height:44px;display:grid;place-items:center;font:700 24px/1 var(--display);color:var(--on-hue)}
+h1{font:700 clamp(2.3rem,6vw,3.6rem)/1.02 var(--display);letter-spacing:-.01em;margin:0;text-wrap:balance}
+.lead{font-size:1.15rem;line-height:1.55;max-width:62ch;margin:0;color:var(--ink)}
+.meta{display:flex;flex-direction:row;flex-wrap:wrap;gap:6px 22px;font:400 .8rem/1.4 var(--mono);color:var(--muted);margin:0;padding:0;list-style:none}
+
+/* Estrutura */
+.layout{display:grid;grid-template-columns:minmax(0,1fr);gap:32px;padding-top:32px}
+.toc{font-size:.92rem}
+.toc h2{font:500 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+.toc ol{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:2px 20px;counter-reset:toc}
+.toc li{counter-increment:toc}
+.toc a{display:flex;gap:10px;padding:5px 0;color:var(--ink);text-decoration:none;line-height:1.35}
+.toc a::before{content:counter(toc,decimal-leading-zero);font:400 .75rem/1.7 var(--mono);color:var(--muted)}
+.toc a:hover{color:var(--accent);text-decoration:underline}
+@media (min-width:1020px){
+  .layout{grid-template-columns:200px minmax(0,1fr);gap:64px}
+  .toc{position:sticky;top:calc(env(safe-area-inset-top,0px) + 24px);align-self:start}
+  .toc ol{grid-template-columns:1fr}
+}
+main{display:flex;flex-direction:column;gap:72px;min-width:0}
+section{display:flex;flex-direction:column;gap:20px;scroll-margin-top:24px}
+.eyebrow{font:500 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0}
+h2{font:700 clamp(1.7rem,4vw,2.2rem)/1.1 var(--display);margin:0;text-wrap:balance}
+h3{font:600 1.3rem/1.2 var(--display);margin:12px 0 0;text-wrap:balance}
+h4{font:600 .95rem/1.3 var(--body);margin:0}
+p{margin:0}
+section > p, section > ul, section > ol, section > h3{max-width:68ch}
+ul,ol{margin:0;padding-left:1.25em;display:flex;flex-direction:column;gap:6px}
+strong{font-weight:600}
+code{font:400 .88em var(--mono);background:var(--sunk);padding:1px 5px;border-radius:3px}
+
+/* Letras coloridas no texto */
+.k{display:inline-grid;place-items:center;width:1.45em;height:1.45em;font:700 .85em/1 var(--display);color:var(--on-hue);vertical-align:.05em}
+
+/* Figuras */
+figure{margin:0;display:flex;flex-direction:column;gap:10px;position:relative}
+.scroll{overflow-x:auto;background:var(--surface);border:1px solid var(--rule);padding:18px}
+.scroll svg{display:block;width:100%;min-width:820px;height:auto;color:var(--ink)}
+figcaption{font-size:.86rem;line-height:1.5;color:var(--muted);max-width:72ch}
+figcaption b{color:var(--ink);font-weight:600}
+svg text{font-family:var(--body);fill:var(--ink)}
+svg .disp{font-family:var(--display);font-weight:700}
+svg .mono{font-family:var(--mono);letter-spacing:.08em}
+svg .on{fill:var(--on-hue)}
+svg .mu{fill:var(--muted)}
+svg .b{font-weight:600}
+svg .ln{stroke:var(--ink);stroke-width:1.5;fill:none}
+svg .ln-mu{stroke:var(--muted);stroke-width:1.5;fill:none}
+svg .ln-bold{stroke:var(--ink);stroke-width:3;fill:none;stroke-linejoin:round;stroke-linecap:round}
+svg .dash{stroke-dasharray:5 4}
+svg .ah{fill:var(--ink)} svg .ah-mu{fill:var(--muted)}
+svg .bx{fill:var(--surface);stroke:var(--rule);stroke-width:1.5}
+svg .bx-ink{fill:var(--ink);stroke:var(--ink)}
+svg .t-ground{fill:var(--ground)}
+svg .bx-out{fill:none;stroke:var(--muted);stroke-width:1.5;stroke-dasharray:5 4}
+svg .gap{stroke:var(--surface);stroke-width:4}
+svg .gap2{stroke:var(--surface);stroke-width:2}
+svg .hub{fill:var(--surface)}
+
+/* Gráfico */
+svg .grid{stroke:var(--rule);stroke-width:1}
+svg .hit{fill:transparent;cursor:crosshair;outline:none}
+.tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--ground);padding:6px 10px;font-size:.78rem;line-height:1.4;transform:translate(-50%,calc(-100% - 14px));white-space:nowrap;z-index:2}
+.tip b{display:block;font:600 1.05rem/1.2 var(--body)}
+details.data{font-size:.88rem}
+details.data summary{cursor:pointer;font:400 .82rem var(--mono);color:var(--muted);padding:4px 0}
+details.data .tbl{margin-top:8px}
+details.data table{min-width:420px}
+
+/* Tabelas */
+.tbl{overflow-x:auto;border:1px solid var(--rule);background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:780px;font-size:.88rem;line-height:1.4}
+th,td{padding:9px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--rule)}
+tr:last-child > td{border-bottom:0}
+thead th{font:600 .8rem/1.3 var(--body);background:var(--sunk)}
+td.num{font-variant-numeric:tabular-nums;white-space:nowrap;font-family:var(--mono);font-size:.82rem}
+
+/* Categorias e marcações do diagrama */
+.tiles .m{background:var(--m)}
+.k.m{background:var(--m)}
+svg .bx-m{fill:var(--m-tint);stroke:var(--m);stroke-width:1.5} svg .hd-m{fill:var(--m)}
+svg .root{fill:var(--accent);stroke:var(--surface);stroke-width:2}
+svg .ring{fill:var(--surface);stroke:var(--accent);stroke-width:1.5}
+svg text.cut{fill:var(--muted);text-decoration:line-through}
+svg text.open{fill:var(--muted);font-style:italic}
+svg .bar{fill:var(--accent)}
+svg .hit:focus-visible{stroke:var(--accent);stroke-width:2}
+
+/* Tabela das causas */
+table.causas{font-size:.84rem;min-width:860px}
+table.causas td.cod{font-weight:600;color:var(--muted);width:7%}
+table.causas td.res b{font-weight:600}
+table.causas td.res small{display:block;color:var(--muted);font-size:.8rem}
+table.causas tr.cut td.cau{color:var(--muted);text-decoration:line-through}
+table.causas tr.open td.cau{color:var(--muted);font-style:italic}
+
+/* Exercício com seis opções */
+.quiz.wide .q{grid-template-columns:minmax(0,1fr)}
+.quiz.wide .opts{flex-wrap:wrap}
+.quiz.wide .opts button{width:auto;height:36px;padding:0 12px;font:600 .85rem/1 var(--body)}
+
+/* Ficha da análise (acima de cada exemplo) */
+.ficha{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:0;border:1px solid var(--rule);background:var(--surface)}
+.ficha div{padding:12px 14px;border-right:1px solid var(--rule);border-bottom:1px solid var(--rule);margin:0 -1px -1px 0}
+.ficha dt{font:500 .68rem/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.ficha dd{margin:0;font-size:.9rem;line-height:1.4}
+dl{margin:0}
+
+/* Blocos */
+.pair{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.box{background:var(--surface);border:1px solid var(--rule);padding:18px 20px;display:flex;flex-direction:column;gap:10px}
+.box h4{font:600 1.1rem/1.2 var(--display)}
+.box ul{font-size:.93rem}
+.note{background:var(--sunk);padding:16px 20px;max-width:72ch;font-size:.94rem;display:flex;flex-direction:column;gap:6px}
+.note h4{font:500 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+
+/* Passo a passo */
+.steps{list-style:none;padding:0;counter-reset:st;gap:0;max-width:none;border-top:1px solid var(--rule)}
+.steps li{counter-increment:st;display:grid;grid-template-columns:44px minmax(0,1fr);gap:4px 12px;padding:16px 0;border-bottom:1px solid var(--rule)}
+.steps li::before{content:counter(st);font:700 1.7rem/1 var(--display);color:var(--muted);grid-row:span 2}
+.steps h4{font:600 1.1rem/1.25 var(--display)}
+.steps p{font-size:.95rem;max-width:64ch;grid-column:2}
+
+/* Erros comuns */
+.errs{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:0 40px;border-top:1px solid var(--rule)}
+.errs div{padding:16px 16px 16px 0;border-bottom:1px solid var(--rule);display:flex;flex-direction:column;gap:4px}
+.errs h4{font:600 1.05rem/1.25 var(--display)}
+.errs p{font-size:.92rem}
+.errs .fix{color:var(--muted)}
+.errs .fix b{color:var(--ink);font-weight:600}
+
+/* Checklist */
+.check{list-style:none;padding:0;gap:0;max-width:none;border:1px solid var(--rule);background:var(--surface)}
+.check li{border-bottom:1px solid var(--rule)}
+.check li:last-child{border-bottom:0}
+.check label{display:grid;grid-template-columns:22px minmax(0,1fr);gap:12px;padding:11px 16px;cursor:pointer;font-size:.94rem;align-items:start}
+.check input{width:18px;height:18px;margin:3px 0 0;accent-color:var(--m)}
+.check input:checked + span{color:var(--muted);text-decoration:line-through}
+.bar{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;font:400 .82rem var(--mono);color:var(--muted)}
+.bar b{color:var(--ink);font-weight:500}
+
+/* Exercício */
+.quiz{display:flex;flex-direction:column;gap:0;border:1px solid var(--rule);background:var(--surface)}
+.q{display:grid;grid-template-columns:minmax(0,1fr);gap:10px;padding:14px 16px;border-bottom:1px solid var(--rule)}
+.q:last-child{border-bottom:0}
+@media (min-width:720px){.q{grid-template-columns:minmax(0,1fr) auto;align-items:center}}
+.q p{font-size:.95rem}
+.q .why{grid-column:1/-1;font-size:.86rem;color:var(--muted)}
+.q .why b{font-weight:600}
+.q .why.ok b{color:var(--good)} .q .why.no b{color:var(--bad)}
+.opts{display:flex;gap:6px}
+.opts button{width:40px;height:40px;border:1.5px solid var(--rule);background:var(--surface);color:var(--ink);font:700 1.1rem/1 var(--display);cursor:pointer;border-radius:0}
+.opts button:hover:not(:disabled){border-color:var(--ink)}
+.opts button:disabled{cursor:default;opacity:.45}
+.opts button.right{background:var(--good-tint);border-color:var(--good);color:var(--good);opacity:1}
+.opts button.wrong{background:var(--bad-tint);border-color:var(--bad);color:var(--bad);opacity:1}
+.btn{border:1.5px solid var(--ink);background:transparent;color:var(--ink);font:500 .82rem var(--mono);padding:7px 14px;cursor:pointer;border-radius:0}
+.btn:hover{background:var(--ink);color:var(--ground)}
+
+/* Glossário */
+.gloss{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:0 40px;border-top:1px solid var(--rule)}
+.gloss div{padding:12px 0;border-bottom:1px solid var(--rule)}
+.gloss dt{font:600 1.02rem/1.3 var(--display)}
+.gloss dd{margin:2px 0 0;font-size:.9rem;color:var(--muted)}
+footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);font-size:.84rem;color:var(--muted);max-width:72ch}
+</style>
+</head>
+<body>
+<div class="page" lang="pt-BR">
+
+<header class="mast">
+  <div class="tiles" aria-hidden="true"><span class="m">6</span><span class="m">M</span></div>
+  <h1>Diagrama de Ishikawa na prática</h1>
+  <p class="lead">Um guia de estudo para sair do “de quem é a culpa?” e chegar ao “por que isso acontece?”: um efeito, seis famílias de causas e a disciplina de verificar cada hipótese antes de agir.</p>
+  <ul class="meta">
+    <li>Treinamento autoinstrucional</li>
+    <li>11 módulos</li>
+    <li>Leitura de cerca de 35 minutos</li>
+    <li>3 exemplos resolvidos e 2 exercícios</li>
+  </ul>
+</header>
+
+<div class="layout">
+
+<nav class="toc" aria-label="Sumário">
+  <h2>Sumário</h2>
+  <ol>
+    <li><a href="#o-que-e">O que é o Diagrama de Ishikawa</a></li>
+    <li><a href="#quando">Quando usar</a></li>
+    <li><a href="#construir">Como construir</a></li>
+    <li><a href="#exemplos">Exemplos resolvidos</a></li>
+    <li><a href="#raiz">Da hipótese à causa raiz</a></li>
+    <li><a href="#erros">Erros comuns</a></li>
+    <li><a href="#ferramentas">Ishikawa e outras ferramentas</a></li>
+    <li><a href="#iso">Ishikawa nas normas ISO</a></li>
+    <li><a href="#oficina">Como conduzir a oficina</a></li>
+    <li><a href="#pratique">Pratique</a></li>
+    <li><a href="#planilha">A planilha de apoio</a></li>
+    <li><a href="#glossario">Glossário</a></li>
+  </ol>
+</nav>
+
+<main>
+
+<!-- ============================ MÓDULO 1 ============================ -->
+<section id="o-que-e">
+  <p class="eyebrow">Módulo 1</p>
+  <h2>O que é o Diagrama de Ishikawa</h2>
+  <p>O Diagrama de Ishikawa é um desenho que organiza as causas possíveis de um problema. O problema, chamado de efeito, fica à direita. As causas se distribuem em ramos, agrupadas por família. Pelo formato, o diagrama também é conhecido como espinha de peixe, e pelo conteúdo, como diagrama de causa e efeito.</p>
+  <p>A ferramenta foi criada pelo engenheiro japonês Kaoru Ishikawa, na década de 1940, e faz parte das sete ferramentas básicas da qualidade. O objetivo é que o grupo olhe para o problema por vários ângulos antes de escolher uma explicação, em vez de ficar com a primeira que aparecer.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 340" role="img" aria-label="Anatomia do diagrama. À direita, a cabeça com o efeito: 18% das entregas chegam depois de 40 minutos. Uma linha horizontal, a espinha, leva até a cabeça. Quatro ramos inclinados saem da espinha, cada um com uma categoria: método, mão de obra, máquina e material. Em cada ramo há uma causa. A causa pedidos não agrupados por bairro tem uma subcausa: a expedição não separa os pedidos por zona.">
+        <defs>
+          <marker id="a1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker>
+        </defs>
+        <line class="ln" x1="30" y1="170" x2="694" y2="170" marker-end="url(#a1)" stroke-width="2"/>
+        <rect class="bx-ink" x="700" y="128" width="184" height="84"/>
+        <text class="mono t-ground" x="792" y="149" font-size="10" text-anchor="middle">EFEITO</text>
+        <text class="b t-ground" x="792" y="170" font-size="12.5" text-anchor="middle">18% das entregas</text>
+        <text class="b t-ground" x="792" y="186" font-size="12.5" text-anchor="middle">chegam depois</text>
+        <text class="b t-ground" x="792" y="202" font-size="12.5" text-anchor="middle">de 40 minutos</text>
+
+        <line class="ln" x1="300" y1="42" x2="370" y2="170"/>
+        <line class="ln" x1="560" y1="42" x2="630" y2="170"/>
+        <line class="ln" x1="300" y1="298" x2="370" y2="170"/>
+        <line class="ln" x1="560" y1="298" x2="630" y2="170"/>
+        <g font-size="12.5" text-anchor="middle">
+          <rect class="hd-m" x="240" y="16" width="120" height="26"/><text class="on b" x="300" y="33.5">Método</text>
+          <rect class="hd-m" x="500" y="16" width="120" height="26"/><text class="on b" x="560" y="33.5">Mão de obra</text>
+          <rect class="hd-m" x="240" y="298" width="120" height="26"/><text class="on b" x="300" y="315.5">Máquina</text>
+          <rect class="hd-m" x="500" y="298" width="120" height="26"/><text class="on b" x="560" y="315.5">Material</text>
+        </g>
+
+        <g class="ln-mu" stroke-width="1">
+          <line x1="323" y1="84" x2="96" y2="84"/>
+          <line x1="160" y1="84" x2="130" y2="118"/>
+          <line x1="588" y1="94" x2="400" y2="94"/>
+          <line x1="332" y1="240" x2="130" y2="240"/>
+          <line x1="592" y1="240" x2="410" y2="240"/>
+        </g>
+        <g font-size="11.5" text-anchor="end">
+          <text x="314" y="78">Pedidos não agrupados por bairro</text>
+          <text x="579" y="88">Escala igual em todos os dias</text>
+          <text x="323" y="234">Forno único, com fila no pico</text>
+          <text x="583" y="234">Endereço sem complemento</text>
+        </g>
+        <text x="24" y="134" font-size="11.5">A expedição não separa</text>
+        <text x="24" y="150" font-size="11.5">os pedidos por zona</text>
+
+        <g class="mono" font-size="9.5">
+          <text class="mu" x="228" y="33" text-anchor="end">CATEGORIA</text>
+          <text class="mu" x="96" y="66">CAUSA</text>
+          <text class="mu" x="24" y="116">SUBCAUSA</text>
+          <text class="mu" x="450" y="188" text-anchor="middle">ESPINHA</text>
+        </g>
+      </svg>
+    </div>
+    <figcaption><b>Figura 1.</b> As partes do diagrama. A leitura vai da esquerda para a direita: as causas levam ao efeito. A construção vai no sentido contrário: parte-se do efeito e pergunta-se o que pode causá-lo.</figcaption>
+  </figure>
+
+  <p>Repare que tudo o que está nos ramos é <strong>hipótese</strong>. O diagrama mostra o que pode estar causando o problema, e não o que está causando. Tratar hipótese como causa confirmada é o erro mais frequente de quem está começando.</p>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:18%">Elemento</th><th style="width:30%">O que é</th><th style="width:26%">Como escrever</th><th>Exemplo</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Efeito</strong></td><td>O problema que se quer explicar.</td><td>Resultado indesejado, com número, local e período</td><td>18% das entregas chegam depois de 40 minutos</td></tr>
+        <tr><td><strong>Categoria</strong></td><td>Família de causas. Serve de roteiro para o grupo não esquecer nenhum ângulo.</td><td>Substantivo</td><td>Método</td></tr>
+        <tr><td><strong>Causa</strong></td><td>Fato que pode produzir o efeito.</td><td>Frase curta, que possa ser verificada</td><td>Pedidos não agrupados por bairro</td></tr>
+        <tr><td><strong>Subcausa</strong></td><td>Resposta à pergunta “por que essa causa acontece?”.</td><td>Frase curta, um nível mais fundo</td><td>A expedição não separa os pedidos por zona</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 2 ============================ -->
+<section id="quando">
+  <p class="eyebrow">Módulo 2</p>
+  <h2>Quando usar</h2>
+  <p>O Ishikawa é uma ferramenta de análise. Ele entra depois que o problema foi escolhido e observado, e antes que qualquer ação seja planejada. Quem pula essa etapa costuma tratar o sintoma e ver o problema voltar.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 190" role="img" aria-label="Cinco etapas do tratamento de um problema: priorizar, observar, analisar, planejar e verificar. O Diagrama de Ishikawa é usado na terceira etapa, analisar.">
+        <polygon class="bx" points="18,20 166,20 178,52 166,84 18,84"/>
+        <text class="disp mu" x="40" y="60" font-size="24">1</text>
+        <text class="b" x="62" y="57" font-size="13">Priorizar</text>
+
+        <polygon class="bx" points="194,20 342,20 354,52 342,84 194,84 206,52"/>
+        <text class="disp mu" x="222" y="60" font-size="24">2</text>
+        <text class="b" x="246" y="57" font-size="13">Observar</text>
+
+        <polygon class="bx-ink" points="370,20 518,20 530,52 518,84 370,84 382,52"/>
+        <text class="disp t-ground" x="398" y="60" font-size="24">3</text>
+        <text class="b t-ground" x="422" y="57" font-size="13">Analisar</text>
+
+        <polygon class="bx" points="546,20 694,20 706,52 694,84 546,84 558,52"/>
+        <text class="disp mu" x="574" y="60" font-size="24">4</text>
+        <text class="b" x="598" y="57" font-size="13">Planejar</text>
+
+        <polygon class="bx" points="722,20 870,20 882,52 870,84 722,84 734,52"/>
+        <text class="disp mu" x="750" y="60" font-size="24">5</text>
+        <text class="b" x="774" y="57" font-size="13">Verificar</text>
+
+        <text class="mu" x="98" y="106" font-size="11.5" text-anchor="middle">qual problema</text>
+        <text class="mu" x="274" y="106" font-size="11.5" text-anchor="middle">onde e quando ocorre</text>
+        <text class="mu" x="450" y="106" font-size="11.5" text-anchor="middle">por que ocorre</text>
+        <text class="mu" x="626" y="106" font-size="11.5" text-anchor="middle">o que fazer</text>
+        <text class="mu" x="802" y="106" font-size="11.5" text-anchor="middle">funcionou?</text>
+
+        <line class="ln" x1="450" y1="114" x2="450" y2="138"/>
+        <rect class="bx" x="150" y="138" width="600" height="38"/>
+        <text x="166" y="162" font-size="12.5"><tspan class="b">O Ishikawa é construído aqui,</tspan> com os dados da observação sobre a mesa.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 2.</b> O Ishikawa pertence à análise das causas. Ele recebe um problema já delimitado e entrega as causas que o plano de ação vai atacar.</figcaption>
+  </figure>
+
+  <div class="pair">
+    <div class="box">
+      <h4>Use quando</h4>
+      <ul>
+        <li>O problema é conhecido, mas a causa não é.</li>
+        <li>O problema volta depois de “resolvido”.</li>
+        <li>Cada pessoa da equipe tem uma explicação diferente.</li>
+        <li>Uma não conformidade pede análise de causa antes da ação corretiva.</li>
+        <li>O grupo está preso a uma única explicação e precisa abrir o olhar.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h4>Procure outra ferramenta quando</h4>
+      <ul>
+        <li>Há vários problemas e é preciso escolher um: use a <a href="../GUT/treinamento-gut.html">Matriz GUT</a>.</li>
+        <li>A causa já é conhecida e falta organizar as ações: use o <a href="../5W2H/treinamento-5w2h.html">5W2H</a>.</li>
+        <li>Há dados por tipo de defeito e falta saber qual pesa mais: use o gráfico de Pareto.</li>
+        <li>O problema tem uma cadeia única de causas: os 5 porquês bastam.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 3 ============================ -->
+<section id="construir">
+  <p class="eyebrow">Módulo 3</p>
+  <h2>Como construir</h2>
+  <p>As categorias são o roteiro da conversa. O conjunto mais usado é o dos 6M, que nasceu na indústria: método, mão de obra, máquina, material, medição e meio ambiente. Cada categoria é uma pergunta que o grupo faz ao processo.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 410" role="img" aria-label="Diagrama com as seis categorias dos 6M e duas perguntas de apoio em cada uma. Método: O procedimento é claro e seguido? A sequência das etapas ajuda? Mão de obra: As pessoas foram treinadas? A escala cobre a demanda? Máquina: O equipamento está em bom estado? A manutenção está em dia? Material: Os insumos chegam no padrão? As informações chegam completas? Medição: Os instrumentos estão calibrados? O indicador mede o que importa? Meio ambiente: O espaço e a temperatura ajudam? Algo de fora afeta o processo?">
+        <defs>
+          <marker id="a3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker>
+        </defs>
+        <line class="ln" x1="14" y1="210" x2="696" y2="210" marker-end="url(#a3)" stroke-width="2"/>
+        <rect class="bx-ink" x="702" y="166" width="188" height="88"/>
+        <text class="mono t-ground" x="796" y="186" font-size="10" text-anchor="middle">EFEITO</text>
+        <text class="b t-ground" x="796" y="206" font-size="12.5" text-anchor="middle">O problema,</text>
+        <text class="b t-ground" x="796" y="222" font-size="12.5" text-anchor="middle">com número, local</text>
+        <text class="b t-ground" x="796" y="238" font-size="12.5" text-anchor="middle">e período</text>
+        <line class="ln" x1="183" y1="52" x2="258" y2="210"/>
+        <rect class="hd-m" x="117" y="26" width="132" height="26"/>
+        <text class="on b" x="183" y="43.5" font-size="12.5" text-anchor="middle">Método</text>
+        <line class="ln-mu" stroke-width="1" x1="202.0" y1="92" x2="6.0" y2="92"/>
+        <text x="193.0" y="87" font-size="11" text-anchor="end">O procedimento é claro e seguido?</text>
+        <line class="ln-mu" stroke-width="1" x1="220.0" y1="130" x2="24.0" y2="130"/>
+        <text x="211.0" y="125" font-size="11" text-anchor="end">A sequência das etapas ajuda?</text>
+        <line class="ln" x1="397" y1="52" x2="472" y2="210"/>
+        <rect class="hd-m" x="331" y="26" width="132" height="26"/>
+        <text class="on b" x="397" y="43.5" font-size="12.5" text-anchor="middle">Mão de obra</text>
+        <line class="ln-mu" stroke-width="1" x1="416.0" y1="92" x2="220.0" y2="92"/>
+        <text x="407.0" y="87" font-size="11" text-anchor="end">As pessoas foram treinadas?</text>
+        <line class="ln-mu" stroke-width="1" x1="434.0" y1="130" x2="238.0" y2="130"/>
+        <text x="425.0" y="125" font-size="11" text-anchor="end">A escala cobre a demanda?</text>
+        <line class="ln" x1="611" y1="52" x2="686" y2="210"/>
+        <rect class="hd-m" x="545" y="26" width="132" height="26"/>
+        <text class="on b" x="611" y="43.5" font-size="12.5" text-anchor="middle">Máquina</text>
+        <line class="ln-mu" stroke-width="1" x1="630.0" y1="92" x2="434.0" y2="92"/>
+        <text x="621.0" y="87" font-size="11" text-anchor="end">O equipamento está em bom estado?</text>
+        <line class="ln-mu" stroke-width="1" x1="648.0" y1="130" x2="452.0" y2="130"/>
+        <text x="639.0" y="125" font-size="11" text-anchor="end">A manutenção está em dia?</text>
+        <line class="ln" x1="183" y1="368" x2="258" y2="210"/>
+        <rect class="hd-m" x="117" y="368" width="132" height="26"/>
+        <text class="on b" x="183" y="385.5" font-size="12.5" text-anchor="middle">Material</text>
+        <line class="ln-mu" stroke-width="1" x1="202.0" y1="328" x2="6.0" y2="328"/>
+        <text x="193.0" y="323" font-size="11" text-anchor="end">Os insumos chegam no padrão?</text>
+        <line class="ln-mu" stroke-width="1" x1="220.0" y1="290" x2="24.0" y2="290"/>
+        <text x="211.0" y="285" font-size="11" text-anchor="end">As informações chegam completas?</text>
+        <line class="ln" x1="397" y1="368" x2="472" y2="210"/>
+        <rect class="hd-m" x="331" y="368" width="132" height="26"/>
+        <text class="on b" x="397" y="385.5" font-size="12.5" text-anchor="middle">Medição</text>
+        <line class="ln-mu" stroke-width="1" x1="416.0" y1="328" x2="220.0" y2="328"/>
+        <text x="407.0" y="323" font-size="11" text-anchor="end">Os instrumentos estão calibrados?</text>
+        <line class="ln-mu" stroke-width="1" x1="434.0" y1="290" x2="238.0" y2="290"/>
+        <text x="425.0" y="285" font-size="11" text-anchor="end">O indicador mede o que importa?</text>
+        <line class="ln" x1="611" y1="368" x2="686" y2="210"/>
+        <rect class="hd-m" x="545" y="368" width="132" height="26"/>
+        <text class="on b" x="611" y="385.5" font-size="12.5" text-anchor="middle">Meio ambiente</text>
+        <line class="ln-mu" stroke-width="1" x1="630.0" y1="328" x2="434.0" y2="328"/>
+        <text x="621.0" y="323" font-size="11" text-anchor="end">O espaço e a temperatura ajudam?</text>
+        <line class="ln-mu" stroke-width="1" x1="648.0" y1="290" x2="452.0" y2="290"/>
+        <text x="639.0" y="285" font-size="11" text-anchor="end">Algo de fora afeta o processo?</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 3.</b> Os 6M, com duas perguntas de apoio em cada ramo. As perguntas servem para puxar ideias. O que vai para o diagrama são as respostas: fatos que podem explicar o efeito.</figcaption>
+  </figure>
+
+  <p>Os nomes podem mudar. Em serviços e em processos administrativos, é comum trocar máquina por sistemas, material por informações e mão de obra por pessoas. O que importa é que as categorias cubram o processo inteiro e façam sentido para quem participa.</p>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:20%">Categoria</th><th style="width:36%">O que investigar</th><th style="width:22%">Nome alternativo</th><th>Exemplo de causa</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Método</strong></td><td>Procedimentos, sequência das etapas, regras e padrões</td><td>Procedimentos</td><td>Pedidos saem sem agrupamento por bairro</td></tr>
+        <tr><td><strong>Mão de obra</strong></td><td>Treinamento, quantidade de pessoas, escala, experiência</td><td>Pessoas</td><td>Escala igual em todos os dias</td></tr>
+        <tr><td><strong>Máquina</strong></td><td>Equipamentos, ferramentas, sistemas, manutenção</td><td>Equipamentos, sistemas</td><td>Forno único, com fila no pico</td></tr>
+        <tr><td><strong>Material</strong></td><td>Insumos, matérias-primas e informações que entram no processo</td><td>Insumos, informações</td><td>Pedido com endereço sem complemento</td></tr>
+        <tr><td><strong>Medição</strong></td><td>Instrumentos, indicadores, critérios de aceitação</td><td>Indicadores</td><td>Tempo medido só pela média do dia</td></tr>
+        <tr><td><strong>Meio ambiente</strong></td><td>Espaço, temperatura, ruído, clima de trabalho, condições externas</td><td>Ambiente</td><td>Obras na avenida principal</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Antes de tudo: o efeito</h3>
+  <p>O efeito é a cabeça do peixe, e tudo depende dele. Um efeito vago, como “problemas na entrega”, produz causas vagas. Um efeito preciso, como “18% das entregas chegam depois de 40 minutos, às sextas e sábados, das 19h às 22h”, já indica onde procurar.</p>
+
+  <h3>Passo a passo</h3>
+  <ol class="steps">
+    <li><h4>Escreva o efeito</h4><p>Descreva o problema com número, local e período. Não inclua causa nem solução. Use os dados da observação: onde, quando e com quem o problema acontece.</p></li>
+    <li><h4>Escolha as categorias</h4><p>Comece pelos 6M e ajuste os nomes ao tipo de processo. De quatro a seis categorias é um bom tamanho.</p></li>
+    <li><h4>Levante as causas</h4><p>Cada pessoa escreve causas em notas adesivas, em silêncio. Depois o grupo lê, junta as repetidas e coloca cada uma na categoria que faz mais sentido. Nesta etapa, não se discute se a causa é verdadeira.</p></li>
+    <li><h4>Pergunte por quê</h4><p>Para cada causa, pergunte por que ela acontece. A resposta vira subcausa. Repita até chegar a algo que a organização possa mudar.</p></li>
+    <li><h4>Escolha as mais prováveis</h4><p>O grupo marca as causas que considera mais prováveis, com base no que conhece do processo. De três a seis causas seguem para a verificação.</p></li>
+    <li><h4>Verifique com dados</h4><p>Para cada causa escolhida, defina como confirmar ou descartar: uma contagem, uma medição, uma observação no local. O módulo 5 detalha esta etapa.</p></li>
+    <li><h4>Registre e encaminhe</h4><p>Marque no diagrama o que foi confirmado e o que foi descartado. As causas confirmadas seguem para o plano de ação. Use o checklist do módulo 9.</p></li>
+  </ol>
+
+  <div class="note">
+    <h4>Regra prática</h4>
+    <p>Causa é fato, e não falta de solução. “Falta de treinamento” já traz a solução embutida e encerra a conversa. “Os requisitantes não sabem quais campos são obrigatórios” descreve o que acontece e deixa a solução em aberto: pode ser treinamento, mas também pode ser um formulário melhor.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 4 ============================ -->
+<section id="exemplos">
+  <p class="eyebrow">Módulo 4</p>
+  <h2>Exemplos resolvidos</h2>
+  <p>Três análises de naturezas diferentes. Os dados são ilustrativos e foram criados para este treinamento. Os diagramas mostram o resultado depois da verificação, e a legenda de cada figura explica as marcações. Os dois primeiros exemplos também estão preenchidos na planilha de apoio.</p>
+
+  <h3>Exemplo 1. Atrasos nas entregas da pizzaria</h3>
+  <dl class="ficha">
+    <div><dt>Efeito</dt><dd>18% das entregas chegam depois de 40 minutos</dd></div>
+    <div><dt>Onde e quando</dt><dd>Sextas e sábados, das 19h às 22h</dd></div>
+    <div><dt>Categorias</dt><dd>6M</dd></div>
+    <div><dt>Responsável</dt><dd>Gerente da loja</dd></div>
+  </dl>
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 440" role="img" aria-label="Diagrama de Ishikawa do exemplo 1, com o efeito 18% das entregas chegam depois de 40 minutos. Método: pedidos não agrupados por bairro (confirmada, segue para o plano); rota escolhida pelo entregador (descartada). Mão de obra: escala igual em todos os dias (confirmada, segue para o plano); expedição sem responsável no pico (não verificada). Máquina: forno único, com fila no pico (confirmada); motos com manutenção atrasada (descartada). Material: endereço sem complemento (confirmada, segue para o plano); bolsas térmicas insuficientes (descartada). Medição: tempo medido pela média do dia (confirmada, segue para o plano); prazo igual para todos os bairros (não verificada). Meio ambiente: obras na avenida principal (descartada); chuva nas noites de pico (não verificada).">
+        <defs>
+          <marker id="a4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker>
+        </defs>
+        <line class="ln" x1="14" y1="210" x2="696" y2="210" marker-end="url(#a4)" stroke-width="2"/>
+        <rect class="bx-ink" x="702" y="166" width="188" height="88"/>
+        <text class="mono t-ground" x="796" y="186" font-size="10" text-anchor="middle">EFEITO</text>
+        <text class="b t-ground" x="796" y="206" font-size="12.5" text-anchor="middle">18% das entregas</text>
+        <text class="b t-ground" x="796" y="222" font-size="12.5" text-anchor="middle">chegam depois</text>
+        <text class="b t-ground" x="796" y="238" font-size="12.5" text-anchor="middle">de 40 minutos</text>
+        <line class="ln" x1="183" y1="52" x2="258" y2="210"/>
+        <rect class="hd-m" x="117" y="26" width="132" height="26"/>
+        <text class="on b" x="183" y="43.5" font-size="12.5" text-anchor="middle">Método</text>
+        <line class="ln-mu" stroke-width="1" x1="202.0" y1="92" x2="6.0" y2="92"/>
+        <text class="b" x="193.0" y="87" font-size="11" text-anchor="end">Pedidos não agrupados por bairro</text>
+        <circle class="root" cx="202.0" cy="92" r="5"/>
+        <line class="ln-mu" stroke-width="1" x1="220.0" y1="130" x2="24.0" y2="130"/>
+        <text class="cut" x="211.0" y="125" font-size="11" text-anchor="end">Rota escolhida pelo entregador</text>
+        <line class="ln" x1="397" y1="52" x2="472" y2="210"/>
+        <rect class="hd-m" x="331" y="26" width="132" height="26"/>
+        <text class="on b" x="397" y="43.5" font-size="12.5" text-anchor="middle">Mão de obra</text>
+        <line class="ln-mu" stroke-width="1" x1="416.0" y1="92" x2="220.0" y2="92"/>
+        <text class="b" x="407.0" y="87" font-size="11" text-anchor="end">Escala igual em todos os dias</text>
+        <circle class="root" cx="416.0" cy="92" r="5"/>
+        <line class="ln-mu" stroke-width="1" x1="434.0" y1="130" x2="238.0" y2="130"/>
+        <text class="open" x="425.0" y="125" font-size="11" text-anchor="end">Expedição sem responsável no pico</text>
+        <line class="ln" x1="611" y1="52" x2="686" y2="210"/>
+        <rect class="hd-m" x="545" y="26" width="132" height="26"/>
+        <text class="on b" x="611" y="43.5" font-size="12.5" text-anchor="middle">Máquina</text>
+        <line class="ln-mu" stroke-width="1" x1="630.0" y1="92" x2="434.0" y2="92"/>
+        <text x="621.0" y="87" font-size="11" text-anchor="end">Forno único, com fila no pico</text>
+        <circle class="ring" cx="630.0" cy="92" r="4"/>
+        <line class="ln-mu" stroke-width="1" x1="648.0" y1="130" x2="452.0" y2="130"/>
+        <text class="cut" x="639.0" y="125" font-size="11" text-anchor="end">Motos com manutenção atrasada</text>
+        <line class="ln" x1="183" y1="368" x2="258" y2="210"/>
+        <rect class="hd-m" x="117" y="368" width="132" height="26"/>
+        <text class="on b" x="183" y="385.5" font-size="12.5" text-anchor="middle">Material</text>
+        <line class="ln-mu" stroke-width="1" x1="202.0" y1="328" x2="6.0" y2="328"/>
+        <text class="b" x="193.0" y="323" font-size="11" text-anchor="end">Endereço sem complemento</text>
+        <circle class="root" cx="202.0" cy="328" r="5"/>
+        <line class="ln-mu" stroke-width="1" x1="220.0" y1="290" x2="24.0" y2="290"/>
+        <text class="cut" x="211.0" y="285" font-size="11" text-anchor="end">Bolsas térmicas insuficientes</text>
+        <line class="ln" x1="397" y1="368" x2="472" y2="210"/>
+        <rect class="hd-m" x="331" y="368" width="132" height="26"/>
+        <text class="on b" x="397" y="385.5" font-size="12.5" text-anchor="middle">Medição</text>
+        <line class="ln-mu" stroke-width="1" x1="416.0" y1="328" x2="220.0" y2="328"/>
+        <text class="b" x="407.0" y="323" font-size="11" text-anchor="end">Tempo medido pela média do dia</text>
+        <circle class="root" cx="416.0" cy="328" r="5"/>
+        <line class="ln-mu" stroke-width="1" x1="434.0" y1="290" x2="238.0" y2="290"/>
+        <text class="open" x="425.0" y="285" font-size="11" text-anchor="end">Prazo igual para todos os bairros</text>
+        <line class="ln" x1="611" y1="368" x2="686" y2="210"/>
+        <rect class="hd-m" x="545" y="368" width="132" height="26"/>
+        <text class="on b" x="611" y="385.5" font-size="12.5" text-anchor="middle">Meio ambiente</text>
+        <line class="ln-mu" stroke-width="1" x1="630.0" y1="328" x2="434.0" y2="328"/>
+        <text class="cut" x="621.0" y="323" font-size="11" text-anchor="end">Obras na avenida principal</text>
+        <line class="ln-mu" stroke-width="1" x1="648.0" y1="290" x2="452.0" y2="290"/>
+        <text class="open" x="639.0" y="285" font-size="11" text-anchor="end">Chuva nas noites de pico</text>
+        <circle class="root" cx="22" cy="420" r="5"/><text class="b" x="34" y="424" font-size="11">confirmada, segue para o plano</text>
+        <circle class="ring" cx="252" cy="420" r="4"/><text x="264" y="424" font-size="11">confirmada, fica para depois</text>
+        <text class="cut" x="468" y="424" font-size="11">descartada pelos dados</text>
+        <text class="open" x="650" y="424" font-size="11">não verificada</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 4.</b> Diagrama do exemplo 1, depois da verificação. Das doze hipóteses, cinco foram confirmadas, quatro foram descartadas e três não foram verificadas. Quatro causas seguiram para o plano de ação.</figcaption>
+  </figure>
+  <div class="tbl">
+    <table class="causas">
+      <thead><tr><th>Código</th><th style="width:13%">Categoria</th><th style="width:24%">Causa provável</th><th style="width:21%">Como foi verificada</th><th style="width:13%">Resultado</th><th>Evidência</th></tr></thead>
+      <tbody>
+        <tr><td class="cod">A1</td><td>Método</td><td class="cau">Pedidos saem um a um, sem agrupamento por bairro</td><td>Acompanhar 50 saídas no pico e mapear as rotas</td><td class="res"><b>Confirmada</b><small>segue para o plano</small></td><td>Rotas cruzadas em 31 das 50 saídas</td></tr>
+        <tr class="cut"><td class="cod">A2</td><td>Método</td><td class="cau">Rota escolhida por cada entregador</td><td>Comparar o tempo de rota entre os entregadores</td><td class="res"><b>Descartada</b></td><td>Tempos parecidos entre os entregadores</td></tr>
+        <tr><td class="cod">B1</td><td>Mão de obra</td><td class="cau">Escala de entregadores igual em todos os dias</td><td>Comparar entregadores disponíveis e pedidos por hora</td><td class="res"><b>Confirmada</b><small>segue para o plano</small></td><td>Pizza pronta esperou entregador em 46% dos atrasos</td></tr>
+        <tr class="open"><td class="cod">B2</td><td>Mão de obra</td><td class="cau">Expedição sem responsável definido no pico</td><td>Observar a expedição em três noites de pico</td><td class="res"><b>Não verificada</b></td><td>—</td></tr>
+        <tr><td class="cod">C1</td><td>Máquina</td><td class="cau">Forno único, com fila no horário de pico</td><td>Medir o tempo de espera antes do forno</td><td class="res"><b>Confirmada</b></td><td>Fila no forno em 27% dos atrasos. Fica para o próximo ciclo</td></tr>
+        <tr class="cut"><td class="cod">C2</td><td>Máquina</td><td class="cau">Motos com manutenção atrasada</td><td>Conferir o registro de quebras do trimestre</td><td class="res"><b>Descartada</b></td><td>Nenhuma quebra em horário de pico</td></tr>
+        <tr><td class="cod">D1</td><td>Material</td><td class="cau">Pedido chega com endereço sem complemento</td><td>Contar os atrasos com endereço incompleto</td><td class="res"><b>Confirmada</b><small>segue para o plano</small></td><td>Endereço incompleto em 15% dos atrasos</td></tr>
+        <tr class="cut"><td class="cod">D2</td><td>Material</td><td class="cau">Bolsas térmicas insuficientes</td><td>Contar bolsas e entregadores no pico</td><td class="res"><b>Descartada</b></td><td>Há bolsas para todos os entregadores</td></tr>
+        <tr><td class="cod">E1</td><td>Medição</td><td class="cau">Tempo de entrega medido só pela média do dia</td><td>Refazer o indicador por faixa de horário</td><td class="res"><b>Confirmada</b><small>segue para o plano</small></td><td>No prazo: 96% fora do pico e 68% no pico</td></tr>
+        <tr class="open"><td class="cod">E2</td><td>Medição</td><td class="cau">Prazo prometido igual para todos os bairros</td><td>Comparar os atrasos por distância</td><td class="res"><b>Não verificada</b></td><td>—</td></tr>
+        <tr class="cut"><td class="cod">F1</td><td>Meio ambiente</td><td class="cau">Obras na avenida principal</td><td>Comparar rotas com e sem passagem pela avenida</td><td class="res"><b>Descartada</b></td><td>Atraso igual nas rotas sem obra</td></tr>
+        <tr class="open"><td class="cod">F2</td><td>Meio ambiente</td><td class="cau">Chuva nas noites de pico</td><td>Cruzar os atrasos com os dias de chuva</td><td class="res"><b>Não verificada</b></td><td>—</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p><strong>O que observar.</strong> A fila do forno foi confirmada pelos dados, mas não seguiu para o plano: pesa menos que a espera por entregador e exige investimento. Ficou registrada para o ciclo seguinte. As obras na avenida eram a explicação preferida da equipe e foram descartadas: o atraso era o mesmo nas rotas que não passam por lá.</p>
+
+  <h3>Exemplo 2. Requisições de compra devolvidas</h3>
+  <dl class="ficha">
+    <div><dt>Efeito</dt><dd>40% das requisições de compra são devolvidas ao requisitante</dd></div>
+    <div><dt>Onde e quando</dt><dd>Todas as áreas requisitantes, no último trimestre</dd></div>
+    <div><dt>Categorias</dt><dd>6M, com nomes adaptados ao processo administrativo</dd></div>
+    <div><dt>Responsável</dt><dd>Gerente de Suprimentos</dd></div>
+  </dl>
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 440" role="img" aria-label="Diagrama de Ishikawa do exemplo 2, com o efeito 40% das requisições de compra são devolvidas. Procedimentos: formulário sem campos obrigatórios (confirmada, segue para o plano); conferência sem dono definido (não verificada). Pessoas: requisitantes sem treinamento (confirmada, segue para o plano); troca frequente de requisitantes (descartada). Sistemas: descrição do item em texto livre (confirmada, segue para o plano); sistema lento no fim do mês (descartada). Informações: desenhos técnicos desatualizados (não verificada); prazos de compra desconhecidos (confirmada). Indicadores: devoluções sem medição por área (confirmada, segue para o plano). Ambiente: sem causas levantadas.">
+        <defs>
+          <marker id="a5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker>
+        </defs>
+        <line class="ln" x1="14" y1="210" x2="696" y2="210" marker-end="url(#a5)" stroke-width="2"/>
+        <rect class="bx-ink" x="702" y="166" width="188" height="88"/>
+        <text class="mono t-ground" x="796" y="186" font-size="10" text-anchor="middle">EFEITO</text>
+        <text class="b t-ground" x="796" y="206" font-size="12.5" text-anchor="middle">40% das requisições</text>
+        <text class="b t-ground" x="796" y="222" font-size="12.5" text-anchor="middle">de compra são</text>
+        <text class="b t-ground" x="796" y="238" font-size="12.5" text-anchor="middle">devolvidas</text>
+        <line class="ln" x1="183" y1="52" x2="258" y2="210"/>
+        <rect class="hd-m" x="117" y="26" width="132" height="26"/>
+        <text class="on b" x="183" y="43.5" font-size="12.5" text-anchor="middle">Procedimentos</text>
+        <line class="ln-mu" stroke-width="1" x1="202.0" y1="92" x2="6.0" y2="92"/>
+        <text class="b" x="193.0" y="87" font-size="11" text-anchor="end">Formulário sem campos obrigatórios</text>
+        <circle class="root" cx="202.0" cy="92" r="5"/>
+        <line class="ln-mu" stroke-width="1" x1="220.0" y1="130" x2="24.0" y2="130"/>
+        <text class="open" x="211.0" y="125" font-size="11" text-anchor="end">Conferência sem dono definido</text>
+        <line class="ln" x1="397" y1="52" x2="472" y2="210"/>
+        <rect class="hd-m" x="331" y="26" width="132" height="26"/>
+        <text class="on b" x="397" y="43.5" font-size="12.5" text-anchor="middle">Pessoas</text>
+        <line class="ln-mu" stroke-width="1" x1="416.0" y1="92" x2="220.0" y2="92"/>
+        <text class="b" x="407.0" y="87" font-size="11" text-anchor="end">Requisitantes sem treinamento</text>
+        <circle class="root" cx="416.0" cy="92" r="5"/>
+        <line class="ln-mu" stroke-width="1" x1="434.0" y1="130" x2="238.0" y2="130"/>
+        <text class="cut" x="425.0" y="125" font-size="11" text-anchor="end">Troca frequente de requisitantes</text>
+        <line class="ln" x1="611" y1="52" x2="686" y2="210"/>
+        <rect class="hd-m" x="545" y="26" width="132" height="26"/>
+        <text class="on b" x="611" y="43.5" font-size="12.5" text-anchor="middle">Sistemas</text>
+        <line class="ln-mu" stroke-width="1" x1="630.0" y1="92" x2="434.0" y2="92"/>
+        <text class="b" x="621.0" y="87" font-size="11" text-anchor="end">Descrição do item em texto livre</text>
+        <circle class="root" cx="630.0" cy="92" r="5"/>
+        <line class="ln-mu" stroke-width="1" x1="648.0" y1="130" x2="452.0" y2="130"/>
+        <text class="cut" x="639.0" y="125" font-size="11" text-anchor="end">Sistema lento no fim do mês</text>
+        <line class="ln" x1="183" y1="368" x2="258" y2="210"/>
+        <rect class="hd-m" x="117" y="368" width="132" height="26"/>
+        <text class="on b" x="183" y="385.5" font-size="12.5" text-anchor="middle">Informações</text>
+        <line class="ln-mu" stroke-width="1" x1="202.0" y1="328" x2="6.0" y2="328"/>
+        <text class="open" x="193.0" y="323" font-size="11" text-anchor="end">Desenhos técnicos desatualizados</text>
+        <line class="ln-mu" stroke-width="1" x1="220.0" y1="290" x2="24.0" y2="290"/>
+        <text x="211.0" y="285" font-size="11" text-anchor="end">Prazos de compra desconhecidos</text>
+        <circle class="ring" cx="220.0" cy="290" r="4"/>
+        <line class="ln" x1="397" y1="368" x2="472" y2="210"/>
+        <rect class="hd-m" x="331" y="368" width="132" height="26"/>
+        <text class="on b" x="397" y="385.5" font-size="12.5" text-anchor="middle">Indicadores</text>
+        <line class="ln-mu" stroke-width="1" x1="416.0" y1="328" x2="220.0" y2="328"/>
+        <text class="b" x="407.0" y="323" font-size="11" text-anchor="end">Devoluções sem medição por área</text>
+        <circle class="root" cx="416.0" cy="328" r="5"/>
+        <line class="ln" x1="611" y1="368" x2="686" y2="210"/>
+        <rect class="hd-m" x="545" y="368" width="132" height="26"/>
+        <text class="on b" x="611" y="385.5" font-size="12.5" text-anchor="middle">Ambiente</text>
+        <text class="open" x="618.0" y="323" font-size="11" text-anchor="end">sem causas levantadas</text>
+        <circle class="root" cx="22" cy="420" r="5"/><text class="b" x="34" y="424" font-size="11">confirmada, segue para o plano</text>
+        <circle class="ring" cx="252" cy="420" r="4"/><text x="264" y="424" font-size="11">confirmada, fica para depois</text>
+        <text class="cut" x="468" y="424" font-size="11">descartada pelos dados</text>
+        <text class="open" x="650" y="424" font-size="11">não verificada</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 5.</b> Diagrama do exemplo 2. As categorias foram renomeadas, e a categoria Ambiente ficou sem causas. O ramo vazio permanece no desenho, para mostrar que o tema foi discutido.</figcaption>
+  </figure>
+  <div class="tbl">
+    <table class="causas">
+      <thead><tr><th>Código</th><th style="width:13%">Categoria</th><th style="width:24%">Causa provável</th><th style="width:21%">Como foi verificada</th><th style="width:13%">Resultado</th><th>Evidência</th></tr></thead>
+      <tbody>
+        <tr><td class="cod">A1</td><td>Procedimentos</td><td class="cau">Formulário de requisição sem campos obrigatórios</td><td>Analisar 100 requisições devolvidas</td><td class="res"><b>Confirmada</b><small>segue para o plano</small></td><td>72 das 100 tinham campo essencial em branco</td></tr>
+        <tr class="open"><td class="cod">A2</td><td>Procedimentos</td><td class="cau">Procedimento não define quem confere a especificação</td><td>Entrevistar compradores e requisitantes</td><td class="res"><b>Não verificada</b></td><td>—</td></tr>
+        <tr><td class="cod">B1</td><td>Pessoas</td><td class="cau">Requisitantes nunca foram treinados no processo de compras</td><td>Conferir os registros de treinamento</td><td class="res"><b>Confirmada</b><small>segue para o plano</small></td><td>Nenhum dos 38 requisitantes foi treinado</td></tr>
+        <tr class="cut"><td class="cod">B2</td><td>Pessoas</td><td class="cau">Troca frequente de requisitantes nas áreas</td><td>Levantar as trocas dos últimos 12 meses</td><td class="res"><b>Descartada</b></td><td>Só 3 trocas em 12 meses</td></tr>
+        <tr><td class="cod">C1</td><td>Sistemas</td><td class="cau">Sistema aceita a descrição do item em texto livre</td><td>Comparar as descrições de um mesmo item</td><td class="res"><b>Confirmada</b><small>segue para o plano</small></td><td>Um mesmo rolamento com 9 descrições diferentes</td></tr>
+        <tr class="cut"><td class="cod">C2</td><td>Sistemas</td><td class="cau">Sistema lento no fechamento do mês</td><td>Comparar as devoluções por semana do mês</td><td class="res"><b>Descartada</b></td><td>Devoluções iguais ao longo do mês</td></tr>
+        <tr class="open"><td class="cod">D1</td><td>Informações</td><td class="cau">Desenhos técnicos desatualizados na rede</td><td>Conferir uma amostra de 20 desenhos</td><td class="res"><b>Não verificada</b></td><td>—</td></tr>
+        <tr><td class="cod">D2</td><td>Informações</td><td class="cau">Requisitante não conhece o prazo de cada tipo de compra</td><td>Perguntar a 10 requisitantes</td><td class="res"><b>Confirmada</b></td><td>8 em 10 não souberam informar. Tratado em outro plano</td></tr>
+        <tr><td class="cod">E1</td><td>Indicadores</td><td class="cau">Devoluções não são medidas por área requisitante</td><td>Verificar os relatórios disponíveis</td><td class="res"><b>Confirmada</b><small>segue para o plano</small></td><td>Só existe o total mensal</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p><strong>O que observar.</strong> Três causas confirmadas apontam para o mesmo lugar: o requisitante não tem como acertar. O formulário não pede, o sistema aceita qualquer texto e ninguém foi treinado. Nenhuma delas é “erro do requisitante”, embora fosse essa a explicação corrente antes da análise.</p>
+
+  <h3>Exemplo 3. Não conformidade de auditoria interna</h3>
+  <dl class="ficha">
+    <div><dt>Efeito</dt><dd>3 de 25 instrumentos de medição em uso com a calibração vencida</dd></div>
+    <div><dt>Onde e quando</dt><dd>Laboratório de recebimento, na auditoria interna</dd></div>
+    <div><dt>Categorias</dt><dd>6M</dd></div>
+    <div><dt>Responsável</dt><dd>Coordenador da Qualidade</dd></div>
+  </dl>
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 440" role="img" aria-label="Diagrama de Ishikawa do exemplo 3, com o efeito 3 de 25 instrumentos em uso com a calibração vencida. Método: controle em planilhas locais (confirmada, segue para o plano); controle sem suplente (confirmada, segue para o plano). Mão de obra: responsável mudou de área (confirmada); etiqueta não conferida no uso (não verificada). Máquina: planilha sem alerta de vencimento (confirmada, segue para o plano). Material: etiquetas de calibração ilegíveis (descartada). Medição: sem indicador de vencimentos (confirmada, segue para o plano). Meio ambiente: laboratório externo demorado (descartada).">
+        <defs>
+          <marker id="a6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker>
+        </defs>
+        <line class="ln" x1="14" y1="210" x2="696" y2="210" marker-end="url(#a6)" stroke-width="2"/>
+        <rect class="bx-ink" x="702" y="166" width="188" height="88"/>
+        <text class="mono t-ground" x="796" y="186" font-size="10" text-anchor="middle">EFEITO</text>
+        <text class="b t-ground" x="796" y="206" font-size="12.5" text-anchor="middle">3 de 25 instrumentos</text>
+        <text class="b t-ground" x="796" y="222" font-size="12.5" text-anchor="middle">em uso com a</text>
+        <text class="b t-ground" x="796" y="238" font-size="12.5" text-anchor="middle">calibração vencida</text>
+        <line class="ln" x1="183" y1="52" x2="258" y2="210"/>
+        <rect class="hd-m" x="117" y="26" width="132" height="26"/>
+        <text class="on b" x="183" y="43.5" font-size="12.5" text-anchor="middle">Método</text>
+        <line class="ln-mu" stroke-width="1" x1="202.0" y1="92" x2="6.0" y2="92"/>
+        <text class="b" x="193.0" y="87" font-size="11" text-anchor="end">Controle em planilhas locais</text>
+        <circle class="root" cx="202.0" cy="92" r="5"/>
+        <line class="ln-mu" stroke-width="1" x1="220.0" y1="130" x2="24.0" y2="130"/>
+        <text class="b" x="211.0" y="125" font-size="11" text-anchor="end">Controle sem suplente</text>
+        <circle class="root" cx="220.0" cy="130" r="5"/>
+        <line class="ln" x1="397" y1="52" x2="472" y2="210"/>
+        <rect class="hd-m" x="331" y="26" width="132" height="26"/>
+        <text class="on b" x="397" y="43.5" font-size="12.5" text-anchor="middle">Mão de obra</text>
+        <line class="ln-mu" stroke-width="1" x1="416.0" y1="92" x2="220.0" y2="92"/>
+        <text x="407.0" y="87" font-size="11" text-anchor="end">Responsável mudou de área</text>
+        <circle class="ring" cx="416.0" cy="92" r="4"/>
+        <line class="ln-mu" stroke-width="1" x1="434.0" y1="130" x2="238.0" y2="130"/>
+        <text class="open" x="425.0" y="125" font-size="11" text-anchor="end">Etiqueta não conferida no uso</text>
+        <line class="ln" x1="611" y1="52" x2="686" y2="210"/>
+        <rect class="hd-m" x="545" y="26" width="132" height="26"/>
+        <text class="on b" x="611" y="43.5" font-size="12.5" text-anchor="middle">Máquina</text>
+        <line class="ln-mu" stroke-width="1" x1="630.0" y1="92" x2="434.0" y2="92"/>
+        <text class="b" x="621.0" y="87" font-size="11" text-anchor="end">Planilha sem alerta de vencimento</text>
+        <circle class="root" cx="630.0" cy="92" r="5"/>
+        <line class="ln" x1="183" y1="368" x2="258" y2="210"/>
+        <rect class="hd-m" x="117" y="368" width="132" height="26"/>
+        <text class="on b" x="183" y="385.5" font-size="12.5" text-anchor="middle">Material</text>
+        <line class="ln-mu" stroke-width="1" x1="202.0" y1="328" x2="6.0" y2="328"/>
+        <text class="cut" x="193.0" y="323" font-size="11" text-anchor="end">Etiquetas de calibração ilegíveis</text>
+        <line class="ln" x1="397" y1="368" x2="472" y2="210"/>
+        <rect class="hd-m" x="331" y="368" width="132" height="26"/>
+        <text class="on b" x="397" y="385.5" font-size="12.5" text-anchor="middle">Medição</text>
+        <line class="ln-mu" stroke-width="1" x1="416.0" y1="328" x2="220.0" y2="328"/>
+        <text class="b" x="407.0" y="323" font-size="11" text-anchor="end">Sem indicador de vencimentos</text>
+        <circle class="root" cx="416.0" cy="328" r="5"/>
+        <line class="ln" x1="611" y1="368" x2="686" y2="210"/>
+        <rect class="hd-m" x="545" y="368" width="132" height="26"/>
+        <text class="on b" x="611" y="385.5" font-size="12.5" text-anchor="middle">Meio ambiente</text>
+        <line class="ln-mu" stroke-width="1" x1="630.0" y1="328" x2="434.0" y2="328"/>
+        <text class="cut" x="621.0" y="323" font-size="11" text-anchor="end">Laboratório externo demorado</text>
+        <circle class="root" cx="22" cy="420" r="5"/><text class="b" x="34" y="424" font-size="11">confirmada, segue para o plano</text>
+        <circle class="ring" cx="252" cy="420" r="4"/><text x="264" y="424" font-size="11">confirmada, fica para depois</text>
+        <text class="cut" x="468" y="424" font-size="11">descartada pelos dados</text>
+        <text class="open" x="650" y="424" font-size="11">não verificada</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 6.</b> Diagrama do exemplo 3. As causas que seguem para o plano estão no método, no sistema e na medição. A mudança de área do responsável foi confirmada, mas é um fato normal da organização: a causa a tratar é o controle depender de uma pessoa só.</figcaption>
+  </figure>
+  <div class="tbl">
+    <table class="causas">
+      <thead><tr><th>Código</th><th style="width:13%">Categoria</th><th style="width:24%">Causa provável</th><th style="width:21%">Como foi verificada</th><th style="width:13%">Resultado</th><th>Evidência</th></tr></thead>
+      <tbody>
+        <tr><td class="cod">A1</td><td>Método</td><td class="cau">Vencimentos controlados em planilhas de cada setor</td><td>Levantar os controles existentes</td><td class="res"><b>Confirmada</b><small>segue para o plano</small></td><td>Quatro planilhas, com formatos diferentes</td></tr>
+        <tr><td class="cod">A2</td><td>Método</td><td class="cau">Procedimento não prevê suplente para o controle</td><td>Ler o procedimento vigente</td><td class="res"><b>Confirmada</b><small>segue para o plano</small></td><td>O texto cita só um responsável</td></tr>
+        <tr><td class="cod">B1</td><td>Mão de obra</td><td class="cau">Responsável pelo controle mudou de área</td><td>Conferir a data da mudança e a da última atualização</td><td class="res"><b>Confirmada</b></td><td>Planilha sem atualização desde a mudança</td></tr>
+        <tr class="open"><td class="cod">B2</td><td>Mão de obra</td><td class="cau">Usuários não conferem a etiqueta antes do uso</td><td>Observar o uso em dois turnos</td><td class="res"><b>Não verificada</b></td><td>—</td></tr>
+        <tr><td class="cod">C1</td><td>Máquina</td><td class="cau">Planilha não emite alerta de vencimento</td><td>Testar a planilha com datas vencidas</td><td class="res"><b>Confirmada</b><small>segue para o plano</small></td><td>Nenhum aviso é exibido</td></tr>
+        <tr class="cut"><td class="cod">D1</td><td>Material</td><td class="cau">Etiquetas de calibração ilegíveis</td><td>Conferir as etiquetas dos 25 instrumentos</td><td class="res"><b>Descartada</b></td><td>Todas as etiquetas legíveis</td></tr>
+        <tr><td class="cod">E1</td><td>Medição</td><td class="cau">Não há indicador de instrumentos vencidos</td><td>Verificar os indicadores do sistema de gestão</td><td class="res"><b>Confirmada</b><small>segue para o plano</small></td><td>O tema não aparece nos indicadores</td></tr>
+        <tr class="cut"><td class="cod">F1</td><td>Meio ambiente</td><td class="cau">Laboratório externo com prazo de atendimento longo</td><td>Conferir os prazos das últimas calibrações</td><td class="res"><b>Descartada</b></td><td>Prazo médio de 6 dias, dentro do contrato</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p><strong>O que observar.</strong> A primeira explicação foi “a pessoa responsável saiu e ninguém assumiu”. O diagrama levou o grupo um nível abaixo: pessoas mudam de área, e o controle não estava preparado para isso. A ação corretiva mudou o método, e não a pessoa.</p>
+</section>
+
+<!-- ============================ MÓDULO 5 ============================ -->
+<section id="raiz">
+  <p class="eyebrow">Módulo 5</p>
+  <h2>Da hipótese à causa raiz</h2>
+  <p>O diagrama pronto é uma lista organizada de hipóteses. Duas etapas o transformam em conhecimento sobre o processo: verificar cada hipótese escolhida e aprofundar as confirmadas até a causa raiz.</p>
+
+  <h3>Verificar: o que os dados dizem</h3>
+  <p>Cada hipótese escolhida recebe um teste simples, definido antes de olhar os dados: o que se espera encontrar se a causa for verdadeira? No exemplo 1, a equipe classificou 200 entregas atrasadas pelo motivo do atraso.</p>
+
+  <figure id="fig-bars">
+    <div class="scroll">
+      <svg id="bars" viewBox="0 0 900 238" role="img" aria-label="Gráfico de barras horizontais com o motivo do atraso em 200 entregas: pizza pronta esperando entregador, 46%; fila no forno, 27%; endereço incompleto, 15%; trânsito ou obras, 5%; outros motivos, 7%.">
+        <line class="grid" x1="330.0" y1="38" x2="330.0" y2="194"/>
+        <text class="mu" x="330.0" y="210" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">0%</text>
+        <line class="grid" x1="414.0" y1="38" x2="414.0" y2="194"/>
+        <text class="mu" x="414.0" y="210" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">10%</text>
+        <line class="grid" x1="498.0" y1="38" x2="498.0" y2="194"/>
+        <text class="mu" x="498.0" y="210" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">20%</text>
+        <line class="grid" x1="582.0" y1="38" x2="582.0" y2="194"/>
+        <text class="mu" x="582.0" y="210" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">30%</text>
+        <line class="grid" x1="666.0" y1="38" x2="666.0" y2="194"/>
+        <text class="mu" x="666.0" y="210" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">40%</text>
+        <line class="grid" x1="750.0" y1="38" x2="750.0" y2="194"/>
+        <text class="mu" x="750.0" y="210" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">50%</text>
+        <text class="mono mu" x="540.0" y="230" font-size="10" text-anchor="middle">PARTE DOS ATRASOS</text>
+        <text class="mono mu" x="880" y="30" font-size="10" text-anchor="end">ACUMULADO</text>
+        <text x="20" y="63.5" font-size="11.5">Pizza pronta esperando entregador</text>
+        <path class="bar" data-k="0" d="M330 52.0 H712.4 Q716.4 52.0 716.4 56.0 V62.0 Q716.4 66.0 712.4 66.0 H330 Z"/>
+        <text class="b" x="723.4" y="63.5" font-size="11.5" style="font-variant-numeric:tabular-nums">46%</text>
+        <text class="mu" x="880" y="63.5" font-size="11.5" text-anchor="end" style="font-variant-numeric:tabular-nums">46%</text>
+        <text x="20" y="93.5" font-size="11.5">Fila no forno</text>
+        <path class="bar" data-k="1" d="M330 82.0 H552.8 Q556.8 82.0 556.8 86.0 V92.0 Q556.8 96.0 552.8 96.0 H330 Z"/>
+        <text class="b" x="563.8" y="93.5" font-size="11.5" style="font-variant-numeric:tabular-nums">27%</text>
+        <text class="mu" x="880" y="93.5" font-size="11.5" text-anchor="end" style="font-variant-numeric:tabular-nums">73%</text>
+        <text x="20" y="123.5" font-size="11.5">Endereço incompleto</text>
+        <path class="bar" data-k="2" d="M330 112.0 H452.0 Q456.0 112.0 456.0 116.0 V122.0 Q456.0 126.0 452.0 126.0 H330 Z"/>
+        <text class="b" x="463.0" y="123.5" font-size="11.5" style="font-variant-numeric:tabular-nums">15%</text>
+        <text class="mu" x="880" y="123.5" font-size="11.5" text-anchor="end" style="font-variant-numeric:tabular-nums">88%</text>
+        <text x="20" y="153.5" font-size="11.5">Trânsito ou obras</text>
+        <path class="bar" data-k="3" d="M330 142.0 H368.0 Q372.0 142.0 372.0 146.0 V152.0 Q372.0 156.0 368.0 156.0 H330 Z"/>
+        <text class="b" x="379.0" y="153.5" font-size="11.5" style="font-variant-numeric:tabular-nums">5%</text>
+        <text class="mu" x="880" y="153.5" font-size="11.5" text-anchor="end" style="font-variant-numeric:tabular-nums">93%</text>
+        <text x="20" y="183.5" font-size="11.5">Outros motivos</text>
+        <path class="bar" data-k="4" d="M330 172.0 H384.8 Q388.8 172.0 388.8 176.0 V182.0 Q388.8 186.0 384.8 186.0 H330 Z"/>
+        <text class="b" x="395.8" y="183.5" font-size="11.5" style="font-variant-numeric:tabular-nums">7%</text>
+        <text class="mu" x="880" y="183.5" font-size="11.5" text-anchor="end" style="font-variant-numeric:tabular-nums">100%</text>
+        <rect class="hit" x="14" y="44" width="872" height="30" tabindex="0" role="img" aria-label="Pizza pronta esperando entregador: 46% dos atrasos, acumulado de 46%" data-k="0" data-n="Pizza pronta esperando entregador" data-v="46" data-q="92" data-c="46" data-x="716.4"/>
+        <rect class="hit" x="14" y="74" width="872" height="30" tabindex="0" role="img" aria-label="Fila no forno: 27% dos atrasos, acumulado de 73%" data-k="1" data-n="Fila no forno" data-v="27" data-q="54" data-c="73" data-x="556.8"/>
+        <rect class="hit" x="14" y="104" width="872" height="30" tabindex="0" role="img" aria-label="Endereço incompleto: 15% dos atrasos, acumulado de 88%" data-k="2" data-n="Endereço incompleto" data-v="15" data-q="30" data-c="88" data-x="456.0"/>
+        <rect class="hit" x="14" y="134" width="872" height="30" tabindex="0" role="img" aria-label="Trânsito ou obras: 5% dos atrasos, acumulado de 93%" data-k="3" data-n="Trânsito ou obras" data-v="5" data-q="10" data-c="93" data-x="372.0"/>
+        <rect class="hit" x="14" y="164" width="872" height="30" tabindex="0" role="img" aria-label="Outros motivos: 7% dos atrasos, acumulado de 100%" data-k="4" data-n="Outros motivos" data-v="7" data-q="14" data-c="100" data-x="388.8"/>
+      </svg>
+    </div>
+    <div class="tip" id="bars-tip" hidden></div>
+    <figcaption><b>Figura 7.</b> Motivo do atraso em 200 entregas atrasadas do exemplo 1. Os três primeiros motivos respondem por 88% dos atrasos. Passe o mouse sobre as barras para ver os valores.</figcaption>
+    <details class="data">
+      <summary>Ver os dados em tabela</summary>
+      <div class="tbl">
+        <table>
+          <thead><tr><th>Motivo do atraso</th><th>Entregas</th><th>Parte dos atrasos</th><th>Acumulado</th></tr></thead>
+          <tbody>
+            <tr><td>Pizza pronta esperando entregador</td><td class="num">92</td><td class="num">46%</td><td class="num">46%</td></tr>
+            <tr><td>Fila no forno</td><td class="num">54</td><td class="num">27%</td><td class="num">73%</td></tr>
+            <tr><td>Endereço incompleto</td><td class="num">30</td><td class="num">15%</td><td class="num">88%</td></tr>
+            <tr><td>Trânsito ou obras</td><td class="num">10</td><td class="num">5%</td><td class="num">93%</td></tr>
+            <tr><td>Outros motivos</td><td class="num">14</td><td class="num">7%</td><td class="num">100%</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </details>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Forma de verificar</th><th style="width:36%">Quando usar</th><th>Exemplo</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Contagem</strong></td><td>A causa deixa rastro nos registros</td><td>Contar os atrasos com endereço incompleto</td></tr>
+        <tr><td><strong>Comparação</strong></td><td>A causa está presente em uma situação e ausente em outra</td><td>Comparar rotas com e sem passagem pela avenida em obras</td></tr>
+        <tr><td><strong>Observação no local</strong></td><td>A causa só aparece quando se acompanha o trabalho</td><td>Acompanhar 50 saídas e mapear as rotas</td></tr>
+        <tr><td><strong>Medição</strong></td><td>A causa depende de um valor que ninguém mediu</td><td>Medir o tempo de espera antes do forno</td></tr>
+        <tr><td><strong>Teste</strong></td><td>É possível mudar a condição e ver o que acontece</td><td>Testar a planilha com datas vencidas</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Uma hipótese descartada é um resultado, e não um fracasso. Ela evita uma ação inútil e deve ficar registrada, com o motivo.</p>
+
+  <h3>Aprofundar: os 5 porquês</h3>
+  <p>Uma causa confirmada ainda pode ser um sintoma. Para chegar à causa raiz, pergunte por que ela acontece e repita a pergunta sobre cada resposta. O número cinco é uma referência: às vezes bastam três perguntas, às vezes são necessárias seis.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 190" role="img" aria-label="Cadeia dos 5 porquês para a causa escala igual em todos os dias. A pizza pronta espera o entregador. Por quê? Não há entregador disponível no pico. Por quê? A escala é igual em todos os dias. Por quê? A escala segue o movimento médio da semana. Por quê? Ninguém analisa os pedidos por faixa de horário: esta é a causa raiz.">
+        <defs>
+          <marker id="a8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker>
+          <marker id="a8m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah-mu" d="M0 0 L10 5 L0 10 z"/></marker>
+        </defs>
+        <g font-size="12" text-anchor="middle">
+          <rect class="bx" x="10" y="50" width="152" height="70"/>
+          <text class="mono mu" x="86" y="68" font-size="9.5">SINTOMA</text>
+          <text x="86" y="90">A pizza pronta</text><text x="86" y="106">espera o entregador</text>
+
+          <rect class="bx" x="192" y="50" width="152" height="70"/>
+          <text class="mono mu" x="268" y="68" font-size="9.5">1º PORQUÊ</text>
+          <text x="268" y="90">Não há entregador</text><text x="268" y="106">disponível no pico</text>
+
+          <rect class="bx" x="374" y="50" width="152" height="70"/>
+          <text class="mono mu" x="450" y="68" font-size="9.5">2º PORQUÊ</text>
+          <text x="450" y="90">A escala é igual</text><text x="450" y="106">em todos os dias</text>
+
+          <rect class="bx" x="556" y="50" width="152" height="70"/>
+          <text class="mono mu" x="632" y="68" font-size="9.5">3º PORQUÊ</text>
+          <text x="632" y="90">A escala segue o</text><text x="632" y="106">movimento médio</text>
+
+          <rect class="bx-ink" x="738" y="50" width="152" height="70"/>
+          <text class="mono t-ground" x="814" y="68" font-size="9.5">CAUSA RAIZ</text>
+          <text class="b t-ground" x="814" y="90">Ninguém analisa os</text><text class="b t-ground" x="814" y="106">pedidos por horário</text>
+        </g>
+        <line class="ln" x1="164" y1="85" x2="188" y2="85" marker-end="url(#a8)"/>
+        <line class="ln" x1="346" y1="85" x2="370" y2="85" marker-end="url(#a8)"/>
+        <line class="ln" x1="528" y1="85" x2="552" y2="85" marker-end="url(#a8)"/>
+        <line class="ln" x1="710" y1="85" x2="734" y2="85" marker-end="url(#a8)"/>
+        <g font-size="10.5" text-anchor="middle">
+          <text x="177" y="40">por quê?</text><text x="359" y="40">por quê?</text><text x="541" y="40">por quê?</text><text x="723" y="40">por quê?</text>
+        </g>
+        <path class="ln-mu dash" d="M814 124 V150 H86 V126" marker-end="url(#a8m)"/>
+        <text class="mu" x="450" y="170" font-size="11.5" text-anchor="middle">teste de volta: leia da direita para a esquerda, trocando “por quê?” por “portanto”</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 8.</b> Os porquês da causa “escala igual em todos os dias”. A cadeia para quando chega a algo que a organização pode mudar. O teste de volta confere se cada elo faz sentido.</figcaption>
+  </figure>
+
+  <h3>Como reconhecer a causa raiz</h3>
+  <ol>
+    <li>Ela foi confirmada com dados ou no local, e não só pela opinião do grupo.</li>
+    <li>Ela está ao alcance da organização: é possível agir sobre ela.</li>
+    <li>Ela explica o efeito: o teste de volta faz sentido do começo ao fim.</li>
+    <li>Ela não aponta uma pessoa. Quando a resposta é um nome, falta um porquê.</li>
+    <li>Se for eliminada, o problema deixa de ocorrer ou diminui de forma clara.</li>
+  </ol>
+  <p>Um problema pode ter mais de uma causa raiz. No exemplo 1, a escala e o agrupamento dos pedidos contribuem para o mesmo sintoma, e as duas foram tratadas.</p>
+</section>
+
+<!-- ============================ MÓDULO 6 ============================ -->
+<section id="erros">
+  <p class="eyebrow">Módulo 6</p>
+  <h2>Erros comuns</h2>
+  <div class="errs">
+    <div><h4>Escrever um efeito vago</h4><p>“Problemas na entrega”, “baixa qualidade”, “clientes insatisfeitos”.</p><p class="fix"><b>Correção:</b> número, local e período. O efeito preciso já mostra onde procurar.</p></div>
+    <div><h4>Escrever soluções como causas</h4><p>“Falta de treinamento”, “falta de um sistema”, “falta de gente”.</p><p class="fix"><b>Correção:</b> descreva o que acontece. A solução é assunto do plano de ação.</p></div>
+    <div><h4>Culpar pessoas</h4><p>“Falha do operador”, “descuido”, “falta de comprometimento”.</p><p class="fix"><b>Correção:</b> pergunte por que o erro foi possível. A resposta costuma estar no método.</p></div>
+    <div><h4>Parar na primeira camada</h4><p>O diagrama tem uma causa por ramo, e nenhuma subcausa.</p><p class="fix"><b>Correção:</b> pergunte por quê a cada causa, até chegar a algo que se possa mudar.</p></div>
+    <div><h4>Tratar hipótese como causa</h4><p>O grupo vota, escolhe a causa mais citada e parte para a ação.</p><p class="fix"><b>Correção:</b> votação escolhe o que verificar. Quem confirma é o dado.</p></div>
+    <div><h4>Forçar as categorias</h4><p>O grupo inventa causas para não deixar ramo vazio, ou ignora um ramo inteiro.</p><p class="fix"><b>Correção:</b> discuta todas as categorias e aceite que algumas fiquem sem causa.</p></div>
+    <div><h4>Fazer sozinho</h4><p>Uma pessoa preenche o diagrama na própria mesa.</p><p class="fix"><b>Correção:</b> reúna quem executa o processo. O diagrama de uma pessoa só tem as causas que ela já conhecia.</p></div>
+    <div><h4>Apagar o que foi descartado</h4><p>O diagrama final mostra só as causas confirmadas.</p><p class="fix"><b>Correção:</b> mantenha as hipóteses descartadas, com o motivo. Elas evitam que a discussão volte.</p></div>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 7 ============================ -->
+<section id="ferramentas">
+  <p class="eyebrow">Módulo 7</p>
+  <h2>Ishikawa e outras ferramentas</h2>
+  <p>O Ishikawa organiza hipóteses. Ele depende de outras ferramentas para escolher o problema, para confirmar as causas e para transformar o que foi aprendido em ação.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 170" role="img" aria-label="Sequência da análise de causas. Problema priorizado, com a Matriz GUT. Hipóteses de causa, com o Diagrama de Ishikawa. Causas confirmadas, com dados e gráfico de Pareto. Causa raiz, com os 5 porquês. Plano de ação, com o 5W2H.">
+        <defs>
+          <marker id="a9" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker>
+        </defs>
+        <g font-size="12.5" text-anchor="middle">
+          <rect class="bx" x="10" y="40" width="160" height="64"/><text class="b" x="90" y="68">Problema</text><text class="b" x="90" y="85">priorizado</text>
+          <rect class="bx-ink" x="190" y="40" width="160" height="64"/><text class="b t-ground" x="270" y="68">Hipóteses</text><text class="b t-ground" x="270" y="85">de causa</text>
+          <rect class="bx" x="370" y="40" width="160" height="64"/><text class="b" x="450" y="68">Causas</text><text class="b" x="450" y="85">confirmadas</text>
+          <rect class="bx" x="550" y="40" width="160" height="64"/><text class="b" x="630" y="77">Causa raiz</text>
+          <rect class="bx" x="730" y="40" width="160" height="64"/><text class="b" x="810" y="68">Plano</text><text class="b" x="810" y="85">de ação</text>
+        </g>
+        <line class="ln" x1="172" y1="72" x2="186" y2="72" marker-end="url(#a9)"/>
+        <line class="ln" x1="352" y1="72" x2="366" y2="72" marker-end="url(#a9)"/>
+        <line class="ln" x1="532" y1="72" x2="546" y2="72" marker-end="url(#a9)"/>
+        <line class="ln" x1="712" y1="72" x2="726" y2="72" marker-end="url(#a9)"/>
+        <g class="mono" font-size="9.5" text-anchor="middle">
+          <text class="mu" x="90" y="126">MATRIZ GUT</text>
+          <text class="mu" x="270" y="126">ISHIKAWA</text>
+          <text class="mu" x="450" y="126">DADOS · PARETO</text>
+          <text class="mu" x="630" y="126">5 PORQUÊS</text>
+          <text class="mu" x="810" y="126">5W2H</text>
+        </g>
+        <text class="mu" x="450" y="156" font-size="11.5" text-anchor="middle">as cinco etapas fazem parte da fase de planejamento do ciclo PDCA</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 9.</b> O caminho do problema ao plano. O Ishikawa abre o leque de hipóteses, e as etapas seguintes o fecham até a causa raiz.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:22%">Ferramenta</th><th style="width:30%">Pergunta que responde</th><th style="width:24%">Relação com o Ishikawa</th><th>Melhor momento</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Brainstorming</strong></td><td>Que causas o grupo consegue imaginar?</td><td>Gera as causas que vão para os ramos</td><td>Durante a construção</td></tr>
+        <tr><td><strong>5 porquês</strong></td><td>Por que essa causa acontece?</td><td>Aprofunda cada ramo</td><td>Durante e depois da construção</td></tr>
+        <tr><td><strong>Folha de verificação</strong></td><td>Quantas vezes cada situação ocorre?</td><td>Coleta os dados da verificação</td><td>Depois da construção</td></tr>
+        <tr><td><strong>Gráfico de Pareto</strong></td><td>Quais causas pesam mais?</td><td>Mostra o peso das causas confirmadas</td><td>Depois da verificação</td></tr>
+        <tr><td><strong>Diagrama de dispersão</strong></td><td>Duas variáveis andam juntas?</td><td>Testa a relação entre uma causa e o efeito</td><td>Durante a verificação</td></tr>
+        <tr><td><strong>Árvore de falhas</strong></td><td>Que combinações de eventos levam à falha?</td><td>Alternativa para falhas com causas combinadas</td><td>Análise de segurança e de confiabilidade</td></tr>
+        <tr><td><strong>FMEA</strong></td><td>O que pode falhar, e com que efeito?</td><td>Usa as mesmas categorias, antes de a falha ocorrer</td><td>Projeto de produto ou de processo</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Na série de estudos, o Ishikawa ocupa o centro da análise. A <a href="../GUT/treinamento-gut.html">Matriz GUT</a> escolhe o problema, o <a href="../SIPOC/treinamento-sipoc.html">SIPOC</a> mostra o processo em que ele acontece, o Ishikawa e os 5 porquês encontram as causas, e o <a href="../5W2H/treinamento-5w2h.html">5W2H</a> organiza as ações, dentro de um ciclo <a href="../PDCA/treinamento-pdca.html">PDCA</a>. A <a href="../SWOT/treinamento-swot.html">Matriz SWOT</a> costuma ser a origem das fraquezas que entram nessa fila.</p>
+</section>
+
+<!-- ============================ MÓDULO 8 ============================ -->
+<section id="iso">
+  <p class="eyebrow">Módulo 8</p>
+  <h2>Ishikawa nas normas ISO</h2>
+  <p>A ISO 9001:2015 pede, no requisito 10.2, que a organização avalie a necessidade de ação para eliminar as causas de uma não conformidade, a fim de que ela não se repita nem ocorra em outro lugar. Para isso, é preciso analisar a não conformidade, determinar as causas e verificar se existem casos similares. A norma não indica o método. O Ishikawa é um dos mais usados, porque deixa registrado o raciocínio que levou à causa.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 250" role="img" aria-label="Fluxo do requisito 10.2 da ISO 9001:2015. Não conformidade; reação e correção; análise das causas, que inclui analisar a não conformidade, determinar as causas e verificar casos similares; ação corretiva; e verificação da eficácia. O Diagrama de Ishikawa é usado na análise das causas. Se a ação não for eficaz, volta-se à análise.">
+        <defs>
+          <marker id="a10" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker>
+          <marker id="a10m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah-mu" d="M0 0 L10 5 L0 10 z"/></marker>
+        </defs>
+        <g font-size="12.5" text-anchor="middle">
+          <rect class="bx" x="10" y="30" width="160" height="70"/><text class="b" x="90" y="61">Não</text><text class="b" x="90" y="78">conformidade</text>
+          <rect class="bx" x="190" y="30" width="160" height="70"/><text class="b" x="270" y="61">Reação</text><text class="b" x="270" y="78">e correção</text>
+          <rect class="bx-ink" x="370" y="30" width="160" height="70"/><text class="b t-ground" x="450" y="61">Análise</text><text class="b t-ground" x="450" y="78">das causas</text>
+          <rect class="bx" x="550" y="30" width="160" height="70"/><text class="b" x="630" y="61">Ação</text><text class="b" x="630" y="78">corretiva</text>
+          <rect class="bx" x="730" y="30" width="160" height="70"/><text class="b" x="810" y="61">Verificação</text><text class="b" x="810" y="78">da eficácia</text>
+        </g>
+        <line class="ln" x1="172" y1="65" x2="186" y2="65" marker-end="url(#a10)"/>
+        <line class="ln" x1="352" y1="65" x2="366" y2="65" marker-end="url(#a10)"/>
+        <line class="ln" x1="532" y1="65" x2="546" y2="65" marker-end="url(#a10)"/>
+        <line class="ln" x1="712" y1="65" x2="726" y2="65" marker-end="url(#a10)"/>
+        <g font-size="11" text-anchor="middle">
+          <text class="mu" x="270" y="120">controlar, corrigir e lidar</text><text class="mu" x="270" y="135">com as consequências</text>
+          <text x="450" y="120">analisar, determinar as causas</text><text x="450" y="135">e procurar casos similares</text>
+          <text class="mu" x="630" y="120">implementar as ações</text><text class="mu" x="630" y="135">necessárias</text>
+          <text class="mu" x="810" y="120">analisar se a causa</text><text class="mu" x="810" y="135">foi eliminada</text>
+        </g>
+        <line class="ln" x1="450" y1="144" x2="450" y2="166"/>
+        <rect class="bx" x="300" y="166" width="300" height="34"/>
+        <text x="450" y="188" font-size="12" text-anchor="middle"><tspan class="b">O Ishikawa é usado aqui</tspan></text>
+        <path class="ln-mu dash" d="M810 144 V222 H650 Q620 222 610 200" marker-end="url(#a10m)"/>
+        <text class="mu" x="730" y="240" font-size="11" text-anchor="middle">ação não eficaz: volte à análise</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 10.</b> O caminho de uma não conformidade, segundo o requisito 10.2 da ISO 9001:2015. A análise das causas separa a correção, que trata o efeito, da ação corretiva, que trata a causa.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:22%">Requisito</th><th style="width:30%">O que a norma pede, em resumo</th><th style="width:22%">Como o Ishikawa ajuda</th><th>Evidências que o auditor procura</th></tr></thead>
+      <tbody>
+        <tr><td><strong>10.2</strong> Não conformidade e ação corretiva</td><td>Analisar a não conformidade, determinar as causas e verificar se existem ou podem ocorrer casos similares.</td><td>Registra as hipóteses, a verificação e as causas confirmadas.</td><td>Análise de causa com dados, e ação ligada à causa.</td></tr>
+        <tr><td><strong>9.1</strong> Análise e avaliação</td><td>Analisar e avaliar os dados do monitoramento e da medição.</td><td>Organiza a busca de causas quando um indicador sai da meta.</td><td>Indicadores fora da meta com análise registrada.</td></tr>
+        <tr><td><strong>6.1</strong> Riscos e oportunidades</td><td>Determinar os riscos que precisam ser abordados.</td><td>Levanta o que pode causar um efeito indesejado que ainda não ocorreu.</td><td>Riscos com causas identificadas, e não só com o evento.</td></tr>
+        <tr><td><strong>10.3</strong> Melhoria contínua</td><td>Usar os resultados das análises para identificar oportunidades de melhoria.</td><td>As causas confirmadas que não entraram no plano viram oportunidades registradas.</td><td>Registro do que ficou para os ciclos seguintes.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Causas que não passam na auditoria</h3>
+  <p>Quatro tipos de “causa” aparecem com frequência nos registros de ação corretiva e costumam render uma pergunta do auditor.</p>
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:26%">O que está escrito</th><th style="width:22%">Qual é o problema</th><th style="width:24%">Pergunta do auditor</th><th>Causa bem escrita</th></tr></thead>
+      <tbody>
+        <tr><td>“Falha humana”</td><td>Aponta uma pessoa, e não uma causa</td><td>Por que a falha foi possível?</td><td>A instrução não pede a conferência da etiqueta antes do uso.</td></tr>
+        <tr><td>“Instrumento com calibração vencida”</td><td>Repete a não conformidade</td><td>Por que o vencimento não foi percebido?</td><td>O controle é feito em uma planilha que não emite alerta.</td></tr>
+        <tr><td>“Falta de treinamento”</td><td>É uma solução disfarçada</td><td>O que a pessoa não sabia, e por quê?</td><td>A integração de novos operadores não inclui o controle de instrumentos.</td></tr>
+        <tr><td>“Procedimento não foi seguido”</td><td>Para um porquê antes da hora</td><td>Por que o procedimento não foi seguido?</td><td>O procedimento não estava disponível no posto de trabalho.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>O que o auditor observa</h3>
+  <div class="pair">
+    <div class="box">
+      <h4>Sinais de análise consistente</h4>
+      <ul>
+        <li>Efeito descrito com número, local e período.</li>
+        <li>Várias hipóteses levantadas, com registro das descartadas.</li>
+        <li>Causas confirmadas com dados ou com observação no local.</li>
+        <li>Ações que atacam as causas confirmadas, uma a uma.</li>
+        <li>Busca de casos similares em outros processos ou áreas.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h4>Sinais de análise de fachada</h4>
+      <ul>
+        <li>Uma única causa, igual em todas as não conformidades.</li>
+        <li>Causa e ação escritas no mesmo dia, sem verificação.</li>
+        <li>“Falha humana” como causa e “reorientar” como ação.</li>
+        <li>Diagrama anexado ao registro, sem ligação com a ação tomada.</li>
+        <li>A mesma não conformidade em auditorias seguidas.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="note">
+    <h4>Pontos de atenção</h4>
+    <p>A norma não exige o Diagrama de Ishikawa nem qualquer outro método. A profundidade da análise deve ser proporcional ao efeito da não conformidade: um desvio simples pode ser resolvido com os 5 porquês.</p>
+    <p>Este módulo usa a numeração da ISO 9001:2015 e resume os requisitos com palavras próprias. Confira sempre a edição vigente da norma antes de citar um requisito em relatório.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 9 ============================ -->
+<section id="oficina">
+  <p class="eyebrow">Módulo 9</p>
+  <h2>Como conduzir a oficina</h2>
+  <p>Um bom diagrama sai de uma reunião com quem conhece o processo de perto. Reserve 90 minutos e convide de 5 a 8 pessoas, de funções diferentes. Leve os dados da observação e desenhe a espinha em um quadro grande, onde todos enxerguem.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 136" role="img" aria-label="Distribuição dos 90 minutos da oficina: 10 para o efeito, 5 para as categorias, 30 para o levantamento das causas, 20 para os porquês, 15 para a escolha das causas mais prováveis e 10 para o plano de verificação.">
+        <g font-size="11.5" text-anchor="middle">
+          <rect class="bx" x="60" y="24" width="86.7" height="56"/><text x="103.3" y="56">Efeito</text>
+          <rect class="bx" x="146.7" y="24" width="43.3" height="56"/><text x="168.3" y="56" font-size="10">Cat.</text>
+          <rect class="hd-m gap2" x="190" y="24" width="260" height="56"/><text class="on b" x="320" y="56">Levantamento das causas</text>
+          <rect class="hd-m gap2" x="450" y="24" width="173.3" height="56"/><text class="on b" x="536.7" y="56">Porquês</text>
+          <rect class="bx" x="623.3" y="24" width="130" height="56"/><text x="688.3" y="49">Escolha das</text><text x="688.3" y="64">mais prováveis</text>
+          <rect class="bx" x="753.3" y="24" width="86.7" height="56"/><text x="796.7" y="49">Plano de</text><text x="796.7" y="64">verificação</text>
+        </g>
+        <g class="ln-mu" stroke-width="1">
+          <line x1="60" y1="82" x2="60" y2="94"/><line x1="146.7" y1="82" x2="146.7" y2="94"/><line x1="190" y1="82" x2="190" y2="94"/>
+          <line x1="450" y1="82" x2="450" y2="94"/><line x1="623.3" y1="82" x2="623.3" y2="94"/><line x1="753.3" y1="82" x2="753.3" y2="94"/>
+          <line x1="840" y1="82" x2="840" y2="94"/>
+        </g>
+        <g class="mono" font-size="10.5" text-anchor="middle">
+          <text class="mu" x="60" y="112">0</text><text class="mu" x="146.7" y="112">10</text><text class="mu" x="190" y="112">15</text>
+          <text class="mu" x="450" y="112">45</text><text class="mu" x="623.3" y="112">65</text><text class="mu" x="753.3" y="112">80</text>
+          <text class="mu" x="840" y="112">90 min</text>
+        </g>
+      </svg>
+    </div>
+    <figcaption><b>Figura 11.</b> Roteiro de 90 minutos, desenhado em escala. O bloco estreito, de 10 a 15 minutos, é o das categorias. Mais da metade do tempo vai para levantar as causas e aprofundá-las.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:14%">Minutos</th><th style="width:24%">Bloco</th><th>O que fazer</th><th style="width:24%">Resultado</th></tr></thead>
+      <tbody>
+        <tr><td class="num">0 a 10</td><td>Efeito</td><td>Apresentar os dados da observação e escrever o efeito, com número, local e período.</td><td>Cabeça do diagrama</td></tr>
+        <tr><td class="num">10 a 15</td><td>Categorias</td><td>Escolher as categorias e ajustar os nomes ao processo.</td><td>Ramos principais</td></tr>
+        <tr><td class="num">15 a 45</td><td>Levantamento das causas</td><td>Cada pessoa escreve causas em notas adesivas, em silêncio. O grupo lê, agrupa e distribui pelos ramos.</td><td>Causas nos ramos</td></tr>
+        <tr><td class="num">45 a 65</td><td>Porquês</td><td>Perguntar por quê a cada causa e registrar as subcausas.</td><td>Subcausas</td></tr>
+        <tr><td class="num">65 a 80</td><td>Escolha das mais prováveis</td><td>Cada pessoa marca as três causas que considera mais prováveis. O grupo discute as mais marcadas.</td><td>De 3 a 6 causas escolhidas</td></tr>
+        <tr><td class="num">80 a 90</td><td>Plano de verificação</td><td>Definir como cada causa escolhida será verificada, por quem e até quando.</td><td>Lista de verificações</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>A verificação acontece depois da oficina. Marque um segundo encontro, de 30 minutos, para ler os resultados, marcar no diagrama o que foi confirmado e encaminhar as causas ao plano de ação.</p>
+
+  <h3>Checklist de validação</h3>
+  <p>Marque os itens conforme revisa o seu diagrama. As marcações ficam salvas neste navegador.</p>
+  <ol class="check" id="checklist">
+    <li><label><input type="checkbox" id="ck-1"><span>O efeito está escrito como problema, com número, local e período.</span></label></li>
+    <li><label><input type="checkbox" id="ck-2"><span>O efeito não traz causa nem solução embutida.</span></label></li>
+    <li><label><input type="checkbox" id="ck-3"><span>Participaram pessoas que conhecem o processo, de funções diferentes.</span></label></li>
+    <li><label><input type="checkbox" id="ck-4"><span>As categorias foram escolhidas de acordo com o tipo de processo.</span></label></li>
+    <li><label><input type="checkbox" id="ck-5"><span>Todas as categorias foram discutidas, mesmo as que ficaram sem causa.</span></label></li>
+    <li><label><input type="checkbox" id="ck-6"><span>Cada causa é um fato que pode ser verificado, e não uma opinião ou a falta de uma solução.</span></label></li>
+    <li><label><input type="checkbox" id="ck-7"><span>As causas foram aprofundadas com a pergunta “por quê?”.</span></label></li>
+    <li><label><input type="checkbox" id="ck-8"><span>Nenhuma causa aponta uma pessoa como culpada.</span></label></li>
+    <li><label><input type="checkbox" id="ck-9"><span>As causas mais prováveis foram escolhidas pelo grupo, com critério combinado.</span></label></li>
+    <li><label><input type="checkbox" id="ck-10"><span>As causas escolhidas foram verificadas com dados ou no local.</span></label></li>
+    <li><label><input type="checkbox" id="ck-11"><span>As causas descartadas ficaram registradas, com o motivo.</span></label></li>
+    <li><label><input type="checkbox" id="ck-12"><span>As causas confirmadas seguiram para o plano de ação.</span></label></li>
+  </ol>
+  <div class="bar"><span><b id="ck-count">0</b> de 12 itens marcados</span><button class="btn" id="ck-reset" type="button">Limpar marcações</button></div>
+</section>
+
+<!-- ============================ MÓDULO 10 ============================ -->
+<section id="pratique">
+  <p class="eyebrow">Módulo 10</p>
+  <h2>Pratique</h2>
+  <h3>Exercício 1. Em qual categoria vai cada causa?</h3>
+  <p>Uma padaria investiga por que 8% dos pães saem fora do peso. As causas abaixo foram levantadas pela equipe. Escolha a categoria de cada uma.</p>
+  <div class="quiz wide" id="quiz"></div>
+  <div class="bar"><span>Acertos: <b id="qz-score">0</b> de <b id="qz-total">10</b></span><span>Respondidos: <b id="qz-done">0</b></span><button class="btn" id="qz-reset" type="button">Recomeçar</button></div>
+  <p>Algumas causas poderiam ficar em mais de um ramo. Isso é normal: a categoria é um roteiro para levantar ideias, e não uma classificação rígida. O que não pode acontecer é a causa ficar fora do diagrama.</p>
+
+  <h3>Exercício 2. Monte o seu diagrama</h3>
+  <p>Escolha um problema que você conhece bem, que se repete e que pode ser medido. Abra a aba Ishikawa da planilha de apoio e siga o roteiro.</p>
+  <ol>
+    <li>Escreva o efeito, com número, local e período.</li>
+    <li>Confira os nomes das seis categorias e ajuste ao seu processo.</li>
+    <li>Escreva pelo menos duas causas em cada categoria. Se uma ficar vazia, registre que foi discutida.</li>
+    <li>Pergunte por quê a cada causa e preencha a coluna de subcausas.</li>
+    <li>Marque a probabilidade de cada causa e escolha de três a seis para verificar.</li>
+    <li>Defina como verificar cada uma. Depois, registre o resultado e a evidência.</li>
+    <li>Leve as confirmadas para a aba 5 Porquês e, em seguida, para o plano de ação.</li>
+  </ol>
+  <p>Depois, mostre o diagrama a alguém que executa o processo e não participou da análise. As causas que essa pessoa acrescentar são a parte mais valiosa do exercício.</p>
+</section>
+
+<!-- ============================ MÓDULO 11 ============================ -->
+<section id="planilha">
+  <p class="eyebrow">Módulo 11</p>
+  <h2>A planilha de apoio</h2>
+  <p>Este treinamento acompanha o arquivo <a id="xlsx-ref" href="Ishikawa-modelo.xlsx">Ishikawa-modelo.xlsx</a>, que fica na mesma pasta. As células em amarelo-claro são para preenchimento. As células cinza são calculadas.</p>
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Aba</th><th>Para que serve</th><th style="width:36%">O que ela calcula</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Instruções</strong></td><td>Legenda de cores, ordem de preenchimento e regras do modelo.</td><td>Nada. É só leitura.</td></tr>
+        <tr><td><strong>Ishikawa</strong></td><td>Cabeçalho da análise e seis categorias, com cinco causas cada, subcausa, probabilidade, verificação e resultado.</td><td>Contagens por resultado, categorias sem causa e avisos, como causa confirmada sem evidência.</td></tr>
+        <tr><td><strong>Diagrama</strong></td><td>Visão do diagrama para leitura e impressão, com três categorias acima da espinha e três abaixo.</td><td>É toda calculada a partir da aba Ishikawa, com marcação do resultado de cada causa.</td></tr>
+        <tr><td><strong>5 Porquês</strong></td><td>Cadeia de porquês de até seis causas, com a causa raiz e o teste de volta.</td><td>Puxa a causa pelo código e avisa quando a cadeia é curta ou a causa raiz não passa no teste.</td></tr>
+        <tr><td><strong>Plano de ação</strong></td><td>Ação, responsável, prazo e status para cada causa que segue para o plano.</td><td>Lista sozinha as causas marcadas, calcula a situação e aponta causas sem ação.</td></tr>
+        <tr><td><strong>Checklist</strong></td><td>Os mesmos 12 itens do módulo 9, com status Sim, Parcial ou Não.</td><td>Percentual atendido e situação da validação.</td></tr>
+        <tr><td><strong>Exemplo 1 e Exemplo 2</strong></td><td>As análises da pizzaria e de Suprimentos, preenchidas, com os porquês das causas principais.</td><td>Os mesmos resumos da aba Ishikawa.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ GLOSSÁRIO ============================ -->
+<section id="glossario">
+  <p class="eyebrow">Referência</p>
+  <h2>Glossário</h2>
+  <dl class="gloss">
+    <div><dt>5 porquês</dt><dd>Técnica de perguntar “por quê?” em sequência, até chegar a uma causa sobre a qual se pode agir.</dd></div>
+    <div><dt>6M</dt><dd>Conjunto de seis categorias de causas: método, mão de obra, máquina, material, medição e meio ambiente.</dd></div>
+    <div><dt>Ação corretiva</dt><dd>Ação para eliminar a causa de uma não conformidade e evitar que ela se repita.</dd></div>
+    <div><dt>Brainstorming</dt><dd>Levantamento de ideias em grupo, sem crítica nem discussão durante a geração.</dd></div>
+    <div><dt>Categoria</dt><dd>Família de causas, representada por um ramo principal do diagrama.</dd></div>
+    <div><dt>Causa raiz</dt><dd>Causa que, eliminada, impede o problema de voltar.</dd></div>
+    <div><dt>Correção</dt><dd>Ação para eliminar uma não conformidade já ocorrida. Trata o efeito, e não a causa.</dd></div>
+    <div><dt>Diagrama de causa e efeito</dt><dd>Outro nome do Diagrama de Ishikawa.</dd></div>
+    <div><dt>Efeito</dt><dd>O problema em análise, escrito na cabeça do diagrama.</dd></div>
+    <div><dt>Espinha de peixe</dt><dd>Nome popular do diagrama, pelo formato.</dd></div>
+    <div><dt>Gráfico de Pareto</dt><dd>Gráfico de barras em ordem decrescente, que separa as poucas causas que mais pesam das muitas que pesam pouco.</dd></div>
+    <div><dt>Hipótese</dt><dd>Causa possível, ainda não confirmada com dados.</dd></div>
+    <div><dt>Subcausa</dt><dd>Causa de uma causa. Aparece como ramo secundário.</dd></div>
+    <div><dt>Teste de volta</dt><dd>Leitura da cadeia de porquês no sentido inverso, com “portanto”, para conferir a lógica.</dd></div>
+  </dl>
+</section>
+
+</main>
+</div>
+
+<footer>Material de estudo. Os exemplos, causas e números são ilustrativos e foram criados para fins didáticos. As referências às normas ISO são resumos para estudo e não substituem o texto das normas.</footer>
+</div>
+
+<script>
+(function () {
+  function read(key) { try { return JSON.parse(localStorage.getItem(key) || 'null'); } catch (e) { return null; } }
+  function write(key, val) { try { localStorage.setItem(key, JSON.stringify(val)); } catch (e) {} }
+
+  /* ---------- Checklist ---------- */
+  var boxes = Array.prototype.slice.call(document.querySelectorAll('#checklist input'));
+  var count = document.getElementById('ck-count');
+  var saved = read('ishikawa-checklist') || {};
+  function refreshChecks() {
+    var n = 0, state = {};
+    boxes.forEach(function (b) { if (b.checked) { n++; } state[b.id] = b.checked; });
+    count.textContent = n;
+    return state;
+  }
+  boxes.forEach(function (b) {
+    if (saved[b.id]) { b.checked = true; }
+    b.addEventListener('change', function () { write('ishikawa-checklist', refreshChecks()); });
+  });
+  refreshChecks();
+  document.getElementById('ck-reset').addEventListener('click', function () {
+    boxes.forEach(function (b) { b.checked = false; });
+    write('ishikawa-checklist', refreshChecks());
+  });
+
+  /* ---------- Exercício ---------- */
+  var KEYS = ['Método', 'Mão de obra', 'Máquina', 'Material', 'Medição', 'Meio ambiente'];
+  var ITEMS = [
+    { t: 'Balança da bancada sem calibração há um ano', a: 'Medição', w: 'A balança é o instrumento que mede o peso.' },
+    { t: 'A receita não informa o peso da massa por unidade', a: 'Método', w: 'A receita é o padrão de como fazer.' },
+    { t: 'Padeiro novo, que ainda não foi treinado na divisão da massa', a: 'Mão de obra', w: 'A causa está no preparo de quem executa.' },
+    { t: 'Divisora de massa com a lâmina gasta', a: 'Máquina', w: 'É uma condição do equipamento.' },
+    { t: 'Farinha com umidade diferente a cada lote', a: 'Material', w: 'É uma variação do insumo que entra no processo.' },
+    { t: 'Cozinha a 35 °C no período da tarde, o que acelera a fermentação', a: 'Meio ambiente', w: 'É uma condição do local de trabalho.' },
+    { t: 'Peso conferido por amostragem, uma vez por turno', a: 'Medição', w: 'Trata de como e quando o peso é verificado.' },
+    { t: 'Forno com temperatura desigual entre as prateleiras', a: 'Máquina', w: 'É uma condição do equipamento.' },
+    { t: 'Cada padeiro deixa a massa descansar por um tempo diferente', a: 'Método', w: 'Falta um padrão para a etapa: a causa está no método.' },
+    { t: 'Fermento usado depois do prazo de validade', a: 'Material', w: 'É uma condição do insumo.' }
+  ];
+  var quiz = document.getElementById('quiz');
+  var score = document.getElementById('qz-score');
+  var done = document.getElementById('qz-done');
+  document.getElementById('qz-total').textContent = ITEMS.length;
+  var hits = 0, answered = 0;
+
+  function render() {
+    hits = 0; answered = 0; score.textContent = 0; done.textContent = 0;
+    quiz.textContent = '';
+    ITEMS.forEach(function (item, idx) {
+      var row = document.createElement('div'); row.className = 'q';
+      var p = document.createElement('p'); p.textContent = (idx + 1) + '. ' + item.t;
+      var opts = document.createElement('div'); opts.className = 'opts';
+      opts.setAttribute('role', 'group'); opts.setAttribute('aria-label', 'Categoria do item ' + (idx + 1));
+      var why = document.createElement('p'); why.className = 'why'; why.hidden = true;
+      KEYS.forEach(function (k, j) {
+        var b = document.createElement('button');
+        b.type = 'button'; b.textContent = k; b.id = 'qz-' + idx + '-' + j;
+        b.addEventListener('click', function () {
+          var ok = k === item.a;
+          Array.prototype.forEach.call(opts.children, function (o) {
+            o.disabled = true;
+            if (o.textContent === item.a) { o.className = 'right'; }
+          });
+          if (!ok) { b.className = 'wrong'; }
+          var lead = document.createElement('b');
+          lead.textContent = (ok ? 'Certo. ' : 'A resposta é “' + item.a + '”. ');
+          why.textContent = ''; why.appendChild(lead); why.appendChild(document.createTextNode(item.w));
+          why.className = 'why ' + (ok ? 'ok' : 'no'); why.hidden = false;
+          answered++; if (ok) { hits++; }
+          score.textContent = hits; done.textContent = answered;
+        });
+        opts.appendChild(b);
+      });
+      row.appendChild(p); row.appendChild(opts); row.appendChild(why);
+      quiz.appendChild(row);
+    });
+  }
+  render();
+  document.getElementById('qz-reset').addEventListener('click', render);
+
+  /* ---------- Gráfico: leitura dos valores ---------- */
+  var fig = document.getElementById('fig-bars');
+  var tip = document.getElementById('bars-tip');
+  var svg = document.getElementById('bars');
+  var bars = document.querySelectorAll('#bars .bar');
+  function hide() {
+    tip.hidden = true;
+    Array.prototype.forEach.call(bars, function (b) { b.removeAttribute('opacity'); });
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('#bars .hit'), function (r) {
+    function show() {
+      var d = r.dataset;
+      Array.prototype.forEach.call(bars, function (b) {
+        b.setAttribute('opacity', b.getAttribute('data-k') === d.k ? '1' : '.45');
+      });
+      tip.textContent = '';
+      var strong = document.createElement('b'); strong.textContent = d.v + '% dos atrasos';
+      tip.appendChild(strong);
+      tip.appendChild(document.createTextNode(d.n));
+      tip.appendChild(document.createElement('br'));
+      tip.appendChild(document.createTextNode(d.q + ' de 200 entregas · acumulado de ' + d.c + '%'));
+      var box = fig.getBoundingClientRect(), rb = r.getBoundingClientRect();
+      var pt = svg.createSVGPoint(); pt.x = parseFloat(d.x); pt.y = 0;
+      var scr = pt.matrixTransform(svg.getScreenCTM());
+      tip.style.left = Math.min(Math.max(scr.x - box.left, 120), box.width - 120) + 'px';
+      tip.style.top = (rb.top - box.top + 4) + 'px';
+      tip.hidden = false;
+    }
+    r.addEventListener('pointerenter', show);
+    r.addEventListener('focus', show);
+    r.addEventListener('pointerleave', hide);
+    r.addEventListener('blur', hide);
+  });
+})();
+</script>
+</body>
+</html>
