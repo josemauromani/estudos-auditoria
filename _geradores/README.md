@@ -33,6 +33,7 @@ Os nomes curtos dos estudos são:
 | `doc` | Informação documentada | `Informacao-Documentada/` |
 | `comp` | Matriz de competências e treinamento | `Competencias/` |
 | `forn` | Avaliação de fornecedores | `Fornecedores/` |
+| `sat` | Satisfação do cliente | `Satisfacao/` |
 
 ## Preparação
 
@@ -73,7 +74,7 @@ O estudo de SWOT não tem arquivo de dados: os exemplos estão dentro de `build_
 
 ## Testes
 
-A pasta `testes/` tem os roteiros usados para conferir as fórmulas de nove planilhas. Cada par preenche uma cópia do modelo com dados de teste, inclusive erros propositais, e lê os resultados depois do recálculo.
+A pasta `testes/` tem os roteiros usados para conferir as fórmulas de dez planilhas. Cada par preenche uma cópia do modelo com dados de teste, inclusive erros propositais, e lê os resultados depois do recálculo.
 
 ```bash
 PY=_geradores/.venv/bin/python

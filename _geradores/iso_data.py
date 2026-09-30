@@ -39,6 +39,7 @@ ESTUDOS = {
     "doc": ("Informação documentada", "../Informacao-Documentada/treinamento-informacao-documentada.html"),
     "comp": ("Matriz de competências", "../Competencias/treinamento-competencias.html"),
     "forn": ("Avaliação de fornecedores", "../Fornecedores/treinamento-fornecedores.html"),
+    "sat": ("Satisfação do cliente", "../Satisfacao/treinamento-satisfacao.html"),
 }
 
 
@@ -78,7 +79,7 @@ REQ = _req([
     ("5.1.2", "Foco no cliente",
      "A alta direção deve assegurar que os requisitos do cliente e os legais sejam determinados e atendidos, que os riscos para a conformidade sejam tratados e que o foco na satisfação do cliente seja mantido.",
      "Como a direção acompanha o que o cliente pede e o que ele recebe?",
-     "Indicadores de satisfação e de reclamações na pauta da direção.", ()),
+     "Indicadores de satisfação e de reclamações na pauta da direção.", ("sat",)),
     ("5.2", "Política",
      "Estabelecer uma política da qualidade apropriada ao propósito e ao contexto, que sirva de base para os objetivos e inclua os compromissos de atender a requisitos e de melhorar. Comunicar a política e mantê-la disponível.",
      "O que a política diz, e como as pessoas a aplicam no trabalho?",
@@ -145,7 +146,7 @@ REQ = _req([
     ("8.2.1", "Comunicação com o cliente",
      "Comunicar-se com o cliente sobre produtos e serviços, consultas, contratos e pedidos, retorno e reclamações, propriedade do cliente e ações de contingência.",
      "Por onde o cliente pergunta, pede e reclama?",
-     "Canais de atendimento, registros de reclamação.", ()),
+     "Canais de atendimento, registros de reclamação.", ("sat",)),
     ("8.2.2", "Determinação de requisitos relativos a produtos e serviços",
      "Assegurar que os requisitos dos produtos e serviços estejam definidos, inclusive os legais e os que a organização considera necessários, e que a organização possa cumprir o que oferece.",
      "Onde estão definidos os requisitos do que é oferecido?",
@@ -214,7 +215,7 @@ REQ = _req([
     ("9.1.2", "Satisfação do cliente",
      "Monitorar a percepção do cliente sobre o grau em que as suas necessidades e expectativas foram atendidas. Determinar os métodos para obter e usar essa informação.",
      "Como se sabe se o cliente está satisfeito?",
-     "Pesquisas, reclamações, elogios, recompra, devoluções.", ("ind",)),
+     "Pesquisas, reclamações, elogios, recompra, devoluções.", ("sat", "ind")),
     ("9.1.3", "Análise e avaliação",
      "Analisar os dados para avaliar a conformidade de produtos e serviços, a satisfação do cliente, o desempenho do sistema, a eficácia do planejamento e das ações sobre riscos, o desempenho de provedores externos e as necessidades de melhoria.",
      "Que decisões foram tomadas a partir dos dados?",

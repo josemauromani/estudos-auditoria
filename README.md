@@ -25,6 +25,7 @@ Para começar, abra o arquivo `index.html` no navegador.
 | Informação documentada | `Informacao-Documentada/` | `Informacao-Documentada-modelo.xlsx` |
 | Matriz de competências e treinamento | `Competencias/` | `Competencias-modelo.xlsx` |
 | Avaliação de fornecedores | `Fornecedores/` | `Fornecedores-modelo.xlsx` |
+| Satisfação do cliente | `Satisfacao/` | `Satisfacao-modelo.xlsx` |
 
 ## Avisos
 

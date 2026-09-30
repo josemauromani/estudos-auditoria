@@ -1,0 +1,1253 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Satisfação do cliente</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<style>
+:root{
+  --ground:#F3F6F7; --surface:#FFFFFF; --sunk:#E9EEF0; --ink:#16242E; --muted:#566672; --rule:#D3DBE0;
+  --accent:#2B5C8A;
+  --s1:#2A6FB0; --s1-tint:#DCE8F3;
+  --s2:#D19A2E; --s2-tint:#F8EBCB;
+  --s3:#B0413E; --s3-tint:#F5DEDC;
+  --on-s2:#16242E;
+  --p:#2B5C8A; --p-tint:#DCE8F3;
+  --d:#A96A12; --d-tint:#F6E8CF;
+  --c:#1E7B73; --c-tint:#D9EEEB;
+  --a:#B0413E; --a-tint:#F5DEDC;
+  --on-hue:#FFFFFF;
+  --good:#1F7A4D; --good-tint:#DDF1E5;
+  --bad:#B0413E; --bad-tint:#F5DEDC;
+  --display:"Barlow Semi Condensed","Arial Narrow",Arial,sans-serif;
+  --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --ground:#0F171C; --surface:#172229; --sunk:#1E2B33; --ink:#E4EAED; --muted:#9BABB6; --rule:#2B3A44;
+    --accent:#86B7E3;
+  --s1:#4F97DB; --s1-tint:#1B2F42;
+  --s2:#B58E14; --s2-tint:#3A2C12;
+  --s3:#D14B45; --s3-tint:#3D1F1E;
+  --on-s2:#0F171C;
+    --p:#86B7E3; --p-tint:#1B2F42;
+    --d:#E2AC4F; --d-tint:#3A2C12;
+    --c:#5FC6BA; --c-tint:#15332F;
+    --a:#EC8E89; --a-tint:#3D1F1E;
+    --on-hue:#0F171C;
+    --good:#6FCF9B; --good-tint:#163326;
+    --bad:#EC8E89; --bad-tint:#3D1F1E;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --ground:#0F171C; --surface:#172229; --sunk:#1E2B33; --ink:#E4EAED; --muted:#9BABB6; --rule:#2B3A44;
+  --accent:#86B7E3;
+  --s1:#4F97DB; --s1-tint:#1B2F42;
+  --s2:#B58E14; --s2-tint:#3A2C12;
+  --s3:#D14B45; --s3-tint:#3D1F1E;
+  --on-s2:#0F171C;
+  --p:#86B7E3; --p-tint:#1B2F42;
+  --d:#E2AC4F; --d-tint:#3A2C12;
+  --c:#5FC6BA; --c-tint:#15332F;
+  --a:#EC8E89; --a-tint:#3D1F1E;
+  --on-hue:#0F171C;
+  --good:#6FCF9B; --good-tint:#163326;
+  --bad:#EC8E89; --bad-tint:#3D1F1E;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--ground);color:var(--ink);font:400 16px/1.65 var(--body);-webkit-text-size-adjust:100%}
+a{color:var(--accent);text-underline-offset:3px}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.page{max-width:1180px;margin-inline:auto;padding-inline:20px;padding-block:36px 80px}
+
+/* Cabeçalho */
+.mast{display:flex;flex-direction:column;gap:18px;padding-bottom:32px;border-bottom:1px solid var(--rule)}
+.tiles{display:flex;gap:6px}
+.tiles span{width:44px;height:44px;display:grid;place-items:center;font:700 24px/1 var(--display);color:var(--on-hue)}
+.tiles .p{background:var(--p)} .tiles .d{background:var(--d)} .tiles .c{background:var(--c)} .tiles .a{background:var(--a)}
+h1{font:700 clamp(2.3rem,6vw,3.6rem)/1.02 var(--display);letter-spacing:-.01em;margin:0;text-wrap:balance}
+.lead{font-size:1.15rem;line-height:1.55;max-width:62ch;margin:0;color:var(--ink)}
+.meta{display:flex;flex-direction:row;flex-wrap:wrap;gap:6px 22px;font:400 .8rem/1.4 var(--mono);color:var(--muted);margin:0;padding:0;list-style:none}
+
+/* Estrutura */
+.layout{display:grid;grid-template-columns:minmax(0,1fr);gap:32px;padding-top:32px}
+.toc{font-size:.92rem}
+.toc h2{font:500 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+.toc ol{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:2px 20px;counter-reset:toc}
+.toc li{counter-increment:toc}
+.toc a{display:flex;gap:10px;padding:5px 0;color:var(--ink);text-decoration:none;line-height:1.35}
+.toc a::before{content:counter(toc,decimal-leading-zero);font:400 .75rem/1.7 var(--mono);color:var(--muted)}
+.toc a:hover{color:var(--accent);text-decoration:underline}
+@media (min-width:1020px){
+  .layout{grid-template-columns:200px minmax(0,1fr);gap:64px}
+  .toc{position:sticky;top:calc(env(safe-area-inset-top,0px) + 24px);align-self:start}
+  .toc ol{grid-template-columns:1fr}
+}
+main{display:flex;flex-direction:column;gap:72px;min-width:0}
+section{display:flex;flex-direction:column;gap:20px;scroll-margin-top:24px}
+.eyebrow{font:500 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0}
+h2{font:700 clamp(1.7rem,4vw,2.2rem)/1.1 var(--display);margin:0;text-wrap:balance}
+h3{font:600 1.3rem/1.2 var(--display);margin:12px 0 0;text-wrap:balance}
+h4{font:600 .95rem/1.3 var(--body);margin:0}
+p{margin:0}
+section > p, section > ul, section > ol, section > h3{max-width:68ch}
+ul,ol{margin:0;padding-left:1.25em;display:flex;flex-direction:column;gap:6px}
+strong{font-weight:600}
+code{font:400 .88em var(--mono);background:var(--sunk);padding:1px 5px;border-radius:3px}
+
+/* Letras coloridas no texto */
+.k{display:inline-grid;place-items:center;width:1.45em;height:1.45em;font:700 .85em/1 var(--display);color:var(--on-hue);vertical-align:.05em}
+.k.p{background:var(--p)} .k.d{background:var(--d)} .k.c{background:var(--c)} .k.a{background:var(--a)}
+
+/* Figuras */
+figure{margin:0;display:flex;flex-direction:column;gap:10px;position:relative}
+.scroll{overflow-x:auto;background:var(--surface);border:1px solid var(--rule);padding:18px}
+.scroll svg{display:block;width:100%;min-width:820px;height:auto;color:var(--ink)}
+figcaption{font-size:.86rem;line-height:1.5;color:var(--muted);max-width:72ch}
+figcaption b{color:var(--ink);font-weight:600}
+svg text{font-family:var(--body);fill:var(--ink)}
+svg .disp{font-family:var(--display);font-weight:700}
+svg .mono{font-family:var(--mono);letter-spacing:.08em}
+svg .on{fill:var(--on-hue)}
+svg .mu{fill:var(--muted)}
+svg .b{font-weight:600}
+svg .ln{stroke:var(--ink);stroke-width:1.5;fill:none}
+svg .ln-mu{stroke:var(--muted);stroke-width:1.5;fill:none}
+svg .ln-bold{stroke:var(--ink);stroke-width:3;fill:none;stroke-linejoin:round;stroke-linecap:round}
+svg .dash{stroke-dasharray:5 4}
+svg .ah{fill:var(--ink)} svg .ah-mu{fill:var(--muted)}
+svg .bx{fill:var(--surface);stroke:var(--rule);stroke-width:1.5}
+svg .bx-ink{fill:var(--ink);stroke:var(--ink)}
+svg .t-ground{fill:var(--ground)}
+svg .bx-out{fill:none;stroke:var(--muted);stroke-width:1.5;stroke-dasharray:5 4}
+svg .bx-p{fill:var(--p-tint);stroke:var(--p);stroke-width:1.5} svg .hd-p{fill:var(--p)}
+svg .bx-d{fill:var(--d-tint);stroke:var(--d);stroke-width:1.5} svg .hd-d{fill:var(--d)}
+svg .bx-c{fill:var(--c-tint);stroke:var(--c);stroke-width:1.5} svg .hd-c{fill:var(--c)}
+svg .bx-a{fill:var(--a-tint);stroke:var(--a);stroke-width:1.5} svg .hd-a{fill:var(--a)}
+svg .gap{stroke:var(--surface);stroke-width:4}
+svg .gap2{stroke:var(--surface);stroke-width:2}
+svg .hub{fill:var(--surface)}
+
+/* Gráfico */
+svg .grid{stroke:var(--rule);stroke-width:1}
+svg .band{fill:var(--sunk)}
+svg .series{stroke:var(--accent);stroke-width:2;fill:none;stroke-linejoin:round;stroke-linecap:round}
+svg .pt{fill:var(--accent);stroke:var(--surface);stroke-width:2}
+svg .pt.on-hit{stroke:var(--ink)}
+svg .goal{stroke:var(--muted);stroke-width:1.5;stroke-dasharray:6 4;fill:none}
+svg .xh{stroke:var(--muted);stroke-width:1}
+svg .hit{fill:transparent;cursor:crosshair;outline:none}
+svg .root{fill:var(--accent);stroke:var(--surface);stroke-width:2}
+.tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--ground);padding:6px 10px;font-size:.78rem;line-height:1.4;transform:translate(-50%,calc(-100% - 14px));white-space:nowrap;z-index:2}
+.tip b{display:block;font:600 1.05rem/1.2 var(--body)}
+details.data{font-size:.88rem}
+details.data summary{cursor:pointer;font:400 .82rem var(--mono);color:var(--muted);padding:4px 0}
+details.data .tbl{margin-top:8px}
+details.data table{min-width:420px}
+
+/* Tabelas */
+.tbl{overflow-x:auto;border:1px solid var(--rule);background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:780px;font-size:.88rem;line-height:1.4}
+th,td{padding:9px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--rule)}
+tr:last-child > td{border-bottom:0}
+thead th{font:600 .8rem/1.3 var(--body);background:var(--sunk)}
+td.num{font-variant-numeric:tabular-nums;white-space:nowrap;font-family:var(--mono);font-size:.82rem}
+
+/* Situações e famílias */
+.chip{display:inline-block;padding:2px 8px;font:600 .76rem/1.45 var(--body);color:var(--on-hue);white-space:nowrap}
+.chip.s1{background:var(--s1)} .chip.s2{background:var(--s2);color:var(--on-s2)} .chip.s3{background:var(--s3)}
+.chip.sl{background:var(--sunk);color:var(--ink);box-shadow:inset 0 0 0 1px var(--rule)}
+svg .hd-ink{fill:var(--ink)}
+svg .f1{fill:var(--s1)} svg .f2{fill:var(--s2)} svg .f3{fill:var(--s3)}
+svg .on2{fill:var(--on-s2)}
+svg .cell{fill:var(--surface)}
+svg .dot{fill:var(--ink)}
+svg .seg{stroke:var(--surface);stroke-width:2}
+svg .halo{paint-order:stroke;stroke:var(--surface);stroke-width:5px;stroke-linejoin:round}
+svg .hit:focus-visible{stroke:var(--accent);stroke-width:2}
+
+/* Tabelas dos exemplos */
+table.aud{font-size:.8rem;min-width:860px;line-height:1.4}
+table.aud th, table.aud td{padding:8px 9px}
+table.aud td.n{white-space:nowrap;font-weight:600;color:var(--muted)}
+table.aud td.c, table.aud th.c{text-align:center;font-variant-numeric:tabular-nums}
+table.aud td.nw{white-space:nowrap;font-variant-numeric:tabular-nums}
+table.aud td.lo{background:var(--s3-tint)}
+table.aud td small, table.aud th small{display:block;color:var(--muted);font-size:.76rem;margin-top:3px;font-weight:400}
+table.aud caption{caption-side:top;text-align:left;padding:10px 12px;font:500 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);background:var(--sunk)}
+
+/* Ficha da pesquisa (acima de cada exemplo) */
+.ficha{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:0;border:1px solid var(--rule);background:var(--surface)}
+.ficha div{padding:12px 14px;border-right:1px solid var(--rule);border-bottom:1px solid var(--rule);margin:0 -1px -1px 0}
+.ficha dt{font:500 .68rem/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.ficha dd{margin:0;font-size:.9rem;line-height:1.4}
+dl{margin:0}
+
+/* Blocos */
+.pair{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.box{background:var(--surface);border:1px solid var(--rule);padding:18px 20px;display:flex;flex-direction:column;gap:10px}
+.box h4{font:600 1.1rem/1.2 var(--display)}
+.box ul{font-size:.93rem}
+.note{background:var(--sunk);padding:16px 20px;max-width:72ch;font-size:.94rem;display:flex;flex-direction:column;gap:6px}
+.note h4{font:500 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+
+/* Passo a passo */
+.steps{list-style:none;padding:0;counter-reset:st;gap:0;max-width:none;border-top:1px solid var(--rule)}
+.steps li{counter-increment:st;display:grid;grid-template-columns:44px minmax(0,1fr);gap:4px 12px;padding:16px 0;border-bottom:1px solid var(--rule)}
+.steps li::before{content:counter(st);font:700 1.7rem/1 var(--display);color:var(--muted);grid-row:span 2}
+.steps h4{font:600 1.1rem/1.25 var(--display)}
+.steps p{font-size:.95rem;max-width:64ch;grid-column:2}
+
+/* Erros comuns */
+.errs{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:0 40px;border-top:1px solid var(--rule)}
+.errs div{padding:16px 16px 16px 0;border-bottom:1px solid var(--rule);display:flex;flex-direction:column;gap:4px}
+.errs h4{font:600 1.05rem/1.25 var(--display)}
+.errs p{font-size:.92rem}
+.errs .fix{color:var(--muted)}
+.errs .fix b{color:var(--ink);font-weight:600}
+
+/* Checklist */
+.check{list-style:none;padding:0;gap:0;max-width:none;border:1px solid var(--rule);background:var(--surface)}
+.check li{border-bottom:1px solid var(--rule)}
+.check li:last-child{border-bottom:0}
+.check label{display:grid;grid-template-columns:22px minmax(0,1fr);gap:12px;padding:11px 16px;cursor:pointer;font-size:.94rem;align-items:start}
+.check input{width:18px;height:18px;margin:3px 0 0;accent-color:var(--c)}
+.check input:checked + span{color:var(--muted);text-decoration:line-through}
+.bar{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;font:400 .82rem var(--mono);color:var(--muted)}
+.bar b{color:var(--ink);font-weight:500}
+
+/* Exercício */
+.quiz{display:flex;flex-direction:column;gap:0;border:1px solid var(--rule);background:var(--surface)}
+.q{display:grid;grid-template-columns:minmax(0,1fr);gap:10px;padding:14px 16px;border-bottom:1px solid var(--rule)}
+.q:last-child{border-bottom:0}
+@media (min-width:720px){.q{grid-template-columns:minmax(0,1fr) auto;align-items:center}}
+.q p{font-size:.95rem}
+.q .why{grid-column:1/-1;font-size:.86rem;color:var(--muted)}
+.q .why b{font-weight:600}
+.q .why.ok b{color:var(--good)} .q .why.no b{color:var(--bad)}
+.opts{display:flex;gap:6px}
+.opts button{width:40px;height:40px;border:1.5px solid var(--rule);background:var(--surface);color:var(--ink);font:700 1.1rem/1 var(--display);cursor:pointer;border-radius:0}
+.opts button:hover:not(:disabled){border-color:var(--ink)}
+.opts button:disabled{cursor:default;opacity:.45}
+.opts button.right{background:var(--good-tint);border-color:var(--good);color:var(--good);opacity:1}
+.opts button.wrong{background:var(--bad-tint);border-color:var(--bad);color:var(--bad);opacity:1}
+.btn{border:1.5px solid var(--ink);background:transparent;color:var(--ink);font:500 .82rem var(--mono);padding:7px 14px;cursor:pointer;border-radius:0}
+.btn:hover{background:var(--ink);color:var(--ground)}
+
+/* Glossário */
+.gloss{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:0 40px;border-top:1px solid var(--rule)}
+.gloss div{padding:12px 0;border-bottom:1px solid var(--rule)}
+.gloss dt{font:600 1.02rem/1.3 var(--display)}
+.gloss dd{margin:2px 0 0;font-size:.9rem;color:var(--muted)}
+footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);font-size:.84rem;color:var(--muted);max-width:72ch}
+
+.quiz .opts{flex-wrap:wrap}
+.quiz .opts button{width:auto;min-width:40px;padding:0 11px;font-size:1rem}
+@media (min-width:720px){.q{grid-template-columns:minmax(0,1fr) auto}}
+</style>
+</head>
+<body>
+<div class="page" lang="pt-BR">
+
+<header class="mast">
+  <div class="tiles" aria-hidden="true"><span class="p">O</span><span class="d">M</span><span class="c">A</span></div>
+  <h1>Satisfação do cliente na prática</h1>
+  <p class="lead">Um guia de estudo para ouvir o cliente por mais de um caminho, medir o que ele percebe, tratar o que ele reclama e devolver a ele o que foi feito com o que disse.</p>
+  <ul class="meta">
+    <li>Treinamento autoinstrucional</li>
+    <li>13 módulos</li>
+    <li>Leitura de cerca de 50 minutos</li>
+    <li>3 exemplos resolvidos e 2 exercícios</li>
+  </ul>
+</header>
+
+<div class="layout">
+
+<nav class="toc" aria-label="Sumário">
+  <h2>Sumário</h2>
+  <ol>
+    <li><a href="#o-que-e">O que é</a></li>
+    <li><a href="#quando">Quando usar</a></li>
+    <li><a href="#como">Como construir</a></li>
+    <li><a href="#pesquisa">A pesquisa</a></li>
+    <li><a href="#reclamacoes">As reclamações e os outros sinais</a></li>
+    <li><a href="#exemplos">Exemplos resolvidos</a></li>
+    <li><a href="#leitura">Ler a indicação</a></li>
+    <li><a href="#erros">Erros comuns</a></li>
+    <li><a href="#ferramentas">A satisfação e outras ferramentas</a></li>
+    <li><a href="#iso">Nas normas ISO</a></li>
+    <li><a href="#reuniao">A reunião de análise</a></li>
+    <li><a href="#pratique">Pratique</a></li>
+    <li><a href="#planilha">A planilha de apoio</a></li>
+    <li><a href="#glossario">Glossário</a></li>
+  </ol>
+</nav>
+
+<main>
+
+<!-- ============================ MÓDULO 1 ============================ -->
+<section id="o-que-e">
+  <p class="eyebrow">Módulo 1</p>
+  <h2>O que é</h2>
+  <p>Satisfação do cliente é a percepção dele sobre o quanto o que recebeu atendeu ao que esperava. É percepção, e não conformidade: um pedido pode estar dentro de todos os requisitos e o cliente sair insatisfeito, porque esperava outra coisa. Por isso a ISO 9001 pede que a organização monitore a percepção, e não só o produto.</p>
+  <p>Monitorar a percepção é ouvir o cliente por mais de um caminho. Ele diz o que pensa quando perguntamos, diz sem que perguntemos, e diz com o que faz. As letras do título são as três etapas do trabalho: <span class="k p">O</span> ouvir, <span class="k d">M</span> medir e <span class="k c">A</span> agir.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 270" role="img" aria-label="As três famílias de fontes. Diz, quando perguntamos: Pesquisa depois da entrega, pesquisa anual, entrevista. Mede: Nota média, percentual de satisfeitos, indicação. Diz, sem perguntar: Reclamações, elogios, comentários, devoluções pedidas. Mede: Reclamações por 100 pedidos, prazo de resposta, motivos. Faz: Volta a comprar, cancela, reduz o pedido, indica a outros. Mede: Recompra, clientes perdidos, participação de mercado. As três levam à percepção do cliente, que é analisada e vira ação.">
+        <defs><marker id="a1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker></defs>
+        <rect class="bx-p" x="10" y="20" width="330" height="62"/>
+        <text class="mono mu" x="24" y="40" font-size="10">O CLIENTE DIZ, QUANDO PERGUNTAMOS</text>
+        <text x="24" y="59" font-size="11">Pesquisa depois da entrega, pesquisa anual,</text>
+        <text x="24" y="73" font-size="11">entrevista.</text>
+        <rect class="bx" x="370" y="20" width="250" height="62"/>
+        <text class="mono mu" x="384" y="40" font-size="10">MEDE</text>
+        <text x="384" y="59" font-size="11">Nota média, percentual de satisfeitos,</text>
+        <text x="384" y="73" font-size="11">indicação.</text>
+        <line class="ln" x1="342" y1="51" x2="366" y2="51" marker-end="url(#a1)"/>
+        <path class="ln" d="M622 51 H648 V125"/>
+        <rect class="bx-d" x="10" y="94" width="330" height="62"/>
+        <text class="mono mu" x="24" y="114" font-size="10">O CLIENTE DIZ, SEM PERGUNTAR</text>
+        <text x="24" y="133" font-size="11">Reclamações, elogios, comentários, devoluções</text>
+        <text x="24" y="147" font-size="11">pedidas.</text>
+        <rect class="bx" x="370" y="94" width="250" height="62"/>
+        <text class="mono mu" x="384" y="114" font-size="10">MEDE</text>
+        <text x="384" y="133" font-size="11">Reclamações por 100 pedidos, prazo de</text>
+        <text x="384" y="147" font-size="11">resposta, motivos.</text>
+        <line class="ln" x1="342" y1="125" x2="366" y2="125" marker-end="url(#a1)"/>
+        <path class="ln" d="M622 125 H648 V125 H676" marker-end="url(#a1)"/>
+        <rect class="bx-c" x="10" y="168" width="330" height="62"/>
+        <text class="mono mu" x="24" y="188" font-size="10">O CLIENTE FAZ</text>
+        <text x="24" y="207" font-size="11">Volta a comprar, cancela, reduz o pedido, indica a</text>
+        <text x="24" y="221" font-size="11">outros.</text>
+        <rect class="bx" x="370" y="168" width="250" height="62"/>
+        <text class="mono mu" x="384" y="188" font-size="10">MEDE</text>
+        <text x="384" y="207" font-size="11">Recompra, clientes perdidos,</text>
+        <text x="384" y="221" font-size="11">participação de mercado.</text>
+        <line class="ln" x1="342" y1="199" x2="366" y2="199" marker-end="url(#a1)"/>
+        <path class="ln" d="M622 199 H648 V125"/>
+        <rect class="bx-ink" x="680" y="80" width="210" height="90"/>
+        <text class="mono t-ground" x="694" y="104" font-size="10">PERCEPÇÃO</text>
+        <text class="b t-ground" x="694" y="128" font-size="13">Analisada e decidida</text>
+        <text class="t-ground" x="694" y="152" font-size="11">Reunião, ação e devolutiva.</text>
+        <text x="450" y="258" font-size="11.5" text-anchor="middle">Uma fonte só engana. Quando as três apontam para o mesmo lugar, a decisão é segura.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 1.</b> As três famílias de fontes e o que cada uma mede. Uma organização que só tem a pesquisa ouve quem responde. Uma que só tem as reclamações ouve quem se irrita. As três juntas ouvem o cliente.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Medida</th><th style="width:38%">O que mostra</th><th>Quando basta</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Conformidade do produto</strong></td><td>O que saiu atendeu aos requisitos.</td><td>Para liberar o produto. Não diz o que o cliente sentiu.</td></tr>
+        <tr><td><strong>Reclamações</strong></td><td>O que o cliente não aceitou.</td><td>Para tratar o que falhou. Não diz o que o cliente calado pensa.</td></tr>
+        <tr><td><strong>Satisfação do cliente</strong></td><td>O que o cliente percebe, por várias fontes.</td><td>Para decidir o que mudar. É o assunto deste estudo.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 2 ============================ -->
+<section id="quando">
+  <p class="eyebrow">Módulo 2</p>
+  <h2>Quando usar</h2>
+  <p>A satisfação é medida de dois jeitos que se completam: logo depois da entrega, quando a memória está fresca e a pergunta é sobre aquele pedido; e no relacionamento, uma ou duas vezes por ano, quando a pergunta é sobre o conjunto. As reclamações são medidas o tempo todo.</p>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:28%">Momento</th><th style="width:36%">O que fazer</th><th>Resultado</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Depois de cada entrega</strong></td><td>Pesquisa curta, de duas a quatro perguntas, sobre aquele pedido.</td><td>Nota por entrega, com volume para ler tendência.</td></tr>
+        <tr><td><strong>Uma vez por ano</strong></td><td>Pesquisa de relacionamento, com as dimensões que o cliente valoriza.</td><td>Nota por dimensão e por segmento de cliente.</td></tr>
+        <tr><td><strong>A cada reclamação</strong></td><td>Registrar, responder no prazo, resolver e agrupar o motivo.</td><td>Reclamações por 100 pedidos e prazo de resposta.</td></tr>
+        <tr><td><strong>A cada mês</strong></td><td>Ler os três sinais juntos: notas, reclamações e comportamento.</td><td>Decisão sobre o motivo mais frequente.</td></tr>
+        <tr><td><strong>Antes da análise crítica</strong></td><td>Fechar o período: resultado, tendência e motivos.</td><td>A entrada “c1” pronta, com dados.</td></tr>
+        <tr><td><strong>Cliente perdido</strong></td><td>Ligar e perguntar por quê. É a fonte mais barata e a menos usada.</td><td>O motivo real, que a pesquisa não pega.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pair">
+    <div class="box">
+      <h4>Use a pesquisa depois da entrega quando</h4>
+      <ul>
+        <li>Há muitas entregas: pedidos, atendimentos, serviços por dia.</li>
+        <li>Cada entrega pode falhar de um jeito diferente.</li>
+        <li>É preciso ler a tendência de mês a mês.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h4>Use a pesquisa anual quando</h4>
+      <ul>
+        <li>Há poucos clientes, com relação longa.</li>
+        <li>A percepção depende de vários contatos: comercial, técnico, financeiro.</li>
+        <li>O resultado vai orientar o plano do ano.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 3 ============================ -->
+<section id="como">
+  <p class="eyebrow">Módulo 3</p>
+  <h2>Como construir</h2>
+  <p>O sistema de satisfação do cliente tem três partes: as fontes, que ouvem; os indicadores, que medem; e a reunião, que age. A parte mais esquecida é a última, e é a única que o cliente percebe.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 214" role="img" aria-label="O ciclo de ouvir, medir, agir e devolver. Ouvir: Pesquisa, reclamações e comportamento, registrados. Medir: Indicadores com meta: nota, satisfeitos, indicação, reclamações. Agir: Motivo principal escolhido, ação com responsável e prazo. Devolver: O cliente sabe o que mudou. A pesquisa seguinte confere. Da devolutiva, o ciclo recomeça.">
+        <defs><marker id="a2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker><marker id="a2m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah-mu" d="M0 0 L10 5 L0 10 z"/></marker></defs>
+        <rect class="bx-p" x="10" y="20" width="200" height="120"/>
+        <text class="mono mu" x="24" y="42" font-size="10">1 · O</text>
+        <text class="b" x="24" y="66" font-size="13">Ouvir</text>
+        <text x="24" y="90" font-size="11">Pesquisa, reclamações e</text>
+        <text x="24" y="105" font-size="11">comportamento, registrados.</text>
+        <line class="ln" x1="211" y1="80" x2="228" y2="80" marker-end="url(#a2)"/>
+        <rect class="bx-d" x="230" y="20" width="200" height="120"/>
+        <text class="mono mu" x="244" y="42" font-size="10">2 · M</text>
+        <text class="b" x="244" y="66" font-size="13">Medir</text>
+        <text x="244" y="90" font-size="11">Indicadores com meta: nota,</text>
+        <text x="244" y="105" font-size="11">satisfeitos, indicação,</text>
+        <text x="244" y="120" font-size="11">reclamações.</text>
+        <line class="ln" x1="431" y1="80" x2="448" y2="80" marker-end="url(#a2)"/>
+        <rect class="bx-c" x="450" y="20" width="200" height="120"/>
+        <text class="mono mu" x="464" y="42" font-size="10">3 · A</text>
+        <text class="b" x="464" y="66" font-size="13">Agir</text>
+        <text x="464" y="90" font-size="11">Motivo principal escolhido,</text>
+        <text x="464" y="105" font-size="11">ação com responsável e prazo.</text>
+        <line class="ln" x1="651" y1="80" x2="668" y2="80" marker-end="url(#a2)"/>
+        <rect class="bx-ink" x="670" y="20" width="200" height="120"/>
+        <text class="mono t-ground" x="684" y="42" font-size="10">4</text>
+        <text class="b t-ground" x="684" y="66" font-size="13">Devolver</text>
+        <text class="t-ground" x="684" y="90" font-size="11">O cliente sabe o que mudou. A</text>
+        <text class="t-ground" x="684" y="105" font-size="11">pesquisa seguinte confere.</text>
+        <path class="ln-mu dash" d="M770.0 142 V172 H110.0 V146" marker-end="url(#a2m)"/>
+        <text class="mu" x="450" y="166" font-size="11" text-anchor="middle">a pesquisa seguinte mostra se a ação chegou ao cliente</text>
+        <text x="450" y="204" font-size="11.5" text-anchor="middle">Devolver é a etapa que separa medir a satisfação de gerir a satisfação.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 2.</b> O ciclo de ouvir, medir e agir. Ele só se fecha quando o cliente fica sabendo o que foi feito com o que ele disse. Sem isso, a pesquisa seguinte tem menos respostas.</figcaption>
+  </figure>
+
+  <h3>Passo a passo</h3>
+  <ol class="steps">
+    <li><h4>Defina quem é o cliente e o que ele valoriza</h4><p>Para a pizzaria: prazo, pizza quente e pedido certo. Para a indústria: conformidade, prazo e assistência. As perguntas da pesquisa saem daqui, e não de um modelo pronto.</p></li>
+    <li><h4>Escolha as fontes</h4><p>Pelo menos uma de cada família: uma pesquisa, o registro de reclamações e um sinal de comportamento, como recompra ou clientes perdidos.</p></li>
+    <li><h4>Desenhe a pesquisa</h4><p>Curta, com uma pergunta por coisa valorizada, uma escala só, uma pergunta de indicação e um campo aberto. Teste com cinco clientes antes de lançar.</p></li>
+    <li><h4>Defina a amostra e a frequência</h4><p>Quem responde, quantos, quando. Registre a taxa de resposta: um resultado de 12% dos pedidos é dos que quiseram responder, e não de todos.</p></li>
+    <li><h4>Registre toda reclamação</h4><p>De qualquer canal, com motivo agrupado e o que o cliente pede. Responda no prazo definido.</p></li>
+    <li><h4>Calcule os indicadores</h4><p>Nota média, percentual de satisfeitos, indicação, reclamações por 100 pedidos, prazo de resposta. Com meta, no painel da organização.</p></li>
+    <li><h4>Analise os motivos</h4><p>Agrupe as notas baixas e as reclamações por motivo. O motivo mais frequente é o primeiro a tratar, e a Matriz GUT ajuda a ordenar.</p></li>
+    <li><h4>Aja e devolva</h4><p>Decida na reunião, com responsável e prazo. Conte ao cliente o que mudou: na resposta à reclamação, na pesquisa seguinte, na visita.</p></li>
+  </ol>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Papel</th><th style="width:26%">Quem costuma ser</th><th>O que faz</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Quem ouve</strong></td><td>Atendimento, vendas, quem entrega.</td><td>Recebe e registra reclamações e elogios. Aplica a pesquisa.</td></tr>
+        <tr><td><strong>Quem responde</strong></td><td>Líder do atendimento ou do comercial.</td><td>Responde ao cliente no prazo e resolve, ou encaminha.</td></tr>
+        <tr><td><strong>Quem mede</strong></td><td>Qualidade ou quem cuida dos indicadores.</td><td>Calcula os indicadores, agrupa os motivos e prepara a reunião.</td></tr>
+        <tr><td><strong>Quem decide</strong></td><td>Dono do processo, ou a direção.</td><td>Escolhe o motivo a tratar, aprova a ação e cobra a devolutiva.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 4 ============================ -->
+<section id="pesquisa">
+  <p class="eyebrow">Módulo 4</p>
+  <h2>A pesquisa</h2>
+  <p>Uma pesquisa boa é curta, pergunta o que o cliente sabe responder e usa uma escala só. A pergunta de indicação, “você indicaria a um amigo ou colega?”, de 0 a 10, é a mais usada no mundo porque resume a relação em um número e permite comparar períodos.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 300" role="img" aria-label="A pesquisa da pizzaria, como aparece no celular. Três perguntas com escala de 1 a 5: como foi a entrega, como estava a pizza, como foi o atendimento. Uma pergunta de indicação, de 0 a 10: você indicaria a pizzaria a um amigo? Um campo aberto: o que podemos melhorar? E o botão enviar.">
+        <rect class="bx" x="260" y="10" width="380" height="280"/>
+        <rect class="hd-ink" x="260" y="10" width="380" height="40"/>
+        <text class="b t-ground" x="278" y="35" font-size="13">Como foi o seu pedido? Leva menos de um minuto.</text>
+        <text class="b" x="278" y="66" font-size="12">Como foi a entrega?</text>
+        <rect class="band" x="278" y="74" width="28" height="22"/>
+        <text class="mu b" x="292" y="89" font-size="11" text-anchor="middle">1</text>
+        <rect class="band" x="312" y="74" width="28" height="22"/>
+        <text class="mu b" x="326" y="89" font-size="11" text-anchor="middle">2</text>
+        <rect class="band" x="346" y="74" width="28" height="22"/>
+        <text class="mu b" x="360" y="89" font-size="11" text-anchor="middle">3</text>
+        <rect class="hd-ink" x="380" y="74" width="28" height="22"/>
+        <text class="t-ground b" x="394" y="89" font-size="11" text-anchor="middle">4</text>
+        <rect class="band" x="414" y="74" width="28" height="22"/>
+        <text class="mu b" x="428" y="89" font-size="11" text-anchor="middle">5</text>
+        <text class="mu" x="460" y="89" font-size="10">1 muito insatisfeito · 5 muito satisfeito</text>
+        <text class="b" x="278" y="116" font-size="12">Como estava a pizza?</text>
+        <rect class="band" x="278" y="124" width="28" height="22"/>
+        <text class="mu b" x="292" y="139" font-size="11" text-anchor="middle">1</text>
+        <rect class="band" x="312" y="124" width="28" height="22"/>
+        <text class="mu b" x="326" y="139" font-size="11" text-anchor="middle">2</text>
+        <rect class="band" x="346" y="124" width="28" height="22"/>
+        <text class="mu b" x="360" y="139" font-size="11" text-anchor="middle">3</text>
+        <rect class="band" x="380" y="124" width="28" height="22"/>
+        <text class="mu b" x="394" y="139" font-size="11" text-anchor="middle">4</text>
+        <rect class="hd-ink" x="414" y="124" width="28" height="22"/>
+        <text class="t-ground b" x="428" y="139" font-size="11" text-anchor="middle">5</text>
+        <text class="mu" x="460" y="139" font-size="10">1 muito insatisfeito · 5 muito satisfeito</text>
+        <text class="b" x="278" y="166" font-size="12">Como foi o atendimento?</text>
+        <rect class="band" x="278" y="174" width="28" height="22"/>
+        <text class="mu b" x="292" y="189" font-size="11" text-anchor="middle">1</text>
+        <rect class="band" x="312" y="174" width="28" height="22"/>
+        <text class="mu b" x="326" y="189" font-size="11" text-anchor="middle">2</text>
+        <rect class="band" x="346" y="174" width="28" height="22"/>
+        <text class="mu b" x="360" y="189" font-size="11" text-anchor="middle">3</text>
+        <rect class="band" x="380" y="174" width="28" height="22"/>
+        <text class="mu b" x="394" y="189" font-size="11" text-anchor="middle">4</text>
+        <rect class="hd-ink" x="414" y="174" width="28" height="22"/>
+        <text class="t-ground b" x="428" y="189" font-size="11" text-anchor="middle">5</text>
+        <text class="mu" x="460" y="189" font-size="10">1 muito insatisfeito · 5 muito satisfeito</text>
+        <text class="b" x="278" y="216" font-size="12">Você indicaria a pizzaria a um amigo?</text>
+        <rect class="band" x="278" y="224" width="26" height="20"/>
+        <text class="mu b" x="291" y="238" font-size="10" text-anchor="middle">0</text>
+        <rect class="band" x="309" y="224" width="26" height="20"/>
+        <text class="mu b" x="322" y="238" font-size="10" text-anchor="middle">1</text>
+        <rect class="band" x="340" y="224" width="26" height="20"/>
+        <text class="mu b" x="353" y="238" font-size="10" text-anchor="middle">2</text>
+        <rect class="band" x="371" y="224" width="26" height="20"/>
+        <text class="mu b" x="384" y="238" font-size="10" text-anchor="middle">3</text>
+        <rect class="band" x="402" y="224" width="26" height="20"/>
+        <text class="mu b" x="415" y="238" font-size="10" text-anchor="middle">4</text>
+        <rect class="band" x="433" y="224" width="26" height="20"/>
+        <text class="mu b" x="446" y="238" font-size="10" text-anchor="middle">5</text>
+        <rect class="band" x="464" y="224" width="26" height="20"/>
+        <text class="mu b" x="477" y="238" font-size="10" text-anchor="middle">6</text>
+        <rect class="band" x="495" y="224" width="26" height="20"/>
+        <text class="mu b" x="508" y="238" font-size="10" text-anchor="middle">7</text>
+        <rect class="band" x="526" y="224" width="26" height="20"/>
+        <text class="mu b" x="539" y="238" font-size="10" text-anchor="middle">8</text>
+        <rect class="hd-ink" x="557" y="224" width="26" height="20"/>
+        <text class="t-ground b" x="570" y="238" font-size="10" text-anchor="middle">9</text>
+        <rect class="band" x="588" y="224" width="26" height="20"/>
+        <text class="mu b" x="601" y="238" font-size="10" text-anchor="middle">10</text>
+        <rect class="band" x="278" y="254" width="240" height="24"/><text class="mu" x="286" y="270" font-size="10.5">O que podemos melhorar?</text>
+        <rect class="hd-ink" x="530" y="254" width="90" height="24"/><text class="b t-ground" x="575" y="270" font-size="11" text-anchor="middle">Enviar</text>
+        <text class="mu" x="20" y="80" font-size="11">Uma pergunta por</text><text class="mu" x="20" y="95" font-size="11">coisa valorizada:</text>
+        <text class="mu" x="20" y="110" font-size="11">entrega, pizza,</text><text class="mu" x="20" y="125" font-size="11">atendimento.</text>
+        <text class="mu" x="20" y="225" font-size="11">A indicação resume</text><text class="mu" x="20" y="240" font-size="11">a relação em um</text><text class="mu" x="20" y="255" font-size="11">número comparável.</text>
+        <text class="mu" x="660" y="80" font-size="11">Uma escala só,</text><text class="mu" x="660" y="95" font-size="11">com os extremos</text><text class="mu" x="660" y="110" font-size="11">escritos.</text>
+        <text class="mu" x="660" y="262" font-size="11">O campo aberto é</text><text class="mu" x="660" y="277" font-size="11">onde os motivos</text><text class="mu" x="660" y="292" font-size="11">aparecem.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 3.</b> A pesquisa de três perguntas da pizzaria, com a escala de 1 a 5, a indicação de 0 a 10 e o campo aberto. Cabe em uma tela do celular e leva menos de um minuto.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:22%">Elemento</th><th style="width:40%">Regra</th><th>Exemplo</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Número de perguntas</strong></td><td>De duas a quatro depois da entrega. Até oito na anual.</td><td>Entrega, pizza, atendimento.</td></tr>
+        <tr><td><strong>Uma pergunta, uma coisa</strong></td><td>Não junte dois assuntos na mesma pergunta.</td><td>“Como foi a entrega?”, e não “a entrega e a pizza”.</td></tr>
+        <tr><td><strong>Escala</strong></td><td>Uma só, com os extremos escritos. De 1 a 5, ou de 0 a 10.</td><td>1 muito insatisfeito, 5 muito satisfeito.</td></tr>
+        <tr><td><strong>Indicação</strong></td><td>De 0 a 10. Promotores dão 9 ou 10; detratores, de 0 a 6.</td><td>Indicação = promotores − detratores, em percentual.</td></tr>
+        <tr><td><strong>Campo aberto</strong></td><td>Um só, no fim, opcional. É onde os motivos aparecem.</td><td>“O que podemos melhorar?”</td></tr>
+        <tr><td><strong>Momento</strong></td><td>Logo depois da entrega, ou em data fixa na anual.</td><td>Código na caixa; e-mail em novembro.</td></tr>
+        <tr><td><strong>Satisfeito</strong></td><td>Nota igual ou acima de 80% da escala: 4 em 5, 8 em 10.</td><td>Percentual de satisfeitos = notas 4 e 5 sobre o total.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pair">
+    <div class="box">
+      <h4>Pergunta boa</h4>
+      <ul>
+        <li>“Como foi a entrega?”</li>
+        <li>“A pizza chegou como você esperava?”</li>
+        <li>“Você indicaria a pizzaria a um amigo?”</li>
+        <li>“O que podemos melhorar?”</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h4>Pergunta ruim</h4>
+      <ul>
+        <li>“Você ficou satisfeito com a qualidade, o prazo e o preço?”</li>
+        <li>“Nossa equipe foi excelente, não foi?”</li>
+        <li>“Avalie o nosso processo de expedição.”</li>
+        <li>Doze perguntas, com escala diferente em cada uma.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="note">
+    <h4>Sobre a amostra</h4>
+    <p>Quem responde não é todo mundo: responde quem gostou muito ou se irritou muito. Por isso a taxa de resposta é registrada junto com a nota, e a nota é lida como tendência, comparando períodos, e não como retrato exato. Doze por cento de respostas todo mês, medidos do mesmo jeito, dizem mais do que uma pesquisa grande feita uma vez.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 5 ============================ -->
+<section id="reclamacoes">
+  <p class="eyebrow">Módulo 5</p>
+  <h2>As reclamações e os outros sinais</h2>
+  <p>A reclamação é o sinal mais valioso: o cliente que reclama ainda quer continuar cliente, e diz exatamente onde falhou. O que ela exige é prazo. Uma reclamação sem resposta em dois dias vira um cliente perdido, e um cliente perdido raramente avisa.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 190" role="img" aria-label="O caminho de uma reclamação, em seis etapas. Receber: Qualquer canal: telefone, mensagem, site, visita. Quem recebe registra. Registrar: Data, cliente, pedido, motivo e o que o cliente pede. Responder: Em até 2 dias úteis: o cliente sabe que foi ouvido e quem cuida. Resolver: Em até 10 dias: reposição, desconto, devolução ou explicação. Analisar: Motivo agrupado. Reclamação grave ou repetida vira não conformidade. Devolver: O cliente sabe o que foi feito. A equipe sabe o que mudou.">
+        <defs><marker id="a4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker></defs>
+        <rect class="bx" x="6" y="20" width="138" height="136"/>
+        <text class="mono mu" x="18" y="40" font-size="10">1</text>
+        <text class="b" x="18" y="62" font-size="12.5">Receber</text>
+        <text x="18" y="84" font-size="10.5">Qualquer canal:</text>
+        <text x="18" y="98" font-size="10.5">telefone, mensagem,</text>
+        <text x="18" y="112" font-size="10.5">site, visita. Quem</text>
+        <text x="18" y="126" font-size="10.5">recebe registra.</text>
+        <line class="ln" x1="145" y1="88" x2="154" y2="88" marker-end="url(#a4)"/>
+        <rect class="bx" x="156" y="20" width="138" height="136"/>
+        <text class="mono mu" x="168" y="40" font-size="10">2</text>
+        <text class="b" x="168" y="62" font-size="12.5">Registrar</text>
+        <text x="168" y="84" font-size="10.5">Data, cliente, pedido,</text>
+        <text x="168" y="98" font-size="10.5">motivo e o que o</text>
+        <text x="168" y="112" font-size="10.5">cliente pede.</text>
+        <line class="ln" x1="295" y1="88" x2="304" y2="88" marker-end="url(#a4)"/>
+        <rect class="bx-ink" x="306" y="20" width="138" height="136"/>
+        <text class="mono t-ground" x="318" y="40" font-size="10">3</text>
+        <text class="b t-ground" x="318" y="62" font-size="12.5">Responder</text>
+        <text class="t-ground" x="318" y="84" font-size="10.5">Em até 2 dias úteis: o</text>
+        <text class="t-ground" x="318" y="98" font-size="10.5">cliente sabe que foi</text>
+        <text class="t-ground" x="318" y="112" font-size="10.5">ouvido e quem cuida.</text>
+        <line class="ln" x1="445" y1="88" x2="454" y2="88" marker-end="url(#a4)"/>
+        <rect class="bx" x="456" y="20" width="138" height="136"/>
+        <text class="mono mu" x="468" y="40" font-size="10">4</text>
+        <text class="b" x="468" y="62" font-size="12.5">Resolver</text>
+        <text x="468" y="84" font-size="10.5">Em até 10 dias:</text>
+        <text x="468" y="98" font-size="10.5">reposição, desconto,</text>
+        <text x="468" y="112" font-size="10.5">devolução ou</text>
+        <text x="468" y="126" font-size="10.5">explicação.</text>
+        <line class="ln" x1="595" y1="88" x2="604" y2="88" marker-end="url(#a4)"/>
+        <rect class="bx" x="606" y="20" width="138" height="136"/>
+        <text class="mono mu" x="618" y="40" font-size="10">5</text>
+        <text class="b" x="618" y="62" font-size="12.5">Analisar</text>
+        <text x="618" y="84" font-size="10.5">Motivo agrupado.</text>
+        <text x="618" y="98" font-size="10.5">Reclamação grave ou</text>
+        <text x="618" y="112" font-size="10.5">repetida vira não</text>
+        <text x="618" y="126" font-size="10.5">conformidade.</text>
+        <line class="ln" x1="745" y1="88" x2="754" y2="88" marker-end="url(#a4)"/>
+        <rect class="bx-ink" x="756" y="20" width="138" height="136"/>
+        <text class="mono t-ground" x="768" y="40" font-size="10">6</text>
+        <text class="b t-ground" x="768" y="62" font-size="12.5">Devolver</text>
+        <text class="t-ground" x="768" y="84" font-size="10.5">O cliente sabe o que</text>
+        <text class="t-ground" x="768" y="98" font-size="10.5">foi feito. A equipe</text>
+        <text class="t-ground" x="768" y="112" font-size="10.5">sabe o que mudou.</text>
+        <text x="450" y="180" font-size="11.5" text-anchor="middle">Os prazos deste material: resposta em 2 dias úteis, solução em 10 dias. A organização define os seus e os mede.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 4.</b> O caminho de uma reclamação, com os prazos deste material. Responder não é resolver: é dizer ao cliente que ele foi ouvido e quem cuida. Resolver vem depois, com prazo próprio.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Indicador</th><th style="width:36%">Como se calcula</th><th>O que diz</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Reclamações por 100 pedidos</strong></td><td>Reclamações do período ÷ pedidos do período × 100.</td><td>Quanto do que sai gera reclamação. Na indústria, por milhão de peças.</td></tr>
+        <tr><td><strong>Prazo de resposta</strong></td><td>Dias entre o registro e a primeira resposta, em média.</td><td>Se o cliente sabe que foi ouvido.</td></tr>
+        <tr><td><strong>Reclamações resolvidas no prazo</strong></td><td>Resolvidas dentro do prazo ÷ reclamações × 100.</td><td>Se a organização cumpre o que promete ao reclamante.</td></tr>
+        <tr><td><strong>Motivo principal</strong></td><td>Reclamações agrupadas por motivo, em ordem.</td><td>O que tratar primeiro.</td></tr>
+        <tr><td><strong>Clientes perdidos</strong></td><td>Clientes que não compraram no período ÷ clientes ativos no início.</td><td>O sinal de comportamento: quem foi embora sem reclamar.</td></tr>
+        <tr><td><strong>Recompra</strong></td><td>Clientes que voltaram a comprar ÷ clientes do período anterior.</td><td>A satisfação que vira pedido.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note">
+    <h4>Reclamação e não conformidade</h4>
+    <p>Toda reclamação é registrada e respondida, mas nem toda vira não conformidade. Vira quando é grave, quando se repete pelo mesmo motivo ou quando mostra que um requisito não foi atendido. Nesses casos, entra no tratamento do estudo de <a href="../Nao-Conformidade/treinamento-nao-conformidade.html">Não conformidade e ação corretiva</a>, com análise de causa. A terceira pizza fria do mesmo condomínio, no exemplo 1, seguiu esse caminho.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 6 ============================ -->
+<section id="exemplos">
+  <p class="eyebrow">Módulo 6</p>
+  <h2>Exemplos resolvidos</h2>
+  <p>Uma pesquisa depois da entrega, uma pesquisa anual e o tratamento de uma reclamação. As organizações são as dos outros estudos da série. Os dois primeiros exemplos também estão preenchidos na planilha de apoio. Os dados são ilustrativos e foram criados para este treinamento.</p>
+
+  <h3>Exemplo 1. A pesquisa na caixa da pizzaria</h3>
+  <dl class="ficha">
+    <div><dt>Organização</dt><dd>Pizzaria (loja com salão e delivery)</dd></div>
+    <div><dt>Data e período</dt><dd>05/05/2027. Fevereiro a abril de 2027</dd></div>
+    <div><dt>Pesquisa</dt><dd>Código impresso na caixa, lido pelo celular. Três perguntas e um campo de comentário.</dd></div>
+    <div><dt>Origem</dt><dd>Decisão da análise crítica de 14/12/2026: pesquisa de três perguntas, com acesso pelo código impresso na caixa.</dd></div>
+  </dl>
+  <div class="tbl">
+    <table class="aud">
+      <caption>Resultado por mês · escala de 1 a 5</caption>
+      <thead><tr><th>Mês</th><th class="c">Pedidos</th><th class="c">Respostas</th><th class="c">Taxa</th><th class="c">P1<small>Como foi a entrega?</small></th><th class="c">P2<small>Como estava a pizza?</small></th><th class="c">P3<small>Como foi o atendimento?</small></th><th class="c">Média</th><th class="c">Indicação</th><th class="c">Reclamações</th><th class="c">Por 100 pedidos</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Fev/2027</strong></td><td class="c">840</td><td class="c">96</td><td class="c">11%</td><td class="c lo">4,1</td><td class="c">4,4</td><td class="c">4,5</td><td class="c"><strong>4,33</strong></td><td class="c">41</td><td class="c">16</td><td class="c">1,9</td></tr>
+        <tr><td><strong>Mar/2027</strong></td><td class="c">910</td><td class="c">108</td><td class="c">12%</td><td class="c">4,3</td><td class="c">4,4</td><td class="c">4,6</td><td class="c"><strong>4,43</strong></td><td class="c">46</td><td class="c">15</td><td class="c">1,6</td></tr>
+        <tr><td><strong>Abr/2027</strong></td><td class="c">870</td><td class="c">108</td><td class="c">12%</td><td class="c">4,5</td><td class="c">4,5</td><td class="c">4,6</td><td class="c"><strong>4,53</strong></td><td class="c">57</td><td class="c">12</td><td class="c">1,4</td></tr>
+        <tr class="tot"><td>Meta</td><td class="c">—</td><td class="c">—</td><td class="c">—</td><td class="c" colspan="3">4,3 em cada pergunta</td><td class="c">4,3</td><td class="c">50</td><td class="c">—</td><td class="c">2,0</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p><small>Célula em vermelho-claro: nota abaixo da meta.</small></p>
+  <div class="tbl">
+    <table class="aud">
+      <caption>Motivos das notas 1 e 2 e das reclamações · fevereiro a abril</caption>
+      <thead><tr><th style="width:44%">Motivo</th><th class="c">Ocorrências</th><th class="c">Percentual</th><th class="c">Acumulado</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Entrega atrasada</strong></td><td class="c">34</td><td class="c">45%</td><td class="c">45%</td></tr>
+        <tr><td><strong>Pizza fria</strong></td><td class="c">19</td><td class="c">25%</td><td class="c">71%</td></tr>
+        <tr><td><strong>Pedido errado ou incompleto</strong></td><td class="c">11</td><td class="c">15%</td><td class="c">85%</td></tr>
+        <tr><td><strong>Embalagem amassada</strong></td><td class="c">7</td><td class="c">9%</td><td class="c">95%</td></tr>
+        <tr><td><strong>Atendimento</strong></td><td class="c">4</td><td class="c">5%</td><td class="c">100%</td></tr>
+        <tr class="tot"><td>Total</td><td class="c">75</td><td class="c">100%</td><td class="c"></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="tbl">
+    <table class="aud">
+      <caption>Reclamações registradas · amostra do período</caption>
+      <thead><tr><th class="c">Data</th><th style="width:9%">Pedido</th><th style="width:9%">Canal</th><th style="width:15%">Motivo</th><th>Descrição</th><th class="c">Respondida</th><th class="c">Resolvida</th><th style="width:9%">Registro</th><th>Situação</th></tr></thead>
+      <tbody>
+        <tr><td class="nw">06/02/2027</td><td>Pedido 2.318</td><td>Aplicativo</td><td>Entrega atrasada</td><td>Pedido chegou 25 minutos depois do prometido, na noite de chuva.</td><td class="c">06/02/2027<small>no mesmo dia</small></td><td class="c">07/02/2027</td><td>—</td><td><span class="chip s1">Resolvida</span></td></tr>
+        <tr><td class="nw">20/02/2027</td><td>Pedido 2.671</td><td>Telefone</td><td>Pizza fria</td><td>Pizza fria no salão de festas: entrega em condomínio, 15 minutos na portaria.</td><td class="c">20/02/2027<small>no mesmo dia</small></td><td class="c">22/02/2027</td><td>—</td><td><span class="chip s1">Resolvida</span></td></tr>
+        <tr><td class="nw">13/03/2027</td><td>Pedido 3.104</td><td>Aplicativo</td><td>Pedido errado ou incompleto</td><td>Faltou o refrigerante.</td><td class="c">13/03/2027<small>no mesmo dia</small></td><td class="c">13/03/2027</td><td>—</td><td><span class="chip s1">Resolvida</span></td></tr>
+        <tr><td class="nw">03/04/2027</td><td>Pedido 3.611</td><td>Mensagem</td><td>Pizza fria</td><td>Terceira reclamação de pizza fria do mesmo condomínio.</td><td class="c">03/04/2027<small>no mesmo dia</small></td><td class="c">10/04/2027</td><td>RNC 2027-04</td><td><span class="chip s1">Resolvida</span></td></tr>
+        <tr><td class="nw">24/04/2027</td><td>Pedido 3.902</td><td>Aplicativo</td><td>Embalagem amassada</td><td>Caixa amassada, pizza colada na tampa.</td><td class="c">27/04/2027<small>3 dias</small></td><td class="c">—</td><td>—</td><td><span class="chip s2">Aberta</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p><strong>O que observar.</strong> A pesquisa começou em fevereiro, como a análise crítica decidiu, e em três meses trouxe 312 respostas. A nota da entrega foi a mais baixa e a que mais subiu: o reforço do agrupamento por zona, feito com o entregador novo, apareceu no cliente. O motivo “pizza fria” levou a uma descoberta que a nota sozinha não daria: três reclamações do mesmo condomínio, onde o pedido espera na portaria. Virou não conformidade, e a solução foi combinar a entrega na porta com a administração. As reclamações por 100 pedidos caíram de 1,9 para 1,4, dentro da meta de 2,0 que o painel de indicadores já acompanhava.</p>
+
+  <h3>Exemplo 2. A pesquisa anual da indústria</h3>
+  <dl class="ficha">
+    <div><dt>Organização</dt><dd>Indústria de embalagens plásticas</dd></div>
+    <div><dt>Data e período</dt><dd>04/12/2026. Pesquisa anual, novembro de 2026, e reclamações de 2026</dd></div>
+    <div><dt>Pesquisa</dt><dd>Pesquisa por e-mail aos 58 clientes ativos, com cinco perguntas de 0 a 10 e uma de indicação. 41 respostas, 71%.</dd></div>
+    <div><dt>Origem</dt><dd>Ação da análise crítica de 12/02/2026: rever a pesquisa de satisfação do cliente.</dd></div>
+  </dl>
+  <div class="tbl">
+    <table class="aud">
+      <caption>Resultado por segmento · escala de 0 a 10</caption>
+      <thead><tr><th>Segmento</th><th class="c">Clientes</th><th class="c">Respostas</th><th class="c">Q1<small>Qualidade do produto</small></th><th class="c">Q2<small>Prazo de entrega</small></th><th class="c">Q3<small>Atendimento comercial</small></th><th class="c">Q4<small>Assistência técnica</small></th><th class="c">Q5<small>Documentação</small></th><th class="c">Média</th><th class="c" title="Promotores">Prom.</th><th class="c" title="Detratores">Detr.</th><th class="c">Indicação</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Alimentos</strong></td><td class="c">24</td><td class="c">19</td><td class="c">8,5</td><td class="c lo">7,8</td><td class="c">8,9</td><td class="c lo">7,9</td><td class="c">8,3</td><td class="c"><strong>8,28</strong></td><td class="c">9</td><td class="c">2</td><td class="c">37</td></tr>
+        <tr><td><strong>Cosméticos</strong></td><td class="c">18</td><td class="c">12</td><td class="c">8,9</td><td class="c">8,4</td><td class="c">9,0</td><td class="c">8,2</td><td class="c">8,1</td><td class="c"><strong>8,52</strong></td><td class="c">7</td><td class="c">1</td><td class="c">50</td></tr>
+        <tr><td><strong>Industrial</strong></td><td class="c">16</td><td class="c">10</td><td class="c">8,8</td><td class="c">8,3</td><td class="c">8,8</td><td class="c">8,0</td><td class="c">8,2</td><td class="c"><strong>8,42</strong></td><td class="c">4</td><td class="c">1</td><td class="c">30</td></tr>
+        <tr class="tot"><td>Todos</td><td class="c">58</td><td class="c">41</td><td class="c">8,7</td><td class="c">8,1</td><td class="c">8,9</td><td class="c">8,0</td><td class="c">8,2</td><td class="c">8,38</td><td class="c">20</td><td class="c">4</td><td class="c">39</td></tr>
+        <tr class="tot"><td>Meta</td><td class="c">—</td><td class="c">—</td><td class="c" colspan="5">8,0 em cada dimensão</td><td class="c">8,0</td><td class="c">—</td><td class="c">—</td><td class="c">40</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p><small>Célula em vermelho-claro: nota abaixo da meta.</small></p>
+  <div class="tbl">
+    <table class="aud">
+      <caption>Reclamações de 2026 por motivo · 7 das 18 são do cliente a, do segmento de alimentos</caption>
+      <thead><tr><th style="width:44%">Motivo</th><th class="c">Reclamações</th><th class="c">Percentual</th><th class="c">Acumulado</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Espessura fora da especificação</strong></td><td class="c">8</td><td class="c">44%</td><td class="c">44%</td></tr>
+        <tr><td><strong>Impressão fora do padrão</strong></td><td class="c">4</td><td class="c">22%</td><td class="c">67%</td></tr>
+        <tr><td><strong>Atraso na entrega</strong></td><td class="c">4</td><td class="c">22%</td><td class="c">89%</td></tr>
+        <tr><td><strong>Embalagem de transporte danificada</strong></td><td class="c">2</td><td class="c">11%</td><td class="c">100%</td></tr>
+        <tr class="tot"><td>Total</td><td class="c">18</td><td class="c">100%</td><td class="c"></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p><strong>O que observar.</strong> A nota geral de 8,4 ficou acima da meta, e a leitura por dimensão mostrou onde não: prazo e assistência técnica, as duas abaixo de 8,2, e as duas no segmento de alimentos. As reclamações contaram o resto: dezoito no ano, sete de um só cliente, e cinco delas pelo mesmo motivo, a espessura do filme. Foi esse cliente que a análise crítica decidiu visitar, e foi o motivo dele que justificou o medidor de espessura. A pesquisa apontou a dimensão; as reclamações apontaram o cliente e a causa.</p>
+
+  <h3>Exemplo 3. O tratamento de uma reclamação, do registro à devolutiva</h3>
+  <dl class="ficha">
+    <div><dt>Cliente e data</dt><dd>Cliente A, alimentos. 14/09/2026</dd></div>
+    <div><dt>Motivo</dt><dd>Espessura fora da especificação</dd></div>
+    <div><dt>Descrição</dt><dd>Lote 26-0911 de filme para embalagem de biscoito com espessura abaixo do mínimo em 3 bobinas. A linha do cliente parou 40 minutos.</dd></div>
+  </dl>
+  <div class="tbl">
+    <table class="aud">
+      <caption>Linha do tempo da reclamação</caption>
+      <thead><tr><th class="c">Data</th><th style="width:14%">Etapa</th><th>O que aconteceu</th></tr></thead>
+      <tbody>
+        <tr><td class="nw">14/09/2026</td><td><strong>Recebida</strong></td><td>Ligação do comprador do cliente ao gerente comercial, às 9h. Registrada às 9h30.</td></tr>
+        <tr><td class="nw">14/09/2026</td><td><strong>Respondida</strong></td><td>E-mail no mesmo dia: reposição de 3 bobinas em 48 horas e visita técnica marcada.</td></tr>
+        <tr><td class="nw">16/09/2026</td><td><strong>Resolvida</strong></td><td>Bobinas repostas. Lote reprovado devolvido para análise.</td></tr>
+        <tr><td class="nw">23/09/2026</td><td><strong>Analisada</strong></td><td>RNC 2026-29: variação de espessura na extrusora 3, sem medidor em linha. Sétima reclamação do cliente no ano, quinta pelo mesmo motivo.</td></tr>
+        <tr><td class="nw">02/10/2026</td><td><strong>Devolvida</strong></td><td>Visita ao cliente: plano apresentado, com inspeção de 100% das bobinas para ele até a compra do medidor.</td></tr>
+        <tr><td class="nw">18/02/2027</td><td><strong>Fechada</strong></td><td>Análise crítica aprova o medidor de espessura. Nenhuma reclamação do cliente A de outubro a fevereiro.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p><strong>O que observar.</strong> A reclamação foi respondida no mesmo dia e resolvida em dois: o cliente soube quem cuidava e recebeu a reposição. O tratamento não parou aí: a análise mostrou que era a quinta reclamação pelo mesmo motivo, e a causa, a falta do medidor em linha, saiu do alcance da área e foi à análise crítica. A devolutiva fechou o ciclo duas vezes: na visita, com o plano, e em fevereiro, com a decisão de compra. O cliente A não reclamou de novo.</p>
+</section>
+
+<!-- ============================ MÓDULO 7 ============================ -->
+<section id="leitura">
+  <p class="eyebrow">Módulo 7</p>
+  <h2>Ler a indicação</h2>
+  <p>A pergunta de indicação divide os clientes em três grupos, e o gráfico mostra os três de uma vez. O número da indicação, promotores menos detratores, resume; a composição explica. Uma indicação que sobe porque os neutros viraram promotores é diferente de uma que sobe porque os detratores foram embora.</p>
+
+  <figure id="fig-bars">
+    <div class="scroll">
+      <svg id="bars" viewBox="0 0 900 236" role="img" aria-label="Gráfico de barras empilhadas com as respostas à pergunta de indicação da pizzaria, por mês. Fev/2027: 52 promotores, 31 neutros e 13 detratores, indicação 41. Mar/2027: 63 promotores, 32 neutros e 13 detratores, indicação 46. Abr/2027: 71 promotores, 28 neutros e 9 detratores, indicação 57.">
+        <g font-size="11.5">
+          <rect class="f1" x="200" y="12" width="14" height="14"/><text x="222" y="24">Promotores</text>
+          <rect class="f2" x="306.0" y="12" width="14" height="14"/><text x="328.0" y="24">Neutros</text>
+          <rect class="f3" x="392.2" y="12" width="14" height="14"/><text x="414.2" y="24">Detratores</text>
+        </g>
+        <line class="grid" x1="200.0" y1="50" x2="200.0" y2="190"/>
+        <text class="mu" x="200.0" y="206" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">0</text>
+        <line class="grid" x1="300.0" y1="50" x2="300.0" y2="190"/>
+        <text class="mu" x="300.0" y="206" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">20</text>
+        <line class="grid" x1="400.0" y1="50" x2="400.0" y2="190"/>
+        <text class="mu" x="400.0" y="206" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">40</text>
+        <line class="grid" x1="500.0" y1="50" x2="500.0" y2="190"/>
+        <text class="mu" x="500.0" y="206" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">60</text>
+        <line class="grid" x1="600.0" y1="50" x2="600.0" y2="190"/>
+        <text class="mu" x="600.0" y="206" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">80</text>
+        <line class="grid" x1="700.0" y1="50" x2="700.0" y2="190"/>
+        <text class="mu" x="700.0" y="206" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">100</text>
+        <line class="grid" x1="800.0" y1="50" x2="800.0" y2="190"/>
+        <text class="mu" x="800.0" y="206" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">120</text>
+        <text class="mono mu" x="495.0" y="226" font-size="10" text-anchor="middle">RESPOSTAS</text>
+        <text x="20" y="84.0" font-size="12"><tspan class="b">Fev/2027</tspan><tspan class="mu"> · 96 respostas</tspan></text>
+        <rect class="seg f1" data-k="0" x="200" y="68.0" width="260.0" height="24"/>
+        <text class="b on" x="330.0" y="84.5" font-size="12" text-anchor="middle" pointer-events="none">52</text>
+        <rect class="seg f2" data-k="0" x="460.0" y="68.0" width="155.0" height="24"/>
+        <text class="b on2" x="537.5" y="84.5" font-size="12" text-anchor="middle" pointer-events="none">31</text>
+        <rect class="seg f3" data-k="0" x="615.0" y="68.0" width="65.0" height="24"/>
+        <text class="b on" x="647.5" y="84.5" font-size="12" text-anchor="middle" pointer-events="none">13</text>
+        <text class="halo" x="690.0" y="84.0" font-size="11.5"><tspan class="b">41</tspan><tspan class="mu"> de indicação</tspan></text>
+        <text x="20" y="128.0" font-size="12"><tspan class="b">Mar/2027</tspan><tspan class="mu"> · 108 respostas</tspan></text>
+        <rect class="seg f1" data-k="1" x="200" y="112.0" width="315.0" height="24"/>
+        <text class="b on" x="357.5" y="128.5" font-size="12" text-anchor="middle" pointer-events="none">63</text>
+        <rect class="seg f2" data-k="1" x="515.0" y="112.0" width="160.0" height="24"/>
+        <text class="b on2" x="595.0" y="128.5" font-size="12" text-anchor="middle" pointer-events="none">32</text>
+        <rect class="seg f3" data-k="1" x="675.0" y="112.0" width="65.0" height="24"/>
+        <text class="b on" x="707.5" y="128.5" font-size="12" text-anchor="middle" pointer-events="none">13</text>
+        <text class="halo" x="750.0" y="128.0" font-size="11.5"><tspan class="b">46</tspan><tspan class="mu"> de indicação</tspan></text>
+        <text x="20" y="172.0" font-size="12"><tspan class="b">Abr/2027</tspan><tspan class="mu"> · 108 respostas</tspan></text>
+        <rect class="seg f1" data-k="2" x="200" y="156.0" width="355.0" height="24"/>
+        <text class="b on" x="377.5" y="172.5" font-size="12" text-anchor="middle" pointer-events="none">71</text>
+        <rect class="seg f2" data-k="2" x="555.0" y="156.0" width="140.0" height="24"/>
+        <text class="b on2" x="625.0" y="172.5" font-size="12" text-anchor="middle" pointer-events="none">28</text>
+        <rect class="seg f3" data-k="2" x="695.0" y="156.0" width="45.0" height="24"/>
+        <text class="b on" x="717.5" y="172.5" font-size="12" text-anchor="middle" pointer-events="none">9</text>
+        <text class="halo" x="750.0" y="172.0" font-size="11.5"><tspan class="b">57</tspan><tspan class="mu"> de indicação</tspan></text>
+        <rect class="hit" x="14" y="58" width="872" height="44" tabindex="0" role="img" aria-label="Fev/2027: 96 respostas, 52 promotores, 31 neutros e 13 detratores, indicação 41" data-k="0" data-r="Fev/2027" data-t="96" data-ped="840" data-a="52" data-b="31" data-c="13" data-nps="41" data-cx="440.0"/>
+        <rect class="hit" x="14" y="102" width="872" height="44" tabindex="0" role="img" aria-label="Mar/2027: 108 respostas, 63 promotores, 32 neutros e 13 detratores, indicação 46" data-k="1" data-r="Mar/2027" data-t="108" data-ped="910" data-a="63" data-b="32" data-c="13" data-nps="46" data-cx="470.0"/>
+        <rect class="hit" x="14" y="146" width="872" height="44" tabindex="0" role="img" aria-label="Abr/2027: 108 respostas, 71 promotores, 28 neutros e 9 detratores, indicação 57" data-k="2" data-r="Abr/2027" data-t="108" data-ped="870" data-a="71" data-b="28" data-c="9" data-nps="57" data-cx="470.0"/>
+      </svg>
+    </div>
+    <div class="tip" id="bars-tip" hidden></div>
+    <figcaption><b>Figura 5.</b> As respostas à pergunta de indicação da pizzaria, por mês, com a indicação ao lado. Passe o mouse sobre as barras para ver os valores.</figcaption>
+    <details class="data">
+      <summary>Ver os dados em tabela</summary>
+      <div class="tbl">
+        <table class="aud">
+          <thead><tr><th>Mês</th><th class="c">Respostas</th><th class="c">Promotores</th><th class="c">Neutros</th><th class="c">Detratores</th><th class="c">Indicação</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Fev/2027</strong></td><td class="c">96</td><td class="c">52</td><td class="c">31</td><td class="c">13</td><td class="c">41</td></tr>
+            <tr><td><strong>Mar/2027</strong></td><td class="c">108</td><td class="c">63</td><td class="c">32</td><td class="c">13</td><td class="c">46</td></tr>
+            <tr><td><strong>Abr/2027</strong></td><td class="c">108</td><td class="c">71</td><td class="c">28</td><td class="c">9</td><td class="c">57</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </details>
+  </figure>
+
+  <p>A indicação subiu de 41 para 57 em três meses, e a composição diz como: os detratores caíram de 13 para 9, e os promotores subiram de 52 para 71, com 96 e 108 respostas. É a leitura que confirma as reclamações: o motivo “entrega atrasada” caiu junto. A taxa de resposta ficou entre 11% e 12% dos pedidos, medida do mesmo jeito nos três meses, e é isso que permite comparar.</p>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:26%">Leitura</th><th style="width:36%">O que significa</th><th>O que fazer</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Detratores caindo</strong></td><td>As falhas que irritam estão sendo tratadas.</td><td>Confirmar nas reclamações: o motivo principal caiu?</td></tr>
+        <tr><td><strong>Neutros virando promotores</strong></td><td>O serviço passou de aceitável a bom.</td><td>Descobrir o que mudou e manter.</td></tr>
+        <tr><td><strong>Indicação alta com poucas respostas</strong></td><td>Só quem gostou respondeu.</td><td>Ler a taxa de resposta antes de comemorar.</td></tr>
+        <tr><td><strong>Indicação estável e reclamações subindo</strong></td><td>Os sinais discordam.</td><td>Confiar na reclamação: ela tem nome, data e motivo.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 8 ============================ -->
+<section id="erros">
+  <p class="eyebrow">Módulo 8</p>
+  <h2>Erros comuns</h2>
+  <div class="errs">
+    <div><h4>Só a pesquisa</h4><p>A nota é 4,5, e a loja perde clientes que nunca responderam.</p><p class="fix"><b>Correção:</b> três famílias de fontes. O cliente que vai embora não responde à pesquisa.</p></div>
+    <div><h4>Pesquisa longa</h4><p>Doze perguntas, e 3% de respostas.</p><p class="fix"><b>Correção:</b> três perguntas e um campo aberto. Quanto menor, mais gente responde.</p></div>
+    <div><h4>Perguntar e não devolver</h4><p>O cliente respondeu três vezes e nunca soube o que mudou.</p><p class="fix"><b>Correção:</b> devolutiva a cada ciclo: na resposta, na pesquisa seguinte, na visita.</p></div>
+    <div><h4>Reclamação sem registro</h4><p>“Resolvi na hora”, e ninguém sabe quantas vezes o mesmo problema voltou.</p><p class="fix"><b>Correção:</b> toda reclamação é registrada, mesmo a resolvida na hora. O registro é que mostra a repetição.</p></div>
+    <div><h4>Média que esconde</h4><p>A nota geral é 8,4, e o segmento que paga mais está em 7,8.</p><p class="fix"><b>Correção:</b> leia por dimensão e por segmento. A média serve para a meta, não para decidir.</p></div>
+    <div><h4>Confundir resposta com solução</h4><p>O cliente recebeu um e-mail automático e nunca mais ouviu falar.</p><p class="fix"><b>Correção:</b> responder tem prazo, resolver tem outro, e os dois são medidos.</p></div>
+    <div><h4>Comemorar a taxa de resposta baixa</h4><p>“Cem por cento dos que responderam estão satisfeitos.” Responderam cinco.</p><p class="fix"><b>Correção:</b> a taxa de resposta acompanha a nota, sempre.</p></div>
+    <div><h4>Medir e não decidir</h4><p>O gráfico é atualizado todo mês, e a reunião não muda nada.</p><p class="fix"><b>Correção:</b> cada análise termina em uma decisão sobre o motivo principal.</p></div>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 9 ============================ -->
+<section id="ferramentas">
+  <p class="eyebrow">Módulo 9</p>
+  <h2>A satisfação e outras ferramentas</h2>
+  <p>A satisfação do cliente é o resultado que dá sentido aos outros: os indicadores, as auditorias e as não conformidades existem para que o cliente receba o que espera. Ela é a primeira entrada de desempenho da análise crítica.</p>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:26%">Ferramenta</th><th style="width:37%">O que ela entrega à satisfação</th><th>O que recebe da satisfação</th></tr></thead>
+      <tbody>
+        <tr><td><a href="../ISO-9001/treinamento-iso-9001.html"><strong>ISO 9001 requisito a requisito</strong></a></td><td>Os requisitos 9.1.2 e 8.2.1 e a lacuna “medir a satisfação, e não só a reclamação”.</td><td>A pesquisa, o registro de reclamações e os indicadores como evidência.</td></tr>
+        <tr><td><a href="../Indicadores/treinamento-indicadores.html"><strong>Indicadores</strong></a></td><td>O indicador de reclamações por 100 pedidos, com meta e limite de atenção.</td><td>A nota média, o percentual de satisfeitos e a indicação, no painel.</td></tr>
+        <tr><td><a href="../Nao-Conformidade/treinamento-nao-conformidade.html"><strong>Não conformidade e ação corretiva</strong></a></td><td>O tratamento das reclamações graves ou repetidas.</td><td>As reclamações que viram registro de não conformidade.</td></tr>
+        <tr><td><a href="../GUT/treinamento-gut.html"><strong>Matriz GUT</strong></a></td><td>A ordem para tratar os motivos das notas baixas.</td><td>A lista de motivos, com a frequência.</td></tr>
+        <tr><td><a href="../Ishikawa/treinamento-ishikawa.html"><strong>Diagrama de Ishikawa</strong></a></td><td>A causa do motivo principal.</td><td>O motivo a analisar: pizza fria, espessura fora.</td></tr>
+        <tr><td><a href="../Processos/treinamento-processos.html"><strong>Mapa de processos e tartaruga</strong></a></td><td>O que o cliente pede e o que recebe, nas duas pontas do mapa.</td><td>A percepção do cliente sobre a saída de cada processo principal.</td></tr>
+        <tr><td><a href="../SWOT/treinamento-swot.html"><strong>Matriz SWOT</strong></a></td><td>O contexto: concorrência e expectativas do mercado.</td><td>Os sinais de comportamento: clientes perdidos e ganhos.</td></tr>
+        <tr><td><a href="../Fornecedores/treinamento-fornecedores.html"><strong>Avaliação de fornecedores</strong></a></td><td>O mesmo método, visto do outro lado: a organização como cliente.</td><td>A reclamação que tem origem no fornecedor.</td></tr>
+        <tr><td><a href="../Analise-Critica/treinamento-analise-critica.html"><strong>Análise crítica pela direção</strong></a></td><td>A decisão sobre o que mudar, e o recurso.</td><td>A entrada “c1”: satisfação do cliente e retorno das partes interessadas.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 10 ============================ -->
+<section id="iso">
+  <p class="eyebrow">Módulo 10</p>
+  <h2>Nas normas ISO</h2>
+  <p>A satisfação do cliente está no requisito 9.1.2 da ISO 9001:2015, e o foco no cliente é um dos sete princípios de gestão da qualidade. A norma pede que a percepção seja monitorada e que os métodos sejam definidos; não pede pesquisa, escala nem indicação. Duas normas de diretrizes ajudam quem quer ir além: a ISO 10002, sobre tratamento de reclamações, e a ISO 10004, sobre monitoramento e medição da satisfação.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 190" role="img" aria-label="O que a norma pede sobre satisfação do cliente. 9.1.2 · Monitorar a percepção: Como o cliente percebe o atendimento das suas necessidades e expectativas. Neste estudo: As três famílias de fontes. 9.1.2 · Definir os métodos: Como a informação é obtida, monitorada e analisada. Neste estudo: Pesquisa, registro de reclamações e painel. 8.2.1 · Comunicar-se com o cliente: Canal para o retorno do cliente e para as reclamações. Neste estudo: O caminho da reclamação, com prazos. 9.3 · Levar à direção: A satisfação é entrada da análise crítica. Neste estudo: Entrada “c1”, com resultado e motivos.">
+        <rect class="bx" x="10" y="14" width="214" height="162"/>
+        <rect class="hd-ink" x="10" y="14" width="214" height="34"/>
+        <text class="b t-ground" x="22" y="36" font-size="12">9.1.2 · Monitorar a percepção</text>
+        <text x="22" y="70" font-size="11.5">Como o cliente percebe o</text>
+        <text x="22" y="86" font-size="11.5">atendimento das suas</text>
+        <text x="22" y="102" font-size="11.5">necessidades e expectativas.</text>
+        <text class="mu" x="22" y="138" font-size="11">Neste estudo: As três famílias de</text>
+        <text class="mu" x="22" y="153" font-size="11">fontes</text>
+        <rect class="bx" x="232" y="14" width="214" height="162"/>
+        <rect class="hd-ink" x="232" y="14" width="214" height="34"/>
+        <text class="b t-ground" x="244" y="36" font-size="12">9.1.2 · Definir os métodos</text>
+        <text x="244" y="70" font-size="11.5">Como a informação é obtida,</text>
+        <text x="244" y="86" font-size="11.5">monitorada e analisada.</text>
+        <text class="mu" x="244" y="138" font-size="11">Neste estudo: Pesquisa, registro</text>
+        <text class="mu" x="244" y="153" font-size="11">de reclamações e painel</text>
+        <rect class="bx" x="454" y="14" width="214" height="162"/>
+        <rect class="hd-ink" x="454" y="14" width="214" height="34"/>
+        <text class="b t-ground" x="466" y="36" font-size="12">8.2.1 · Comunicar-se com o cliente</text>
+        <text x="466" y="70" font-size="11.5">Canal para o retorno do cliente</text>
+        <text x="466" y="86" font-size="11.5">e para as reclamações.</text>
+        <text class="mu" x="466" y="138" font-size="11">Neste estudo: O caminho da</text>
+        <text class="mu" x="466" y="153" font-size="11">reclamação, com prazos</text>
+        <rect class="bx" x="676" y="14" width="214" height="162"/>
+        <rect class="hd-ink" x="676" y="14" width="214" height="34"/>
+        <text class="b t-ground" x="688" y="36" font-size="12">9.3 · Levar à direção</text>
+        <text x="688" y="70" font-size="11.5">A satisfação é entrada da</text>
+        <text x="688" y="86" font-size="11.5">análise crítica.</text>
+        <text class="mu" x="688" y="138" font-size="11">Neste estudo: Entrada “c1”, com</text>
+        <text class="mu" x="688" y="153" font-size="11">resultado e motivos</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 6.</b> O que a norma pede e onde este estudo responde. O texto da figura é um resumo, com palavras próprias.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:10%">Item</th><th style="width:32%">O que pede, em resumo</th><th style="width:27%">O que isso significa</th><th>Evidências que o auditor procura</th></tr></thead>
+      <tbody>
+        <tr><td class="num">9.1.2</td><td>Monitorar a percepção do cliente sobre o atendimento das suas necessidades e expectativas, e determinar os métodos para obter, monitorar e analisar essa informação</td><td>A organização escolhe como ouve o cliente, ouve e analisa.</td><td>Pesquisas, registro de reclamações, indicadores e análise.</td></tr>
+        <tr><td class="num">5.1.2</td><td>A alta direção deve assegurar o foco no cliente: requisitos atendidos, riscos tratados, foco em aumentar a satisfação</td><td>A direção acompanha a satisfação e decide sobre ela.</td><td>Satisfação na análise crítica e nos objetivos.</td></tr>
+        <tr><td class="num">8.2.1</td><td>Comunicar-se com o cliente, inclusive para obter o retorno dele e tratar as reclamações</td><td>Há canal para o cliente falar, e o que ele diz é tratado.</td><td>Canais de atendimento e registro de reclamações.</td></tr>
+        <tr><td class="num">9.1.3</td><td>Analisar os dados, entre eles a satisfação do cliente</td><td>A nota e as reclamações são analisadas, e não só coletadas.</td><td>Atas com decisões sobre os motivos.</td></tr>
+        <tr><td class="num">9.3.2</td><td>A satisfação do cliente e o retorno das partes interessadas são entradas da análise crítica</td><td>A direção vê o resultado do período.</td><td>Ata da análise crítica, entrada “c1”.</td></tr>
+        <tr><td class="num">10.2</td><td>Reagir à não conformidade, inclusive a que vem de reclamação</td><td>Reclamação grave ou repetida tem análise de causa.</td><td>Registros de não conformidade abertos por reclamação.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pair">
+    <div class="box">
+      <h4>O que a ISO 9001 exige</h4>
+      <ul>
+        <li>Monitorar a percepção do cliente.</li>
+        <li>Definir os métodos de obter e analisar a informação.</li>
+        <li>Canal de comunicação com o cliente, inclusive para reclamações.</li>
+        <li>Analisar os dados e levá-los à análise crítica.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h4>O que a ISO 9001 não exige</h4>
+      <ul>
+        <li>Uma pesquisa de satisfação.</li>
+        <li>A pergunta de indicação, ou uma escala definida.</li>
+        <li>Uma meta de satisfação.</li>
+        <li>Prazo de resposta a reclamações.</li>
+        <li>As normas ISO 10002 e ISO 10004: são diretrizes, e não requisitos.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="note">
+    <h4>Pontos de atenção</h4>
+    <p>O auditor costuma pedir três coisas: como a organização ouve o cliente, o que o cliente disse no último período e o que foi feito com isso. Uma pesquisa engavetada e um registro de reclamações sem tratamento são as constatações mais comuns. Uma organização pequena, sem pesquisa, atende ao requisito com o registro de reclamações e um sinal de comportamento, desde que analise os dois.</p>
+    <p>Este módulo usa a numeração da ISO 9001:2015 e resume os textos com palavras próprias. Confira sempre a edição vigente da norma antes de citar um requisito em relatório.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 11 ============================ -->
+<section id="reuniao">
+  <p class="eyebrow">Módulo 11</p>
+  <h2>A reunião de análise</h2>
+  <p>A satisfação do cliente é analisada todo mês, em uma reunião de uma hora, ou a cada período da pesquisa. Antes dela, os indicadores estão calculados e os motivos, agrupados. Na reunião, escolhe-se o motivo a tratar e quem devolve ao cliente.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 136" role="img" aria-label="Distribuição de uma reunião de análise da satisfação de 60 minutos: 5 minutos para os indicadores, 15 minutos para a pesquisa por pergunta e por segmento, 15 minutos para as reclamações e os motivos, 20 minutos para a decisão sobre o motivo principal e 5 minutos para a devolutiva e o fecho.">
+        <g font-size="11.5" text-anchor="middle">
+          <rect class="bx" x="60" y="24" width="65" height="56"/><text x="92.5" y="56" font-size="10.5">Indicadores</text>
+          <rect class="bx" x="125" y="24" width="195" height="56"/><text x="222.5" y="49">Pesquisa por pergunta</text><text x="222.5" y="64">e por segmento</text>
+          <rect class="hd-d gap2" x="320" y="24" width="195" height="56"/><text class="on b" x="417.5" y="56">Reclamações e motivos</text>
+          <rect class="hd-ink gap2" x="515" y="24" width="260" height="56"/><text class="t-ground b" x="645" y="56">Decisão sobre o motivo principal</text>
+          <rect class="bx" x="775" y="24" width="65" height="56"/><text x="807.5" y="56" font-size="10.5">Devolutiva</text>
+        </g>
+        <g class="ln-mu" stroke-width="1">
+          <line x1="60" y1="82" x2="60" y2="94"/><line x1="125" y1="82" x2="125" y2="94"/><line x1="320" y1="82" x2="320" y2="94"/>
+          <line x1="515" y1="82" x2="515" y2="94"/><line x1="775" y1="82" x2="775" y2="94"/><line x1="840" y1="82" x2="840" y2="94"/>
+        </g>
+        <g class="mono" font-size="10.5" text-anchor="middle">
+          <text class="mu" x="60" y="112">0</text><text class="mu" x="125" y="112">5</text><text class="mu" x="320" y="112">20</text>
+          <text class="mu" x="515" y="112">35</text><text class="mu" x="775" y="112">55</text><text class="mu" x="840" y="112">60</text>
+        </g>
+      </svg>
+    </div>
+    <figcaption><b>Figura 7.</b> Uma reunião de análise de uma hora, desenhada em escala. A decisão sobre o motivo principal ocupa um terço: é a parte que o cliente percebe.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Momento</th><th style="width:42%">O que fazer</th><th>Frases que ajudam</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Indicadores</strong></td><td>Ler os números do período contra a meta e o anterior: nota, satisfeitos, indicação, reclamações, prazo de resposta, taxa de resposta.</td><td>“O que mudou desde o mês passado?”</td></tr>
+        <tr><td><strong>Pesquisa</strong></td><td>Uma pergunta por vez, e um segmento por vez. Procurar a nota que discorda das outras.</td><td>“Qual pergunta puxa a média para baixo?”</td></tr>
+        <tr><td><strong>Reclamações e motivos</strong></td><td>Ler os motivos em ordem, os prazos cumpridos e as reclamações repetidas.</td><td>“Quantas vezes este motivo apareceu?”</td></tr>
+        <tr><td><strong>Decisão</strong></td><td>Escolher um motivo, definir a ação, o responsável e o prazo. Abrir não conformidade quando couber.</td><td>“O que fazemos com o motivo número um?”</td></tr>
+        <tr><td><strong>Devolutiva</strong></td><td>Definir quem conta ao cliente, e como: resposta, visita, mensagem na pesquisa seguinte.</td><td>“Como o cliente vai saber?”</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Leve os comentários do campo aberto para a reunião, e leia alguns em voz alta. Os números dizem quanto; os comentários dizem por quê.</p>
+
+  <h3>Checklist da satisfação do cliente</h3>
+  <p>Marque os itens conforme revisa o seu sistema. As marcações ficam salvas neste navegador.</p>
+  <ol class="check" id="checklist">
+    <li><label><input type="checkbox" id="ck-1"><span>Está definido quem é o cliente e o que ele valoriza no produto ou no serviço.</span></label></li>
+    <li><label><input type="checkbox" id="ck-2"><span>Há pelo menos uma fonte de cada família: o que o cliente diz quando perguntamos, o que diz sem perguntar e o que faz.</span></label></li>
+    <li><label><input type="checkbox" id="ck-3"><span>A pesquisa é curta, com perguntas ligadas ao que o cliente valoriza, e tem frequência definida.</span></label></li>
+    <li><label><input type="checkbox" id="ck-4"><span>A amostra e a taxa de resposta são conhecidas, e o resultado não é generalizado além delas.</span></label></li>
+    <li><label><input type="checkbox" id="ck-5"><span>Toda reclamação é registrada, de qualquer canal, com data, motivo e o que o cliente pede.</span></label></li>
+    <li><label><input type="checkbox" id="ck-6"><span>A reclamação recebe resposta no prazo definido, e o cliente sabe quem cuida dela.</span></label></li>
+    <li><label><input type="checkbox" id="ck-7"><span>Os motivos das reclamações e das notas baixas são agrupados e analisados.</span></label></li>
+    <li><label><input type="checkbox" id="ck-8"><span>Reclamação grave ou repetida vira não conformidade, com análise de causa.</span></label></li>
+    <li><label><input type="checkbox" id="ck-9"><span>Os indicadores de satisfação têm meta e entram no painel da organização.</span></label></li>
+    <li><label><input type="checkbox" id="ck-10"><span>O resultado é analisado em reunião, com decisões registradas.</span></label></li>
+    <li><label><input type="checkbox" id="ck-11"><span>O cliente recebe a devolutiva: o que foi feito com o que ele disse.</span></label></li>
+    <li><label><input type="checkbox" id="ck-12"><span>A satisfação do cliente é entrada da análise crítica pela direção.</span></label></li>
+  </ol>
+  <div class="bar"><span><b id="ck-count">0</b> de 12 itens marcados</span><button class="btn" id="ck-reset" type="button">Limpar marcações</button></div>
+</section>
+
+<!-- ============================ MÓDULO 12 ============================ -->
+<section id="pratique">
+  <p class="eyebrow">Módulo 12</p>
+  <h2>Pratique</h2>
+  <h3>Exercício 1. De que família é a fonte?</h3>
+  <p>Cada item descreve uma informação sobre o cliente. Diga de que família ela é: o que o cliente diz quando perguntamos, o que diz sem perguntar, ou o que faz.</p>
+  <div class="quiz" id="quiz"></div>
+  <div class="bar"><span>Acertos: <b id="qz-score">0</b> de <b id="qz-total">12</b></span><span>Respondidos: <b id="qz-done">0</b></span><button class="btn" id="qz-reset" type="button">Recomeçar</button></div>
+
+  <h3>Exercício 2. Monte o sistema de satisfação da sua organização</h3>
+  <p>Escolha um produto ou serviço com clientes identificados. Abra a planilha de apoio e siga o roteiro.</p>
+  <ol>
+    <li>Na aba Pesquisa, escreva o que o cliente valoriza e transforme cada item em uma pergunta. Escolha a escala.</li>
+    <li>Na aba Respostas, lance as respostas do último período, ou as de um teste com cinco clientes.</li>
+    <li>Na aba Reclamações, registre as reclamações do período, com motivo, datas de resposta e de solução.</li>
+    <li>Na aba Painel, informe os pedidos do período e as metas, e leia os indicadores.</li>
+    <li>Escolha o motivo mais frequente e decida uma ação, com responsável e prazo.</li>
+    <li>Escreva, em três linhas, a devolutiva que os clientes vão receber.</li>
+    <li>Passe o checklist do módulo 11.</li>
+  </ol>
+  <p>Depois, ligue para um cliente que parou de comprar e pergunte por quê. Anote a resposta ao lado dos indicadores: é o sinal que a pesquisa não pega.</p>
+</section>
+
+<!-- ============================ MÓDULO 13 ============================ -->
+<section id="planilha">
+  <p class="eyebrow">Módulo 13</p>
+  <h2>A planilha de apoio</h2>
+  <p>Este treinamento acompanha o arquivo <a id="xlsx-ref" href="Satisfacao-modelo.xlsx">Satisfacao-modelo.xlsx</a>, que fica na mesma pasta. As células em amarelo-claro são para preenchimento. As células cinza são calculadas.</p>
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Aba</th><th>Para que serve</th><th style="width:36%">O que ela calcula</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Instruções</strong></td><td>Legenda de cores, as regras de cálculo, ordem de preenchimento e premissas do modelo.</td><td>Nada. É só leitura.</td></tr>
+        <tr><td><strong>Pesquisa</strong></td><td>Até cinco perguntas, com a escala, o período e o canal.</td><td>O limite de “satisfeito” para a escala escolhida.</td></tr>
+        <tr><td><strong>Respostas</strong></td><td>Até 60 respostas, com as notas de cada pergunta, a indicação e o comentário.</td><td>Média por pergunta, percentual de satisfeitos, classificação da indicação e conferência.</td></tr>
+        <tr><td><strong>Reclamações</strong></td><td>Até 30 reclamações, com motivo, datas de resposta e de solução, e situação.</td><td>Prazo de resposta, situação de cada uma, motivos em ordem.</td></tr>
+        <tr><td><strong>Painel</strong></td><td>Os pedidos do período e as metas.</td><td>Nota média, satisfeitos, indicação, taxa de resposta, reclamações por 100 pedidos, prazo médio e situação de cada indicador.</td></tr>
+        <tr><td><strong>Checklist</strong></td><td>Os mesmos 12 itens do módulo 11, com status Sim, Parcial ou Não.</td><td>Percentual atendido e situação da validação.</td></tr>
+        <tr><td><strong>Exemplo 1 e Exemplo 2</strong></td><td>A pesquisa da pizzaria, por mês, e a pesquisa anual da indústria, por segmento.</td><td>Médias, indicação e reclamações por 100 pedidos.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ GLOSSÁRIO ============================ -->
+<section id="glossario">
+  <p class="eyebrow">Referência</p>
+  <h2>Glossário</h2>
+  <dl class="gloss">
+    <div><dt>Campo aberto</dt><dd>Pergunta sem escala, em que o cliente escreve o que quiser. É a fonte dos motivos.</dd></div>
+    <div><dt>Detrator</dt><dd>Cliente que dá de 0 a 6 na pergunta de indicação.</dd></div>
+    <div><dt>Devolutiva</dt><dd>O que a organização conta ao cliente sobre o que fez com o que ele disse.</dd></div>
+    <div><dt>Indicação</dt><dd>Percentual de promotores menos percentual de detratores, de −100 a 100.</dd></div>
+    <div><dt>Motivo</dt><dd>Categoria em que as reclamações e as notas baixas são agrupadas.</dd></div>
+    <div><dt>Percepção</dt><dd>O que o cliente sente que recebeu, comparado com o que esperava.</dd></div>
+    <div><dt>Pesquisa de relacionamento</dt><dd>Pesquisa periódica, sobre o conjunto da relação com o cliente.</dd></div>
+    <div><dt>Pesquisa depois da entrega</dt><dd>Pesquisa curta, aplicada logo depois de cada pedido ou serviço.</dd></div>
+    <div><dt>Promotor</dt><dd>Cliente que dá 9 ou 10 na pergunta de indicação.</dd></div>
+    <div><dt>Reclamação</dt><dd>Manifestação de insatisfação do cliente, por qualquer canal, que espera resposta.</dd></div>
+    <div><dt>Satisfeito</dt><dd>Neste material, cliente que dá nota igual ou acima de 80% da escala.</dd></div>
+    <div><dt>Segmento</dt><dd>Grupo de clientes com necessidades parecidas, lido separadamente na pesquisa.</dd></div>
+    <div><dt>Taxa de resposta</dt><dd>Respostas recebidas sobre clientes ou pedidos consultados.</dd></div>
+  </dl>
+</section>
+
+</main>
+</div>
+
+<footer>Material de estudo. Os exemplos, documentos e números são ilustrativos e foram criados para fins didáticos. As referências às normas ISO são resumos para estudo e não substituem o texto das normas.</footer>
+</div>
+
+<script>
+(function () {
+  function read(key) { try { return JSON.parse(localStorage.getItem(key) || 'null'); } catch (e) { return null; } }
+  function write(key, val) { try { localStorage.setItem(key, JSON.stringify(val)); } catch (e) {} }
+
+  /* ---------- Checklist ---------- */
+  var boxes = Array.prototype.slice.call(document.querySelectorAll('#checklist input'));
+  var count = document.getElementById('ck-count');
+  var saved = read('satisfacao-checklist') || {};
+  function refreshChecks() {
+    var n = 0, state = {};
+    boxes.forEach(function (b) { if (b.checked) { n++; } state[b.id] = b.checked; });
+    count.textContent = n;
+    return state;
+  }
+  boxes.forEach(function (b) {
+    if (saved[b.id]) { b.checked = true; }
+    b.addEventListener('change', function () { write('satisfacao-checklist', refreshChecks()); });
+  });
+  refreshChecks();
+  document.getElementById('ck-reset').addEventListener('click', function () {
+    boxes.forEach(function (b) { b.checked = false; });
+    write('satisfacao-checklist', refreshChecks());
+  });
+
+  /* ---------- Exercício ---------- */
+  var KEYS = ['P', 'D', 'F'];
+  var LABEL = { P: 'Perguntamos', D: 'Diz sem perguntar', F: 'Faz' };
+  var NAMES = { P: 'o que o cliente diz quando perguntamos', D: 'o que o cliente diz sem perguntar', F: 'o que o cliente faz' };
+  var ITEMS = [
+    { t: 'A nota 4,5 para a entrega, no código da caixa.', a: 'P', w: 'Resposta a uma pergunta que a loja fez.' },
+    { t: 'A mensagem “a pizza chegou fria de novo”, no aplicativo.', a: 'D', w: 'É uma reclamação: o cliente disse sem que perguntassem.' },
+    { t: 'O condomínio que fazia dez pedidos por semana e passou a fazer dois.', a: 'F', w: 'Comportamento: ninguém perguntou, ninguém reclamou, o pedido caiu.' },
+    { t: 'O cliente A, que fez sete reclamações no ano.', a: 'D', w: 'Reclamações são o que o cliente diz por conta própria.' },
+    { t: 'A nota 7,8 para o prazo, no segmento de alimentos, na pesquisa anual.', a: 'P', w: 'Resposta à pesquisa anual.' },
+    { t: 'Os quatro clientes que não compraram nada em 2026.', a: 'F', w: 'Clientes perdidos: o sinal de comportamento mais importante.' },
+    { t: 'O elogio à entregadora, deixado no campo aberto da pesquisa.', a: 'P', w: 'Veio pela pesquisa, mesmo sendo espontâneo: o canal foi a pergunta.' },
+    { t: 'O e-mail do comprador agradecendo a visita técnica.', a: 'D', w: 'Elogio espontâneo: o cliente disse sem perguntar.' },
+    { t: 'A indicação de 57 em abril, calculada dos promotores e detratores.', a: 'P', w: 'Vem da pergunta de indicação.' },
+    { t: 'O novo cliente que chegou indicado por um cliente antigo.', a: 'F', w: 'Indicar de fato é comportamento. Dizer que indicaria é pesquisa.' },
+    { t: 'A devolução de um lote pedida pelo cliente, com o motivo por escrito.', a: 'D', w: 'É uma reclamação formal.' },
+    { t: 'O pedido repetido todo mês pelo mesmo cliente há três anos.', a: 'F', w: 'Recompra: a satisfação que vira pedido.' }
+  ];
+  var quiz = document.getElementById('quiz');
+  var score = document.getElementById('qz-score');
+  var done = document.getElementById('qz-done');
+  document.getElementById('qz-total').textContent = ITEMS.length;
+  var hits = 0, answered = 0;
+
+  function render() {
+    hits = 0; answered = 0; score.textContent = 0; done.textContent = 0;
+    quiz.textContent = '';
+    ITEMS.forEach(function (item, idx) {
+      var row = document.createElement('div'); row.className = 'q';
+      var p = document.createElement('p'); p.textContent = (idx + 1) + '. ' + item.t;
+      var opts = document.createElement('div'); opts.className = 'opts';
+      opts.setAttribute('role', 'group'); opts.setAttribute('aria-label', 'Família da fonte do item ' + (idx + 1));
+      var why = document.createElement('p'); why.className = 'why'; why.hidden = true;
+      KEYS.forEach(function (k) {
+        var b = document.createElement('button');
+        b.type = 'button'; b.textContent = LABEL[k]; b.id = 'qz-' + idx + '-' + k;
+        b.setAttribute('data-k', k);
+        b.addEventListener('click', function () {
+          var ok = k === item.a;
+          Array.prototype.forEach.call(opts.children, function (o) {
+            o.disabled = true;
+            if (o.getAttribute('data-k') === item.a) { o.className = 'right'; }
+          });
+          if (!ok) { b.className = 'wrong'; }
+          var lead = document.createElement('b');
+          lead.textContent = (ok ? 'Certo. ' : 'A resposta é ' + NAMES[item.a] + '. ');
+          why.textContent = ''; why.appendChild(lead); why.appendChild(document.createTextNode(item.w));
+          why.className = 'why ' + (ok ? 'ok' : 'no'); why.hidden = false;
+          answered++; if (ok) { hits++; }
+          score.textContent = hits; done.textContent = answered;
+        });
+        opts.appendChild(b);
+      });
+      row.appendChild(p); row.appendChild(opts); row.appendChild(why);
+      quiz.appendChild(row);
+    });
+  }
+  render();
+  document.getElementById('qz-reset').addEventListener('click', render);
+
+  /* ---------- Gráfico: leitura dos valores ---------- */
+  var fig = document.getElementById('fig-bars');
+  var tip = document.getElementById('bars-tip');
+  var svg = document.getElementById('bars');
+  var segs = document.querySelectorAll('#bars .seg');
+  function hide() {
+    tip.hidden = true;
+    Array.prototype.forEach.call(segs, function (b) { b.removeAttribute('opacity'); });
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('#bars .hit'), function (r) {
+    function show() {
+      var d = r.dataset;
+      Array.prototype.forEach.call(segs, function (b) {
+        b.setAttribute('opacity', b.getAttribute('data-k') === d.k ? '1' : '.4');
+      });
+      tip.textContent = '';
+      var strong = document.createElement('b'); strong.textContent = 'Indicação ' + d.nps;
+      tip.appendChild(strong);
+      tip.appendChild(document.createTextNode(d.r + ' · ' + d.t + ' respostas de ' + d.ped + ' pedidos'));
+      tip.appendChild(document.createElement('br'));
+      tip.appendChild(document.createTextNode('Promotores ' + d.a + ' · Neutros ' + d.b + ' · Detratores ' + d.c));
+      var box = fig.getBoundingClientRect(), rb = r.getBoundingClientRect();
+      var pt = svg.createSVGPoint(); pt.x = parseFloat(d.cx); pt.y = 0;
+      var scr = pt.matrixTransform(svg.getScreenCTM());
+      tip.style.left = Math.min(Math.max(scr.x - box.left, 190), box.width - 190) + 'px';
+      tip.style.top = (rb.top - box.top + 4) + 'px';
+      tip.hidden = false;
+    }
+    r.addEventListener('pointerenter', show);
+    r.addEventListener('focus', show);
+    r.addEventListener('pointerleave', hide);
+    r.addEventListener('blur', hide);
+  });
+})();
+</script>
+</body>
+</html>
