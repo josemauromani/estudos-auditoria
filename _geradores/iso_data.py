@@ -36,6 +36,7 @@ ESTUDOS = {
     "auditoria": ("Auditoria interna", "../Auditoria/treinamento-auditoria.html"),
     "nc": ("Não conformidade e ação corretiva", "../Nao-Conformidade/treinamento-nao-conformidade.html"),
     "ac": ("Análise crítica pela direção", "../Analise-Critica/treinamento-analise-critica.html"),
+    "doc": ("Informação documentada", "../Informacao-Documentada/treinamento-informacao-documentada.html"),
 }
 
 
@@ -133,7 +134,7 @@ REQ = _req([
     ("7.5", "Informação documentada",
      "Manter a informação documentada exigida pela norma e a que a organização considera necessária. Ao criar e atualizar, cuidar da identificação, do formato e da aprovação. Controlar a distribuição, o acesso, o armazenamento, as alterações e o descarte.",
      "Como se sabe que o documento em uso é a versão válida?",
-     "Lista de documentos, controle de revisão, regras de retenção.", ()),
+     "Lista de documentos, controle de revisão, regras de retenção.", ("doc",)),
     # ------------------------------------------------------------ 8
     ("8.1", "Planejamento e controle operacionais",
      "Planejar, implementar e controlar os processos necessários para atender aos requisitos: determinar os requisitos, os critérios dos processos e de aceitação, os recursos e os controles. Controlar as mudanças planejadas e os processos terceirizados.",

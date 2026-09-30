@@ -22,6 +22,7 @@ Para começar, abra o arquivo `index.html` no navegador.
 | Auditoria interna | `Auditoria/` | `Auditoria-modelo.xlsx` |
 | Não conformidade e ação corretiva | `Nao-Conformidade/` | `RNC-modelo.xlsx` |
 | Análise crítica pela direção | `Analise-Critica/` | `Analise-Critica-modelo.xlsx` |
+| Informação documentada | `Informacao-Documentada/` | `Informacao-Documentada-modelo.xlsx` |
 
 ## Avisos
 

@@ -30,6 +30,7 @@ Os nomes curtos dos estudos são:
 | `ind` | Indicadores | `Indicadores/` |
 | `proc` | Mapa de processos e diagrama de tartaruga | `Processos/` |
 | `ac` | Análise crítica pela direção | `Analise-Critica/` |
+| `doc` | Informação documentada | `Informacao-Documentada/` |
 
 ## Preparação
 
@@ -66,11 +67,11 @@ O estudo de SWOT não tem arquivo de dados: os exemplos estão dentro de `build_
 - **Funções compartilhadas:** os geradores de planilha reaproveitam o bloco inicial de `build_pdca.py`, até a linha `STATUS = [`. Não mova nem renomeie esse arquivo.
 - **Recálculo:** o `openpyxl` grava as fórmulas sem os valores. O LibreOffice abre o arquivo, calcula e grava de novo, para a planilha abrir já calculada.
 - **Painel:** o `index.html` não é gerado. Ao criar um estudo, acrescente à mão o cartão, a caixa da figura, as linhas das duas tabelas e as contagens do cabeçalho.
-- **Estudo da ISO 9001:** a matriz e a tabela do módulo 11 vêm do campo `estudos` de cada requisito, em `iso_data.py`. Ao criar um estudo, inclua-o ali.
+- **Estudo da ISO 9001:** a matriz e a tabela do módulo 11 vêm do campo `estudos` de cada requisito, em `iso_data.py`. Ao criar um estudo, inclua-o ali. O estudo de Informação documentada também lê a lista `DOCS` desse arquivo.
 
 ## Testes
 
-A pasta `testes/` tem os roteiros usados para conferir as fórmulas de seis planilhas. Cada par preenche uma cópia do modelo com dados de teste, inclusive erros propositais, e lê os resultados depois do recálculo.
+A pasta `testes/` tem os roteiros usados para conferir as fórmulas de sete planilhas. Cada par preenche uma cópia do modelo com dados de teste, inclusive erros propositais, e lê os resultados depois do recálculo.
 
 ```bash
 PY=_geradores/.venv/bin/python
@@ -79,4 +80,4 @@ soffice --headless --convert-to 'xlsx:Calc MS Excel 2007 XML' --outdir /tmp/test
 $PY _geradores/testes/rk_test_read.py /tmp/teste/saida
 ```
 
-Os roteiros importam os arquivos de dados desta pasta. Os de indicadores, de processos e de análise crítica já encontram a pasta sozinhos. Para rodar os outros, informe o caminho de `_geradores/` em `PYTHONPATH`.
+Os roteiros importam os arquivos de dados desta pasta. Os de indicadores, de processos, de análise crítica e de informação documentada já encontram a pasta sozinhos. Para rodar os outros, informe o caminho de `_geradores/` em `PYTHONPATH`.

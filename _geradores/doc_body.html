@@ -1,0 +1,843 @@
+<body>
+<div class="page" lang="pt-BR">
+
+<header class="mast">
+  <div class="tiles" aria-hidden="true"><span class="p">D</span><span class="d">R</span><span class="c">C</span></div>
+  <h1>Informação documentada na prática</h1>
+  <p class="lead">Um guia de estudo para decidir o que documentar, organizar os documentos e os registros, controlar as revisões e provar que o sistema funciona, sem transformar a qualidade em papel.</p>
+  <ul class="meta">
+    <li>Treinamento autoinstrucional</li>
+    <li>13 módulos</li>
+    <li>Leitura de cerca de 50 minutos</li>
+    <li>3 exemplos resolvidos e 2 exercícios</li>
+  </ul>
+</header>
+
+<div class="layout">
+
+<nav class="toc" aria-label="Sumário">
+  <h2>Sumário</h2>
+  <ol>
+    <li><a href="#o-que-e">O que é</a></li>
+    <li><a href="#quando">Quando documentar</a></li>
+    <li><a href="#como">Como organizar</a></li>
+    <li><a href="#lista">A lista mestra e o código</a></li>
+    <li><a href="#registros">Os registros</a></li>
+    <li><a href="#exemplos">Exemplos resolvidos</a></li>
+    <li><a href="#situacao">Ler a lista mestra</a></li>
+    <li><a href="#erros">Erros comuns</a></li>
+    <li><a href="#ferramentas">Os documentos e outras ferramentas</a></li>
+    <li><a href="#iso">Nas normas ISO</a></li>
+    <li><a href="#oficina">A oficina de levantamento</a></li>
+    <li><a href="#pratique">Pratique</a></li>
+    <li><a href="#planilha">A planilha de apoio</a></li>
+    <li><a href="#glossario">Glossário</a></li>
+  </ol>
+</nav>
+
+<main>
+
+<!-- ============================ MÓDULO 1 ============================ -->
+<section id="o-que-e">
+  <p class="eyebrow">Módulo 1</p>
+  <h2>O que é</h2>
+  <p>Informação documentada é tudo o que a organização precisa manter escrito para o sistema funcionar, e tudo o que precisa guardar para provar que ele funcionou. A ISO 9001 usa um só termo para as duas coisas, mas elas são diferentes, e a diferença é o começo deste estudo.</p>
+  <p>O <strong>documento</strong> diz como fazer: uma política, um procedimento, uma instrução, um formulário em branco. Ele é <span class="k p">D</span> mantido: muda de revisão ao longo do tempo. O <strong>registro</strong> prova que foi feito: um formulário preenchido, uma ata, um relatório. Ele é <span class="k d">R</span> retido: não muda, é guardado por um prazo e depois descartado. Os dois são <span class="k c">C</span> controlados.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 262" role="img" aria-label="Documento e registro. O documento diz como fazer e é mantido: tem código, revisão, aprovação e data de revisão; muda ao longo do tempo. O registro prova que foi feito e é retido: tem data, autor e prazo de retenção; não muda depois de feito. O documento gera o registro: o formulário em branco vira registro quando é preenchido.">
+        <defs>
+          <marker id="a1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker>
+        </defs>
+        <g font-size="11.5">
+          <rect class="bx-p" x="10" y="20" width="400" height="200"/>
+          <text class="mono mu" x="28" y="44" font-size="10">DOCUMENTO · MANTER</text>
+          <text class="b" x="28" y="72" font-size="14">Diz como fazer</text>
+          <text x="28" y="100">· Política, procedimento, instrução, formulário em branco</text>
+          <text x="28" y="122">· Tem código, revisão e aprovação</text>
+          <text x="28" y="144">· Muda ao longo do tempo: revisão 1, 2, 3</text>
+          <text x="28" y="166">· A versão antiga sai de circulação</text>
+          <text class="mu" x="28" y="200">Pergunta do auditor: “esta é a revisão em vigor?”</text>
+
+          <rect class="bx-d" x="490" y="20" width="400" height="200"/>
+          <text class="mono mu" x="508" y="44" font-size="10">REGISTRO · RETER</text>
+          <text class="b" x="508" y="72" font-size="14">Prova que foi feito</text>
+          <text x="508" y="100">· Formulário preenchido, ata, relatório, certificado</text>
+          <text x="508" y="122">· Tem data, autor e prazo de retenção</text>
+          <text x="508" y="144">· Não muda depois de feito</text>
+          <text x="508" y="166">· É guardado, e depois descartado</text>
+          <text class="mu" x="508" y="200">Pergunta do auditor: “mostre a evidência.”</text>
+        </g>
+        <line class="ln" x1="412" y1="120" x2="486" y2="120" marker-end="url(#a1)"/>
+        <text x="449" y="108" font-size="11" text-anchor="middle">gera</text>
+        <text x="450" y="248" font-size="11.5" text-anchor="middle">O formulário em branco é documento. O formulário preenchido é registro.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 1.</b> Documento e registro. A norma chama os dois de informação documentada, mas pede controles diferentes: o documento precisa de revisão, e o registro, de retenção.</figcaption>
+  </figure>
+
+<!--TIPOS-->
+  <p>Os tipos e as siglas são uma convenção deste material. A norma não os define, e cada organização escolhe os seus. O que importa é que a lista de tipos seja curta e que todos saibam o que cada um é.</p>
+</section>
+
+<!-- ============================ MÓDULO 2 ============================ -->
+<section id="quando">
+  <p class="eyebrow">Módulo 2</p>
+  <h2>Quando documentar</h2>
+  <p>A ISO 9001:2015 exige poucos documentos. O restante fica a critério da organização, “na extensão necessária”. Essa extensão depende do porte, da complexidade dos processos e da competência das pessoas. Uma loja com doze pessoas não precisa dos documentos de uma indústria com trezentas.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 340" role="img" aria-label="Quando documentar, em quatro quadrantes. Eixo horizontal: risco de errar, de baixo a alto. Eixo vertical: quem executa, de pessoas fixas e experientes a pessoas novas ou em rodízio. Risco baixo e pessoas experientes: não documente, treine. Risco alto e pessoas experientes: instrução curta, no posto. Risco baixo e pessoas novas: lista de verificação ou roteiro. Risco alto e pessoas novas: procedimento, instrução e registro.">
+        <text class="mono mu" x="525" y="330" font-size="10" text-anchor="middle">RISCO DE ERRAR</text>
+        <text class="mu" x="170" y="330" font-size="11">baixo</text><text class="mu" x="880" y="330" font-size="11" text-anchor="end">alto</text>
+        <text class="mono mu" x="26" y="170" font-size="10" text-anchor="middle" transform="rotate(-90 26 170)">QUEM EXECUTA</text>
+        <g font-size="11.5">
+          <rect class="bx" x="160" y="20" width="360" height="140"/>
+          <text class="mono mu" x="176" y="42" font-size="10">PESSOAS NOVAS · RISCO BAIXO</text>
+          <text class="b" x="176" y="68" font-size="13">Lista de verificação ou roteiro</text>
+          <text x="176" y="96">Uma página, com os passos e o que conferir.</text>
+          <text class="mu" x="176" y="118">Ex.: roteiro de atendimento por telefone.</text>
+
+          <rect class="bx-ink" x="530" y="20" width="360" height="140"/>
+          <text class="mono t-ground" x="546" y="42" font-size="10">PESSOAS NOVAS · RISCO ALTO</text>
+          <text class="b t-ground" x="546" y="68" font-size="13">Procedimento, instrução e registro</text>
+          <text class="t-ground" x="546" y="96">Quem faz, como faz e a prova de que fez.</text>
+          <text class="t-ground" x="546" y="118">Ex.: aquisição, controle de temperatura.</text>
+
+          <rect class="bx" x="160" y="170" width="360" height="140"/>
+          <text class="mono mu" x="176" y="192" font-size="10">PESSOAS EXPERIENTES · RISCO BAIXO</text>
+          <text class="b" x="176" y="218" font-size="13">Não documente: treine</text>
+          <text x="176" y="246">A competência substitui o papel.</text>
+          <text class="mu" x="176" y="268">Ex.: abrir a loja, atender a mesa.</text>
+
+          <rect class="bx" x="530" y="170" width="360" height="140"/>
+          <text class="mono mu" x="546" y="192" font-size="10">PESSOAS EXPERIENTES · RISCO ALTO</text>
+          <text class="b" x="546" y="218" font-size="13">Instrução curta, no posto</text>
+          <text x="546" y="246">Os pontos críticos e os limites, à vista.</text>
+          <text class="mu" x="546" y="268">Ex.: regulagem do forno, parâmetros da extrusora.</text>
+        </g>
+        <text class="mu" x="60" y="90" font-size="11" text-anchor="middle">novas ou</text><text class="mu" x="60" y="105" font-size="11" text-anchor="middle">em rodízio</text>
+        <text class="mu" x="60" y="240" font-size="11" text-anchor="middle">fixas e</text><text class="mu" x="60" y="255" font-size="11" text-anchor="middle">experientes</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 2.</b> A extensão necessária, em quatro quadrantes. Documentar é a resposta para o risco e para a rotatividade. Onde os dois são baixos, o documento só atrapalha.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:28%">Momento</th><th style="width:36%">O que fazer</th><th>Resultado</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Implantação do sistema</strong></td><td>Levantar o que já existe, definir os tipos e montar a lista mestra.</td><td>O requisito 7.5 atendido com os documentos que a organização já usa.</td></tr>
+        <tr><td><strong>Ação corretiva</strong></td><td>Escrever ou revisar o documento que trata a causa, e conferir os documentos ligados.</td><td>A mudança chega a quem executa.</td></tr>
+        <tr><td><strong>Pessoa nova na função</strong></td><td>Entregar a instrução e o formulário do posto, na revisão em vigor.</td><td>Integração mais rápida, com menos erro.</td></tr>
+        <tr><td><strong>Exigência de cliente ou de lei</strong></td><td>Criar o registro pedido, com o prazo de retenção exigido.</td><td>Evidência disponível quando for cobrada.</td></tr>
+        <tr><td><strong>Preparação da auditoria</strong></td><td>Conferir a lista mestra contra os postos de trabalho.</td><td>Revisão em vigor em todo lugar, e nenhuma versão antiga.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pair">
+    <div class="box">
+      <h4>Documente quando</h4>
+      <ul>
+        <li>A norma, a lei ou o cliente exigem.</li>
+        <li>O erro custa caro, ou atinge o cliente.</li>
+        <li>Pessoas diferentes fazem a mesma atividade.</li>
+        <li>O conhecimento está só na cabeça de uma pessoa.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h4>Não documente quando</h4>
+      <ul>
+        <li>A atividade é simples e as pessoas são experientes.</li>
+        <li>O documento só repete o que o sistema já obriga.</li>
+        <li>Ninguém vai ler: um procedimento de quarenta páginas.</li>
+        <li>O motivo é “o auditor gosta”.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 3 ============================ -->
+<section id="como">
+  <p class="eyebrow">Módulo 3</p>
+  <h2>Como organizar</h2>
+  <p>Organizar a informação documentada é definir o ciclo de vida de cada documento e a retenção de cada registro, e depois manter uma lista que mostre a situação de tudo. O trabalho começa por um levantamento: o que existe, onde está e em que versão.</p>
+
+  <figure>
+    <div class="scroll">
+<!--CICLO-->
+    </div>
+    <figcaption><b>Figura 3.</b> O ciclo de vida de um documento. O ciclo recomeça na revisão prevista, ou antes, quando o processo muda. A versão antiga vira obsoleta e sai de circulação.</figcaption>
+  </figure>
+
+  <h3>Passo a passo</h3>
+  <ol class="steps">
+    <li><h4>Levante o que existe</h4><p>Percorra os postos de trabalho e recolha tudo o que é usado para fazer o trabalho: instruções, planilhas, cadernos, avisos na parede. Anote onde cada um está e quem o usa.</p></li>
+    <li><h4>Separe documento de registro</h4><p>O que diz como fazer é documento. O que prova que foi feito é registro. O formulário em branco vai para uma lista, e o preenchido, para a outra.</p></li>
+    <li><h4>Defina os tipos e o código</h4><p>Escolha uma lista curta de tipos e uma regra de código. Cada documento recebe código, título, revisão e data. Os que não têm dono nem aprovação recebem os dois.</p></li>
+    <li><h4>Defina o ciclo</h4><p>Quem elabora, quem analisa criticamente, quem aprova e como a versão nova chega a quem usa. Defina também o intervalo de revisão: dois anos é um ponto de partida comum.</p></li>
+    <li><h4>Defina a retenção dos registros</h4><p>Para cada registro: onde é gerado, onde fica guardado, por quanto tempo, quem pode ver e o que se faz no fim do prazo.</p></li>
+    <li><h4>Monte a lista mestra</h4><p>Uma tabela com todos os documentos e a situação de cada um. Ela é o único lugar onde se confere qual é a revisão em vigor.</p></li>
+    <li><h4>Retire o que não vale mais</h4><p>Versões antigas e documentos abandonados saem dos postos. Se precisarem ser guardados, recebem a marca de obsoletos.</p></li>
+    <li><h4>Treine e confira</h4><p>Quem usa os documentos precisa saber onde encontrar a revisão em vigor. Uma conferência por amostra, a cada seis meses, mantém a lista viva.</p></li>
+  </ol>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Papel</th><th style="width:26%">Quem costuma ser</th><th>O que faz</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Quem elabora</strong></td><td>Quem conhece a atividade.</td><td>Escreve ou revisa, no modelo padrão, e submete à análise crítica.</td></tr>
+        <tr><td><strong>Quem analisa criticamente</strong></td><td>Quem usa o documento, e a Qualidade.</td><td>Lê antes da aprovação e aponta o que não funciona ou conflita com outro documento.</td></tr>
+        <tr><td><strong>Quem aprova</strong></td><td>O dono do processo, ou a direção.</td><td>Assina e dá validade à revisão. Sem aprovação, o documento é um rascunho.</td></tr>
+        <tr><td><strong>Quem controla</strong></td><td>A Qualidade, ou quem a organização definir.</td><td>Mantém a lista mestra, distribui a versão nova, retira a antiga e guarda o histórico.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note">
+    <h4>Documentos ligados</h4>
+    <p>Um documento raramente muda sozinho. A instrução muda, e o roteiro, a tela do sistema, o formulário e o treinamento precisam mudar junto. Foi essa ligação que faltou no <a href="../Nao-Conformidade/treinamento-nao-conformidade.html#exemplos">RNC 2026-05</a> da pizzaria. Ao revisar um documento, liste os que dependem dele antes de aprovar.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 4 ============================ -->
+<section id="lista">
+  <p class="eyebrow">Módulo 4</p>
+  <h2>A lista mestra e o código</h2>
+  <p>A lista mestra é a tabela que diz quais documentos existem e em que revisão estão. O código é o nome curto que liga o documento à lista. Os dois precisam ser simples: um código que ninguém consegue ler não identifica nada.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 300" role="img" aria-label="Anatomia de um documento controlado. No cabeçalho: o tipo e o processo no código PR-SUP-01, o título, a revisão 6, a data de 16 de outubro de 2026, quem elaborou, quem aprovou e a página. No rodapé: o histórico de revisões, com a revisão, a data e o que mudou. As partes do código: PR é o tipo, procedimento; SUP é o processo, Suprimentos; 01 é o número de ordem.">
+        <rect class="bx" x="120" y="16" width="660" height="268"/>
+        <rect class="hd-ink" x="120" y="16" width="660" height="70"/>
+        <g font-size="11.5">
+          <text class="mono t-ground" x="138" y="38" font-size="10">CÓDIGO</text><text class="b t-ground" x="138" y="60" font-size="15">PR-SUP-01</text>
+          <text class="mono t-ground" x="290" y="38" font-size="10">TÍTULO</text><text class="b t-ground" x="290" y="60" font-size="13">Aquisição de materiais e serviços</text>
+          <text class="mono t-ground" x="580" y="38" font-size="10">REVISÃO</text><text class="b t-ground" x="580" y="60" font-size="15">6</text>
+          <text class="mono t-ground" x="660" y="38" font-size="10">DATA</text><text class="b t-ground" x="660" y="60" font-size="13">16/10/2026</text>
+          <text class="t-ground" x="138" y="78" font-size="10.5">Elaborou: Gerente de Suprimentos · Aprovou: Diretor geral · Página 1 de 6</text>
+        </g>
+        <g font-size="11.5">
+          <text class="mu" x="138" y="112">1. Objetivo</text><line class="ln-mu" x1="138" y1="122" x2="760" y2="122"/>
+          <text class="mu" x="138" y="142">2. Aplicação</text><line class="ln-mu" x1="138" y1="152" x2="760" y2="152"/>
+          <text class="mu" x="138" y="172">3. Responsabilidades</text><line class="ln-mu" x1="138" y1="182" x2="760" y2="182"/>
+          <text class="mu" x="138" y="202">4. Descrição</text><line class="ln-mu" x1="138" y1="212" x2="760" y2="212"/>
+        </g>
+        <rect class="band" x="120" y="228" width="660" height="56"/>
+        <g font-size="10.5">
+          <text class="mono mu" x="138" y="246" font-size="10">HISTÓRICO DE REVISÕES</text>
+          <text x="138" y="266">Rev. 6 · 16/10/2026 · Cadastro do item antes da compra, devolução da requisição incompleta e prazo contado da requisição completa.</text>
+          <text class="mu" x="138" y="280">Rev. 5 · 03/03/2025 · Inclusão da política de alçadas.</text>
+        </g>
+        <g font-size="11">
+          <text class="b" x="20" y="38">O código</text>
+          <text class="b" x="20" y="64">PR</text><text class="mu" x="44" y="64">tipo</text>
+          <text class="b" x="20" y="84">SUP</text><text class="mu" x="52" y="84">processo</text>
+          <text class="b" x="20" y="104">01</text><text class="mu" x="44" y="104">ordem</text>
+        </g>
+        <text class="mu" x="20" y="200" font-size="10.5">O código não</text>
+        <text class="mu" x="20" y="214" font-size="10.5">muda com a</text>
+        <text class="mu" x="20" y="228" font-size="10.5">revisão.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 4.</b> A anatomia de um documento controlado. O cabeçalho responde às perguntas do requisito 7.5.2: o que é, qual é a versão, quem fez e quem aprovou. O histórico diz o que mudou.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:22%">Campo da lista mestra</th><th style="width:40%">Para que serve</th><th>Exemplo</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Código e título</strong></td><td>Identificar o documento sem confusão.</td><td>IT-EXP-01 · Expedição e agrupamento por zona</td></tr>
+        <tr><td><strong>Tipo e processo</strong></td><td>Agrupar e encontrar. Cada processo enxerga os seus documentos.</td><td>Instrução · Entregar o pedido</td></tr>
+        <tr><td><strong>Revisão e data</strong></td><td>Saber qual é a versão em vigor e desde quando.</td><td>Rev. 2 · 10/07/2026</td></tr>
+        <tr><td><strong>Elaborou e aprovou</strong></td><td>Saber quem responde pelo conteúdo e quem deu validade.</td><td>Líder da expedição · Gerente da loja</td></tr>
+        <tr><td><strong>Meio e local</strong></td><td>Saber onde está a versão em vigor, em papel ou no sistema.</td><td>Papel · Quadro da expedição</td></tr>
+        <tr><td><strong>Intervalo de revisão</strong></td><td>Calcular a próxima revisão e avisar quando vencer.</td><td>24 meses · próxima em 07/2028</td></tr>
+        <tr><td><strong>Status e situação</strong></td><td>Vigente, em revisão ou obsoleto, e o que falta para estar em ordem.</td><td>Vigente · Revisão vencida</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pair">
+    <div class="box">
+      <h4>Um bom código</h4>
+      <ul>
+        <li>Diz o tipo e o processo: PR-SUP-01.</li>
+        <li>Cabe no cabeçalho e na conversa: “a IT-EXP-01”.</li>
+        <li>Não muda quando o documento é revisado.</li>
+        <li>É dado uma vez, pela lista mestra, e nunca reaproveitado.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h4>Um código ruim</h4>
+      <ul>
+        <li>Traz a data ou a revisão: PR-2026-10-v6.</li>
+        <li>Tem oito partes: QUA-SGQ-PR-SUP-BR-001-A.</li>
+        <li>Muda quando a área muda de nome.</li>
+        <li>É dado por cada área, do seu jeito.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="note">
+    <h4>Documentos no sistema</h4>
+    <p>Uma tela do sistema, uma planilha compartilhada ou um fluxo de aprovação eletrônico também são informação documentada. Eles entram na lista mestra, com o nome da tela ou do arquivo no lugar do código, e a versão do sistema no lugar da revisão. A regra é a mesma: saber qual é a versão em vigor e quem a aprovou.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 5 ============================ -->
+<section id="registros">
+  <p class="eyebrow">Módulo 5</p>
+  <h2>Os registros</h2>
+  <p>O registro é a evidência. Ele nasce quando a atividade acontece, é guardado por um prazo e depois é descartado. O controle do registro não é sobre revisão, que ele não tem, mas sobre quatro perguntas: onde está, por quanto tempo, quem pode ver e como se garante que não foi alterado.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 214" role="img" aria-label="A vida de um registro, em quatro etapas. Gerado: a atividade acontece e o formulário é preenchido, com data e autor. Guardado: vai para o local definido, em papel ou no sistema, protegido de perda e de alteração. Retido: fica disponível durante o prazo de retenção, legível e com acesso controlado. Disposição: no fim do prazo, é descartado ou arquivado, e o descarte é registrado.">
+        <defs>
+          <marker id="a5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker>
+        </defs>
+        <g font-size="11.5">
+          <rect class="bx-d" x="10" y="20" width="200" height="140"/>
+          <text class="mono mu" x="24" y="42" font-size="10">1 · GERADO</text>
+          <text class="b" x="24" y="66" font-size="13">A atividade acontece</text>
+          <text x="24" y="92">O formulário é preenchido,</text><text x="24" y="108">com data e autor.</text>
+          <text class="mu" x="24" y="140">Ex.: planilha de temperatura.</text>
+
+          <rect class="bx" x="238" y="20" width="200" height="140"/>
+          <text class="mono mu" x="252" y="42" font-size="10">2 · GUARDADO</text>
+          <text class="b" x="252" y="66" font-size="13">Vai para o lugar certo</text>
+          <text x="252" y="92">Pasta ou sistema definido,</text><text x="252" y="108">protegido de perda.</text>
+          <text class="mu" x="252" y="140">Ex.: pasta da cozinha.</text>
+
+          <rect class="bx" x="466" y="20" width="200" height="140"/>
+          <text class="mono mu" x="480" y="42" font-size="10">3 · RETIDO</text>
+          <text class="b" x="480" y="66" font-size="13">Fica disponível</text>
+          <text x="480" y="92">Legível, com acesso definido,</text><text x="480" y="108">pelo prazo de retenção.</text>
+          <text class="mu" x="480" y="140">Ex.: um ano.</text>
+
+          <rect class="bx" x="694" y="20" width="196" height="140"/>
+          <text class="mono mu" x="708" y="42" font-size="10">4 · DISPOSIÇÃO</text>
+          <text class="b" x="708" y="66" font-size="13">Sai no fim do prazo</text>
+          <text x="708" y="92">Descartado ou arquivado,</text><text x="708" y="108">com o descarte anotado.</text>
+          <text class="mu" x="708" y="140">Ex.: picotar.</text>
+        </g>
+        <line class="ln" x1="212" y1="90" x2="234" y2="90" marker-end="url(#a5)"/>
+        <line class="ln" x1="440" y1="90" x2="462" y2="90" marker-end="url(#a5)"/>
+        <line class="ln" x1="668" y1="90" x2="690" y2="90" marker-end="url(#a5)"/>
+        <text x="450" y="196" font-size="11.5" text-anchor="middle">O registro não tem revisão. Se precisa ser corrigido, a correção é datada e assinada, sem apagar o original.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 5.</b> A vida de um registro. A tabela de retenção define as etapas 2, 3 e 4 para cada tipo de registro.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Pergunta</th><th style="width:38%">O que definir</th><th>Regra prática</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Por quanto tempo?</strong></td><td>O prazo de retenção, contado da data do registro.</td><td>O maior entre o prazo legal, o do cliente e o do próprio uso. Sem exigência, um ciclo de auditoria de certificação: três anos.</td></tr>
+        <tr><td><strong>Onde?</strong></td><td>O local de guarda e o meio: papel, sistema ou os dois.</td><td>Um só local por registro. Cópia de segurança para o que é eletrônico.</td></tr>
+        <tr><td><strong>Quem pode ver?</strong></td><td>O acesso, principalmente para dados de pessoas e de clientes.</td><td>Registros de pessoal e contratos têm acesso restrito.</td></tr>
+        <tr><td><strong>Como se protege?</strong></td><td>A forma de impedir alteração e perda.</td><td>Papel assinado, ou sistema que guarda quem alterou e quando.</td></tr>
+        <tr><td><strong>O que se faz depois?</strong></td><td>A disposição: descarte, arquivo morto ou devolução ao cliente.</td><td>Picotar o papel. Excluir o eletrônico. Anotar a data.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note">
+    <h4>Registros que a norma pede</h4>
+    <p>A ISO 9001:2015 lista os registros que toda organização certificada precisa reter: calibração, competência, avaliação de fornecedores, liberação de produto, não conformidades, auditorias e análise crítica, entre outros. A lista completa está no módulo 10. Cada um deles precisa estar na tabela de retenção.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 6 ============================ -->
+<section id="exemplos">
+  <p class="eyebrow">Módulo 6</p>
+  <h2>Exemplos resolvidos</h2>
+  <p>Duas listas mestras e uma lista de documentos externos. As organizações são as dos outros estudos da série, e os documentos são os que apareceram neles. Os dois primeiros exemplos também estão preenchidos na planilha de apoio. Os dados são ilustrativos e foram criados para este treinamento.</p>
+
+  <h3>Exemplo 1. O levantamento da pizzaria</h3>
+<!--EX1HEAD-->
+<!--EX1DOCS-->
+  <figure>
+    <div class="scroll">
+<!--LIGADOS-->
+    </div>
+    <figcaption><b>Figura 6.</b> A instrução IT-EXP-01 e os documentos ligados a ela. Quando a instrução mudou para a revisão 2, o roteiro de atendimento não mudou junto, e a não conformidade nasceu aí. A rotina de documentos, na revisão 3, passou a exigir essa conferência.</figcaption>
+  </figure>
+<!--EX1REGS-->
+  <p><strong>O que observar.</strong> O levantamento encontrou treze documentos e oito registros. Cinco documentos não estavam em ordem: três sem código, um sem aprovação e um obsoleto, ainda na gaveta do caixa. Nada disso impedia a loja de funcionar, mas a instrução de fechamento de caixa, escrita para o sistema antigo, era um erro esperando para acontecer. O trabalho seguinte é dar código e aprovação ao que falta, e picotar o que é obsoleto.</p>
+
+  <h3>Exemplo 2. Os documentos do processo de compras</h3>
+<!--EX2HEAD-->
+  <figure>
+    <div class="scroll">
+<!--FLUXO-->
+    </div>
+    <figcaption><b>Figura 7.</b> Os documentos do processo de aquisição, na ordem em que são usados. Cada etapa tem o documento que diz como fazer e o formulário que gera o registro.</figcaption>
+  </figure>
+<!--EX2DOCS-->
+<!--EX2REGS-->
+  <p><strong>O que observar.</strong> O procedimento principal está na revisão 6, publicada pelo <a href="../Nao-Conformidade/treinamento-nao-conformidade.html#exemplos">RNC 2026-31</a>. Dois documentos do Recebimento passaram da data de revisão sem que ninguém percebesse, porque a lista mestra não calculava a próxima revisão. O cadastro de itens, criado pela ação corretiva, entrou no sistema sem código nem aprovação: é o caso comum do documento que nasce de uma ação e não passa pelo ciclo.</p>
+
+  <h3>Exemplo 3. Os documentos de origem externa da indústria</h3>
+  <dl class="ficha">
+    <div><dt>Organização</dt><dd>Indústria de embalagens plásticas</dd></div>
+    <div><dt>Data</dt><dd>05/03/2027, na mesma preparação da auditoria de certificação</dd></div>
+    <div><dt>Regra</dt><dd>Cada documento externo tem um responsável por verificar se há versão nova, em um intervalo definido.</dd></div>
+  </dl>
+<!--EXT-->
+  <p><strong>O que observar.</strong> O documento externo não é revisado pela organização: ele é verificado. A pergunta é “existe versão nova?”, e a resposta precisa de data. O regulamento de embalagens passou do prazo de verificação, e a auditoria perguntaria se a versão em uso ainda é a vigente. Os desenhos do cliente são o caso mais sensível: uma revisão antiga no posto de trabalho produz peça errada com o procedimento certo.</p>
+</section>
+
+<!-- ============================ MÓDULO 7 ============================ -->
+<section id="situacao">
+  <p class="eyebrow">Módulo 7</p>
+  <h2>Ler a lista mestra</h2>
+  <p>Uma lista mestra com a situação de cada documento permite uma leitura que a pasta de documentos não permite: onde o controle está falhando. A leitura por processo mostra quem precisa de ajuda, e a leitura por situação mostra que tipo de ajuda.</p>
+
+  <figure id="fig-bars">
+    <div class="scroll">
+<!--CHART-->
+    </div>
+    <div class="tip" id="bars-tip" hidden></div>
+    <figcaption><b>Figura 8.</b> Os documentos da indústria, por processo e por situação, em 05/03/2027. “Sem controle” reúne os documentos sem código, sem aprovação ou sem revisão. Passe o mouse sobre as barras para ver os valores.</figcaption>
+    <details class="data">
+      <summary>Ver os dados em tabela</summary>
+      <div class="tbl">
+<!--CHARTTABLE-->
+      </div>
+    </details>
+  </figure>
+
+<!--CHARTTEXT-->
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:22%">Situação</th><th style="width:40%">O que significa</th><th>O que fazer</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Vigente</strong></td><td>Tem código, revisão, aprovação e a próxima revisão ainda não chegou.</td><td>Nada. Conferir no posto se a revisão em uso é essa.</td></tr>
+        <tr><td><strong>Em revisão</strong></td><td>Uma revisão nova está sendo escrita. A atual continua em vigor.</td><td>Acompanhar o prazo. A versão nova só vale depois de aprovada.</td></tr>
+        <tr><td><strong>Revisão vencida</strong></td><td>Passou da data prevista sem ser revisto.</td><td>Ler e decidir: confirmar como está, ou revisar. Registrar a decisão.</td></tr>
+        <tr><td><strong>Falta o código, a revisão ou a aprovação</strong></td><td>O documento está em uso, mas fora do controle.</td><td>Completar o que falta, ou retirar do posto.</td></tr>
+        <tr><td><strong>Obsoleto</strong></td><td>Não vale mais.</td><td>Retirar de circulação. Se guardado, marcar como obsoleto.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note">
+    <h4>Revisão vencida não é documento errado</h4>
+    <p>A data de revisão é um lembrete para ler o documento com atenção, e não uma obrigação de mudar. Muitas revisões terminam com “confirmado sem alteração”, e essa confirmação, datada e assinada, é uma evidência tão boa quanto uma revisão nova.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 8 ============================ -->
+<section id="erros">
+  <p class="eyebrow">Módulo 8</p>
+  <h2>Erros comuns</h2>
+  <div class="errs">
+    <div><h4>Documentar tudo</h4><p>Há um procedimento para abrir a loja e outro para fechar.</p><p class="fix"><b>Correção:</b> documente pelo risco e pela rotatividade. O restante é treinamento.</p></div>
+    <div><h4>Versão antiga no posto</h4><p>A lista diz revisão 6. Na parede está a revisão 4.</p><p class="fix"><b>Correção:</b> quem distribui a versão nova recolhe a antiga. Confira por amostra a cada seis meses.</p></div>
+    <div><h4>Documento sem dono</h4><p>Ninguém sabe quem aprovou, nem quem pode mudar.</p><p class="fix"><b>Correção:</b> cada documento tem quem elabora e quem aprova, na lista mestra e no cabeçalho.</p></div>
+    <div><h4>Código que ninguém lê</h4><p>QUA-SGQ-PR-SUP-BR-001-A.</p><p class="fix"><b>Correção:</b> tipo, processo e número. O código serve para ser dito em voz alta.</p></div>
+    <div><h4>Mudar sem avisar</h4><p>A instrução mudou, e o roteiro, a tela e o treinamento ficaram como estavam.</p><p class="fix"><b>Correção:</b> ao revisar, liste os documentos ligados e confira cada um.</p></div>
+    <div><h4>Registro sem prazo</h4><p>Vinte anos de planilhas de temperatura no armário.</p><p class="fix"><b>Correção:</b> cada registro tem prazo de retenção e forma de descarte.</p></div>
+    <div><h4>Registro corrigido com corretivo</h4><p>O valor foi apagado e reescrito, sem data nem assinatura.</p><p class="fix"><b>Correção:</b> risque, escreva ao lado, date e assine. O original continua legível.</p></div>
+    <div><h4>Externo esquecido</h4><p>A norma na estante é a edição de 2008.</p><p class="fix"><b>Correção:</b> liste os documentos externos, com responsável e data de verificação.</p></div>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 9 ============================ -->
+<section id="ferramentas">
+  <p class="eyebrow">Módulo 9</p>
+  <h2>Os documentos e outras ferramentas</h2>
+  <p>Quase todo estudo da série produz um documento ou um registro. A lista mestra e a tabela de retenção são o lugar onde eles são controlados. A tabela mostra o que cada ferramenta gera e como esse resultado é tratado aqui.</p>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:26%">Ferramenta</th><th style="width:37%">O que ela produz</th><th>Como é controlado</th></tr></thead>
+      <tbody>
+        <tr><td><a href="../ISO-9001/treinamento-iso-9001.html"><strong>ISO 9001 requisito a requisito</strong></a></td><td>A lista dos 23 documentos e registros que a norma exige.</td><td>É a conferência mínima da lista mestra e da tabela de retenção.</td></tr>
+        <tr><td><a href="../Processos/treinamento-processos.html"><strong>Mapa de processos e tartaruga</strong></a></td><td>O mapa, e a parte “como” da tartaruga, que aponta os documentos de cada processo.</td><td>O mapa é um documento. A coluna “processo” da lista mestra vem dele.</td></tr>
+        <tr><td><a href="../SIPOC/treinamento-sipoc.html"><strong>SIPOC</strong></a></td><td>A descrição de um processo em uma página.</td><td>Documento do tipo mapa e descrição de processo.</td></tr>
+        <tr><td><a href="../RACI/treinamento-raci.html"><strong>Matriz RACI</strong></a></td><td>Quem elabora, quem é consultado, quem aprova.</td><td>Define os papéis do ciclo de vida de cada documento.</td></tr>
+        <tr><td><a href="../Riscos/treinamento-riscos.html"><strong>Matriz de riscos</strong></a></td><td>A matriz, revista a cada seis meses.</td><td>Documento com intervalo de revisão curto.</td></tr>
+        <tr><td><a href="../Indicadores/treinamento-indicadores.html"><strong>Indicadores</strong></a></td><td>As fichas dos indicadores e os resultados de cada período.</td><td>A ficha é documento. O resultado é registro.</td></tr>
+        <tr><td><a href="../Auditoria/treinamento-auditoria.html"><strong>Auditoria interna</strong></a></td><td>O programa, o plano e o relatório.</td><td>O programa é documento. O plano e o relatório são registros.</td></tr>
+        <tr><td><a href="../Nao-Conformidade/treinamento-nao-conformidade.html"><strong>Não conformidade e ação corretiva</strong></a></td><td>O registro de não conformidade e as revisões de documentos que a ação exige.</td><td>O RNC é registro. Cada ação que muda um documento passa pelo ciclo.</td></tr>
+        <tr><td><a href="../Analise-Critica/treinamento-analise-critica.html"><strong>Análise crítica pela direção</strong></a></td><td>A ata, com as entradas e as decisões.</td><td>Registro retido, com acesso definido.</td></tr>
+        <tr><td><a href="../5W2H/treinamento-5w2h.html"><strong>5W2H</strong></a></td><td>O plano de ação.</td><td>Registro. Quando a ação cria um documento, ele entra na lista mestra.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pair">
+    <div class="box">
+      <h4>Documento: o que o sistema mantém</h4>
+      <ul>
+        <li>Política e objetivos.</li>
+        <li>Mapa, procedimentos e instruções.</li>
+        <li>Formulários em branco e especificações.</li>
+        <li>Documentos externos: normas, leis, desenhos.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h4>Registro: o que o sistema retém</h4>
+      <ul>
+        <li>Resultados de indicadores e de inspeções.</li>
+        <li>Relatórios de auditoria e registros de não conformidade.</li>
+        <li>Atas, listas de presença e certificados.</li>
+        <li>Pedidos, contratos e avaliações de fornecedores.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 10 ============================ -->
+<section id="iso">
+  <p class="eyebrow">Módulo 10</p>
+  <h2>Nas normas ISO</h2>
+  <p>A ISO 9001:2015 trata da informação documentada no requisito 7.5, em três partes: o que é, como criar e atualizar, e como controlar. A edição de 2015 deixou de exigir o manual da qualidade e os seis procedimentos documentados das edições anteriores. O que ela exige está na lista deste módulo.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 250" role="img" aria-label="A estrutura do requisito 7.5. Em 7.5.1, generalidades: o sistema inclui a informação documentada exigida pela norma e a que a organização considera necessária, na extensão que depende do porte, da complexidade e da competência. Em 7.5.2, criação e atualização: identificação, formato e meio, análise crítica e aprovação. Em 7.5.3, controle: disponível e protegida; distribuição, acesso e uso; armazenamento e preservação; controle de alterações; retenção e disposição; documentos externos; registros protegidos contra alteração.">
+        <g font-size="11.5">
+          <rect class="bx" x="10" y="20" width="270" height="210"/>
+          <rect class="hd-ink" x="10" y="20" width="270" height="34"/>
+          <text class="b t-ground" x="26" y="42" font-size="13">7.5.1 · O que incluir</text>
+          <text x="26" y="80">· O que a norma exige</text>
+          <text x="26" y="102">· O que a organização decide</text>
+          <text x="26" y="124">  que precisa</text>
+          <text class="mu" x="26" y="158">Na extensão que depende do</text>
+          <text class="mu" x="26" y="174">porte, da complexidade dos</text>
+          <text class="mu" x="26" y="190">processos e da competência</text>
+          <text class="mu" x="26" y="206">das pessoas.</text>
+
+          <rect class="bx" x="315" y="20" width="270" height="210"/>
+          <rect class="hd-ink" x="315" y="20" width="270" height="34"/>
+          <text class="b t-ground" x="331" y="42" font-size="13">7.5.2 · Criar e atualizar</text>
+          <text x="331" y="80">· Identificar: título, data, autor,</text>
+          <text x="331" y="96">  número de referência</text>
+          <text x="331" y="118">· Formato e meio: idioma, versão,</text>
+          <text x="331" y="134">  papel ou eletrônico</text>
+          <text x="331" y="156">· Analisar criticamente e aprovar</text>
+          <text class="mu" x="331" y="190">É o cabeçalho da figura 4 e o</text>
+          <text class="mu" x="331" y="206">ciclo da figura 3.</text>
+
+          <rect class="bx" x="620" y="20" width="270" height="210"/>
+          <rect class="hd-ink" x="620" y="20" width="270" height="34"/>
+          <text class="b t-ground" x="636" y="42" font-size="13">7.5.3 · Controlar</text>
+          <text x="636" y="80">· Disponível onde é usada</text>
+          <text x="636" y="102">· Protegida de perda e de alteração</text>
+          <text x="636" y="124">· Distribuir, guardar, alterar,</text>
+          <text x="636" y="140">  reter e descartar</text>
+          <text x="636" y="162">· Documentos externos identificados</text>
+          <text class="mu" x="636" y="196">É a lista mestra, a tabela de</text>
+          <text class="mu" x="636" y="212">retenção e a lista de externos.</text>
+        </g>
+      </svg>
+    </div>
+    <figcaption><b>Figura 9.</b> As três partes do requisito 7.5, com o lugar deste estudo em que cada uma é atendida. O texto da figura é um resumo, com palavras próprias.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:10%">Item</th><th style="width:32%">O que pede, em resumo</th><th style="width:27%">O que isso significa</th><th>Evidências que o auditor procura</th></tr></thead>
+      <tbody>
+        <tr><td class="num">7.5.1</td><td>O sistema deve incluir a informação documentada exigida pela norma e a que a organização determinar como necessária</td><td>A organização decide quanto documentar, e justifica pela necessidade.</td><td>Lista mestra e tabela de retenção, com os itens exigidos.</td></tr>
+        <tr><td class="num">7.5.2</td><td>Ao criar e atualizar, assegurar identificação, formato e meio adequados, e análise crítica e aprovação</td><td>Todo documento tem título, código, revisão, autor e aprovação.</td><td>Cabeçalho dos documentos e registro da aprovação.</td></tr>
+        <tr><td class="num">7.5.3.1</td><td>A informação documentada deve estar disponível e adequada para uso, e protegida contra perda de confidencialidade, uso impróprio e perda de integridade</td><td>Quem precisa encontra a versão certa, e ninguém altera o que não deve.</td><td>Revisão em vigor no posto. Acesso e cópia de segurança.</td></tr>
+        <tr><td class="num">7.5.3.2</td><td>Tratar da distribuição, acesso e uso; armazenamento e preservação; controle de alterações; retenção e disposição. Identificar e controlar a informação de origem externa. Proteger os registros contra alterações não intencionais</td><td>Cada uma das seis atividades tem uma regra.</td><td>Lista mestra, histórico de revisões, tabela de retenção, lista de externos.</td></tr>
+        <tr><td class="num">4.4.2</td><td>Manter a informação que apoia a operação dos processos, e reter a que mostra que eles são realizados como planejado</td><td>Documentos para operar, registros para provar.</td><td>Documentos e registros de cada processo do mapa.</td></tr>
+        <tr><td class="num">8.5.6</td><td>Reter informação sobre as mudanças, quem as autorizou e as ações decorrentes</td><td>Uma mudança de processo muda documentos, e isso fica registrado.</td><td>Histórico de revisões e registro da mudança.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>O que a norma exige que seja mantido e retido</h3>
+  <p>A lista abaixo reúne os pontos da ISO 9001:2015 que pedem informação documentada. Ela vem do estudo da <a href="../ISO-9001/treinamento-iso-9001.html">ISO 9001 requisito a requisito</a>, e é a conferência mínima da lista mestra e da tabela de retenção.</p>
+<!--DOCSTAB-->
+
+  <div class="pair">
+    <div class="box">
+      <h4>O que a ISO 9001 exige</h4>
+      <ul>
+        <li>Os documentos e os registros da lista acima.</li>
+        <li>Identificação, formato, análise crítica e aprovação.</li>
+        <li>Controle da distribuição, das alterações e da retenção.</li>
+        <li>Documentos externos identificados e controlados.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h4>O que a ISO 9001 não exige</h4>
+      <ul>
+        <li>Manual da qualidade.</li>
+        <li>Procedimento documentado para o controle de documentos.</li>
+        <li>Um sistema de codificação, ou uma lista mestra em formato definido.</li>
+        <li>Documentos em papel: o meio é escolha da organização.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="note">
+    <h4>Pontos de atenção</h4>
+    <p>Em auditoria, o requisito 7.5 é verificado em todo lugar, e não só na pasta da Qualidade. O auditor pega o documento que está no posto de trabalho e confere na lista mestra se a revisão é a mesma. Um posto com versão antiga é a não conformidade mais comum desse requisito.</p>
+    <p>Este módulo usa a numeração da ISO 9001:2015 e resume os textos com palavras próprias. Confira sempre a edição vigente da norma antes de citar um requisito em relatório.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 11 ============================ -->
+<section id="oficina">
+  <p class="eyebrow">Módulo 11</p>
+  <h2>A oficina de levantamento</h2>
+  <p>O levantamento dos documentos de uma organização pequena ou média cabe em uma oficina de duas horas, com os donos dos processos. Antes dela, cada um recolhe o que usa no seu posto. Depois dela, a Qualidade monta a lista mestra e a tabela de retenção.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 136" role="img" aria-label="Distribuição de uma oficina de levantamento de 120 minutos: 10 minutos para as regras, 40 minutos para separar documentos de registros, 30 minutos para os tipos e os códigos, 25 minutos para a retenção dos registros, 10 minutos para os documentos externos e 5 minutos para o fecho.">
+        <g font-size="11.5" text-anchor="middle">
+          <rect class="bx" x="60" y="24" width="65" height="56"/><text x="92.5" y="56" font-size="10.5">Regras</text>
+          <rect class="hd-d gap2" x="125" y="24" width="260" height="56"/><text class="on b" x="255" y="56">Separar documento de registro</text>
+          <rect class="bx" x="385" y="24" width="195" height="56"/><text x="482.5" y="56">Tipos e códigos</text>
+          <rect class="hd-ink gap2" x="580" y="24" width="162.5" height="56"/><text class="t-ground b" x="661.3" y="56">Retenção</text>
+          <rect class="bx" x="742.5" y="24" width="65" height="56"/><text x="775" y="49" font-size="10.5">Docs.</text><text x="775" y="64" font-size="10.5">externos</text>
+          <rect class="bx" x="807.5" y="24" width="32.5" height="56"/>
+        </g>
+        <g class="ln-mu" stroke-width="1">
+          <line x1="60" y1="82" x2="60" y2="94"/><line x1="125" y1="82" x2="125" y2="94"/><line x1="385" y1="82" x2="385" y2="94"/>
+          <line x1="580" y1="82" x2="580" y2="94"/><line x1="742.5" y1="82" x2="742.5" y2="94"/><line x1="807.5" y1="82" x2="807.5" y2="94"/>
+          <line x1="840" y1="82" x2="840" y2="94"/>
+        </g>
+        <g class="mono" font-size="10.5" text-anchor="middle">
+          <text class="mu" x="60" y="112">0</text><text class="mu" x="125" y="112">10</text><text class="mu" x="385" y="112">50</text>
+          <text class="mu" x="580" y="112">80</text><text class="mu" x="742.5" y="112">105</text><text class="mu" x="800" y="112">115</text>
+          <text class="mu" x="848" y="112">120</text>
+        </g>
+        <text class="mu" x="823.8" y="16" font-size="10.5" text-anchor="middle">fecho</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 10.</b> Uma oficina de levantamento de duas horas, desenhada em escala. Separar documento de registro é o bloco maior: é onde as dúvidas aparecem, e onde a equipe aprende a diferença.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Momento</th><th style="width:42%">O que fazer</th><th>Frases que ajudam</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Regras</strong></td><td>Explicar a diferença entre documento e registro, e o que vai para cada lista.</td><td>“Isto diz como fazer, ou prova que foi feito?”</td></tr>
+        <tr><td><strong>Separar</strong></td><td>Passar por tudo o que foi recolhido, item por item, e colocar em uma das duas pilhas. A terceira pilha é o que não serve mais.</td><td>“Quem usa isto? Em que versão?”</td></tr>
+        <tr><td><strong>Tipos e códigos</strong></td><td>Dar tipo e código a cada documento. Anotar quem elabora e quem aprova.</td><td>“Se isto mudar, quem precisa saber?”</td></tr>
+        <tr><td><strong>Retenção</strong></td><td>Para cada registro, definir prazo, local, acesso e descarte.</td><td>“Por quanto tempo alguém vai pedir isto?”</td></tr>
+        <tr><td><strong>Documentos externos</strong></td><td>Listar normas, leis, desenhos e manuais, com o responsável por verificar.</td><td>“Como sabemos que esta é a versão vigente?”</td></tr>
+        <tr><td><strong>Fecho</strong></td><td>Marcar a data em que a lista mestra fica pronta e a da conferência nos postos.</td><td>“O que sai da parede hoje?”</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Leve os documentos físicos para a oficina, e não uma lista deles. A escala colada na parede, o caderno de receitas e a planilha na gaveta são o que a auditoria vai encontrar.</p>
+
+  <h3>Checklist do controle de documentos</h3>
+  <p>Marque os itens conforme revisa o seu sistema. As marcações ficam salvas neste navegador.</p>
+  <ol class="check" id="checklist">
+<!--CHECK-->
+  </ol>
+  <div class="bar"><span><b id="ck-count">0</b> de 12 itens marcados</span><button class="btn" id="ck-reset" type="button">Limpar marcações</button></div>
+</section>
+
+<!-- ============================ MÓDULO 12 ============================ -->
+<section id="pratique">
+  <p class="eyebrow">Módulo 12</p>
+  <h2>Pratique</h2>
+  <h3>Exercício 1. Documento, registro ou nenhum dos dois?</h3>
+  <p>Cada item traz algo encontrado em um posto de trabalho. Diga se é um documento, que precisa de controle de revisão, um registro, que precisa de retenção, ou nenhum dos dois.</p>
+  <div class="quiz" id="quiz"></div>
+  <div class="bar"><span>Acertos: <b id="qz-score">0</b> de <b id="qz-total">12</b></span><span>Respondidos: <b id="qz-done">0</b></span><button class="btn" id="qz-reset" type="button">Recomeçar</button></div>
+
+  <h3>Exercício 2. Faça o levantamento de um processo</h3>
+  <p>Escolha um processo que você conhece bem. Abra a planilha de apoio e siga o roteiro.</p>
+  <ol>
+    <li>Recolha tudo o que é usado no processo: instruções, planilhas, formulários, avisos, telas do sistema.</li>
+    <li>Na aba Lista mestra, cadastre cada documento, com tipo, revisão, data, quem elaborou e quem aprovou. Deixe em branco o que não existe.</li>
+    <li>Leia a coluna Situação e anote o que falta em cada documento.</li>
+    <li>Na aba Registros, cadastre cada registro que o processo gera, com local, prazo de retenção e disposição.</li>
+    <li>Na aba Externos, liste as normas, as leis e os documentos de cliente que o processo usa.</li>
+    <li>Confira a aba Alterações: registre a última mudança de um documento e os documentos ligados que foram conferidos.</li>
+    <li>Passe o checklist do módulo 11.</li>
+  </ol>
+  <p>Depois, vá ao posto de trabalho e compare a revisão que está em uso com a da lista. Cada diferença é um achado de auditoria que você encontrou antes do auditor.</p>
+</section>
+
+<!-- ============================ MÓDULO 13 ============================ -->
+<section id="planilha">
+  <p class="eyebrow">Módulo 13</p>
+  <h2>A planilha de apoio</h2>
+  <p>Este treinamento acompanha o arquivo <a id="xlsx-ref" href="Informacao-Documentada-modelo.xlsx">Informacao-Documentada-modelo.xlsx</a>, que fica na mesma pasta. As células em amarelo-claro são para preenchimento. As células cinza são calculadas.</p>
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Aba</th><th>Para que serve</th><th style="width:36%">O que ela calcula</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Instruções</strong></td><td>Legenda de cores, ordem de preenchimento e regras do modelo.</td><td>Nada. É só leitura.</td></tr>
+        <tr><td><strong>Lista mestra</strong></td><td>Até 30 documentos, com código, tipo, processo, revisão, aprovação, meio, local e intervalo de revisão.</td><td>Próxima revisão, situação de cada documento, contagem por situação e gráfico.</td></tr>
+        <tr><td><strong>Registros</strong></td><td>Até 20 registros, com local de guarda, meio, prazo de retenção, acesso e disposição.</td><td>Conferência dos campos e registros sem prazo.</td></tr>
+        <tr><td><strong>Externos</strong></td><td>Até 15 documentos de origem externa, com o responsável e o intervalo de verificação.</td><td>Próxima verificação e situação de cada documento.</td></tr>
+        <tr><td><strong>Alterações</strong></td><td>Histórico de até 20 alterações, com o motivo e os documentos ligados conferidos.</td><td>Conferência de cada alteração.</td></tr>
+        <tr><td><strong>Checklist</strong></td><td>Os mesmos 12 itens do módulo 11, com status Sim, Parcial ou Não.</td><td>Percentual atendido e situação da validação.</td></tr>
+        <tr><td><strong>Exemplo 1 e Exemplo 2</strong></td><td>A lista mestra e os registros da pizzaria, e os do processo de compras.</td><td>Situação de cada documento e contagens.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ GLOSSÁRIO ============================ -->
+<section id="glossario">
+  <p class="eyebrow">Referência</p>
+  <h2>Glossário</h2>
+  <dl class="gloss">
+    <div><dt>Análise crítica do documento</dt><dd>Leitura feita antes da aprovação, por quem usa o documento, para conferir se ele funciona.</dd></div>
+    <div><dt>Aprovação</dt><dd>Ato de quem tem autoridade, que dá validade a uma revisão.</dd></div>
+    <div><dt>Cópia controlada</dt><dd>Cópia que recebe as revisões novas e é recolhida quando vence.</dd></div>
+    <div><dt>Disposição</dt><dd>O que se faz com o registro no fim do prazo de retenção: descarte ou arquivo.</dd></div>
+    <div><dt>Documento</dt><dd>Informação que diz como fazer, e que é mantida e revisada.</dd></div>
+    <div><dt>Documento externo</dt><dd>Documento de origem externa que a organização precisa seguir: norma, lei, desenho do cliente, manual.</dd></div>
+    <div><dt>Documento obsoleto</dt><dd>Documento que deixou de valer, retirado de circulação ou marcado como tal.</dd></div>
+    <div><dt>Informação documentada</dt><dd>Informação que a organização precisa controlar e manter, e o meio que a contém.</dd></div>
+    <div><dt>Lista mestra</dt><dd>Relação dos documentos em vigor, com código, revisão, data e situação de cada um.</dd></div>
+    <div><dt>Manter</dt><dd>Criar, revisar e controlar um documento ao longo do tempo.</dd></div>
+    <div><dt>Registro</dt><dd>Informação que prova que algo foi feito, e que é retida sem alteração.</dd></div>
+    <div><dt>Retenção</dt><dd>Prazo pelo qual o registro é guardado, contado da data em que foi gerado.</dd></div>
+    <div><dt>Reter</dt><dd>Guardar um registro, protegido, pelo prazo definido.</dd></div>
+    <div><dt>Revisão</dt><dd>Versão aprovada de um documento, identificada por número ou data.</dd></div>
+  </dl>
+</section>
+
+</main>
+</div>
+
+<footer>Material de estudo. Os exemplos, documentos e números são ilustrativos e foram criados para fins didáticos. As referências às normas ISO são resumos para estudo e não substituem o texto das normas.</footer>
+</div>
+
+<script>
+(function () {
+  function read(key) { try { return JSON.parse(localStorage.getItem(key) || 'null'); } catch (e) { return null; } }
+  function write(key, val) { try { localStorage.setItem(key, JSON.stringify(val)); } catch (e) {} }
+
+  /* ---------- Checklist ---------- */
+  var boxes = Array.prototype.slice.call(document.querySelectorAll('#checklist input'));
+  var count = document.getElementById('ck-count');
+  var saved = read('documentos-checklist') || {};
+  function refreshChecks() {
+    var n = 0, state = {};
+    boxes.forEach(function (b) { if (b.checked) { n++; } state[b.id] = b.checked; });
+    count.textContent = n;
+    return state;
+  }
+  boxes.forEach(function (b) {
+    if (saved[b.id]) { b.checked = true; }
+    b.addEventListener('change', function () { write('documentos-checklist', refreshChecks()); });
+  });
+  refreshChecks();
+  document.getElementById('ck-reset').addEventListener('click', function () {
+    boxes.forEach(function (b) { b.checked = false; });
+    write('documentos-checklist', refreshChecks());
+  });
+
+  /* ---------- Exercício ---------- */
+  var KEYS = ['D', 'R', 'N'];
+  var LABEL = { D: 'Documento', R: 'Registro', N: 'Nenhum' };
+  var NAMES = { D: 'documento', R: 'registro', N: 'nenhum dos dois' };
+  var ITEMS = [
+    { t: 'O procedimento de compras, PR-SUP-01, na revisão 6.', a: 'D', w: 'Diz como fazer, tem revisão e aprovação.' },
+    { t: 'A lista de presença do treinamento de julho, assinada por sete atendentes.', a: 'R', w: 'Prova que o treinamento aconteceu. Fica guardada, sem alteração.' },
+    { t: 'A ficha de alergênicos em branco, no sistema de pedidos.', a: 'D', w: 'É um formulário: documento até ser preenchido.' },
+    { t: 'A ficha de alergênicos preenchida para o sabor novo.', a: 'R', w: 'O formulário preenchido é a evidência.' },
+    { t: 'A mensagem do gerente combinando a escala do sábado.', a: 'N', w: 'É comunicação do dia. A escala padrão, essa sim, é documento.' },
+    { t: 'A planilha de temperatura da câmara fria de setembro.', a: 'R', w: 'Registro exigido pela rotina de temperatura. Tem prazo de retenção.' },
+    { t: 'A norma ISO 9001:2015, na estante da Qualidade.', a: 'D', w: 'Documento de origem externa: entra na lista de externos, com data de verificação.' },
+    { t: 'O certificado de calibração da balança do Recebimento.', a: 'R', w: 'Registro que a norma pede reter, no requisito 7.1.5.' },
+    { t: 'O rascunho do cardápio novo, ainda sem aprovação.', a: 'N', w: 'Até ser aprovado, é um rascunho. Vira documento na aprovação.' },
+    { t: 'O manual do forno, entregue pelo fabricante.', a: 'D', w: 'Documento externo: diz como operar e manter o equipamento.' },
+    { t: 'O relatório da auditoria interna 2026-07.', a: 'R', w: 'Registro exigido pelo requisito 9.2.' },
+    { t: 'O aviso “lave as mãos”, colado na pia da cozinha.', a: 'N', w: 'É um lembrete, e não uma instrução com revisão. Se a lei exigir o aviso, ele vira documento externo.' }
+  ];
+  var quiz = document.getElementById('quiz');
+  var score = document.getElementById('qz-score');
+  var done = document.getElementById('qz-done');
+  document.getElementById('qz-total').textContent = ITEMS.length;
+  var hits = 0, answered = 0;
+
+  function render() {
+    hits = 0; answered = 0; score.textContent = 0; done.textContent = 0;
+    quiz.textContent = '';
+    ITEMS.forEach(function (item, idx) {
+      var row = document.createElement('div'); row.className = 'q';
+      var p = document.createElement('p'); p.textContent = (idx + 1) + '. ' + item.t;
+      var opts = document.createElement('div'); opts.className = 'opts';
+      opts.setAttribute('role', 'group'); opts.setAttribute('aria-label', 'Classificação do item ' + (idx + 1));
+      var why = document.createElement('p'); why.className = 'why'; why.hidden = true;
+      KEYS.forEach(function (k) {
+        var b = document.createElement('button');
+        b.type = 'button'; b.textContent = LABEL[k]; b.id = 'qz-' + idx + '-' + k;
+        b.setAttribute('data-k', k);
+        b.addEventListener('click', function () {
+          var ok = k === item.a;
+          Array.prototype.forEach.call(opts.children, function (o) {
+            o.disabled = true;
+            if (o.getAttribute('data-k') === item.a) { o.className = 'right'; }
+          });
+          if (!ok) { b.className = 'wrong'; }
+          var lead = document.createElement('b');
+          lead.textContent = (ok ? 'Certo. ' : 'A resposta é ' + NAMES[item.a] + '. ');
+          why.textContent = ''; why.appendChild(lead); why.appendChild(document.createTextNode(item.w));
+          why.className = 'why ' + (ok ? 'ok' : 'no'); why.hidden = false;
+          answered++; if (ok) { hits++; }
+          score.textContent = hits; done.textContent = answered;
+        });
+        opts.appendChild(b);
+      });
+      row.appendChild(p); row.appendChild(opts); row.appendChild(why);
+      quiz.appendChild(row);
+    });
+  }
+  render();
+  document.getElementById('qz-reset').addEventListener('click', render);
+
+  /* ---------- Gráfico: leitura dos valores ---------- */
+  var fig = document.getElementById('fig-bars');
+  var tip = document.getElementById('bars-tip');
+  var svg = document.getElementById('bars');
+  var segs = document.querySelectorAll('#bars .seg');
+  function hide() {
+    tip.hidden = true;
+    Array.prototype.forEach.call(segs, function (b) { b.removeAttribute('opacity'); });
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('#bars .hit'), function (r) {
+    function show() {
+      var d = r.dataset;
+      Array.prototype.forEach.call(segs, function (b) {
+        b.setAttribute('opacity', b.getAttribute('data-k') === d.k ? '1' : '.4');
+      });
+      tip.textContent = '';
+      var strong = document.createElement('b'); strong.textContent = d.pct + ' em dia';
+      tip.appendChild(strong);
+      tip.appendChild(document.createTextNode(d.r + ' · ' + d.t + ' documentos'));
+      tip.appendChild(document.createElement('br'));
+      tip.appendChild(document.createTextNode('Em dia: ' + d.a + ' · Revisão vencida: ' + d.b + ' · Sem controle: ' + d.c));
+      var box = fig.getBoundingClientRect(), rb = r.getBoundingClientRect();
+      var pt = svg.createSVGPoint(); pt.x = parseFloat(d.cx); pt.y = 0;
+      var scr = pt.matrixTransform(svg.getScreenCTM());
+      tip.style.left = Math.min(Math.max(scr.x - box.left, 190), box.width - 190) + 'px';
+      tip.style.top = (rb.top - box.top + 4) + 'px';
+      tip.hidden = false;
+    }
+    r.addEventListener('pointerenter', show);
+    r.addEventListener('focus', show);
+    r.addEventListener('pointerleave', hide);
+    r.addEventListener('blur', hide);
+  });
+})();
+</script>
+</body>
+</html>
