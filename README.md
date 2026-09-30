@@ -23,6 +23,7 @@ Para começar, abra o arquivo `index.html` no navegador.
 | Não conformidade e ação corretiva | `Nao-Conformidade/` | `RNC-modelo.xlsx` |
 | Análise crítica pela direção | `Analise-Critica/` | `Analise-Critica-modelo.xlsx` |
 | Informação documentada | `Informacao-Documentada/` | `Informacao-Documentada-modelo.xlsx` |
+| Matriz de competências e treinamento | `Competencias/` | `Competencias-modelo.xlsx` |
 
 ## Avisos
 

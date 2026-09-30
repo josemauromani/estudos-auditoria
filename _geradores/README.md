@@ -31,6 +31,7 @@ Os nomes curtos dos estudos são:
 | `proc` | Mapa de processos e diagrama de tartaruga | `Processos/` |
 | `ac` | Análise crítica pela direção | `Analise-Critica/` |
 | `doc` | Informação documentada | `Informacao-Documentada/` |
+| `comp` | Matriz de competências e treinamento | `Competencias/` |
 
 ## Preparação
 
@@ -71,7 +72,7 @@ O estudo de SWOT não tem arquivo de dados: os exemplos estão dentro de `build_
 
 ## Testes
 
-A pasta `testes/` tem os roteiros usados para conferir as fórmulas de sete planilhas. Cada par preenche uma cópia do modelo com dados de teste, inclusive erros propositais, e lê os resultados depois do recálculo.
+A pasta `testes/` tem os roteiros usados para conferir as fórmulas de oito planilhas. Cada par preenche uma cópia do modelo com dados de teste, inclusive erros propositais, e lê os resultados depois do recálculo.
 
 ```bash
 PY=_geradores/.venv/bin/python
@@ -80,4 +81,4 @@ soffice --headless --convert-to 'xlsx:Calc MS Excel 2007 XML' --outdir /tmp/test
 $PY _geradores/testes/rk_test_read.py /tmp/teste/saida
 ```
 
-Os roteiros importam os arquivos de dados desta pasta. Os de indicadores, de processos, de análise crítica e de informação documentada já encontram a pasta sozinhos. Para rodar os outros, informe o caminho de `_geradores/` em `PYTHONPATH`.
+Os roteiros importam os arquivos de dados desta pasta. Os de indicadores, de processos, de análise crítica, de informação documentada e de competências já encontram a pasta sozinhos. Para rodar os outros, informe o caminho de `_geradores/` em `PYTHONPATH`.

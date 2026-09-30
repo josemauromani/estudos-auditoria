@@ -37,6 +37,7 @@ ESTUDOS = {
     "nc": ("Não conformidade e ação corretiva", "../Nao-Conformidade/treinamento-nao-conformidade.html"),
     "ac": ("Análise crítica pela direção", "../Analise-Critica/treinamento-analise-critica.html"),
     "doc": ("Informação documentada", "../Informacao-Documentada/treinamento-informacao-documentada.html"),
+    "comp": ("Matriz de competências", "../Competencias/treinamento-competencias.html"),
 }
 
 
@@ -122,11 +123,11 @@ REQ = _req([
     ("7.2", "Competência",
      "Determinar a competência necessária das pessoas que afetam o desempenho do sistema, assegurar que elas sejam competentes, agir para obter a competência que falta e avaliar a eficácia dessas ações.",
      "Que competência o cargo exige, e como se sabe que a pessoa a tem?",
-     "Descrição de cargo, matriz de competências, registros de treinamento.", ()),
+     "Descrição de cargo, matriz de competências, registros de treinamento.", ("comp",)),
     ("7.3", "Conscientização",
      "Assegurar que as pessoas conheçam a política, os objetivos pertinentes, a sua contribuição para o sistema e as consequências de não atender aos requisitos.",
      "Para quem executa: como o seu trabalho afeta o cliente?",
-     "Entrevistas com as pessoas, integração, comunicação interna.", ()),
+     "Entrevistas com as pessoas, integração, comunicação interna.", ("comp",)),
     ("7.4", "Comunicação",
      "Determinar as comunicações internas e externas pertinentes ao sistema: o que comunicar, quando, a quem, como e quem comunica.",
      "Como as informações importantes chegam a quem precisa?",

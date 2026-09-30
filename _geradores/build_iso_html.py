@@ -204,7 +204,7 @@ tb.append(f'            <tr class="tot"><td>Total</td><td class="c">{GERAL[0]}</
 tb += ['          </tbody>', '        </table>']
 
 # ---- figura 9: estudos da série × seções da norma
-ORDEM = ["swot", "proc", "sipoc", "raci", "riscos", "ind", "gut", "ishikawa", "w5h2", "pdca", "auditoria", "nc", "ac", "doc"]
+ORDEM = ["swot", "proc", "sipoc", "raci", "riscos", "ind", "gut", "ishikawa", "w5h2", "pdca", "auditoria", "nc", "ac", "doc", "comp"]
 CX = lambda j: 350 + j * 80  # noqa: E731
 HD = {"base": "hd-ink", "p": "hd-p", "d": "hd-d", "c": "hd-c", "a": "hd-a"}
 RY, R0 = 32, 70
@@ -237,6 +237,8 @@ AJUDA = {
     "6.2": "O estudo de Indicadores liga o objetivo à medida e à meta. O 5W2H transforma a meta em plano.",
     "6.3": "A Matriz de riscos avalia o que a mudança pode causar. O 5W2H planeja a execução.",
     "7.5": "Traz a lista mestra, a tabela de retenção dos registros e a lista de documentos externos.",
+    "7.2": "Traz a matriz por função, a escala de níveis, o plano de treinamento e a avaliação da eficácia.",
+    "7.3": "Traz as perguntas de conscientização e o que se espera ouvir.",
     "7.4": "As letras C e I da matriz mostram quem precisa ser consultado e informado.",
     "8.1": "Mostra as entradas e as saídas que a operação precisa controlar.",
     "8.7": "Separa a correção da saída não conforme da ação sobre a causa.",
