@@ -41,6 +41,7 @@ ESTUDOS = {
     "forn": ("Avaliação de fornecedores", "../Fornecedores/treinamento-fornecedores.html"),
     "sat": ("Satisfação do cliente", "../Satisfacao/treinamento-satisfacao.html"),
     "par": ("Pareto e folha de verificação", "../Pareto/treinamento-pareto.html"),
+    "pi": ("Partes interessadas", "../Partes-Interessadas/treinamento-partes-interessadas.html"),
 }
 
 
@@ -63,7 +64,7 @@ REQ = _req([
     ("4.2", "Entendendo as necessidades e expectativas de partes interessadas",
      "Determinar as partes interessadas pertinentes ao sistema e os requisitos de cada uma. Monitorar e analisar essas informações.",
      "Quem é afetado pelo sistema, e o que cada um espera?",
-     "Lista de partes interessadas, com requisitos. Contratos e requisitos legais.", ("swot",)),
+     "Lista de partes interessadas, com requisitos. Contratos e requisitos legais.", ("pi", "swot")),
     ("4.3", "Determinando o escopo do sistema de gestão da qualidade",
      "Definir os limites e a aplicabilidade do sistema, considerando o contexto, as partes interessadas e os produtos e serviços. Justificar todo requisito considerado não aplicável.",
      "O que está dentro do sistema, e por que algum requisito não se aplica?",
