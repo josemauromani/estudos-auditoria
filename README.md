@@ -15,6 +15,7 @@ Para começar, abra o arquivo `index.html` no navegador.
 | Matriz RACI | `RACI/` | `RACI-modelo.xlsx` |
 | Matriz de riscos | `Riscos/` | `Riscos-modelo.xlsx` |
 | Matriz GUT | `GUT/` | `GUT-modelo.xlsx` |
+| Pareto e folha de verificação | `Pareto/` | `Pareto-modelo.xlsx` |
 | Diagrama de Ishikawa | `Ishikawa/` | `Ishikawa-modelo.xlsx` |
 | 5W2H | `5W2H/` | `5W2H-modelo.xlsx` |
 | PDCA | `PDCA/` | `PDCA-modelo.xlsx` |

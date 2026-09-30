@@ -1,0 +1,696 @@
+<body>
+<div class="page" lang="pt-BR">
+
+<header class="mast">
+  <div class="tiles" aria-hidden="true"><span class="p">C</span><span class="d">O</span><span class="c">D</span></div>
+  <h1>Pareto e folha de verificação na prática</h1>
+  <p class="lead">Um guia de estudo para contar as ocorrências de um problema do jeito certo, ordenar o que foi contado e decidir, com dados, por onde começar.</p>
+  <ul class="meta">
+    <li>Treinamento autoinstrucional</li>
+    <li>13 módulos</li>
+    <li>Leitura de cerca de 50 minutos</li>
+    <li>3 exemplos resolvidos e 2 exercícios</li>
+  </ul>
+</header>
+
+<div class="layout">
+
+<nav class="toc" aria-label="Sumário">
+  <h2>Sumário</h2>
+  <ol>
+    <li><a href="#o-que-e">O que é</a></li>
+    <li><a href="#quando">Quando usar</a></li>
+    <li><a href="#como">Como construir</a></li>
+    <li><a href="#folha">A folha de verificação</a></li>
+    <li><a href="#grafico">O gráfico de Pareto</a></li>
+    <li><a href="#exemplos">Exemplos resolvidos</a></li>
+    <li><a href="#leitura">Ler o Pareto</a></li>
+    <li><a href="#erros">Erros comuns</a></li>
+    <li><a href="#ferramentas">O Pareto e outras ferramentas</a></li>
+    <li><a href="#iso">Nas normas ISO</a></li>
+    <li><a href="#reuniao">A reunião de análise</a></li>
+    <li><a href="#pratique">Pratique</a></li>
+    <li><a href="#planilha">A planilha de apoio</a></li>
+    <li><a href="#glossario">Glossário</a></li>
+  </ol>
+</nav>
+
+<main>
+
+<!-- ============================ MÓDULO 1 ============================ -->
+<section id="o-que-e">
+  <p class="eyebrow">Módulo 1</p>
+  <h2>O que é</h2>
+  <p>A folha de verificação é um formulário para contar ocorrências no momento em que elas acontecem: um traço para cada entrega atrasada, para cada requisição devolvida, para cada peça reprovada, na linha da categoria a que pertence. O gráfico de Pareto põe essas contagens em ordem, da maior para a menor, e mostra quanto cada categoria pesa no total.</p>
+  <p>As duas ferramentas trabalham juntas, e o resultado é uma decisão. As letras do título são as três etapas: <span class="k p">C</span> contar, <span class="k d">O</span> ordenar e <span class="k c">D</span> decidir. O gráfico leva o nome do economista Vilfredo Pareto, e a ideia que ele resume foi levada à qualidade por Joseph Juran: em quase todo problema, poucas categorias concentram a maior parte das ocorrências.</p>
+
+  <figure>
+    <div class="scroll">
+<!--DAFIG-->
+    </div>
+    <figcaption><b>Figura 1.</b> Da folha ao gráfico. A folha de verificação transforma opinião em contagem. O Pareto transforma a contagem em ordem. A ordem mostra onde o esforço rende mais.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Ferramenta</th><th style="width:38%">O que faz</th><th>O que não faz</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Folha de verificação</strong></td><td>Coleta os dados: quantas vezes, de que tipo, quando e onde.</td><td>Não diz qual categoria tratar primeiro.</td></tr>
+        <tr><td><strong>Estratificação</strong></td><td>Separa a contagem por um segundo fator: dia, turno, área, máquina.</td><td>Não explica por que um grupo é diferente do outro.</td></tr>
+        <tr><td><strong>Gráfico de Pareto</strong></td><td>Ordena as categorias e mostra o peso de cada uma no total.</td><td>Não diz a causa. Mostra onde procurar.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note">
+    <h4>Sobre o “80 e 20”</h4>
+    <p>A frase “80% dos efeitos vêm de 20% das causas” é um modo de lembrar a ideia, e não uma lei. Em um problema real, três motivos podem somar 88%, ou dois podem somar 57%. O que o Pareto afirma é mais simples: as categorias não pesam igual, e vale a pena descobrir quais pesam mais antes de agir.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 2 ============================ -->
+<section id="quando">
+  <p class="eyebrow">Módulo 2</p>
+  <h2>Quando usar</h2>
+  <p>Use a folha de verificação quando a equipe discute um problema sem números, e o Pareto quando há números e falta decidir por onde começar. Os dois pedem um problema que se repete: uma ocorrência única é tratada como não conformidade, e não contada.</p>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:30%">Situação</th><th style="width:34%">O que fazer</th><th>Resultado</th></tr></thead>
+      <tbody>
+        <tr><td><strong>“Eu acho que o motivo é…”</strong></td><td>Folha de verificação por duas a quatro semanas.</td><td>A contagem de cada motivo, no lugar da opinião.</td></tr>
+        <tr><td><strong>Um indicador fora da meta</strong></td><td>Contar as ocorrências por tipo e ordenar.</td><td>As categorias que explicam a maior parte do desvio.</td></tr>
+        <tr><td><strong>Muitas reclamações ou não conformidades</strong></td><td>Pareto por motivo, com os registros que já existem.</td><td>O motivo que mais se repete.</td></tr>
+        <tr><td><strong>Antes da análise de causa</strong></td><td>Pareto do problema, e estratificação da primeira barra.</td><td>Um efeito estreito e bem descrito para o Diagrama de Ishikawa.</td></tr>
+        <tr><td><strong>Depois da ação</strong></td><td>Repetir a contagem, com as mesmas categorias.</td><td>A comparação entre o antes e o depois.</td></tr>
+        <tr><td><strong>Na análise crítica</strong></td><td>Pareto do ano: reclamações, não conformidades, devoluções.</td><td>Onde a direção deve pôr recurso.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pair">
+    <div class="box">
+      <h4>Use quando</h4>
+      <ul>
+        <li>O problema se repete e pode ser contado.</li>
+        <li>As ocorrências podem ser separadas em categorias.</li>
+        <li>Há mais problemas do que tempo para tratá-los.</li>
+        <li>É preciso mostrar a outras pessoas por que a escolha foi essa.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h4>Prefira outra ferramenta quando</h4>
+      <ul>
+        <li>Os problemas são de naturezas diferentes e não há dados de frequência: use a <a href="../GUT/treinamento-gut.html">Matriz GUT</a>.</li>
+        <li>O que se quer é a causa, e não o peso: use o <a href="../Ishikawa/treinamento-ishikawa.html">Diagrama de Ishikawa</a>.</li>
+        <li>O dado é uma medida ao longo do tempo: use o gráfico dos <a href="../Indicadores/treinamento-indicadores.html">Indicadores</a>.</li>
+        <li>Uma só ocorrência já é grave: trate como <a href="../Nao-Conformidade/treinamento-nao-conformidade.html">não conformidade</a>.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 3 ============================ -->
+<section id="como">
+  <p class="eyebrow">Módulo 3</p>
+  <h2>Como construir</h2>
+  <p>O trabalho tem cinco etapas, e a primeira decide a qualidade de todas as outras. Uma folha com categorias mal definidas produz um gráfico bonito e errado.</p>
+
+  <figure>
+    <div class="scroll">
+<!--FLUXO-->
+    </div>
+    <figcaption><b>Figura 2.</b> As cinco etapas. Depois da ação, a contagem se repete com as mesmas categorias, e o novo Pareto mostra o que mudou e qual é a primeira barra agora.</figcaption>
+  </figure>
+
+  <h3>Passo a passo</h3>
+  <ol class="steps">
+    <li><h4>Defina o que será contado</h4><p>Uma unidade e um critério: “entrega que chegou depois de 40 minutos”, “requisição devolvida ao requisitante”. Sem o critério, cada pessoa conta uma coisa.</p></li>
+    <li><h4>Escolha as categorias</h4><p>De quatro a oito, mais “Outros”. Elas saem de uma conversa com quem faz o trabalho e de uma leitura de vinte ocorrências recentes. Cada uma recebe uma definição escrita.</p></li>
+    <li><h4>Escolha o segundo fator</h4><p>As colunas da folha: dia da semana, turno, área, máquina ou produto. É ele que permite estratificar depois, sem coletar de novo.</p></li>
+    <li><h4>Defina o período e quem registra</h4><p>Tempo suficiente para juntar pelo menos 50 ocorrências e para cobrir um ciclo completo do trabalho: uma semana inteira, um mês inteiro. Registra quem vê a ocorrência.</p></li>
+    <li><h4>Conte na hora</h4><p>Um traço por ocorrência, no momento em que acontece. O caso que não cabe em nenhuma categoria vai para “Outros”, com uma anotação ao lado.</p></li>
+    <li><h4>Some e ordene</h4><p>Total de cada categoria, do maior para o menor, com “Outros” por último. Calcule a parte de cada uma no total e o acumulado.</p></li>
+    <li><h4>Desenhe e leia</h4><p>Barras em ordem, linha do acumulado e o total no título. Leia a concentração: quantas barras são necessárias para chegar a 80%?</p></li>
+    <li><h4>Decida e registre</h4><p>As primeiras barras seguem para a análise de causa. A decisão considera também o custo e a facilidade de agir, e fica escrita, com a data da próxima contagem.</p></li>
+  </ol>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Papel</th><th style="width:26%">Quem costuma ser</th><th>O que faz</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Quem define</strong></td><td>Dono do processo, com a equipe.</td><td>Escolhe o que contar, as categorias, o período e o segundo fator.</td></tr>
+        <tr><td><strong>Quem conta</strong></td><td>Quem executa o trabalho e vê a ocorrência.</td><td>Faz o traço na hora e anota o que vai para “Outros”.</td></tr>
+        <tr><td><strong>Quem confere e ordena</strong></td><td>Qualidade, ou um líder da área.</td><td>Confere a folha a cada dia, soma, desenha o Pareto e estratifica.</td></tr>
+        <tr><td><strong>Quem decide</strong></td><td>Dono do processo, ou a direção.</td><td>Escolhe as barras a tratar e marca a nova contagem.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 4 ============================ -->
+<section id="folha">
+  <p class="eyebrow">Módulo 4</p>
+  <h2>A folha de verificação</h2>
+  <p>Uma folha de verificação boa cabe em uma página, fica no lugar onde a ocorrência aparece e pede só um traço. Se o registro der trabalho, ele será feito de memória no fim do turno, e a memória guarda o caso mais recente e o mais irritante, e não o mais frequente.</p>
+
+  <figure>
+    <div class="scroll">
+<!--FOLHAFIG-->
+    </div>
+    <figcaption><b>Figura 3.</b> A folha de uma noite da pizzaria, com os traços agrupados de cinco em cinco. As folhas de cada dia são somadas na tabela do período, que aparece no exemplo 1.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Parte da folha</th><th style="width:40%">O que informa</th><th>Exemplo</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Cabeçalho</strong></td><td>O que se conta, onde, em que período e quem registra.</td><td>Entregas com mais de 40 minutos. Expedição. Sábado, 20/06.</td></tr>
+        <tr><td><strong>Categorias</strong></td><td>As linhas: os tipos de ocorrência, com definição escrita.</td><td>“Fila no forno: o pedido esperou mais de 10 minutos para entrar.”</td></tr>
+        <tr><td><strong>Segundo fator</strong></td><td>As colunas: o fator que pode explicar a diferença.</td><td>Faixa de horário, dia da semana, área requisitante.</td></tr>
+        <tr><td><strong>Traços</strong></td><td>Um por ocorrência, em grupos de cinco.</td><td>Quatro traços e um corte: cinco.</td></tr>
+        <tr><td><strong>Outros</strong></td><td>O que não coube, com uma anotação.</td><td>“Moto quebrou”, “cliente não atendeu”.</td></tr>
+        <tr><td><strong>Totais</strong></td><td>Por linha e por coluna, somados no fim do período.</td><td>13 na primeira linha, 9 na coluna das 20h.</td></tr>
+        <tr><td><strong>Base</strong></td><td>Quantas oportunidades houve no período.</td><td>148 entregas na noite.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Tipo de folha</th><th style="width:40%">Para que serve</th><th>Exemplo</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Contagem por categoria</strong></td><td>Saber qual tipo de ocorrência é mais frequente. É a que alimenta o Pareto.</td><td>Motivos de atraso, tipos de defeito, motivos de devolução.</td></tr>
+        <tr><td><strong>Localização</strong></td><td>Saber em que lugar do produto ou do espaço a ocorrência aparece. Usa um desenho.</td><td>Marcas sobre o croqui da caixa, onde ela chega amassada.</td></tr>
+        <tr><td><strong>Distribuição</strong></td><td>Saber como uma medida varia. Usa faixas de valor no lugar de categorias.</td><td>Espessura do filme, em faixas de 2 micrômetros.</td></tr>
+        <tr><td><strong>Lista de conferência</strong></td><td>Garantir que os passos foram feitos. Não conta ocorrências.</td><td>Conferência do pedido antes de embalar.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pair">
+    <div class="box">
+      <h4>Categoria bem definida</h4>
+      <ul>
+        <li>“Fila no forno: o pedido esperou mais de 10 minutos para entrar no forno.”</li>
+        <li>“Endereço incompleto: o entregador precisou ligar ou procurar.”</li>
+        <li>Uma ocorrência cabe em uma só categoria.</li>
+        <li>Duas pessoas classificam o mesmo caso do mesmo jeito.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h4>Categoria mal definida</h4>
+      <ul>
+        <li>“Problema na cozinha.”</li>
+        <li>“Falha humana.”</li>
+        <li>“Atraso” e “demora”, na mesma folha.</li>
+        <li>Causa e sintoma misturados: “pizza fria” e “falta de entregador”.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="note">
+    <h4>Quando há dois motivos</h4>
+    <p>Uma entrega pode atrasar por fila no forno e, depois, por endereço incompleto. A regra deve estar escrita na folha antes de começar. Neste material, conta o motivo principal: o que tomou mais tempo. A alternativa é contar os dois, e nesse caso o total de traços é maior do que o de ocorrências, e o título do gráfico precisa dizer isso.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 5 ============================ -->
+<section id="grafico">
+  <p class="eyebrow">Módulo 5</p>
+  <h2>O gráfico de Pareto</h2>
+  <p>O Pareto tem duas leituras no mesmo desenho. As barras mostram o tamanho de cada categoria. A linha mostra a soma das barras até ali: o acumulado. Os dois eixos medem a mesma coisa em unidades diferentes, e por isso precisam estar alinhados: o total de ocorrências, à esquerda, fica na mesma altura dos 100%, à direita.</p>
+
+  <figure>
+    <div class="scroll">
+<!--ANATOMIA-->
+    </div>
+    <figcaption><b>Figura 4.</b> As partes do gráfico de Pareto. As barras cheias são as categorias necessárias para chegar a 80% do total. As barras vazadas ficam para depois.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Elemento</th><th style="width:40%">Regra</th><th>Por quê</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Ordem das barras</strong></td><td>Da maior para a menor, da esquerda para a direita.</td><td>A ordem é a informação. Sem ela, é só um gráfico de barras.</td></tr>
+        <tr><td><strong>Outros</strong></td><td>Sempre por último, mesmo quando é maior do que a barra anterior.</td><td>É uma soma de categorias pequenas, e não uma categoria.</td></tr>
+        <tr><td><strong>Eixo da esquerda</strong></td><td>Começa em zero e vai até o total de ocorrências.</td><td>Para que a altura da barra e o acumulado usem a mesma régua.</td></tr>
+        <tr><td><strong>Eixo da direita</strong></td><td>De 0 a 100%, com os 100% na altura do total.</td><td>Para ler a parte e o acumulado sem fazer conta.</td></tr>
+        <tr><td><strong>Linha do acumulado</strong></td><td>Parte do topo da primeira barra e chega a 100% na última.</td><td>Mostra quantas barras são necessárias para chegar a 80%.</td></tr>
+        <tr><td><strong>Título</strong></td><td>O que foi contado, o total, o período e a base.</td><td>Um Pareto sem total e sem período não pode ser comparado.</td></tr>
+        <tr><td><strong>Número de barras</strong></td><td>De quatro a oito, mais “Outros”.</td><td>Com mais do que isso, as últimas não se leem.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>As contas</h3>
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Coluna</th><th style="width:40%">Como se calcula</th><th>No exemplo da pizzaria</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Valor</strong></td><td>O total de cada categoria na folha.</td><td>92 entregas esperaram entregador.</td></tr>
+        <tr><td><strong>Parte do total</strong></td><td>Valor ÷ total × 100.</td><td>92 ÷ 200 = 46%.</td></tr>
+        <tr><td><strong>Acumulado</strong></td><td>A soma das partes, da primeira categoria até a atual.</td><td>46% + 27% = 73% na segunda barra.</td></tr>
+        <tr><td><strong>Classe</strong></td><td>Prioridade: a categoria começa antes de 80% do acumulado. Depois: começa em 80% ou mais.</td><td>A terceira barra começa em 73% e é prioridade.</td></tr>
+        <tr><td><strong>Taxa</strong></td><td>Valor ÷ base × 100, quando a base é conhecida.</td><td>92 ÷ 1.110 entregas = 8,3 por 100 entregas.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note">
+    <h4>As convenções deste material</h4>
+    <p>O corte de 80% separa a prioridade do que fica para depois, e entra na prioridade a barra que cruza o corte. “Outros” não deve passar de 10% do total. O Pareto pede pelo menos 50 ocorrências. Quando as duas primeiras barras somam menos de 50%, o gráfico é considerado plano. Esses números são uma referência para começar, e a organização pode definir os seus.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 6 ============================ -->
+<section id="exemplos">
+  <p class="eyebrow">Módulo 6</p>
+  <h2>Exemplos resolvidos</h2>
+  <p>Uma folha com o dia da semana, uma folha com a área requisitante e um Pareto feito duas vezes, por ocorrências e por peso. As organizações são as dos outros estudos da série. Os dois primeiros exemplos também estão preenchidos na planilha de apoio. Os dados são ilustrativos e foram criados para este treinamento.</p>
+
+  <h3>Exemplo 1. Os atrasos nas entregas da pizzaria</h3>
+<!--EX1HEAD-->
+<!--EX1FOLHA-->
+<!--EX1PARETO-->
+  <p><strong>O que observar.</strong> A equipe apostava no trânsito, e o trânsito ficou com 5%. Duas barras somam 73% dos atrasos, e as duas acontecem dentro da loja: a pizza pronta que espera entregador e a fila no forno. As colunas da folha deram a segunda resposta sem nova coleta: 140 dos 200 atrasos são de sexta e de sábado. O endereço incompleto é diferente: aparece igual em todos os dias, porque não depende do movimento. Este é o Pareto da etapa de observação do ciclo <a href="../PDCA/treinamento-pdca.html#exemplos">PDCA</a> da pizzaria, e a primeira barra foi o efeito analisado no <a href="../Ishikawa/treinamento-ishikawa.html#exemplos">Diagrama de Ishikawa</a>. A fila no forno, segunda barra, pede investimento e ficou para o ciclo seguinte: o Pareto mostra o peso, e a decisão considera também o custo de agir.</p>
+
+  <h3>Exemplo 2. As requisições de compra devolvidas</h3>
+<!--EX2HEAD-->
+<!--EX2FOLHA-->
+<!--EX2PARETO-->
+<!--EX2AREA-->
+  <p><strong>O que observar.</strong> Lido barra por barra, o Pareto parece pouco concentrado: são precisas quatro categorias para passar de 80%. Lido com atenção, as três primeiras são o mesmo defeito, um campo essencial em branco, e somam 72 das 100 devoluções. Categorias com a mesma causa podem ser tratadas juntas, e a causa aqui é uma só: o formulário aceita o envio com campos vazios. O segundo Pareto, feito com as colunas da mesma folha, mostra de onde vêm as devoluções: a Manutenção responde por 48%, e por 24 das 38 requisições sem especificação técnica. O treinamento dos requisitantes começou por ela.</p>
+
+  <h3>Exemplo 3. O mesmo problema, por ocorrências e por peso</h3>
+<!--EX3HEAD-->
+<!--EX3TAB-->
+  <figure>
+    <div class="scroll">
+<!--EX3FIG-->
+    </div>
+    <figcaption><b>Figura 5.</b> As bobinas reprovadas da indústria, contadas de dois jeitos. À esquerda, por bobinas: a impressão vem primeiro. À direita, por quilos refugados: a espessura sozinha passa de 60%.</figcaption>
+  </figure>
+  <p><strong>O que observar.</strong> Por número de bobinas, a impressão fora de registro é a primeira barra, com 34%. Por quilos refugados, ela cai para a terceira, com 10%: o defeito de impressão aparece no acerto e perde poucos metros. A espessura fora da especificação reprova a bobina inteira: 23% das ocorrências e 62% do peso. Quando as ocorrências não custam o mesmo, o Pareto por frequência aponta para o problema mais visível, e o Pareto por custo aponta para o mais caro. Faça os dois, e decida com o segundo. Foi o peso da espessura, somado às reclamações do cliente A no estudo de <a href="../Satisfacao/treinamento-satisfacao.html#exemplos">Satisfação do cliente</a>, que levou o medidor de espessura à análise crítica.</p>
+</section>
+
+<!-- ============================ MÓDULO 7 ============================ -->
+<section id="leitura">
+  <p class="eyebrow">Módulo 7</p>
+  <h2>Ler o Pareto</h2>
+  <p>A leitura começa pela forma. Um Pareto concentrado, com duas ou três barras altas e uma linha que sobe depressa, diz onde agir. Um Pareto plano, com barras parecidas, diz que as categorias escolhidas não separam o problema, e que é preciso contar de outro jeito.</p>
+
+  <figure id="fig-bars">
+    <div class="scroll">
+<!--CHART-->
+    </div>
+    <div class="tip" id="bars-tip" hidden></div>
+    <figcaption><b>Figura 6.</b> O Pareto dos atrasos da pizzaria. Passe o mouse sobre as barras para ver os valores.</figcaption>
+    <details class="data">
+      <summary>Ver os dados em tabela</summary>
+      <div class="tbl">
+<!--CHARTTABLE-->
+      </div>
+    </details>
+  </figure>
+
+<!--CHARTTEXT-->
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:26%">Leitura</th><th style="width:36%">O que significa</th><th>O que fazer</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Duas ou três barras altas</strong></td><td>O problema está concentrado.</td><td>Analisar a causa das primeiras barras.</td></tr>
+        <tr><td><strong>Barras parecidas</strong></td><td>As categorias não separam o problema.</td><td>Estratificar por outro fator: dia, turno, área, máquina, produto.</td></tr>
+        <tr><td><strong>“Outros” entre as maiores</strong></td><td>Há uma categoria escondida.</td><td>Ler as anotações e abrir “Outros” em categorias.</td></tr>
+        <tr><td><strong>Primeira barra muito larga</strong></td><td>A categoria é ampla demais para analisar.</td><td>Fazer um segundo Pareto só dela.</td></tr>
+        <tr><td><strong>Ordem muda com o custo</strong></td><td>As ocorrências não pesam igual.</td><td>Decidir pelo Pareto por custo, tempo ou gravidade.</td></tr>
+        <tr><td><strong>Poucas ocorrências</strong></td><td>A ordem pode ser acaso.</td><td>Continuar contando antes de decidir.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Antes e depois</h3>
+  <p>O Pareto feito depois da ação responde a duas perguntas: a barra tratada diminuiu, e qual é a primeira barra agora? A comparação usa as mesmas categorias e a taxa, e não a contagem, porque o número de entregas mudou de um período para o outro.</p>
+
+  <figure>
+    <div class="scroll">
+<!--ADFIG-->
+    </div>
+    <figcaption><b>Figura 7.</b> Os atrasos da pizzaria por 100 entregas, antes e depois das ações do ciclo PDCA, com as categorias na ordem do primeiro Pareto.</figcaption>
+    <details class="data">
+      <summary>Ver os dados em tabela</summary>
+      <div class="tbl">
+<!--ADTABLE-->
+      </div>
+    </details>
+  </figure>
+
+<!--ADTEXT-->
+</section>
+
+<!-- ============================ MÓDULO 8 ============================ -->
+<section id="erros">
+  <p class="eyebrow">Módulo 8</p>
+  <h2>Erros comuns</h2>
+  <div class="errs">
+    <div><h4>Contar de memória</h4><p>A folha é preenchida no fim do turno, e o motivo mais lembrado vence.</p><p class="fix"><b>Correção:</b> um traço na hora, no lugar onde a ocorrência aparece.</p></div>
+    <div><h4>Categorias sem definição</h4><p>Cada pessoa classifica o mesmo atraso de um jeito.</p><p class="fix"><b>Correção:</b> definição escrita na folha, testada com vinte casos antes de começar.</p></div>
+    <div><h4>“Outros” gigante</h4><p>A maior barra do gráfico é a que não diz nada.</p><p class="fix"><b>Correção:</b> anotar o motivo ao lado de cada traço de “Outros” e abrir a categoria quando passar de 10%.</p></div>
+    <div><h4>Barras fora de ordem</h4><p>O gráfico segue a ordem do formulário, e a leitura se perde.</p><p class="fix"><b>Correção:</b> ordem decrescente, com “Outros” por último.</p></div>
+    <div><h4>Só a frequência</h4><p>A equipe trata o defeito mais comum, e o mais caro continua.</p><p class="fix"><b>Correção:</b> um segundo Pareto, por custo, tempo ou gravidade.</p></div>
+    <div><h4>Pareto plano aceito como resposta</h4><p>“Tudo pesa igual, então vamos tratar tudo.”</p><p class="fix"><b>Correção:</b> estratificar por outro fator até aparecer a concentração.</p></div>
+    <div><h4>Poucos dados</h4><p>Doze ocorrências, e uma barra com quatro vira “a principal causa”.</p><p class="fix"><b>Correção:</b> pelo menos 50 ocorrências e um ciclo completo do trabalho.</p></div>
+    <div><h4>Comparar contagens com bases diferentes</h4><p>“Caiu de 200 para 62”, em períodos de tamanhos diferentes.</p><p class="fix"><b>Correção:</b> comparar a taxa: ocorrências por 100 entregas, por 100 requisições.</p></div>
+    <div><h4>Tratar a barra como causa</h4><p>“A causa é a fila no forno.” A fila é onde o atraso aparece.</p><p class="fix"><b>Correção:</b> o Pareto diz onde procurar. A causa sai da análise, com o Ishikawa e os 5 porquês.</p></div>
+    <div><h4>Um Pareto só</h4><p>O gráfico foi feito uma vez, para o relatório, e ninguém contou de novo.</p><p class="fix"><b>Correção:</b> repetir a contagem depois da ação, com as mesmas categorias.</p></div>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 9 ============================ -->
+<section id="ferramentas">
+  <p class="eyebrow">Módulo 9</p>
+  <h2>O Pareto e outras ferramentas</h2>
+  <p>A folha de verificação e o Pareto são as ferramentas da etapa de observação: ficam entre a escolha do problema e a análise da causa. Elas recebem um problema amplo e entregam um efeito estreito, com número, local e período.</p>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:26%">Ferramenta</th><th style="width:37%">O que ela entrega ao Pareto</th><th>O que recebe do Pareto</th></tr></thead>
+      <tbody>
+        <tr><td><a href="../PDCA/treinamento-pdca.html"><strong>PDCA</strong></a></td><td>O problema e a meta do ciclo.</td><td>A observação do problema, na etapa 2, e a comparação do antes com o depois, na etapa 6.</td></tr>
+        <tr><td><a href="../GUT/treinamento-gut.html"><strong>Matriz GUT</strong></a></td><td>O problema escolhido entre vários de naturezas diferentes.</td><td>A frequência medida, que apoia a nota de gravidade e de tendência.</td></tr>
+        <tr><td><a href="../Ishikawa/treinamento-ishikawa.html"><strong>Diagrama de Ishikawa</strong></a></td><td>As hipóteses de causa, que podem virar categorias de uma nova folha.</td><td>O efeito a analisar: a primeira barra, com número, local e período.</td></tr>
+        <tr><td><a href="../5W2H/treinamento-5w2h.html"><strong>5W2H</strong></a></td><td>As ações implantadas, com as datas que separam o antes do depois.</td><td>A ordem das ações: primeiro, o que atinge as maiores barras.</td></tr>
+        <tr><td><a href="../Indicadores/treinamento-indicadores.html"><strong>Indicadores</strong></a></td><td>O indicador fora da meta, que pede a contagem por tipo.</td><td>A explicação do desvio, para o registro da análise.</td></tr>
+        <tr><td><a href="../Nao-Conformidade/treinamento-nao-conformidade.html"><strong>Não conformidade e ação corretiva</strong></a></td><td>Os registros do período, por processo, por requisito e por causa.</td><td>As não conformidades que se repetem, e que pedem uma ação sobre a causa comum.</td></tr>
+        <tr><td><a href="../Satisfacao/treinamento-satisfacao.html"><strong>Satisfação do cliente</strong></a></td><td>As reclamações e as notas baixas, agrupadas por motivo.</td><td>O motivo a tratar primeiro, com o acumulado.</td></tr>
+        <tr><td><a href="../Fornecedores/treinamento-fornecedores.html"><strong>Avaliação de fornecedores</strong></a></td><td>As ocorrências do recebimento, por fornecedor e por tipo.</td><td>Os fornecedores e os defeitos que concentram as ocorrências.</td></tr>
+        <tr><td><a href="../Auditoria/treinamento-auditoria.html"><strong>Auditoria interna</strong></a></td><td>As constatações do programa, por requisito e por processo.</td><td>Os requisitos que mais falham, para o programa do ano seguinte.</td></tr>
+        <tr><td><a href="../Analise-Critica/treinamento-analise-critica.html"><strong>Análise crítica pela direção</strong></a></td><td>A decisão sobre recursos para as primeiras barras.</td><td>O desempenho do período resumido em poucos gráficos.</td></tr>
+        <tr><td><a href="../ISO-9001/treinamento-iso-9001.html"><strong>ISO 9001 requisito a requisito</strong></a></td><td>Os requisitos 9.1.3 e 10.2, que pedem análise de dados.</td><td>A evidência de que a decisão saiu dos dados.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 10 ============================ -->
+<section id="iso">
+  <p class="eyebrow">Módulo 10</p>
+  <h2>Nas normas ISO</h2>
+  <p>A ISO 9001:2015 não cita a folha de verificação nem o gráfico de Pareto. Ela pede que a organização analise os dados que coleta e que decida com base neles: a tomada de decisão baseada em evidência é um dos sete princípios de gestão da qualidade. Uma nota do requisito 9.1.3 lembra que os métodos de análise podem incluir técnicas estatísticas, e a ISO 10017 traz diretrizes sobre essas técnicas. A folha e o Pareto são as mais simples delas.</p>
+
+  <figure>
+    <div class="scroll">
+<!--ISOFIG-->
+    </div>
+    <figcaption><b>Figura 8.</b> O que a norma pede e onde este estudo responde. O texto da figura é um resumo, com palavras próprias.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:10%">Item</th><th style="width:32%">O que pede, em resumo</th><th style="width:27%">O que isso significa</th><th>Evidências que o auditor procura</th></tr></thead>
+      <tbody>
+        <tr><td class="num">9.1.1</td><td>Determinar os métodos de monitoramento, medição, análise e avaliação necessários para assegurar resultados válidos</td><td>A organização define como coleta e como analisa.</td><td>Folhas com critério de contagem e categorias definidas.</td></tr>
+        <tr><td class="num">9.1.3</td><td>Analisar e avaliar os dados do monitoramento e da medição, e usar o resultado para avaliar o desempenho e a necessidade de melhorias</td><td>Os dados são analisados, e não só guardados.</td><td>Gráficos com leitura e decisão registrada.</td></tr>
+        <tr><td class="num">8.7</td><td>Reter informação sobre as saídas não conformes e as ações tomadas</td><td>Os registros de produto reprovado são a fonte da contagem.</td><td>Registros com o tipo de defeito, usados na análise.</td></tr>
+        <tr><td class="num">10.2</td><td>Diante de uma não conformidade, determinar se existem ou se poderiam ocorrer não conformidades similares</td><td>As ocorrências repetidas são contadas e tratadas em conjunto.</td><td>Análise das não conformidades por tipo e por causa.</td></tr>
+        <tr><td class="num">9.3.2</td><td>Levar à análise crítica as tendências de não conformidades, de ações corretivas e de resultados de medição</td><td>A direção vê o conjunto, e não só os casos.</td><td>Pareto do período na pauta da análise crítica.</td></tr>
+        <tr><td class="num">10.3</td><td>Considerar os resultados da análise e da avaliação para identificar oportunidades de melhoria</td><td>A melhoria começa onde os dados apontam.</td><td>Projetos de melhoria abertos a partir da análise.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pair">
+    <div class="box">
+      <h4>O que a ISO 9001 exige</h4>
+      <ul>
+        <li>Definir os métodos de análise, para que os resultados sejam válidos.</li>
+        <li>Analisar os dados e avaliar o desempenho.</li>
+        <li>Verificar se uma não conformidade se repete.</li>
+        <li>Levar as tendências à análise crítica.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h4>O que a ISO 9001 não exige</h4>
+      <ul>
+        <li>A folha de verificação ou o gráfico de Pareto.</li>
+        <li>O corte de 80%, ou qualquer outro.</li>
+        <li>Um número mínimo de ocorrências.</li>
+        <li>Um procedimento de técnicas estatísticas.</li>
+        <li>A ISO 10017: é uma diretriz, e não um requisito.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="note">
+    <h4>Pontos de atenção</h4>
+    <p>O auditor costuma perguntar como a organização escolheu o que tratar. “Pelo que mais incomodava” é uma resposta fraca. Um Pareto com data, total, período e a decisão escrita ao lado é uma resposta forte. A constatação mais comum é a inversa: registros de não conformidade e de reclamação guardados um a um, sem que ninguém tenha olhado para o conjunto.</p>
+    <p>Este módulo usa a numeração da ISO 9001:2015 e resume os textos com palavras próprias. Confira sempre a edição vigente da norma antes de citar um requisito em relatório.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 11 ============================ -->
+<section id="reuniao">
+  <p class="eyebrow">Módulo 11</p>
+  <h2>A reunião de análise</h2>
+  <p>O Pareto é lido em uma reunião curta, de 45 minutos, com quem contou e com quem decide. Antes dela, a folha foi conferida e somada. Na reunião, a equipe lê o gráfico, estratifica a primeira barra e escolhe o que segue para a análise de causa.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 136" role="img" aria-label="Distribuição de uma reunião de análise de 45 minutos: 5 minutos para conferir a folha, 10 minutos para ler o Pareto, 10 minutos para a estratificação, 15 minutos para a decisão sobre as primeiras barras e 5 minutos para marcar a próxima contagem.">
+        <g font-size="11.5" text-anchor="middle">
+          <rect class="bx" x="60" y="24" width="86.7" height="56"/><text x="103.3" y="56" font-size="10.5">Folha</text>
+          <rect class="bx" x="146.7" y="24" width="173.3" height="56"/><text x="233.3" y="56">Leitura do Pareto</text>
+          <rect class="hd-d gap2" x="320" y="24" width="173.3" height="56"/><text class="on b" x="406.7" y="56">Estratificação</text>
+          <rect class="hd-ink gap2" x="493.3" y="24" width="260" height="56"/><text class="t-ground b" x="623.3" y="56">Decisão sobre as primeiras barras</text>
+          <rect class="bx" x="753.3" y="24" width="86.7" height="56"/><text x="796.7" y="49" font-size="10.5">Próxima</text><text x="796.7" y="63" font-size="10.5">contagem</text>
+        </g>
+        <g class="ln-mu" stroke-width="1">
+          <line x1="60" y1="82" x2="60" y2="94"/><line x1="146.7" y1="82" x2="146.7" y2="94"/><line x1="320" y1="82" x2="320" y2="94"/>
+          <line x1="493.3" y1="82" x2="493.3" y2="94"/><line x1="753.3" y1="82" x2="753.3" y2="94"/><line x1="840" y1="82" x2="840" y2="94"/>
+        </g>
+        <g class="mono" font-size="10.5" text-anchor="middle">
+          <text class="mu" x="60" y="112">0</text><text class="mu" x="146.7" y="112">5</text><text class="mu" x="320" y="112">15</text>
+          <text class="mu" x="493.3" y="112">25</text><text class="mu" x="753.3" y="112">40</text><text class="mu" x="840" y="112">45</text>
+        </g>
+      </svg>
+    </div>
+    <figcaption><b>Figura 9.</b> Uma reunião de análise de 45 minutos, desenhada em escala. A decisão ocupa um terço do tempo: o gráfico já está pronto quando a reunião começa.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Momento</th><th style="width:42%">O que fazer</th><th>Frases que ajudam</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Folha</strong></td><td>Conferir o período, o total, a base e as anotações de “Outros”. Perguntar a quem contou o que foi difícil classificar.</td><td>“Houve caso que ninguém soube onde pôr?”</td></tr>
+        <tr><td><strong>Leitura do Pareto</strong></td><td>Ler a forma, as primeiras barras e o acumulado. Comparar com o que a equipe esperava.</td><td>“O que aqui nos surpreende?”</td></tr>
+        <tr><td><strong>Estratificação</strong></td><td>Abrir a primeira barra pelas colunas da folha: dia, turno, área. Procurar onde ela se concentra.</td><td>“Esta barra é igual em todos os dias?”</td></tr>
+        <tr><td><strong>Decisão</strong></td><td>Escolher as barras que seguem para a análise de causa, com responsável. Registrar o que fica para depois, e por quê.</td><td>“O que tratamos neste ciclo, e o que fica para o próximo?”</td></tr>
+        <tr><td><strong>Próxima contagem</strong></td><td>Marcar a data da nova folha, com as mesmas categorias.</td><td>“Quando contamos de novo?”</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Leve a folha original para a reunião, com os traços e as anotações. O gráfico resume, e a folha mostra como o dado nasceu.</p>
+
+  <h3>Checklist do Pareto e da folha de verificação</h3>
+  <p>Marque os itens conforme revisa a sua análise. As marcações ficam salvas neste navegador.</p>
+  <ol class="check" id="checklist">
+<!--CHECK-->
+  </ol>
+  <div class="bar"><span><b id="ck-count">0</b> de 12 itens marcados</span><button class="btn" id="ck-reset" type="button">Limpar marcações</button></div>
+</section>
+
+<!-- ============================ MÓDULO 12 ============================ -->
+<section id="pratique">
+  <p class="eyebrow">Módulo 12</p>
+  <h2>Pratique</h2>
+  <h3>Exercício 1. Qual é o próximo passo?</h3>
+  <p>Cada item descreve uma situação. Diga o que fazer em seguida: contar, com a folha de verificação; ordenar, com o Pareto; estratificar, abrindo a contagem por outro fator ou em mais categorias; ou agir, levando a barra para a análise de causa.</p>
+  <div class="quiz" id="quiz"></div>
+  <div class="bar"><span>Acertos: <b id="qz-score">0</b> de <b id="qz-total">12</b></span><span>Respondidos: <b id="qz-done">0</b></span><button class="btn" id="qz-reset" type="button">Recomeçar</button></div>
+
+  <h3>Exercício 2. Faça o Pareto de um problema da sua organização</h3>
+  <p>Escolha um problema que se repete e que possa ser contado. Abra a planilha de apoio e siga o roteiro.</p>
+  <ol>
+    <li>Na aba Coleta, escreva o que será contado, o período e quem registra. Cadastre de quatro a oito categorias, cada uma com a sua definição.</li>
+    <li>Imprima a aba Folha, ou desenhe uma igual, e deixe no lugar onde a ocorrência aparece. Escolha o fator das colunas.</li>
+    <li>Conte por pelo menos duas semanas, ou até juntar 50 ocorrências.</li>
+    <li>Lance os totais na aba Folha e leia a aba Pareto: a ordem, o acumulado e o aviso.</li>
+    <li>Se as ocorrências não custam o mesmo, informe o peso de cada categoria na aba Coleta e troque a base do Pareto.</li>
+    <li>Escolha as barras que seguem para a análise de causa e escreva a decisão.</li>
+    <li>Depois da ação, lance a nova contagem na aba Antes e depois.</li>
+    <li>Passe o checklist do módulo 11.</li>
+  </ol>
+  <p>Antes de começar a contar, peça a três pessoas que escrevam qual será a primeira barra. Guarde as respostas e compare com o gráfico: é a melhor demonstração de por que contar.</p>
+</section>
+
+<!-- ============================ MÓDULO 13 ============================ -->
+<section id="planilha">
+  <p class="eyebrow">Módulo 13</p>
+  <h2>A planilha de apoio</h2>
+  <p>Este treinamento acompanha o arquivo <a id="xlsx-ref" href="Pareto-modelo.xlsx">Pareto-modelo.xlsx</a>, que fica na mesma pasta. As células em amarelo-claro são para preenchimento. As células cinza são calculadas.</p>
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Aba</th><th>Para que serve</th><th style="width:36%">O que ela calcula</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Instruções</strong></td><td>Legenda de cores, as regras de cálculo, ordem de preenchimento e premissas do modelo.</td><td>Nada. É só leitura.</td></tr>
+        <tr><td><strong>Coleta</strong></td><td>O plano da coleta: o que se conta, onde, quando, quem registra, a base e até oito categorias com definição e peso.</td><td>A conferência das categorias.</td></tr>
+        <tr><td><strong>Folha</strong></td><td>As contagens de cada categoria, em até sete colunas do segundo fator.</td><td>Totais por linha e por coluna, a coluna com mais ocorrências e a taxa por 100.</td></tr>
+        <tr><td><strong>Pareto</strong></td><td>A escolha da base: frequência, ou frequência vezes o peso.</td><td>A ordem, a parte do total, o acumulado, a classe, o aviso e o gráfico.</td></tr>
+        <tr><td><strong>Antes e depois</strong></td><td>A contagem feita depois da ação, com a nova base.</td><td>A taxa de cada categoria nos dois períodos, a variação e a primeira barra de agora.</td></tr>
+        <tr><td><strong>Checklist</strong></td><td>Os mesmos 12 itens do módulo 11, com status Sim, Parcial ou Não.</td><td>Percentual atendido e situação da validação.</td></tr>
+        <tr><td><strong>Exemplo 1 e Exemplo 2</strong></td><td>Os atrasos da pizzaria, com o antes e o depois, e as requisições devolvidas, por motivo e por área.</td><td>Os dois Paretos de cada exemplo.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ GLOSSÁRIO ============================ -->
+<section id="glossario">
+  <p class="eyebrow">Referência</p>
+  <h2>Glossário</h2>
+  <dl class="gloss">
+    <div><dt>Acumulado</dt><dd>A soma das partes do total, da primeira categoria até a atual.</dd></div>
+    <div><dt>Base</dt><dd>O número de oportunidades do período: entregas, requisições, peças produzidas.</dd></div>
+    <div><dt>Categoria</dt><dd>Cada tipo de ocorrência contado na folha. É uma linha da folha e uma barra do gráfico.</dd></div>
+    <div><dt>Corte</dt><dd>O acumulado que separa a prioridade do restante. Neste material, 80%.</dd></div>
+    <div><dt>Definição operacional</dt><dd>A regra escrita que diz quando uma ocorrência conta em uma categoria.</dd></div>
+    <div><dt>Estratificação</dt><dd>A separação dos dados por um fator, como dia, turno, área ou máquina, para ver onde o problema se concentra.</dd></div>
+    <div><dt>Folha de verificação</dt><dd>Formulário para registrar ocorrências na hora, com um traço por ocorrência.</dd></div>
+    <div><dt>Gráfico de Pareto</dt><dd>Gráfico de barras em ordem decrescente, com a linha do acumulado.</dd></div>
+    <div><dt>Outros</dt><dd>A soma das ocorrências que não cabem nas categorias. Fica sempre por último.</dd></div>
+    <div><dt>Pareto plano</dt><dd>Gráfico com barras de alturas parecidas. Pede outra estratificação.</dd></div>
+    <div><dt>Peso</dt><dd>O custo, o tempo ou a quantidade perdida em cada ocorrência de uma categoria.</dd></div>
+    <div><dt>Prioridade</dt><dd>Neste material, as categorias necessárias para chegar ao corte.</dd></div>
+    <div><dt>Taxa</dt><dd>Ocorrências divididas pela base. Permite comparar períodos de tamanhos diferentes.</dd></div>
+  </dl>
+</section>
+
+</main>
+</div>
+
+<footer>Material de estudo. Os exemplos, documentos e números são ilustrativos e foram criados para fins didáticos. As referências às normas ISO são resumos para estudo e não substituem o texto das normas.</footer>
+</div>
+
+<script>
+(function () {
+  function read(key) { try { return JSON.parse(localStorage.getItem(key) || 'null'); } catch (e) { return null; } }
+  function write(key, val) { try { localStorage.setItem(key, JSON.stringify(val)); } catch (e) {} }
+
+  /* ---------- Checklist ---------- */
+  var boxes = Array.prototype.slice.call(document.querySelectorAll('#checklist input'));
+  var count = document.getElementById('ck-count');
+  var saved = read('pareto-checklist') || {};
+  function refreshChecks() {
+    var n = 0, state = {};
+    boxes.forEach(function (b) { if (b.checked) { n++; } state[b.id] = b.checked; });
+    count.textContent = n;
+    return state;
+  }
+  boxes.forEach(function (b) {
+    if (saved[b.id]) { b.checked = true; }
+    b.addEventListener('change', function () { write('pareto-checklist', refreshChecks()); });
+  });
+  refreshChecks();
+  document.getElementById('ck-reset').addEventListener('click', function () {
+    boxes.forEach(function (b) { b.checked = false; });
+    write('pareto-checklist', refreshChecks());
+  });
+
+  /* ---------- Exercício ---------- */
+  var KEYS = ['C', 'O', 'E', 'A'];
+  var LABEL = { C: 'Contar', O: 'Ordenar', E: 'Estratificar', A: 'Agir' };
+  var NAMES = { C: 'contar, com a folha de verificação', O: 'ordenar, com o Pareto', E: 'estratificar', A: 'agir, com a análise de causa' };
+  var ITEMS = [
+    { t: 'A equipe acha que o maior motivo de atraso é o trânsito, mas ninguém anotou nada.', a: 'C', w: 'Sem contagem, só há opinião. A folha de verificação vem primeiro.' },
+    { t: 'A folha tem 200 atrasos, em cinco motivos, e o relatório lista os motivos em ordem alfabética.', a: 'O', w: 'Os dados existem. Falta a ordem, a parte do total e o acumulado.' },
+    { t: 'O Pareto tem sete barras quase da mesma altura.', a: 'E', w: 'Pareto plano: as categorias não separam o problema. Abra por outro fator.' },
+    { t: 'A primeira barra tem 46% dos atrasos, e a causa ainda não foi analisada.', a: 'A', w: 'A concentração está clara. A barra segue para o Diagrama de Ishikawa.' },
+    { t: '“Outros” é a maior barra do gráfico.', a: 'E', w: 'Há categorias escondidas. Leia as anotações e abra “Outros”.' },
+    { t: 'Há 12 ocorrências registradas, em uma semana de coleta.', a: 'C', w: 'É pouco: a ordem pode ser acaso. Continue contando.' },
+    { t: 'As ações do plano foram implantadas há um mês.', a: 'C', w: 'É hora de contar de novo, com as mesmas categorias, para comparar.' },
+    { t: 'As requisições devolvidas estão contadas por motivo, e falta saber de que área elas vêm.', a: 'E', w: 'O segundo fator, a área, mostra onde a primeira barra se concentra.' },
+    { t: 'Os defeitos estão ordenados por número de bobinas, mas uma bobina com espessura fora perde 95 kg, e uma com defeito de impressão, 10 kg.', a: 'O', w: 'Ordene de novo, pelo peso refugado. A ordem vai mudar.' },
+    { t: 'Três barras somam 88% do total, e a equipe já sabe em que dias elas se concentram.', a: 'A', w: 'A observação está completa. Falta a análise de causa e o plano.' },
+    { t: 'Dois atendentes classificam o mesmo atraso em categorias diferentes.', a: 'C', w: 'A contagem não vale. Escreva a definição de cada categoria e conte de novo.' },
+    { t: 'A contagem do depois está pronta: 62 atrasos em 1.380 entregas, por motivo.', a: 'O', w: 'Ordene e compare com o primeiro Pareto, usando a taxa por 100 entregas.' }
+  ];
+  var quiz = document.getElementById('quiz');
+  var score = document.getElementById('qz-score');
+  var done = document.getElementById('qz-done');
+  document.getElementById('qz-total').textContent = ITEMS.length;
+  var hits = 0, answered = 0;
+
+  function render() {
+    hits = 0; answered = 0; score.textContent = 0; done.textContent = 0;
+    quiz.textContent = '';
+    ITEMS.forEach(function (item, idx) {
+      var row = document.createElement('div'); row.className = 'q';
+      var p = document.createElement('p'); p.textContent = (idx + 1) + '. ' + item.t;
+      var opts = document.createElement('div'); opts.className = 'opts';
+      opts.setAttribute('role', 'group'); opts.setAttribute('aria-label', 'Próximo passo do item ' + (idx + 1));
+      var why = document.createElement('p'); why.className = 'why'; why.hidden = true;
+      KEYS.forEach(function (k) {
+        var b = document.createElement('button');
+        b.type = 'button'; b.textContent = LABEL[k]; b.id = 'qz-' + idx + '-' + k;
+        b.setAttribute('data-k', k);
+        b.addEventListener('click', function () {
+          var ok = k === item.a;
+          Array.prototype.forEach.call(opts.children, function (o) {
+            o.disabled = true;
+            if (o.getAttribute('data-k') === item.a) { o.className = 'right'; }
+          });
+          if (!ok) { b.className = 'wrong'; }
+          var lead = document.createElement('b');
+          lead.textContent = (ok ? 'Certo. ' : 'A resposta é ' + NAMES[item.a] + '. ');
+          why.textContent = ''; why.appendChild(lead); why.appendChild(document.createTextNode(item.w));
+          why.className = 'why ' + (ok ? 'ok' : 'no'); why.hidden = false;
+          answered++; if (ok) { hits++; }
+          score.textContent = hits; done.textContent = answered;
+        });
+        opts.appendChild(b);
+      });
+      row.appendChild(p); row.appendChild(opts); row.appendChild(why);
+      quiz.appendChild(row);
+    });
+  }
+  render();
+  document.getElementById('qz-reset').addEventListener('click', render);
+
+  /* ---------- Gráfico: leitura dos valores ---------- */
+  var fig = document.getElementById('fig-bars');
+  var tip = document.getElementById('bars-tip');
+  var svg = document.getElementById('bars');
+  var bars = document.querySelectorAll('#bars .bar');
+  function hide() {
+    tip.hidden = true;
+    Array.prototype.forEach.call(bars, function (b) { b.removeAttribute('opacity'); });
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('#bars .hit'), function (r) {
+    function show() {
+      var d = r.dataset;
+      Array.prototype.forEach.call(bars, function (b) {
+        b.setAttribute('opacity', b.getAttribute('data-k') === d.k ? '1' : '.4');
+      });
+      tip.textContent = '';
+      var strong = document.createElement('b'); strong.textContent = d.v + ' atrasos · ' + d.p + '%';
+      tip.appendChild(strong);
+      tip.appendChild(document.createTextNode(d.n));
+      tip.appendChild(document.createElement('br'));
+      tip.appendChild(document.createTextNode('Acumulado ' + d.c + '% · ' + d.cl));
+      var box = fig.getBoundingClientRect();
+      var pt = svg.createSVGPoint(); pt.x = parseFloat(d.cx); pt.y = parseFloat(d.cy);
+      var scr = pt.matrixTransform(svg.getScreenCTM());
+      tip.style.left = Math.min(Math.max(scr.x - box.left, 150), box.width - 150) + 'px';
+      tip.style.top = (scr.y - box.top) + 'px';
+      tip.hidden = false;
+    }
+    r.addEventListener('pointerenter', show);
+    r.addEventListener('focus', show);
+    r.addEventListener('pointerleave', hide);
+    r.addEventListener('blur', hide);
+  });
+})();
+</script>
+</body>
+</html>

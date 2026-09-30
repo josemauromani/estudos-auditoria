@@ -40,6 +40,7 @@ ESTUDOS = {
     "comp": ("Matriz de competências", "../Competencias/treinamento-competencias.html"),
     "forn": ("Avaliação de fornecedores", "../Fornecedores/treinamento-fornecedores.html"),
     "sat": ("Satisfação do cliente", "../Satisfacao/treinamento-satisfacao.html"),
+    "par": ("Pareto e folha de verificação", "../Pareto/treinamento-pareto.html"),
 }
 
 
@@ -219,7 +220,7 @@ REQ = _req([
     ("9.1.3", "Análise e avaliação",
      "Analisar os dados para avaliar a conformidade de produtos e serviços, a satisfação do cliente, o desempenho do sistema, a eficácia do planejamento e das ações sobre riscos, o desempenho de provedores externos e as necessidades de melhoria.",
      "Que decisões foram tomadas a partir dos dados?",
-     "Relatórios de análise, gráficos, atas com decisões.", ("ind", "gut", "ishikawa")),
+     "Relatórios de análise, gráficos, atas com decisões.", ("ind", "par", "gut", "ishikawa")),
     ("9.2", "Auditoria interna",
      "Conduzir auditorias internas a intervalos planejados, com programa, critérios e escopo definidos, auditores imparciais, resultados relatados à gestão e ações sem demora indevida.",
      "O programa cobre todo o sistema, e o que foi feito com as constatações?",

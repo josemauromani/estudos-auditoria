@@ -204,7 +204,7 @@ tb.append(f'            <tr class="tot"><td>Total</td><td class="c">{GERAL[0]}</
 tb += ['          </tbody>', '        </table>']
 
 # ---- figura 9: estudos da série × seções da norma
-ORDEM = ["swot", "proc", "sipoc", "raci", "riscos", "ind", "gut", "ishikawa", "w5h2", "pdca", "auditoria", "nc", "ac", "doc", "comp", "forn", "sat"]
+ORDEM = ["swot", "proc", "sipoc", "raci", "riscos", "ind", "gut", "par", "ishikawa", "w5h2", "pdca", "auditoria", "nc", "ac", "doc", "comp", "forn", "sat"]
 CX = lambda j: 350 + j * 80  # noqa: E731
 HD = {"base": "hd-ink", "p": "hd-p", "d": "hd-d", "c": "hd-c", "a": "hd-a"}
 RY, R0 = 32, 70
@@ -249,7 +249,7 @@ AJUDA = {
     "8.7": "Separa a correção da saída não conforme da ação sobre a causa.",
     "9.1.1": "O estudo de Indicadores define o que medir, como e quando. O PDCA compara o resultado com a meta.",
     "9.1.2": "O estudo de Satisfação do cliente traz a pesquisa, o registro de reclamações e a devolutiva. O de Indicadores põe o resultado no painel.",
-    "9.1.3": "O painel mostra a situação e a tendência. A GUT prioriza, e o Ishikawa procura as causas.",
+    "9.1.3": "O painel mostra a situação e a tendência. O Pareto mostra onde o problema se concentra. A GUT prioriza, e o Ishikawa procura as causas.",
     "9.2": "Entrega o programa, o plano, a lista de verificação e as constatações.",
     "9.3": "Traz a pauta das doze entradas, o registro das decisões e o acompanhamento das ações.",
     "10.1": "Conduz a melhoria, do problema até a padronização.",
