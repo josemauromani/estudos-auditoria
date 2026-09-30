@@ -38,6 +38,7 @@ ESTUDOS = {
     "ac": ("Análise crítica pela direção", "../Analise-Critica/treinamento-analise-critica.html"),
     "doc": ("Informação documentada", "../Informacao-Documentada/treinamento-informacao-documentada.html"),
     "comp": ("Matriz de competências", "../Competencias/treinamento-competencias.html"),
+    "forn": ("Avaliação de fornecedores", "../Fornecedores/treinamento-fornecedores.html"),
 }
 
 
@@ -164,15 +165,15 @@ REQ = _req([
     ("8.4.1", "Provedores externos: generalidades",
      "Assegurar que processos, produtos e serviços providos externamente atendam aos requisitos. Determinar e aplicar critérios para avaliar, selecionar, monitorar o desempenho e reavaliar os provedores externos.",
      "Como os fornecedores são escolhidos e acompanhados?",
-     "Critérios de homologação, avaliações de desempenho, lista de fornecedores aprovados.", ()),
+     "Critérios de homologação, avaliações de desempenho, lista de fornecedores aprovados.", ("forn",)),
     ("8.4.2", "Provedores externos: tipo e extensão do controle",
      "Definir os controles sobre o provedor externo e sobre o que ele entrega, de acordo com o impacto na capacidade de atender ao cliente. Definir a verificação necessária para assegurar que o item recebido atende aos requisitos.",
      "O que é conferido no recebimento, e por que esse nível de controle?",
-     "Inspeção de recebimento, auditorias em fornecedores.", ()),
+     "Inspeção de recebimento, auditorias em fornecedores.", ("forn",)),
     ("8.4.3", "Provedores externos: informação",
      "Comunicar ao provedor externo os requisitos do que será fornecido, os critérios de aprovação, a competência exigida e os controles que serão aplicados. Assegurar que os requisitos estejam adequados antes de comunicá-los.",
      "O pedido de compra diz tudo o que o fornecedor precisa saber?",
-     "Pedidos de compra, contratos, especificações técnicas.", ()),
+     "Pedidos de compra, contratos, especificações técnicas.", ("forn",)),
     ("8.5.1", "Controle de produção e de provisão de serviço",
      "Produzir e prestar o serviço sob condições controladas: informação sobre o que fazer e o resultado esperado, recursos de medição, monitoramento, infraestrutura, pessoas competentes, validação de processos, prevenção de erro humano e atividades de liberação e de entrega.",
      "Como quem executa sabe o que fazer, e como sabe que ficou certo?",

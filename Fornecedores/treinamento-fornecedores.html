@@ -1,0 +1,1225 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Avaliação de fornecedores</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<style>
+:root{
+  --ground:#F3F6F7; --surface:#FFFFFF; --sunk:#E9EEF0; --ink:#16242E; --muted:#566672; --rule:#D3DBE0;
+  --accent:#2B5C8A;
+  --s1:#2A6FB0; --s1-tint:#DCE8F3;
+  --s2:#D19A2E; --s2-tint:#F8EBCB;
+  --s3:#B0413E; --s3-tint:#F5DEDC;
+  --s4:#7A3E9A; --s4-tint:#EADFF0;
+  --on-s2:#16242E;
+  --p:#2B5C8A; --p-tint:#DCE8F3;
+  --d:#A96A12; --d-tint:#F6E8CF;
+  --c:#1E7B73; --c-tint:#D9EEEB;
+  --a:#B0413E; --a-tint:#F5DEDC;
+  --on-hue:#FFFFFF;
+  --good:#1F7A4D; --good-tint:#DDF1E5;
+  --bad:#B0413E; --bad-tint:#F5DEDC;
+  --display:"Barlow Semi Condensed","Arial Narrow",Arial,sans-serif;
+  --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --ground:#0F171C; --surface:#172229; --sunk:#1E2B33; --ink:#E4EAED; --muted:#9BABB6; --rule:#2B3A44;
+    --accent:#86B7E3;
+  --s1:#4F97DB; --s1-tint:#1B2F42;
+  --s2:#B58E14; --s2-tint:#3A2C12;
+  --s3:#D14B45; --s3-tint:#3D1F1E;
+  --s4:#A45BC0; --s4-tint:#33203C;
+  --on-s2:#0F171C;
+    --p:#86B7E3; --p-tint:#1B2F42;
+    --d:#E2AC4F; --d-tint:#3A2C12;
+    --c:#5FC6BA; --c-tint:#15332F;
+    --a:#EC8E89; --a-tint:#3D1F1E;
+    --on-hue:#0F171C;
+    --good:#6FCF9B; --good-tint:#163326;
+    --bad:#EC8E89; --bad-tint:#3D1F1E;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --ground:#0F171C; --surface:#172229; --sunk:#1E2B33; --ink:#E4EAED; --muted:#9BABB6; --rule:#2B3A44;
+  --accent:#86B7E3;
+  --s1:#4F97DB; --s1-tint:#1B2F42;
+  --s2:#B58E14; --s2-tint:#3A2C12;
+  --s3:#D14B45; --s3-tint:#3D1F1E;
+  --s4:#A45BC0; --s4-tint:#33203C;
+  --on-s2:#0F171C;
+  --p:#86B7E3; --p-tint:#1B2F42;
+  --d:#E2AC4F; --d-tint:#3A2C12;
+  --c:#5FC6BA; --c-tint:#15332F;
+  --a:#EC8E89; --a-tint:#3D1F1E;
+  --on-hue:#0F171C;
+  --good:#6FCF9B; --good-tint:#163326;
+  --bad:#EC8E89; --bad-tint:#3D1F1E;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--ground);color:var(--ink);font:400 16px/1.65 var(--body);-webkit-text-size-adjust:100%}
+a{color:var(--accent);text-underline-offset:3px}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.page{max-width:1180px;margin-inline:auto;padding-inline:20px;padding-block:36px 80px}
+
+/* Cabeçalho */
+.mast{display:flex;flex-direction:column;gap:18px;padding-bottom:32px;border-bottom:1px solid var(--rule)}
+.tiles{display:flex;gap:6px}
+.tiles span{width:44px;height:44px;display:grid;place-items:center;font:700 24px/1 var(--display);color:var(--on-hue)}
+.tiles .p{background:var(--p)} .tiles .d{background:var(--d)} .tiles .c{background:var(--c)} .tiles .a{background:var(--a)}
+h1{font:700 clamp(2.3rem,6vw,3.6rem)/1.02 var(--display);letter-spacing:-.01em;margin:0;text-wrap:balance}
+.lead{font-size:1.15rem;line-height:1.55;max-width:62ch;margin:0;color:var(--ink)}
+.meta{display:flex;flex-direction:row;flex-wrap:wrap;gap:6px 22px;font:400 .8rem/1.4 var(--mono);color:var(--muted);margin:0;padding:0;list-style:none}
+
+/* Estrutura */
+.layout{display:grid;grid-template-columns:minmax(0,1fr);gap:32px;padding-top:32px}
+.toc{font-size:.92rem}
+.toc h2{font:500 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+.toc ol{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:2px 20px;counter-reset:toc}
+.toc li{counter-increment:toc}
+.toc a{display:flex;gap:10px;padding:5px 0;color:var(--ink);text-decoration:none;line-height:1.35}
+.toc a::before{content:counter(toc,decimal-leading-zero);font:400 .75rem/1.7 var(--mono);color:var(--muted)}
+.toc a:hover{color:var(--accent);text-decoration:underline}
+@media (min-width:1020px){
+  .layout{grid-template-columns:200px minmax(0,1fr);gap:64px}
+  .toc{position:sticky;top:calc(env(safe-area-inset-top,0px) + 24px);align-self:start}
+  .toc ol{grid-template-columns:1fr}
+}
+main{display:flex;flex-direction:column;gap:72px;min-width:0}
+section{display:flex;flex-direction:column;gap:20px;scroll-margin-top:24px}
+.eyebrow{font:500 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0}
+h2{font:700 clamp(1.7rem,4vw,2.2rem)/1.1 var(--display);margin:0;text-wrap:balance}
+h3{font:600 1.3rem/1.2 var(--display);margin:12px 0 0;text-wrap:balance}
+h4{font:600 .95rem/1.3 var(--body);margin:0}
+p{margin:0}
+section > p, section > ul, section > ol, section > h3{max-width:68ch}
+ul,ol{margin:0;padding-left:1.25em;display:flex;flex-direction:column;gap:6px}
+strong{font-weight:600}
+code{font:400 .88em var(--mono);background:var(--sunk);padding:1px 5px;border-radius:3px}
+
+/* Letras coloridas no texto */
+.k{display:inline-grid;place-items:center;width:1.45em;height:1.45em;font:700 .85em/1 var(--display);color:var(--on-hue);vertical-align:.05em}
+.k.p{background:var(--p)} .k.d{background:var(--d)} .k.c{background:var(--c)} .k.a{background:var(--a)}
+
+/* Figuras */
+figure{margin:0;display:flex;flex-direction:column;gap:10px;position:relative}
+.scroll{overflow-x:auto;background:var(--surface);border:1px solid var(--rule);padding:18px}
+.scroll svg{display:block;width:100%;min-width:820px;height:auto;color:var(--ink)}
+figcaption{font-size:.86rem;line-height:1.5;color:var(--muted);max-width:72ch}
+figcaption b{color:var(--ink);font-weight:600}
+svg text{font-family:var(--body);fill:var(--ink)}
+svg .disp{font-family:var(--display);font-weight:700}
+svg .mono{font-family:var(--mono);letter-spacing:.08em}
+svg .on{fill:var(--on-hue)}
+svg .mu{fill:var(--muted)}
+svg .b{font-weight:600}
+svg .ln{stroke:var(--ink);stroke-width:1.5;fill:none}
+svg .ln-mu{stroke:var(--muted);stroke-width:1.5;fill:none}
+svg .ln-bold{stroke:var(--ink);stroke-width:3;fill:none;stroke-linejoin:round;stroke-linecap:round}
+svg .dash{stroke-dasharray:5 4}
+svg .ah{fill:var(--ink)} svg .ah-mu{fill:var(--muted)}
+svg .bx{fill:var(--surface);stroke:var(--rule);stroke-width:1.5}
+svg .bx-ink{fill:var(--ink);stroke:var(--ink)}
+svg .t-ground{fill:var(--ground)}
+svg .bx-out{fill:none;stroke:var(--muted);stroke-width:1.5;stroke-dasharray:5 4}
+svg .bx-p{fill:var(--p-tint);stroke:var(--p);stroke-width:1.5} svg .hd-p{fill:var(--p)}
+svg .bx-d{fill:var(--d-tint);stroke:var(--d);stroke-width:1.5} svg .hd-d{fill:var(--d)}
+svg .bx-c{fill:var(--c-tint);stroke:var(--c);stroke-width:1.5} svg .hd-c{fill:var(--c)}
+svg .bx-a{fill:var(--a-tint);stroke:var(--a);stroke-width:1.5} svg .hd-a{fill:var(--a)}
+svg .gap{stroke:var(--surface);stroke-width:4}
+svg .gap2{stroke:var(--surface);stroke-width:2}
+svg .hub{fill:var(--surface)}
+
+/* Gráfico */
+svg .grid{stroke:var(--rule);stroke-width:1}
+svg .band{fill:var(--sunk)}
+svg .series{stroke:var(--accent);stroke-width:2;fill:none;stroke-linejoin:round;stroke-linecap:round}
+svg .pt{fill:var(--accent);stroke:var(--surface);stroke-width:2}
+svg .pt.on-hit{stroke:var(--ink)}
+svg .goal{stroke:var(--muted);stroke-width:1.5;stroke-dasharray:6 4;fill:none}
+svg .xh{stroke:var(--muted);stroke-width:1}
+svg .hit{fill:transparent;cursor:crosshair;outline:none}
+svg .root{fill:var(--accent);stroke:var(--surface);stroke-width:2}
+.tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--ground);padding:6px 10px;font-size:.78rem;line-height:1.4;transform:translate(-50%,calc(-100% - 14px));white-space:nowrap;z-index:2}
+.tip b{display:block;font:600 1.05rem/1.2 var(--body)}
+details.data{font-size:.88rem}
+details.data summary{cursor:pointer;font:400 .82rem var(--mono);color:var(--muted);padding:4px 0}
+details.data .tbl{margin-top:8px}
+details.data table{min-width:420px}
+
+/* Tabelas */
+.tbl{overflow-x:auto;border:1px solid var(--rule);background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:780px;font-size:.88rem;line-height:1.4}
+th,td{padding:9px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--rule)}
+tr:last-child > td{border-bottom:0}
+thead th{font:600 .8rem/1.3 var(--body);background:var(--sunk)}
+td.num{font-variant-numeric:tabular-nums;white-space:nowrap;font-family:var(--mono);font-size:.82rem}
+
+/* Classes e situações */
+.chip{display:inline-block;padding:2px 8px;font:600 .76rem/1.45 var(--body);color:var(--on-hue);white-space:nowrap}
+.chip.s1{background:var(--s1)} .chip.s2{background:var(--s2);color:var(--on-s2)} .chip.s3{background:var(--s3)} .chip.s4{background:var(--s4)}
+.chip.sl{background:var(--sunk);color:var(--ink);box-shadow:inset 0 0 0 1px var(--rule)}
+.cl{display:inline-grid;place-items:center;width:1.9em;height:1.9em;font:700 .9em/1 var(--display);color:var(--on-hue)}
+.cl.A{background:var(--s1)} .cl.B{background:var(--s2);color:var(--on-s2)} .cl.C{background:var(--s3)} .cl.D{background:var(--s4)}
+svg .hd-ink{fill:var(--ink)}
+svg .f1{fill:var(--s1)} svg .f2{fill:var(--s2)} svg .f3{fill:var(--s3)} svg .f4{fill:var(--s4)}
+svg .z1{fill:var(--s1-tint)} svg .z2{fill:var(--s2-tint)} svg .z3{fill:var(--s3-tint)} svg .z4{fill:var(--s4-tint)}
+svg .on2{fill:var(--on-s2)}
+svg .cell{fill:var(--surface)}
+svg .seg{fill:var(--ink)}
+svg .halo{paint-order:stroke;stroke:var(--surface);stroke-width:5px;stroke-linejoin:round}
+svg .hit:focus-visible{stroke:var(--accent);stroke-width:2}
+
+/* Tabelas dos exemplos */
+table.aud{font-size:.8rem;min-width:860px;line-height:1.4}
+table.aud th, table.aud td{padding:8px 9px}
+table.aud td.n{white-space:nowrap;font-weight:600;color:var(--muted)}
+table.aud td.c, table.aud th.c{text-align:center;font-variant-numeric:tabular-nums}
+table.aud td.nw{white-space:nowrap;font-variant-numeric:tabular-nums}
+table.aud td small{display:block;color:var(--muted);font-size:.76rem;margin-top:3px}
+table.aud caption{caption-side:top;text-align:left;padding:10px 12px;font:500 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);background:var(--sunk)}
+
+/* Ficha da avaliação (acima de cada exemplo) */
+.ficha{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:0;border:1px solid var(--rule);background:var(--surface)}
+.ficha div{padding:12px 14px;border-right:1px solid var(--rule);border-bottom:1px solid var(--rule);margin:0 -1px -1px 0}
+.ficha dt{font:500 .68rem/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.ficha dd{margin:0;font-size:.9rem;line-height:1.4}
+dl{margin:0}
+
+/* Blocos */
+.pair{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.box{background:var(--surface);border:1px solid var(--rule);padding:18px 20px;display:flex;flex-direction:column;gap:10px}
+.box h4{font:600 1.1rem/1.2 var(--display)}
+.box ul{font-size:.93rem}
+.note{background:var(--sunk);padding:16px 20px;max-width:72ch;font-size:.94rem;display:flex;flex-direction:column;gap:6px}
+.note h4{font:500 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+
+/* Passo a passo */
+.steps{list-style:none;padding:0;counter-reset:st;gap:0;max-width:none;border-top:1px solid var(--rule)}
+.steps li{counter-increment:st;display:grid;grid-template-columns:44px minmax(0,1fr);gap:4px 12px;padding:16px 0;border-bottom:1px solid var(--rule)}
+.steps li::before{content:counter(st);font:700 1.7rem/1 var(--display);color:var(--muted);grid-row:span 2}
+.steps h4{font:600 1.1rem/1.25 var(--display)}
+.steps p{font-size:.95rem;max-width:64ch;grid-column:2}
+
+/* Erros comuns */
+.errs{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:0 40px;border-top:1px solid var(--rule)}
+.errs div{padding:16px 16px 16px 0;border-bottom:1px solid var(--rule);display:flex;flex-direction:column;gap:4px}
+.errs h4{font:600 1.05rem/1.25 var(--display)}
+.errs p{font-size:.92rem}
+.errs .fix{color:var(--muted)}
+.errs .fix b{color:var(--ink);font-weight:600}
+
+/* Checklist */
+.check{list-style:none;padding:0;gap:0;max-width:none;border:1px solid var(--rule);background:var(--surface)}
+.check li{border-bottom:1px solid var(--rule)}
+.check li:last-child{border-bottom:0}
+.check label{display:grid;grid-template-columns:22px minmax(0,1fr);gap:12px;padding:11px 16px;cursor:pointer;font-size:.94rem;align-items:start}
+.check input{width:18px;height:18px;margin:3px 0 0;accent-color:var(--c)}
+.check input:checked + span{color:var(--muted);text-decoration:line-through}
+.bar{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;font:400 .82rem var(--mono);color:var(--muted)}
+.bar b{color:var(--ink);font-weight:500}
+
+/* Exercício */
+.quiz{display:flex;flex-direction:column;gap:0;border:1px solid var(--rule);background:var(--surface)}
+.q{display:grid;grid-template-columns:minmax(0,1fr);gap:10px;padding:14px 16px;border-bottom:1px solid var(--rule)}
+.q:last-child{border-bottom:0}
+@media (min-width:720px){.q{grid-template-columns:minmax(0,1fr) auto;align-items:center}}
+.q p{font-size:.95rem}
+.q .why{grid-column:1/-1;font-size:.86rem;color:var(--muted)}
+.q .why b{font-weight:600}
+.q .why.ok b{color:var(--good)} .q .why.no b{color:var(--bad)}
+.opts{display:flex;gap:6px}
+.opts button{width:40px;height:40px;border:1.5px solid var(--rule);background:var(--surface);color:var(--ink);font:700 1.1rem/1 var(--display);cursor:pointer;border-radius:0}
+.opts button:hover:not(:disabled){border-color:var(--ink)}
+.opts button:disabled{cursor:default;opacity:.45}
+.opts button.right{background:var(--good-tint);border-color:var(--good);color:var(--good);opacity:1}
+.opts button.wrong{background:var(--bad-tint);border-color:var(--bad);color:var(--bad);opacity:1}
+.btn{border:1.5px solid var(--ink);background:transparent;color:var(--ink);font:500 .82rem var(--mono);padding:7px 14px;cursor:pointer;border-radius:0}
+.btn:hover{background:var(--ink);color:var(--ground)}
+
+/* Glossário */
+.gloss{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:0 40px;border-top:1px solid var(--rule)}
+.gloss div{padding:12px 0;border-bottom:1px solid var(--rule)}
+.gloss dt{font:600 1.02rem/1.3 var(--display)}
+.gloss dd{margin:2px 0 0;font-size:.9rem;color:var(--muted)}
+footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);font-size:.84rem;color:var(--muted);max-width:72ch}
+
+.quiz .opts{flex-wrap:wrap}
+.quiz .opts button{width:auto;min-width:40px;padding:0 11px;font-size:1rem}
+@media (min-width:720px){.q{grid-template-columns:minmax(0,1fr) auto}}
+</style>
+</head>
+<body>
+<div class="page" lang="pt-BR">
+
+<header class="mast">
+  <div class="tiles" aria-hidden="true"><span class="p">S</span><span class="d">A</span><span class="c">R</span></div>
+  <h1>Avaliação de fornecedores na prática</h1>
+  <p class="lead">Um guia de estudo para decidir quem pode fornecer, controlar o que chega, medir o desempenho de cada fornecedor e decidir, com dados, quem continua.</p>
+  <ul class="meta">
+    <li>Treinamento autoinstrucional</li>
+    <li>13 módulos</li>
+    <li>Leitura de cerca de 50 minutos</li>
+    <li>3 exemplos resolvidos e 2 exercícios</li>
+  </ul>
+</header>
+
+<div class="layout">
+
+<nav class="toc" aria-label="Sumário">
+  <h2>Sumário</h2>
+  <ol>
+    <li><a href="#o-que-e">O que é</a></li>
+    <li><a href="#quando">Quando usar</a></li>
+    <li><a href="#como">Como construir</a></li>
+    <li><a href="#homologacao">A homologação</a></li>
+    <li><a href="#desempenho">O índice de desempenho</a></li>
+    <li><a href="#exemplos">Exemplos resolvidos</a></li>
+    <li><a href="#leitura">Ler a carteira de fornecedores</a></li>
+    <li><a href="#erros">Erros comuns</a></li>
+    <li><a href="#ferramentas">A avaliação e outras ferramentas</a></li>
+    <li><a href="#iso">Nas normas ISO</a></li>
+    <li><a href="#reuniao">A reunião de avaliação</a></li>
+    <li><a href="#pratique">Pratique</a></li>
+    <li><a href="#planilha">A planilha de apoio</a></li>
+    <li><a href="#glossario">Glossário</a></li>
+  </ol>
+</nav>
+
+<main>
+
+<!-- ============================ MÓDULO 1 ============================ -->
+<section id="o-que-e">
+  <p class="eyebrow">Módulo 1</p>
+  <h2>O que é</h2>
+  <p>O que a organização compra entra no que ela entrega. Um lote de resina fora da especificação vira embalagem defeituosa; um queijo que chega atrasado vira pizza que não sai. A ISO 9001 chama de <strong>provedor externo</strong> quem fornece produto, serviço ou um processo inteiro, e pede que a organização controle esses fornecimentos na medida do efeito que eles têm sobre o cliente.</p>
+  <p>A avaliação de fornecedores é o conjunto de três decisões, tomadas com dados: quem pode fornecer, como o que chega é controlado e quem continua fornecendo. As letras do título são as três etapas: <span class="k p">S</span> selecionar, <span class="k d">A</span> avaliar e <span class="k c">R</span> reavaliar.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 214" role="img" aria-label="O ciclo do fornecedor, em quatro etapas. Selecionar: Definir o que é crítico e homologar quem pode fornecer. Controlar: Pedido com os requisitos, e conferência no recebimento. Avaliar: Medir o desempenho do período: qualidade, prazo e atendimento. Reavaliar: Decidir pela classe: manter, plano de ação ou desqualificar. Da reavaliação, o ciclo volta ao controle, ou termina na desqualificação.">
+        <defs><marker id="a1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker><marker id="a1m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah-mu" d="M0 0 L10 5 L0 10 z"/></marker></defs>
+        <rect class="bx-p" x="10" y="20" width="200" height="120"/>
+        <text class="mono mu" x="24" y="42" font-size="10">1 · S</text>
+        <text class="b" x="24" y="66" font-size="13">Selecionar</text>
+        <text x="24" y="90" font-size="11">Definir o que é crítico e</text>
+        <text x="24" y="105" font-size="11">homologar quem pode fornecer.</text>
+        <line class="ln" x1="211" y1="80" x2="228" y2="80" marker-end="url(#a1)"/>
+        <rect class="bx" x="230" y="20" width="200" height="120"/>
+        <text class="mono mu" x="244" y="42" font-size="10">2</text>
+        <text class="b" x="244" y="66" font-size="13">Controlar</text>
+        <text x="244" y="90" font-size="11">Pedido com os requisitos, e</text>
+        <text x="244" y="105" font-size="11">conferência no recebimento.</text>
+        <line class="ln" x1="431" y1="80" x2="448" y2="80" marker-end="url(#a1)"/>
+        <rect class="bx-d" x="450" y="20" width="200" height="120"/>
+        <text class="mono mu" x="464" y="42" font-size="10">3 · A</text>
+        <text class="b" x="464" y="66" font-size="13">Avaliar</text>
+        <text x="464" y="90" font-size="11">Medir o desempenho do período:</text>
+        <text x="464" y="105" font-size="11">qualidade, prazo e</text>
+        <text x="464" y="120" font-size="11">atendimento.</text>
+        <line class="ln" x1="651" y1="80" x2="668" y2="80" marker-end="url(#a1)"/>
+        <rect class="bx-c" x="670" y="20" width="200" height="120"/>
+        <text class="mono mu" x="684" y="42" font-size="10">4 · R</text>
+        <text class="b" x="684" y="66" font-size="13">Reavaliar</text>
+        <text x="684" y="90" font-size="11">Decidir pela classe: manter,</text>
+        <text x="684" y="105" font-size="11">plano de ação ou</text>
+        <text x="684" y="120" font-size="11">desqualificar.</text>
+        <path class="ln-mu dash" d="M770.0 142 V172 H330.0 V146" marker-end="url(#a1m)"/>
+        <text class="mu" x="450" y="166" font-size="11" text-anchor="middle">quem continua volta ao controle; quem não continua sai da lista</text>
+        <text x="450" y="204" font-size="11.5" text-anchor="middle">Os dados da avaliação nascem no controle: sem registro no recebimento, a avaliação é opinião.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 1.</b> O ciclo do fornecedor. A homologação abre a porta; a avaliação decide se ela continua aberta. O controle do recebimento, no meio, é o que gera os dados da avaliação.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Tipo de provedor externo</th><th style="width:38%">O que é</th><th>Exemplo</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Produto</strong></td><td>Material ou componente que entra no produto, ou que a organização revende.</td><td>Resina, queijo, caixas, tintas.</td></tr>
+        <tr><td><strong>Serviço</strong></td><td>Trabalho feito por terceiros, que afeta o produto ou o processo.</td><td>Transporte, manutenção, ensaio de laboratório, revisão das motos.</td></tr>
+        <tr><td><strong>Processo terceirizado</strong></td><td>Uma etapa do próprio processo, feita fora, que continua sob a responsabilidade da organização.</td><td>Usinagem de moldes, impressão, entrega por aplicativo.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Os três tipos entram no mesmo ciclo. O que muda é o controle: um produto se confere no recebimento; um serviço se confere no resultado; um processo terceirizado exige que a organização defina o que vai conferir, e quando, como se fosse dela.</p>
+</section>
+
+<!-- ============================ MÓDULO 2 ============================ -->
+<section id="quando">
+  <p class="eyebrow">Módulo 2</p>
+  <h2>Quando usar</h2>
+  <p>Nem todo fornecedor precisa do mesmo controle. A norma pede que o tipo e a extensão do controle dependam do efeito que o fornecimento tem sobre o produto e sobre o cliente. O primeiro trabalho é separar o que é crítico do que não é.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 340" role="img" aria-label="Quando o fornecedor é crítico, em quatro quadrantes. Eixo horizontal: efeito no produto ou no cliente, de baixo a alto. Eixo vertical: facilidade de substituir, de muitos fornecedores a fornecedor único. Efeito baixo e muitos fornecedores: não crítico, controle mínimo. Efeito alto e muitos fornecedores: crítico, homologar e avaliar. Efeito baixo e fornecedor único: acompanhar o risco de falta. Efeito alto e fornecedor único: crítico e estratégico, homologar, avaliar e formar o segundo fornecedor.">
+        <text class="mono mu" x="525" y="330" font-size="10" text-anchor="middle">EFEITO NO PRODUTO OU NO CLIENTE</text>
+        <text class="mu" x="170" y="330" font-size="11">baixo</text><text class="mu" x="880" y="330" font-size="11" text-anchor="end">alto</text>
+        <text class="mono mu" x="26" y="170" font-size="10" text-anchor="middle" transform="rotate(-90 26 170)">SUBSTITUIÇÃO</text>
+        <g font-size="11.5">
+          <rect class="bx" x="160" y="20" width="360" height="140"/>
+          <text class="mono mu" x="176" y="42" font-size="10">FORNECEDOR ÚNICO · EFEITO BAIXO</text>
+          <text class="b" x="176" y="68" font-size="13">Acompanhar o risco de falta</text>
+          <text x="176" y="96">Segundo fornecedor ou estoque de segurança.</text>
+          <text class="mu" x="176" y="118">Ex.: gás de cozinha, paletes.</text>
+
+          <rect class="bx-ink" x="530" y="20" width="360" height="140"/>
+          <text class="mono t-ground" x="546" y="42" font-size="10">FORNECEDOR ÚNICO · EFEITO ALTO</text>
+          <text class="b t-ground" x="546" y="68" font-size="13">Crítico e estratégico</text>
+          <text class="t-ground" x="546" y="96">Homologar, avaliar e formar o segundo fornecedor.</text>
+          <text class="t-ground" x="546" y="118">Ex.: resina, queijo.</text>
+
+          <rect class="bx" x="160" y="170" width="360" height="140"/>
+          <text class="mono mu" x="176" y="192" font-size="10">MUITOS FORNECEDORES · EFEITO BAIXO</text>
+          <text class="b" x="176" y="218" font-size="13">Não crítico</text>
+          <text x="176" y="246">Cadastro e nota fiscal. Sem avaliação formal.</text>
+          <text class="mu" x="176" y="268">Ex.: material de escritório, caixas de pizza.</text>
+
+          <rect class="bx" x="530" y="170" width="360" height="140"/>
+          <text class="mono mu" x="546" y="192" font-size="10">MUITOS FORNECEDORES · EFEITO ALTO</text>
+          <text class="b" x="546" y="218" font-size="13">Crítico</text>
+          <text x="546" y="246">Homologar, controlar o recebimento e avaliar.</text>
+          <text class="mu" x="546" y="268">Ex.: tintas, transporte, farinha.</text>
+        </g>
+        <text class="mu" x="60" y="90" font-size="11" text-anchor="middle">fornecedor</text><text class="mu" x="60" y="105" font-size="11" text-anchor="middle">único</text>
+        <text class="mu" x="60" y="240" font-size="11" text-anchor="middle">muitos</text><text class="mu" x="60" y="255" font-size="11" text-anchor="middle">fornecedores</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 2.</b> A criticidade em quatro quadrantes. O efeito no produto define se o fornecedor é avaliado. A dificuldade de substituir define se, além disso, ele é um risco.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:28%">Momento</th><th style="width:36%">O que fazer</th><th>Resultado</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Implantação do sistema</strong></td><td>Classificar os itens e serviços, homologar os fornecedores críticos e definir a avaliação.</td><td>O requisito 8.4 atendido com o que a compra já faz.</td></tr>
+        <tr><td><strong>Fornecedor novo</strong></td><td>Homologar antes do primeiro pedido, com os critérios do módulo 4.</td><td>Ninguém fornece item crítico sem homologação.</td></tr>
+        <tr><td><strong>Fim do período</strong></td><td>Avaliar o desempenho de todos os fornecedores críticos, com os dados do recebimento.</td><td>Classe e conduta de cada um, comunicadas ao fornecedor.</td></tr>
+        <tr><td><strong>Ocorrência grave</strong></td><td>Registrar, tratar e, se for o caso, reavaliar fora do período.</td><td>O problema não espera seis meses para virar decisão.</td></tr>
+        <tr><td><strong>Risco de fornecedor único</strong></td><td>Homologar o segundo fornecedor antes de precisar dele.</td><td>A produção não para por falta de material.</td></tr>
+        <tr><td><strong>Preparação da auditoria</strong></td><td>Conferir se todo fornecedor crítico tem homologação válida e avaliação no período.</td><td>Evidência pronta para a amostra do auditor.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 3 ============================ -->
+<section id="como">
+  <p class="eyebrow">Módulo 3</p>
+  <h2>Como construir</h2>
+  <p>O sistema de avaliação de fornecedores tem quatro peças: a lista do que é crítico, os critérios de homologação, o controle do recebimento e o índice de desempenho. As duas primeiras se fazem uma vez. As outras duas funcionam todo dia e todo semestre.</p>
+
+  <h3>Passo a passo</h3>
+  <ol class="steps">
+    <li><h4>Classifique o que compra</h4><p>Item por item, serviço por serviço: crítico ou não crítico, pelo efeito no produto e no cliente. Marque também o que tem fornecedor único.</p></li>
+    <li><h4>Escreva os critérios de homologação</h4><p>O que um fornecedor precisa mostrar antes do primeiro pedido. Os mesmos critérios para todos os fornecedores do mesmo tipo.</p></li>
+    <li><h4>Homologue os fornecedores críticos</h4><p>Os atuais e os novos. Registre o resultado, a data e a validade. Quem não passa não recebe pedido de item crítico.</p></li>
+    <li><h4>Informe os requisitos no pedido</h4><p>Especificação, quantidade, prazo, condição de aceitação. O fornecedor só pode ser cobrado pelo que foi pedido por escrito.</p></li>
+    <li><h4>Controle o recebimento</h4><p>Confira o que chega contra o pedido e registre: lote aceito ou recusado, entrega no prazo ou atrasada. É daqui que saem os dados da avaliação.</p></li>
+    <li><h4>Defina o índice</h4><p>Qualidade, prazo e atendimento, com pesos. Uma classe por faixa e uma conduta por classe. Comunique a regra aos fornecedores.</p></li>
+    <li><h4>Avalie no período</h4><p>A cada semestre, ou no intervalo definido, calcule o índice de cada fornecedor crítico e registre a classe.</p></li>
+    <li><h4>Decida e comunique</h4><p>Manter, pedir plano de ação, suspender ou desqualificar. O fornecedor recebe o resultado, e o sistema de compras reflete a decisão.</p></li>
+  </ol>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Papel</th><th style="width:26%">Quem costuma ser</th><th>O que faz</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Compras</strong></td><td>Comprador ou gerente de suprimentos.</td><td>Homologa, emite o pedido com os requisitos, avalia e comunica o resultado ao fornecedor.</td></tr>
+        <tr><td><strong>Recebimento</strong></td><td>Almoxarifado, ou quem recebe o serviço.</td><td>Confere o que chega, registra lote e prazo, e abre a ocorrência quando algo falha.</td></tr>
+        <tr><td><strong>Qualidade ou área técnica</strong></td><td>Laboratório, engenharia, líder do processo.</td><td>Define a especificação, avalia a amostra na homologação e decide sobre o lote recusado.</td></tr>
+        <tr><td><strong>Quem decide</strong></td><td>Gerente de suprimentos, ou a direção.</td><td>Aprova a homologação, o plano de ação e a desqualificação.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note">
+    <h4>Processo terceirizado</h4>
+    <p>Quando uma etapa do processo é feita fora, o controle não termina na homologação. A organização define o que confere no resultado, com que frequência, e o que o terceiro precisa registrar. Na indústria de embalagens, a usinagem de moldes é terceirizada: cada molde novo é medido na chegada, e a ferramentaria envia o relatório dimensional junto com a peça.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 4 ============================ -->
+<section id="homologacao">
+  <p class="eyebrow">Módulo 4</p>
+  <h2>A homologação</h2>
+  <p>Homologar é decidir, antes do primeiro pedido, que o fornecedor tem condições de entregar o que se pede. A decisão usa critérios escritos e evidência, e vale por um prazo. Um fornecedor que atende a todos os critérios pode ser um mau fornecedor depois: por isso existe a avaliação de desempenho.</p>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:22%">Critério</th><th style="width:38%">O que se confere</th><th>Evidência</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Documentos legais</strong></td><td>Empresa regular, com as licenças da atividade.</td><td>Cadastro, certidões, licença ambiental quando exigida.</td></tr>
+        <tr><td><strong>Capacidade técnica</strong></td><td>Consegue fazer o que se pede, na quantidade e no prazo.</td><td>Visita, portfólio, referências de clientes.</td></tr>
+        <tr><td><strong>Qualidade do produto</strong></td><td>A amostra ou o lote piloto atende à especificação.</td><td>Laudo de ensaio, inspeção de recebimento.</td></tr>
+        <tr><td><strong>Sistema de gestão</strong></td><td>Tem controle do próprio processo.</td><td>Certificado ISO 9001, ou auditoria de segunda parte.</td></tr>
+        <tr><td><strong>Condições comerciais</strong></td><td>Preço, prazo de pagamento e de entrega compatíveis.</td><td>Proposta e contrato.</td></tr>
+        <tr><td><strong>Segurança e meio ambiente</strong></td><td>Cumpre o que a lei e o cliente exigem.</td><td>Fichas de segurança, programa de gestão de resíduos.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 300" role="img" aria-label="A ficha de homologação. No cabeçalho: fornecedor, o que fornece, data e quem avaliou. No corpo, os seis critérios, cada um com o resultado, atende, não atende ou pendente, e a evidência. No rodapé, a decisão: homologado, com validade, ou não homologado.">
+        <rect class="bx" x="80" y="16" width="740" height="268"/>
+        <rect class="hd-ink" x="80" y="16" width="740" height="52"/>
+        <g font-size="11">
+          <text class="mono t-ground" x="98" y="36" font-size="10">FORNECEDOR</text><text class="b t-ground" x="98" y="56" font-size="13">F-13 · Resinas Atlântico · resina de polietileno</text>
+          <text class="mono t-ground" x="620" y="36" font-size="10">DATA · AVALIADORES</text><text class="t-ground" x="620" y="56" font-size="11.5">05/03/2027 · Compras e Qualidade</text>
+        </g>
+        <rect class="cell" x="98" y="84" width="704" height="26" style="stroke:none"/>
+        <text class="b" x="108" y="101" font-size="11">Documentos legais</text>
+        <rect class="f1" x="300" y="89" width="52" height="16"/>
+        <text class="b on" x="326" y="101" font-size="10" text-anchor="middle">Atende</text>
+        <text class="mu" x="380" y="101" font-size="10.5">Cadastro, certidões e licença de operação válidas até 2028.</text>
+        <rect class="band" x="98" y="112" width="704" height="26" style="stroke:none"/>
+        <text class="b" x="108" y="129" font-size="11">Capacidade técnica</text>
+        <rect class="f1" x="300" y="117" width="52" height="16"/>
+        <text class="b on" x="326" y="129" font-size="10" text-anchor="middle">Atende</text>
+        <text class="mu" x="380" y="129" font-size="10.5">Visita em 24/02/2027: duas linhas de extrusão, estoque para 20 dias de consumo.</text>
+        <rect class="cell" x="98" y="140" width="704" height="26" style="stroke:none"/>
+        <text class="b" x="108" y="157" font-size="11">Qualidade do produto</text>
+        <rect class="f2" x="300" y="145" width="62" height="16"/>
+        <text class="b on2" x="331" y="157" font-size="10" text-anchor="middle">Pendente</text>
+        <text class="mu" x="380" y="157" font-size="10.5">Amostra de 500 kg em ensaio no laboratório externo. Laudo previsto para [...]</text>
+        <rect class="band" x="98" y="168" width="704" height="26" style="stroke:none"/>
+        <text class="b" x="108" y="185" font-size="11">Sistema de gestão</text>
+        <rect class="f1" x="300" y="173" width="52" height="16"/>
+        <text class="b on" x="326" y="185" font-size="10" text-anchor="middle">Atende</text>
+        <text class="mu" x="380" y="185" font-size="10.5">Certificado ISO 9001 válido até 11/2028.</text>
+        <rect class="cell" x="98" y="196" width="704" height="26" style="stroke:none"/>
+        <text class="b" x="108" y="213" font-size="11">Condições comerciais</text>
+        <rect class="f1" x="300" y="201" width="52" height="16"/>
+        <text class="b on" x="326" y="213" font-size="10" text-anchor="middle">Atende</text>
+        <text class="mu" x="380" y="213" font-size="10.5">Preço 3% acima do atual, com prazo de entrega de 7 dias.</text>
+        <rect class="band" x="98" y="224" width="704" height="26" style="stroke:none"/>
+        <text class="b" x="108" y="241" font-size="11">Segurança e meio ambiente</text>
+        <rect class="f1" x="300" y="229" width="52" height="16"/>
+        <text class="b on" x="326" y="241" font-size="10" text-anchor="middle">Atende</text>
+        <text class="mu" x="380" y="241" font-size="10.5">Fichas de segurança do produto recebidas.</text>
+        <rect class="band" x="80" y="256" width="740" height="28"/>
+        <text class="mono mu" x="98" y="274" font-size="10">DECISÃO</text>
+        <text class="b" x="170" y="274" font-size="11.5">Em homologação: aguarda o laudo do ensaio e o lote piloto. Validade, quando homologado: 24 meses.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 3.</b> Como a homologação se registra: cada critério com o resultado e a evidência, uma decisão e uma validade. A planilha de apoio tem essa ficha na aba Homologação.</figcaption>
+  </figure>
+
+  <div class="pair">
+    <div class="box">
+      <h4>Homologação bem feita</h4>
+      <ul>
+        <li>Critérios iguais para todos os fornecedores do mesmo tipo.</li>
+        <li>Evidência para cada critério, e não só a palavra do vendedor.</li>
+        <li>Amostra ou lote piloto para item crítico.</li>
+        <li>Validade definida, com renovação pela avaliação de desempenho.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h4>Homologação mal feita</h4>
+      <ul>
+        <li>“Cadastrado no sistema” tratado como homologado.</li>
+        <li>Preço como único critério.</li>
+        <li>Certificado ISO 9001 como substituto da amostra.</li>
+        <li>Homologação feita depois do primeiro pedido, para regularizar.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="note">
+    <h4>Sobre a validade</h4>
+    <p>Neste material, a homologação vale por dois anos, e é renovada sem nova ficha quando o fornecedor fica nas classes A ou B nas avaliações do período. Fornecedor reprovado perde a homologação. Os prazos são uma convenção: a norma pede a reavaliação, e deixa o intervalo para a organização.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 5 ============================ -->
+<section id="desempenho">
+  <p class="eyebrow">Módulo 5</p>
+  <h2>O índice de desempenho</h2>
+  <p>O índice resume, em um número, o que o fornecedor entregou no período. Ele junta três medidas que o recebimento já registra: a qualidade do que chegou, o prazo em que chegou e a nota do comprador para o atendimento. Os pesos dizem o que importa mais.</p>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:20%">Componente</th><th style="width:10%">Peso</th><th style="width:40%">Como se mede</th><th>De onde vem o dado</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Qualidade</strong></td><td class="num">50%</td><td>Lotes ou serviços aceitos, sobre os recebidos.</td><td>Registro de recebimento: lotes aceitos e recusados.</td></tr>
+        <tr><td><strong>Prazo</strong></td><td class="num">30%</td><td>Entregas no prazo, sobre as entregas.</td><td>Registro de recebimento: data combinada e data da entrega.</td></tr>
+        <tr><td><strong>Atendimento</strong></td><td class="num">20%</td><td>Nota do comprador, de 0 a 10: resposta, documentação, flexibilidade.</td><td>Nota dada pelo comprador no fim do período.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 236" role="img" aria-label="O cálculo do índice para o fornecedor de caixas de papelão. Qualidade: 25 lotes aceitos de 30, 83%, com peso 50, vale 41,7 pontos. Prazo: 19 entregas no prazo de 30, 63%, com peso 30, vale 19,0 pontos. Atendimento: nota 5, 50%, com peso 20, vale 10,0 pontos. Índice: 70,7, classe C, com plano de ação.">
+        <defs><marker id="a4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker></defs>
+        <rect class="bx-p" x="10" y="20" width="196" height="120"/>
+        <text class="mono mu" x="24" y="42" font-size="10">QUALIDADE · PESO 50</text>
+        <text x="24" y="68" font-size="11.5">25 de 30 lotes aceitos</text>
+        <text class="mu" x="24" y="90" font-size="11">83% × 50</text>
+        <text class="b" x="24" y="124" font-size="20">41,7</text>
+        <text class="b" x="212" y="86" font-size="18" text-anchor="middle">+</text>
+        <rect class="bx-d" x="218" y="20" width="196" height="120"/>
+        <text class="mono mu" x="232" y="42" font-size="10">PRAZO · PESO 30</text>
+        <text x="232" y="68" font-size="11.5">19 de 30 entregas no prazo</text>
+        <text class="mu" x="232" y="90" font-size="11">63% × 30</text>
+        <text class="b" x="232" y="124" font-size="20">19,0</text>
+        <text class="b" x="420" y="86" font-size="18" text-anchor="middle">+</text>
+        <rect class="bx-c" x="426" y="20" width="196" height="120"/>
+        <text class="mono mu" x="440" y="42" font-size="10">ATENDIMENTO · PESO 20</text>
+        <text x="440" y="68" font-size="11.5">nota 5 de 10</text>
+        <text class="mu" x="440" y="90" font-size="11">50% × 20</text>
+        <text class="b" x="440" y="124" font-size="20">10,0</text>
+        <text class="b" x="638" y="86" font-size="18" text-anchor="middle">=</text>
+        <rect class="bx-ink" x="654" y="20" width="236" height="120"/>
+        <text class="mono t-ground" x="668" y="42" font-size="10">ÍNDICE DE DESEMPENHO</text>
+        <text class="b t-ground" x="668" y="90" font-size="30">70,7</text>
+        <text class="t-ground" x="668" y="124" font-size="11.5">Classe C · Com plano de ação</text>
+        <text x="450" y="176" font-size="11.5" text-anchor="middle">Pedir plano de ação, com prazo. Reavaliar no período seguinte.</text>
+        <text class="mu" x="450" y="200" font-size="11" text-anchor="middle">Índice = 50 × qualidade + 30 × prazo + 20 × atendimento, com os três em percentual.</text>
+        <text class="mu" x="450" y="220" font-size="11" text-anchor="middle">O prazo, e não a qualidade, é o que derruba este fornecedor: é sobre logística que a conversa precisa ser.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 4.</b> O cálculo do índice, com o exemplo do fornecedor de caixas de papelão da indústria. O índice, os pesos e as classes são uma convenção deste material.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:8%">Classe</th><th style="width:14%">Índice</th><th style="width:22%">Nome</th><th>Conduta</th></tr></thead>
+      <tbody>
+        <tr><td><span class="cl A" title="Classe A">A</span></td><td>90 ou mais</td><td><strong>Preferencial</strong></td><td>Manter. Pode ter menos inspeção no recebimento.</td></tr>
+        <tr><td><span class="cl B" title="Classe B">B</span></td><td>de 75 a 89,9</td><td><strong>Aprovado</strong></td><td>Manter e acompanhar. Comunicar o resultado ao fornecedor.</td></tr>
+        <tr><td><span class="cl C" title="Classe C">C</span></td><td>de 60 a 74,9</td><td><strong>Com plano de ação</strong></td><td>Pedir plano de ação, com prazo. Reavaliar no período seguinte.</td></tr>
+        <tr><td><span class="cl D" title="Classe D">D</span></td><td>abaixo de 60</td><td><strong>Reprovado</strong></td><td>Suspender as compras até um plano aprovado, ou desqualificar.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note">
+    <h4>Sobre o índice</h4>
+    <p>Índices com pesos parecem exatos e não são: o fornecedor de nota 74,9 e o de 75,1 são iguais. Use as classes para decidir, e os três componentes para conversar com o fornecedor. Um índice de 80 com qualidade de 100% e prazo de 50% pede uma conversa sobre logística, e não sobre produto.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 6 ============================ -->
+<section id="exemplos">
+  <p class="eyebrow">Módulo 6</p>
+  <h2>Exemplos resolvidos</h2>
+  <p>Duas avaliações de desempenho e uma homologação. As organizações são as dos outros estudos da série. Os dois primeiros exemplos também estão preenchidos na planilha de apoio. Os dados são ilustrativos e foram criados para este treinamento.</p>
+
+  <h3>Exemplo 1. Os doze fornecedores críticos da indústria</h3>
+  <dl class="ficha">
+    <div><dt>Organização</dt><dd>Indústria de embalagens plásticas · Suprimentos</dd></div>
+    <div><dt>Data e período</dt><dd>11/12/2026. Julho a dezembro de 2026</dd></div>
+    <div><dt>Quem avaliou</dt><dd>Comprador sênior, com o Gerente de Suprimentos e a Qualidade</dd></div>
+    <div><dt>Origem</dt><dd>Constatação nº 2 da auditoria 2026-07: cinco fornecedores críticos sem avaliação em 2026. Avaliação semestral, PR-SUP-02 rev. 2.</dd></div>
+  </dl>
+  <div class="tbl">
+    <table class="aud">
+      <caption>Cadastro e homologação</caption>
+      <thead><tr><th>Código</th><th style="width:20%">Fornecedor</th><th style="width:24%">O que fornece</th><th style="width:14%">Tipo</th><th style="width:10%">Criticidade</th><th class="c">Homologado em</th><th class="c">Válida até</th><th>Situação</th></tr></thead>
+      <tbody>
+        <tr><td class="n">F-01</td><td><strong>Polímeros do Vale</strong></td><td>Resina de polietileno</td><td>Produto</td><td>Crítico</td><td class="c">10/03/2025</td><td class="c">03/2027</td><td><span class="chip s1">Homologado</span></td></tr>
+        <tr><td class="n">F-02</td><td><strong>Petroquímica Sul</strong></td><td>Resina de polipropileno</td><td>Produto</td><td>Crítico</td><td class="c">02/06/2025</td><td class="c">06/2027</td><td><span class="chip s1">Homologado</span></td></tr>
+        <tr><td class="n">F-03</td><td><strong>Colorfix</strong></td><td>Masterbatch e pigmentos</td><td>Produto</td><td>Crítico</td><td class="c">18/11/2024</td><td class="c">11/2026</td><td><span class="chip s2">Homologação vencida</span></td></tr>
+        <tr><td class="n">F-04</td><td><strong>Tintas Gráficas Ltda.</strong></td><td>Tintas de impressão</td><td>Produto</td><td>Crítico</td><td class="c">24/02/2025</td><td class="c">02/2027</td><td><span class="chip s1">Homologado</span></td></tr>
+        <tr><td class="n">F-05</td><td><strong>Cliché Print</strong></td><td>Clichês e matrizes</td><td>Produto</td><td>Crítico</td><td class="c">11/08/2025</td><td class="c">08/2027</td><td><span class="chip s1">Homologado</span></td></tr>
+        <tr><td class="n">F-06</td><td><strong>Filmes Técnicos</strong></td><td>Filme para laminação</td><td>Produto</td><td>Crítico</td><td class="c">20/01/2026</td><td class="c">01/2028</td><td><span class="chip s1">Homologado</span></td></tr>
+        <tr><td class="n">F-07</td><td><strong>Papelão Oeste</strong></td><td>Caixas de papelão</td><td>Produto</td><td>Crítico</td><td class="c">30/09/2024</td><td class="c">09/2026</td><td><span class="chip s2">Homologação vencida</span></td></tr>
+        <tr><td class="n">F-08</td><td><strong>Paletes Rápido</strong></td><td>Paletes de madeira</td><td>Produto</td><td>Crítico</td><td class="c">14/10/2024</td><td class="c">10/2026</td><td><span class="chip s2">Documentos pendentes</span></td></tr>
+        <tr><td class="n">F-09</td><td><strong>Transportes Horizonte</strong></td><td>Transporte de produto acabado</td><td>Serviço</td><td>Crítico</td><td class="c">05/05/2025</td><td class="c">05/2027</td><td><span class="chip s1">Homologado</span></td></tr>
+        <tr><td class="n">F-10</td><td><strong>Mantec</strong></td><td>Manutenção de extrusoras</td><td>Serviço</td><td>Crítico</td><td class="c">22/04/2025</td><td class="c">04/2027</td><td><span class="chip s1">Homologado</span></td></tr>
+        <tr><td class="n">F-11</td><td><strong>Laboratório Analítica</strong></td><td>Ensaios de migração e espessura</td><td>Serviço</td><td>Crítico</td><td class="c">08/07/2025</td><td class="c">07/2027</td><td><span class="chip s1">Homologado</span></td></tr>
+        <tr><td class="n">F-12</td><td><strong>Ferramentaria Precisa</strong></td><td>Usinagem de moldes</td><td>Processo terceirizado</td><td>Crítico</td><td class="c">13/01/2025</td><td class="c">01/2027</td><td><span class="chip s1">Homologado</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="tbl">
+    <table class="aud">
+      <caption>Avaliação de desempenho · julho a dezembro de 2026</caption>
+      <thead><tr><th>Código</th><th style="width:16%">Fornecedor</th><th class="c">Lotes aceitos</th><th class="c">Qualidade</th><th class="c">Entregas no prazo</th><th class="c">Prazo</th><th class="c">Nota</th><th class="c">Índice</th><th class="c">Classe</th><th>Observação e conduta</th></tr></thead>
+      <tbody>
+        <tr><td class="n">F-01</td><td><strong>Polímeros do Vale</strong></td><td class="c">26 de 26</td><td class="c">100%</td><td class="c">24 de 26</td><td class="c">92%</td><td class="c">8</td><td class="c"><strong>93,7</strong></td><td class="c"><span class="cl A" title="Classe A">A</span></td><td>Fornecedor único da resina. Segundo fornecedor em homologação. <small>Manter. Pode ter menos inspeção no recebimento.</small></td></tr>
+        <tr><td class="n">F-02</td><td><strong>Petroquímica Sul</strong></td><td class="c">14 de 14</td><td class="c">100%</td><td class="c">14 de 14</td><td class="c">100%</td><td class="c">9</td><td class="c"><strong>98,0</strong></td><td class="c"><span class="cl A" title="Classe A">A</span></td><td><small>Manter. Pode ter menos inspeção no recebimento.</small></td></tr>
+        <tr><td class="n">F-03</td><td><strong>Colorfix</strong></td><td class="c">13 de 18</td><td class="c">72%</td><td class="c">15 de 18</td><td class="c">83%</td><td class="c">6</td><td class="c"><strong>73,1</strong></td><td class="c"><span class="cl C" title="Classe C">C</span></td><td>Cinco lotes com tonalidade fora do padrão, devolvidos. Três entregas atrasadas. <small>Pedir plano de ação, com prazo. Reavaliar no período seguinte.</small></td></tr>
+        <tr><td class="n">F-04</td><td><strong>Tintas Gráficas Ltda.</strong></td><td class="c">9 de 9</td><td class="c">100%</td><td class="c">9 de 9</td><td class="c">100%</td><td class="c">9</td><td class="c"><strong>98,0</strong></td><td class="c"><span class="cl A" title="Classe A">A</span></td><td><small>Manter. Pode ter menos inspeção no recebimento.</small></td></tr>
+        <tr><td class="n">F-05</td><td><strong>Cliché Print</strong></td><td class="c">21 de 22</td><td class="c">95%</td><td class="c">20 de 22</td><td class="c">91%</td><td class="c">8</td><td class="c"><strong>91,0</strong></td><td class="c"><span class="cl A" title="Classe A">A</span></td><td><small>Manter. Pode ter menos inspeção no recebimento.</small></td></tr>
+        <tr><td class="n">F-06</td><td><strong>Filmes Técnicos</strong></td><td class="c">11 de 11</td><td class="c">100%</td><td class="c">11 de 11</td><td class="c">100%</td><td class="c">8</td><td class="c"><strong>96,0</strong></td><td class="c"><span class="cl A" title="Classe A">A</span></td><td>Primeira avaliação depois da homologação. <small>Manter. Pode ter menos inspeção no recebimento.</small></td></tr>
+        <tr><td class="n">F-07</td><td><strong>Papelão Oeste</strong></td><td class="c">25 de 30</td><td class="c">83%</td><td class="c">19 de 30</td><td class="c">63%</td><td class="c">5</td><td class="c"><strong>70,7</strong></td><td class="c"><span class="cl C" title="Classe C">C</span></td><td>Onze entregas atrasadas. Caixas úmidas em cinco lotes. <small>Pedir plano de ação, com prazo. Reavaliar no período seguinte.</small></td></tr>
+        <tr><td class="n">F-08</td><td><strong>Paletes Rápido</strong></td><td class="c">8 de 12</td><td class="c">67%</td><td class="c">7 de 12</td><td class="c">58%</td><td class="c">4</td><td class="c"><strong>58,8</strong></td><td class="c"><span class="cl D" title="Classe D">D</span></td><td>Paletes fora da medida e madeira sem tratamento. Licença ambiental vencida. <small>Suspender as compras até um plano aprovado, ou desqualificar.</small></td></tr>
+        <tr><td class="n">F-09</td><td><strong>Transportes Horizonte</strong></td><td class="c">58 de 60</td><td class="c">97%</td><td class="c">55 de 60</td><td class="c">92%</td><td class="c">8</td><td class="c"><strong>91,8</strong></td><td class="c"><span class="cl A" title="Classe A">A</span></td><td>Duas cargas com avaria. <small>Manter. Pode ter menos inspeção no recebimento.</small></td></tr>
+        <tr><td class="n">F-10</td><td><strong>Mantec</strong></td><td class="c">6 de 6</td><td class="c">100%</td><td class="c">5 de 6</td><td class="c">83%</td><td class="c">9</td><td class="c"><strong>93,0</strong></td><td class="c"><span class="cl A" title="Classe A">A</span></td><td>Uma manutenção reprogramada pela produção. <small>Manter. Pode ter menos inspeção no recebimento.</small></td></tr>
+        <tr><td class="n">F-11</td><td><strong>Laboratório Analítica</strong></td><td class="c">15 de 15</td><td class="c">100%</td><td class="c">12 de 15</td><td class="c">80%</td><td class="c">7</td><td class="c"><strong>88,0</strong></td><td class="c"><span class="cl B" title="Classe B">B</span></td><td>Laudos entregues com atraso em três pedidos. <small>Manter e acompanhar. Comunicar o resultado ao fornecedor.</small></td></tr>
+        <tr><td class="n">F-12</td><td><strong>Ferramentaria Precisa</strong></td><td class="c">5 de 5</td><td class="c">100%</td><td class="c">5 de 5</td><td class="c">100%</td><td class="c">8</td><td class="c"><strong>96,0</strong></td><td class="c"><span class="cl A" title="Classe A">A</span></td><td><small>Manter. Pode ter menos inspeção no recebimento.</small></td></tr>
+        <tr class="tot"><td colspan="8">Fornecedores por classe</td><td colspan="2">A: 8 · B: 1 · C: 2 · D: 1</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p><strong>O que observar.</strong> A avaliação de dezembro foi a resposta à constatação nº 2 da <a href="../Auditoria/treinamento-auditoria.html#exemplos">auditoria 2026-07</a>: cinco fornecedores críticos estavam sem avaliação no ano. Feita a avaliação, o quadro apareceu: nove fornecedores nas classes A e B, dois com plano de ação e um reprovado. O fornecedor de paletes junta três problemas, medida, tratamento da madeira e licença vencida, e foi bloqueado no sistema. Os dois de classe C estão também com a homologação vencida: ela só é renovada com o plano de ação aprovado. O fornecedor único de resina tem índice alto, mas continua um risco: o segundo fornecedor está no exemplo 3. Foi este resultado que chegou à <a href="../Analise-Critica/treinamento-analise-critica.html#exemplos">análise crítica</a> de fevereiro, na entrada sobre provedores externos.</p>
+
+  <h3>Exemplo 2. A primeira avaliação da pizzaria</h3>
+  <dl class="ficha">
+    <div><dt>Organização</dt><dd>Pizzaria (loja com salão e delivery)</dd></div>
+    <div><dt>Data e período</dt><dd>15/02/2027. Agosto de 2026 a janeiro de 2027</dd></div>
+    <div><dt>Quem avaliou</dt><dd>Gerente da loja, com o pizzaiolo líder</dd></div>
+    <div><dt>Origem</dt><dd>Decisão da análise crítica de 14/12/2026: avaliar os fornecedores de insumos críticos a cada semestre, com registro.</dd></div>
+  </dl>
+  <div class="tbl">
+    <table class="aud">
+      <caption>Cadastro e homologação</caption>
+      <thead><tr><th>Código</th><th style="width:20%">Fornecedor</th><th style="width:24%">O que fornece</th><th style="width:14%">Tipo</th><th style="width:10%">Criticidade</th><th class="c">Homologado em</th><th class="c">Válida até</th><th>Situação</th></tr></thead>
+      <tbody>
+        <tr><td class="n">P1</td><td><strong>Laticínios Serra</strong></td><td>Queijo muçarela</td><td>Produto</td><td>Crítico</td><td class="c">04/12/2026</td><td class="c">12/2028</td><td><span class="chip s1">Homologado</span></td></tr>
+        <tr><td class="n">P2</td><td><strong>Queijaria do Campo</strong></td><td>Queijo muçarela, segundo fornecedor</td><td>Produto</td><td>Crítico</td><td class="c">20/11/2026</td><td class="c">11/2028</td><td><span class="chip s1">Homologado</span></td></tr>
+        <tr><td class="n">P3</td><td><strong>Moinho Bom Trigo</strong></td><td>Farinha de trigo</td><td>Produto</td><td>Crítico</td><td class="c">04/12/2026</td><td class="c">12/2028</td><td><span class="chip s1">Homologado</span></td></tr>
+        <tr><td class="n">P4</td><td><strong>Conservas Vale Verde</strong></td><td>Molho e tomate pelado</td><td>Produto</td><td>Crítico</td><td class="c">04/12/2026</td><td class="c">12/2028</td><td><span class="chip s1">Homologado</span></td></tr>
+        <tr><td class="n">P5</td><td><strong>Embalagens Rápidas</strong></td><td>Caixas de pizza</td><td>Produto</td><td>Não crítico</td><td class="c">04/12/2026</td><td class="c">12/2028</td><td><span class="chip s1">Homologado</span></td></tr>
+        <tr><td class="n">P6</td><td><strong>Gás Central</strong></td><td>Gás de cozinha</td><td>Produto</td><td>Crítico</td><td class="c">04/12/2026</td><td class="c">12/2028</td><td><span class="chip s2">Documentos pendentes</span></td></tr>
+        <tr><td class="n">P7</td><td><strong>Oficina Duas Rodas</strong></td><td>Revisão mensal das motos</td><td>Serviço</td><td>Crítico</td><td class="c">04/12/2026</td><td class="c">12/2028</td><td><span class="chip s1">Homologado</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="tbl">
+    <table class="aud">
+      <caption>Avaliação de desempenho · agosto de 2026 a janeiro de 2027</caption>
+      <thead><tr><th>Código</th><th style="width:16%">Fornecedor</th><th class="c">Lotes aceitos</th><th class="c">Qualidade</th><th class="c">Entregas no prazo</th><th class="c">Prazo</th><th class="c">Nota</th><th class="c">Índice</th><th class="c">Classe</th><th>Observação e conduta</th></tr></thead>
+      <tbody>
+        <tr><td class="n">P1</td><td><strong>Laticínios Serra</strong></td><td class="c">23 de 24</td><td class="c">96%</td><td class="c">21 de 24</td><td class="c">88%</td><td class="c">7</td><td class="c"><strong>88,2</strong></td><td class="c"><span class="cl B" title="Classe B">B</span></td><td>Três atrasos, um deles no sábado. Um lote devolvido por temperatura. <small>Manter e acompanhar. Comunicar o resultado ao fornecedor.</small></td></tr>
+        <tr><td class="n">P2</td><td><strong>Queijaria do Campo</strong></td><td class="c">8 de 8</td><td class="c">100%</td><td class="c">8 de 8</td><td class="c">100%</td><td class="c">8</td><td class="c"><strong>96,0</strong></td><td class="c"><span class="cl A" title="Classe A">A</span></td><td>Fornece desde novembro. Primeira avaliação. <small>Manter. Pode ter menos inspeção no recebimento.</small></td></tr>
+        <tr><td class="n">P3</td><td><strong>Moinho Bom Trigo</strong></td><td class="c">12 de 12</td><td class="c">100%</td><td class="c">12 de 12</td><td class="c">100%</td><td class="c">9</td><td class="c"><strong>98,0</strong></td><td class="c"><span class="cl A" title="Classe A">A</span></td><td><small>Manter. Pode ter menos inspeção no recebimento.</small></td></tr>
+        <tr><td class="n">P4</td><td><strong>Conservas Vale Verde</strong></td><td class="c">12 de 12</td><td class="c">100%</td><td class="c">11 de 12</td><td class="c">92%</td><td class="c">8</td><td class="c"><strong>93,5</strong></td><td class="c"><span class="cl A" title="Classe A">A</span></td><td><small>Manter. Pode ter menos inspeção no recebimento.</small></td></tr>
+        <tr><td class="n">P5</td><td><strong>Embalagens Rápidas</strong></td><td class="c">6 de 6</td><td class="c">100%</td><td class="c">6 de 6</td><td class="c">100%</td><td class="c">8</td><td class="c"><strong>96,0</strong></td><td class="c"><span class="cl A" title="Classe A">A</span></td><td><small>Manter. Pode ter menos inspeção no recebimento.</small></td></tr>
+        <tr><td class="n">P6</td><td><strong>Gás Central</strong></td><td class="c">26 de 26</td><td class="c">100%</td><td class="c">26 de 26</td><td class="c">100%</td><td class="c">7</td><td class="c"><strong>94,0</strong></td><td class="c"><span class="cl A" title="Classe A">A</span></td><td>Nota fiscal sem o número do contrato em cinco entregas. <small>Manter. Pode ter menos inspeção no recebimento.</small></td></tr>
+        <tr><td class="n">P7</td><td><strong>Oficina Duas Rodas</strong></td><td class="c">5 de 6</td><td class="c">83%</td><td class="c">6 de 6</td><td class="c">100%</td><td class="c">8</td><td class="c"><strong>87,7</strong></td><td class="c"><span class="cl B" title="Classe B">B</span></td><td>Uma revisão refeita: freio com folga. <small>Manter e acompanhar. Comunicar o resultado ao fornecedor.</small></td></tr>
+        <tr class="tot"><td colspan="8">Fornecedores por classe</td><td colspan="2">A: 5 · B: 2 · C: 0 · D: 0</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p><strong>O que observar.</strong> A pizzaria nunca tinha avaliado fornecedores, e a análise crítica decidiu começar pelos insumos críticos. A homologação foi feita de uma vez, em dezembro, com os fornecedores já em uso: cadastro, nota fiscal e uma visita. O laticínio que atrasou três entregas no ano ficou na classe B, e a decisão foi manter os dois fornecedores de queijo, com pedidos alternados. O fornecedor de gás está sem os documentos, e a homologação fica pendente até que ele os envie. As caixas de pizza são o único item não crítico: ficam no cadastro, sem avaliação formal.</p>
+
+  <h3>Exemplo 3. A homologação do segundo fornecedor de resina</h3>
+  <dl class="ficha">
+    <div><dt>Fornecedor</dt><dd>F-13 · Resinas Atlântico · resina de polietileno</dd></div>
+    <div><dt>Data e avaliadores</dt><dd>05/03/2027. Comprador sênior e Coordenador da Qualidade</dd></div>
+    <div><dt>Origem</dt><dd>Risco C1 da matriz de riscos: fornecedor único de resina. Decisão da análise crítica de 18/02/2027: contratar os ensaios externos.</dd></div>
+  </dl>
+  <div class="tbl">
+    <table class="aud">
+      <caption>Ficha de homologação</caption>
+      <thead><tr><th style="width:22%">Critério</th><th style="width:12%">Resultado</th><th>Evidência</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Documentos legais</strong></td><td><span class="chip s1">Atende</span></td><td>Cadastro, certidões e licença de operação válidas até 2028.</td></tr>
+        <tr><td><strong>Capacidade técnica</strong></td><td><span class="chip s1">Atende</span></td><td>Visita em 24/02/2027: duas linhas de extrusão, estoque para 20 dias de consumo.</td></tr>
+        <tr><td><strong>Qualidade do produto</strong></td><td><span class="chip s2">Pendente</span></td><td>Amostra de 500 kg em ensaio no laboratório externo. Laudo previsto para 26/03/2027.</td></tr>
+        <tr><td><strong>Sistema de gestão</strong></td><td><span class="chip s1">Atende</span></td><td>Certificado ISO 9001 válido até 11/2028.</td></tr>
+        <tr><td><strong>Condições comerciais</strong></td><td><span class="chip s1">Atende</span></td><td>Preço 3% acima do atual, com prazo de entrega de 7 dias.</td></tr>
+        <tr><td><strong>Segurança e meio ambiente</strong></td><td><span class="chip s1">Atende</span></td><td>Fichas de segurança do produto recebidas.</td></tr>
+        <tr class="tot"><td>Decisão</td><td colspan="2">Em homologação: aprovado em cinco critérios. A homologação é concluída com o laudo do ensaio, e o primeiro pedido é um lote piloto de 2 toneladas.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p><strong>O que observar.</strong> Cinco critérios atendidos não homologam um fornecedor de item crítico: o que decide é a amostra. O ensaio foi contratado fora porque a indústria não tem o equipamento, e é a decisão de recurso que a análise crítica tomou. O primeiro pedido será um lote piloto, medido na produção. Só depois dele o fornecedor entra na avaliação semestral como os outros, e o risco C1 da <a href="../Riscos/treinamento-riscos.html#exemplos">matriz de riscos</a> pode ser reavaliado.</p>
+</section>
+
+<!-- ============================ MÓDULO 7 ============================ -->
+<section id="leitura">
+  <p class="eyebrow">Módulo 7</p>
+  <h2>Ler a carteira de fornecedores</h2>
+  <p>A lista de índices, ordenada, mostra a carteira inteira de uma vez: onde estão os bons fornecedores, quem está na borda de uma classe e quem precisa de decisão. As faixas das classes, ao fundo, tornam a leitura imediata.</p>
+
+  <figure id="fig-bars">
+    <div class="scroll">
+      <svg id="bars" viewBox="0 0 900 488" role="img" aria-label="Gráfico de barras com o índice de desempenho dos doze fornecedores críticos da indústria, em ordem decrescente, sobre as faixas das classes. F-02, Petroquímica Sul: 98,0, classe A. F-04, Tintas Gráficas Ltda.: 98,0, classe A. F-06, Filmes Técnicos: 96,0, classe A. F-12, Ferramentaria Precisa: 96,0, classe A. F-01, Polímeros do Vale: 93,7, classe A. F-10, Mantec: 93,0, classe A. F-09, Transportes Horizonte: 91,8, classe A. F-05, Cliché Print: 91,0, classe A. F-11, Laboratório Analítica: 88,0, classe B. F-03, Colorfix: 73,1, classe C. F-07, Papelão Oeste: 70,7, classe C. F-08, Paletes Rápido: 58,8, classe D.">
+        <rect class="z4" x="300.0" y="50" width="336.0" height="392"/>
+        <text class="b" x="468.0" y="42" font-size="12" text-anchor="middle">Classe D</text>
+        <rect class="z3" x="636.0" y="50" width="84.0" height="392"/>
+        <text class="b" x="678.0" y="42" font-size="12" text-anchor="middle">Classe C</text>
+        <rect class="z2" x="720.0" y="50" width="84.0" height="392"/>
+        <text class="b" x="762.0" y="42" font-size="12" text-anchor="middle">Classe B</text>
+        <rect class="z1" x="804.0" y="50" width="56.0" height="392"/>
+        <text class="b" x="832.0" y="42" font-size="12" text-anchor="middle">Classe A</text>
+        <line class="grid" x1="300.0" y1="50" x2="300.0" y2="442"/>
+        <text class="mu" x="300.0" y="458" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">0</text>
+        <line class="grid" x1="636.0" y1="50" x2="636.0" y2="442"/>
+        <text class="mu" x="636.0" y="458" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">60</text>
+        <line class="grid" x1="720.0" y1="50" x2="720.0" y2="442"/>
+        <text class="mu" x="720.0" y="458" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">75</text>
+        <line class="grid" x1="804.0" y1="50" x2="804.0" y2="442"/>
+        <text class="mu" x="804.0" y="458" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">90</text>
+        <line class="grid" x1="860.0" y1="50" x2="860.0" y2="442"/>
+        <text class="mu" x="860.0" y="458" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">100</text>
+        <text class="mono mu" x="580.0" y="478" font-size="10" text-anchor="middle">ÍNDICE DE DESEMPENHO</text>
+        <text x="20" y="78.0" font-size="11.5"><tspan class="b">F-02</tspan> · Petroquímica Sul</text>
+        <path class="seg" data-k="0" d="M300 65.0 H844.8 Q848.8 65.0 848.8 69.0 V79.0 Q848.8 83.0 844.8 83.0 H300 Z"/>
+        <text class="halo" x="856.8" y="78.0" font-size="11.5"><tspan class="b">98,0</tspan></text>
+        <text x="20" y="110.0" font-size="11.5"><tspan class="b">F-04</tspan> · Tintas Gráficas Ltda.</text>
+        <path class="seg" data-k="1" d="M300 97.0 H844.8 Q848.8 97.0 848.8 101.0 V111.0 Q848.8 115.0 844.8 115.0 H300 Z"/>
+        <text class="halo" x="856.8" y="110.0" font-size="11.5"><tspan class="b">98,0</tspan></text>
+        <text x="20" y="142.0" font-size="11.5"><tspan class="b">F-06</tspan> · Filmes Técnicos</text>
+        <path class="seg" data-k="2" d="M300 129.0 H833.6 Q837.6 129.0 837.6 133.0 V143.0 Q837.6 147.0 833.6 147.0 H300 Z"/>
+        <text class="halo" x="845.6" y="142.0" font-size="11.5"><tspan class="b">96,0</tspan></text>
+        <text x="20" y="174.0" font-size="11.5"><tspan class="b">F-12</tspan> · Ferramentaria Precisa</text>
+        <path class="seg" data-k="3" d="M300 161.0 H833.6 Q837.6 161.0 837.6 165.0 V175.0 Q837.6 179.0 833.6 179.0 H300 Z"/>
+        <text class="halo" x="845.6" y="174.0" font-size="11.5"><tspan class="b">96,0</tspan></text>
+        <text x="20" y="206.0" font-size="11.5"><tspan class="b">F-01</tspan> · Polímeros do Vale</text>
+        <path class="seg" data-k="4" d="M300 193.0 H820.7 Q824.7 193.0 824.7 197.0 V207.0 Q824.7 211.0 820.7 211.0 H300 Z"/>
+        <text class="halo" x="832.7" y="206.0" font-size="11.5"><tspan class="b">93,7</tspan></text>
+        <text x="20" y="238.0" font-size="11.5"><tspan class="b">F-10</tspan> · Mantec</text>
+        <path class="seg" data-k="5" d="M300 225.0 H816.8 Q820.8 225.0 820.8 229.0 V239.0 Q820.8 243.0 816.8 243.0 H300 Z"/>
+        <text class="halo" x="828.8" y="238.0" font-size="11.5"><tspan class="b">93,0</tspan></text>
+        <text x="20" y="270.0" font-size="11.5"><tspan class="b">F-09</tspan> · Transportes Horizonte</text>
+        <path class="seg" data-k="6" d="M300 257.0 H810.1 Q814.1 257.0 814.1 261.0 V271.0 Q814.1 275.0 810.1 275.0 H300 Z"/>
+        <text class="halo" x="822.1" y="270.0" font-size="11.5"><tspan class="b">91,8</tspan></text>
+        <text x="20" y="302.0" font-size="11.5"><tspan class="b">F-05</tspan> · Cliché Print</text>
+        <path class="seg" data-k="7" d="M300 289.0 H805.6 Q809.6 289.0 809.6 293.0 V303.0 Q809.6 307.0 805.6 307.0 H300 Z"/>
+        <text class="halo" x="817.6" y="302.0" font-size="11.5"><tspan class="b">91,0</tspan></text>
+        <text x="20" y="334.0" font-size="11.5"><tspan class="b">F-11</tspan> · Laboratório Analítica</text>
+        <path class="seg" data-k="8" d="M300 321.0 H788.8 Q792.8 321.0 792.8 325.0 V335.0 Q792.8 339.0 788.8 339.0 H300 Z"/>
+        <text class="halo" x="800.8" y="334.0" font-size="11.5"><tspan class="b">88,0</tspan></text>
+        <text x="20" y="366.0" font-size="11.5"><tspan class="b">F-03</tspan> · Colorfix</text>
+        <path class="seg" data-k="9" d="M300 353.0 H705.4 Q709.4 353.0 709.4 357.0 V367.0 Q709.4 371.0 705.4 371.0 H300 Z"/>
+        <text class="halo" x="717.4" y="366.0" font-size="11.5"><tspan class="b">73,1</tspan></text>
+        <text x="20" y="398.0" font-size="11.5"><tspan class="b">F-07</tspan> · Papelão Oeste</text>
+        <path class="seg" data-k="10" d="M300 385.0 H691.9 Q695.9 385.0 695.9 389.0 V399.0 Q695.9 403.0 691.9 403.0 H300 Z"/>
+        <text class="halo" x="703.9" y="398.0" font-size="11.5"><tspan class="b">70,7</tspan></text>
+        <text x="20" y="430.0" font-size="11.5"><tspan class="b">F-08</tspan> · Paletes Rápido</text>
+        <path class="seg" data-k="11" d="M300 417.0 H625.3 Q629.3 417.0 629.3 421.0 V431.0 Q629.3 435.0 625.3 435.0 H300 Z"/>
+        <text class="halo" x="637.3" y="430.0" font-size="11.5"><tspan class="b">58,8</tspan></text>
+        <rect class="hit" x="14" y="58" width="872" height="32" tabindex="0" role="img" aria-label="F-02, Petroquímica Sul: índice 98,0, classe A" data-k="0" data-id="F-02" data-n="Petroquímica Sul" data-i="98,0" data-c="A" data-q="100%" data-p="100%" data-a="9 de 10" data-cx="574.4"/>
+        <rect class="hit" x="14" y="90" width="872" height="32" tabindex="0" role="img" aria-label="F-04, Tintas Gráficas Ltda.: índice 98,0, classe A" data-k="1" data-id="F-04" data-n="Tintas Gráficas Ltda." data-i="98,0" data-c="A" data-q="100%" data-p="100%" data-a="9 de 10" data-cx="574.4"/>
+        <rect class="hit" x="14" y="122" width="872" height="32" tabindex="0" role="img" aria-label="F-06, Filmes Técnicos: índice 96,0, classe A" data-k="2" data-id="F-06" data-n="Filmes Técnicos" data-i="96,0" data-c="A" data-q="100%" data-p="100%" data-a="8 de 10" data-cx="568.8"/>
+        <rect class="hit" x="14" y="154" width="872" height="32" tabindex="0" role="img" aria-label="F-12, Ferramentaria Precisa: índice 96,0, classe A" data-k="3" data-id="F-12" data-n="Ferramentaria Precisa" data-i="96,0" data-c="A" data-q="100%" data-p="100%" data-a="8 de 10" data-cx="568.8"/>
+        <rect class="hit" x="14" y="186" width="872" height="32" tabindex="0" role="img" aria-label="F-01, Polímeros do Vale: índice 93,7, classe A" data-k="4" data-id="F-01" data-n="Polímeros do Vale" data-i="93,7" data-c="A" data-q="100%" data-p="92%" data-a="8 de 10" data-cx="562.4"/>
+        <rect class="hit" x="14" y="218" width="872" height="32" tabindex="0" role="img" aria-label="F-10, Mantec: índice 93,0, classe A" data-k="5" data-id="F-10" data-n="Mantec" data-i="93,0" data-c="A" data-q="100%" data-p="83%" data-a="9 de 10" data-cx="560.4"/>
+        <rect class="hit" x="14" y="250" width="872" height="32" tabindex="0" role="img" aria-label="F-09, Transportes Horizonte: índice 91,8, classe A" data-k="6" data-id="F-09" data-n="Transportes Horizonte" data-i="91,8" data-c="A" data-q="97%" data-p="92%" data-a="8 de 10" data-cx="557.0"/>
+        <rect class="hit" x="14" y="282" width="872" height="32" tabindex="0" role="img" aria-label="F-05, Cliché Print: índice 91,0, classe A" data-k="7" data-id="F-05" data-n="Cliché Print" data-i="91,0" data-c="A" data-q="95%" data-p="91%" data-a="8 de 10" data-cx="554.8"/>
+        <rect class="hit" x="14" y="314" width="872" height="32" tabindex="0" role="img" aria-label="F-11, Laboratório Analítica: índice 88,0, classe B" data-k="8" data-id="F-11" data-n="Laboratório Analítica" data-i="88,0" data-c="B" data-q="100%" data-p="80%" data-a="7 de 10" data-cx="546.4"/>
+        <rect class="hit" x="14" y="346" width="872" height="32" tabindex="0" role="img" aria-label="F-03, Colorfix: índice 73,1, classe C" data-k="9" data-id="F-03" data-n="Colorfix" data-i="73,1" data-c="C" data-q="72%" data-p="83%" data-a="6 de 10" data-cx="504.7"/>
+        <rect class="hit" x="14" y="378" width="872" height="32" tabindex="0" role="img" aria-label="F-07, Papelão Oeste: índice 70,7, classe C" data-k="10" data-id="F-07" data-n="Papelão Oeste" data-i="70,7" data-c="C" data-q="83%" data-p="63%" data-a="5 de 10" data-cx="498.0"/>
+        <rect class="hit" x="14" y="410" width="872" height="32" tabindex="0" role="img" aria-label="F-08, Paletes Rápido: índice 58,8, classe D" data-k="11" data-id="F-08" data-n="Paletes Rápido" data-i="58,8" data-c="D" data-q="67%" data-p="58%" data-a="4 de 10" data-cx="464.6"/>
+      </svg>
+    </div>
+    <div class="tip" id="bars-tip" hidden></div>
+    <figcaption><b>Figura 5.</b> O índice dos doze fornecedores críticos da indústria, no segundo semestre de 2026, sobre as faixas das classes. Passe o mouse sobre as barras para ver os três componentes.</figcaption>
+    <details class="data">
+      <summary>Ver os dados em tabela</summary>
+      <div class="tbl">
+        <table class="aud">
+          <thead><tr><th>Fornecedor</th><th class="c">Qualidade</th><th class="c">Prazo</th><th class="c">Atendimento</th><th class="c">Índice</th><th class="c">Classe</th></tr></thead>
+          <tbody>
+            <tr><td><strong>F-02 · Petroquímica Sul</strong></td><td class="c">100%</td><td class="c">100%</td><td class="c">9</td><td class="c">98,0</td><td class="c">A</td></tr>
+            <tr><td><strong>F-04 · Tintas Gráficas Ltda.</strong></td><td class="c">100%</td><td class="c">100%</td><td class="c">9</td><td class="c">98,0</td><td class="c">A</td></tr>
+            <tr><td><strong>F-06 · Filmes Técnicos</strong></td><td class="c">100%</td><td class="c">100%</td><td class="c">8</td><td class="c">96,0</td><td class="c">A</td></tr>
+            <tr><td><strong>F-12 · Ferramentaria Precisa</strong></td><td class="c">100%</td><td class="c">100%</td><td class="c">8</td><td class="c">96,0</td><td class="c">A</td></tr>
+            <tr><td><strong>F-01 · Polímeros do Vale</strong></td><td class="c">100%</td><td class="c">92%</td><td class="c">8</td><td class="c">93,7</td><td class="c">A</td></tr>
+            <tr><td><strong>F-10 · Mantec</strong></td><td class="c">100%</td><td class="c">83%</td><td class="c">9</td><td class="c">93,0</td><td class="c">A</td></tr>
+            <tr><td><strong>F-09 · Transportes Horizonte</strong></td><td class="c">97%</td><td class="c">92%</td><td class="c">8</td><td class="c">91,8</td><td class="c">A</td></tr>
+            <tr><td><strong>F-05 · Cliché Print</strong></td><td class="c">95%</td><td class="c">91%</td><td class="c">8</td><td class="c">91,0</td><td class="c">A</td></tr>
+            <tr><td><strong>F-11 · Laboratório Analítica</strong></td><td class="c">100%</td><td class="c">80%</td><td class="c">7</td><td class="c">88,0</td><td class="c">B</td></tr>
+            <tr><td><strong>F-03 · Colorfix</strong></td><td class="c">72%</td><td class="c">83%</td><td class="c">6</td><td class="c">73,1</td><td class="c">C</td></tr>
+            <tr><td><strong>F-07 · Papelão Oeste</strong></td><td class="c">83%</td><td class="c">63%</td><td class="c">5</td><td class="c">70,7</td><td class="c">C</td></tr>
+            <tr><td><strong>F-08 · Paletes Rápido</strong></td><td class="c">67%</td><td class="c">58%</td><td class="c">4</td><td class="c">58,8</td><td class="c">D</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </details>
+  </figure>
+
+  <p>Oito dos doze fornecedores estão na classe A, e a leitura fácil seria “a carteira é boa”. As bordas contam outra história: F-09 e F-05 estão a menos de dois pontos da classe B, e os dois fornecedores de classe C caíram por prazo e por lotes recusados que o recebimento registrou lote a lote. O fornecedor único de resina, F-01, tem 93,7 pontos e é, ainda assim, o maior risco da carteira: o índice mede o que ele entregou, e não o que acontece se ele parar.</p>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:26%">Leitura</th><th style="width:36%">O que significa</th><th>O que fazer</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Muitos na classe A</strong></td><td>A carteira é boa, ou os critérios são frouxos.</td><td>Conferir se a inspeção de recebimento está mesmo recusando o que não atende.</td></tr>
+        <tr><td><strong>Fornecedor na borda</strong></td><td>Índice a um ou dois pontos da classe de baixo.</td><td>Conversar antes que caia. É o momento mais barato de agir.</td></tr>
+        <tr><td><strong>Classe C repetida</strong></td><td>O plano de ação do período anterior não funcionou.</td><td>Reduzir a participação e formar outro fornecedor.</td></tr>
+        <tr><td><strong>Classe A com fornecedor único</strong></td><td>Bom desempenho, alto risco.</td><td>Homologar o segundo. O índice não protege contra a falta.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 8 ============================ -->
+<section id="erros">
+  <p class="eyebrow">Módulo 8</p>
+  <h2>Erros comuns</h2>
+  <div class="errs">
+    <div><h4>Avaliar só pelo preço</h4><p>O mais barato ganha, e o custo aparece no retrabalho.</p><p class="fix"><b>Correção:</b> qualidade e prazo entram no índice, com peso maior que o preço.</p></div>
+    <div><h4>Avaliar de memória</h4><p>A nota é dada no fim do semestre, pelo que o comprador lembra.</p><p class="fix"><b>Correção:</b> o índice sai dos registros do recebimento, lote por lote.</p></div>
+    <div><h4>Não devolver o resultado</h4><p>O fornecedor nunca soube que estava na classe C.</p><p class="fix"><b>Correção:</b> comunique a classe e os componentes. Sem isso, o plano de ação não existe.</p></div>
+    <div><h4>Confundir cadastro com homologação</h4><p>Todo fornecedor com nota fiscal está “homologado”.</p><p class="fix"><b>Correção:</b> homologação é uma decisão com critérios e evidência, para item crítico.</p></div>
+    <div><h4>Esquecer o serviço</h4><p>A transportadora e a manutenção nunca foram avaliadas.</p><p class="fix"><b>Correção:</b> serviço crítico entra no mesmo ciclo. O “lote” é cada serviço prestado.</p></div>
+    <div><h4>Índice sem consequência</h4><p>O fornecedor está na classe D há dois anos e segue recebendo pedidos.</p><p class="fix"><b>Correção:</b> cada classe tem uma conduta, e o sistema de compras reflete a decisão.</p></div>
+    <div><h4>Pedir sem requisito</h4><p>O pedido diz “resina, 2 t” e a recusa vira discussão.</p><p class="fix"><b>Correção:</b> especificação, prazo e condição de aceitação no pedido. Só se cobra o que foi pedido.</p></div>
+    <div><h4>Ignorar o fornecedor único</h4><p>Índice ótimo, e a produção parou quando ele atrasou.</p><p class="fix"><b>Correção:</b> a matriz de riscos manda: segundo fornecedor ou estoque de segurança.</p></div>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 9 ============================ -->
+<section id="ferramentas">
+  <p class="eyebrow">Módulo 9</p>
+  <h2>A avaliação e outras ferramentas</h2>
+  <p>A avaliação de fornecedores é alimentada pelo recebimento e alimenta a matriz de riscos, o tratamento de não conformidades e a análise crítica. É uma das entradas que a direção precisa considerar.</p>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:26%">Ferramenta</th><th style="width:37%">O que ela entrega à avaliação</th><th>O que recebe da avaliação</th></tr></thead>
+      <tbody>
+        <tr><td><a href="../ISO-9001/treinamento-iso-9001.html"><strong>ISO 9001 requisito a requisito</strong></a></td><td>O requisito 8.4 e a evidência que a norma pede reter.</td><td>Homologações, avaliações e ocorrências como evidência.</td></tr>
+        <tr><td><a href="../Processos/treinamento-processos.html"><strong>Mapa de processos e tartaruga</strong></a></td><td>As entradas do processo de compras e a de quem recebe.</td><td>Os fornecedores de cada entrada crítica.</td></tr>
+        <tr><td><a href="../Riscos/treinamento-riscos.html"><strong>Matriz de riscos</strong></a></td><td>O risco de fornecedor único e o de material não conforme.</td><td>A criticidade e a classe de cada fornecedor.</td></tr>
+        <tr><td><a href="../Indicadores/treinamento-indicadores.html"><strong>Indicadores</strong></a></td><td>O indicador “fornecedores críticos avaliados”, com meta de 100%.</td><td>O índice de cada fornecedor, como indicador do processo.</td></tr>
+        <tr><td><a href="../Nao-Conformidade/treinamento-nao-conformidade.html"><strong>Não conformidade e ação corretiva</strong></a></td><td>O tratamento do lote recusado e da ocorrência grave.</td><td>As ocorrências que abaixam o índice.</td></tr>
+        <tr><td><a href="../Auditoria/treinamento-auditoria.html"><strong>Auditoria interna</strong></a></td><td>A constatação sobre fornecedores sem avaliação.</td><td>A evidência da avaliação no período.</td></tr>
+        <tr><td><a href="../Informacao-Documentada/treinamento-informacao-documentada.html"><strong>Informação documentada</strong></a></td><td>O procedimento de homologação e a lista de fornecedores homologados, com revisão.</td><td>Os registros de avaliação, com prazo de retenção.</td></tr>
+        <tr><td><a href="../Analise-Critica/treinamento-analise-critica.html"><strong>Análise crítica pela direção</strong></a></td><td>A decisão sobre recursos: ensaios externos, segundo fornecedor.</td><td>A entrada “c7”, desempenho dos provedores externos.</td></tr>
+        <tr><td><a href="../Competencias/treinamento-competencias.html"><strong>Matriz de competências</strong></a></td><td>Quem sabe homologar e avaliar.</td><td>A competência “homologar e avaliar fornecedores” de cada comprador.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 10 ============================ -->
+<section id="iso">
+  <p class="eyebrow">Módulo 10</p>
+  <h2>Nas normas ISO</h2>
+  <p>O controle de provedores externos está no requisito 8.4 da ISO 9001:2015, em três partes: o que controlar e por quê, quanto controlar e o que informar ao fornecedor. A norma não pede índice, classes nem homologação com ficha: pede critérios, avaliação, monitoramento e reavaliação, com evidência.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 214" role="img" aria-label="As três partes do requisito 8.4. 8.4.1 · Critérios: Avaliar, selecionar, monitorar e reavaliar os provedores externos, com critérios definidos e evidência retida. Neste estudo: Cadastro, Homologação e Avaliação. 8.4.2 · Controle: Controle proporcional ao efeito do fornecimento. Processos terceirizados sob controle. Verificação do que é recebido. Neste estudo: Criticidade, recebimento e ocorrências. 8.4.3 · Informação: Comunicar ao fornecedor os requisitos do produto, da aprovação, da competência e do controle. Neste estudo: Pedido de compra com os requisitos.">
+        <rect class="bx" x="10" y="14" width="284" height="186"/>
+        <rect class="hd-ink" x="10" y="14" width="284" height="34"/>
+        <text class="b t-ground" x="24" y="36" font-size="13">8.4.1 · Critérios</text>
+        <text x="24" y="70" font-size="11.5">Avaliar, selecionar, monitorar e reavaliar</text>
+        <text x="24" y="86" font-size="11.5">os provedores externos, com critérios</text>
+        <text x="24" y="102" font-size="11.5">definidos e evidência retida.</text>
+        <text class="mu" x="24" y="186" font-size="11">Neste estudo: Cadastro, Homologação e Avaliação</text>
+        <rect class="bx" x="308" y="14" width="284" height="186"/>
+        <rect class="hd-ink" x="308" y="14" width="284" height="34"/>
+        <text class="b t-ground" x="322" y="36" font-size="13">8.4.2 · Controle</text>
+        <text x="322" y="70" font-size="11.5">Controle proporcional ao efeito do</text>
+        <text x="322" y="86" font-size="11.5">fornecimento. Processos terceirizados sob</text>
+        <text x="322" y="102" font-size="11.5">controle. Verificação do que é recebido.</text>
+        <text class="mu" x="322" y="186" font-size="11">Neste estudo: Criticidade, recebimento e ocorrências</text>
+        <rect class="bx" x="606" y="14" width="284" height="186"/>
+        <rect class="hd-ink" x="606" y="14" width="284" height="34"/>
+        <text class="b t-ground" x="620" y="36" font-size="13">8.4.3 · Informação</text>
+        <text x="620" y="70" font-size="11.5">Comunicar ao fornecedor os requisitos do</text>
+        <text x="620" y="86" font-size="11.5">produto, da aprovação, da competência e do</text>
+        <text x="620" y="102" font-size="11.5">controle.</text>
+        <text class="mu" x="620" y="186" font-size="11">Neste estudo: Pedido de compra com os requisitos</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 6.</b> As três partes do requisito 8.4 e o lugar deste estudo em que cada uma é atendida. O texto da figura é um resumo, com palavras próprias.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:10%">Item</th><th style="width:32%">O que pede, em resumo</th><th style="width:27%">O que isso significa</th><th>Evidências que o auditor procura</th></tr></thead>
+      <tbody>
+        <tr><td class="num">8.4.1</td><td>Assegurar que o que vem de fora atende aos requisitos; definir critérios para avaliar, selecionar, monitorar e reavaliar os provedores externos; reter a evidência</td><td>Há critério para entrar, para continuar e para sair, e tudo fica registrado.</td><td>Critérios de homologação, avaliações do período, lista de fornecedores aprovados.</td></tr>
+        <tr><td class="num">8.4.2</td><td>Definir o tipo e a extensão do controle, pelo efeito do fornecimento sobre o produto e o cliente; os processos terceirizados continuam sob controle da organização; verificar o que é recebido</td><td>Controle proporcional à criticidade, e recebimento que confere.</td><td>Classificação de criticidade, registros de recebimento, controle dos terceirizados.</td></tr>
+        <tr><td class="num">8.4.3</td><td>Comunicar ao provedor externo os requisitos: do produto ou serviço, da aprovação, da competência, da interação, do controle e da verificação</td><td>O fornecedor sabe o que se espera dele, por escrito.</td><td>Pedidos de compra com especificação, contratos, especificações enviadas.</td></tr>
+        <tr><td class="num">8.6</td><td>Verificar o produto antes da liberação, com evidência da conformidade</td><td>O lote recebido só entra na produção depois de conferido.</td><td>Registro de recebimento e de inspeção.</td></tr>
+        <tr><td class="num">8.7</td><td>Controlar as saídas não conformes, inclusive as recebidas de fora</td><td>O lote recusado é identificado, separado e tratado.</td><td>Registro de devolução e de disposição.</td></tr>
+        <tr><td class="num">6.1</td><td>Considerar os riscos, entre eles os do fornecimento</td><td>Fornecedor único e material crítico estão na matriz de riscos.</td><td>Matriz de riscos, com as respostas.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pair">
+    <div class="box">
+      <h4>O que a ISO 9001 exige</h4>
+      <ul>
+        <li>Critérios para selecionar, avaliar, monitorar e reavaliar.</li>
+        <li>Controle proporcional ao efeito do fornecimento.</li>
+        <li>Requisitos comunicados ao fornecedor.</li>
+        <li>Verificação do que é recebido.</li>
+        <li>Evidência retida das avaliações.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h4>O que a ISO 9001 não exige</h4>
+      <ul>
+        <li>Um índice com pesos, ou classes A a D.</li>
+        <li>Homologação com visita ou auditoria no fornecedor.</li>
+        <li>Certificação ISO 9001 dos fornecedores.</li>
+        <li>Avaliação de fornecedores não críticos.</li>
+        <li>Um intervalo determinado de reavaliação.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="note">
+    <h4>Pontos de atenção</h4>
+    <p>O auditor costuma escolher dois ou três fornecedores críticos e seguir o caminho: homologação, pedido com requisitos, recebimento e avaliação. Depois pega um lote recusado e pergunta o que aconteceu com ele. Um fornecedor crítico sem avaliação no período foi a constatação da auditoria da indústria, e é a mais comum deste requisito.</p>
+    <p>Este módulo usa a numeração da ISO 9001:2015 e resume os textos com palavras próprias. Confira sempre a edição vigente da norma antes de citar um requisito em relatório.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 11 ============================ -->
+<section id="reuniao">
+  <p class="eyebrow">Módulo 11</p>
+  <h2>A reunião de avaliação</h2>
+  <p>A avaliação semestral de uma carteira de dez a vinte fornecedores críticos cabe em uma reunião de duas horas, com compras, recebimento e qualidade. Antes dela, os dados do recebimento já foram somados. Na reunião, cada fornecedor recebe classe, conduta e, quando precisa, plano de ação.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 136" role="img" aria-label="Distribuição de uma reunião de avaliação de fornecedores de 120 minutos: 10 minutos para conferir os dados, 50 minutos para avaliar os fornecedores, 20 minutos para os fornecedores únicos e os riscos, 30 minutos para as decisões e os planos de ação e 10 minutos para o fecho e a comunicação.">
+        <g font-size="11.5" text-anchor="middle">
+          <rect class="bx" x="60" y="24" width="65" height="56"/><text x="92.5" y="56" font-size="10.5">Dados</text>
+          <rect class="hd-d gap2" x="125" y="24" width="325" height="56"/><text class="on b" x="287.5" y="56">Avaliar os fornecedores</text>
+          <rect class="bx" x="450" y="24" width="130" height="56"/><text x="515" y="49">Fornecedores</text><text x="515" y="64">únicos e riscos</text>
+          <rect class="hd-ink gap2" x="580" y="24" width="195" height="56"/><text class="t-ground b" x="677.5" y="56">Decisões e planos</text>
+          <rect class="bx" x="775" y="24" width="65" height="56"/><text x="807.5" y="56" font-size="10.5">Fecho</text>
+        </g>
+        <g class="ln-mu" stroke-width="1">
+          <line x1="60" y1="82" x2="60" y2="94"/><line x1="125" y1="82" x2="125" y2="94"/><line x1="450" y1="82" x2="450" y2="94"/>
+          <line x1="580" y1="82" x2="580" y2="94"/><line x1="775" y1="82" x2="775" y2="94"/><line x1="840" y1="82" x2="840" y2="94"/>
+        </g>
+        <g class="mono" font-size="10.5" text-anchor="middle">
+          <text class="mu" x="60" y="112">0</text><text class="mu" x="125" y="112">10</text><text class="mu" x="450" y="112">60</text>
+          <text class="mu" x="580" y="112">80</text><text class="mu" x="775" y="112">110</text><text class="mu" x="840" y="112">120</text>
+        </g>
+      </svg>
+    </div>
+    <figcaption><b>Figura 7.</b> Uma reunião de avaliação de duas horas, desenhada em escala. As decisões têm horário marcado: sem isso, a reunião termina na lista de índices e ninguém decide nada.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Momento</th><th style="width:42%">O que fazer</th><th>Frases que ajudam</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Dados</strong></td><td>Conferir os totais do recebimento: lotes, recusas, entregas, atrasos. Corrigir o que estiver errado antes de calcular.</td><td>“Esses números batem com as devoluções?”</td></tr>
+        <tr><td><strong>Avaliar os fornecedores</strong></td><td>Um por vez: os três componentes, o índice, a classe e o que aconteceu no período.</td><td>“O que fez o prazo cair?”</td></tr>
+        <tr><td><strong>Fornecedores únicos e riscos</strong></td><td>Para cada item com um só fornecedor, decidir: segundo fornecedor, estoque ou aceitar o risco.</td><td>“Se ele parar amanhã, quantos dias temos?”</td></tr>
+        <tr><td><strong>Decisões e planos</strong></td><td>Conduta de cada classe C e D: plano de ação com prazo, suspensão ou desqualificação. Bloqueio no sistema quando for o caso.</td><td>“O que ele precisa mostrar até a próxima avaliação?”</td></tr>
+        <tr><td><strong>Fecho</strong></td><td>Definir quem comunica cada fornecedor e marcar a próxima avaliação.</td><td>“Quem liga para o fornecedor de paletes, e quando?”</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Leve a matriz de riscos para a reunião. A avaliação diz como o fornecedor está; a matriz diz o que acontece se ele faltar. As duas leituras juntas é que decidem.</p>
+
+  <h3>Checklist do controle de fornecedores</h3>
+  <p>Marque os itens conforme revisa o seu sistema. As marcações ficam salvas neste navegador.</p>
+  <ol class="check" id="checklist">
+    <li><label><input type="checkbox" id="ck-1"><span>Os itens e serviços críticos estão identificados, com o motivo.</span></label></li>
+    <li><label><input type="checkbox" id="ck-2"><span>Os critérios de homologação estão escritos e são os mesmos para todos os fornecedores do mesmo tipo.</span></label></li>
+    <li><label><input type="checkbox" id="ck-3"><span>Todo fornecedor crítico tem homologação registrada e dentro da validade.</span></label></li>
+    <li><label><input type="checkbox" id="ck-4"><span>O pedido de compra informa os requisitos do produto ou do serviço.</span></label></li>
+    <li><label><input type="checkbox" id="ck-5"><span>O recebimento confere o que chega, com registro, antes da liberação.</span></label></li>
+    <li><label><input type="checkbox" id="ck-6"><span>Os indicadores de desempenho e os pesos estão definidos e foram comunicados aos fornecedores.</span></label></li>
+    <li><label><input type="checkbox" id="ck-7"><span>A avaliação é feita no período definido, com os dados do recebimento.</span></label></li>
+    <li><label><input type="checkbox" id="ck-8"><span>Cada fornecedor avaliado tem classe e conduta registradas.</span></label></li>
+    <li><label><input type="checkbox" id="ck-9"><span>Os fornecedores com plano de ação têm prazo e responsável.</span></label></li>
+    <li><label><input type="checkbox" id="ck-10"><span>Os fornecedores reprovados estão bloqueados no sistema de compras.</span></label></li>
+    <li><label><input type="checkbox" id="ck-11"><span>As ocorrências com fornecedores são registradas e tratadas.</span></label></li>
+    <li><label><input type="checkbox" id="ck-12"><span>Os processos terceirizados têm o controle definido: o que a organização confere e quando.</span></label></li>
+  </ol>
+  <div class="bar"><span><b id="ck-count">0</b> de 12 itens marcados</span><button class="btn" id="ck-reset" type="button">Limpar marcações</button></div>
+</section>
+
+<!-- ============================ MÓDULO 12 ============================ -->
+<section id="pratique">
+  <p class="eyebrow">Módulo 12</p>
+  <h2>Pratique</h2>
+  <h3>Exercício 1. Selecionar, avaliar ou reavaliar?</h3>
+  <p>Cada item descreve uma ação do ciclo do fornecedor. Diga a que etapa ela pertence: selecionar, quando se decide quem pode fornecer; avaliar, quando se mede o desempenho do período; ou reavaliar, quando se decide quem continua.</p>
+  <div class="quiz" id="quiz"></div>
+  <div class="bar"><span>Acertos: <b id="qz-score">0</b> de <b id="qz-total">12</b></span><span>Respondidos: <b id="qz-done">0</b></span><button class="btn" id="qz-reset" type="button">Recomeçar</button></div>
+
+  <h3>Exercício 2. Avalie os seus fornecedores críticos</h3>
+  <p>Escolha um processo que compra materiais ou serviços. Abra a planilha de apoio e siga o roteiro.</p>
+  <ol>
+    <li>Na aba Cadastro, liste os fornecedores, com o que fornecem, o tipo e a criticidade. Marque a data e os documentos da homologação de cada um.</li>
+    <li>Na aba Homologação, preencha a ficha de um fornecedor novo, ou de um crítico que nunca foi homologado.</li>
+    <li>Na aba Avaliação, lance os dados do último período: lotes recebidos e aceitos, entregas e entregas no prazo, nota de atendimento.</li>
+    <li>Leia o índice e a classe de cada fornecedor, e escreva a conduta.</li>
+    <li>Na aba Ocorrências, registre as falhas do período que ainda não foram tratadas.</li>
+    <li>Confira quais itens críticos têm um só fornecedor e leve para a matriz de riscos.</li>
+    <li>Passe o checklist do módulo 11.</li>
+  </ol>
+  <p>Depois, escolha o fornecedor de índice mais baixo e escreva, em cinco linhas, o que você diria a ele: os três componentes, a classe e o que precisa mudar até a próxima avaliação.</p>
+</section>
+
+<!-- ============================ MÓDULO 13 ============================ -->
+<section id="planilha">
+  <p class="eyebrow">Módulo 13</p>
+  <h2>A planilha de apoio</h2>
+  <p>Este treinamento acompanha o arquivo <a id="xlsx-ref" href="Fornecedores-modelo.xlsx">Fornecedores-modelo.xlsx</a>, que fica na mesma pasta. As células em amarelo-claro são para preenchimento. As células cinza são calculadas.</p>
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Aba</th><th>Para que serve</th><th style="width:36%">O que ela calcula</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Instruções</strong></td><td>Legenda de cores, os pesos e as classes, ordem de preenchimento e regras do modelo.</td><td>Nada. É só leitura.</td></tr>
+        <tr><td><strong>Cadastro</strong></td><td>Até 30 fornecedores, com o que fornecem, o tipo, a criticidade, a homologação e os documentos.</td><td>Validade da homologação, situação de cada fornecedor e contagens.</td></tr>
+        <tr><td><strong>Homologação</strong></td><td>A ficha de um fornecedor novo, com os seis critérios, o resultado e a evidência.</td><td>Resultado da homologação e critérios pendentes.</td></tr>
+        <tr><td><strong>Avaliação</strong></td><td>Até 30 avaliações, com os dados do recebimento e a nota de atendimento.</td><td>Percentuais, índice, classe, conduta e gráfico.</td></tr>
+        <tr><td><strong>Ocorrências</strong></td><td>Até 25 ocorrências com fornecedores, com tipo, tratamento e situação.</td><td>Conferência de cada ocorrência e ocorrências abertas.</td></tr>
+        <tr><td><strong>Checklist</strong></td><td>Os mesmos 12 itens do módulo 11, com status Sim, Parcial ou Não.</td><td>Percentual atendido e situação da validação.</td></tr>
+        <tr><td><strong>Exemplo 1 e Exemplo 2</strong></td><td>A avaliação da indústria e a da pizzaria.</td><td>Índice, classe e contagens por classe.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ GLOSSÁRIO ============================ -->
+<section id="glossario">
+  <p class="eyebrow">Referência</p>
+  <h2>Glossário</h2>
+  <dl class="gloss">
+    <div><dt>Classe</dt><dd>Faixa do índice de desempenho, com uma conduta definida: A, B, C ou D, neste material.</dd></div>
+    <div><dt>Criticidade</dt><dd>Efeito do fornecimento sobre o produto e sobre o cliente. Define o controle.</dd></div>
+    <div><dt>Desqualificação</dt><dd>Retirada do fornecedor da lista de aprovados, com bloqueio no sistema de compras.</dd></div>
+    <div><dt>Fornecedor único</dt><dd>Único fornecedor homologado para um item ou serviço. É um risco, mesmo com bom desempenho.</dd></div>
+    <div><dt>Homologação</dt><dd>Decisão, com critérios e evidência, de que o fornecedor pode fornecer um item ou serviço.</dd></div>
+    <div><dt>Índice de desempenho</dt><dd>Número que resume a qualidade, o prazo e o atendimento do fornecedor no período.</dd></div>
+    <div><dt>Lote piloto</dt><dd>Primeiro fornecimento, em quantidade limitada, usado para confirmar a homologação.</dd></div>
+    <div><dt>Ocorrência</dt><dd>Falha do fornecedor registrada pelo recebimento: lote recusado, atraso, documento errado.</dd></div>
+    <div><dt>Plano de ação do fornecedor</dt><dd>O que o fornecedor se compromete a mudar, com prazo, para sair da classe C.</dd></div>
+    <div><dt>Processo terceirizado</dt><dd>Etapa do processo da organização feita por um provedor externo, sob controle da organização.</dd></div>
+    <div><dt>Provedor externo</dt><dd>Quem fornece produto, serviço ou processo à organização. O termo da norma para fornecedor.</dd></div>
+    <div><dt>Reavaliação</dt><dd>Decisão periódica sobre a continuidade do fornecedor, a partir do desempenho.</dd></div>
+    <div><dt>Recebimento</dt><dd>Conferência do que chega contra o pedido, antes da liberação para uso.</dd></div>
+  </dl>
+</section>
+
+</main>
+</div>
+
+<footer>Material de estudo. Os exemplos, documentos e números são ilustrativos e foram criados para fins didáticos. As referências às normas ISO são resumos para estudo e não substituem o texto das normas.</footer>
+</div>
+
+<script>
+(function () {
+  function read(key) { try { return JSON.parse(localStorage.getItem(key) || 'null'); } catch (e) { return null; } }
+  function write(key, val) { try { localStorage.setItem(key, JSON.stringify(val)); } catch (e) {} }
+
+  /* ---------- Checklist ---------- */
+  var boxes = Array.prototype.slice.call(document.querySelectorAll('#checklist input'));
+  var count = document.getElementById('ck-count');
+  var saved = read('fornecedores-checklist') || {};
+  function refreshChecks() {
+    var n = 0, state = {};
+    boxes.forEach(function (b) { if (b.checked) { n++; } state[b.id] = b.checked; });
+    count.textContent = n;
+    return state;
+  }
+  boxes.forEach(function (b) {
+    if (saved[b.id]) { b.checked = true; }
+    b.addEventListener('change', function () { write('fornecedores-checklist', refreshChecks()); });
+  });
+  refreshChecks();
+  document.getElementById('ck-reset').addEventListener('click', function () {
+    boxes.forEach(function (b) { b.checked = false; });
+    write('fornecedores-checklist', refreshChecks());
+  });
+
+  /* ---------- Exercício ---------- */
+  var KEYS = ['S', 'A', 'R'];
+  var LABEL = { S: 'Selecionar', A: 'Avaliar', R: 'Reavaliar' };
+  var NAMES = { S: 'selecionar', A: 'avaliar', R: 'reavaliar' };
+  var ITEMS = [
+    { t: 'Visitar a fábrica do novo fornecedor de resina e pedir uma amostra para ensaio.', a: 'S', w: 'É homologação: decide se ele pode fornecer.' },
+    { t: 'Somar os lotes recusados do semestre e calcular o percentual de qualidade.', a: 'A', w: 'É a medida do desempenho do período.' },
+    { t: 'Suspender as compras do fornecedor de paletes até um plano de ação aprovado.', a: 'R', w: 'É a decisão sobre a continuidade, a partir da classe.' },
+    { t: 'Conferir as certidões e a licença ambiental antes do primeiro pedido.', a: 'S', w: 'Critério de homologação: documentos legais.' },
+    { t: 'Dar a nota de atendimento do semestre a cada fornecedor.', a: 'A', w: 'O atendimento é um dos três componentes do índice.' },
+    { t: 'Renovar a homologação do fornecedor que ficou na classe A nas duas últimas avaliações.', a: 'R', w: 'Reavaliação: a continuidade decidida pelo desempenho.' },
+    { t: 'Pedir ao fornecedor de caixas um plano de ação para as entregas atrasadas.', a: 'R', w: 'Conduta da classe C: plano de ação com prazo.' },
+    { t: 'Registrar, no recebimento, que a entrega chegou dois dias depois do combinado.', a: 'A', w: 'É o dado do recebimento que alimenta o índice. Sem ele, não há avaliação.' },
+    { t: 'Definir que o segundo fornecedor de queijo só entra depois de um lote piloto.', a: 'S', w: 'O lote piloto é a última etapa da homologação.' },
+    { t: 'Comunicar ao laticínio que ele ficou na classe B, com o prazo como ponto fraco.', a: 'R', w: 'Comunicar o resultado faz parte da decisão sobre a continuidade.' },
+    { t: 'Comparar as propostas de três transportadoras e escolher uma para homologar.', a: 'S', w: 'Seleção: ainda não há fornecimento para avaliar.' },
+    { t: 'Calcular o índice de cada fornecedor crítico e ordenar a carteira.', a: 'A', w: 'É a avaliação do período. A decisão vem depois.' }
+  ];
+  var quiz = document.getElementById('quiz');
+  var score = document.getElementById('qz-score');
+  var done = document.getElementById('qz-done');
+  document.getElementById('qz-total').textContent = ITEMS.length;
+  var hits = 0, answered = 0;
+
+  function render() {
+    hits = 0; answered = 0; score.textContent = 0; done.textContent = 0;
+    quiz.textContent = '';
+    ITEMS.forEach(function (item, idx) {
+      var row = document.createElement('div'); row.className = 'q';
+      var p = document.createElement('p'); p.textContent = (idx + 1) + '. ' + item.t;
+      var opts = document.createElement('div'); opts.className = 'opts';
+      opts.setAttribute('role', 'group'); opts.setAttribute('aria-label', 'Etapa do item ' + (idx + 1));
+      var why = document.createElement('p'); why.className = 'why'; why.hidden = true;
+      KEYS.forEach(function (k) {
+        var b = document.createElement('button');
+        b.type = 'button'; b.textContent = LABEL[k]; b.id = 'qz-' + idx + '-' + k;
+        b.setAttribute('data-k', k);
+        b.addEventListener('click', function () {
+          var ok = k === item.a;
+          Array.prototype.forEach.call(opts.children, function (o) {
+            o.disabled = true;
+            if (o.getAttribute('data-k') === item.a) { o.className = 'right'; }
+          });
+          if (!ok) { b.className = 'wrong'; }
+          var lead = document.createElement('b');
+          lead.textContent = (ok ? 'Certo. ' : 'A resposta é ' + NAMES[item.a] + '. ');
+          why.textContent = ''; why.appendChild(lead); why.appendChild(document.createTextNode(item.w));
+          why.className = 'why ' + (ok ? 'ok' : 'no'); why.hidden = false;
+          answered++; if (ok) { hits++; }
+          score.textContent = hits; done.textContent = answered;
+        });
+        opts.appendChild(b);
+      });
+      row.appendChild(p); row.appendChild(opts); row.appendChild(why);
+      quiz.appendChild(row);
+    });
+  }
+  render();
+  document.getElementById('qz-reset').addEventListener('click', render);
+
+  /* ---------- Gráfico: leitura dos valores ---------- */
+  var fig = document.getElementById('fig-bars');
+  var tip = document.getElementById('bars-tip');
+  var svg = document.getElementById('bars');
+  var segs = document.querySelectorAll('#bars .seg');
+  function hide() {
+    tip.hidden = true;
+    Array.prototype.forEach.call(segs, function (b) { b.removeAttribute('opacity'); });
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('#bars .hit'), function (r) {
+    function show() {
+      var d = r.dataset;
+      Array.prototype.forEach.call(segs, function (b) {
+        b.setAttribute('opacity', b.getAttribute('data-k') === d.k ? '1' : '.4');
+      });
+      tip.textContent = '';
+      var strong = document.createElement('b'); strong.textContent = 'Índice ' + d.i + ' · classe ' + d.c;
+      tip.appendChild(strong);
+      tip.appendChild(document.createTextNode(d.id + ' · ' + d.n));
+      tip.appendChild(document.createElement('br'));
+      tip.appendChild(document.createTextNode('Qualidade ' + d.q + ' · Prazo ' + d.p + ' · Atendimento ' + d.a));
+      var box = fig.getBoundingClientRect(), rb = r.getBoundingClientRect();
+      var pt = svg.createSVGPoint(); pt.x = parseFloat(d.cx); pt.y = 0;
+      var scr = pt.matrixTransform(svg.getScreenCTM());
+      tip.style.left = Math.min(Math.max(scr.x - box.left, 190), box.width - 190) + 'px';
+      tip.style.top = (rb.top - box.top + 4) + 'px';
+      tip.hidden = false;
+    }
+    r.addEventListener('pointerenter', show);
+    r.addEventListener('focus', show);
+    r.addEventListener('pointerleave', hide);
+    r.addEventListener('blur', hide);
+  });
+})();
+</script>
+</body>
+</html>

@@ -204,7 +204,7 @@ tb.append(f'            <tr class="tot"><td>Total</td><td class="c">{GERAL[0]}</
 tb += ['          </tbody>', '        </table>']
 
 # ---- figura 9: estudos da série × seções da norma
-ORDEM = ["swot", "proc", "sipoc", "raci", "riscos", "ind", "gut", "ishikawa", "w5h2", "pdca", "auditoria", "nc", "ac", "doc", "comp"]
+ORDEM = ["swot", "proc", "sipoc", "raci", "riscos", "ind", "gut", "ishikawa", "w5h2", "pdca", "auditoria", "nc", "ac", "doc", "comp", "forn"]
 CX = lambda j: 350 + j * 80  # noqa: E731
 HD = {"base": "hd-ink", "p": "hd-p", "d": "hd-d", "c": "hd-c", "a": "hd-a"}
 RY, R0 = 32, 70
@@ -241,6 +241,9 @@ AJUDA = {
     "7.3": "Traz as perguntas de conscientização e o que se espera ouvir.",
     "7.4": "As letras C e I da matriz mostram quem precisa ser consultado e informado.",
     "8.1": "Mostra as entradas e as saídas que a operação precisa controlar.",
+    "8.4.1": "Traz os critérios de homologação, o índice de desempenho e as classes com conduta.",
+    "8.4.2": "Classifica os fornecedores por criticidade e registra o recebimento e as ocorrências.",
+    "8.4.3": "Mostra o que o pedido de compra precisa informar ao fornecedor.",
     "8.7": "Separa a correção da saída não conforme da ação sobre a causa.",
     "9.1.1": "O estudo de Indicadores define o que medir, como e quando. O PDCA compara o resultado com a meta.",
     "9.1.2": "Traz a satisfação do cliente para o painel, com meta e análise.",

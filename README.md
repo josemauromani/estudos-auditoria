@@ -24,6 +24,7 @@ Para começar, abra o arquivo `index.html` no navegador.
 | Análise crítica pela direção | `Analise-Critica/` | `Analise-Critica-modelo.xlsx` |
 | Informação documentada | `Informacao-Documentada/` | `Informacao-Documentada-modelo.xlsx` |
 | Matriz de competências e treinamento | `Competencias/` | `Competencias-modelo.xlsx` |
+| Avaliação de fornecedores | `Fornecedores/` | `Fornecedores-modelo.xlsx` |
 
 ## Avisos
 
