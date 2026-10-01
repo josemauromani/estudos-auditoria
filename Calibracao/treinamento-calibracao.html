@@ -1,0 +1,1305 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Calibração e recursos de medição</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<style>
+:root{
+  --ground:#F3F6F7; --surface:#FFFFFF; --sunk:#E9EEF0; --ink:#16242E; --muted:#566672; --rule:#D3DBE0;
+  --accent:#2B5C8A;
+  --s1:#2A6FB0; --s1-tint:#DCE8F3;
+  --s2:#D19A2E; --s2-tint:#F8EBCB;
+  --s3:#B0413E; --s3-tint:#F5DEDC;
+  --on-s2:#16242E;
+  --p:#2B5C8A; --p-tint:#DCE8F3;
+  --d:#A96A12; --d-tint:#F6E8CF;
+  --c:#1E7B73; --c-tint:#D9EEEB;
+  --a:#B0413E; --a-tint:#F5DEDC;
+  --on-hue:#FFFFFF;
+  --good:#1F7A4D; --good-tint:#DDF1E5;
+  --bad:#B0413E; --bad-tint:#F5DEDC;
+  --display:"Barlow Semi Condensed","Arial Narrow",Arial,sans-serif;
+  --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --ground:#0F171C; --surface:#172229; --sunk:#1E2B33; --ink:#E4EAED; --muted:#9BABB6; --rule:#2B3A44;
+    --accent:#86B7E3;
+  --s1:#4F97DB; --s1-tint:#1B2F42;
+  --s2:#B58E14; --s2-tint:#3A2C12;
+  --s3:#D14B45; --s3-tint:#3D1F1E;
+  --on-s2:#0F171C;
+    --p:#86B7E3; --p-tint:#1B2F42;
+    --d:#E2AC4F; --d-tint:#3A2C12;
+    --c:#5FC6BA; --c-tint:#15332F;
+    --a:#EC8E89; --a-tint:#3D1F1E;
+    --on-hue:#0F171C;
+    --good:#6FCF9B; --good-tint:#163326;
+    --bad:#EC8E89; --bad-tint:#3D1F1E;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --ground:#0F171C; --surface:#172229; --sunk:#1E2B33; --ink:#E4EAED; --muted:#9BABB6; --rule:#2B3A44;
+  --accent:#86B7E3;
+  --s1:#4F97DB; --s1-tint:#1B2F42;
+  --s2:#B58E14; --s2-tint:#3A2C12;
+  --s3:#D14B45; --s3-tint:#3D1F1E;
+  --on-s2:#0F171C;
+  --p:#86B7E3; --p-tint:#1B2F42;
+  --d:#E2AC4F; --d-tint:#3A2C12;
+  --c:#5FC6BA; --c-tint:#15332F;
+  --a:#EC8E89; --a-tint:#3D1F1E;
+  --on-hue:#0F171C;
+  --good:#6FCF9B; --good-tint:#163326;
+  --bad:#EC8E89; --bad-tint:#3D1F1E;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--ground);color:var(--ink);font:400 16px/1.65 var(--body);-webkit-text-size-adjust:100%}
+a{color:var(--accent);text-underline-offset:3px}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.page{max-width:1180px;margin-inline:auto;padding-inline:20px;padding-block:36px 80px}
+
+/* Cabeçalho */
+.mast{display:flex;flex-direction:column;gap:18px;padding-bottom:32px;border-bottom:1px solid var(--rule)}
+.tiles{display:flex;gap:6px}
+.tiles span{width:44px;height:44px;display:grid;place-items:center;font:700 24px/1 var(--display);color:var(--on-hue)}
+.tiles .p{background:var(--p)} .tiles .d{background:var(--d)} .tiles .c{background:var(--c)} .tiles .a{background:var(--a)}
+h1{font:700 clamp(2.3rem,6vw,3.6rem)/1.02 var(--display);letter-spacing:-.01em;margin:0;text-wrap:balance}
+.lead{font-size:1.15rem;line-height:1.55;max-width:62ch;margin:0;color:var(--ink)}
+.meta{display:flex;flex-direction:row;flex-wrap:wrap;gap:6px 22px;font:400 .8rem/1.4 var(--mono);color:var(--muted);margin:0;padding:0;list-style:none}
+
+/* Estrutura */
+.layout{display:grid;grid-template-columns:minmax(0,1fr);gap:32px;padding-top:32px}
+.toc{font-size:.92rem}
+.toc h2{font:500 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+.toc ol{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:2px 20px;counter-reset:toc}
+.toc li{counter-increment:toc}
+.toc a{display:flex;gap:10px;padding:5px 0;color:var(--ink);text-decoration:none;line-height:1.35}
+.toc a::before{content:counter(toc,decimal-leading-zero);font:400 .75rem/1.7 var(--mono);color:var(--muted)}
+.toc a:hover{color:var(--accent);text-decoration:underline}
+@media (min-width:1020px){
+  .layout{grid-template-columns:200px minmax(0,1fr);gap:64px}
+  .toc{position:sticky;top:calc(env(safe-area-inset-top,0px) + 24px);align-self:start}
+  .toc ol{grid-template-columns:1fr}
+}
+main{display:flex;flex-direction:column;gap:72px;min-width:0}
+section{display:flex;flex-direction:column;gap:20px;scroll-margin-top:24px}
+.eyebrow{font:500 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0}
+h2{font:700 clamp(1.7rem,4vw,2.2rem)/1.1 var(--display);margin:0;text-wrap:balance}
+h3{font:600 1.3rem/1.2 var(--display);margin:12px 0 0;text-wrap:balance}
+h4{font:600 .95rem/1.3 var(--body);margin:0}
+p{margin:0}
+section > p, section > ul, section > ol, section > h3{max-width:68ch}
+ul,ol{margin:0;padding-left:1.25em;display:flex;flex-direction:column;gap:6px}
+strong{font-weight:600}
+code{font:400 .88em var(--mono);background:var(--sunk);padding:1px 5px;border-radius:3px}
+
+/* Letras coloridas no texto */
+.k{display:inline-grid;place-items:center;width:1.45em;height:1.45em;font:700 .85em/1 var(--display);color:var(--on-hue);vertical-align:.05em}
+.k.p{background:var(--p)} .k.d{background:var(--d)} .k.c{background:var(--c)} .k.a{background:var(--a)}
+
+/* Figuras */
+figure{margin:0;display:flex;flex-direction:column;gap:10px;position:relative}
+.scroll{overflow-x:auto;background:var(--surface);border:1px solid var(--rule);padding:18px}
+.scroll svg{display:block;width:100%;min-width:820px;height:auto;color:var(--ink)}
+figcaption{font-size:.86rem;line-height:1.5;color:var(--muted);max-width:72ch}
+figcaption b{color:var(--ink);font-weight:600}
+svg text{font-family:var(--body);fill:var(--ink)}
+svg .disp{font-family:var(--display);font-weight:700}
+svg .mono{font-family:var(--mono);letter-spacing:.08em}
+svg .on{fill:var(--on-hue)}
+svg .mu{fill:var(--muted)}
+svg .b{font-weight:600}
+svg .ln{stroke:var(--ink);stroke-width:1.5;fill:none}
+svg .ln-mu{stroke:var(--muted);stroke-width:1.5;fill:none}
+svg .ln-bold{stroke:var(--ink);stroke-width:3;fill:none;stroke-linejoin:round;stroke-linecap:round}
+svg .dash{stroke-dasharray:5 4}
+svg .ah{fill:var(--ink)} svg .ah-mu{fill:var(--muted)}
+svg .bx{fill:var(--surface);stroke:var(--rule);stroke-width:1.5}
+svg .bx-ink{fill:var(--ink);stroke:var(--ink)}
+svg .t-ground{fill:var(--ground)}
+svg .bx-out{fill:none;stroke:var(--muted);stroke-width:1.5;stroke-dasharray:5 4}
+svg .bx-p{fill:var(--p-tint);stroke:var(--p);stroke-width:1.5} svg .hd-p{fill:var(--p)}
+svg .bx-d{fill:var(--d-tint);stroke:var(--d);stroke-width:1.5} svg .hd-d{fill:var(--d)}
+svg .bx-c{fill:var(--c-tint);stroke:var(--c);stroke-width:1.5} svg .hd-c{fill:var(--c)}
+svg .bx-a{fill:var(--a-tint);stroke:var(--a);stroke-width:1.5} svg .hd-a{fill:var(--a)}
+svg .gap{stroke:var(--surface);stroke-width:4}
+svg .gap2{stroke:var(--surface);stroke-width:2}
+svg .hub{fill:var(--surface)}
+
+/* Gráfico */
+svg .grid{stroke:var(--rule);stroke-width:1}
+svg .band{fill:var(--sunk)}
+svg .series{stroke:var(--accent);stroke-width:2;fill:none;stroke-linejoin:round;stroke-linecap:round}
+svg .pt{fill:var(--accent);stroke:var(--surface);stroke-width:2}
+svg .pt.on-hit{stroke:var(--ink)}
+svg .goal{stroke:var(--muted);stroke-width:1.5;stroke-dasharray:6 4;fill:none}
+svg .xh{stroke:var(--muted);stroke-width:1}
+svg .hit{fill:transparent;cursor:crosshair;outline:none}
+svg .root{fill:var(--accent);stroke:var(--surface);stroke-width:2}
+.tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--ground);padding:6px 10px;font-size:.78rem;line-height:1.4;transform:translate(-50%,calc(-100% - 14px));white-space:nowrap;z-index:2}
+.tip b{display:block;font:600 1.05rem/1.2 var(--body)}
+details.data{font-size:.88rem}
+details.data summary{cursor:pointer;font:400 .82rem var(--mono);color:var(--muted);padding:4px 0}
+details.data .tbl{margin-top:8px}
+details.data table{min-width:420px}
+
+/* Tabelas */
+.tbl{overflow-x:auto;border:1px solid var(--rule);background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:780px;font-size:.88rem;line-height:1.4}
+th,td{padding:9px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--rule)}
+tr:last-child > td{border-bottom:0}
+thead th{font:600 .8rem/1.3 var(--body);background:var(--sunk)}
+td.num{font-variant-numeric:tabular-nums;white-space:nowrap;font-family:var(--mono);font-size:.82rem}
+
+/* Situações */
+.chip{display:inline-block;padding:2px 8px;font:600 .76rem/1.45 var(--body);color:var(--on-hue);white-space:nowrap}
+.chip.s1{background:var(--s1)} .chip.s2{background:var(--s2);color:var(--on-s2)} .chip.s3{background:var(--s3)}
+.chip.sl{background:var(--sunk);color:var(--ink);box-shadow:inset 0 0 0 1px var(--rule)}
+svg .hd-ink{fill:var(--ink)}
+svg .f1{fill:var(--s1)} svg .f2{fill:var(--s2)} svg .f3{fill:var(--s3)} svg .f0{fill:var(--muted)}
+svg .bx-s1{fill:var(--s1-tint);stroke:var(--s1);stroke-width:1.5} svg .bx-s2{fill:var(--s2-tint);stroke:var(--s2);stroke-width:1.5} svg .bx-s3{fill:var(--s3-tint);stroke:var(--s3);stroke-width:1.5}
+svg .zone{fill:var(--s1-tint)}
+svg .err1{stroke:var(--s1);stroke-width:3} svg .err3{stroke:var(--s3);stroke-width:3}
+svg .halo{paint-order:stroke;stroke:var(--surface);stroke-width:5px;stroke-linejoin:round}
+svg .hit:focus-visible{stroke:var(--accent);stroke-width:2}
+
+/* Tabelas dos exemplos */
+table.aud{font-size:.8rem;min-width:960px;line-height:1.4}
+table.aud th, table.aud td{padding:8px 9px}
+table.aud td.n{white-space:nowrap;font-weight:600;color:var(--muted)}
+table.aud td.c, table.aud th.c{text-align:center;font-variant-numeric:tabular-nums}
+table.aud td.no{background:var(--s3-tint)}
+table.aud td small, table.aud th small{display:block;color:var(--muted);font-size:.76rem;margin-top:3px;font-weight:400}
+table.aud caption{caption-side:top;text-align:left;padding:10px 12px;font:500 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);background:var(--sunk)}
+
+/* Ficha dos instrumentos (acima de cada exemplo) */
+.ficha{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:0;border:1px solid var(--rule);background:var(--surface)}
+.ficha div{padding:12px 14px;border-right:1px solid var(--rule);border-bottom:1px solid var(--rule);margin:0 -1px -1px 0}
+.ficha dt{font:500 .68rem/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.ficha dd{margin:0;font-size:.9rem;line-height:1.4}
+dl{margin:0}
+
+/* Blocos */
+.pair{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.box{background:var(--surface);border:1px solid var(--rule);padding:18px 20px;display:flex;flex-direction:column;gap:10px}
+.box h4{font:600 1.1rem/1.2 var(--display)}
+.box ul{font-size:.93rem}
+.note{background:var(--sunk);padding:16px 20px;max-width:72ch;font-size:.94rem;display:flex;flex-direction:column;gap:6px}
+.note h4{font:500 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+
+/* Passo a passo */
+.steps{list-style:none;padding:0;counter-reset:st;gap:0;max-width:none;border-top:1px solid var(--rule)}
+.steps li{counter-increment:st;display:grid;grid-template-columns:44px minmax(0,1fr);gap:4px 12px;padding:16px 0;border-bottom:1px solid var(--rule)}
+.steps li::before{content:counter(st);font:700 1.7rem/1 var(--display);color:var(--muted);grid-row:span 2}
+.steps h4{font:600 1.1rem/1.25 var(--display)}
+.steps p{font-size:.95rem;max-width:64ch;grid-column:2}
+
+/* Erros comuns */
+.errs{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:0 40px;border-top:1px solid var(--rule)}
+.errs div{padding:16px 16px 16px 0;border-bottom:1px solid var(--rule);display:flex;flex-direction:column;gap:4px}
+.errs h4{font:600 1.05rem/1.25 var(--display)}
+.errs p{font-size:.92rem}
+.errs .fix{color:var(--muted)}
+.errs .fix b{color:var(--ink);font-weight:600}
+
+/* Checklist */
+.check{list-style:none;padding:0;gap:0;max-width:none;border:1px solid var(--rule);background:var(--surface)}
+.check li{border-bottom:1px solid var(--rule)}
+.check li:last-child{border-bottom:0}
+.check label{display:grid;grid-template-columns:22px minmax(0,1fr);gap:12px;padding:11px 16px;cursor:pointer;font-size:.94rem;align-items:start}
+.check input{width:18px;height:18px;margin:3px 0 0;accent-color:var(--c)}
+.check input:checked + span{color:var(--muted);text-decoration:line-through}
+.bar{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;font:400 .82rem var(--mono);color:var(--muted)}
+.bar b{color:var(--ink);font-weight:500}
+
+/* Exercício */
+.quiz{display:flex;flex-direction:column;gap:0;border:1px solid var(--rule);background:var(--surface)}
+.q{display:grid;grid-template-columns:minmax(0,1fr);gap:10px;padding:14px 16px;border-bottom:1px solid var(--rule)}
+.q:last-child{border-bottom:0}
+@media (min-width:720px){.q{grid-template-columns:minmax(0,1fr) auto;align-items:center}}
+.q p{font-size:.95rem}
+.q .why{grid-column:1/-1;font-size:.86rem;color:var(--muted)}
+.q .why b{font-weight:600}
+.q .why.ok b{color:var(--good)} .q .why.no b{color:var(--bad)}
+.opts{display:flex;gap:6px}
+.opts button{width:40px;height:40px;border:1.5px solid var(--rule);background:var(--surface);color:var(--ink);font:700 1.1rem/1 var(--display);cursor:pointer;border-radius:0}
+.opts button:hover:not(:disabled){border-color:var(--ink)}
+.opts button:disabled{cursor:default;opacity:.45}
+.opts button.right{background:var(--good-tint);border-color:var(--good);color:var(--good);opacity:1}
+.opts button.wrong{background:var(--bad-tint);border-color:var(--bad);color:var(--bad);opacity:1}
+.btn{border:1.5px solid var(--ink);background:transparent;color:var(--ink);font:500 .82rem var(--mono);padding:7px 14px;cursor:pointer;border-radius:0}
+.btn:hover{background:var(--ink);color:var(--ground)}
+
+/* Glossário */
+.gloss{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:0 40px;border-top:1px solid var(--rule)}
+.gloss div{padding:12px 0;border-bottom:1px solid var(--rule)}
+.gloss dt{font:600 1.02rem/1.3 var(--display)}
+.gloss dd{margin:2px 0 0;font-size:.9rem;color:var(--muted)}
+footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);font-size:.84rem;color:var(--muted);max-width:72ch}
+
+.quiz .opts{flex-wrap:wrap}
+.quiz .opts button{width:auto;min-width:40px;padding:0 11px;font-size:1rem}
+@media (min-width:720px){.q{grid-template-columns:minmax(0,1fr) auto}}
+</style>
+</head>
+<body>
+<div class="page" lang="pt-BR">
+
+<header class="mast">
+  <div class="tiles" aria-hidden="true"><span class="p">C</span><span class="d">I</span><span class="c">R</span></div>
+  <h1>Calibração e recursos de medição na prática</h1>
+  <p class="lead">Um guia de estudo para escolher instrumentos adequados ao que se mede, calibrar ou verificar com rastreabilidade, ler o certificado, identificar a situação de cada instrumento e reagir quando ele estava errado.</p>
+  <ul class="meta">
+    <li>Treinamento autoinstrucional</li>
+    <li>13 módulos</li>
+    <li>Leitura de cerca de 45 minutos</li>
+    <li>3 exemplos resolvidos e 2 exercícios</li>
+  </ul>
+</header>
+
+<div class="layout">
+
+<nav class="toc" aria-label="Sumário">
+  <h2>Sumário</h2>
+  <ol>
+    <li><a href="#o-que-e">O que é</a></li>
+    <li><a href="#quando">Quando usar</a></li>
+    <li><a href="#como">Como construir</a></li>
+    <li><a href="#certificado">Ler o certificado</a></li>
+    <li><a href="#adequacao">O instrumento adequado</a></li>
+    <li><a href="#exemplos">Exemplos resolvidos</a></li>
+    <li><a href="#leitura">Ler os vencimentos</a></li>
+    <li><a href="#erros">Erros comuns</a></li>
+    <li><a href="#ferramentas">A calibração e outras ferramentas</a></li>
+    <li><a href="#iso">Nas normas ISO</a></li>
+    <li><a href="#ronda">A ronda metrológica</a></li>
+    <li><a href="#pratique">Pratique</a></li>
+    <li><a href="#planilha">A planilha de apoio</a></li>
+    <li><a href="#glossario">Glossário</a></li>
+  </ol>
+</nav>
+
+<main>
+
+<!-- ============================ MÓDULO 1 ============================ -->
+<section id="o-que-e">
+  <p class="eyebrow">Módulo 1</p>
+  <h2>O que é</h2>
+  <p>Toda decisão de aprovar ou reprovar um produto depende de uma medição: a temperatura da pizza, o peso da massa, a espessura do filme. Se o instrumento está errado, a decisão está errada, e ninguém percebe. Calibrar é comparar o instrumento com um padrão confiável e saber quanto ele erra. Verificar é conferir se esse erro cabe no que a organização aceita.</p>
+  <p>As letras do título são os três movimentos: <span class="k p">C</span> calibrar ou verificar contra um padrão rastreável, <span class="k d">I</span> identificar a situação de cada instrumento e <span class="k c">R</span> reagir quando ele estava errado, inclusive sobre o que já foi medido.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 214" role="img" aria-label="A cadeia de rastreabilidade metrológica. Padrão internacional: Define a unidade de medida. Instituto nacional de metrologia: Mantém o padrão nacional do país. Laboratório acreditado: Calibra os padrões e os instrumentos das empresas, com incerteza declarada. Padrão da organização: Termômetro padrão, peso-padrão, bloco-padrão. Instrumento do posto: Mede o produto, todos os dias. Cada elo é calibrado pelo anterior, e a incerteza cresce a cada elo.">
+        <defs><marker id="a1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker><marker id="a1m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah-mu" d="M0 0 L10 5 L0 10 z"/></marker></defs>
+        <rect class="bx" x="12" y="16" width="164" height="118"/>
+        <text class="b" x="24" y="40" font-size="12">Padrão internacional</text>
+        <text x="24" y="63" font-size="10.5">Define a unidade de</text>
+        <text x="24" y="77" font-size="10.5">medida.</text>
+        <line class="ln" x1="177" y1="75" x2="188" y2="75" marker-end="url(#a1)"/>
+        <rect class="bx" x="190" y="16" width="164" height="118"/>
+        <text class="b" x="202" y="40" font-size="12">Instituto nacional de</text>
+        <text class="b" x="202" y="55" font-size="12">metrologia</text>
+        <text x="202" y="78" font-size="10.5">Mantém o padrão nacional</text>
+        <text x="202" y="92" font-size="10.5">do país.</text>
+        <line class="ln" x1="355" y1="75" x2="366" y2="75" marker-end="url(#a1)"/>
+        <rect class="bx-s1" x="368" y="16" width="164" height="118"/>
+        <text class="b" x="380" y="40" font-size="12">Laboratório acreditado</text>
+        <text x="380" y="63" font-size="10.5">Calibra os padrões e os</text>
+        <text x="380" y="77" font-size="10.5">instrumentos das empresas,</text>
+        <text x="380" y="91" font-size="10.5">com incerteza declarada.</text>
+        <line class="ln" x1="533" y1="75" x2="544" y2="75" marker-end="url(#a1)"/>
+        <rect class="bx-s1" x="546" y="16" width="164" height="118"/>
+        <text class="b" x="558" y="40" font-size="12">Padrão da organização</text>
+        <text x="558" y="63" font-size="10.5">Termômetro padrão, peso-</text>
+        <text x="558" y="77" font-size="10.5">padrão, bloco-padrão.</text>
+        <line class="ln" x1="711" y1="75" x2="722" y2="75" marker-end="url(#a1)"/>
+        <rect class="bx-ink" x="724" y="16" width="164" height="118"/>
+        <text class="b t-ground" x="736" y="40" font-size="12">Instrumento do posto</text>
+        <text class="t-ground" x="736" y="63" font-size="10.5">Mede o produto, todos os</text>
+        <text class="t-ground" x="736" y="77" font-size="10.5">dias.</text>
+        <path class="ln-mu dash" d="M94 150 H806" marker-end="url(#a1m)"/>
+        <text class="mu halo" x="450" y="154" font-size="11" text-anchor="middle">a incerteza cresce a cada elo</text>
+        <text x="450" y="182" font-size="11.5" text-anchor="middle">Rastreabilidade é poder seguir, de elo em elo, até o padrão da unidade.</text>
+        <text class="mu" x="450" y="202" font-size="11" text-anchor="middle">O certificado de cada elo diz contra o que o instrumento foi comparado, e com que incerteza.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 1.</b> A cadeia de rastreabilidade. O instrumento do posto vale o que vale o elo de cima, e assim até o padrão da unidade.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Elemento</th><th style="width:40%">O que é</th><th>Exemplo</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Calibração</strong></td><td>A comparação com um padrão rastreável, que diz o erro do instrumento e a incerteza.</td><td>Certificado do laboratório: erro de +0,6 µm, incerteza de 0,3 µm.</td></tr>
+        <tr><td><strong>Verificação</strong></td><td>A conferência de que o erro cabe no critério. Pode ser feita na própria organização.</td><td>Termômetro em água com gelo: deve marcar 0 °C, com ±1 °C.</td></tr>
+        <tr><td><strong>Ajuste</strong></td><td>A correção do instrumento para reduzir o erro. Não é calibração.</td><td>Regular o zero da balança.</td></tr>
+        <tr><td><strong>Erro máximo admissível</strong></td><td>O maior erro que a organização aceita naquele instrumento.</td><td>±1 °C no termômetro da câmara fria.</td></tr>
+        <tr><td><strong>Incerteza</strong></td><td>A dúvida da própria medição de calibração, declarada pelo laboratório.</td><td>±0,2 °C na verificação do termômetro.</td></tr>
+        <tr><td><strong>Rastreabilidade</strong></td><td>A cadeia de calibrações que liga o instrumento ao padrão da unidade.</td><td>O peso-padrão calibrado por um laboratório acreditado.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 2 ============================ -->
+<section id="quando">
+  <p class="eyebrow">Módulo 2</p>
+  <h2>Quando usar</h2>
+  <p>O controle vale para todo instrumento cujo resultado decide se o produto está conforme. O relógio da parede, o termômetro do escritório e a régua da recepção ficam de fora. O termômetro que libera a pizza, não.</p>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:28%">Momento</th><th style="width:38%">O que fazer</th><th>Resultado</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Instrumento novo</strong></td><td>Conferir a adequação, cadastrar, calibrar ou verificar antes do primeiro uso.</td><td>Nada mede o produto sem ter sido conferido.</td></tr>
+        <tr><td><strong>No intervalo definido</strong></td><td>Calibrar ou verificar, ler o resultado e atualizar a etiqueta.</td><td>O instrumento continua confiável.</td></tr>
+        <tr><td><strong>Depois de uma queda ou de um reparo</strong></td><td>Verificar antes de voltar a usar.</td><td>O dano não passa despercebido.</td></tr>
+        <tr><td><strong>Certificado recebido</strong></td><td>Comparar o erro e a incerteza com o critério.</td><td>O certificado é lido, e não só arquivado.</td></tr>
+        <tr><td><strong>Instrumento reprovado</strong></td><td>Bloquear, corrigir e avaliar o que foi medido desde a última calibração boa.</td><td>O produto aprovado por engano é encontrado.</td></tr>
+        <tr><td><strong>Toda semana</strong></td><td>Ler a lista dos que vencem no mês.</td><td>Nada vence sem aviso.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pair">
+    <div class="box">
+      <h4>Pede calibração rastreável</h4>
+      <ul>
+        <li>O cliente ou a lei exige rastreabilidade.</li>
+        <li>A tolerância é apertada, e o erro do instrumento pesa.</li>
+        <li>O instrumento é o padrão das verificações internas.</li>
+        <li>O resultado vai para um laudo ou um certificado.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h4>Pode bastar a verificação interna</h4>
+      <ul>
+        <li>Há um padrão confiável na própria organização.</li>
+        <li>A tolerância é larga perto do erro do instrumento.</li>
+        <li>O método está escrito e é repetível.</li>
+        <li>O padrão usado, ele sim, é calibrado.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 3 ============================ -->
+<section id="como">
+  <p class="eyebrow">Módulo 3</p>
+  <h2>Como construir</h2>
+  <p>O controle de instrumentos cabe em uma lista e em um registro. O erro mais comum é parar na lista: os instrumentos estão cadastrados e etiquetados, os certificados estão na pasta, e ninguém leu se o erro cabe no critério.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 222" role="img" aria-label="As cinco etapas do trabalho. Listar o que se mede: Cada medição que decide se o produto está conforme, e o instrumento que a faz. Escolher o instrumento: Faixa, resolução e método adequados à tolerância do que se mede. Calibrar ou verificar: Contra padrão rastreável, no intervalo definido, com o erro máximo admissível. Identificar e proteger: Etiqueta com a situação. Proteção contra queda, ajuste indevido e desgaste. Ler e reagir: Ler o certificado. Reprovado: bloquear, corrigir e rever o que foi medido antes. O instrumento reprovado volta à escolha.">
+        <defs><marker id="a2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker><marker id="a2m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah-mu" d="M0 0 L10 5 L0 10 z"/></marker></defs>
+        <rect class="bx" x="12" y="16" width="164" height="140"/>
+        <text class="mono mu" x="24" y="36" font-size="10">ETAPA 1</text>
+        <text class="b" x="24" y="58" font-size="12.5">Listar o que se mede</text>
+        <text x="24" y="80.0" font-size="10.5">Cada medição que decide se</text>
+        <text x="24" y="94.5" font-size="10.5">o produto está conforme, e</text>
+        <text x="24" y="109.0" font-size="10.5">o instrumento que a faz.</text>
+        <line class="ln" x1="177" y1="78" x2="188" y2="78" marker-end="url(#a2)"/>
+        <rect class="bx-s2" x="190" y="16" width="164" height="140"/>
+        <text class="mono mu" x="202" y="36" font-size="10">ETAPA 2</text>
+        <text class="b" x="202" y="58" font-size="12.5">Escolher o instrumento</text>
+        <text x="202" y="80.0" font-size="10.5">Faixa, resolução e método</text>
+        <text x="202" y="94.5" font-size="10.5">adequados à tolerância do</text>
+        <text x="202" y="109.0" font-size="10.5">que se mede.</text>
+        <line class="ln" x1="355" y1="78" x2="366" y2="78" marker-end="url(#a2)"/>
+        <rect class="bx-s1" x="368" y="16" width="164" height="140"/>
+        <text class="mono mu" x="380" y="36" font-size="10">ETAPA 3</text>
+        <text class="b" x="380" y="58" font-size="12.5">Calibrar ou verificar</text>
+        <text x="380" y="80.0" font-size="10.5">Contra padrão rastreável,</text>
+        <text x="380" y="94.5" font-size="10.5">no intervalo definido, com</text>
+        <text x="380" y="109.0" font-size="10.5">o erro máximo admissível.</text>
+        <line class="ln" x1="533" y1="78" x2="544" y2="78" marker-end="url(#a2)"/>
+        <rect class="bx" x="546" y="16" width="164" height="140"/>
+        <text class="mono mu" x="558" y="36" font-size="10">ETAPA 4</text>
+        <text class="b" x="558" y="58" font-size="12.5">Identificar e proteger</text>
+        <text x="558" y="80.0" font-size="10.5">Etiqueta com a situação.</text>
+        <text x="558" y="94.5" font-size="10.5">Proteção contra queda,</text>
+        <text x="558" y="109.0" font-size="10.5">ajuste indevido e</text>
+        <text x="558" y="123.5" font-size="10.5">desgaste.</text>
+        <line class="ln" x1="711" y1="78" x2="722" y2="78" marker-end="url(#a2)"/>
+        <rect class="bx-ink" x="724" y="16" width="164" height="140"/>
+        <text class="mono t-ground" x="736" y="36" font-size="10">ETAPA 5</text>
+        <text class="b t-ground" x="736" y="58" font-size="12.5">Ler e reagir</text>
+        <text class="t-ground" x="736" y="80.0" font-size="10.5">Ler o certificado.</text>
+        <text class="t-ground" x="736" y="94.5" font-size="10.5">Reprovado: bloquear,</text>
+        <text class="t-ground" x="736" y="109.0" font-size="10.5">corrigir e rever o que foi</text>
+        <text class="t-ground" x="736" y="123.5" font-size="10.5">medido antes.</text>
+        <path class="ln-mu dash" d="M806.0 158 V186 H272.0 V162" marker-end="url(#a2m)"/>
+        <text class="mu halo" x="539.0" y="190" font-size="11" text-anchor="middle">o instrumento reprovado, ou grosso demais, é trocado</text>
+        <text x="450" y="214" font-size="11.5" text-anchor="middle">A etapa escura é a que mais se esquece: o que fazer quando o instrumento estava errado.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 2.</b> As cinco etapas. A última é a que justifica todas as outras: saber o que fazer quando o instrumento estava errado.</figcaption>
+  </figure>
+
+  <h3>Passo a passo</h3>
+  <ol class="steps">
+    <li><h4>Liste as medições que decidem</h4><p>Percorra o plano de controle e a inspeção: cada medição que aprova ou reprova um produto, e o instrumento que a faz.</p></li>
+    <li><h4>Confira a adequação</h4><p>A faixa cobre o que se mede? A resolução cabe ao menos dez vezes na tolerância? O método mede o que precisa ser medido?</p></li>
+    <li><h4>Defina o controle de cada instrumento</h4><p>Calibração externa, verificação interna ou as duas. O intervalo, pelo uso e pelo histórico. O erro máximo admissível.</p></li>
+    <li><h4>Calibre ou verifique</h4><p>Com laboratório competente, de preferência acreditado, ou com um padrão próprio calibrado. Sem padrão, registre o método usado.</p></li>
+    <li><h4>Leia o resultado</h4><p>Erro mais incerteza cabe no critério? Aprovado. Não cabe? Reprovado, mesmo que o certificado não diga isso.</p></li>
+    <li><h4>Identifique e proteja</h4><p>Etiqueta com a situação e a próxima data. Lacre nos ajustes que não podem ser mexidos. Guarda que evite quedas.</p></li>
+    <li><h4>Reaja ao instrumento reprovado</h4><p>Bloqueie, corrija ou troque, e avalie tudo o que ele mediu desde a última calibração boa. O produto afetado é tratado como não conforme.</p></li>
+    <li><h4>Leia os vencimentos toda semana</h4><p>A lista dos que vencem no mês, e a ronda no posto para conferir as etiquetas.</p></li>
+  </ol>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:26%">Papel</th><th style="width:28%">Quem costuma ser</th><th>O que faz</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Quem controla</strong></td><td>A Qualidade, o laboratório ou o líder.</td><td>Mantém a lista, programa as calibrações e lê os certificados.</td></tr>
+        <tr><td><strong>Quem calibra</strong></td><td>Um laboratório externo competente.</td><td>Compara com padrões rastreáveis e emite o certificado.</td></tr>
+        <tr><td><strong>Quem verifica</strong></td><td>O laboratório interno ou o líder treinado.</td><td>Aplica o método escrito, com o padrão próprio.</td></tr>
+        <tr><td><strong>Quem usa</strong></td><td>Quem mede no posto.</td><td>Confere a etiqueta antes de usar e avisa da queda ou do dano.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 4 ============================ -->
+<section id="certificado">
+  <p class="eyebrow">Módulo 4</p>
+  <h2>Ler o certificado</h2>
+  <p>O certificado de calibração não diz se o instrumento está bom. Diz quanto ele erra, em que pontos, e com que incerteza. A decisão de aprovar é da organização, que compara esses números com o seu critério: o erro máximo admissível.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 236" role="img" aria-label="Como ler o resultado de uma calibração. O critério é o erro máximo admissível de mais ou menos 1 grau. TER-01: erro de mais 0,3 grau, incerteza de 0,2: o intervalo inteiro cabe no critério, aprovado. TER-02: erro de menos 2 graus, incerteza de 0,3: fora do critério, reprovado.">
+        <rect class="zone" x="443.33333333333337" y="30" width="193.33333333333337" height="128"/>
+        <text class="mono mu" x="540.0" y="22" font-size="10" text-anchor="middle">ERRO MÁXIMO ADMISSÍVEL: ±1 °C</text>
+        <line class="grid" x1="250.0" y1="30" x2="250.0" y2="158"/>
+        <text class="mu" x="250.0" y="176" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">-3</text>
+        <line class="grid" x1="346.6666666666667" y1="30" x2="346.6666666666667" y2="158"/>
+        <text class="mu" x="346.6666666666667" y="176" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">-2</text>
+        <line class="grid" x1="443.33333333333337" y1="30" x2="443.33333333333337" y2="158"/>
+        <text class="mu" x="443.33333333333337" y="176" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">-1</text>
+        <line class="grid" x1="540.0" y1="30" x2="540.0" y2="158"/>
+        <text class="mu" x="540.0" y="176" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">0</text>
+        <line class="grid" x1="636.6666666666667" y1="30" x2="636.6666666666667" y2="158"/>
+        <text class="mu" x="636.6666666666667" y="176" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">+1</text>
+        <line class="grid" x1="733.3333333333333" y1="30" x2="733.3333333333333" y2="158"/>
+        <text class="mu" x="733.3333333333333" y="176" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">+2</text>
+        <line class="grid" x1="830.0" y1="30" x2="830.0" y2="158"/>
+        <text class="mu" x="830.0" y="176" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">+3</text>
+        <line class="ln" x1="540.0" y1="30" x2="540.0" y2="158"/>
+        <text class="mono mu" x="540.0" y="196" font-size="10" text-anchor="middle">ERRO ENCONTRADO, EM °C</text>
+        <text x="20" y="68" font-size="11.5"><tspan class="b">TER-01, verificado em 05/03</tspan></text>
+        <text class="mu" x="20" y="84" font-size="10.5">erro +0,3 °C · incerteza 0,2 °C</text>
+        <line class="err1" x1="549.6666666666667" y1="64" x2="588.3333333333333" y2="64"/>
+        <line class="err1" x1="549.6666666666667" y1="58" x2="549.6666666666667" y2="70"/><line class="err1" x1="588.3333333333333" y1="58" x2="588.3333333333333" y2="70"/>
+        <circle class="f1" cx="569.0" cy="64" r="6"/>
+        <text class="b halo" x="598.3333333333333" y="68" font-size="11.5">Aprovado</text>
+        <text x="20" y="124" font-size="11.5"><tspan class="b">TER-02, verificado em 15/03</tspan></text>
+        <text class="mu" x="20" y="140" font-size="10.5">erro -2 °C · incerteza 0,3 °C</text>
+        <line class="err3" x1="317.6666666666667" y1="120" x2="375.6666666666667" y2="120"/>
+        <line class="err3" x1="317.6666666666667" y1="114" x2="317.6666666666667" y2="126"/><line class="err3" x1="375.6666666666667" y1="114" x2="375.6666666666667" y2="126"/>
+        <circle class="f3" cx="346.6666666666667" cy="120" r="6"/>
+        <text class="b halo" x="307.6666666666667" y="124" font-size="11.5" text-anchor="end">Reprovado</text>
+        <text x="450" y="226" font-size="11.5" text-anchor="middle">Aprovado só quando o erro, somado à incerteza, cabe no critério. A incerteza é a dúvida do próprio laboratório.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 3.</b> Dois resultados de verificação na pizzaria. O traço é o erro com a incerteza; a faixa azul, o critério. Só o primeiro cabe inteiro.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">No certificado</th><th style="width:40%">O que significa</th><th>O que conferir</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Pontos calibrados</strong></td><td>Os valores em que o instrumento foi comparado.</td><td>Os pontos cobrem a faixa em que o instrumento é usado?</td></tr>
+        <tr><td><strong>Erro, ou correção</strong></td><td>A diferença entre o que o instrumento mostrou e o padrão.</td><td>O erro, somado à incerteza, cabe no critério?</td></tr>
+        <tr><td><strong>Incerteza</strong></td><td>A faixa de dúvida da calibração.</td><td>A incerteza é pequena perto do critério?</td></tr>
+        <tr><td><strong>Padrões usados</strong></td><td>Contra o que o instrumento foi comparado.</td><td>Os padrões têm calibração válida? A cadeia é rastreável?</td></tr>
+        <tr><td><strong>Laboratório</strong></td><td>Quem calibrou, e se é acreditado.</td><td>O laboratório é competente para aquela grandeza?</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note">
+    <h4>Calibrado não é aprovado</h4>
+    <p>Um instrumento pode ter certificado de calibração em dia e estar reprovado. O certificado só registra o que o laboratório encontrou. Se o erro de +0,8 µm com incerteza de 0,4 µm é comparado com o critério de ±1 µm, o resultado é 1,2 µm, fora do critério. O instrumento precisa ser ajustado, ou trocado, e o que ele mediu precisa ser revisto. Arquivar o certificado sem essa conta é um dos achados mais comuns em auditoria.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 5 ============================ -->
+<section id="adequacao">
+  <p class="eyebrow">Módulo 5</p>
+  <h2>O instrumento adequado</h2>
+  <p>A norma pede recursos adequados ao tipo de medição. Antes de calibrar, a pergunta é se aquele instrumento consegue medir o que se precisa: a faixa, a resolução e o método. Um instrumento perfeitamente calibrado e grosso demais continua inútil.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 222" role="img" aria-label="Resolução e tolerância, no exemplo da espessura de 38 a 42 micrômetros. Com resolução de 1 micrômetro, a faixa cabe em apenas 4 passos, e o micrômetro não distingue 41,6 de 42,4. Com 0,1 micrômetro, são 40 passos. A regra deste material pede ao menos 10 passos dentro da tolerância.">
+        <text class="b" x="20" y="50" font-size="12">Resolução de 1 µm</text>
+        <text class="mu" x="20" y="67" font-size="10.5">4 passos na tolerância: grossa</text>
+        <rect class="zone" x="310.0" y="34" width="440.0" height="34"/>
+        <line class="ln-mu" x1="200.0" y1="62" x2="860.0" y2="62"/>
+        <line class="ln" x1="200.0" y1="44" x2="200.0" y2="62"/>
+        <line class="ln" x1="310.0" y1="44" x2="310.0" y2="62"/>
+        <line class="ln" x1="420.0" y1="44" x2="420.0" y2="62"/>
+        <line class="ln" x1="530.0" y1="44" x2="530.0" y2="62"/>
+        <line class="ln" x1="640.0" y1="44" x2="640.0" y2="62"/>
+        <line class="ln" x1="750.0" y1="44" x2="750.0" y2="62"/>
+        <line class="ln" x1="860.0" y1="44" x2="860.0" y2="62"/>
+        <text class="b" x="20" y="128" font-size="12">Resolução de 0,1 µm</text>
+        <text class="mu" x="20" y="145" font-size="10.5">40 passos na tolerância: adequada</text>
+        <rect class="zone" x="310.0" y="112" width="440.0" height="34"/>
+        <line class="ln-mu" x1="200.0" y1="140" x2="860.0" y2="140"/>
+        <line class="ln" x1="200.0" y1="122" x2="200.0" y2="140"/>
+        <line class="ln-mu" x1="211.0" y1="130" x2="211.0" y2="140"/>
+        <line class="ln-mu" x1="222.0" y1="130" x2="222.0" y2="140"/>
+        <line class="ln-mu" x1="233.0" y1="130" x2="233.0" y2="140"/>
+        <line class="ln-mu" x1="244.0" y1="130" x2="244.0" y2="140"/>
+        <line class="ln-mu" x1="255.0" y1="130" x2="255.0" y2="140"/>
+        <line class="ln-mu" x1="266.0" y1="130" x2="266.0" y2="140"/>
+        <line class="ln-mu" x1="277.0" y1="130" x2="277.0" y2="140"/>
+        <line class="ln-mu" x1="288.0" y1="130" x2="288.0" y2="140"/>
+        <line class="ln-mu" x1="299.0" y1="130" x2="299.0" y2="140"/>
+        <line class="ln" x1="310.0" y1="122" x2="310.0" y2="140"/>
+        <line class="ln-mu" x1="321.0" y1="130" x2="321.0" y2="140"/>
+        <line class="ln-mu" x1="332.0" y1="130" x2="332.0" y2="140"/>
+        <line class="ln-mu" x1="343.0" y1="130" x2="343.0" y2="140"/>
+        <line class="ln-mu" x1="354.0" y1="130" x2="354.0" y2="140"/>
+        <line class="ln-mu" x1="365.0" y1="130" x2="365.0" y2="140"/>
+        <line class="ln-mu" x1="376.0" y1="130" x2="376.0" y2="140"/>
+        <line class="ln-mu" x1="387.0" y1="130" x2="387.0" y2="140"/>
+        <line class="ln-mu" x1="398.0" y1="130" x2="398.0" y2="140"/>
+        <line class="ln-mu" x1="409.0" y1="130" x2="409.0" y2="140"/>
+        <line class="ln" x1="420.0" y1="122" x2="420.0" y2="140"/>
+        <line class="ln-mu" x1="431.0" y1="130" x2="431.0" y2="140"/>
+        <line class="ln-mu" x1="442.0" y1="130" x2="442.0" y2="140"/>
+        <line class="ln-mu" x1="453.0" y1="130" x2="453.0" y2="140"/>
+        <line class="ln-mu" x1="464.0" y1="130" x2="464.0" y2="140"/>
+        <line class="ln-mu" x1="475.0" y1="130" x2="475.0" y2="140"/>
+        <line class="ln-mu" x1="486.0" y1="130" x2="486.0" y2="140"/>
+        <line class="ln-mu" x1="497.0" y1="130" x2="497.0" y2="140"/>
+        <line class="ln-mu" x1="508.0" y1="130" x2="508.0" y2="140"/>
+        <line class="ln-mu" x1="519.0" y1="130" x2="519.0" y2="140"/>
+        <line class="ln" x1="530.0" y1="122" x2="530.0" y2="140"/>
+        <line class="ln-mu" x1="541.0" y1="130" x2="541.0" y2="140"/>
+        <line class="ln-mu" x1="552.0" y1="130" x2="552.0" y2="140"/>
+        <line class="ln-mu" x1="563.0" y1="130" x2="563.0" y2="140"/>
+        <line class="ln-mu" x1="574.0" y1="130" x2="574.0" y2="140"/>
+        <line class="ln-mu" x1="585.0" y1="130" x2="585.0" y2="140"/>
+        <line class="ln-mu" x1="596.0" y1="130" x2="596.0" y2="140"/>
+        <line class="ln-mu" x1="607.0" y1="130" x2="607.0" y2="140"/>
+        <line class="ln-mu" x1="618.0" y1="130" x2="618.0" y2="140"/>
+        <line class="ln-mu" x1="629.0" y1="130" x2="629.0" y2="140"/>
+        <line class="ln" x1="640.0" y1="122" x2="640.0" y2="140"/>
+        <line class="ln-mu" x1="651.0" y1="130" x2="651.0" y2="140"/>
+        <line class="ln-mu" x1="662.0" y1="130" x2="662.0" y2="140"/>
+        <line class="ln-mu" x1="673.0" y1="130" x2="673.0" y2="140"/>
+        <line class="ln-mu" x1="684.0" y1="130" x2="684.0" y2="140"/>
+        <line class="ln-mu" x1="695.0" y1="130" x2="695.0" y2="140"/>
+        <line class="ln-mu" x1="706.0" y1="130" x2="706.0" y2="140"/>
+        <line class="ln-mu" x1="717.0" y1="130" x2="717.0" y2="140"/>
+        <line class="ln-mu" x1="728.0" y1="130" x2="728.0" y2="140"/>
+        <line class="ln-mu" x1="739.0" y1="130" x2="739.0" y2="140"/>
+        <line class="ln" x1="750.0" y1="122" x2="750.0" y2="140"/>
+        <line class="ln-mu" x1="761.0" y1="130" x2="761.0" y2="140"/>
+        <line class="ln-mu" x1="772.0" y1="130" x2="772.0" y2="140"/>
+        <line class="ln-mu" x1="783.0" y1="130" x2="783.0" y2="140"/>
+        <line class="ln-mu" x1="794.0" y1="130" x2="794.0" y2="140"/>
+        <line class="ln-mu" x1="805.0" y1="130" x2="805.0" y2="140"/>
+        <line class="ln-mu" x1="816.0" y1="130" x2="816.0" y2="140"/>
+        <line class="ln-mu" x1="827.0" y1="130" x2="827.0" y2="140"/>
+        <line class="ln-mu" x1="838.0" y1="130" x2="838.0" y2="140"/>
+        <line class="ln-mu" x1="849.0" y1="130" x2="849.0" y2="140"/>
+        <line class="ln" x1="860.0" y1="122" x2="860.0" y2="140"/>
+        <text class="mu" x="200.0" y="168" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">37</text>
+        <text class="mu" x="310.0" y="168" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">38</text>
+        <text class="mu" x="420.0" y="168" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">39</text>
+        <text class="mu" x="530.0" y="168" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">40</text>
+        <text class="mu" x="640.0" y="168" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">41</text>
+        <text class="mu" x="750.0" y="168" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">42</text>
+        <text class="mu" x="860.0" y="168" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">43</text>
+        <text class="mono mu" x="530.0" y="24" font-size="10" text-anchor="middle">TOLERÂNCIA: 38 A 42 µm</text>
+        <text x="450" y="210" font-size="11.5" text-anchor="middle">Regra deste material: a resolução deve caber ao menos 10 vezes na tolerância.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 4.</b> A mesma tolerância vista por dois micrômetros. O de cima não consegue distinguir uma bobina no limite de uma bobina fora dele.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:20%">Pergunta</th><th style="width:44%">O que conferir</th><th>Exemplo</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Faixa</strong></td><td>O instrumento mede todos os valores que podem aparecer?</td><td>O termômetro do forno precisa ir além de 320 °C.</td></tr>
+        <tr><td><strong>Resolução</strong></td><td>O menor passo cabe ao menos dez vezes na tolerância?</td><td>Tolerância de 4 µm pede resolução de 0,4 µm ou menor.</td></tr>
+        <tr><td><strong>Método</strong></td><td>O instrumento mede a grandeza certa, no lugar certo?</td><td>Termômetro infravermelho mede a superfície, e não o centro do queijo.</td></tr>
+        <tr><td><strong>Condições de uso</strong></td><td>Temperatura, umidade, vibração, limpeza.</td><td>A balança perto do forno, sujeita a correntes de ar.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note">
+    <h4>Instrumento sem padrão</h4>
+    <p>Às vezes não há padrão nacional para o que se mede: a cor de uma impressão, o aroma de um ingrediente, a aparência de uma bobina. Nesses casos, a norma pede que a organização registre a base usada para verificar: um padrão de cores aprovado pelo cliente, uma amostra de referência guardada, um painel de defeitos fotografado. O padrão de defeitos do posto, usado no plano de controle da indústria, é um exemplo.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 6 ============================ -->
+<section id="exemplos">
+  <p class="eyebrow">Módulo 6</p>
+  <h2>Exemplos resolvidos</h2>
+  <p>Os instrumentos de uma cozinha e os de uma fábrica, com as calibrações e as verificações, e a avaliação dos resultados anteriores de um micrômetro reprovado. As organizações são as dos outros estudos da série, e os instrumentos são os do plano de controle. Os dois primeiros exemplos também estão preenchidos na planilha de apoio. Os dados são ilustrativos e foram criados para este treinamento.</p>
+
+  <h3>Exemplo 1. Os instrumentos da pizzaria</h3>
+  <dl class="ficha">
+    <div><dt>Organização</dt><dd>Pizzaria (loja com salão e delivery)</dd></div>
+    <div><dt>Responsável</dt><dd>Pizzaiolo líder, com o gerente da loja</dd></div>
+    <div><dt>Padrões próprios</dt><dd>Termômetro de espeto TER-01, verificado em água com gelo, e peso-padrão de 500 g, calibrado por laboratório externo.</dd></div>
+    <div><dt>Leitura</dt><dd>31/03/2027.</dd></div>
+    <div><dt>Origem</dt><dd>Requisito 7.1.5 atendido em parte no diagnóstico de 2026: a balança era verificada todo mês, e o termômetro da câmara fria, nunca.</dd></div>
+  </dl>
+  <div class="tbl">
+    <table class="aud">
+      <caption>Instrumentos · 6 cadastrados: 2 em dia, 2 vencem em 30 dias, 0 vencidos, 1 sem calibração, 1 fora de uso</caption>
+      <thead><tr><th>Código</th><th style="width:28%">Instrumento<small>Local · o que mede</small></th><th class="c">Tolerância</th><th class="c">Resolução</th><th style="width:15%">Controle<small>Intervalo · erro máximo</small></th><th class="c">Última</th><th class="c">Próxima</th><th>Situação</th><th>Conferência</th></tr></thead>
+      <tbody>
+        <tr><td class="n">TER-01</td><td><strong>Termômetro de espeto</strong><small>Expedição · Temperatura da pizza na saída: no mínimo 65 °C</small></td><td class="c">5 °C</td><td class="c">0,1 °C<small>Adequado</small></td><td>Verificação interna<small>todo mês · ±1 °C</small></td><td class="c">05/03/2027</td><td class="c">05/04/2027</td><td><span class="chip s2">Vence em 30 dias</span></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">TER-02</td><td><strong>Termômetro de visor da câmara fria</strong><small>Câmara fria · Temperatura da câmara: 0 a 5 °C</small></td><td class="c">5 °C</td><td class="c">0,1 °C<small>Adequado</small></td><td>Verificação interna<small>a cada 3 meses · ±1 °C</small></td><td class="c">15/03/2027</td><td class="c">15/06/2027</td><td><span class="chip sl">Fora de uso</span></td><td><span class="chip sl">Fora de uso</span></td></tr>
+        <tr><td class="n">TER-03</td><td><strong>Termômetro do forno</strong><small>Forno · Temperatura do forno: 280 a 320 °C</small></td><td class="c">40 °C</td><td class="c">1 °C<small>Adequado</small></td><td>Calibração externa<small>a cada 12 meses · ±5 °C</small></td><td class="c">15/06/2026</td><td class="c">15/06/2027</td><td><span class="chip s1">Em dia</span></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">TER-04</td><td><strong>Termômetro de espeto do recebimento</strong><small>Recebimento · Temperatura dos insumos refrigerados: até 7 °C</small></td><td class="c">2 °C</td><td class="c">0,1 °C<small>Adequado</small></td><td>Verificação interna<small>todo mês · ±1 °C</small></td><td class="c">—</td><td class="c">—</td><td><span class="chip s3">Sem calibração</span></td><td><span class="chip s3">Sem calibração ou verificação</span></td></tr>
+        <tr><td class="n">BAL-01</td><td><strong>Balança da bancada</strong><small>Produção · Peso da bola de massa: 380 a 420 g</small></td><td class="c">40 g</td><td class="c">1 g<small>Adequado</small></td><td>Verificação interna<small>todo mês · ±2 g</small></td><td class="c">01/03/2027</td><td class="c">01/04/2027</td><td><span class="chip s2">Vence em 30 dias</span></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">BAL-02</td><td><strong>Balança do recebimento</strong><small>Recebimento · Peso dos insumos recebidos</small></td><td class="c">200 g</td><td class="c">5 g<small>Adequado</small></td><td>Calibração externa<small>a cada 12 meses · ±10 g</small></td><td class="c">20/01/2027</td><td class="c">20/01/2028</td><td><span class="chip s1">Em dia</span></td><td><span class="chip s1">OK</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="tbl">
+    <table class="aud">
+      <caption>Calibrações e verificações · 5 registros, 1 reprovado</caption>
+      <thead><tr><th class="c">Data</th><th>Código</th><th style="width:18%">Tipo<small>Registro</small></th><th style="width:12%">Ponto medido</th><th class="c">Erro<small>Incerteza</small></th><th class="c">Critério</th><th>Resultado</th><th style="width:28%">Ação e resultados anteriores</th><th>Conferência</th></tr></thead>
+      <tbody>
+        <tr><td class="c">15/06</td><td class="n">TER-03</td><td>Calibração<small>Certificado 1442/26, laboratório acreditado</small></td><td>300 °C</td><td class="c">-3 °C<small>± 1,5</small></td><td class="c">±5 °C</td><td><span class="chip s1">Aprovado</span></td><td>—</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="c">20/01</td><td class="n">BAL-02</td><td>Calibração<small>Certificado 0187/27, laboratório acreditado</small></td><td>10 kg</td><td class="c">+5 g<small>± 3</small></td><td class="c">±10 g</td><td><span class="chip s1">Aprovado</span></td><td>—</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="c">01/03</td><td class="n">BAL-01</td><td>Verificação<small>Planilha de verificação FR-07</small></td><td>Peso-padrão de 500 g</td><td class="c">+1 g<small>± 0,5</small></td><td class="c">±2 g</td><td><span class="chip s1">Aprovado</span></td><td>—</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="c">05/03</td><td class="n">TER-01</td><td>Verificação<small>Planilha de verificação FR-07</small></td><td>Água com gelo, 0 °C</td><td class="c">+0,3 °C<small>± 0,2</small></td><td class="c">±1 °C</td><td><span class="chip s1">Aprovado</span></td><td>—</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="c">15/03</td><td class="n">TER-02</td><td>Verificação<small>Planilha de verificação FR-07</small></td><td>Contra o TER-01, a 5 °C</td><td class="c">-2 °C<small>± 0,3</small></td><td class="c">±1 °C</td><td><span class="chip s3">Reprovado</span></td><td><strong>Ação:</strong> Retirado da câmara. Um termômetro novo, verificado contra o TER-01, foi instalado no lugar.<small>Resultados anteriores: não avaliados.</small></td><td><span class="chip s3">Falta avaliar os resultados anteriores</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p><strong>O que observar.</strong> A verificação de 15/03 pegou o termômetro da câmara fria marcando 2 °C a menos que o real. Ele foi trocado no mesmo dia, o que está certo. Falta a outra metade: as leituras do plano de controle na semana de 08 a 14/03, entre 2,9 e 4,1 °C, podem ter sido de 4,9 a 6,1 °C, acima do limite de 5 °C, e a de 7 °C, já tratada, pode ter sido de 9 °C. A loja precisa decidir o que isso significa para os insumos daquela semana, que já foram usados. O termômetro do recebimento nunca foi verificado: a mussarela recusada a 9 °C no estudo de liberação foi medida com ele. A balança da bancada e o termômetro de espeto vencem em poucos dias, e a verificação mensal só funciona se alguém olhar a lista.</p>
+
+  <h3>Exemplo 2. Os instrumentos da indústria</h3>
+  <dl class="ficha">
+    <div><dt>Organização</dt><dd>Indústria de embalagens plásticas</dd></div>
+    <div><dt>Responsável</dt><dd>Analista da Qualidade, com o Laboratório</dd></div>
+    <div><dt>Padrões próprios</dt><dd>Termômetro padrão PAD-01 e blocos-padrão de espessura, calibrados por laboratório acreditado.</dd></div>
+    <div><dt>Leitura</dt><dd>30/06/2027.</dd></div>
+    <div><dt>Origem</dt><dd>Auditoria interna de 2026: 3 de 25 instrumentos em uso com a calibração vencida (GUT e Ishikawa da série).</dd></div>
+  </dl>
+  <div class="tbl">
+    <table class="aud">
+      <caption>Instrumentos · 7 cadastrados: 5 em dia, 0 vencem em 30 dias, 1 vencido, 0 sem calibração, 1 fora de uso</caption>
+      <thead><tr><th>Código</th><th style="width:28%">Instrumento<small>Local · o que mede</small></th><th class="c">Tolerância</th><th class="c">Resolução</th><th style="width:15%">Controle<small>Intervalo · erro máximo</small></th><th class="c">Última</th><th class="c">Próxima</th><th>Situação</th><th>Conferência</th></tr></thead>
+      <tbody>
+        <tr><td class="n">MIC-07</td><td><strong>Micrômetro de ponta plana</strong><small>Extrusora 3 · Espessura do filme: 38 a 42 µm</small></td><td class="c">4 µm</td><td class="c no">1 µm<small>Resolução grossa</small></td><td>Calibração externa<small>a cada 6 meses · ±1 µm</small></td><td class="c">12/06/2027</td><td class="c">12/12/2027</td><td><span class="chip sl">Fora de uso</span></td><td><span class="chip sl">Fora de uso</span></td></tr>
+        <tr><td class="n">MIC-08</td><td><strong>Micrômetro digital</strong><small>Laboratório · Espessura do filme: 38 a 42 µm</small></td><td class="c">4 µm</td><td class="c">0,1 µm<small>Adequado</small></td><td>Calibração externa<small>a cada 6 meses · ±0,5 µm</small></td><td class="c">15/03/2027</td><td class="c">15/09/2027</td><td><span class="chip s1">Em dia</span></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">TR-03</td><td><strong>Trena digital</strong><small>Extrusora 3 · Largura do filme: 598 a 602 mm</small></td><td class="c">4 mm</td><td class="c">0,1 mm<small>Adequado</small></td><td>Calibração externa<small>a cada 12 meses · ±0,3 mm</small></td><td class="c">08/11/2026</td><td class="c">08/11/2027</td><td><span class="chip s1">Em dia</span></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">TER-Z3</td><td><strong>Termopar da zona 3</strong><small>Extrusora 3 · Temperatura da zona 3: 185 a 195 °C</small></td><td class="c">10 °C</td><td class="c">1 °C<small>Adequado</small></td><td>Calibração externa<small>a cada 12 meses · ±2 °C</small></td><td class="c">02/08/2026</td><td class="c">02/08/2027</td><td><span class="chip s1">Em dia</span></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">DIN-01</td><td><strong>Dinamômetro</strong><small>Laboratório · Resistência da solda: no mínimo 12 N/15 mm</small></td><td class="c">2 N</td><td class="c">0,01 N<small>Adequado</small></td><td>Calibração externa<small>a cada 12 meses · ±0,2 N</small></td><td class="c">21/05/2027</td><td class="c">21/05/2028</td><td><span class="chip s1">Em dia</span></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">TER-L1</td><td><strong>Termômetro da câmara de condicionamento</strong><small>Laboratório · Temperatura do ensaio a -18 °C, com ±2 °C</small></td><td class="c">4 °C</td><td class="c">0,1 °C<small>Adequado</small></td><td>Verificação interna<small>a cada 3 meses · ±1 °C</small></td><td class="c">15/03/2027</td><td class="c">15/06/2027</td><td><span class="chip s3">Vencido</span></td><td><span class="chip s3">Vencido: bloquear ou calibrar</span></td></tr>
+        <tr><td class="n">PAD-01</td><td><strong>Termômetro padrão</strong><small>Laboratório · Referência das verificações internas</small></td><td class="c">—</td><td class="c">0,01 °C<small>—</small></td><td>Calibração externa<small>a cada 12 meses · ±0,1 °C</small></td><td class="c">10/02/2027</td><td class="c">10/02/2028</td><td><span class="chip s1">Em dia</span></td><td><span class="chip s1">OK</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="tbl">
+    <table class="aud">
+      <caption>Calibrações e verificações · 8 registros, 1 reprovado</caption>
+      <thead><tr><th class="c">Data</th><th>Código</th><th style="width:18%">Tipo<small>Registro</small></th><th style="width:12%">Ponto medido</th><th class="c">Erro<small>Incerteza</small></th><th class="c">Critério</th><th>Resultado</th><th style="width:28%">Ação e resultados anteriores</th><th>Conferência</th></tr></thead>
+      <tbody>
+        <tr><td class="c">02/08</td><td class="n">TER-Z3</td><td>Calibração<small>Certificado T-2026-0802, laboratório acreditado</small></td><td>190 °C</td><td class="c">+1,2 °C<small>± 0,5</small></td><td class="c">±2 °C</td><td><span class="chip s1">Aprovado</span></td><td>—</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="c">08/11</td><td class="n">TR-03</td><td>Calibração<small>Certificado D-2026-1108, laboratório acreditado</small></td><td>600 mm</td><td class="c">+0,1 mm<small>± 0,05</small></td><td class="c">±0,3 mm</td><td><span class="chip s1">Aprovado</span></td><td>—</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="c">10/01</td><td class="n">MIC-07</td><td>Calibração<small>Certificado C-2027-0112, laboratório acreditado</small></td><td>40 µm</td><td class="c">+0,6 µm<small>± 0,3</small></td><td class="c">±1 µm</td><td><span class="chip s1">Aprovado</span></td><td>—</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="c">10/02</td><td class="n">PAD-01</td><td>Calibração<small>Certificado P-2027-0210, laboratório acreditado</small></td><td>-18 °C e 20 °C</td><td class="c">+0,02 °C<small>± 0,03</small></td><td class="c">±0,1 °C</td><td><span class="chip s1">Aprovado</span></td><td>—</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="c">15/03</td><td class="n">MIC-08</td><td>Calibração<small>Certificado C-2027-0315, laboratório acreditado</small></td><td>40 µm</td><td class="c">+0,1 µm<small>± 0,08</small></td><td class="c">±0,5 µm</td><td><span class="chip s1">Aprovado</span></td><td>—</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="c">15/03</td><td class="n">TER-L1</td><td>Verificação<small>Registro de verificação FV-09</small></td><td>Contra o PAD-01, a -18 °C</td><td class="c">+0,4 °C<small>± 0,1</small></td><td class="c">±1 °C</td><td><span class="chip s1">Aprovado</span></td><td>—</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="c">21/05</td><td class="n">DIN-01</td><td>Calibração<small>Certificado F-2027-0521, laboratório acreditado</small></td><td>15 N</td><td class="c">+0,15 N<small>± 0,05</small></td><td class="c">±0,2 N</td><td><span class="chip s1">Aprovado</span></td><td>—</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="c">12/06</td><td class="n">MIC-07</td><td>Verificação<small>Registro de verificação FV-12</small></td><td>Bloco-padrão de 40 µm</td><td class="c">+1,6 µm<small>± 0,2</small></td><td class="c">±1 µm</td><td><span class="chip s3">Reprovado</span></td><td><strong>Ação:</strong> Retirado do posto. O MIC-08 mede as bobinas até a reposição, e um micrômetro de 0,1 µm foi comprado.<small>Resultados anteriores: Medições de 10/01 a 12/06 corrigidas em 1,6 µm: 6 bobinas abaixo de 38 µm, 2 delas já entregues, inclusive a do lote 135. Clientes informados em 14/06.</small></td><td><span class="chip s1">OK</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p><strong>O que observar.</strong> A fábrica tem a cadeia completa: padrões calibrados por laboratório acreditado e verificações internas contra eles. Duas lacunas aparecem. O termômetro da câmara de condicionamento venceu em 15/06 e continua em uso, logo antes dos ensaios a -18 °C do projeto de filme para congelados. E o micrômetro do posto, com resolução de 1 µm para uma tolerância de 4 µm, era grosso demais desde o início: só um passo de 1 µm separava uma bobina no limite de uma bobina fora dele. A verificação de 12/06 reprovou o micrômetro, e a resposta da fábrica é o modelo do exemplo 3.</p>
+
+  <h3>Exemplo 3. A avaliação dos resultados anteriores</h3>
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 222" role="img" aria-label="A avaliação dos resultados anteriores do micrômetro MIC-07. 10/01, Última calibração aprovada: Erro de +0,6 µm, dentro do critério de ±1 µm. Até 12/06, Cinco meses de medições: Cerca de 1.200 bobinas medidas no posto da extrusora 3. 24/05, Reclamação do cliente A: Filme fino no lote 135. A fábrica tinha medido 39,1 µm na bobina. 12/06, Verificação reprovada: O micrômetro marca 1,6 µm a mais. A bobina de 39,1 µm tinha, na verdade, 37,5 µm. 14/06, Avaliação e ação: Medições corrigidas desde 10/01. 6 bobinas abaixo de 38 µm, 2 entregues. Clientes informados.">
+        <defs><marker id="a5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker></defs>
+        <rect class="bx-s1" x="12" y="14" width="164" height="168"/>
+        <text class="mono mu" x="24" y="34" font-size="9.5">10/01</text>
+        <text class="b" x="24" y="54" font-size="12">Última calibração</text>
+        <text class="b" x="24" y="69" font-size="12">aprovada</text>
+        <text x="24" y="90" font-size="10.5">Erro de +0,6 µm, dentro do</text>
+        <text x="24" y="104" font-size="10.5">critério de ±1 µm.</text>
+        <line class="ln" x1="177" y1="96" x2="188" y2="96" marker-end="url(#a5)"/>
+        <rect class="bx" x="190" y="14" width="164" height="168"/>
+        <text class="mono mu" x="202" y="34" font-size="9.5">ATÉ 12/06</text>
+        <text class="b" x="202" y="54" font-size="12">Cinco meses de</text>
+        <text class="b" x="202" y="69" font-size="12">medições</text>
+        <text x="202" y="90" font-size="10.5">Cerca de 1.200 bobinas</text>
+        <text x="202" y="104" font-size="10.5">medidas no posto da</text>
+        <text x="202" y="118" font-size="10.5">extrusora 3.</text>
+        <line class="ln" x1="355" y1="96" x2="366" y2="96" marker-end="url(#a5)"/>
+        <rect class="bx-s2" x="368" y="14" width="164" height="168"/>
+        <text class="mono mu" x="380" y="34" font-size="9.5">24/05</text>
+        <text class="b" x="380" y="54" font-size="12">Reclamação do cliente</text>
+        <text class="b" x="380" y="69" font-size="12">A</text>
+        <text x="380" y="90" font-size="10.5">Filme fino no lote 135. A</text>
+        <text x="380" y="104" font-size="10.5">fábrica tinha medido 39,1</text>
+        <text x="380" y="118" font-size="10.5">µm na bobina.</text>
+        <line class="ln" x1="533" y1="96" x2="544" y2="96" marker-end="url(#a5)"/>
+        <rect class="bx-s3" x="546" y="14" width="164" height="168"/>
+        <text class="mono mu" x="558" y="34" font-size="9.5">12/06</text>
+        <text class="b" x="558" y="54" font-size="12">Verificação reprovada</text>
+        <text x="558" y="76" font-size="10.5">O micrômetro marca 1,6 µm</text>
+        <text x="558" y="90" font-size="10.5">a mais. A bobina de 39,1</text>
+        <text x="558" y="104" font-size="10.5">µm tinha, na verdade, 37,5</text>
+        <text x="558" y="118" font-size="10.5">µm.</text>
+        <line class="ln" x1="711" y1="96" x2="722" y2="96" marker-end="url(#a5)"/>
+        <rect class="bx-ink" x="724" y="14" width="164" height="168"/>
+        <text class="mono t-ground" x="736" y="34" font-size="9.5">14/06</text>
+        <text class="b t-ground" x="736" y="54" font-size="12">Avaliação e ação</text>
+        <text class="t-ground" x="736" y="76" font-size="10.5">Medições corrigidas desde</text>
+        <text class="t-ground" x="736" y="90" font-size="10.5">10/01. 6 bobinas abaixo de</text>
+        <text class="t-ground" x="736" y="104" font-size="10.5">38 µm, 2 entregues.</text>
+        <text class="t-ground" x="736" y="118" font-size="10.5">Clientes informados.</text>
+        <text x="450" y="210" font-size="11.5" text-anchor="middle">O instrumento errado não estraga só a medição de hoje: todas, desde a última calibração boa, ficam em dúvida.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 5.</b> Do último certificado aprovado do micrômetro MIC-07 à ação no cliente. A reclamação de maio ganhou explicação em junho.</figcaption>
+  </figure>
+  <p><strong>O que observar.</strong> Em maio, o cliente A reclamou de filme fino no lote 135, e a fábrica respondeu com o que tinha: a bobina medira 39,1 µm, dentro do critério. Em junho, a verificação mostrou que o micrômetro marcava 1,6 µm a mais. A bobina tinha 37,5 µm, e o cliente estava certo. A fábrica fez o que a norma pede: corrigiu todas as medições desde a última calibração aprovada, encontrou as bobinas abaixo do critério e avisou os clientes que as receberam. Sem essa avaliação, o instrumento trocado resolveria o futuro e deixaria o passado no cliente.</p>
+</section>
+
+<!-- ============================ MÓDULO 7 ============================ -->
+<section id="leitura">
+  <p class="eyebrow">Módulo 7</p>
+  <h2>Ler os vencimentos</h2>
+  <p>A lista de instrumentos é lida pela data: quantos dias faltam para cada um vencer. O que vence no mês entra na programação; o que venceu sai de uso até a calibração.</p>
+
+  <figure id="fig-bars">
+    <div class="scroll">
+      <svg id="bars" viewBox="0 0 900 480" role="img" aria-label="Dias até o vencimento da calibração ou da verificação de cada instrumento, na data da leitura de cada exemplo. TER-01: 5 dias. TER-02: fora de uso. TER-03: 76 dias. TER-04: sem calibração. BAL-01: 1 dias. BAL-02: 295 dias. MIC-07: fora de uso. MIC-08: 77 dias. TR-03: 131 dias. TER-Z3: 33 dias. DIN-01: 326 dias. TER-L1: -15 dias. PAD-01: 225 dias.">
+        <g font-size="11.5">
+          <rect class="f1" x="330" y="12" width="14" height="14"/><text x="352" y="24">Em dia</text>
+          <rect class="f2" x="490" y="12" width="14" height="14"/><text x="512" y="24">Vence em 30 dias</text>
+          <rect class="f3" x="650" y="12" width="14" height="14"/><text x="672" y="24">Vencido</text>
+        </g>
+        <line class="grid" x1="330.0" y1="40" x2="330.0" y2="436"/>
+        <text class="mu" x="330.0" y="452" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">-60</text>
+        <line class="ln" x1="405.7" y1="40" x2="405.7" y2="436"/>
+        <text class="mu" x="405.7" y="452" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">0</text>
+        <line class="grid" x1="481.4" y1="40" x2="481.4" y2="436"/>
+        <text class="mu" x="481.4" y="452" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">60</text>
+        <line class="grid" x1="557.1" y1="40" x2="557.1" y2="436"/>
+        <text class="mu" x="557.1" y="452" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">120</text>
+        <line class="grid" x1="632.9" y1="40" x2="632.9" y2="436"/>
+        <text class="mu" x="632.9" y="452" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">180</text>
+        <line class="grid" x1="708.6" y1="40" x2="708.6" y2="436"/>
+        <text class="mu" x="708.6" y="452" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">240</text>
+        <line class="grid" x1="784.3" y1="40" x2="784.3" y2="436"/>
+        <text class="mu" x="784.3" y="452" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">300</text>
+        <line class="grid" x1="860.0" y1="40" x2="860.0" y2="436"/>
+        <text class="mu" x="860.0" y="452" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">360</text>
+        <text class="mono mu" x="595.0" y="472" font-size="10" text-anchor="middle">DIAS ATÉ O VENCIMENTO, NA DATA DA LEITURA</text>
+        <text class="mono mu" x="20" y="63" font-size="10">PIZZARIA</text>
+        <text x="36" y="89" font-size="11.5"><tspan class="b">TER-01</tspan><tspan class="mu" dx="8">Termômetro de espeto</tspan></text>
+        <rect class="bar f2" data-k="1" x="405.7" y="78" width="6.3" height="14"/>
+        <text class="mu halo" x="418.0" y="89" font-size="10.5" style="font-variant-numeric:tabular-nums">5</text>
+        <text x="36" y="115" font-size="11.5"><tspan class="b">TER-02</tspan><tspan class="mu" dx="8">Termômetro de visor da câmara fria</tspan></text>
+        <text class="b halo" x="413.7" y="115" font-size="11" fill-opacity=".75">fora de uso</text>
+        <text x="36" y="141" font-size="11.5"><tspan class="b">TER-03</tspan><tspan class="mu" dx="8">Termômetro do forno</tspan></text>
+        <rect class="bar f1" data-k="3" x="405.7" y="130" width="95.9" height="14"/>
+        <text class="mu halo" x="507.6" y="141" font-size="10.5" style="font-variant-numeric:tabular-nums">76</text>
+        <text x="36" y="167" font-size="11.5"><tspan class="b">TER-04</tspan><tspan class="mu" dx="8">Termômetro de espeto do…</tspan></text>
+        <text class="b halo" x="413.7" y="167" font-size="11">sem calibração</text>
+        <text x="36" y="193" font-size="11.5"><tspan class="b">BAL-01</tspan><tspan class="mu" dx="8">Balança da bancada</tspan></text>
+        <rect class="bar f2" data-k="5" x="405.7" y="182" width="2.0" height="14"/>
+        <text class="mu halo" x="413.0" y="193" font-size="10.5" style="font-variant-numeric:tabular-nums">1</text>
+        <text x="36" y="219" font-size="11.5"><tspan class="b">BAL-02</tspan><tspan class="mu" dx="8">Balança do recebimento</tspan></text>
+        <rect class="bar f1" data-k="6" x="405.7" y="208" width="372.3" height="14"/>
+        <text class="mu halo" x="784.0" y="219" font-size="10.5" style="font-variant-numeric:tabular-nums">295</text>
+        <text class="mono mu" x="20" y="245" font-size="10">INDÚSTRIA</text>
+        <text x="36" y="271" font-size="11.5"><tspan class="b">MIC-07</tspan><tspan class="mu" dx="8">Micrômetro de ponta plana</tspan></text>
+        <text class="b halo" x="413.7" y="271" font-size="11" fill-opacity=".75">fora de uso</text>
+        <text x="36" y="297" font-size="11.5"><tspan class="b">MIC-08</tspan><tspan class="mu" dx="8">Micrômetro digital</tspan></text>
+        <rect class="bar f1" data-k="9" x="405.7" y="286" width="97.2" height="14"/>
+        <text class="mu halo" x="508.9" y="297" font-size="10.5" style="font-variant-numeric:tabular-nums">77</text>
+        <text x="36" y="323" font-size="11.5"><tspan class="b">TR-03</tspan><tspan class="mu" dx="8">Trena digital</tspan></text>
+        <rect class="bar f1" data-k="10" x="405.7" y="312" width="165.3" height="14"/>
+        <text class="mu halo" x="577.0" y="323" font-size="10.5" style="font-variant-numeric:tabular-nums">131</text>
+        <text x="36" y="349" font-size="11.5"><tspan class="b">TER-Z3</tspan><tspan class="mu" dx="8">Termopar da zona 3</tspan></text>
+        <rect class="bar f1" data-k="11" x="405.7" y="338" width="41.6" height="14"/>
+        <text class="mu halo" x="453.4" y="349" font-size="10.5" style="font-variant-numeric:tabular-nums">33</text>
+        <text x="36" y="375" font-size="11.5"><tspan class="b">DIN-01</tspan><tspan class="mu" dx="8">Dinamômetro</tspan></text>
+        <rect class="bar f1" data-k="12" x="405.7" y="364" width="411.4" height="14"/>
+        <text class="mu halo" x="823.1" y="375" font-size="10.5" style="font-variant-numeric:tabular-nums">326</text>
+        <text x="36" y="401" font-size="11.5"><tspan class="b">TER-L1</tspan><tspan class="mu" dx="8">Termômetro da câmara de…</tspan></text>
+        <rect class="bar f3" data-k="13" x="386.8" y="390" width="18.9" height="14"/>
+        <text class="mu halo" x="380.8" y="401" font-size="10.5" text-anchor="end" style="font-variant-numeric:tabular-nums">-15</text>
+        <text x="36" y="427" font-size="11.5"><tspan class="b">PAD-01</tspan><tspan class="mu" dx="8">Termômetro padrão</tspan></text>
+        <rect class="bar f1" data-k="14" x="405.7" y="416" width="283.9" height="14"/>
+        <text class="mu halo" x="695.6" y="427" font-size="10.5" style="font-variant-numeric:tabular-nums">225</text>
+        <rect class="hit" x="14" y="72" width="872" height="26" tabindex="0" role="img" aria-label="TER-01, Termômetro de espeto: vence em 30 dias, próxima 05/04" data-k="1" data-n="TER-01 · Termômetro de espeto" data-s="Vence em 30 dias" data-p="05/04/2027" data-d="5 dias" data-cx="405.7" data-cy="72"/>
+        <rect class="hit" x="14" y="98" width="872" height="26" tabindex="0" role="img" aria-label="TER-02, Termômetro de visor da câmara fria: fora de uso, próxima 15/06" data-k="2" data-n="TER-02 · Termômetro de visor da câmara fria" data-s="Fora de uso" data-p="15/06/2027" data-d="Fora de uso" data-cx="405.7" data-cy="98"/>
+        <rect class="hit" x="14" y="124" width="872" height="26" tabindex="0" role="img" aria-label="TER-03, Termômetro do forno: em dia, próxima 15/06" data-k="3" data-n="TER-03 · Termômetro do forno" data-s="Em dia" data-p="15/06/2027" data-d="76 dias" data-cx="405.7" data-cy="124"/>
+        <rect class="hit" x="14" y="150" width="872" height="26" tabindex="0" role="img" aria-label="TER-04, Termômetro de espeto do recebimento: sem calibração, próxima —" data-k="4" data-n="TER-04 · Termômetro de espeto do recebimento" data-s="Sem calibração" data-p="—" data-d="Sem calibração" data-cx="405.7" data-cy="150"/>
+        <rect class="hit" x="14" y="176" width="872" height="26" tabindex="0" role="img" aria-label="BAL-01, Balança da bancada: vence em 30 dias, próxima 01/04" data-k="5" data-n="BAL-01 · Balança da bancada" data-s="Vence em 30 dias" data-p="01/04/2027" data-d="1 dias" data-cx="405.7" data-cy="176"/>
+        <rect class="hit" x="14" y="202" width="872" height="26" tabindex="0" role="img" aria-label="BAL-02, Balança do recebimento: em dia, próxima 20/01" data-k="6" data-n="BAL-02 · Balança do recebimento" data-s="Em dia" data-p="20/01/2028" data-d="295 dias" data-cx="405.7" data-cy="202"/>
+        <rect class="hit" x="14" y="254" width="872" height="26" tabindex="0" role="img" aria-label="MIC-07, Micrômetro de ponta plana: fora de uso, próxima 12/12" data-k="8" data-n="MIC-07 · Micrômetro de ponta plana" data-s="Fora de uso" data-p="12/12/2027" data-d="Fora de uso" data-cx="405.7" data-cy="254"/>
+        <rect class="hit" x="14" y="280" width="872" height="26" tabindex="0" role="img" aria-label="MIC-08, Micrômetro digital: em dia, próxima 15/09" data-k="9" data-n="MIC-08 · Micrômetro digital" data-s="Em dia" data-p="15/09/2027" data-d="77 dias" data-cx="405.7" data-cy="280"/>
+        <rect class="hit" x="14" y="306" width="872" height="26" tabindex="0" role="img" aria-label="TR-03, Trena digital: em dia, próxima 08/11" data-k="10" data-n="TR-03 · Trena digital" data-s="Em dia" data-p="08/11/2027" data-d="131 dias" data-cx="405.7" data-cy="306"/>
+        <rect class="hit" x="14" y="332" width="872" height="26" tabindex="0" role="img" aria-label="TER-Z3, Termopar da zona 3: em dia, próxima 02/08" data-k="11" data-n="TER-Z3 · Termopar da zona 3" data-s="Em dia" data-p="02/08/2027" data-d="33 dias" data-cx="405.7" data-cy="332"/>
+        <rect class="hit" x="14" y="358" width="872" height="26" tabindex="0" role="img" aria-label="DIN-01, Dinamômetro: em dia, próxima 21/05" data-k="12" data-n="DIN-01 · Dinamômetro" data-s="Em dia" data-p="21/05/2028" data-d="326 dias" data-cx="405.7" data-cy="358"/>
+        <rect class="hit" x="14" y="384" width="872" height="26" tabindex="0" role="img" aria-label="TER-L1, Termômetro da câmara de condicionamento: vencido, próxima 15/06" data-k="13" data-n="TER-L1 · Termômetro da câmara de condicionamento" data-s="Vencido" data-p="15/06/2027" data-d="-15 dias" data-cx="405.7" data-cy="384"/>
+        <rect class="hit" x="14" y="410" width="872" height="26" tabindex="0" role="img" aria-label="PAD-01, Termômetro padrão: em dia, próxima 10/02" data-k="14" data-n="PAD-01 · Termômetro padrão" data-s="Em dia" data-p="10/02/2028" data-d="225 dias" data-cx="405.7" data-cy="410"/>
+      </svg>
+    </div>
+    <div class="tip" id="bars-tip" hidden></div>
+    <figcaption><b>Figura 6.</b> Dias até o vencimento de cada instrumento, na data da leitura de cada exemplo. Passe o mouse sobre as linhas para ver os valores.</figcaption>
+    <details class="data">
+      <summary>Ver os dados em tabela</summary>
+      <div class="tbl">
+        <table class="aud">
+          <thead><tr><th>Código</th><th>Instrumento</th><th class="c">Próxima</th><th class="c">Dias</th><th>Situação</th></tr></thead>
+          <tbody>
+            <tr><td>TER-01</td><td>Termômetro de espeto</td><td class="c">05/04/2027</td><td class="c">5</td><td>Vence em 30 dias</td></tr>
+            <tr><td>TER-02</td><td>Termômetro de visor da câmara fria</td><td class="c">15/06/2027</td><td class="c">—</td><td>Fora de uso</td></tr>
+            <tr><td>TER-03</td><td>Termômetro do forno</td><td class="c">15/06/2027</td><td class="c">76</td><td>Em dia</td></tr>
+            <tr><td>TER-04</td><td>Termômetro de espeto do recebimento</td><td class="c">—</td><td class="c">—</td><td>Sem calibração</td></tr>
+            <tr><td>BAL-01</td><td>Balança da bancada</td><td class="c">01/04/2027</td><td class="c">1</td><td>Vence em 30 dias</td></tr>
+            <tr><td>BAL-02</td><td>Balança do recebimento</td><td class="c">20/01/2028</td><td class="c">295</td><td>Em dia</td></tr>
+            <tr><td>MIC-07</td><td>Micrômetro de ponta plana</td><td class="c">12/12/2027</td><td class="c">—</td><td>Fora de uso</td></tr>
+            <tr><td>MIC-08</td><td>Micrômetro digital</td><td class="c">15/09/2027</td><td class="c">77</td><td>Em dia</td></tr>
+            <tr><td>TR-03</td><td>Trena digital</td><td class="c">08/11/2027</td><td class="c">131</td><td>Em dia</td></tr>
+            <tr><td>TER-Z3</td><td>Termopar da zona 3</td><td class="c">02/08/2027</td><td class="c">33</td><td>Em dia</td></tr>
+            <tr><td>DIN-01</td><td>Dinamômetro</td><td class="c">21/05/2028</td><td class="c">326</td><td>Em dia</td></tr>
+            <tr><td>TER-L1</td><td>Termômetro da câmara de condicionamento</td><td class="c">15/06/2027</td><td class="c">-15</td><td>Vencido</td></tr>
+            <tr><td>PAD-01</td><td>Termômetro padrão</td><td class="c">10/02/2028</td><td class="c">225</td><td>Em dia</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </details>
+  </figure>
+
+  <p>Na pizzaria, dois instrumentos vencem em menos de uma semana: a balança da bancada no dia seguinte, e o termômetro de espeto em cinco dias. Verificação mensal é assim: a lista de vencimentos precisa ser lida toda semana, ou a verificação vira atraso. O termômetro do recebimento nunca foi verificado, e foi ele que recusou a mussarela a 9 °C no estudo de liberação: a decisão provavelmente estava certa, mas ninguém pode provar. Na indústria, o termômetro da câmara de condicionamento venceu há 15 dias, às vésperas dos ensaios a -18 °C do projeto de filme para congelados, em julho. Os ensaios precisam esperar a verificação, ou não valem.</p>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Situação</th><th style="width:40%">Regra deste material</th><th>O que fazer</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Em dia</strong></td><td>A próxima data está a mais de 30 dias.</td><td>Usar normalmente.</td></tr>
+        <tr><td><strong>Vence em 30 dias</strong></td><td>A próxima data está a 30 dias ou menos.</td><td>Programar a calibração ou a verificação.</td></tr>
+        <tr><td><strong>Vencido</strong></td><td>A próxima data já passou.</td><td>Bloquear o uso até calibrar. O que foi medido depois do vencimento fica em dúvida.</td></tr>
+        <tr><td><strong>Sem calibração</strong></td><td>Não há registro de calibração nem de verificação.</td><td>Verificar antes de usar de novo.</td></tr>
+        <tr><td><strong>Fora de uso</strong></td><td>O instrumento foi retirado: reprovado, quebrado, substituído.</td><td>Etiqueta de bloqueio, e fora do posto.</td></tr>
+        <tr><td><strong>Resolução grossa</strong></td><td>A resolução não cabe dez vezes na tolerância.</td><td>Trocar por um instrumento adequado.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note">
+    <h4>Como definir o intervalo</h4>
+    <p>O intervalo não precisa ser de um ano para todos. Ele depende do uso, do ambiente e do histórico. O termômetro de espeto, que cai e esquenta todo dia, é verificado todo mês; o termômetro padrão, guardado no laboratório, é calibrado uma vez por ano. Se as últimas calibrações mostraram o instrumento estável, o intervalo pode crescer; se ele foi reprovado, o intervalo deve encurtar.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 8 ============================ -->
+<section id="erros">
+  <p class="eyebrow">Módulo 8</p>
+  <h2>Erros comuns</h2>
+  <div class="errs">
+    <div><h4>Certificado arquivado sem leitura</h4><p>O certificado chega, vai para a pasta, e ninguém compara o erro com o critério.</p><p class="fix"><b>Correção:</b> erro mais incerteza contra o erro máximo admissível, com o resultado registrado.</p></div>
+    <div><h4>Sem critério de aceitação</h4><p>O instrumento é calibrado, mas ninguém definiu quanto erro é aceitável.</p><p class="fix"><b>Correção:</b> o erro máximo admissível de cada instrumento, pela tolerância do que mede.</p></div>
+    <div><h4>Instrumento grosso demais</h4><p>O micrômetro de 1 µm para uma tolerância de 4 µm.</p><p class="fix"><b>Correção:</b> a resolução cabendo ao menos dez vezes na tolerância.</p></div>
+    <div><h4>Vencido em uso</h4><p>A etiqueta venceu há duas semanas, e o instrumento continua no posto.</p><p class="fix"><b>Correção:</b> lista semanal dos vencimentos e bloqueio do vencido.</p></div>
+    <div><h4>Instrumento sem etiqueta</h4><p>Ninguém sabe se o termômetro da gaveta é o calibrado ou o velho.</p><p class="fix"><b>Correção:</b> código e etiqueta de situação em todo instrumento em uso.</p></div>
+    <div><h4>Verificação sem método</h4><p>“Conferido”, sem dizer contra o quê nem como.</p><p class="fix"><b>Correção:</b> o método escrito e o padrão usado, com o resultado.</p></div>
+    <div><h4>Padrão próprio sem calibração</h4><p>As verificações internas são feitas contra um padrão que nunca foi calibrado.</p><p class="fix"><b>Correção:</b> o padrão calibrado por laboratório competente: é ele que dá a rastreabilidade.</p></div>
+    <div><h4>Trocar e esquecer o passado</h4><p>O instrumento reprovado foi substituído, e ninguém olhou o que ele mediu.</p><p class="fix"><b>Correção:</b> avaliar os resultados desde a última calibração boa.</p></div>
+    <div><h4>Calibrar só um ponto</h4><p>O termômetro foi calibrado a 0 °C e é usado a 300 °C.</p><p class="fix"><b>Correção:</b> os pontos da calibração cobrindo a faixa de uso.</p></div>
+    <div><h4>Instrumento que caiu</h4><p>A balança caiu da bancada, foi recolocada e continuou pesando.</p><p class="fix"><b>Correção:</b> verificar depois de qualquer queda, reparo ou suspeita.</p></div>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 9 ============================ -->
+<section id="ferramentas">
+  <p class="eyebrow">Módulo 9</p>
+  <h2>A calibração e outras ferramentas</h2>
+  <p>A calibração sustenta todas as ferramentas que dependem de números: o plano de controle, a liberação, os indicadores, a validação de um projeto. Quando o instrumento erra, todas erram juntas.</p>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:26%">Ferramenta</th><th style="width:37%">O que ela entrega à calibração</th><th>O que recebe da calibração</th></tr></thead>
+      <tbody>
+        <tr><td><a href="../ISO-9001/treinamento-iso-9001.html"><strong>ISO 9001 requisito a requisito</strong></a></td><td>O requisito 7.1.5, e a lacuna de cada organização.</td><td>A lista de instrumentos e os registros, como evidência.</td></tr>
+        <tr><td><a href="../Producao/treinamento-producao.html"><strong>Controle de produção e de serviço</strong></a></td><td>As medições do plano de controle e as tolerâncias.</td><td>Instrumentos confiáveis para cada controle.</td></tr>
+        <tr><td><a href="../Liberacao/treinamento-liberacao.html"><strong>Liberação e produto não conforme</strong></a></td><td>O registro do produto afetado por um instrumento errado.</td><td>As verificações que sustentam a liberação.</td></tr>
+        <tr><td><a href="../Projeto/treinamento-projeto.html"><strong>Projeto e desenvolvimento</strong></a></td><td>Os ensaios de verificação e de validação.</td><td>Instrumentos em dia no momento dos ensaios.</td></tr>
+        <tr><td><a href="../Fornecedores/treinamento-fornecedores.html"><strong>Avaliação de fornecedores</strong></a></td><td>A avaliação do laboratório de calibração contratado.</td><td>O laboratório e o serviço a avaliar.</td></tr>
+        <tr><td><a href="../Satisfacao/treinamento-satisfacao.html"><strong>Satisfação do cliente</strong></a></td><td>A reclamação que pode revelar um instrumento errado.</td><td>A explicação, e a ação junto ao cliente.</td></tr>
+        <tr><td><a href="../Nao-Conformidade/treinamento-nao-conformidade.html"><strong>Não conformidade e ação corretiva</strong></a></td><td>A análise de causa do instrumento reprovado.</td><td>O instrumento reprovado, com o impacto avaliado.</td></tr>
+        <tr><td><a href="../GUT/treinamento-gut.html"><strong>Matriz GUT</strong></a></td><td>A prioridade entre os problemas, como os instrumentos vencidos.</td><td>Um problema medido: quantos instrumentos vencidos.</td></tr>
+        <tr><td><a href="../Informacao-Documentada/treinamento-informacao-documentada.html"><strong>Informação documentada</strong></a></td><td>A guarda dos certificados e dos registros.</td><td>Os registros que a norma exige.</td></tr>
+        <tr><td><a href="../Competencias/treinamento-competencias.html"><strong>Matriz de competências</strong></a></td><td>Quem sabe verificar e ler um certificado.</td><td>A competência a treinar.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 10 ============================ -->
+<section id="iso">
+  <p class="eyebrow">Módulo 10</p>
+  <h2>Nas normas ISO</h2>
+  <p>Os recursos de monitoramento e medição estão no requisito 7.1.5 da ISO 9001:2015, em duas partes. A primeira pede recursos adequados e mantidos sempre que a medição verifica a conformidade. A segunda vale quando a rastreabilidade é exigida, ou considerada essencial: calibrar ou verificar, identificar, proteger e reagir quando o instrumento estava errado.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 200" role="img" aria-label="O que a norma pede sobre os recursos de medição. 7.1.5.1 · Recursos: Instrumentos adequados ao que medem, e mantidos, quando a medição verifica a conformidade. Neste estudo: a adequação e a manutenção. 7.1.5.2 · Calibrar: Calibrar ou verificar, em intervalos, contra padrões rastreáveis; sem padrão, registrar a base usada. Neste estudo: o cadastro e o registro. 7.1.5.2 · Identificar: Identificar a situação de cada instrumento e protegê-lo de ajustes, danos e desgaste. Neste estudo: a situação e a etiqueta. 7.1.5.2 · Reagir: Quando o instrumento estava errado, avaliar se os resultados anteriores foram afetados e agir. Neste estudo: o exemplo 3.">
+        <rect class="bx" x="10" y="14" width="214" height="172"/>
+        <rect class="hd-ink" x="10" y="14" width="214" height="34"/>
+        <text class="b t-ground" x="22" y="36" font-size="11.5">7.1.5.1 · Recursos</text>
+        <text x="22" y="70" font-size="11.5">Instrumentos adequados ao que</text>
+        <text x="22" y="86" font-size="11.5">medem, e mantidos, quando a</text>
+        <text x="22" y="102" font-size="11.5">medição verifica a conformidade.</text>
+        <text class="mu" x="22" y="160" font-size="11">Neste estudo: a adequação e a</text>
+        <text class="mu" x="22" y="175" font-size="11">manutenção</text>
+        <rect class="bx" x="232" y="14" width="214" height="172"/>
+        <rect class="hd-ink" x="232" y="14" width="214" height="34"/>
+        <text class="b t-ground" x="244" y="36" font-size="11.5">7.1.5.2 · Calibrar</text>
+        <text x="244" y="70" font-size="11.5">Calibrar ou verificar, em</text>
+        <text x="244" y="86" font-size="11.5">intervalos, contra padrões</text>
+        <text x="244" y="102" font-size="11.5">rastreáveis; sem padrão,</text>
+        <text x="244" y="118" font-size="11.5">registrar a base usada.</text>
+        <text class="mu" x="244" y="160" font-size="11">Neste estudo: o cadastro e o</text>
+        <text class="mu" x="244" y="175" font-size="11">registro</text>
+        <rect class="bx" x="454" y="14" width="214" height="172"/>
+        <rect class="hd-ink" x="454" y="14" width="214" height="34"/>
+        <text class="b t-ground" x="466" y="36" font-size="11.5">7.1.5.2 · Identificar</text>
+        <text x="466" y="70" font-size="11.5">Identificar a situação de cada</text>
+        <text x="466" y="86" font-size="11.5">instrumento e protegê-lo de</text>
+        <text x="466" y="102" font-size="11.5">ajustes, danos e desgaste.</text>
+        <text class="mu" x="466" y="160" font-size="11">Neste estudo: a situação e a</text>
+        <text class="mu" x="466" y="175" font-size="11">etiqueta</text>
+        <rect class="bx" x="676" y="14" width="214" height="172"/>
+        <rect class="hd-ink" x="676" y="14" width="214" height="34"/>
+        <text class="b t-ground" x="688" y="36" font-size="11.5">7.1.5.2 · Reagir</text>
+        <text x="688" y="70" font-size="11.5">Quando o instrumento estava</text>
+        <text x="688" y="86" font-size="11.5">errado, avaliar se os resultados</text>
+        <text x="688" y="102" font-size="11.5">anteriores foram afetados e</text>
+        <text x="688" y="118" font-size="11.5">agir.</text>
+        <text class="mu" x="688" y="160" font-size="11">Neste estudo: o exemplo 3</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 7.</b> O que a norma pede e onde este estudo responde. O texto da figura é um resumo, com palavras próprias.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:10%">Item</th><th style="width:32%">O que pede, em resumo</th><th style="width:27%">O que isso significa</th><th>Evidências que o auditor procura</th></tr></thead>
+      <tbody>
+        <tr><td class="num">7.1.5.1</td><td>Determinar e prover os recursos para resultados válidos e confiáveis quando a medição verifica a conformidade: adequados ao tipo de medição e mantidos. Reter a evidência dessa adequação</td><td>Cada instrumento serve para o que mede, e continua servindo.</td><td>Lista de instrumentos, com faixa, resolução e uso.</td></tr>
+        <tr><td class="num">7.1.5.2</td><td>Quando a rastreabilidade é requisito ou essencial: calibrar ou verificar em intervalos, ou antes do uso, contra padrões rastreáveis; sem padrão, reter a base usada</td><td>A cadeia até o padrão da unidade, ou o método registrado.</td><td>Certificados, registros de verificação, padrões próprios calibrados.</td></tr>
+        <tr><td class="num">7.1.5.2</td><td>Identificar os instrumentos para saber a situação, e protegê-los de ajustes, danos e deterioração</td><td>A situação está no instrumento, e ele é bem guardado.</td><td>Etiquetas, lacres, guarda adequada.</td></tr>
+        <tr><td class="num">7.1.5.2</td><td>Quando o instrumento é encontrado inadequado, verificar se a validade dos resultados anteriores foi afetada, e agir</td><td>O passado é revisto, e não só o instrumento.</td><td>Registro da avaliação de impacto e das ações.</td></tr>
+        <tr><td class="num">4.3</td><td>Justificar o requisito não aplicável</td><td>O 7.1.5 só não se aplica a quem não mede nada que decida a conformidade.</td><td>Escopo, com a justificativa.</td></tr>
+        <tr><td class="num">8.4</td><td>Controlar os serviços providos externamente</td><td>O laboratório de calibração é um fornecedor.</td><td>Avaliação do laboratório, escopo de acreditação.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pair">
+    <div class="box">
+      <h4>O que a ISO 9001 exige</h4>
+      <ul>
+        <li>Instrumentos adequados ao que medem, e mantidos.</li>
+        <li>Calibração ou verificação rastreável, quando exigida ou essencial.</li>
+        <li>A situação de cada instrumento identificada.</li>
+        <li>Proteção contra ajustes e danos.</li>
+        <li>A avaliação dos resultados anteriores quando o instrumento estava errado.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h4>O que a ISO 9001 não exige</h4>
+      <ul>
+        <li>Calibração externa para todos os instrumentos.</li>
+        <li>Um intervalo fixo, como um ano.</li>
+        <li>Laboratório acreditado, embora seja o caminho mais seguro.</li>
+        <li>A regra de dez vezes e as situações deste material.</li>
+        <li>Controle do instrumento que não decide a conformidade.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="note">
+    <h4>Pontos de atenção</h4>
+    <p>As constatações mais comuns são o instrumento vencido em uso, o certificado sem leitura, a falta de critério de aceitação e, a mais séria, o instrumento reprovado sem avaliação dos resultados anteriores. O auditor costuma pegar um instrumento no posto, ler a etiqueta, pedir o certificado e perguntar: “o erro cabe no que vocês aceitam?”. Depois, pede o último instrumento reprovado e pergunta o que foi feito com o que ele mediu.</p>
+    <p>Este módulo usa a numeração da ISO 9001:2015 e resume os textos com palavras próprias. Confira sempre a edição vigente da norma antes de citar um requisito em relatório.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 11 ============================ -->
+<section id="ronda">
+  <p class="eyebrow">Módulo 11</p>
+  <h2>A ronda metrológica</h2>
+  <p>Uma vez por mês, quem controla os instrumentos faz uma ronda de 30 minutos: lê a lista de vencimentos, passa pelos postos conferindo as etiquetas e decide o que fazer com os reprovados.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 136" role="img" aria-label="Distribuição de uma ronda metrológica de 30 minutos: 5 minutos para a lista de vencimentos, 10 minutos para os instrumentos no posto, 10 minutos para os reprovados e as avaliações de impacto, e 5 minutos para as decisões.">
+        <g font-size="11.5" text-anchor="middle">
+          <rect class="bx" x="60" y="24" width="130" height="56"/><text x="125" y="49">Lista de</text><text x="125" y="64">vencimentos</text>
+          <rect class="hd-ink gap2" x="190" y="24" width="260" height="56"/><text class="t-ground b" x="320" y="49">Instrumentos no posto:</text><text class="t-ground b" x="320" y="64">etiqueta, guarda, estado</text>
+          <rect class="hd-d gap2" x="450" y="24" width="260" height="56"/><text class="on b" x="580" y="49">Reprovados e</text><text class="on b" x="580" y="64">resultados anteriores</text>
+          <rect class="bx" x="710" y="24" width="130" height="56"/><text x="775" y="56">Decisões</text>
+        </g>
+        <g class="ln-mu" stroke-width="1">
+          <line x1="60" y1="82" x2="60" y2="94"/><line x1="190" y1="82" x2="190" y2="94"/><line x1="450" y1="82" x2="450" y2="94"/>
+          <line x1="710" y1="82" x2="710" y2="94"/><line x1="840" y1="82" x2="840" y2="94"/>
+        </g>
+        <g class="mono" font-size="10.5" text-anchor="middle">
+          <text class="mu" x="60" y="112">0</text><text class="mu" x="190" y="112">5</text><text class="mu" x="450" y="112">15</text>
+          <text class="mu" x="710" y="112">25</text><text class="mu" x="840" y="112">30</text>
+        </g>
+      </svg>
+    </div>
+    <figcaption><b>Figura 8.</b> Uma ronda de 30 minutos, desenhada em escala. O posto e os reprovados ocupam dois terços do tempo.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Momento</th><th style="width:42%">O que fazer</th><th>Perguntas que ajudam</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Lista de vencimentos</strong></td><td>O que vence no mês, o que já venceu, o que nunca foi verificado.</td><td>“Quem leva este ao laboratório, e quando?”</td></tr>
+        <tr><td><strong>Instrumentos no posto</strong></td><td>Etiqueta legível e em dia, guarda adequada, sinal de queda ou de ajuste. Instrumento sem cadastro.</td><td>“Este é o mesmo da lista?”</td></tr>
+        <tr><td><strong>Reprovados</strong></td><td>Para cada reprovado do mês: foi bloqueado? Os resultados anteriores foram avaliados?</td><td>“O que ele mediu desde a última calibração boa?”</td></tr>
+        <tr><td><strong>Decisões</strong></td><td>Compras, trocas, mudanças de intervalo, produto a avaliar, com responsável e prazo.</td><td>“O intervalo deste instrumento está curto ou longo?”</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>No posto, peça a quem usa para mostrar a etiqueta e dizer o que faz se ela estiver vencida. A resposta vale mais do que a lista.</p>
+
+  <h3>Checklist da calibração e dos recursos de medição</h3>
+  <p>Marque os itens conforme revisa os seus instrumentos. As marcações ficam salvas neste navegador.</p>
+  <ol class="check" id="checklist">
+    <li><label><input type="checkbox" id="ck-1"><span>Os instrumentos que verificam a conformidade do produto estão listados, com código e local.</span></label></li>
+    <li><label><input type="checkbox" id="ck-2"><span>Cada instrumento é adequado ao que mede: faixa, resolução e método.</span></label></li>
+    <li><label><input type="checkbox" id="ck-3"><span>Para cada instrumento está definido se é calibrado, verificado ou os dois, e com que intervalo.</span></label></li>
+    <li><label><input type="checkbox" id="ck-4"><span>A calibração é rastreável a padrões nacionais ou internacionais, feita por laboratório competente.</span></label></li>
+    <li><label><input type="checkbox" id="ck-5"><span>Quando não há padrão, o método de verificação está registrado.</span></label></li>
+    <li><label><input type="checkbox" id="ck-6"><span>Cada instrumento tem o critério de aceitação: o erro máximo admissível.</span></label></li>
+    <li><label><input type="checkbox" id="ck-7"><span>O certificado é lido: o erro e a incerteza são comparados com o critério, e o resultado é registrado.</span></label></li>
+    <li><label><input type="checkbox" id="ck-8"><span>Cada instrumento está identificado com a situação: em dia, vencido, fora de uso.</span></label></li>
+    <li><label><input type="checkbox" id="ck-9"><span>Os instrumentos são protegidos de ajustes, quedas e danos que invalidem a calibração.</span></label></li>
+    <li><label><input type="checkbox" id="ck-10"><span>Instrumento vencido ou reprovado é bloqueado até a nova calibração.</span></label></li>
+    <li><label><input type="checkbox" id="ck-11"><span>Quando um instrumento é reprovado, os resultados anteriores são avaliados, e o que foi afetado é tratado.</span></label></li>
+    <li><label><input type="checkbox" id="ck-12"><span>Os registros de calibração e de verificação estão guardados.</span></label></li>
+  </ol>
+  <div class="bar"><span><b id="ck-count">0</b> de 12 itens marcados</span><button class="btn" id="ck-reset" type="button">Limpar marcações</button></div>
+</section>
+
+<!-- ============================ MÓDULO 12 ============================ -->
+<section id="pratique">
+  <p class="eyebrow">Módulo 12</p>
+  <h2>Pratique</h2>
+  <h3>Exercício 1. O que fazer com este instrumento?</h3>
+  <p>Cada item descreve um instrumento e a situação dele. Diga o que fazer: usar, bloquear até calibrar ou verificar, rever os resultados anteriores, ou trocar por um instrumento adequado.</p>
+  <div class="quiz" id="quiz"></div>
+  <div class="bar"><span>Acertos: <b id="qz-score">0</b> de <b id="qz-total">12</b></span><span>Respondidos: <b id="qz-done">0</b></span><button class="btn" id="qz-reset" type="button">Recomeçar</button></div>
+
+  <h3>Exercício 2. Monte o controle dos seus instrumentos</h3>
+  <p>Abra a planilha de apoio e siga o roteiro.</p>
+  <ol>
+    <li>Na aba Instrumentos, informe a data da leitura e liste os instrumentos que decidem a conformidade, com o que medem e a tolerância.</li>
+    <li>Escreva a resolução, o tipo de controle, o intervalo e o erro máximo admissível de cada um.</li>
+    <li>Escreva a data da última calibração ou verificação, e se o instrumento está em uso.</li>
+    <li>Na aba Calibrações, lance os últimos certificados e verificações, com o erro e a incerteza.</li>
+    <li>Para cada reprovado, escreva a ação e a avaliação dos resultados anteriores.</li>
+    <li>Leia a aba Painel: os vencidos, os que vencem em 30 dias, os sem calibração, os grossos demais e os reprovados sem avaliação.</li>
+    <li>Passe o checklist do módulo 11.</li>
+  </ol>
+  <p>Depois, vá até um posto e escolha um instrumento ao acaso. Se a etiqueta, a lista e o certificado não contarem a mesma história, comece por ali.</p>
+</section>
+
+<!-- ============================ MÓDULO 13 ============================ -->
+<section id="planilha">
+  <p class="eyebrow">Módulo 13</p>
+  <h2>A planilha de apoio</h2>
+  <p>Este treinamento acompanha o arquivo <a id="xlsx-ref" href="Calibracao-modelo.xlsx">Calibracao-modelo.xlsx</a>, que fica na mesma pasta. As células em amarelo-claro são para preenchimento. As células cinza são calculadas.</p>
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Aba</th><th>Para que serve</th><th style="width:36%">O que ela calcula</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Instruções</strong></td><td>Legenda de cores, as regras de cálculo, ordem de preenchimento e premissas do modelo.</td><td>Nada. É só leitura.</td></tr>
+        <tr><td><strong>Instrumentos</strong></td><td>Até 40 instrumentos, com local, uso, tolerância, resolução, tipo de controle, intervalo, última data, erro máximo e se está em uso.</td><td>A próxima data, a situação, a adequação e a conferência.</td></tr>
+        <tr><td><strong>Calibrações</strong></td><td>Até 80 registros, com o erro, a incerteza, a ação e a avaliação dos resultados anteriores.</td><td>O resultado, pelo critério do instrumento, e a conferência.</td></tr>
+        <tr><td><strong>Painel</strong></td><td>Nada a preencher.</td><td>Os instrumentos por situação, os reprovados, o gráfico e o aviso.</td></tr>
+        <tr><td><strong>Checklist</strong></td><td>Os mesmos 12 itens do módulo 11, com status Sim, Parcial ou Não.</td><td>Percentual atendido e situação da validação.</td></tr>
+        <tr><td><strong>Exemplo 1 e Exemplo 2</strong></td><td>Os instrumentos e as calibrações da pizzaria e da indústria.</td><td>Situações, adequações, resultados e conferências.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ GLOSSÁRIO ============================ -->
+<section id="glossario">
+  <p class="eyebrow">Referência</p>
+  <h2>Glossário</h2>
+  <dl class="gloss">
+    <div><dt>Ajuste</dt><dd>A correção do instrumento para reduzir o erro. Não substitui a calibração.</dd></div>
+    <div><dt>Calibração</dt><dd>A comparação com um padrão rastreável, que determina o erro do instrumento e a incerteza.</dd></div>
+    <div><dt>Certificado de calibração</dt><dd>O documento do laboratório com os pontos, os erros, a incerteza e os padrões usados.</dd></div>
+    <div><dt>Erro</dt><dd>A diferença entre o valor indicado pelo instrumento e o valor do padrão.</dd></div>
+    <div><dt>Erro máximo admissível</dt><dd>O maior erro que a organização aceita naquele instrumento, pela tolerância do que ele mede.</dd></div>
+    <div><dt>Incerteza</dt><dd>A faixa de dúvida associada ao resultado da calibração.</dd></div>
+    <div><dt>Intervalo de calibração</dt><dd>O tempo entre duas calibrações ou verificações do mesmo instrumento.</dd></div>
+    <div><dt>Laboratório acreditado</dt><dd>Laboratório cuja competência foi reconhecida por um organismo de acreditação, para aquela grandeza.</dd></div>
+    <div><dt>Padrão</dt><dd>Instrumento ou objeto de referência, com valor conhecido e calibração rastreável.</dd></div>
+    <div><dt>Rastreabilidade metrológica</dt><dd>A cadeia de calibrações que liga o resultado da medição ao padrão da unidade.</dd></div>
+    <div><dt>Resolução</dt><dd>O menor passo que o instrumento consegue mostrar.</dd></div>
+    <div><dt>Verificação</dt><dd>A conferência de que o instrumento atende ao critério, com um padrão e um método definidos.</dd></div>
+  </dl>
+</section>
+
+</main>
+</div>
+
+<footer>Material de estudo. Os exemplos, documentos e números são ilustrativos e foram criados para fins didáticos. As referências às normas ISO são resumos para estudo e não substituem o texto das normas.</footer>
+</div>
+
+<script>
+(function () {
+  function read(key) { try { return JSON.parse(localStorage.getItem(key) || 'null'); } catch (e) { return null; } }
+  function write(key, val) { try { localStorage.setItem(key, JSON.stringify(val)); } catch (e) {} }
+
+  /* ---------- Checklist ---------- */
+  var boxes = Array.prototype.slice.call(document.querySelectorAll('#checklist input'));
+  var count = document.getElementById('ck-count');
+  var saved = read('calibracao-checklist') || {};
+  function refreshChecks() {
+    var n = 0, state = {};
+    boxes.forEach(function (b) { if (b.checked) { n++; } state[b.id] = b.checked; });
+    count.textContent = n;
+    return state;
+  }
+  boxes.forEach(function (b) {
+    if (saved[b.id]) { b.checked = true; }
+    b.addEventListener('change', function () { write('calibracao-checklist', refreshChecks()); });
+  });
+  refreshChecks();
+  document.getElementById('ck-reset').addEventListener('click', function () {
+    boxes.forEach(function (b) { b.checked = false; });
+    write('calibracao-checklist', refreshChecks());
+  });
+
+  /* ---------- Exercício ---------- */
+  var KEYS = ['U', 'B', 'R', 'T'];
+  var LABEL = { U: 'Pode usar', B: 'Bloquear até calibrar', R: 'Rever os resultados anteriores', T: 'Trocar por um adequado' };
+  var NAMES = { U: 'pode usar', B: 'bloquear até calibrar ou verificar', R: 'rever os resultados anteriores', T: 'trocar por um instrumento adequado' };
+  var ITEMS = [
+    { t: '“Termômetro com etiqueta de verificação de 05/03, intervalo de um mês. Hoje é 20/03.”', a: 'U', w: 'A verificação está em dia, e vence em 05/04.' },
+    { t: '“Micrômetro com a calibração vencida há dez dias, ainda no posto.”', a: 'B', w: 'Vencido não mede o produto. Bloquear até calibrar.' },
+    { t: '“Verificação de hoje: o termômetro da câmara marca 2 °C a menos que o padrão. Ele vinha sendo usado havia três meses.”', a: 'R', w: 'Trocar resolve o futuro. As leituras dos três meses precisam ser revistas.' },
+    { t: '“Balança com resolução de 10 g usada para pesar bolas de massa de 380 a 420 g.”', a: 'T', w: 'Tolerância de 40 g pede resolução de 4 g ou menor.' },
+    { t: '“Paquímetro que caiu no chão da expedição, sem marca visível.”', a: 'B', w: 'Depois de uma queda, verificar antes de voltar a usar.' },
+    { t: '“Certificado: erro de +0,6 µm, incerteza de 0,3 µm, critério de ±1 µm.”', a: 'U', w: '0,6 + 0,3 = 0,9 µm, dentro do critério.' },
+    { t: '“Certificado: erro de +0,8 µm, incerteza de 0,4 µm, critério de ±1 µm. O micrômetro estava em uso até a calibração.”', a: 'R', w: '0,8 + 0,4 = 1,2 µm, fora do critério. Além de ajustar, rever o que foi medido desde a última calibração boa.' },
+    { t: '“Termômetro sem etiqueta e sem código, encontrado na gaveta da cozinha.”', a: 'B', w: 'Sem identificação, ninguém sabe a situação. Verificar e cadastrar antes de usar.' },
+    { t: '“Trena de 1 mm de resolução para conferir a largura de 598 a 602 mm.”', a: 'T', w: 'Tolerância de 4 mm pede resolução de 0,4 mm ou menor.' },
+    { t: '“Dinamômetro voltou da calibração com erro de +0,15 N, incerteza de 0,05 N, critério de ±0,2 N.”', a: 'U', w: '0,15 + 0,05 = 0,2 N, no limite do critério, e aprovado.' },
+    { t: '“O laboratório externo avisa que o padrão usado na calibração do mês passado estava fora de especificação.”', a: 'R', w: 'A calibração pode estar errada. Os resultados medidos desde então ficam em dúvida.' },
+    { t: '“Termômetro infravermelho usado para medir a temperatura no centro do queijo.”', a: 'T', w: 'O infravermelho mede a superfície. O método não serve; é preciso um termômetro de espeto.' }
+  ];
+  var quiz = document.getElementById('quiz');
+  var score = document.getElementById('qz-score');
+  var done = document.getElementById('qz-done');
+  document.getElementById('qz-total').textContent = ITEMS.length;
+  var hits = 0, answered = 0;
+
+  function render() {
+    hits = 0; answered = 0; score.textContent = 0; done.textContent = 0;
+    quiz.textContent = '';
+    ITEMS.forEach(function (item, idx) {
+      var row = document.createElement('div'); row.className = 'q';
+      var p = document.createElement('p'); p.textContent = (idx + 1) + '. ' + item.t;
+      var opts = document.createElement('div'); opts.className = 'opts';
+      opts.setAttribute('role', 'group'); opts.setAttribute('aria-label', 'O que fazer no item ' + (idx + 1));
+      var why = document.createElement('p'); why.className = 'why'; why.hidden = true;
+      KEYS.forEach(function (k) {
+        var b = document.createElement('button');
+        b.type = 'button'; b.textContent = LABEL[k]; b.id = 'qz-' + idx + '-' + k;
+        b.setAttribute('data-k', k);
+        b.addEventListener('click', function () {
+          var ok = k === item.a;
+          Array.prototype.forEach.call(opts.children, function (o) {
+            o.disabled = true;
+            if (o.getAttribute('data-k') === item.a) { o.className = 'right'; }
+          });
+          if (!ok) { b.className = 'wrong'; }
+          var lead = document.createElement('b');
+          lead.textContent = (ok ? 'Certo. ' : 'A resposta é: ' + NAMES[item.a] + '. ');
+          why.textContent = ''; why.appendChild(lead); why.appendChild(document.createTextNode(item.w));
+          why.className = 'why ' + (ok ? 'ok' : 'no'); why.hidden = false;
+          answered++; if (ok) { hits++; }
+          score.textContent = hits; done.textContent = answered;
+        });
+        opts.appendChild(b);
+      });
+      row.appendChild(p); row.appendChild(opts); row.appendChild(why);
+      quiz.appendChild(row);
+    });
+  }
+  render();
+  document.getElementById('qz-reset').addEventListener('click', render);
+
+  /* ---------- Gráfico: leitura dos valores ---------- */
+  var fig = document.getElementById('fig-bars');
+  var tip = document.getElementById('bars-tip');
+  var svg = document.getElementById('bars');
+  var bars = document.querySelectorAll('#bars .bar');
+  function hide() {
+    tip.hidden = true;
+    Array.prototype.forEach.call(bars, function (b) { b.removeAttribute('opacity'); });
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('#bars .hit'), function (r) {
+    function show() {
+      var d = r.dataset;
+      Array.prototype.forEach.call(bars, function (b) {
+        b.setAttribute('opacity', b.getAttribute('data-k') === d.k ? '1' : '.4');
+      });
+      tip.textContent = '';
+      var strong = document.createElement('b'); strong.textContent = d.s + ' · ' + d.d;
+      tip.appendChild(strong);
+      tip.appendChild(document.createTextNode(d.n + ' · próxima ' + d.p));
+      var box = fig.getBoundingClientRect();
+      var pt = svg.createSVGPoint(); pt.x = parseFloat(d.cx); pt.y = parseFloat(d.cy);
+      var scr = pt.matrixTransform(svg.getScreenCTM());
+      tip.style.left = Math.min(Math.max(scr.x - box.left, 180), box.width - 180) + 'px';
+      tip.style.top = (scr.y - box.top + 4) + 'px';
+      tip.hidden = false;
+    }
+    r.addEventListener('pointerenter', show);
+    r.addEventListener('focus', show);
+    r.addEventListener('pointerleave', hide);
+    r.addEventListener('blur', hide);
+  });
+})();
+</script>
+</body>
+</html>

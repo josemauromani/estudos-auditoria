@@ -204,7 +204,7 @@ tb.append(f'            <tr class="tot"><td>Total</td><td class="c">{GERAL[0]}</
 tb += ['          </tbody>', '        </table>']
 
 # ---- figura 9: estudos da série × seções da norma
-ORDEM = ["esc", "pi", "swot", "obj", "ped", "proj", "proc", "sipoc", "raci", "riscos", "prod", "lib", "ind", "gut", "par", "ishikawa", "w5h2", "pdca", "auditoria", "nc", "ac", "doc", "comp", "forn", "sat"]
+ORDEM = ["esc", "pi", "swot", "obj", "ped", "proj", "proc", "sipoc", "raci", "riscos", "prod", "lib", "ind", "gut", "par", "ishikawa", "w5h2", "pdca", "auditoria", "nc", "ac", "doc", "comp", "cal", "forn", "sat"]
 CX = lambda j: 350 + j * 80  # noqa: E731
 HD = {"base": "hd-ink", "p": "hd-p", "d": "hd-d", "c": "hd-c", "a": "hd-a"}
 RY, R0 = 32, 70
@@ -241,6 +241,7 @@ AJUDA = {
     "5.2": "Traz os compromissos da política e a ligação de cada objetivo a um deles.",
     "6.2": "O estudo de Objetivos da qualidade liga a política ao objetivo, com base, meta, prazo e plano. Os Indicadores medem; o 5W2H detalha o plano.",
     "6.3": "A Matriz de riscos avalia o que a mudança pode causar. O 5W2H planeja a execução.",
+    "7.1.5": "Traz a lista de instrumentos, a adequação, a leitura do certificado, a situação de cada um e a avaliação dos resultados anteriores.",
     "7.5": "Traz a lista mestra, a tabela de retenção dos registros e a lista de documentos externos.",
     "7.2": "Traz a matriz por função, a escala de níveis, o plano de treinamento e a avaliação da eficácia.",
     "7.3": "Traz as perguntas de conscientização e o que se espera ouvir.",

@@ -48,6 +48,7 @@ ESTUDOS = {
     "ped": ("Requisitos do cliente e análise de pedidos", "../Pedidos/treinamento-pedidos.html"),
     "proj": ("Projeto e desenvolvimento", "../Projeto/treinamento-projeto.html"),
     "esc": ("Escopo e liderança", "../Escopo/treinamento-escopo.html"),
+    "cal": ("Calibração e recursos de medição", "../Calibracao/treinamento-calibracao.html"),
 }
 
 
@@ -125,7 +126,7 @@ REQ = _req([
     ("7.1.5", "Recursos de monitoramento e medição",
      "Assegurar que os recursos usados para medir e monitorar sejam adequados e mantidos. Quando a rastreabilidade da medição for requisito, calibrar ou verificar os instrumentos, identificá-los e protegê-los.",
      "Como se sabe que os instrumentos medem certo?",
-     "Lista de instrumentos, certificados de calibração, identificação da situação.", ()),
+     "Lista de instrumentos, certificados de calibração, identificação da situação.", ("cal",)),
     ("7.1.6", "Conhecimento organizacional",
      "Determinar o conhecimento necessário para operar os processos, mantê-lo e torná-lo disponível. Diante de mudanças, avaliar como obter o conhecimento que falta.",
      "O que acontece se a pessoa que sabe fazer sair da organização?",
