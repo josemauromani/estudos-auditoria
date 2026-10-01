@@ -1,0 +1,1307 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Liberação e produto não conforme</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<style>
+:root{
+  --ground:#F3F6F7; --surface:#FFFFFF; --sunk:#E9EEF0; --ink:#16242E; --muted:#566672; --rule:#D3DBE0;
+  --accent:#2B5C8A;
+  --s1:#2A6FB0; --s1-tint:#DCE8F3;
+  --s2:#D19A2E; --s2-tint:#F8EBCB;
+  --s3:#B0413E; --s3-tint:#F5DEDC;
+  --on-s2:#16242E;
+  --p:#2B5C8A; --p-tint:#DCE8F3;
+  --d:#A96A12; --d-tint:#F6E8CF;
+  --c:#1E7B73; --c-tint:#D9EEEB;
+  --a:#B0413E; --a-tint:#F5DEDC;
+  --on-hue:#FFFFFF;
+  --good:#1F7A4D; --good-tint:#DDF1E5;
+  --bad:#B0413E; --bad-tint:#F5DEDC;
+  --display:"Barlow Semi Condensed","Arial Narrow",Arial,sans-serif;
+  --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --ground:#0F171C; --surface:#172229; --sunk:#1E2B33; --ink:#E4EAED; --muted:#9BABB6; --rule:#2B3A44;
+    --accent:#86B7E3;
+  --s1:#4F97DB; --s1-tint:#1B2F42;
+  --s2:#B58E14; --s2-tint:#3A2C12;
+  --s3:#D14B45; --s3-tint:#3D1F1E;
+  --on-s2:#0F171C;
+    --p:#86B7E3; --p-tint:#1B2F42;
+    --d:#E2AC4F; --d-tint:#3A2C12;
+    --c:#5FC6BA; --c-tint:#15332F;
+    --a:#EC8E89; --a-tint:#3D1F1E;
+    --on-hue:#0F171C;
+    --good:#6FCF9B; --good-tint:#163326;
+    --bad:#EC8E89; --bad-tint:#3D1F1E;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --ground:#0F171C; --surface:#172229; --sunk:#1E2B33; --ink:#E4EAED; --muted:#9BABB6; --rule:#2B3A44;
+  --accent:#86B7E3;
+  --s1:#4F97DB; --s1-tint:#1B2F42;
+  --s2:#B58E14; --s2-tint:#3A2C12;
+  --s3:#D14B45; --s3-tint:#3D1F1E;
+  --on-s2:#0F171C;
+  --p:#86B7E3; --p-tint:#1B2F42;
+  --d:#E2AC4F; --d-tint:#3A2C12;
+  --c:#5FC6BA; --c-tint:#15332F;
+  --a:#EC8E89; --a-tint:#3D1F1E;
+  --on-hue:#0F171C;
+  --good:#6FCF9B; --good-tint:#163326;
+  --bad:#EC8E89; --bad-tint:#3D1F1E;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--ground);color:var(--ink);font:400 16px/1.65 var(--body);-webkit-text-size-adjust:100%}
+a{color:var(--accent);text-underline-offset:3px}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.page{max-width:1180px;margin-inline:auto;padding-inline:20px;padding-block:36px 80px}
+
+/* Cabeçalho */
+.mast{display:flex;flex-direction:column;gap:18px;padding-bottom:32px;border-bottom:1px solid var(--rule)}
+.tiles{display:flex;gap:6px}
+.tiles span{width:44px;height:44px;display:grid;place-items:center;font:700 24px/1 var(--display);color:var(--on-hue)}
+.tiles .p{background:var(--p)} .tiles .d{background:var(--d)} .tiles .c{background:var(--c)} .tiles .a{background:var(--a)}
+h1{font:700 clamp(2.3rem,6vw,3.6rem)/1.02 var(--display);letter-spacing:-.01em;margin:0;text-wrap:balance}
+.lead{font-size:1.15rem;line-height:1.55;max-width:62ch;margin:0;color:var(--ink)}
+.meta{display:flex;flex-direction:row;flex-wrap:wrap;gap:6px 22px;font:400 .8rem/1.4 var(--mono);color:var(--muted);margin:0;padding:0;list-style:none}
+
+/* Estrutura */
+.layout{display:grid;grid-template-columns:minmax(0,1fr);gap:32px;padding-top:32px}
+.toc{font-size:.92rem}
+.toc h2{font:500 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+.toc ol{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:2px 20px;counter-reset:toc}
+.toc li{counter-increment:toc}
+.toc a{display:flex;gap:10px;padding:5px 0;color:var(--ink);text-decoration:none;line-height:1.35}
+.toc a::before{content:counter(toc,decimal-leading-zero);font:400 .75rem/1.7 var(--mono);color:var(--muted)}
+.toc a:hover{color:var(--accent);text-decoration:underline}
+@media (min-width:1020px){
+  .layout{grid-template-columns:200px minmax(0,1fr);gap:64px}
+  .toc{position:sticky;top:calc(env(safe-area-inset-top,0px) + 24px);align-self:start}
+  .toc ol{grid-template-columns:1fr}
+}
+main{display:flex;flex-direction:column;gap:72px;min-width:0}
+section{display:flex;flex-direction:column;gap:20px;scroll-margin-top:24px}
+.eyebrow{font:500 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0}
+h2{font:700 clamp(1.7rem,4vw,2.2rem)/1.1 var(--display);margin:0;text-wrap:balance}
+h3{font:600 1.3rem/1.2 var(--display);margin:12px 0 0;text-wrap:balance}
+h4{font:600 .95rem/1.3 var(--body);margin:0}
+p{margin:0}
+section > p, section > ul, section > ol, section > h3{max-width:68ch}
+ul,ol{margin:0;padding-left:1.25em;display:flex;flex-direction:column;gap:6px}
+strong{font-weight:600}
+code{font:400 .88em var(--mono);background:var(--sunk);padding:1px 5px;border-radius:3px}
+
+/* Letras coloridas no texto */
+.k{display:inline-grid;place-items:center;width:1.45em;height:1.45em;font:700 .85em/1 var(--display);color:var(--on-hue);vertical-align:.05em}
+.k.p{background:var(--p)} .k.d{background:var(--d)} .k.c{background:var(--c)} .k.a{background:var(--a)}
+
+/* Figuras */
+figure{margin:0;display:flex;flex-direction:column;gap:10px;position:relative}
+.scroll{overflow-x:auto;background:var(--surface);border:1px solid var(--rule);padding:18px}
+.scroll svg{display:block;width:100%;min-width:820px;height:auto;color:var(--ink)}
+figcaption{font-size:.86rem;line-height:1.5;color:var(--muted);max-width:72ch}
+figcaption b{color:var(--ink);font-weight:600}
+svg text{font-family:var(--body);fill:var(--ink)}
+svg .disp{font-family:var(--display);font-weight:700}
+svg .mono{font-family:var(--mono);letter-spacing:.08em}
+svg .on{fill:var(--on-hue)}
+svg .mu{fill:var(--muted)}
+svg .b{font-weight:600}
+svg .ln{stroke:var(--ink);stroke-width:1.5;fill:none}
+svg .ln-mu{stroke:var(--muted);stroke-width:1.5;fill:none}
+svg .ln-bold{stroke:var(--ink);stroke-width:3;fill:none;stroke-linejoin:round;stroke-linecap:round}
+svg .dash{stroke-dasharray:5 4}
+svg .ah{fill:var(--ink)} svg .ah-mu{fill:var(--muted)}
+svg .bx{fill:var(--surface);stroke:var(--rule);stroke-width:1.5}
+svg .bx-ink{fill:var(--ink);stroke:var(--ink)}
+svg .t-ground{fill:var(--ground)}
+svg .bx-out{fill:none;stroke:var(--muted);stroke-width:1.5;stroke-dasharray:5 4}
+svg .bx-p{fill:var(--p-tint);stroke:var(--p);stroke-width:1.5} svg .hd-p{fill:var(--p)}
+svg .bx-d{fill:var(--d-tint);stroke:var(--d);stroke-width:1.5} svg .hd-d{fill:var(--d)}
+svg .bx-c{fill:var(--c-tint);stroke:var(--c);stroke-width:1.5} svg .hd-c{fill:var(--c)}
+svg .bx-a{fill:var(--a-tint);stroke:var(--a);stroke-width:1.5} svg .hd-a{fill:var(--a)}
+svg .gap{stroke:var(--surface);stroke-width:4}
+svg .gap2{stroke:var(--surface);stroke-width:2}
+svg .hub{fill:var(--surface)}
+
+/* Gráfico */
+svg .grid{stroke:var(--rule);stroke-width:1}
+svg .band{fill:var(--sunk)}
+svg .series{stroke:var(--accent);stroke-width:2;fill:none;stroke-linejoin:round;stroke-linecap:round}
+svg .pt{fill:var(--accent);stroke:var(--surface);stroke-width:2}
+svg .pt.on-hit{stroke:var(--ink)}
+svg .goal{stroke:var(--muted);stroke-width:1.5;stroke-dasharray:6 4;fill:none}
+svg .xh{stroke:var(--muted);stroke-width:1}
+svg .hit{fill:transparent;cursor:crosshair;outline:none}
+svg .root{fill:var(--accent);stroke:var(--surface);stroke-width:2}
+.tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--ground);padding:6px 10px;font-size:.78rem;line-height:1.4;transform:translate(-50%,calc(-100% - 14px));white-space:nowrap;z-index:2}
+.tip b{display:block;font:600 1.05rem/1.2 var(--body)}
+details.data{font-size:.88rem}
+details.data summary{cursor:pointer;font:400 .82rem var(--mono);color:var(--muted);padding:4px 0}
+details.data .tbl{margin-top:8px}
+details.data table{min-width:420px}
+
+/* Tabelas */
+.tbl{overflow-x:auto;border:1px solid var(--rule);background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:780px;font-size:.88rem;line-height:1.4}
+th,td{padding:9px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--rule)}
+tr:last-child > td{border-bottom:0}
+thead th{font:600 .8rem/1.3 var(--body);background:var(--sunk)}
+td.num{font-variant-numeric:tabular-nums;white-space:nowrap;font-family:var(--mono);font-size:.82rem}
+
+/* Situações */
+.chip{display:inline-block;padding:2px 8px;font:600 .76rem/1.45 var(--body);color:var(--on-hue);white-space:nowrap}
+.chip.s1{background:var(--s1)} .chip.s2{background:var(--s2);color:var(--on-s2)} .chip.s3{background:var(--s3)}
+.chip.sl{background:var(--sunk);color:var(--ink);box-shadow:inset 0 0 0 1px var(--rule)}
+svg .hd-ink{fill:var(--ink)}
+svg .f1{fill:var(--s1)} svg .f2{fill:var(--s2)} svg .f3{fill:var(--s3)}
+svg .bx-s1{fill:var(--s1-tint);stroke:var(--s1);stroke-width:1.5} svg .bx-s2{fill:var(--s2-tint);stroke:var(--s2);stroke-width:1.5} svg .bx-s3{fill:var(--s3-tint);stroke:var(--s3);stroke-width:1.5}
+svg .on-s2{fill:var(--on-s2)}
+svg .halo{paint-order:stroke;stroke:var(--surface);stroke-width:5px;stroke-linejoin:round}
+svg .hit:focus-visible{stroke:var(--accent);stroke-width:2}
+
+/* Tabelas dos exemplos */
+table.aud{font-size:.8rem;min-width:960px;line-height:1.4}
+table.aud th, table.aud td{padding:8px 9px}
+table.aud td.n{white-space:nowrap;font-weight:600;color:var(--muted)}
+table.aud td.c, table.aud th.c{text-align:center;font-variant-numeric:tabular-nums}
+table.aud td.r, table.aud th.r{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+table.aud td.no{background:var(--s3-tint)}
+table.aud td small, table.aud th small{display:block;color:var(--muted);font-size:.76rem;margin-top:3px;font-weight:400}
+table.aud caption{caption-side:top;text-align:left;padding:10px 12px;font:500 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);background:var(--sunk)}
+
+/* Ficha do registro (acima de cada exemplo) */
+.ficha{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:0;border:1px solid var(--rule);background:var(--surface)}
+.ficha div{padding:12px 14px;border-right:1px solid var(--rule);border-bottom:1px solid var(--rule);margin:0 -1px -1px 0}
+.ficha dt{font:500 .68rem/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.ficha dd{margin:0;font-size:.9rem;line-height:1.4}
+dl{margin:0}
+
+/* Blocos */
+.pair{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.box{background:var(--surface);border:1px solid var(--rule);padding:18px 20px;display:flex;flex-direction:column;gap:10px}
+.box h4{font:600 1.1rem/1.2 var(--display)}
+.box ul{font-size:.93rem}
+.note{background:var(--sunk);padding:16px 20px;max-width:72ch;font-size:.94rem;display:flex;flex-direction:column;gap:6px}
+.note h4{font:500 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+
+/* Passo a passo */
+.steps{list-style:none;padding:0;counter-reset:st;gap:0;max-width:none;border-top:1px solid var(--rule)}
+.steps li{counter-increment:st;display:grid;grid-template-columns:44px minmax(0,1fr);gap:4px 12px;padding:16px 0;border-bottom:1px solid var(--rule)}
+.steps li::before{content:counter(st);font:700 1.7rem/1 var(--display);color:var(--muted);grid-row:span 2}
+.steps h4{font:600 1.1rem/1.25 var(--display)}
+.steps p{font-size:.95rem;max-width:64ch;grid-column:2}
+
+/* Erros comuns */
+.errs{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:0 40px;border-top:1px solid var(--rule)}
+.errs div{padding:16px 16px 16px 0;border-bottom:1px solid var(--rule);display:flex;flex-direction:column;gap:4px}
+.errs h4{font:600 1.05rem/1.25 var(--display)}
+.errs p{font-size:.92rem}
+.errs .fix{color:var(--muted)}
+.errs .fix b{color:var(--ink);font-weight:600}
+
+/* Checklist */
+.check{list-style:none;padding:0;gap:0;max-width:none;border:1px solid var(--rule);background:var(--surface)}
+.check li{border-bottom:1px solid var(--rule)}
+.check li:last-child{border-bottom:0}
+.check label{display:grid;grid-template-columns:22px minmax(0,1fr);gap:12px;padding:11px 16px;cursor:pointer;font-size:.94rem;align-items:start}
+.check input{width:18px;height:18px;margin:3px 0 0;accent-color:var(--c)}
+.check input:checked + span{color:var(--muted);text-decoration:line-through}
+.bar{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;font:400 .82rem var(--mono);color:var(--muted)}
+.bar b{color:var(--ink);font-weight:500}
+
+/* Exercício */
+.quiz{display:flex;flex-direction:column;gap:0;border:1px solid var(--rule);background:var(--surface)}
+.q{display:grid;grid-template-columns:minmax(0,1fr);gap:10px;padding:14px 16px;border-bottom:1px solid var(--rule)}
+.q:last-child{border-bottom:0}
+@media (min-width:720px){.q{grid-template-columns:minmax(0,1fr) auto;align-items:center}}
+.q p{font-size:.95rem}
+.q .why{grid-column:1/-1;font-size:.86rem;color:var(--muted)}
+.q .why b{font-weight:600}
+.q .why.ok b{color:var(--good)} .q .why.no b{color:var(--bad)}
+.opts{display:flex;gap:6px}
+.opts button{width:40px;height:40px;border:1.5px solid var(--rule);background:var(--surface);color:var(--ink);font:700 1.1rem/1 var(--display);cursor:pointer;border-radius:0}
+.opts button:hover:not(:disabled){border-color:var(--ink)}
+.opts button:disabled{cursor:default;opacity:.45}
+.opts button.right{background:var(--good-tint);border-color:var(--good);color:var(--good);opacity:1}
+.opts button.wrong{background:var(--bad-tint);border-color:var(--bad);color:var(--bad);opacity:1}
+.btn{border:1.5px solid var(--ink);background:transparent;color:var(--ink);font:500 .82rem var(--mono);padding:7px 14px;cursor:pointer;border-radius:0}
+.btn:hover{background:var(--ink);color:var(--ground)}
+
+/* Glossário */
+.gloss{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:0 40px;border-top:1px solid var(--rule)}
+.gloss div{padding:12px 0;border-bottom:1px solid var(--rule)}
+.gloss dt{font:600 1.02rem/1.3 var(--display)}
+.gloss dd{margin:2px 0 0;font-size:.9rem;color:var(--muted)}
+footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);font-size:.84rem;color:var(--muted);max-width:72ch}
+
+.quiz .opts{flex-wrap:wrap}
+.quiz .opts button{width:auto;min-width:40px;padding:0 11px;font-size:1rem}
+@media (min-width:720px){.q{grid-template-columns:minmax(0,1fr) auto}}
+</style>
+</head>
+<body>
+<div class="page" lang="pt-BR">
+
+<header class="mast">
+  <div class="tiles" aria-hidden="true"><span class="p">L</span><span class="d">S</span><span class="c">D</span></div>
+  <h1>Liberação e produto não conforme na prática</h1>
+  <p class="lead">Um guia de estudo para liberar o produto com base em verificações e com autoridade definida, separar o que não atende, decidir o destino de cada item e registrar o que foi feito.</p>
+  <ul class="meta">
+    <li>Treinamento autoinstrucional</li>
+    <li>13 módulos</li>
+    <li>Leitura de cerca de 45 minutos</li>
+    <li>3 exemplos resolvidos e 2 exercícios</li>
+  </ul>
+</header>
+
+<div class="layout">
+
+<nav class="toc" aria-label="Sumário">
+  <h2>Sumário</h2>
+  <ol>
+    <li><a href="#o-que-e">O que é</a></li>
+    <li><a href="#quando">Quando usar</a></li>
+    <li><a href="#como">Como construir</a></li>
+    <li><a href="#disposicoes">As seis disposições</a></li>
+    <li><a href="#liberar">Liberar com autoridade</a></li>
+    <li><a href="#exemplos">Exemplos resolvidos</a></li>
+    <li><a href="#leitura">Ler os registros</a></li>
+    <li><a href="#erros">Erros comuns</a></li>
+    <li><a href="#ferramentas">A liberação e outras ferramentas</a></li>
+    <li><a href="#iso">Nas normas ISO</a></li>
+    <li><a href="#reuniao">A reunião semanal</a></li>
+    <li><a href="#pratique">Pratique</a></li>
+    <li><a href="#planilha">A planilha de apoio</a></li>
+    <li><a href="#glossario">Glossário</a></li>
+  </ol>
+</nav>
+
+<main>
+
+<!-- ============================ MÓDULO 1 ============================ -->
+<section id="o-que-e">
+  <p class="eyebrow">Módulo 1</p>
+  <h2>O que é</h2>
+  <p>Liberar é decidir que um produto, ou um serviço, pode seguir para o cliente. A decisão se apoia nas verificações planejadas e é tomada por alguém com autoridade para isso. Quando uma verificação mostra que o produto não atende, ele vira uma saída não conforme: precisa ser marcado, separado e ter o destino decidido, para não chegar ao cliente por engano.</p>
+  <p>As letras do título são os três movimentos: <span class="k p">L</span> liberar o que atende, <span class="k d">S</span> segregar o que não atende e <span class="k c">D</span> decidir a disposição, isto é, o destino do produto não conforme.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 350" role="img" aria-label="O caminho do produto até o cliente. As verificações planejadas levam à pergunta: atende aos critérios? Se sim, o produto é liberado, com o registro de quem liberou, e entregue. Se não, é identificado e segregado, e quem tem autoridade decide a disposição. Retrabalhar ou reclassificar devolve o produto à verificação. Aceitar sob concessão leva à liberação com autorização. Refugar, devolver ou recolher tira o produto do fluxo. O defeito visto depois da entrega leva a informar o cliente e também passa pela decisão da disposição.">
+        <defs><marker id="a1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker><marker id="a1m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah-mu" d="M0 0 L10 5 L0 10 z"/></marker></defs>
+        <rect class="bx" x="20" y="20" width="170" height="56"/>
+        <text class="b" x="32" y="44" font-size="12">Verificações</text>
+        <text class="mu" x="32" y="61" font-size="10.5">as planejadas</text>
+        <rect class="bx-ink" x="230" y="20" width="170" height="56"/>
+        <text class="b t-ground" x="242" y="44" font-size="12">Atende aos critérios?</text>
+        <text class="t-ground" x="242" y="61" font-size="10.5">de aceitação</text>
+        <rect class="bx-s1" x="440" y="20" width="190" height="56"/>
+        <text class="b" x="452" y="44" font-size="12">Liberar</text>
+        <text class="mu" x="452" y="61" font-size="10.5">e registrar quem liberou</text>
+        <rect class="bx" x="670" y="20" width="210" height="56"/>
+        <text class="b" x="682" y="44" font-size="12">Entregar ao cliente</text>
+        <text class="mu" x="682" y="61" font-size="10.5">produto ou serviço</text>
+        <rect class="bx-s3" x="230" y="140" width="170" height="56"/>
+        <text class="b" x="242" y="164" font-size="12">Identificar e segregar</text>
+        <text class="mu" x="242" y="181" font-size="10.5">sai do fluxo</text>
+        <rect class="bx-s2" x="440" y="140" width="190" height="56"/>
+        <text class="b" x="452" y="164" font-size="12">Decidir a disposição</text>
+        <text class="mu" x="452" y="181" font-size="10.5">quem tem autoridade</text>
+        <rect class="bx-s3" x="670" y="140" width="210" height="56"/>
+        <text class="b" x="682" y="164" font-size="12">Informar o cliente</text>
+        <text class="mu" x="682" y="181" font-size="10.5">defeito visto depois da entrega</text>
+        <rect class="bx" x="230" y="256" width="170" height="56"/>
+        <text class="b" x="242" y="280" font-size="12">Retrabalhar</text>
+        <text class="mu" x="242" y="297" font-size="10.5">ou reclassificar</text>
+        <rect class="bx" x="440" y="256" width="190" height="56"/>
+        <text class="b" x="452" y="280" font-size="12">Aceitar sob concessão</text>
+        <text class="mu" x="452" y="297" font-size="10.5">com o aceite do cliente</text>
+        <rect class="bx" x="670" y="256" width="210" height="56"/>
+        <text class="b" x="682" y="280" font-size="12">Refugar ou devolver</text>
+        <text class="mu" x="682" y="297" font-size="10.5">ou recolher do cliente</text>
+        <line class="ln" x1="191" y1="40" x2="228" y2="40" marker-end="url(#a1)"/>
+        <line class="ln" x1="401" y1="40" x2="438" y2="40" marker-end="url(#a1)"/>
+        <text class="mu halo" x="419" y="34" font-size="10.5" text-anchor="middle">sim</text>
+        <line class="ln" x1="631" y1="40" x2="668" y2="40" marker-end="url(#a1)"/>
+        <line class="ln" x1="315" y1="77" x2="315" y2="138" marker-end="url(#a1)"/>
+        <text class="mu halo" x="323" y="112" font-size="10.5">não</text>
+        <line class="ln" x1="401" y1="168" x2="438" y2="168" marker-end="url(#a1)"/>
+        <path class="ln-mu dash" d="M775 77 V138" marker-end="url(#a1m)"/>
+        <line class="ln" x1="669" y1="168" x2="633" y2="168" marker-end="url(#a1)"/>
+        <path class="ln" d="M535 197 V226 H315 V254" marker-end="url(#a1)"/>
+        <path class="ln" d="M535 226 V254" marker-end="url(#a1)"/>
+        <path class="ln" d="M535 226 H775 V254" marker-end="url(#a1)"/>
+        <path class="ln-mu dash" d="M229 284 H210 V64 H228" marker-end="url(#a1m)"/>
+        <text class="mu halo" x="205" y="190" font-size="10.5" text-anchor="end">verificar</text>
+        <text class="mu halo" x="205" y="204" font-size="10.5" text-anchor="end">de novo</text>
+        <path class="ln-mu dash" d="M631 284 H652 V64 H633" marker-end="url(#a1m)"/>
+        <text class="mu halo" x="657" y="112" font-size="10.5">com</text>
+        <text class="mu halo" x="657" y="126" font-size="10.5">autorização</text>
+        <text x="450" y="340" font-size="11.5" text-anchor="middle">O produto que não atende sai do fluxo e só volta a ele por uma decisão de quem tem autoridade.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 1.</b> O caminho do produto até o cliente. Na pergunta do centro, ele segue para a liberação ou sai do fluxo, até que alguém com autoridade decida o destino.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Elemento</th><th style="width:40%">O que é</th><th>Exemplo</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Critério de aceitação</strong></td><td>O que o produto precisa atender para ser liberado.</td><td>Espessura de 38 a 42 µm. Pizza a no mínimo 65 °C.</td></tr>
+        <tr><td><strong>Liberação</strong></td><td>A decisão de que o produto pode seguir, com o registro de quem decidiu.</td><td>O laudo do lote, com a assinatura do analista.</td></tr>
+        <tr><td><strong>Saída não conforme</strong></td><td>Produto ou serviço que não atende a um requisito.</td><td>A bobina com géis. A pizza com o sabor trocado.</td></tr>
+        <tr><td><strong>Segregação</strong></td><td>Separar o produto não conforme do fluxo, com uma marca clara.</td><td>Etiqueta vermelha e área de segregação.</td></tr>
+        <tr><td><strong>Disposição</strong></td><td>O destino decidido para o produto não conforme.</td><td>Retrabalhar, refugar, aceitar sob concessão.</td></tr>
+        <tr><td><strong>Concessão</strong></td><td>A autorização para entregar o produto como está.</td><td>O cliente B aceita filme de até 44 µm, por escrito.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 2 ============================ -->
+<section id="quando">
+  <p class="eyebrow">Módulo 2</p>
+  <h2>Quando usar</h2>
+  <p>A liberação acontece em todo lote, pedido ou serviço entregue. O controle do produto não conforme começa no momento em que um resultado sai do critério, em qualquer ponto: no recebimento do insumo, no processo, na inspeção final ou depois da entrega.</p>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:28%">Momento</th><th style="width:38%">O que fazer</th><th>Resultado</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Antes de entregar</strong></td><td>Conferir se as verificações planejadas foram feitas e atendidas, e registrar a liberação.</td><td>Só sai o que foi verificado, por decisão de quem pode decidir.</td></tr>
+        <tr><td><strong>Verificação pendente</strong></td><td>Reter, ou liberar só com a autorização de quem pode e, se for o caso, do cliente.</td><td>A pressa não vira surpresa para o cliente.</td></tr>
+        <tr><td><strong>Resultado fora do critério</strong></td><td>Identificar, segregar e abrir o registro de produto não conforme.</td><td>O produto sai do fluxo antes de ser usado ou entregue.</td></tr>
+        <tr><td><strong>Insumo com defeito no recebimento</strong></td><td>Não deixar entrar no estoque. Devolver, e registrar na avaliação do fornecedor.</td><td>O defeito não entra na operação.</td></tr>
+        <tr><td><strong>Defeito visto depois da entrega</strong></td><td>Informar o cliente, decidir o recolhimento ou a troca e procurar outros lotes iguais.</td><td>O cliente sabe antes de descobrir sozinho.</td></tr>
+        <tr><td><strong>Toda semana</strong></td><td>Ler os registros abertos, os defeitos que se repetem e o custo.</td><td>Nenhum registro esquecido, e a causa tratada quando o defeito volta.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pair">
+    <div class="box">
+      <h4>É saída não conforme</h4>
+      <ul>
+        <li>O produto, ou o serviço, que não atende ao critério.</li>
+        <li>O insumo recebido fora da especificação.</li>
+        <li>O produto que foi entregue e depois se mostrou com defeito.</li>
+        <li>O produto sem a verificação planejada, enquanto ela não é feita.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h4>Não é saída não conforme, e vai para outro tratamento</h4>
+      <ul>
+        <li>O procedimento que não foi seguido, sem produto afetado: não conformidade do sistema.</li>
+        <li>A constatação de auditoria: vai para o tratamento de não conformidades.</li>
+        <li>O ajuste previsto na reação do plano de controle, antes de o produto sair do critério.</li>
+        <li>A reclamação sem defeito comprovado: é tratada pela satisfação do cliente.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 3 ============================ -->
+<section id="como">
+  <p class="eyebrow">Módulo 3</p>
+  <h2>Como construir</h2>
+  <p>A liberação e o controle do produto não conforme são definidos uma vez, por escrito, e usados todos os dias. O erro mais comum é deixar para decidir na hora: quem libera, quem pode aceitar um produto com desvio, onde o produto reprovado fica. Na hora, com o cliente esperando, a decisão costuma ser deixar passar.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 206" role="img" aria-label="As cinco etapas do trabalho. Definir quem libera: Os critérios de aceitação, as verificações e quem tem autoridade para liberar. Verificar e liberar: Conferir as verificações planejadas e registrar quem liberou. Identificar e segregar: O que não atende recebe uma marca e sai do fluxo, para não ser entregue. Decidir a disposição: Quem tem autoridade escolhe uma das seis disposições. Verificar e registrar: O que foi corrigido é verificado de novo. O registro guarda o defeito e quem decidiu. Os registros lidos devolvem o trabalho à primeira etapa.">
+        <defs><marker id="a2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker><marker id="a2m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah-mu" d="M0 0 L10 5 L0 10 z"/></marker></defs>
+        <rect class="bx-s1" x="12" y="16" width="164" height="124"/>
+        <text class="mono mu" x="24" y="36" font-size="10">ETAPA 1</text>
+        <text class="b" x="24" y="58" font-size="13">Definir quem libera</text>
+        <text x="24" y="80.0" font-size="10.5">Os critérios de aceitação,</text>
+        <text x="24" y="94.5" font-size="10.5">as verificações e quem tem</text>
+        <text x="24" y="109.0" font-size="10.5">autoridade para liberar.</text>
+        <line class="ln" x1="177" y1="78" x2="188" y2="78" marker-end="url(#a2)"/>
+        <rect class="bx-s1" x="190" y="16" width="164" height="124"/>
+        <text class="mono mu" x="202" y="36" font-size="10">ETAPA 2</text>
+        <text class="b" x="202" y="58" font-size="13">Verificar e liberar</text>
+        <text x="202" y="80.0" font-size="10.5">Conferir as verificações</text>
+        <text x="202" y="94.5" font-size="10.5">planejadas e registrar</text>
+        <text x="202" y="109.0" font-size="10.5">quem liberou.</text>
+        <line class="ln" x1="355" y1="78" x2="366" y2="78" marker-end="url(#a2)"/>
+        <rect class="bx-s3" x="368" y="16" width="164" height="124"/>
+        <text class="mono mu" x="380" y="36" font-size="10">ETAPA 3</text>
+        <text class="b" x="380" y="58" font-size="13">Identificar e segregar</text>
+        <text x="380" y="80.0" font-size="10.5">O que não atende recebe</text>
+        <text x="380" y="94.5" font-size="10.5">uma marca e sai do fluxo,</text>
+        <text x="380" y="109.0" font-size="10.5">para não ser entregue.</text>
+        <line class="ln" x1="533" y1="78" x2="544" y2="78" marker-end="url(#a2)"/>
+        <rect class="bx-s2" x="546" y="16" width="164" height="124"/>
+        <text class="mono mu" x="558" y="36" font-size="10">ETAPA 4</text>
+        <text class="b" x="558" y="58" font-size="13">Decidir a disposição</text>
+        <text x="558" y="80.0" font-size="10.5">Quem tem autoridade</text>
+        <text x="558" y="94.5" font-size="10.5">escolhe uma das seis</text>
+        <text x="558" y="109.0" font-size="10.5">disposições.</text>
+        <line class="ln" x1="711" y1="78" x2="722" y2="78" marker-end="url(#a2)"/>
+        <rect class="bx-ink" x="724" y="16" width="164" height="124"/>
+        <text class="mono t-ground" x="736" y="36" font-size="10">ETAPA 5</text>
+        <text class="b t-ground" x="736" y="58" font-size="13">Verificar e registrar</text>
+        <text class="t-ground" x="736" y="80.0" font-size="10.5">O que foi corrigido é</text>
+        <text class="t-ground" x="736" y="94.5" font-size="10.5">verificado de novo. O</text>
+        <text class="t-ground" x="736" y="109.0" font-size="10.5">registro guarda o defeito</text>
+        <text class="t-ground" x="736" y="123.5" font-size="10.5">e quem decidiu.</text>
+        <path class="ln-mu dash" d="M806.0 142 V170 H94.0 V146" marker-end="url(#a2m)"/>
+        <text class="mu halo" x="450" y="174" font-size="11" text-anchor="middle">o defeito que se repete muda o critério, a verificação ou o processo</text>
+        <text x="450" y="198" font-size="11.5" text-anchor="middle">As duas primeiras etapas são a liberação (8.6). As três últimas, o controle do produto não conforme (8.7).</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 2.</b> As cinco etapas. As duas primeiras cuidam do que atende. As três últimas, do que não atende.</figcaption>
+  </figure>
+
+  <h3>Passo a passo</h3>
+  <ol class="steps">
+    <li><h4>Escreva os critérios de aceitação</h4><p>Para cada produto, o que precisa ser atendido. Os critérios vêm do cliente, da lei, da especificação e do plano de controle.</p></li>
+    <li><h4>Liste as verificações que precisam estar feitas</h4><p>Antes de liberar: as do processo, as da inspeção final, os laudos. A liberação confere que todas foram feitas e atendidas.</p></li>
+    <li><h4>Defina quem libera</h4><p>A função, e não só o setor. Defina também quem pode autorizar a liberação com uma verificação pendente, e quando o cliente precisa concordar.</p></li>
+    <li><h4>Defina a marca e o lugar do produto não conforme</h4><p>Etiqueta, cor, carimbo, área separada. Quem encontra o produto sabe, sem perguntar, que ele não pode seguir.</p></li>
+    <li><h4>Defina quem decide cada disposição</h4><p>Retrabalhar pode ser decisão do líder do turno; refugar um lote inteiro ou recolher do cliente, não. Escreva os limites.</p></li>
+    <li><h4>Registre cada caso</h4><p>O defeito, a quantidade, onde foi visto, a segregação, a disposição, quem decidiu, a concessão e a reverificação. O registro é exigido pela norma.</p></li>
+    <li><h4>Verifique de novo o que foi corrigido</h4><p>O produto retrabalhado volta às verificações antes de seguir. A correção pode ter falhado, ou criado outro defeito.</p></li>
+    <li><h4>Leia os registros toda semana</h4><p>Os abertos, os que se repetem e o custo. O defeito que volta é levado ao tratamento de não conformidades, com análise de causa.</p></li>
+  </ol>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:26%">Papel</th><th style="width:28%">Quem costuma ser</th><th>O que faz</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Quem encontra</strong></td><td>Quem executa ou inspeciona.</td><td>Identifica, segrega e abre o registro. Não decide o destino.</td></tr>
+        <tr><td><strong>Quem libera</strong></td><td>A inspeção final, o laboratório ou o líder.</td><td>Confere as verificações e registra a liberação.</td></tr>
+        <tr><td><strong>Quem decide a disposição</strong></td><td>O líder, a Qualidade ou a gerência, conforme o limite.</td><td>Escolhe o destino e responde pela decisão.</td></tr>
+        <tr><td><strong>Quem fala com o cliente</strong></td><td>O comercial, o atendimento ou a gerência.</td><td>Pede a concessão e informa o defeito visto depois da entrega.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 4 ============================ -->
+<section id="disposicoes">
+  <p class="eyebrow">Módulo 4</p>
+  <h2>As seis disposições</h2>
+  <p>Disposição é o destino do produto não conforme. A norma lista os tipos de tratamento sem dar nomes fixos; este material usa seis, que cobrem os casos mais comuns. Cada uma tem um cuidado que não pode ser esquecido.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 330" role="img" aria-label="As seis disposições. Retrabalhar: Corrigir o produto para que volte a atender ao requisito. Quando: O defeito pode ser corrigido, e a correção custa menos do que refazer. Cuidado: Verificar de novo depois da correção. Reclassificar: Destinar o produto a outro uso, em que ele atende ao requisito. Quando: O produto não serve para este cliente, e serve para outro uso ou outra classe. Cuidado: Identificar de novo, com a nova classe. Aceitar sob concessão: Entregar o produto como está, com a autorização de quem pode aceitar. Quando: O desvio não afeta o uso, e o cliente concorda em receber. Cuidado: A autorização do cliente, por escrito, antes da entrega. Refugar: Descartar o produto, ou destruí-lo para reaproveitar o material. Quando: Não há correção possível, ou ela custa mais do que refazer. Cuidado: Garantir que o produto não volte ao fluxo. Devolver ao fornecedor: Devolver o item recebido a quem o forneceu. Quando: O defeito veio no insumo, e foi visto no recebimento ou antes do uso. Cuidado: Registrar a ocorrência na avaliação do fornecedor. Recolher ou substituir: Buscar o produto que já está com o cliente, trocar ou reparar. Quando: O defeito foi encontrado depois da entrega. Cuidado: Informar o cliente, sem esperar a reclamação.">
+        <rect class="bx" x="10" y="10" width="284" height="148"/>
+        <rect class="hd-ink" x="10" y="10" width="284" height="32"/>
+        <text class="mono t-ground" x="22" y="31" font-size="10">1</text>
+        <text class="b t-ground" x="40" y="31" font-size="12.5">Retrabalhar</text>
+        <text x="22" y="62" font-size="11">Corrigir o produto para que volte a atender ao</text>
+        <text x="22" y="76" font-size="11">requisito.</text>
+        <text class="mono mu" x="22" y="98" font-size="9.5">CUIDADO</text>
+        <text x="22" y="114" font-size="10.5">Verificar de novo depois da correção.</text>
+        <rect class="bx" x="306" y="10" width="284" height="148"/>
+        <rect class="hd-ink" x="306" y="10" width="284" height="32"/>
+        <text class="mono t-ground" x="318" y="31" font-size="10">2</text>
+        <text class="b t-ground" x="336" y="31" font-size="12.5">Reclassificar</text>
+        <text x="318" y="62" font-size="11">Destinar o produto a outro uso, em que ele</text>
+        <text x="318" y="76" font-size="11">atende ao requisito.</text>
+        <text class="mono mu" x="318" y="98" font-size="9.5">CUIDADO</text>
+        <text x="318" y="114" font-size="10.5">Identificar de novo, com a nova classe.</text>
+        <rect class="bx" x="602" y="10" width="284" height="148"/>
+        <rect class="hd-ink" x="602" y="10" width="284" height="32"/>
+        <text class="mono t-ground" x="614" y="31" font-size="10">3</text>
+        <text class="b t-ground" x="632" y="31" font-size="12.5">Aceitar sob concessão</text>
+        <text x="614" y="62" font-size="11">Entregar o produto como está, com a</text>
+        <text x="614" y="76" font-size="11">autorização de quem pode aceitar.</text>
+        <text class="mono mu" x="614" y="98" font-size="9.5">CUIDADO</text>
+        <text x="614" y="114" font-size="10.5">A autorização do cliente, por escrito, antes</text>
+        <text x="614" y="127" font-size="10.5">da entrega.</text>
+        <rect class="bx" x="10" y="168" width="284" height="148"/>
+        <rect class="hd-ink" x="10" y="168" width="284" height="32"/>
+        <text class="mono t-ground" x="22" y="189" font-size="10">4</text>
+        <text class="b t-ground" x="40" y="189" font-size="12.5">Refugar</text>
+        <text x="22" y="220" font-size="11">Descartar o produto, ou destruí-lo para</text>
+        <text x="22" y="234" font-size="11">reaproveitar o material.</text>
+        <text class="mono mu" x="22" y="256" font-size="9.5">CUIDADO</text>
+        <text x="22" y="272" font-size="10.5">Garantir que o produto não volte ao fluxo.</text>
+        <rect class="bx" x="306" y="168" width="284" height="148"/>
+        <rect class="hd-ink" x="306" y="168" width="284" height="32"/>
+        <text class="mono t-ground" x="318" y="189" font-size="10">5</text>
+        <text class="b t-ground" x="336" y="189" font-size="12.5">Devolver ao fornecedor</text>
+        <text x="318" y="220" font-size="11">Devolver o item recebido a quem o forneceu.</text>
+        <text class="mono mu" x="318" y="242" font-size="9.5">CUIDADO</text>
+        <text x="318" y="258" font-size="10.5">Registrar a ocorrência na avaliação do</text>
+        <text x="318" y="271" font-size="10.5">fornecedor.</text>
+        <rect class="bx" x="602" y="168" width="284" height="148"/>
+        <rect class="hd-ink" x="602" y="168" width="284" height="32"/>
+        <text class="mono t-ground" x="614" y="189" font-size="10">6</text>
+        <text class="b t-ground" x="632" y="189" font-size="12.5">Recolher ou substituir</text>
+        <text x="614" y="220" font-size="11">Buscar o produto que já está com o cliente,</text>
+        <text x="614" y="234" font-size="11">trocar ou reparar.</text>
+        <text class="mono mu" x="614" y="256" font-size="9.5">CUIDADO</text>
+        <text x="614" y="272" font-size="10.5">Informar o cliente, sem esperar a reclamação.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 3.</b> As seis disposições, com o cuidado de cada uma. As três primeiras mantêm o produto em uso; as três últimas o tiram do fluxo.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:18%">Disposição</th><th style="width:30%">Quando usar</th><th style="width:28%">Cuidado</th><th>Exemplo da série</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Retrabalhar</strong></td><td>O defeito pode ser corrigido, e a correção custa menos do que refazer.</td><td>Verificar de novo depois da correção.</td><td>Reaquecer a pizza. Refilar a bobina larga.</td></tr>
+        <tr><td><strong>Reclassificar</strong></td><td>O produto não serve para este cliente, e serve para outro uso ou outra classe.</td><td>Identificar de novo, com a nova classe.</td><td>Filme espesso vendido como segunda linha.</td></tr>
+        <tr><td><strong>Aceitar sob concessão</strong></td><td>O desvio não afeta o uso, e o cliente concorda em receber.</td><td>A autorização do cliente, por escrito, antes da entrega.</td><td>Bobinas com 43 µm aceitas pelo cliente B.</td></tr>
+        <tr><td><strong>Refugar</strong></td><td>Não há correção possível, ou ela custa mais do que refazer.</td><td>Garantir que o produto não volte ao fluxo.</td><td>Pizza com o sabor trocado. Bobina com géis, moída.</td></tr>
+        <tr><td><strong>Devolver ao fornecedor</strong></td><td>O defeito veio no insumo, e foi visto no recebimento ou antes do uso.</td><td>Registrar a ocorrência na avaliação do fornecedor.</td><td>Mussarela recebida a 9 °C.</td></tr>
+        <tr><td><strong>Recolher ou substituir</strong></td><td>O defeito foi encontrado depois da entrega.</td><td>Informar o cliente, sem esperar a reclamação.</td><td>Pedido entregue com o sabor errado.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pair">
+    <div class="box">
+      <h4>A disposição é bem decidida quando</h4>
+      <ul>
+        <li>Quem decide tem essa autoridade escrita.</li>
+        <li>O custo de cada caminho foi comparado: corrigir, refazer, descartar.</li>
+        <li>O cliente foi consultado quando o produto vai a ele com desvio.</li>
+        <li>O que foi corrigido foi verificado de novo.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h4>A disposição é mal decidida quando</h4>
+      <ul>
+        <li>Quem encontrou o defeito decide sozinho, para não atrasar.</li>
+        <li>O produto vai ao cliente “porque ninguém vai perceber”.</li>
+        <li>O refugo fica ao lado do produto bom, esperando o descarte.</li>
+        <li>A correção é dada por feita sem verificar.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="note">
+    <h4>Sobre a concessão</h4>
+    <p>A concessão é a única disposição em que o produto chega ao cliente com o desvio. Por isso, ela pede a autorização de quem pode aceitar, quase sempre o próprio cliente, antes da entrega e por escrito. Uma concessão vale para um lote, ou uma quantidade, e não muda a especificação. Se o mesmo desvio é aceito todo mês, o certo é rever a especificação com o cliente, e não pedir a concessão outra vez.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 5 ============================ -->
+<section id="liberar">
+  <p class="eyebrow">Módulo 5</p>
+  <h2>Liberar com autoridade</h2>
+  <p>A liberação responde a duas perguntas: as verificações planejadas foram feitas e atendidas? Quem decidiu que o produto pode seguir? A resposta precisa estar no produto, para quem vai pegá-lo, e no registro, para quem vai conferir depois.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 236" role="img" aria-label="As três situações de um produto. LIBERADO: marca: Etiqueta verde, carimbo ou rubrica Pode seguir para a etapa seguinte ou para o cliente. Quando: As verificações planejadas foram feitas e atendidas, e alguém com autoridade liberou. AGUARDANDO: marca: Etiqueta amarela, ou área de espera Não pode seguir, salvo liberação autorizada. Quando: Uma verificação está pendente: o laudo, o ensaio, a conferência. RETIDO: marca: Etiqueta vermelha e área separada Não pode seguir. Espera a disposição. Quando: Um resultado saiu do critério. Só quem tem autoridade decide o destino.">
+        <rect class="bx-s1" x="10" y="10" width="284" height="190"/>
+        <rect class="f1" x="22" y="24" width="22" height="22"/>
+        <text class="b" x="54" y="41" font-size="13">LIBERADO</text>
+        <text class="mono mu" x="22" y="70" font-size="9.5">MARCA</text>
+        <text x="22" y="85" font-size="11">Etiqueta verde, carimbo ou rubrica</text>
+        <text class="mono mu" x="22" y="112" font-size="9.5">PODE SEGUIR?</text>
+        <text x="22" y="127" font-size="11">Pode seguir para a etapa seguinte ou para o</text>
+        <text x="22" y="140" font-size="11">cliente.</text>
+        <text class="mono mu" x="22" y="158" font-size="9.5">QUANDO</text>
+        <text x="22" y="173" font-size="10.5">As verificações planejadas foram feitas e</text>
+        <text x="22" y="186" font-size="10.5">atendidas, e alguém com autoridade liberou.</text>
+        <rect class="bx-s2" x="306" y="10" width="284" height="190"/>
+        <rect class="f2" x="318" y="24" width="22" height="22"/>
+        <text class="b" x="350" y="41" font-size="13">AGUARDANDO</text>
+        <text class="mono mu" x="318" y="70" font-size="9.5">MARCA</text>
+        <text x="318" y="85" font-size="11">Etiqueta amarela, ou área de espera</text>
+        <text class="mono mu" x="318" y="112" font-size="9.5">PODE SEGUIR?</text>
+        <text x="318" y="127" font-size="11">Não pode seguir, salvo liberação autorizada.</text>
+        <text class="mono mu" x="318" y="158" font-size="9.5">QUANDO</text>
+        <text x="318" y="173" font-size="10.5">Uma verificação está pendente: o laudo, o</text>
+        <text x="318" y="186" font-size="10.5">ensaio, a conferência.</text>
+        <rect class="bx-s3" x="602" y="10" width="284" height="190"/>
+        <rect class="f3" x="614" y="24" width="22" height="22"/>
+        <text class="b" x="646" y="41" font-size="13">RETIDO</text>
+        <text class="mono mu" x="614" y="70" font-size="9.5">MARCA</text>
+        <text x="614" y="85" font-size="11">Etiqueta vermelha e área separada</text>
+        <text class="mono mu" x="614" y="112" font-size="9.5">PODE SEGUIR?</text>
+        <text x="614" y="127" font-size="11">Não pode seguir. Espera a disposição.</text>
+        <text class="mono mu" x="614" y="158" font-size="9.5">QUANDO</text>
+        <text x="614" y="173" font-size="10.5">Um resultado saiu do critério. Só quem tem</text>
+        <text x="614" y="186" font-size="10.5">autoridade decide o destino.</text>
+        <text x="450" y="226" font-size="11.5" text-anchor="middle">A situação está no produto, e não só no registro: quem pega a caixa ou a bobina sabe, na hora, se ela pode seguir.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 4.</b> As três situações de um produto, com a marca de cada uma. As cores são um exemplo: o que importa é que a marca seja clara e conhecida por todos.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Leitura do lote</th><th style="width:38%">Regra deste material</th><th>Decisões possíveis</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Conforme</strong></td><td>Todas as verificações planejadas foram feitas, e nenhuma ficou fora do critério.</td><td>Liberar.</td></tr>
+        <tr><td><strong>Com desvio</strong></td><td>Todas foram feitas, e alguma ficou fora do critério.</td><td>Reter, ou liberar a parte boa, com o registro de não conforme da parte separada.</td></tr>
+        <tr><td><strong>Verificação pendente</strong></td><td>Alguma verificação planejada ainda não foi feita.</td><td>Reter, ou liberar com a autorização de quem pode e, quando aplicável, do cliente.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note">
+    <h4>A liberação com verificação pendente</h4>
+    <p>A norma permite liberar antes de concluir as verificações, desde que alguém com autoridade aprove e, quando for o caso, o cliente também. A exceção existe porque às vezes ela é necessária: o instrumento está em calibração, o laudo externo atrasou, o cliente precisa do lote. O que a norma não aceita é a liberação pendente sem decisão de ninguém. O exemplo 3 mostra a diferença entre as duas, na mesma semana e na mesma fábrica.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 6 ============================ -->
+<section id="exemplos">
+  <p class="eyebrow">Módulo 6</p>
+  <h2>Exemplos resolvidos</h2>
+  <p>As liberações e os produtos não conformes de uma cozinha e de uma linha de extrusão, e duas liberações com verificação pendente, lado a lado. As organizações são as dos outros estudos da série, e os exemplos continuam os do estudo de controle de produção. Os dois primeiros exemplos também estão preenchidos na planilha de apoio. Os dados são ilustrativos e foram criados para este treinamento.</p>
+
+  <h3>Exemplo 1. A semana seguinte na pizzaria</h3>
+  <dl class="ficha">
+    <div><dt>Organização</dt><dd>Pizzaria (loja com salão e delivery)</dd></div>
+    <div><dt>Processo</dt><dd>Produzir e embalar (P2) e Entregar o pedido (P3)</dd></div>
+    <div><dt>Produto</dt><dd>Pizza entregue em casa e servida no salão</dd></div>
+    <div><dt>Quem libera</dt><dd>Cada pedido: quem embala, com a rubrica na etiqueta. O fechamento da noite: líder da expedição.</dd></div>
+    <div><dt>Quem decide a disposição</dt><dd>Pizzaiolo líder e líder da expedição, no turno. Gerente da loja, para descarte de insumos, concessão e troca no cliente.</dd></div>
+    <div><dt>Registros</dt><dd>Noites de 15 a 21/03/2027, lidos em 22/03/2027.</dd></div>
+    <div><dt>Origem</dt><dd>Requisito 8.7 atendido em parte no diagnóstico de 2026: a pizza errada era refeita, sem registro.</dd></div>
+  </dl>
+  <div class="tbl">
+    <table class="aud">
+      <caption>Liberações · 7 registros, 0 com autorização, 0 retidos, 1 a rever</caption>
+      <thead><tr><th class="c">Data</th><th style="width:13%">Lote<small>Quantidade</small></th><th class="c">Verificações</th><th class="c">Fora</th><th>Leitura</th><th style="width:12%">Decisão</th><th style="width:17%">Quem liberou</th><th style="width:22%">Registro de não conforme<small>Observação</small></th><th>Conferência</th></tr></thead>
+      <tbody>
+        <tr><td class="c">15/03</td><td><strong>Noite 15/03</strong><small>142 pedidos</small></td><td class="c">8 de 8</td><td class="c">0</td><td><span class="chip s1">Conforme</span></td><td><span class="chip s1">Liberado</span></td><td>Líder da expedição</td><td>—</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="c">16/03</td><td><strong>Noite 16/03</strong><small>118 pedidos</small></td><td class="c">8 de 8</td><td class="c no">1</td><td><span class="chip s3">Com desvio</span></td><td><span class="chip s1">Liberado</span></td><td>Líder da expedição</td><td>2027-15</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="c">17/03</td><td><strong>Noite 17/03</strong><small>125 pedidos</small></td><td class="c">8 de 8</td><td class="c">0</td><td><span class="chip s1">Conforme</span></td><td><span class="chip s1">Liberado</span></td><td>Líder da expedição</td><td>—</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="c">18/03</td><td><strong>Noite 18/03</strong><small>131 pedidos</small></td><td class="c">8 de 8</td><td class="c no">1</td><td><span class="chip s3">Com desvio</span></td><td><span class="chip s1">Liberado</span></td><td>Líder da expedição</td><td>2027-17</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="c">19/03</td><td><strong>Noite 19/03</strong><small>214 pedidos</small></td><td class="c">8 de 8</td><td class="c no">2</td><td><span class="chip s3">Com desvio</span></td><td><span class="chip s1">Liberado</span></td><td>Líder da expedição</td><td>2027-18 e 2027-19</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="c">20/03</td><td><strong>Noite 20/03</strong><small>236 pedidos</small></td><td class="c no">7 de 8</td><td class="c no">1</td><td><span class="chip s2">Verificação pendente</span></td><td><span class="chip s1">Liberado</span></td><td>Líder da expedição</td><td>2027-21<small>A temperatura na saída não foi medida na última hora do pico.</small></td><td><span class="chip s3">Liberado com verificação pendente</span></td></tr>
+        <tr><td class="c">21/03</td><td><strong>Noite 21/03</strong><small>160 pedidos</small></td><td class="c">8 de 8</td><td class="c">0</td><td><span class="chip s1">Conforme</span></td><td><span class="chip s1">Liberado</span></td><td>Líder da expedição</td><td>—</td><td><span class="chip s1">OK</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="tbl">
+    <table class="aud">
+      <caption>Produto não conforme · 8 registros, 1 aberto, 0 em tratamento, custo de R$ 113</caption>
+      <thead><tr><th style="width:6%">Nº<small>Data</small></th><th style="width:10%">Lote<small>Quantidade</small></th><th style="width:20%">Defeito</th><th>Onde foi visto</th><th style="width:13%">Identificação e segregação</th><th style="width:11%">Disposição<small>Quem decidiu</small></th><th style="width:15%">Cliente, reverificação e ação</th><th>Situação</th><th class="r">Custo</th><th>Conferência</th></tr></thead>
+      <tbody>
+        <tr><td class="n">2027-14<small>15/03</small></td><td>Noite 13/03, pedido das 21h<small>1 pizza</small></td><td><strong>Pizza fria na saída</strong> · 2×<small>Pizza a 62 °C na saída, registrada sem reação no plano de controle. Vista na leitura de 15/03: já tinha sido entregue.</small></td><td>Inspeção final</td><td>—</td><td>—</td><td>—</td><td><span class="chip s3">Aberto</span></td><td class="r">—</td><td><span class="chip s3">Falta a disposição</span></td></tr>
+        <tr><td class="n">2027-15<small>16/03</small></td><td>Pedido 5127<small>1 pizza</small></td><td><strong>Sabor trocado</strong> · 3×<small>Pizza de calabresa montada no lugar da portuguesa. Vista na conferência com a etiqueta.</small></td><td>Inspeção final</td><td>Retirada da bancada de saída.</td><td>Refugar<small>Pizzaiolo líder</small></td><td>—</td><td><span class="chip s1">Encerrado</span><small>16/03</small></td><td class="r">R$ 28</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">2027-16<small>17/03</small></td><td>Mussarela, nota de 17/03<small>12 kg</small></td><td><strong>Insumo fora de temperatura</strong><small>Mussarela recebida a 9 °C, com o critério de até 7 °C.</small></td><td>Recebimento</td><td>Não entrou na câmara. Ficou na área de recebimento, com etiqueta vermelha.</td><td>Devolver ao fornecedor<small>Gerente da loja</small></td><td>—</td><td><span class="chip s1">Encerrado</span><small>17/03</small></td><td class="r">R$ 0</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">2027-17<small>18/03</small></td><td>Massa 18/03<small>40 bolas</small></td><td><strong>Peso da massa fora</strong><small>Bolas de massa com 365 g em média, com o critério de 380 a 420 g.</small></td><td>Processo</td><td>Caixa do lote com etiqueta vermelha.</td><td>Retrabalhar<small>Pizzaiolo líder</small></td><td>Reverificação: conforme.</td><td><span class="chip s1">Encerrado</span><small>18/03</small></td><td class="r">R$ 0</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">2027-18<small>19/03</small></td><td>Pedido 5342, mesa 7<small>1 pizza</small></td><td><strong>Borda queimada</strong><small>Pizza com a borda escura de um lado, vista ao servir no salão.</small></td><td>Inspeção final</td><td>Mostrada ao cliente antes de servir.</td><td>Aceitar sob concessão<small>Gerente da loja</small></td><td>Cliente da mesa 7 aceitou, com desconto de 20%, em 19/03.</td><td><span class="chip s1">Encerrado</span><small>19/03</small></td><td class="r">R$ 11</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">2027-19<small>19/03</small></td><td>Pedido 5360<small>1 pizza</small></td><td><strong>Pizza fria na saída</strong> · 2×<small>Pizza a 61 °C na saída, depois de 13 minutos de espera.</small></td><td>Inspeção final</td><td>Voltou da bancada de saída para o forno.</td><td>Retrabalhar<small>Líder da expedição</small></td><td>Reverificação: conforme.</td><td><span class="chip s1">Encerrado</span><small>19/03</small></td><td class="r">R$ 0</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">2027-20<small>20/03</small></td><td>Pedido 5431<small>1 pizza</small></td><td><strong>Sabor trocado</strong> · 3×<small>Cliente recebeu meia mussarela no lugar de meia marguerita. Avisou pelo aplicativo.</small></td><td>Após a entrega</td><td>—</td><td>Recolher ou substituir<small>Atendente líder</small></td><td>Cliente atendido em 20/03: pizza nova entregue em 35 minutos.</td><td><span class="chip s1">Encerrado</span><small>20/03</small></td><td class="r">R$ 46</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">2027-21<small>20/03</small></td><td>Pedido 5440<small>1 pizza</small></td><td><strong>Sabor trocado</strong> · 3×<small>Pizza de frango montada no lugar da de atum. Vista na conferência com a etiqueta.</small></td><td>Inspeção final</td><td>Retirada da bancada de saída.</td><td>Refugar<small>Pizzaiolo líder</small></td><td>Ação corretiva: RNC 2027-07.</td><td><span class="chip s1">Encerrado</span><small>20/03</small></td><td class="r">R$ 28</td><td><span class="chip s1">OK</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="tbl">
+    <table class="aud">
+      <caption>Onde o defeito foi visto, e quanto custou</caption>
+      <thead><tr><th style="width:30%">Ponto de detecção</th><th class="c">Registros</th><th class="r">Custo</th><th class="r">Custo por registro</th><th class="c">Parte do custo</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Recebimento</strong></td><td class="c">1</td><td class="r">R$ 0</td><td class="r">R$ 0</td><td class="c">0%</td></tr>
+        <tr><td><strong>Processo</strong></td><td class="c">1</td><td class="r">R$ 0</td><td class="r">R$ 0</td><td class="c">0%</td></tr>
+        <tr><td><strong>Inspeção final</strong></td><td class="c">5</td><td class="r">R$ 67</td><td class="r">R$ 13</td><td class="c">59%</td></tr>
+        <tr><td><strong>Após a entrega</strong></td><td class="c">1</td><td class="r">R$ 46</td><td class="r">R$ 46</td><td class="c">41%</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p><strong>O que observar.</strong> A pizzaria passou a registrar o que antes só refazia. Em uma semana, foram oito registros, e três deles têm o mesmo defeito: o sabor trocado. Duas vezes a conferência com a etiqueta pegou o erro antes da saída; na terceira, em 20/03, a pizza chegou ao cliente, e a troca custou R$ 46, contra R$ 28 de cada pizza refugada na loja. O terceiro registro já leva a ação corretiva RNC 2027-07: o defeito saiu da correção e foi para a análise de causa. Dois pontos pedem atenção. O registro 2027-14, a pizza fria de 13/03 que o plano de controle mostrou sem reação, foi aberto e ninguém decidiu nada. E no sábado, a noite mais cheia, a temperatura da última hora do pico não foi medida, e a noite foi fechada como liberada. No pico, a verificação é a primeira coisa a cair. A borda queimada mostra a concessão feita do jeito certo: o cliente da mesa viu a pizza e aceitou antes de ser servido.</p>
+
+  <h3>Exemplo 2. Os lotes 136 a 143 da indústria</h3>
+  <dl class="ficha">
+    <div><dt>Organização</dt><dd>Indústria de embalagens plásticas</dd></div>
+    <div><dt>Processo</dt><dd>Extrusão, na extrusora 3, e inspeção final</dd></div>
+    <div><dt>Produto</dt><dd>Filme de 40 µm para clientes do segmento de alimentos</dd></div>
+    <div><dt>Quem libera</dt><dd>Analista da Qualidade, com o laudo do lote. Liberação com verificação pendente: só com a autorização do gerente industrial e o aceite do cliente.</dd></div>
+    <div><dt>Quem decide a disposição</dt><dd>Coordenador da Qualidade. Refugo acima de 500 kg e recolhimento no cliente: gerente industrial e gerente comercial.</dd></div>
+    <div><dt>Registros</dt><dd>Lotes 136 a 143, de 17 a 26/05/2027, lidos em 28/05/2027.</dd></div>
+    <div><dt>Origem</dt><dd>Reclamações do cliente A e o objetivo O1: reduzir o refugo para 2,0%.</dd></div>
+  </dl>
+  <div class="tbl">
+    <table class="aud">
+      <caption>Liberações · 8 registros, 1 com autorização, 1 retido, 1 a rever</caption>
+      <thead><tr><th class="c">Data</th><th style="width:13%">Lote<small>Quantidade</small></th><th class="c">Verificações</th><th class="c">Fora</th><th>Leitura</th><th style="width:12%">Decisão</th><th style="width:17%">Quem liberou</th><th style="width:22%">Registro de não conforme<small>Observação</small></th><th>Conferência</th></tr></thead>
+      <tbody>
+        <tr><td class="c">17/05</td><td><strong>Lote 136</strong><small>4 bobinas, 1.210 kg</small></td><td class="c">12 de 12</td><td class="c">0</td><td><span class="chip s1">Conforme</span></td><td><span class="chip s1">Liberado</span></td><td>Analista da Qualidade</td><td>—</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="c">18/05</td><td><strong>Lote 137</strong><small>4 bobinas, 1.180 kg</small></td><td class="c">12 de 12</td><td class="c no">1</td><td><span class="chip s3">Com desvio</span></td><td><span class="chip s1">Liberado</span></td><td>Analista da Qualidade</td><td>2027-20<small>Bobina 3 segregada. As outras três foram liberadas.</small></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="c">19/05</td><td><strong>Lote 138</strong><small>4 bobinas, 1.225 kg</small></td><td class="c">12 de 12</td><td class="c">0</td><td><span class="chip s1">Conforme</span></td><td><span class="chip s1">Liberado</span></td><td>Analista da Qualidade</td><td>—</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="c">20/05</td><td><strong>Lote 139</strong><small>4 bobinas, 1.190 kg</small></td><td class="c no">11 de 12</td><td class="c">0</td><td><span class="chip s2">Verificação pendente</span></td><td><span class="chip s2">Liberado com autorização</span></td><td>Analista da Qualidade<small>Autorizou: Gerente industrial, com o aceite do cliente A por e-mail.</small></td><td>—<small>Ensaio de solda pendente: dinamômetro em calibração. Feito em 21/05, conforme.</small></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="c">20/05</td><td><strong>Lote 140</strong><small>2 bobinas, 600 kg</small></td><td class="c">12 de 12</td><td class="c no">2</td><td><span class="chip s3">Com desvio</span></td><td><span class="chip s3">Retido</span></td><td>—</td><td>2027-21<small>Espessura acima do critério nas duas bobinas.</small></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="c">21/05</td><td><strong>Lote 141</strong><small>4 bobinas, 1.205 kg</small></td><td class="c">12 de 12</td><td class="c">0</td><td><span class="chip s1">Conforme</span></td><td><span class="chip s1">Liberado</span></td><td>Analista da Qualidade</td><td>—</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="c">24/05</td><td><strong>Lote 142</strong><small>4 bobinas, 1.215 kg</small></td><td class="c no">11 de 12</td><td class="c">0</td><td><span class="chip s2">Verificação pendente</span></td><td><span class="chip s1">Liberado</span></td><td>Analista da Qualidade</td><td>—<small>Ensaio de solda na fila do laboratório. Lote embarcado no mesmo dia.</small></td><td><span class="chip s3">Liberado com verificação pendente</span></td></tr>
+        <tr><td class="c">26/05</td><td><strong>Lote 143</strong><small>4 bobinas, 1.200 kg</small></td><td class="c">12 de 12</td><td class="c no">1</td><td><span class="chip s3">Com desvio</span></td><td><span class="chip s1">Liberado</span></td><td>Analista da Qualidade</td><td>2027-24<small>Bobina 1 segregada para refilar.</small></td><td><span class="chip s1">OK</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="tbl">
+    <table class="aud">
+      <caption>Produto não conforme · 9 registros, 0 abertos, 3 em tratamento, custo de R$ 10.170</caption>
+      <thead><tr><th style="width:6%">Nº<small>Data</small></th><th style="width:10%">Lote<small>Quantidade</small></th><th style="width:20%">Defeito</th><th>Onde foi visto</th><th style="width:13%">Identificação e segregação</th><th style="width:11%">Disposição<small>Quem decidiu</small></th><th style="width:15%">Cliente, reverificação e ação</th><th>Situação</th><th class="r">Custo</th><th>Conferência</th></tr></thead>
+      <tbody>
+        <tr><td class="n">2027-17<small>11/05</small></td><td>Lote 132, bobina 2<small>290 kg</small></td><td><strong>Géis</strong> · 2×<small>Géis visíveis, comparados com o padrão de defeitos do posto.</small></td><td>Processo</td><td>Etiqueta vermelha. Área de segregação da extrusão.</td><td>Refugar<small>Coordenador da Qualidade</small></td><td>—</td><td><span class="chip s1">Encerrado</span><small>12/05</small></td><td class="r">R$ 580</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">2027-18<small>12/05</small></td><td>Lote 133, bobina 1<small>310 kg</small></td><td><strong>Espessura fora</strong> · 4×<small>Espessura de 42,6 µm, com o critério de 38 a 42 µm.</small></td><td>Processo</td><td>Etiqueta vermelha. Área de segregação da extrusão.</td><td>Reclassificar<small>Coordenador da Qualidade</small></td><td>Ação corretiva: Ciclo PDCA do refugo.</td><td><span class="chip s1">Encerrado</span><small>14/05</small></td><td class="r">R$ 620</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">2027-19<small>14/05</small></td><td>Lote 135, bobina 1<small>305 kg</small></td><td><strong>Espessura fora</strong> · 4×<small>Espessura de 37,4 µm, na primeira bobina com a resina do segundo fornecedor.</small></td><td>Processo</td><td>Etiqueta vermelha. Área de segregação da extrusão.</td><td>Refugar<small>Coordenador da Qualidade</small></td><td>—</td><td><span class="chip s1">Encerrado</span><small>17/05</small></td><td class="r">R$ 610</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">2027-20<small>18/05</small></td><td>Lote 137, bobina 3<small>280 kg</small></td><td><strong>Géis</strong> · 2×<small>Géis visíveis depois da troca da tela do filtro.</small></td><td>Processo</td><td>Etiqueta vermelha. Área de segregação da extrusão.</td><td>Refugar<small>Coordenador da Qualidade</small></td><td>—</td><td><span class="chip s1">Encerrado</span><small>19/05</small></td><td class="r">R$ 560</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">2027-21<small>20/05</small></td><td>Lote 140, duas bobinas<small>600 kg</small></td><td><strong>Espessura fora</strong> · 4×<small>Espessura de 43,1 e 43,4 µm, vista na inspeção final.</small></td><td>Inspeção final</td><td>Lote retido no armazém, com etiqueta vermelha no palete.</td><td>Aceitar sob concessão<small>Coordenador da Qualidade</small></td><td>Cliente B aceitou até 44 µm, por e-mail de 21/05, com desconto de 15%.</td><td><span class="chip s1">Encerrado</span><small>21/05</small></td><td class="r">R$ 1.350</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">2027-22<small>24/05</small></td><td>Lote 135, bobina 2<small>300 kg</small></td><td><strong>Espessura fora</strong> · 4×<small>Cliente A reclamou de filme fino. Trechos com 37,9 µm, medidos na bobina devolvida.</small></td><td>Após a entrega</td><td>—</td><td>Recolher ou substituir<small>Gerente comercial</small></td><td>Cliente A informado em 24/05. Bobina recolhida e reposta em 26/05.</td><td><span class="chip s2">Em tratamento</span></td><td class="r">R$ 2.900</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">2027-23<small>25/05</small></td><td>Resina, lote R-0440<small>2.000 kg</small></td><td><strong>Resina úmida</strong><small>Sacaria molhada no recebimento. Umidade acima do limite da ficha técnica.</small></td><td>Recebimento</td><td>Etiqueta vermelha no almoxarifado. Não entrou no estoque.</td><td>Devolver ao fornecedor<small>Gerente de Suprimentos</small></td><td>—</td><td><span class="chip s1">Encerrado</span><small>27/05</small></td><td class="r">R$ 0</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">2027-24<small>26/05</small></td><td>Lote 143, bobina 1<small>300 kg</small></td><td><strong>Largura fora</strong><small>Largura de 603 mm, com o critério de 598 a 602 mm.</small></td><td>Processo</td><td>Etiqueta vermelha. Ao lado da refiladeira.</td><td>Retrabalhar<small>Líder do turno</small></td><td>—</td><td><span class="chip s2">Em tratamento</span></td><td class="r">R$ 150</td><td><span class="chip s3">Falta a reverificação</span></td></tr>
+        <tr><td class="n">2027-25<small>26/05</small></td><td>Lote 142<small>1.215 kg</small></td><td><strong>Solda fraca</strong><small>Resistência da solda de 11,2 N/15 mm, com o critério de no mínimo 12. Ensaio feito dois dias depois do embarque.</small></td><td>Após a entrega</td><td>—</td><td>Recolher ou substituir<small>Coordenador da Qualidade</small></td><td>—</td><td><span class="chip s2">Em tratamento</span></td><td class="r">R$ 3.400</td><td><span class="chip s3">Falta informar o cliente</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="tbl">
+    <table class="aud">
+      <caption>Onde o defeito foi visto, e quanto custou</caption>
+      <thead><tr><th style="width:30%">Ponto de detecção</th><th class="c">Registros</th><th class="r">Custo</th><th class="r">Custo por registro</th><th class="c">Parte do custo</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Recebimento</strong></td><td class="c">1</td><td class="r">R$ 0</td><td class="r">R$ 0</td><td class="c">0%</td></tr>
+        <tr><td><strong>Processo</strong></td><td class="c">5</td><td class="r">R$ 2.520</td><td class="r">R$ 504</td><td class="c">25%</td></tr>
+        <tr><td><strong>Inspeção final</strong></td><td class="c">1</td><td class="r">R$ 1.350</td><td class="r">R$ 1.350</td><td class="c">13%</td></tr>
+        <tr><td><strong>Após a entrega</strong></td><td class="c">2</td><td class="r">R$ 6.300</td><td class="r">R$ 3.150</td><td class="c">62%</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p><strong>O que observar.</strong> A espessura fora do critério aparece em quatro registros, e um deles já aponta o ciclo PDCA do refugo como ação corretiva: o defeito que se repete tem tratamento de causa, e a planilha não pede outra ação. O lote 140 foi retido na inspeção final e seguiu para o cliente B sob concessão, com o aceite por escrito e desconto. Os dois registros mais caros foram achados no cliente, e um deles, a solda fraca do lote 142, ainda não foi comunicado ao cliente. É o registro mais grave da semana: o lote já está com o cliente, e a conferência da planilha mostra a falta. A bobina larga do lote 143 foi refilada, e falta verificar de novo antes de liberar.</p>
+
+  <h3>Exemplo 3. Duas liberações com verificação pendente</h3>
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 372" role="img" aria-label="Duas liberações com verificação pendente na indústria. Lote 139 · liberado com autorização: 20/05, Ensaio de solda pendente: O dinamômetro está em calibração. As outras 11 verificações estão conformes. 20/05, Autorização antes de liberar: O gerente industrial autoriza, e o cliente A aceita por e-mail. O lote sai identificado. 21/05, Ensaio feito: conforme: O resultado entra no laudo. O registro de liberação é fechado. Resultado, Nenhum custo: Se o ensaio reprovasse, o cliente já sabia que lote separar. Lote 142 · liberado com verificação pendente: 24/05, Ensaio de solda pendente: A amostra está na fila do laboratório. As outras 11 verificações estão conformes. 24/05, Liberado e embarcado: Ninguém autorizou, e o cliente não foi avisado. 26/05, Ensaio feito: não conforme: Solda de 11,2 N/15 mm. O lote já está no cliente. Resultado, R$ 3.400 e o cliente a informar: Recolher 1.215 kg, repor e explicar. O registro 2027-25 segue aberto. A verificação pendente era a mesma. A diferença foi a autorização: ela não evita o defeito, e sim a surpresa.">
+        <defs><marker id="a5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker></defs>
+        <rect class="f1" x="20" y="10" width="420" height="34"/>
+        <text class="b on" x="32" y="32" font-size="12.5">Lote 139 · liberado com autorização</text>
+        <rect class="bx" x="20" y="56" width="420" height="60"/>
+        <text class="mono mu" x="32" y="76" font-size="9.5">20/05</text>
+        <text class="b" x="116" y="76" font-size="11.5">Ensaio de solda pendente</text>
+        <text x="116" y="93" font-size="10.5">O dinamômetro está em calibração. As outras 11</text>
+        <text x="116" y="106" font-size="10.5">verificações estão conformes.</text>
+        <line class="ln" x1="60" y1="117" x2="60" y2="124" marker-end="url(#a5)"/>
+        <rect class="bx" x="20" y="126" width="420" height="60"/>
+        <text class="mono mu" x="32" y="146" font-size="9.5">20/05</text>
+        <text class="b" x="116" y="146" font-size="11.5">Autorização antes de liberar</text>
+        <text x="116" y="163" font-size="10.5">O gerente industrial autoriza, e o cliente A aceita</text>
+        <text x="116" y="176" font-size="10.5">por e-mail. O lote sai identificado.</text>
+        <line class="ln" x1="60" y1="187" x2="60" y2="194" marker-end="url(#a5)"/>
+        <rect class="bx" x="20" y="196" width="420" height="60"/>
+        <text class="mono mu" x="32" y="216" font-size="9.5">21/05</text>
+        <text class="b" x="116" y="216" font-size="11.5">Ensaio feito: conforme</text>
+        <text x="116" y="233" font-size="10.5">O resultado entra no laudo. O registro de liberação é</text>
+        <text x="116" y="246" font-size="10.5">fechado.</text>
+        <line class="ln" x1="60" y1="257" x2="60" y2="264" marker-end="url(#a5)"/>
+        <rect class="bx-s1" x="20" y="266" width="420" height="60"/>
+        <text class="mono mu" x="32" y="286" font-size="9.5">RESULTADO</text>
+        <text class="b" x="116" y="286" font-size="11.5">Nenhum custo</text>
+        <text x="116" y="303" font-size="10.5">Se o ensaio reprovasse, o cliente já sabia que lote</text>
+        <text x="116" y="316" font-size="10.5">separar.</text>
+        <rect class="f3" x="460" y="10" width="420" height="34"/>
+        <text class="b on" x="472" y="32" font-size="12.5">Lote 142 · liberado com verificação pendente</text>
+        <rect class="bx" x="460" y="56" width="420" height="60"/>
+        <text class="mono mu" x="472" y="76" font-size="9.5">24/05</text>
+        <text class="b" x="556" y="76" font-size="11.5">Ensaio de solda pendente</text>
+        <text x="556" y="93" font-size="10.5">A amostra está na fila do laboratório. As outras 11</text>
+        <text x="556" y="106" font-size="10.5">verificações estão conformes.</text>
+        <line class="ln" x1="500" y1="117" x2="500" y2="124" marker-end="url(#a5)"/>
+        <rect class="bx" x="460" y="126" width="420" height="60"/>
+        <text class="mono mu" x="472" y="146" font-size="9.5">24/05</text>
+        <text class="b" x="556" y="146" font-size="11.5">Liberado e embarcado</text>
+        <text x="556" y="163" font-size="10.5">Ninguém autorizou, e o cliente não foi avisado.</text>
+        <line class="ln" x1="500" y1="187" x2="500" y2="194" marker-end="url(#a5)"/>
+        <rect class="bx" x="460" y="196" width="420" height="60"/>
+        <text class="mono mu" x="472" y="216" font-size="9.5">26/05</text>
+        <text class="b" x="556" y="216" font-size="11.5">Ensaio feito: não conforme</text>
+        <text x="556" y="233" font-size="10.5">Solda de 11,2 N/15 mm. O lote já está no cliente.</text>
+        <line class="ln" x1="500" y1="257" x2="500" y2="264" marker-end="url(#a5)"/>
+        <rect class="bx-s3" x="460" y="266" width="420" height="60"/>
+        <text class="mono mu" x="472" y="286" font-size="9.5">RESULTADO</text>
+        <text class="b" x="556" y="286" font-size="11.5">R$ 3.400 e o cliente a informar</text>
+        <text x="556" y="303" font-size="10.5">Recolher 1.215 kg, repor e explicar. O registro</text>
+        <text x="556" y="316" font-size="10.5">2027-25 segue aberto.</text>
+        <text x="450" y="348" font-size="11.5" text-anchor="middle">A verificação pendente era a mesma. A diferença foi a autorização: ela não evita o defeito, e sim a surpresa.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 5.</b> Os lotes 139 e 142 da indústria. A mesma verificação pendente, o ensaio de solda, e duas decisões diferentes.</figcaption>
+  </figure>
+  <p><strong>O que observar.</strong> Nos dois lotes, o ensaio de solda ficou para depois, e as outras onze verificações estavam conformes. No lote 139, o gerente industrial autorizou e o cliente A concordou antes do embarque. O ensaio foi feito no dia seguinte e aprovou; se tivesse reprovado, o cliente saberia exatamente que lote separar. No lote 142, ninguém autorizou: o lote saiu porque tudo parecia bem. O ensaio reprovou dois dias depois, com o lote já no cliente. A autorização não muda o resultado do ensaio. Muda quem decidiu correr o risco, e se o cliente sabia.</p>
+</section>
+
+<!-- ============================ MÓDULO 7 ============================ -->
+<section id="leitura">
+  <p class="eyebrow">Módulo 7</p>
+  <h2>Ler os registros</h2>
+  <p>Os registros de produto não conforme são lidos de três jeitos. Um por um, para que nenhum fique sem destino. Em conjunto, para ver o defeito que se repete. E pelo custo, para ver onde o defeito está sendo encontrado.</p>
+
+  <figure id="fig-bars">
+    <div class="scroll">
+      <svg id="bars" viewBox="0 0 900 312" role="img" aria-label="Custo por registro de produto não conforme, por ponto de detecção, na indústria, de 11 a 26 de maio de 2027. Recebimento: 1 registros, R$ 0 por registro. Processo: 5 registros, R$ 504 por registro. Inspeção final: 1 registros, R$ 1.350 por registro. Após a entrega: 2 registros, R$ 3.150 por registro.">
+        <line class="grid" x1="90" y1="250.0" x2="860" y2="250.0"/>
+        <text class="mu" x="80" y="254.0" font-size="11" text-anchor="end" style="font-variant-numeric:tabular-nums">0</text>
+        <line class="grid" x1="90" y1="221.42857142857142" x2="860" y2="221.42857142857142"/>
+        <text class="mu" x="80" y="225.42857142857142" font-size="11" text-anchor="end" style="font-variant-numeric:tabular-nums">500</text>
+        <line class="grid" x1="90" y1="192.85714285714286" x2="860" y2="192.85714285714286"/>
+        <text class="mu" x="80" y="196.85714285714286" font-size="11" text-anchor="end" style="font-variant-numeric:tabular-nums">1.000</text>
+        <line class="grid" x1="90" y1="164.28571428571428" x2="860" y2="164.28571428571428"/>
+        <text class="mu" x="80" y="168.28571428571428" font-size="11" text-anchor="end" style="font-variant-numeric:tabular-nums">1.500</text>
+        <line class="grid" x1="90" y1="135.71428571428572" x2="860" y2="135.71428571428572"/>
+        <text class="mu" x="80" y="139.71428571428572" font-size="11" text-anchor="end" style="font-variant-numeric:tabular-nums">2.000</text>
+        <line class="grid" x1="90" y1="107.14285714285714" x2="860" y2="107.14285714285714"/>
+        <text class="mu" x="80" y="111.14285714285714" font-size="11" text-anchor="end" style="font-variant-numeric:tabular-nums">2.500</text>
+        <line class="grid" x1="90" y1="78.57142857142858" x2="860" y2="78.57142857142858"/>
+        <text class="mu" x="80" y="82.57142857142858" font-size="11" text-anchor="end" style="font-variant-numeric:tabular-nums">3.000</text>
+        <line class="grid" x1="90" y1="50.0" x2="860" y2="50.0"/>
+        <text class="mu" x="80" y="54.0" font-size="11" text-anchor="end" style="font-variant-numeric:tabular-nums">3.500</text>
+        <text class="mono mu" x="90" y="28" font-size="10">CUSTO POR REGISTRO, EM R$</text>
+        <text class="b halo" x="186.25" y="242.0" font-size="12" text-anchor="middle" style="font-variant-numeric:tabular-nums">R$ 0</text>
+        <text x="186.25" y="270" font-size="11.5" text-anchor="middle">Recebimento</text>
+        <text class="mu" x="186.25" y="286" font-size="10.5" text-anchor="middle">1 registro</text>
+        <rect class="bar f1" data-k="1" x="318.75" y="221.2" width="120" height="28.8"/>
+        <text class="b halo" x="378.75" y="213.2" font-size="12" text-anchor="middle" style="font-variant-numeric:tabular-nums">R$ 504</text>
+        <text x="378.75" y="270" font-size="11.5" text-anchor="middle">Processo</text>
+        <text class="mu" x="378.75" y="286" font-size="10.5" text-anchor="middle">5 registros</text>
+        <rect class="bar f2" data-k="2" x="511.25" y="172.9" width="120" height="77.1"/>
+        <text class="b halo" x="571.25" y="164.9" font-size="12" text-anchor="middle" style="font-variant-numeric:tabular-nums">R$ 1.350</text>
+        <text x="571.25" y="270" font-size="11.5" text-anchor="middle">Inspeção final</text>
+        <text class="mu" x="571.25" y="286" font-size="10.5" text-anchor="middle">1 registro</text>
+        <rect class="bar f3" data-k="3" x="703.75" y="70.0" width="120" height="180.0"/>
+        <text class="b halo" x="763.75" y="62.0" font-size="12" text-anchor="middle" style="font-variant-numeric:tabular-nums">R$ 3.150</text>
+        <text x="763.75" y="270" font-size="11.5" text-anchor="middle">Após a entrega</text>
+        <text class="mu" x="763.75" y="286" font-size="10.5" text-anchor="middle">2 registros</text>
+        <line class="ln-mu" x1="90" y1="250" x2="860" y2="250"/>
+        <rect class="hit" x="90.0" y="40" width="192.5" height="250" tabindex="0" role="img" aria-label="Recebimento: 1 registros, custo total R$ 0, R$ 0 por registro" data-k="0" data-n="Recebimento" data-c="R$ 0" data-r="1" data-m="R$ 0" data-cx="186.25" data-cy="250.0"/>
+        <rect class="hit" x="282.5" y="40" width="192.5" height="250" tabindex="0" role="img" aria-label="Processo: 5 registros, custo total R$ 2.520, R$ 504 por registro" data-k="1" data-n="Processo" data-c="R$ 2.520" data-r="5" data-m="R$ 504" data-cx="378.75" data-cy="221.2"/>
+        <rect class="hit" x="475.0" y="40" width="192.5" height="250" tabindex="0" role="img" aria-label="Inspeção final: 1 registros, custo total R$ 1.350, R$ 1.350 por registro" data-k="2" data-n="Inspeção final" data-c="R$ 1.350" data-r="1" data-m="R$ 1.350" data-cx="571.25" data-cy="172.9"/>
+        <rect class="hit" x="667.5" y="40" width="192.5" height="250" tabindex="0" role="img" aria-label="Após a entrega: 2 registros, custo total R$ 6.300, R$ 3.150 por registro" data-k="3" data-n="Após a entrega" data-c="R$ 6.300" data-r="2" data-m="R$ 3.150" data-cx="763.75" data-cy="70.0"/>
+      </svg>
+    </div>
+    <div class="tip" id="bars-tip" hidden></div>
+    <figcaption><b>Figura 6.</b> Custo por registro de produto não conforme, por ponto de detecção, na indústria. Passe o mouse sobre as barras para ver os valores.</figcaption>
+    <details class="data">
+      <summary>Ver os dados em tabela</summary>
+      <div class="tbl">
+        <table class="aud">
+          <thead><tr><th>Ponto de detecção</th><th class="c">Registros</th><th class="r">Custo</th><th class="r">Custo por registro</th></tr></thead>
+          <tbody>
+            <tr><td>Recebimento</td><td class="c">1</td><td class="r">R$ 0</td><td class="r">R$ 0</td></tr>
+            <tr><td>Processo</td><td class="c">5</td><td class="r">R$ 2.520</td><td class="r">R$ 504</td></tr>
+            <tr><td>Inspeção final</td><td class="c">1</td><td class="r">R$ 1.350</td><td class="r">R$ 1.350</td></tr>
+            <tr><td>Após a entrega</td><td class="c">2</td><td class="r">R$ 6.300</td><td class="r">R$ 3.150</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </details>
+  </figure>
+
+  <p>Na fábrica, o registro encontrado no recebimento não custou nada: a resina úmida voltou ao fornecedor antes de entrar no estoque. No processo, cada registro custou, em média, R$ 504: a bobina refugada, reclassificada ou refilada. Na inspeção final, R$ 1.350: o lote inteiro já estava feito e foi para o cliente com desconto. Depois da entrega, R$ 3.150 por registro, com o frete, a reposição e uma conversa difícil. Os 2 registros achados no cliente são 62% do custo do período. O gráfico é o argumento mais forte para controlar o processo e liberar com cuidado: o mesmo defeito custa mais a cada etapa em que passa sem ser visto.</p>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Situação</th><th style="width:38%">Regra deste material</th><th>O que fazer</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Aberto</strong></td><td>O registro existe, e a disposição não foi decidida.</td><td>Decidir na semana. Produto parado também custa.</td></tr>
+        <tr><td><strong>Em tratamento</strong></td><td>A disposição foi decidida, e o caso não foi encerrado.</td><td>Conferir o que falta: a reverificação, a troca, a resposta do cliente.</td></tr>
+        <tr><td><strong>Encerrado</strong></td><td>A disposição foi cumprida, e o encerramento tem data.</td><td>Conferir se o registro está completo.</td></tr>
+        <tr><td><strong>Defeito repetido</strong></td><td>O mesmo defeito aparece em 3 registros ou mais, e nenhum leva a uma ação corretiva.</td><td>Abrir o tratamento de não conformidade, com análise de causa.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note">
+    <h4>Disposição não é ação corretiva</h4>
+    <p>A disposição cuida do produto que já foi feito: a pizza refugada, a bobina refilada. A ação corretiva cuida da causa, para que o próximo produto não saia igual. Um defeito isolado pode terminar na disposição. O defeito que se repete pede as duas coisas: a disposição de cada caso e uma análise de causa. Sem ela, o registro de produto não conforme vira só uma lista de refugos.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 8 ============================ -->
+<section id="erros">
+  <p class="eyebrow">Módulo 8</p>
+  <h2>Erros comuns</h2>
+  <div class="errs">
+    <div><h4>Liberar sem saber quem libera</h4><p>“O lote saiu porque estava pronto.” Ninguém decidiu.</p><p class="fix"><b>Correção:</b> a função que libera, escrita, e o nome dela no registro.</p></div>
+    <div><h4>Liberação pendente sem autorização</h4><p>O laudo atrasou, e o lote foi embarcado assim mesmo.</p><p class="fix"><b>Correção:</b> reter, ou liberar com a autorização de quem pode e do cliente.</p></div>
+    <div><h4>Produto reprovado sem marca</h4><p>A bobina com géis fica na linha, ao lado das aprovadas.</p><p class="fix"><b>Correção:</b> etiqueta vermelha e área separada, na hora em que o defeito é visto.</p></div>
+    <div><h4>Quem encontra decide</h4><p>O operador refila e despacha, para não atrasar.</p><p class="fix"><b>Correção:</b> limites de decisão escritos, por disposição.</p></div>
+    <div><h4>Retrabalho sem reverificação</h4><p>A massa foi dividida de novo e foi direto para o forno.</p><p class="fix"><b>Correção:</b> o produto corrigido volta às verificações antes de seguir.</p></div>
+    <div><h4>Concessão de boca</h4><p>“O cliente disse que tudo bem”, por telefone, sem registro.</p><p class="fix"><b>Correção:</b> o aceite do cliente, por escrito, antes da entrega.</p></div>
+    <div><h4>Esperar o cliente reclamar</h4><p>O defeito foi visto depois do embarque, e ninguém avisou.</p><p class="fix"><b>Correção:</b> informar o cliente assim que se sabe, e procurar outros lotes iguais.</p></div>
+    <div><h4>Refazer sem registrar</h4><p>A pizza errada é refeita, e o defeito some da memória da loja.</p><p class="fix"><b>Correção:</b> todo caso gera um registro, mesmo os pequenos.</p></div>
+    <div><h4>Registro sem destino</h4><p>O registro foi aberto, e a disposição nunca foi decidida.</p><p class="fix"><b>Correção:</b> leitura semanal dos registros abertos, com prazo para decidir.</p></div>
+    <div><h4>Tratar sempre só o produto</h4><p>O sabor trocado é refugado toda semana, e a causa continua lá.</p><p class="fix"><b>Correção:</b> defeito repetido vai para a análise de causa.</p></div>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 9 ============================ -->
+<section id="ferramentas">
+  <p class="eyebrow">Módulo 9</p>
+  <h2>A liberação e outras ferramentas</h2>
+  <p>A liberação é o último controle antes do cliente, e o registro de produto não conforme é onde os desvios da operação ficam visíveis. Recebe os critérios e as verificações do plano de controle; entrega os casos que se repetem ao tratamento de não conformidades e o custo à análise crítica.</p>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:26%">Ferramenta</th><th style="width:37%">O que ela entrega à liberação</th><th>O que recebe da liberação</th></tr></thead>
+      <tbody>
+        <tr><td><a href="../ISO-9001/treinamento-iso-9001.html"><strong>ISO 9001 requisito a requisito</strong></a></td><td>Os requisitos 8.6 e 8.7, e a lacuna de cada organização.</td><td>Os registros de liberação e de produto não conforme, como evidência.</td></tr>
+        <tr><td><a href="../Producao/treinamento-producao.html"><strong>Controle de produção e de serviço</strong></a></td><td>Os critérios, as verificações e a identificação do produto.</td><td>O resultado fora do critério que virou produto não conforme.</td></tr>
+        <tr><td><a href="../Fornecedores/treinamento-fornecedores.html"><strong>Avaliação de fornecedores</strong></a></td><td>O controle do recebimento.</td><td>O insumo devolvido, que entra no índice de desempenho.</td></tr>
+        <tr><td><a href="../Nao-Conformidade/treinamento-nao-conformidade.html"><strong>Não conformidade e ação corretiva</strong></a></td><td>A análise de causa e a ação sobre ela.</td><td>O defeito que se repete, com os registros de cada caso.</td></tr>
+        <tr><td><a href="../Satisfacao/treinamento-satisfacao.html"><strong>Satisfação do cliente</strong></a></td><td>A reclamação que revela o defeito visto depois da entrega.</td><td>A troca, o recolhimento e a resposta ao cliente.</td></tr>
+        <tr><td><a href="../Pareto/treinamento-pareto.html"><strong>Pareto e folha de verificação</strong></a></td><td>A ordem dos defeitos pela frequência ou pelo custo.</td><td>Os registros, contados por defeito.</td></tr>
+        <tr><td><a href="../Indicadores/treinamento-indicadores.html"><strong>Indicadores</strong></a></td><td>A meta de refugo e de reclamações.</td><td>Os registros e o custo, somados por período.</td></tr>
+        <tr><td><a href="../RACI/treinamento-raci.html"><strong>Matriz RACI</strong></a></td><td>Quem decide, quem é consultado e quem é informado.</td><td>A autoridade para liberar e para cada disposição.</td></tr>
+        <tr><td><a href="../Informacao-Documentada/treinamento-informacao-documentada.html"><strong>Informação documentada</strong></a></td><td>A guarda e o prazo dos registros.</td><td>O registro de liberação e o de produto não conforme.</td></tr>
+        <tr><td><a href="../Auditoria/treinamento-auditoria.html"><strong>Auditoria interna</strong></a></td><td>A verificação de que o produto retido não sai sem decisão.</td><td>Os registros a amostrar e a área de segregação a visitar.</td></tr>
+        <tr><td><a href="../Analise-Critica/treinamento-analise-critica.html"><strong>Análise crítica pela direção</strong></a></td><td>As decisões sobre recursos para reduzir o refugo.</td><td>O custo do produto não conforme, por ponto de detecção.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 10 ============================ -->
+<section id="iso">
+  <p class="eyebrow">Módulo 10</p>
+  <h2>Nas normas ISO</h2>
+  <p>A liberação está no requisito 8.6 da ISO 9001:2015, e o controle das saídas não conformes, no 8.7, dividido em duas partes: como tratar e o que registrar. A norma fala em saídas, e não só em produto, porque o requisito vale também para o serviço: o atendimento malfeito, a entrega fora do combinado. Quando o defeito se repete, o requisito 10.2 entra em cena.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 200" role="img" aria-label="O que a norma pede sobre a liberação e o produto não conforme. 8.6 · Liberar: Liberar só depois das verificações planejadas, salvo aprovação de quem tem autoridade e, se for o caso, do cliente. Neste estudo: o registro de liberação. 8.7.1 · Controlar: Identificar e controlar o que não atende. Corrigir, segregar, devolver, informar o cliente ou obter concessão. Neste estudo: as seis disposições. 8.7.2 · Registrar: Descrever o defeito, as ações, as concessões e quem decidiu. Neste estudo: o registro de produto não conforme. 10.2 · Tratar a causa: Quando o defeito se repete ou é grave, analisar a causa e agir sobre ela. Neste estudo: o defeito repetido na planilha.">
+        <rect class="bx" x="10" y="14" width="214" height="172"/>
+        <rect class="hd-ink" x="10" y="14" width="214" height="34"/>
+        <text class="b t-ground" x="22" y="36" font-size="11.5">8.6 · Liberar</text>
+        <text x="22" y="70" font-size="11.5">Liberar só depois das</text>
+        <text x="22" y="86" font-size="11.5">verificações planejadas, salvo</text>
+        <text x="22" y="102" font-size="11.5">aprovação de quem tem autoridade</text>
+        <text x="22" y="118" font-size="11.5">e, se for o caso, do cliente.</text>
+        <text class="mu" x="22" y="152" font-size="11">Neste estudo: o registro de</text>
+        <text class="mu" x="22" y="167" font-size="11">liberação</text>
+        <rect class="bx" x="232" y="14" width="214" height="172"/>
+        <rect class="hd-ink" x="232" y="14" width="214" height="34"/>
+        <text class="b t-ground" x="244" y="36" font-size="11.5">8.7.1 · Controlar</text>
+        <text x="244" y="70" font-size="11.5">Identificar e controlar o que</text>
+        <text x="244" y="86" font-size="11.5">não atende. Corrigir, segregar,</text>
+        <text x="244" y="102" font-size="11.5">devolver, informar o cliente ou</text>
+        <text x="244" y="118" font-size="11.5">obter concessão.</text>
+        <text class="mu" x="244" y="152" font-size="11">Neste estudo: as seis disposições</text>
+        <rect class="bx" x="454" y="14" width="214" height="172"/>
+        <rect class="hd-ink" x="454" y="14" width="214" height="34"/>
+        <text class="b t-ground" x="466" y="36" font-size="11.5">8.7.2 · Registrar</text>
+        <text x="466" y="70" font-size="11.5">Descrever o defeito, as ações,</text>
+        <text x="466" y="86" font-size="11.5">as concessões e quem decidiu.</text>
+        <text class="mu" x="466" y="152" font-size="11">Neste estudo: o registro de</text>
+        <text class="mu" x="466" y="167" font-size="11">produto não conforme</text>
+        <rect class="bx" x="676" y="14" width="214" height="172"/>
+        <rect class="hd-ink" x="676" y="14" width="214" height="34"/>
+        <text class="b t-ground" x="688" y="36" font-size="11.5">10.2 · Tratar a causa</text>
+        <text x="688" y="70" font-size="11.5">Quando o defeito se repete ou é</text>
+        <text x="688" y="86" font-size="11.5">grave, analisar a causa e agir</text>
+        <text x="688" y="102" font-size="11.5">sobre ela.</text>
+        <text class="mu" x="688" y="152" font-size="11">Neste estudo: o defeito repetido</text>
+        <text class="mu" x="688" y="167" font-size="11">na planilha</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 7.</b> O que a norma pede e onde este estudo responde. O texto da figura é um resumo, com palavras próprias.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:10%">Item</th><th style="width:32%">O que pede, em resumo</th><th style="width:27%">O que isso significa</th><th>Evidências que o auditor procura</th></tr></thead>
+      <tbody>
+        <tr><td class="num">8.6</td><td>Verificar, nas etapas planejadas, que os requisitos foram atendidos. Só liberar depois das verificações, salvo aprovação de autoridade pertinente e, quando aplicável, do cliente. Reter a evidência da conformidade e a identificação de quem autorizou a liberação</td><td>Nenhum produto sai sem verificação e sem alguém que decidiu.</td><td>Registro de liberação, com critérios, resultados e o nome de quem liberou.</td></tr>
+        <tr><td class="num">8.7.1</td><td>Identificar e controlar as saídas não conformes, para evitar o uso ou a entrega não pretendidos. Tratar de uma ou mais maneiras: correção, segregação, contenção, devolução ou suspensão, informação ao cliente, aceitação sob concessão. Verificar de novo depois da correção</td><td>O produto não conforme é marcado, separado e tem destino decidido.</td><td>Área de segregação, etiquetas, produto corrigido com nova verificação.</td></tr>
+        <tr><td class="num">8.7.2</td><td>Reter informação que descreva a não conformidade, as ações tomadas, as concessões obtidas e a autoridade que decidiu a ação</td><td>Cada caso tem registro completo.</td><td>Registros de produto não conforme e de concessões.</td></tr>
+        <tr><td class="num">8.5.2</td><td>Identificar a situação das saídas em relação às verificações</td><td>Dá para saber, olhando o produto, se ele pode seguir.</td><td>Etiquetas de situação, áreas de espera e de segregação.</td></tr>
+        <tr><td class="num">10.2</td><td>Reagir à não conformidade, avaliar a necessidade de eliminar a causa e verificar se ocorrem outras semelhantes</td><td>O defeito que se repete pede análise de causa.</td><td>Ação corretiva aberta a partir dos registros repetidos.</td></tr>
+        <tr><td class="num">9.1.3</td><td>Analisar os dados para avaliar a conformidade dos produtos e a eficácia do sistema</td><td>Os registros são somados e lidos, e não só arquivados.</td><td>Indicadores de refugo, de concessões e de custo.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pair">
+    <div class="box">
+      <h4>O que a ISO 9001 exige</h4>
+      <ul>
+        <li>Verificação antes da liberação, e o registro de quem liberou.</li>
+        <li>Liberação pendente só com a aprovação de quem tem autoridade e, se for o caso, do cliente.</li>
+        <li>Identificação e controle do produto não conforme.</li>
+        <li>Nova verificação depois da correção.</li>
+        <li>Registro do defeito, das ações, das concessões e de quem decidiu.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h4>O que a ISO 9001 não exige</h4>
+      <ul>
+        <li>Uma etiqueta de cor, ou uma área de segregação com cerca.</li>
+        <li>Inspeção de 100% dos produtos.</li>
+        <li>Um formulário único para todos os casos.</li>
+        <li>As seis disposições e as situações deste material.</li>
+        <li>Ação corretiva para cada produto não conforme.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="note">
+    <h4>Pontos de atenção</h4>
+    <p>As constatações mais comuns são o produto reprovado sem identificação, misturado ao aprovado; o registro que não diz quem decidiu; a concessão sem o aceite do cliente; e o lote liberado com o laudo pendente, sem autorização. No chão de fábrica, o auditor costuma ir direto à área de segregação e perguntar, item por item, o que é, desde quando está ali e quem vai decidir. Em serviço, pergunta o que acontece quando o atendimento sai errado.</p>
+    <p>Este módulo usa a numeração da ISO 9001:2015 e resume os textos com palavras próprias. Confira sempre a edição vigente da norma antes de citar um requisito em relatório.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 11 ============================ -->
+<section id="reuniao">
+  <p class="eyebrow">Módulo 11</p>
+  <h2>A reunião semanal</h2>
+  <p>Os registros são lidos uma vez por semana, em uma reunião de 30 minutos, com quem decide as disposições e com quem fala com o cliente. A reunião começa na área de segregação: o que está lá, desde quando, e o que falta para decidir.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 136" role="img" aria-label="Distribuição de uma reunião semanal de 30 minutos: 10 minutos para os registros abertos e o que está na área de segregação, 10 minutos para os defeitos que se repetem, 5 minutos para as liberações a rever e o custo, e 5 minutos para as decisões.">
+        <g font-size="11.5" text-anchor="middle">
+          <rect class="hd-ink gap2" x="60" y="24" width="260" height="56"/><text class="t-ground b" x="190" y="49">Registros abertos e</text><text class="t-ground b" x="190" y="64">área de segregação</text>
+          <rect class="hd-d gap2" x="320" y="24" width="260" height="56"/><text class="on b" x="450" y="56">Defeitos que se repetem</text>
+          <rect class="bx" x="580" y="24" width="130" height="56"/><text x="645" y="49">Liberações</text><text x="645" y="64">e custo</text>
+          <rect class="bx" x="710" y="24" width="130" height="56"/><text x="775" y="56">Decisões</text>
+        </g>
+        <g class="ln-mu" stroke-width="1">
+          <line x1="60" y1="82" x2="60" y2="94"/><line x1="320" y1="82" x2="320" y2="94"/><line x1="580" y1="82" x2="580" y2="94"/>
+          <line x1="710" y1="82" x2="710" y2="94"/><line x1="840" y1="82" x2="840" y2="94"/>
+        </g>
+        <g class="mono" font-size="10.5" text-anchor="middle">
+          <text class="mu" x="60" y="112">0</text><text class="mu" x="320" y="112">10</text><text class="mu" x="580" y="112">20</text>
+          <text class="mu" x="710" y="112">25</text><text class="mu" x="840" y="112">30</text>
+        </g>
+      </svg>
+    </div>
+    <figcaption><b>Figura 8.</b> Uma reunião semanal de 30 minutos, desenhada em escala. Os registros abertos e os defeitos repetidos ocupam dois terços do tempo.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Momento</th><th style="width:42%">O que fazer</th><th>Perguntas que ajudam</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Registros abertos</strong></td><td>Para cada registro sem disposição, e para cada item da área de segregação: o que falta para decidir?</td><td>“Este produto está aqui desde quando?”</td></tr>
+        <tr><td><strong>Defeitos que se repetem</strong></td><td>Contar os registros por defeito. O que voltou três vezes ou mais tem ação corretiva?</td><td>“Por que este defeito voltou?”</td></tr>
+        <tr><td><strong>Liberações e custo</strong></td><td>Ler as liberações a rever e o custo da semana, por ponto de detecção.</td><td>“Quanto disto foi achado no cliente?”</td></tr>
+        <tr><td><strong>Decisões</strong></td><td>Disposições, comunicações ao cliente e ações corretivas, com responsável e prazo.</td><td>“Quem avisa o cliente, e até quando?”</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Comece pela área de segregação, e não pela planilha. O produto que está lá sem registro é o achado mais importante da reunião.</p>
+
+  <h3>Checklist da liberação e do produto não conforme</h3>
+  <p>Marque os itens conforme revisa a sua rotina. As marcações ficam salvas neste navegador.</p>
+  <ol class="check" id="checklist">
+    <li><label><input type="checkbox" id="ck-1"><span>Cada produto tem critérios de aceitação escritos e as verificações que precisam estar feitas antes da liberação.</span></label></li>
+    <li><label><input type="checkbox" id="ck-2"><span>Está definido quem tem autoridade para liberar, e o registro de liberação traz esse nome.</span></label></li>
+    <li><label><input type="checkbox" id="ck-3"><span>Nenhum produto sai com verificação pendente sem a autorização de quem pode autorizar e, quando aplicável, do cliente.</span></label></li>
+    <li><label><input type="checkbox" id="ck-4"><span>O produto não conforme é identificado assim que é encontrado.</span></label></li>
+    <li><label><input type="checkbox" id="ck-5"><span>O produto não conforme é separado do fluxo, para não ser usado nem entregue por engano.</span></label></li>
+    <li><label><input type="checkbox" id="ck-6"><span>Está definido quem pode decidir cada disposição: retrabalhar, reclassificar, conceder, refugar, devolver ou recolher.</span></label></li>
+    <li><label><input type="checkbox" id="ck-7"><span>O produto retrabalhado é verificado de novo antes de seguir.</span></label></li>
+    <li><label><input type="checkbox" id="ck-8"><span>A concessão tem a autorização do cliente registrada, antes da entrega.</span></label></li>
+    <li><label><input type="checkbox" id="ck-9"><span>O defeito encontrado depois da entrega é comunicado ao cliente, sem esperar a reclamação.</span></label></li>
+    <li><label><input type="checkbox" id="ck-10"><span>Cada registro descreve o defeito, a ação tomada, a concessão obtida e quem decidiu.</span></label></li>
+    <li><label><input type="checkbox" id="ck-11"><span>Os registros abertos são lidos toda semana, e nenhum fica sem disposição.</span></label></li>
+    <li><label><input type="checkbox" id="ck-12"><span>O defeito que se repete leva à análise de causa, no tratamento de não conformidades.</span></label></li>
+  </ol>
+  <div class="bar"><span><b id="ck-count">0</b> de 12 itens marcados</span><button class="btn" id="ck-reset" type="button">Limpar marcações</button></div>
+</section>
+
+<!-- ============================ MÓDULO 12 ============================ -->
+<section id="pratique">
+  <p class="eyebrow">Módulo 12</p>
+  <h2>Pratique</h2>
+  <h3>Exercício 1. O que falta neste caso?</h3>
+  <p>Cada item descreve um produto não conforme, ou uma liberação, e o que foi feito. Diga o que falta: identificar ou segregar, a autorização, verificar de novo, ou se está correto.</p>
+  <div class="quiz" id="quiz"></div>
+  <div class="bar"><span>Acertos: <b id="qz-score">0</b> de <b id="qz-total">12</b></span><span>Respondidos: <b id="qz-done">0</b></span><button class="btn" id="qz-reset" type="button">Recomeçar</button></div>
+
+  <h3>Exercício 2. Monte a rotina da sua organização</h3>
+  <p>Escolha um produto ou um serviço. Abra a planilha de apoio e siga o roteiro.</p>
+  <ol>
+    <li>Na aba Autoridades, escreva quem libera, quem autoriza a liberação pendente e quem decide cada disposição, com os limites.</li>
+    <li>Na aba Liberação, registre os lotes ou os pedidos de uma semana, com as verificações previstas e feitas e a decisão.</li>
+    <li>Na aba Produto não conforme, registre cada caso: o defeito, onde foi visto, a segregação, a disposição e quem decidiu.</li>
+    <li>Preencha a concessão ou a comunicação ao cliente, a reverificação e o custo, quando houver.</li>
+    <li>Leia a aba Painel: os registros abertos, os defeitos repetidos, as liberações a rever e o custo por ponto de detecção.</li>
+    <li>Para cada defeito repetido, decida se abre uma ação corretiva.</li>
+    <li>Passe o checklist do módulo 11.</li>
+  </ol>
+  <p>Depois, vá até o lugar onde o produto reprovado fica e confira se cada item tem marca e registro. A diferença entre o que está lá e o que está na planilha é o primeiro achado.</p>
+</section>
+
+<!-- ============================ MÓDULO 13 ============================ -->
+<section id="planilha">
+  <p class="eyebrow">Módulo 13</p>
+  <h2>A planilha de apoio</h2>
+  <p>Este treinamento acompanha o arquivo <a id="xlsx-ref" href="Liberacao-modelo.xlsx">Liberacao-modelo.xlsx</a>, que fica na mesma pasta. As células em amarelo-claro são para preenchimento. As células cinza são calculadas.</p>
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Aba</th><th>Para que serve</th><th style="width:36%">O que ela calcula</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Instruções</strong></td><td>Legenda de cores, as regras de cálculo, ordem de preenchimento e premissas do modelo.</td><td>Nada. É só leitura.</td></tr>
+        <tr><td><strong>Autoridades</strong></td><td>Quem libera, quem autoriza a liberação pendente e quem decide cada disposição, com os limites.</td><td>A conferência de cada linha.</td></tr>
+        <tr><td><strong>Liberação</strong></td><td>Até 60 lotes ou pedidos, com as verificações previstas e feitas, os resultados fora, a decisão e quem liberou.</td><td>A leitura do lote e a conferência da decisão.</td></tr>
+        <tr><td><strong>Produto não conforme</strong></td><td>Até 60 registros, com o defeito, onde foi visto, a segregação, a disposição, quem decidiu, o cliente, a reverificação e o custo.</td><td>A situação, as repetições do defeito e a conferência.</td></tr>
+        <tr><td><strong>Painel</strong></td><td>Nada a preencher.</td><td>Os indicadores, o custo por ponto de detecção e por disposição, o gráfico e o aviso.</td></tr>
+        <tr><td><strong>Checklist</strong></td><td>Os mesmos 12 itens do módulo 11, com status Sim, Parcial ou Não.</td><td>Percentual atendido e situação da validação.</td></tr>
+        <tr><td><strong>Exemplo 1 e Exemplo 2</strong></td><td>As liberações e os registros da pizzaria e da indústria.</td><td>Leituras, situações, conferências e custo por ponto de detecção.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ GLOSSÁRIO ============================ -->
+<section id="glossario">
+  <p class="eyebrow">Referência</p>
+  <h2>Glossário</h2>
+  <dl class="gloss">
+    <div><dt>Concessão</dt><dd>A autorização para entregar um produto não conforme como está, dada por quem pode aceitar, quase sempre o cliente.</dd></div>
+    <div><dt>Critério de aceitação</dt><dd>O que o produto precisa atender para ser liberado.</dd></div>
+    <div><dt>Disposição</dt><dd>O destino decidido para o produto não conforme.</dd></div>
+    <div><dt>Liberação</dt><dd>A decisão de que o produto pode seguir, apoiada nas verificações e registrada com o nome de quem decidiu.</dd></div>
+    <div><dt>Liberação com verificação pendente</dt><dd>A liberação antes de concluir as verificações, aprovada por quem tem autoridade e, quando aplicável, pelo cliente.</dd></div>
+    <div><dt>Reclassificar</dt><dd>Destinar o produto a outro uso, ou a outra classe, em que ele atende ao requisito.</dd></div>
+    <div><dt>Recolher</dt><dd>Buscar no cliente o produto que se mostrou com defeito depois da entrega.</dd></div>
+    <div><dt>Refugar</dt><dd>Descartar o produto, ou destruí-lo para reaproveitar o material.</dd></div>
+    <div><dt>Retrabalhar</dt><dd>Corrigir o produto para que volte a atender ao requisito.</dd></div>
+    <div><dt>Reverificação</dt><dd>A nova verificação do produto depois da correção.</dd></div>
+    <div><dt>Saída não conforme</dt><dd>Produto ou serviço que não atende a um requisito.</dd></div>
+    <div><dt>Segregação</dt><dd>A separação do produto não conforme do fluxo, com uma marca clara.</dd></div>
+  </dl>
+</section>
+
+</main>
+</div>
+
+<footer>Material de estudo. Os exemplos, documentos e números são ilustrativos e foram criados para fins didáticos. As referências às normas ISO são resumos para estudo e não substituem o texto das normas.</footer>
+</div>
+
+<script>
+(function () {
+  function read(key) { try { return JSON.parse(localStorage.getItem(key) || 'null'); } catch (e) { return null; } }
+  function write(key, val) { try { localStorage.setItem(key, JSON.stringify(val)); } catch (e) {} }
+
+  /* ---------- Checklist ---------- */
+  var boxes = Array.prototype.slice.call(document.querySelectorAll('#checklist input'));
+  var count = document.getElementById('ck-count');
+  var saved = read('liberacao-checklist') || {};
+  function refreshChecks() {
+    var n = 0, state = {};
+    boxes.forEach(function (b) { if (b.checked) { n++; } state[b.id] = b.checked; });
+    count.textContent = n;
+    return state;
+  }
+  boxes.forEach(function (b) {
+    if (saved[b.id]) { b.checked = true; }
+    b.addEventListener('change', function () { write('liberacao-checklist', refreshChecks()); });
+  });
+  refreshChecks();
+  document.getElementById('ck-reset').addEventListener('click', function () {
+    boxes.forEach(function (b) { b.checked = false; });
+    write('liberacao-checklist', refreshChecks());
+  });
+
+  /* ---------- Exercício ---------- */
+  var KEYS = ['S', 'A', 'V', 'C'];
+  var LABEL = { S: 'Falta identificar ou segregar', A: 'Falta a autorização', V: 'Falta verificar de novo', C: 'Está correto' };
+  var NAMES = { S: 'falta identificar ou segregar', A: 'falta a autorização', V: 'falta verificar de novo', C: 'está correto' };
+  var ITEMS = [
+    { t: '“Bobinas com 43 µm. Disposição: aceitar sob concessão, decidida pelo Coordenador da Qualidade. Embarcadas para o cliente B no mesmo dia.”', a: 'A', w: 'A concessão leva o desvio ao cliente. Falta o aceite dele, por escrito, antes do embarque.' },
+    { t: '“Pizza com o sabor trocado, vista na conferência com a etiqueta. Retirada da bancada de saída. Disposição: refugar, decidida pelo pizzaiolo líder.”', a: 'C', w: 'Identificada, separada, com disposição e quem decidiu.' },
+    { t: '“40 bolas de massa com 365 g. Disposição: retrabalhar, dividindo a massa de novo. Pizzaiolo líder. Encerrado no mesmo dia.”', a: 'V', w: 'A massa dividida de novo precisa ser pesada antes de seguir. O encerramento veio antes da reverificação.' },
+    { t: '“Bobina com géis no fim do turno. Disposição: refugar, decidida pelo Coordenador. A bobina ficou na linha, ao lado das aprovadas, até a moagem no dia seguinte.”', a: 'S', w: 'Uma noite inteira sem marca, ao lado das bobinas boas. Faltou a etiqueta e a área separada.' },
+    { t: '“Mussarela recebida a 9 °C. Não entrou na câmara e recebeu etiqueta vermelha. Devolvida ao fornecedor por decisão do gerente da loja.”', a: 'C', w: 'Devolução no recebimento, com segregação e quem decidiu.' },
+    { t: '“Lote liberado com o ensaio de solda pendente, porque o cliente tinha pressa. Liberado pelo analista, como de costume.”', a: 'A', w: 'A liberação pendente pede a aprovação de quem tem autoridade e, aqui, do cliente.' },
+    { t: '“Bobina 3 mm mais larga. Refilada pelo líder do turno, com a decisão registrada, e embarcada em seguida.”', a: 'V', w: 'A bobina refilada precisa ser medida de novo antes do embarque.' },
+    { t: '“Pizza a 61 °C na saída. O entregador levou assim mesmo, porque o cliente esperava havia 50 minutos.”', a: 'A', w: 'Ninguém com autoridade decidiu entregar com o desvio, e o cliente não foi consultado.' },
+    { t: '“Resina úmida no recebimento. Etiqueta vermelha no almoxarifado, fora do estoque. Devolvida por decisão do gerente de Suprimentos e registrada na avaliação do fornecedor.”', a: 'C', w: 'Caso completo, até o registro na avaliação do fornecedor.' },
+    { t: '“Filme espesso reclassificado como segunda linha pelo Coordenador da Qualidade. A etiqueta da bobina continua a do cliente A.”', a: 'S', w: 'Reclassificar pede identificar de novo. Com a etiqueta antiga, a bobina pode seguir para o cliente errado.' },
+    { t: '“Pizza refeita depois de sair errada do forno. A nova foi direto para a caixa, sem conferir com a etiqueta.”', a: 'V', w: 'A pizza refeita precisa passar pela mesma conferência que reprovou a primeira.' },
+    { t: '“Bobina com espessura fora, com etiqueta vermelha na área de segregação. Disposição: refugar, decidida pelo operador, que não tem essa autoridade.”', a: 'A', w: 'A segregação está certa. A decisão de refugar cabe a quem tem a autoridade escrita.' }
+  ];
+  var quiz = document.getElementById('quiz');
+  var score = document.getElementById('qz-score');
+  var done = document.getElementById('qz-done');
+  document.getElementById('qz-total').textContent = ITEMS.length;
+  var hits = 0, answered = 0;
+
+  function render() {
+    hits = 0; answered = 0; score.textContent = 0; done.textContent = 0;
+    quiz.textContent = '';
+    ITEMS.forEach(function (item, idx) {
+      var row = document.createElement('div'); row.className = 'q';
+      var p = document.createElement('p'); p.textContent = (idx + 1) + '. ' + item.t;
+      var opts = document.createElement('div'); opts.className = 'opts';
+      opts.setAttribute('role', 'group'); opts.setAttribute('aria-label', 'O que falta no item ' + (idx + 1));
+      var why = document.createElement('p'); why.className = 'why'; why.hidden = true;
+      KEYS.forEach(function (k) {
+        var b = document.createElement('button');
+        b.type = 'button'; b.textContent = LABEL[k]; b.id = 'qz-' + idx + '-' + k;
+        b.setAttribute('data-k', k);
+        b.addEventListener('click', function () {
+          var ok = k === item.a;
+          Array.prototype.forEach.call(opts.children, function (o) {
+            o.disabled = true;
+            if (o.getAttribute('data-k') === item.a) { o.className = 'right'; }
+          });
+          if (!ok) { b.className = 'wrong'; }
+          var lead = document.createElement('b');
+          lead.textContent = (ok ? 'Certo. ' : 'A resposta é: ' + NAMES[item.a] + '. ');
+          why.textContent = ''; why.appendChild(lead); why.appendChild(document.createTextNode(item.w));
+          why.className = 'why ' + (ok ? 'ok' : 'no'); why.hidden = false;
+          answered++; if (ok) { hits++; }
+          score.textContent = hits; done.textContent = answered;
+        });
+        opts.appendChild(b);
+      });
+      row.appendChild(p); row.appendChild(opts); row.appendChild(why);
+      quiz.appendChild(row);
+    });
+  }
+  render();
+  document.getElementById('qz-reset').addEventListener('click', render);
+
+  /* ---------- Gráfico: leitura dos valores ---------- */
+  var fig = document.getElementById('fig-bars');
+  var tip = document.getElementById('bars-tip');
+  var svg = document.getElementById('bars');
+  var bars = document.querySelectorAll('#bars .bar');
+  function hide() {
+    tip.hidden = true;
+    Array.prototype.forEach.call(bars, function (b) { b.removeAttribute('opacity'); });
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('#bars .hit'), function (r) {
+    function show() {
+      var d = r.dataset;
+      Array.prototype.forEach.call(bars, function (b) {
+        b.setAttribute('opacity', b.getAttribute('data-k') === d.k ? '1' : '.4');
+      });
+      tip.textContent = '';
+      var strong = document.createElement('b'); strong.textContent = d.m + ' por registro';
+      tip.appendChild(strong);
+      tip.appendChild(document.createTextNode(d.n + ' · ' + d.r + (d.r === '1' ? ' registro' : ' registros') + ' · ' + d.c + ' no total'));
+      var box = fig.getBoundingClientRect();
+      var pt = svg.createSVGPoint(); pt.x = parseFloat(d.cx); pt.y = parseFloat(d.cy);
+      var scr = pt.matrixTransform(svg.getScreenCTM());
+      tip.style.left = Math.min(Math.max(scr.x - box.left, 140), box.width - 140) + 'px';
+      tip.style.top = (scr.y - box.top - 18) + 'px';
+      tip.hidden = false;
+    }
+    r.addEventListener('pointerenter', show);
+    r.addEventListener('focus', show);
+    r.addEventListener('pointerleave', hide);
+    r.addEventListener('blur', hide);
+  });
+})();
+</script>
+</body>
+</html>

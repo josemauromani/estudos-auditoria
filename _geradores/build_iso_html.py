@@ -204,7 +204,7 @@ tb.append(f'            <tr class="tot"><td>Total</td><td class="c">{GERAL[0]}</
 tb += ['          </tbody>', '        </table>']
 
 # ---- figura 9: estudos da série × seções da norma
-ORDEM = ["pi", "swot", "obj", "proc", "sipoc", "raci", "riscos", "prod", "ind", "gut", "par", "ishikawa", "w5h2", "pdca", "auditoria", "nc", "ac", "doc", "comp", "forn", "sat"]
+ORDEM = ["pi", "swot", "obj", "proc", "sipoc", "raci", "riscos", "prod", "lib", "ind", "gut", "par", "ishikawa", "w5h2", "pdca", "auditoria", "nc", "ac", "doc", "comp", "forn", "sat"]
 CX = lambda j: 350 + j * 80  # noqa: E731
 HD = {"base": "hd-ink", "p": "hd-p", "d": "hd-d", "c": "hd-c", "a": "hd-a"}
 RY, R0 = 32, 70
@@ -224,7 +224,9 @@ for i, k in enumerate(ORDEM):
         nums = [r["num"] for r in REQ if r["secao"] == s and k in r["estudos"]]
         if nums:
             mz.append(f'        <rect class="cell" x="{CX(j) - 36}" y="{y + 5}" width="72" height="22"/>')
-            mz.append(f'        <text x="{CX(j)}" y="{y + 20}" font-size="10.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">{" · ".join(nums)}</text>')
+            # três itens ou mais não cabem na célula: mostra a seção comum e a contagem, com a lista completa na dica
+            txt = " · ".join(nums) if len(nums) < 3 else f'{os.path.commonprefix(nums).rstrip(".")} · {len(nums)} itens'
+            mz.append(f'        <text x="{CX(j)}" y="{y + 20}" font-size="10.5" text-anchor="middle" style="font-variant-numeric:tabular-nums"><title>{" · ".join(nums)}</title>{txt}</text>')
 mz.append(f'        <line class="grid" x1="20" y1="{R0 + RY * len(ORDEM)}" x2="880" y2="{R0 + RY * len(ORDEM)}"/>')
 mz.append("      </svg>")
 
@@ -252,7 +254,8 @@ AJUDA = {
     "8.5.3": "Lista o que pertence a clientes e a fornecedores, com o cuidado e a comunicação das ocorrências.",
     "8.5.4": "Registra como o produto é protegido em cada etapa, até a entrega.",
     "8.5.6": "Traz o registro de mudanças, com a análise, a autorização e as ações decorrentes.",
-    "8.7": "Separa a correção da saída não conforme da ação sobre a causa.",
+    "8.6": "Traz o registro de liberação, com as verificações, a decisão e quem liberou, e a liberação com verificação pendente.",
+    "8.7": "O estudo de Liberação traz a segregação, as seis disposições, a concessão e o registro. O de Não conformidade separa a correção da ação sobre a causa.",
     "9.1.1": "O estudo de Indicadores define o que medir, como e quando. O PDCA compara o resultado com a meta.",
     "9.1.2": "O estudo de Satisfação do cliente traz a pesquisa, o registro de reclamações e a devolutiva. O de Indicadores põe o resultado no painel.",
     "9.1.3": "O painel mostra a situação e a tendência. O Pareto mostra onde o problema se concentra. A GUT prioriza, e o Ishikawa procura as causas.",

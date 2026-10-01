@@ -44,6 +44,7 @@ ESTUDOS = {
     "pi": ("Partes interessadas", "../Partes-Interessadas/treinamento-partes-interessadas.html"),
     "obj": ("Objetivos da qualidade", "../Objetivos/treinamento-objetivos.html"),
     "prod": ("Controle de produção e de serviço", "../Producao/treinamento-producao.html"),
+    "lib": ("Liberação e produto não conforme", "../Liberacao/treinamento-liberacao.html"),
 }
 
 
@@ -206,11 +207,11 @@ REQ = _req([
     ("8.6", "Liberação de produtos e serviços",
      "Verificar, nas etapas planejadas, se os requisitos foram atendidos. Só liberar ao cliente depois das verificações, salvo aprovação de autoridade pertinente. Registrar a conformidade e quem autorizou a liberação.",
      "Quem libera o produto, e com base em quê?",
-     "Registros de inspeção final, com a identificação de quem liberou.", ()),
+     "Registros de inspeção final, com a identificação de quem liberou.", ("lib",)),
     ("8.7", "Controle de saídas não conformes",
      "Identificar e controlar as saídas não conformes, para evitar o uso ou a entrega. Agir conforme a natureza da falha: corrigir, separar, devolver, informar o cliente ou obter concessão. Verificar de novo depois da correção.",
      "O que acontece com o produto reprovado?",
-     "Área de segregação, registros de produto não conforme, concessões.", ("nc",)),
+     "Área de segregação, registros de produto não conforme, concessões.", ("lib", "nc")),
     # ------------------------------------------------------------ 9
     ("9.1.1", "Monitoramento, medição, análise e avaliação: generalidades",
      "Determinar o que medir e monitorar, os métodos, quando medir e quando analisar os resultados. Avaliar o desempenho e a eficácia do sistema.",

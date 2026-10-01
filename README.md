@@ -17,6 +17,7 @@ Para começar, abra o arquivo `index.html` no navegador.
 | Matriz RACI | `RACI/` | `RACI-modelo.xlsx` |
 | Matriz de riscos | `Riscos/` | `Riscos-modelo.xlsx` |
 | Controle de produção e de serviço | `Producao/` | `Producao-modelo.xlsx` |
+| Liberação e produto não conforme | `Liberacao/` | `Liberacao-modelo.xlsx` |
 | Matriz GUT | `GUT/` | `GUT-modelo.xlsx` |
 | Pareto e folha de verificação | `Pareto/` | `Pareto-modelo.xlsx` |
 | Diagrama de Ishikawa | `Ishikawa/` | `Ishikawa-modelo.xlsx` |
