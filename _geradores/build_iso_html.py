@@ -204,7 +204,7 @@ tb.append(f'            <tr class="tot"><td>Total</td><td class="c">{GERAL[0]}</
 tb += ['          </tbody>', '        </table>']
 
 # ---- figura 9: estudos da série × seções da norma
-ORDEM = ["pi", "swot", "obj", "proc", "sipoc", "raci", "riscos", "prod", "lib", "ind", "gut", "par", "ishikawa", "w5h2", "pdca", "auditoria", "nc", "ac", "doc", "comp", "forn", "sat"]
+ORDEM = ["pi", "swot", "obj", "ped", "proc", "sipoc", "raci", "riscos", "prod", "lib", "ind", "gut", "par", "ishikawa", "w5h2", "pdca", "auditoria", "nc", "ac", "doc", "comp", "forn", "sat"]
 CX = lambda j: 350 + j * 80  # noqa: E731
 HD = {"base": "hd-ink", "p": "hd-p", "d": "hd-d", "c": "hd-c", "a": "hd-a"}
 RY, R0 = 32, 70
@@ -248,7 +248,10 @@ AJUDA = {
     "8.4.1": "Traz os critérios de homologação, o índice de desempenho e as classes com conduta.",
     "8.4.2": "Classifica os fornecedores por criticidade e registra o recebimento e as ocorrências.",
     "8.4.3": "Mostra o que o pedido de compra precisa informar ao fornecedor.",
-    "8.2.1": "Traz o caminho da reclamação, com prazos de resposta e de solução.",
+    "8.2.1": "O estudo de Satisfação traz o caminho da reclamação. O de Requisitos do cliente traz os canais de pedido e o que se informa ao cliente.",
+    "8.2.2": "Traz a oferta: a especificação, os requisitos legais, o que não se garante e a capacidade confirmada.",
+    "8.2.3": "Traz as sete perguntas da análise antes do aceite, a decisão com o cliente e o registro.",
+    "8.2.4": "Traz o registro das mudanças nos pedidos aceitos, com a análise, os documentos e quem foi informado.",
     "8.5.1": "Traz o plano de controle: o que conferir em cada etapa, com critério, medição, registro e reação.",
     "8.5.2": "Mostra a identificação e a situação do produto em cada etapa, e uma busca de rastreabilidade.",
     "8.5.3": "Lista o que pertence a clientes e a fornecedores, com o cuidado e a comunicação das ocorrências.",

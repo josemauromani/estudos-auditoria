@@ -1,0 +1,1277 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Requisitos do cliente e análise de pedidos</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<style>
+:root{
+  --ground:#F3F6F7; --surface:#FFFFFF; --sunk:#E9EEF0; --ink:#16242E; --muted:#566672; --rule:#D3DBE0;
+  --accent:#2B5C8A;
+  --s1:#2A6FB0; --s1-tint:#DCE8F3;
+  --s2:#D19A2E; --s2-tint:#F8EBCB;
+  --s3:#B0413E; --s3-tint:#F5DEDC;
+  --on-s2:#16242E;
+  --p:#2B5C8A; --p-tint:#DCE8F3;
+  --d:#A96A12; --d-tint:#F6E8CF;
+  --c:#1E7B73; --c-tint:#D9EEEB;
+  --a:#B0413E; --a-tint:#F5DEDC;
+  --on-hue:#FFFFFF;
+  --good:#1F7A4D; --good-tint:#DDF1E5;
+  --bad:#B0413E; --bad-tint:#F5DEDC;
+  --display:"Barlow Semi Condensed","Arial Narrow",Arial,sans-serif;
+  --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --ground:#0F171C; --surface:#172229; --sunk:#1E2B33; --ink:#E4EAED; --muted:#9BABB6; --rule:#2B3A44;
+    --accent:#86B7E3;
+  --s1:#4F97DB; --s1-tint:#1B2F42;
+  --s2:#B58E14; --s2-tint:#3A2C12;
+  --s3:#D14B45; --s3-tint:#3D1F1E;
+  --on-s2:#0F171C;
+    --p:#86B7E3; --p-tint:#1B2F42;
+    --d:#E2AC4F; --d-tint:#3A2C12;
+    --c:#5FC6BA; --c-tint:#15332F;
+    --a:#EC8E89; --a-tint:#3D1F1E;
+    --on-hue:#0F171C;
+    --good:#6FCF9B; --good-tint:#163326;
+    --bad:#EC8E89; --bad-tint:#3D1F1E;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --ground:#0F171C; --surface:#172229; --sunk:#1E2B33; --ink:#E4EAED; --muted:#9BABB6; --rule:#2B3A44;
+  --accent:#86B7E3;
+  --s1:#4F97DB; --s1-tint:#1B2F42;
+  --s2:#B58E14; --s2-tint:#3A2C12;
+  --s3:#D14B45; --s3-tint:#3D1F1E;
+  --on-s2:#0F171C;
+  --p:#86B7E3; --p-tint:#1B2F42;
+  --d:#E2AC4F; --d-tint:#3A2C12;
+  --c:#5FC6BA; --c-tint:#15332F;
+  --a:#EC8E89; --a-tint:#3D1F1E;
+  --on-hue:#0F171C;
+  --good:#6FCF9B; --good-tint:#163326;
+  --bad:#EC8E89; --bad-tint:#3D1F1E;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--ground);color:var(--ink);font:400 16px/1.65 var(--body);-webkit-text-size-adjust:100%}
+a{color:var(--accent);text-underline-offset:3px}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.page{max-width:1180px;margin-inline:auto;padding-inline:20px;padding-block:36px 80px}
+
+/* Cabeçalho */
+.mast{display:flex;flex-direction:column;gap:18px;padding-bottom:32px;border-bottom:1px solid var(--rule)}
+.tiles{display:flex;gap:6px}
+.tiles span{width:44px;height:44px;display:grid;place-items:center;font:700 24px/1 var(--display);color:var(--on-hue)}
+.tiles .p{background:var(--p)} .tiles .d{background:var(--d)} .tiles .c{background:var(--c)} .tiles .a{background:var(--a)}
+h1{font:700 clamp(2.3rem,6vw,3.6rem)/1.02 var(--display);letter-spacing:-.01em;margin:0;text-wrap:balance}
+.lead{font-size:1.15rem;line-height:1.55;max-width:62ch;margin:0;color:var(--ink)}
+.meta{display:flex;flex-direction:row;flex-wrap:wrap;gap:6px 22px;font:400 .8rem/1.4 var(--mono);color:var(--muted);margin:0;padding:0;list-style:none}
+
+/* Estrutura */
+.layout{display:grid;grid-template-columns:minmax(0,1fr);gap:32px;padding-top:32px}
+.toc{font-size:.92rem}
+.toc h2{font:500 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+.toc ol{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:2px 20px;counter-reset:toc}
+.toc li{counter-increment:toc}
+.toc a{display:flex;gap:10px;padding:5px 0;color:var(--ink);text-decoration:none;line-height:1.35}
+.toc a::before{content:counter(toc,decimal-leading-zero);font:400 .75rem/1.7 var(--mono);color:var(--muted)}
+.toc a:hover{color:var(--accent);text-decoration:underline}
+@media (min-width:1020px){
+  .layout{grid-template-columns:200px minmax(0,1fr);gap:64px}
+  .toc{position:sticky;top:calc(env(safe-area-inset-top,0px) + 24px);align-self:start}
+  .toc ol{grid-template-columns:1fr}
+}
+main{display:flex;flex-direction:column;gap:72px;min-width:0}
+section{display:flex;flex-direction:column;gap:20px;scroll-margin-top:24px}
+.eyebrow{font:500 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0}
+h2{font:700 clamp(1.7rem,4vw,2.2rem)/1.1 var(--display);margin:0;text-wrap:balance}
+h3{font:600 1.3rem/1.2 var(--display);margin:12px 0 0;text-wrap:balance}
+h4{font:600 .95rem/1.3 var(--body);margin:0}
+p{margin:0}
+section > p, section > ul, section > ol, section > h3{max-width:68ch}
+ul,ol{margin:0;padding-left:1.25em;display:flex;flex-direction:column;gap:6px}
+strong{font-weight:600}
+code{font:400 .88em var(--mono);background:var(--sunk);padding:1px 5px;border-radius:3px}
+
+/* Letras coloridas no texto */
+.k{display:inline-grid;place-items:center;width:1.45em;height:1.45em;font:700 .85em/1 var(--display);color:var(--on-hue);vertical-align:.05em}
+.k.p{background:var(--p)} .k.d{background:var(--d)} .k.c{background:var(--c)} .k.a{background:var(--a)}
+
+/* Figuras */
+figure{margin:0;display:flex;flex-direction:column;gap:10px;position:relative}
+.scroll{overflow-x:auto;background:var(--surface);border:1px solid var(--rule);padding:18px}
+.scroll svg{display:block;width:100%;min-width:820px;height:auto;color:var(--ink)}
+figcaption{font-size:.86rem;line-height:1.5;color:var(--muted);max-width:72ch}
+figcaption b{color:var(--ink);font-weight:600}
+svg text{font-family:var(--body);fill:var(--ink)}
+svg .disp{font-family:var(--display);font-weight:700}
+svg .mono{font-family:var(--mono);letter-spacing:.08em}
+svg .on{fill:var(--on-hue)}
+svg .mu{fill:var(--muted)}
+svg .b{font-weight:600}
+svg .ln{stroke:var(--ink);stroke-width:1.5;fill:none}
+svg .ln-mu{stroke:var(--muted);stroke-width:1.5;fill:none}
+svg .ln-bold{stroke:var(--ink);stroke-width:3;fill:none;stroke-linejoin:round;stroke-linecap:round}
+svg .dash{stroke-dasharray:5 4}
+svg .ah{fill:var(--ink)} svg .ah-mu{fill:var(--muted)}
+svg .bx{fill:var(--surface);stroke:var(--rule);stroke-width:1.5}
+svg .bx-ink{fill:var(--ink);stroke:var(--ink)}
+svg .t-ground{fill:var(--ground)}
+svg .bx-out{fill:none;stroke:var(--muted);stroke-width:1.5;stroke-dasharray:5 4}
+svg .bx-p{fill:var(--p-tint);stroke:var(--p);stroke-width:1.5} svg .hd-p{fill:var(--p)}
+svg .bx-d{fill:var(--d-tint);stroke:var(--d);stroke-width:1.5} svg .hd-d{fill:var(--d)}
+svg .bx-c{fill:var(--c-tint);stroke:var(--c);stroke-width:1.5} svg .hd-c{fill:var(--c)}
+svg .bx-a{fill:var(--a-tint);stroke:var(--a);stroke-width:1.5} svg .hd-a{fill:var(--a)}
+svg .gap{stroke:var(--surface);stroke-width:4}
+svg .gap2{stroke:var(--surface);stroke-width:2}
+svg .hub{fill:var(--surface)}
+
+/* Gráfico */
+svg .grid{stroke:var(--rule);stroke-width:1}
+svg .band{fill:var(--sunk)}
+svg .series{stroke:var(--accent);stroke-width:2;fill:none;stroke-linejoin:round;stroke-linecap:round}
+svg .pt{fill:var(--accent);stroke:var(--surface);stroke-width:2}
+svg .pt.on-hit{stroke:var(--ink)}
+svg .goal{stroke:var(--muted);stroke-width:1.5;stroke-dasharray:6 4;fill:none}
+svg .xh{stroke:var(--muted);stroke-width:1}
+svg .hit{fill:transparent;cursor:crosshair;outline:none}
+svg .root{fill:var(--accent);stroke:var(--surface);stroke-width:2}
+.tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--ground);padding:6px 10px;font-size:.78rem;line-height:1.4;transform:translate(-50%,calc(-100% - 14px));white-space:nowrap;z-index:2}
+.tip b{display:block;font:600 1.05rem/1.2 var(--body)}
+details.data{font-size:.88rem}
+details.data summary{cursor:pointer;font:400 .82rem var(--mono);color:var(--muted);padding:4px 0}
+details.data .tbl{margin-top:8px}
+details.data table{min-width:420px}
+
+/* Tabelas */
+.tbl{overflow-x:auto;border:1px solid var(--rule);background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:780px;font-size:.88rem;line-height:1.4}
+th,td{padding:9px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--rule)}
+tr:last-child > td{border-bottom:0}
+thead th{font:600 .8rem/1.3 var(--body);background:var(--sunk)}
+td.num{font-variant-numeric:tabular-nums;white-space:nowrap;font-family:var(--mono);font-size:.82rem}
+
+/* Decisões */
+.chip{display:inline-block;padding:2px 8px;font:600 .76rem/1.45 var(--body);color:var(--on-hue);white-space:nowrap}
+.chip.s1{background:var(--s1)} .chip.s2{background:var(--s2);color:var(--on-s2)} .chip.s3{background:var(--s3)}
+.chip.sl{background:var(--sunk);color:var(--ink);box-shadow:inset 0 0 0 1px var(--rule)}
+svg .hd-ink{fill:var(--ink)}
+svg .f1{fill:var(--s1)} svg .f2{fill:var(--s2)} svg .f3{fill:var(--s3)}
+svg .bx-s1{fill:var(--s1-tint);stroke:var(--s1);stroke-width:1.5} svg .bx-s2{fill:var(--s2-tint);stroke:var(--s2);stroke-width:1.5} svg .bx-s3{fill:var(--s3-tint);stroke:var(--s3);stroke-width:1.5}
+svg .halo{paint-order:stroke;stroke:var(--surface);stroke-width:5px;stroke-linejoin:round}
+svg .hit:focus-visible{stroke:var(--accent);stroke-width:2}
+
+/* Tabelas dos exemplos */
+table.aud{font-size:.8rem;min-width:980px;line-height:1.4}
+table.aud th, table.aud td{padding:8px 9px}
+table.aud td.n{white-space:nowrap;font-weight:600;color:var(--muted)}
+table.aud td.c, table.aud th.c{text-align:center;font-variant-numeric:tabular-nums}
+table.aud td.qa, table.aud th.qa{text-align:center;padding:8px 3px;width:26px;font-weight:600}
+table.aud td.no{background:var(--s3-tint)}
+table.aud td small, table.aud th small{display:block;color:var(--muted);font-size:.76rem;margin-top:3px;font-weight:400}
+table.aud caption{caption-side:top;text-align:left;padding:10px 12px;font:500 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);background:var(--sunk)}
+
+/* Ficha do registro (acima de cada exemplo) */
+.ficha{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:0;border:1px solid var(--rule);background:var(--surface)}
+.ficha div{padding:12px 14px;border-right:1px solid var(--rule);border-bottom:1px solid var(--rule);margin:0 -1px -1px 0}
+.ficha dt{font:500 .68rem/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.ficha dd{margin:0;font-size:.9rem;line-height:1.4}
+dl{margin:0}
+
+/* Blocos */
+.pair{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.box{background:var(--surface);border:1px solid var(--rule);padding:18px 20px;display:flex;flex-direction:column;gap:10px}
+.box h4{font:600 1.1rem/1.2 var(--display)}
+.box ul{font-size:.93rem}
+.note{background:var(--sunk);padding:16px 20px;max-width:72ch;font-size:.94rem;display:flex;flex-direction:column;gap:6px}
+.note h4{font:500 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+
+/* Passo a passo */
+.steps{list-style:none;padding:0;counter-reset:st;gap:0;max-width:none;border-top:1px solid var(--rule)}
+.steps li{counter-increment:st;display:grid;grid-template-columns:44px minmax(0,1fr);gap:4px 12px;padding:16px 0;border-bottom:1px solid var(--rule)}
+.steps li::before{content:counter(st);font:700 1.7rem/1 var(--display);color:var(--muted);grid-row:span 2}
+.steps h4{font:600 1.1rem/1.25 var(--display)}
+.steps p{font-size:.95rem;max-width:64ch;grid-column:2}
+
+/* Erros comuns */
+.errs{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:0 40px;border-top:1px solid var(--rule)}
+.errs div{padding:16px 16px 16px 0;border-bottom:1px solid var(--rule);display:flex;flex-direction:column;gap:4px}
+.errs h4{font:600 1.05rem/1.25 var(--display)}
+.errs p{font-size:.92rem}
+.errs .fix{color:var(--muted)}
+.errs .fix b{color:var(--ink);font-weight:600}
+
+/* Checklist */
+.check{list-style:none;padding:0;gap:0;max-width:none;border:1px solid var(--rule);background:var(--surface)}
+.check li{border-bottom:1px solid var(--rule)}
+.check li:last-child{border-bottom:0}
+.check label{display:grid;grid-template-columns:22px minmax(0,1fr);gap:12px;padding:11px 16px;cursor:pointer;font-size:.94rem;align-items:start}
+.check input{width:18px;height:18px;margin:3px 0 0;accent-color:var(--c)}
+.check input:checked + span{color:var(--muted);text-decoration:line-through}
+.bar{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;font:400 .82rem var(--mono);color:var(--muted)}
+.bar b{color:var(--ink);font-weight:500}
+
+/* Exercício */
+.quiz{display:flex;flex-direction:column;gap:0;border:1px solid var(--rule);background:var(--surface)}
+.q{display:grid;grid-template-columns:minmax(0,1fr);gap:10px;padding:14px 16px;border-bottom:1px solid var(--rule)}
+.q:last-child{border-bottom:0}
+@media (min-width:720px){.q{grid-template-columns:minmax(0,1fr) auto;align-items:center}}
+.q p{font-size:.95rem}
+.q .why{grid-column:1/-1;font-size:.86rem;color:var(--muted)}
+.q .why b{font-weight:600}
+.q .why.ok b{color:var(--good)} .q .why.no b{color:var(--bad)}
+.opts{display:flex;gap:6px}
+.opts button{width:40px;height:40px;border:1.5px solid var(--rule);background:var(--surface);color:var(--ink);font:700 1.1rem/1 var(--display);cursor:pointer;border-radius:0}
+.opts button:hover:not(:disabled){border-color:var(--ink)}
+.opts button:disabled{cursor:default;opacity:.45}
+.opts button.right{background:var(--good-tint);border-color:var(--good);color:var(--good);opacity:1}
+.opts button.wrong{background:var(--bad-tint);border-color:var(--bad);color:var(--bad);opacity:1}
+.btn{border:1.5px solid var(--ink);background:transparent;color:var(--ink);font:500 .82rem var(--mono);padding:7px 14px;cursor:pointer;border-radius:0}
+.btn:hover{background:var(--ink);color:var(--ground)}
+
+/* Glossário */
+.gloss{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:0 40px;border-top:1px solid var(--rule)}
+.gloss div{padding:12px 0;border-bottom:1px solid var(--rule)}
+.gloss dt{font:600 1.02rem/1.3 var(--display)}
+.gloss dd{margin:2px 0 0;font-size:.9rem;color:var(--muted)}
+footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);font-size:.84rem;color:var(--muted);max-width:72ch}
+
+.quiz .opts{flex-wrap:wrap}
+.quiz .opts button{width:auto;min-width:40px;padding:0 11px;font-size:1rem}
+@media (min-width:720px){.q{grid-template-columns:minmax(0,1fr) auto}}
+</style>
+</head>
+<body>
+<div class="page" lang="pt-BR">
+
+<header class="mast">
+  <div class="tiles" aria-hidden="true"><span class="p">R</span><span class="d">A</span><span class="c">M</span></div>
+  <h1>Requisitos do cliente e análise de pedidos na prática</h1>
+  <p class="lead">Um guia de estudo para definir o que a organização oferece, analisar cada pedido antes de aceitar, decidir com o cliente o que não cabe, e controlar o pedido que muda depois de aceito.</p>
+  <ul class="meta">
+    <li>Treinamento autoinstrucional</li>
+    <li>13 módulos</li>
+    <li>Leitura de cerca de 45 minutos</li>
+    <li>3 exemplos resolvidos e 2 exercícios</li>
+  </ul>
+</header>
+
+<div class="layout">
+
+<nav class="toc" aria-label="Sumário">
+  <h2>Sumário</h2>
+  <ol>
+    <li><a href="#o-que-e">O que é</a></li>
+    <li><a href="#quando">Quando usar</a></li>
+    <li><a href="#como">Como construir</a></li>
+    <li><a href="#fontes">De onde vêm os requisitos</a></li>
+    <li><a href="#analisar">Analisar antes de aceitar</a></li>
+    <li><a href="#exemplos">Exemplos resolvidos</a></li>
+    <li><a href="#leitura">Ler os registros</a></li>
+    <li><a href="#erros">Erros comuns</a></li>
+    <li><a href="#ferramentas">A análise e outras ferramentas</a></li>
+    <li><a href="#iso">Nas normas ISO</a></li>
+    <li><a href="#reuniao">A reunião da carteira de pedidos</a></li>
+    <li><a href="#pratique">Pratique</a></li>
+    <li><a href="#planilha">A planilha de apoio</a></li>
+    <li><a href="#glossario">Glossário</a></li>
+  </ol>
+</nav>
+
+<main>
+
+<!-- ============================ MÓDULO 1 ============================ -->
+<section id="o-que-e">
+  <p class="eyebrow">Módulo 1</p>
+  <h2>O que é</h2>
+  <p>Muitos problemas de qualidade nascem antes da produção, no momento em que alguém diz “sim” ao cliente. O pedido aceito sem olhar a agenda, a especificação que o processo não alcança, o uso que o cliente não contou: tudo isso chega à operação como um problema que ela não criou e não consegue resolver.</p>
+  <p>O requisito 8.2 da norma trata desse momento. A organização define o que oferece, analisa cada pedido antes de se comprometer e controla o pedido que muda. As letras do título são os três movimentos: <span class="k p">R</span> conhecer os requisitos, <span class="k d">A</span> analisar antes de aceitar e <span class="k c">M</span> controlar as mudanças.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 262" role="img" aria-label="O caminho do pedido. A organização define a oferta, recebe o pedido pelos canais definidos e analisa antes de aceitar. Depois decide: aceitar, negociar uma alteração com o cliente ou recusar com o motivo. O pedido aceito é confirmado com o cliente e segue para a produção e a entrega. Quando o pedido muda, a mudança volta para a análise.">
+        <defs><marker id="a1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker><marker id="a1m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah-mu" d="M0 0 L10 5 L0 10 z"/></marker></defs>
+        <rect class="bx" x="20" y="30" width="170" height="56"/>
+        <text class="b" x="32" y="54" font-size="12">Definir a oferta</text>
+        <text class="mu" x="32" y="71" font-size="10.5">8.2.2 · o que se oferece</text>
+        <rect class="bx" x="230" y="30" width="170" height="56"/>
+        <text class="b" x="242" y="54" font-size="12">Receber o pedido</text>
+        <text class="mu" x="242" y="71" font-size="10.5">8.2.1 · pelos canais</text>
+        <rect class="bx-ink" x="440" y="30" width="190" height="56"/>
+        <text class="b t-ground" x="452" y="54" font-size="12">Analisar antes de aceitar</text>
+        <text class="t-ground" x="452" y="71" font-size="10.5">8.2.3 · as sete perguntas</text>
+        <rect class="bx-s2" x="670" y="30" width="210" height="56"/>
+        <text class="b" x="682" y="54" font-size="12">Decidir</text>
+        <text class="mu" x="682" y="71" font-size="10.5">aceitar, alterar ou recusar</text>
+        <rect class="bx-s2" x="20" y="160" width="170" height="56"/>
+        <text class="b" x="32" y="184" font-size="12">Mudança no pedido</text>
+        <text class="mu" x="32" y="201" font-size="10.5">8.2.4 · analisar de novo</text>
+        <rect class="bx" x="230" y="160" width="170" height="56"/>
+        <text class="b" x="242" y="184" font-size="12">Produzir e entregar</text>
+        <text class="mu" x="242" y="201" font-size="10.5">o plano de controle</text>
+        <rect class="bx-s1" x="440" y="160" width="190" height="56"/>
+        <text class="b" x="452" y="184" font-size="12">Confirmar com o cliente</text>
+        <text class="mu" x="452" y="201" font-size="10.5">o que foi aceito</text>
+        <rect class="bx-s3" x="670" y="160" width="210" height="56"/>
+        <text class="b" x="682" y="184" font-size="12">Recusar</text>
+        <text class="mu" x="682" y="201" font-size="10.5">com o motivo, ao cliente</text>
+        <line class="ln" x1="191" y1="58" x2="228" y2="58" marker-end="url(#a1)"/>
+        <line class="ln" x1="401" y1="58" x2="438" y2="58" marker-end="url(#a1)"/>
+        <line class="ln" x1="631" y1="58" x2="668" y2="58" marker-end="url(#a1)"/>
+        <line class="ln" x1="775" y1="87" x2="775" y2="158" marker-end="url(#a1)"/>
+        <text class="mu halo" x="783" y="130" font-size="10.5">recusar</text>
+        <path class="ln" d="M700 87 V122 H560 V158" marker-end="url(#a1)"/>
+        <text class="mu halo" x="630" y="116" font-size="10.5" text-anchor="middle">aceitar</text>
+        <path class="ln-mu dash" d="M775 29 V14 H315 V28" marker-end="url(#a1m)"/>
+        <text class="mu halo" x="545" y="18" font-size="10.5" text-anchor="middle">alterar: a proposta volta ao cliente, que decide</text>
+        <line class="ln" x1="439" y1="188" x2="402" y2="188" marker-end="url(#a1)"/>
+        <line class="ln-mu dash" x1="229" y1="188" x2="192" y2="188" marker-end="url(#a1m)"/>
+        <path class="ln-mu dash" d="M105 159 V130 H500 V88" marker-end="url(#a1m)"/>
+        <text class="mu halo" x="300" y="126" font-size="10.5" text-anchor="middle">o pedido mudou: analisar de novo</text>
+        <text x="450" y="250" font-size="11.5" text-anchor="middle">A análise vem antes do compromisso. Depois de aceito, o pedido só muda passando de novo por ela.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 1.</b> O caminho do pedido. A análise fica entre o pedido e o compromisso, e o pedido que muda volta para ela.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Elemento</th><th style="width:40%">O que é</th><th>Exemplo</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Oferta</strong></td><td>O que a organização se dispõe a fornecer, com a especificação e os limites.</td><td>Encomendas a partir de 20 pizzas, com 48 horas de antecedência.</td></tr>
+        <tr><td><strong>Requisito declarado</strong></td><td>O que o cliente pede, de forma explícita.</td><td>12 t de filme de 40 µm em 20 dias.</td></tr>
+        <tr><td><strong>Requisito não declarado</strong></td><td>O que o uso exige, mesmo que o cliente não diga.</td><td>Filme para congelados precisa resistir ao frio.</td></tr>
+        <tr><td><strong>Análise crítica do pedido</strong></td><td>A conferência, antes de aceitar, de que a organização consegue atender.</td><td>As sete perguntas, respondidas e registradas.</td></tr>
+        <tr><td><strong>Confirmação</strong></td><td>O aceite comunicado ao cliente, com o que foi combinado.</td><td>O e-mail com a quantidade, o prazo e a tolerância.</td></tr>
+        <tr><td><strong>Mudança no pedido</strong></td><td>Qualquer alteração depois do aceite, de quem quer que venha.</td><td>Mais 10 pizzas doces na segunda leva.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 2 ============================ -->
+<section id="quando">
+  <p class="eyebrow">Módulo 2</p>
+  <h2>Quando usar</h2>
+  <p>A análise acontece em todo pedido, mas não precisa ter o mesmo tamanho em todos. O pedido igual ao anterior, pelo preço e pelo prazo do catálogo, pede uma conferência rápida. O item novo, a quantidade grande ou o prazo apertado pedem a análise completa, com quem conhece a capacidade, o produto e a lei.</p>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:28%">Momento</th><th style="width:38%">O que fazer</th><th>Resultado</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Antes de oferecer</strong></td><td>Definir o que se oferece, a especificação, os requisitos legais e o que não se garante.</td><td>A organização só promete o que consegue cumprir.</td></tr>
+        <tr><td><strong>Pedido recebido</strong></td><td>Responder às sete perguntas antes de confirmar.</td><td>O problema aparece antes do compromisso, quando ainda dá para negociar.</td></tr>
+        <tr><td><strong>Pedido verbal</strong></td><td>Ler o pedido de volta ao cliente e confirmar antes de aceitar.</td><td>O que foi entendido é o que foi pedido.</td></tr>
+        <tr><td><strong>Proposta antes do pedido</strong></td><td>Comparar o pedido com a proposta e resolver as diferenças.</td><td>Ninguém produz o que o cliente não pediu.</td></tr>
+        <tr><td><strong>Pedido que muda</strong></td><td>Analisar de novo, atualizar os documentos e informar quem precisa saber.</td><td>A produção trabalha com a versão certa.</td></tr>
+        <tr><td><strong>Toda semana</strong></td><td>Ler os pedidos aceitos com pendência e as mudanças sem análise.</td><td>O problema de amanhã visto hoje.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pair">
+    <div class="box">
+      <h4>Pede a análise completa</h4>
+      <ul>
+        <li>Item novo, ou especificação diferente da usual.</li>
+        <li>Quantidade ou prazo fora do comum.</li>
+        <li>Cliente novo, ou uso novo para um produto conhecido.</li>
+        <li>Requisito legal que a organização ainda não atende.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h4>Pode ter a análise simplificada</h4>
+      <ul>
+        <li>Pedido igual ao anterior, com o mesmo prazo e o mesmo preço.</li>
+        <li>Venda pelo catálogo, dentro das condições publicadas.</li>
+        <li>Pedido pequeno do cardápio, na tela de confirmação.</li>
+        <li>Mesmo assim, com o registro de quem conferiu.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 3 ============================ -->
+<section id="como">
+  <p class="eyebrow">Módulo 3</p>
+  <h2>Como construir</h2>
+  <p>A rotina é desenhada uma vez, com quem vende, quem programa e quem produz. O erro mais comum é deixar a análise na cabeça de quem atende: ela existe quando a pessoa experiente está, e desaparece no sábado à noite, quando a atendente nova atende a ligação.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 206" role="img" aria-label="As cinco etapas do trabalho. Definir a oferta: O que se oferece, a especificação, os requisitos legais e o que não se garante. Receber o pedido: Pelos canais definidos, com os requisitos declarados por escrito ou confirmados. Analisar antes de aceitar: As sete perguntas, com quem conhece a capacidade, o produto e a lei. Decidir e confirmar: Aceitar, negociar uma alteração ou recusar, e confirmar com o cliente. Controlar as mudanças: O pedido que muda é analisado de novo, os documentos são atualizados e as pessoas, informadas. A mudança devolve o pedido à análise.">
+        <defs><marker id="a2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker><marker id="a2m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah-mu" d="M0 0 L10 5 L0 10 z"/></marker></defs>
+        <rect class="bx" x="12" y="16" width="164" height="124"/>
+        <text class="mono mu" x="24" y="36" font-size="10">ETAPA 1</text>
+        <text class="b" x="24" y="58" font-size="12.5">Definir a oferta</text>
+        <text x="24" y="80.0" font-size="10.5">O que se oferece, a</text>
+        <text x="24" y="94.5" font-size="10.5">especificação, os</text>
+        <text x="24" y="109.0" font-size="10.5">requisitos legais e o que</text>
+        <text x="24" y="123.5" font-size="10.5">não se garante.</text>
+        <line class="ln" x1="177" y1="78" x2="188" y2="78" marker-end="url(#a2)"/>
+        <rect class="bx" x="190" y="16" width="164" height="124"/>
+        <text class="mono mu" x="202" y="36" font-size="10">ETAPA 2</text>
+        <text class="b" x="202" y="58" font-size="12.5">Receber o pedido</text>
+        <text x="202" y="80.0" font-size="10.5">Pelos canais definidos,</text>
+        <text x="202" y="94.5" font-size="10.5">com os requisitos</text>
+        <text x="202" y="109.0" font-size="10.5">declarados por escrito ou</text>
+        <text x="202" y="123.5" font-size="10.5">confirmados.</text>
+        <line class="ln" x1="355" y1="78" x2="366" y2="78" marker-end="url(#a2)"/>
+        <rect class="bx-ink" x="368" y="16" width="164" height="124"/>
+        <text class="mono t-ground" x="380" y="36" font-size="10">ETAPA 3</text>
+        <text class="b t-ground" x="380" y="58" font-size="12.5">Analisar antes de aceitar</text>
+        <text class="t-ground" x="380" y="80.0" font-size="10.5">As sete perguntas, com</text>
+        <text class="t-ground" x="380" y="94.5" font-size="10.5">quem conhece a capacidade,</text>
+        <text class="t-ground" x="380" y="109.0" font-size="10.5">o produto e a lei.</text>
+        <line class="ln" x1="533" y1="78" x2="544" y2="78" marker-end="url(#a2)"/>
+        <rect class="bx-s1" x="546" y="16" width="164" height="124"/>
+        <text class="mono mu" x="558" y="36" font-size="10">ETAPA 4</text>
+        <text class="b" x="558" y="58" font-size="12.5">Decidir e confirmar</text>
+        <text x="558" y="80.0" font-size="10.5">Aceitar, negociar uma</text>
+        <text x="558" y="94.5" font-size="10.5">alteração ou recusar, e</text>
+        <text x="558" y="109.0" font-size="10.5">confirmar com o cliente.</text>
+        <line class="ln" x1="711" y1="78" x2="722" y2="78" marker-end="url(#a2)"/>
+        <rect class="bx-s2" x="724" y="16" width="164" height="124"/>
+        <text class="mono mu" x="736" y="36" font-size="10">ETAPA 5</text>
+        <text class="b" x="736" y="58" font-size="12.5">Controlar as mudanças</text>
+        <text x="736" y="80.0" font-size="10.5">O pedido que muda é</text>
+        <text x="736" y="94.5" font-size="10.5">analisado de novo, os</text>
+        <text x="736" y="109.0" font-size="10.5">documentos são atualizados</text>
+        <text x="736" y="123.5" font-size="10.5">e as pessoas, informadas.</text>
+        <path class="ln-mu dash" d="M806.0 142 V170 H450.0 V146" marker-end="url(#a2m)"/>
+        <text class="mu halo" x="628.0" y="174" font-size="11" text-anchor="middle">o pedido que muda volta à análise</text>
+        <text x="450" y="198" font-size="11.5" text-anchor="middle">A etapa escura é o centro do requisito: nenhum compromisso antes da análise.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 2.</b> As cinco etapas. A terceira é o centro: nenhum compromisso antes da análise.</figcaption>
+  </figure>
+
+  <h3>Passo a passo</h3>
+  <ol class="steps">
+    <li><h4>Escreva a oferta</h4><p>Para cada produto ou serviço: o que se oferece, a especificação, os prazos, os requisitos legais e o que não se garante. É a base de toda análise.</p></li>
+    <li><h4>Confirme que consegue cumprir</h4><p>A capacidade, o prazo, a especificação. Uma oferta acima do que o processo entrega garante pedidos com problema.</p></li>
+    <li><h4>Defina os canais</h4><p>Por onde o cliente pede, muda e reclama, e o que precisa ser registrado em cada canal. O pedido verbal tem confirmação.</p></li>
+    <li><h4>Defina quem analisa</h4><p>Por tipo de pedido: o atendente na tela de confirmação, o gerente nas encomendas grandes, a Engenharia nos itens novos.</p></li>
+    <li><h4>Analise com as sete perguntas</h4><p>Especificação, capacidade e prazo, entrega, uso pretendido, requisitos legais, diferenças e condições. O “não” é resolvido antes do “sim”.</p></li>
+    <li><h4>Decida e confirme com o cliente</h4><p>Aceitar, negociar uma alteração ou recusar. A alteração só vale com o aceite do cliente; a recusa vai com o motivo.</p></li>
+    <li><h4>Controle as mudanças</h4><p>Toda alteração depois do aceite passa de novo pela análise, atualiza os documentos e chega a quem vai produzir e entregar.</p></li>
+    <li><h4>Leia os registros toda semana</h4><p>Os pedidos aceitos com pendência, os analisados depois do aceite e as mudanças sem análise. Cada um é um problema que ainda não aconteceu.</p></li>
+  </ol>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:26%">Papel</th><th style="width:28%">Quem costuma ser</th><th>O que faz</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Quem recebe o pedido</strong></td><td>O atendimento ou o comercial.</td><td>Registra o que o cliente pede e confirma o pedido verbal.</td></tr>
+        <tr><td><strong>Quem analisa</strong></td><td>O comercial, com a programação, a engenharia e a qualidade.</td><td>Responde às perguntas e encontra o que não cabe.</td></tr>
+        <tr><td><strong>Quem decide</strong></td><td>O gerente comercial, ou o gerente da loja.</td><td>Aceita, negocia ou recusa, e responde pela decisão.</td></tr>
+        <tr><td><strong>Quem é informado</strong></td><td>Programação, produção, compras, expedição.</td><td>Recebe o pedido aceito, e cada mudança, a tempo de agir.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 4 ============================ -->
+<section id="fontes">
+  <p class="eyebrow">Módulo 4</p>
+  <h2>De onde vêm os requisitos</h2>
+  <p>O cliente diz o que quer, mas não diz tudo. A análise procura os requisitos em quatro fontes, e as duas do meio são as que mais escapam: o que o uso exige sem ninguém falar, e o que a lei exige mesmo que o cliente não saiba.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 214" role="img" aria-label="As quatro fontes de requisitos de um pedido, com exemplos da pizzaria. Declarados: O que o cliente pede: o produto, a quantidade, o prazo, o local. Exemplo: 50 pizzas grandes para sábado, às 21h, no salão de festas do condomínio. Não declarados, mas necessários: O que o uso exige, mesmo sem o cliente dizer. Exemplo: A pizza para uma criança celíaca precisa estar livre de glúten, inclusive de contaminação na cozinha. Legais e regulamentares: O que a lei exige do produto e da forma de vender. Exemplo: Informar os alergênicos. Não vender bebida alcoólica a menores de idade. Da organização: O que a própria organização decide exigir de si. Exemplo: Encomendas a partir de 20 pizzas, com 48 horas de antecedência.">
+        <rect class="bx" x="10" y="10" width="214" height="194"/>
+        <rect class="hd-p" x="10" y="10" width="214" height="40"/>
+        <text class="b on" x="22" y="35" font-size="12">Declarados</text>
+        <text x="22" y="72" font-size="11">O que o cliente pede: o produto,</text>
+        <text x="22" y="87" font-size="11">a quantidade, o prazo, o local.</text>
+        <text class="mono mu" x="22" y="112" font-size="9.5">NA PIZZARIA</text>
+        <text class="mu" x="22" y="128" font-size="10.5">50 pizzas grandes para sábado, às</text>
+        <text class="mu" x="22" y="142" font-size="10.5">21h, no salão de festas do</text>
+        <text class="mu" x="22" y="156" font-size="10.5">condomínio.</text>
+        <rect class="bx" x="232" y="10" width="214" height="194"/>
+        <rect class="hd-d" x="232" y="10" width="214" height="40"/>
+        <text class="b on" x="244" y="27" font-size="12">Não declarados, mas</text>
+        <text class="b on" x="244" y="42" font-size="12">necessários</text>
+        <text x="244" y="72" font-size="11">O que o uso exige, mesmo sem o</text>
+        <text x="244" y="87" font-size="11">cliente dizer.</text>
+        <text class="mono mu" x="244" y="112" font-size="9.5">NA PIZZARIA</text>
+        <text class="mu" x="244" y="128" font-size="10.5">A pizza para uma criança celíaca</text>
+        <text class="mu" x="244" y="142" font-size="10.5">precisa estar livre de glúten,</text>
+        <text class="mu" x="244" y="156" font-size="10.5">inclusive de contaminação na</text>
+        <text class="mu" x="244" y="170" font-size="10.5">cozinha.</text>
+        <rect class="bx" x="454" y="10" width="214" height="194"/>
+        <rect class="hd-c" x="454" y="10" width="214" height="40"/>
+        <text class="b on" x="466" y="35" font-size="12">Legais e regulamentares</text>
+        <text x="466" y="72" font-size="11">O que a lei exige do produto e</text>
+        <text x="466" y="87" font-size="11">da forma de vender.</text>
+        <text class="mono mu" x="466" y="112" font-size="9.5">NA PIZZARIA</text>
+        <text class="mu" x="466" y="128" font-size="10.5">Informar os alergênicos. Não</text>
+        <text class="mu" x="466" y="142" font-size="10.5">vender bebida alcoólica a menores</text>
+        <text class="mu" x="466" y="156" font-size="10.5">de idade.</text>
+        <rect class="bx" x="676" y="10" width="214" height="194"/>
+        <rect class="hd-ink" x="676" y="10" width="214" height="40"/>
+        <text class="b t-ground" x="688" y="35" font-size="12">Da organização</text>
+        <text x="688" y="72" font-size="11">O que a própria organização</text>
+        <text x="688" y="87" font-size="11">decide exigir de si.</text>
+        <text class="mono mu" x="688" y="112" font-size="9.5">NA PIZZARIA</text>
+        <text class="mu" x="688" y="128" font-size="10.5">Encomendas a partir de 20 pizzas,</text>
+        <text class="mu" x="688" y="142" font-size="10.5">com 48 horas de antecedência.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 3.</b> As quatro fontes de requisitos de um pedido, com exemplos da pizzaria. O cliente costuma falar só da primeira.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:26%">Pergunta ao cliente</th><th style="width:36%">O que ela revela</th><th>Exemplo</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Para que vai usar?</strong></td><td>O uso pretendido, e os requisitos que vêm com ele.</td><td>“Para embalar vegetais congelados.”</td></tr>
+        <tr><td><strong>Onde e como vai receber?</strong></td><td>Os requisitos de entrega.</td><td>“No 8º andar, só pelo elevador de serviço.”</td></tr>
+        <tr><td><strong>Quem vai consumir?</strong></td><td>Restrições de saúde e requisitos legais.</td><td>“Uma turma de formatura, com alunos de 17 anos.”</td></tr>
+        <tr><td><strong>É igual ao último?</strong></td><td>As diferenças em relação ao que foi combinado antes.</td><td>“Agora com 620 mm, para a máquina nova.”</td></tr>
+        <tr><td><strong>O que acontece depois?</strong></td><td>As atividades pós-entrega: troca, garantia, assistência.</td><td>“Se uma bobina vier errada, quanto tempo para repor?”</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note">
+    <h4>O que a organização não garante</h4>
+    <p>A oferta também diz o que a organização não faz, e diz isso ao cliente antes do pedido. A pizzaria não garante a ausência de glúten porque a cozinha é compartilhada; a fábrica não garante tolerância menor que ±2 µm porque o processo não alcança. Escrever o que não se garante protege o cliente de uma promessa que não seria cumprida, e protege quem atende de ter de decidir isso sozinho no telefone.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 5 ============================ -->
+<section id="analisar">
+  <p class="eyebrow">Módulo 5</p>
+  <h2>Analisar antes de aceitar</h2>
+  <p>A análise responde a sete perguntas. Cada uma pode ser “sim”, “não” ou “não se aplica”. O “não” não impede o pedido: ele aponta o que precisa ser resolvido, mudado com o cliente ou recusado antes do compromisso.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 350" role="img" aria-label="As sete perguntas aplicadas à encomenda E-32 da pizzaria: 50 pizzas grandes, sábado 27/03 às 21h, no salão de festas. Especificação: Sim. Capacidade e prazo: Não. Entrega e pós-entrega: Sim. Uso pretendido: Sim. Requisitos legais: Não. Diferenças: Sim. Preço e condições: Sim. Decisão: Aceito com alteração. Entrega às 18h30, em duas levas, antes do pico do sábado. Sem bebida alcoólica no pedido.">
+        <rect class="bx" x="10" y="10" width="880" height="332"/>
+        <rect class="hd-ink" x="10" y="10" width="880" height="34"/>
+        <text class="b t-ground" x="24" y="32" font-size="12.5">E-32 · 50 pizzas grandes, sábado 27/03 às 21h, no salão de festas.</text>
+        <line class="grid" x1="10" y1="84" x2="890" y2="84"/>
+        <text class="mono mu" x="24" y="72" font-size="10">1</text>
+        <text class="b" x="44" y="72" font-size="11.5">Especificação</text>
+        <text x="196" y="72" font-size="11">O produto e a especificação estão definidos, e a organização consegue cumpri-la?</text>
+        <rect class="f1" x="760" y="59" width="44" height="20"/><text class="b on" x="782" y="73" font-size="11" text-anchor="middle">Sim</text>
+        <line class="grid" x1="10" y1="118" x2="890" y2="118"/>
+        <text class="mono mu" x="24" y="106" font-size="10">2</text>
+        <text class="b" x="44" y="106" font-size="11.5">Capacidade e prazo</text>
+        <text x="196" y="106" font-size="11">A quantidade e o prazo cabem na capacidade, considerando o que já foi aceito?</text>
+        <rect class="f3" x="760" y="93" width="44" height="20"/><text class="b on" x="782" y="107" font-size="11" text-anchor="middle">Não</text>
+        <text class="mu" x="812" y="101" font-size="9.5">ver</text><text class="mu" x="812" y="113" font-size="9.5">abaixo</text>
+        <line class="grid" x1="10" y1="152" x2="890" y2="152"/>
+        <text class="mono mu" x="24" y="140" font-size="10">3</text>
+        <text class="b" x="44" y="140" font-size="11.5">Entrega e pós-entrega</text>
+        <text x="196" y="140" font-size="11">O local, a forma de entrega e o que vem depois dela estão combinados?</text>
+        <rect class="f1" x="760" y="127" width="44" height="20"/><text class="b on" x="782" y="141" font-size="11" text-anchor="middle">Sim</text>
+        <line class="grid" x1="10" y1="186" x2="890" y2="186"/>
+        <text class="mono mu" x="24" y="174" font-size="10">4</text>
+        <text class="b" x="44" y="174" font-size="11.5">Uso pretendido</text>
+        <text x="196" y="174" font-size="11">Os requisitos que o cliente não declarou, mas que o uso exige, foram considerados?</text>
+        <rect class="f1" x="760" y="161" width="44" height="20"/><text class="b on" x="782" y="175" font-size="11" text-anchor="middle">Sim</text>
+        <line class="grid" x1="10" y1="220" x2="890" y2="220"/>
+        <text class="mono mu" x="24" y="208" font-size="10">5</text>
+        <text class="b" x="44" y="208" font-size="11.5">Requisitos legais</text>
+        <text x="196" y="208" font-size="11">Os requisitos legais e regulamentares do produto e do uso foram identificados?</text>
+        <rect class="f3" x="760" y="195" width="44" height="20"/><text class="b on" x="782" y="209" font-size="11" text-anchor="middle">Não</text>
+        <text class="mu" x="812" y="203" font-size="9.5">ver</text><text class="mu" x="812" y="215" font-size="9.5">abaixo</text>
+        <line class="grid" x1="10" y1="254" x2="890" y2="254"/>
+        <text class="mono mu" x="24" y="242" font-size="10">6</text>
+        <text class="b" x="44" y="242" font-size="11.5">Diferenças</text>
+        <text x="196" y="242" font-size="11">As diferenças em relação à proposta, ao pedido anterior ou ao catálogo foram resolvidas?</text>
+        <rect class="f1" x="760" y="229" width="44" height="20"/><text class="b on" x="782" y="243" font-size="11" text-anchor="middle">Sim</text>
+        <line class="grid" x1="10" y1="288" x2="890" y2="288"/>
+        <text class="mono mu" x="24" y="276" font-size="10">7</text>
+        <text class="b" x="44" y="276" font-size="11.5">Preço e condições</text>
+        <text x="196" y="276" font-size="11">O preço, o pagamento e as demais condições estão confirmados?</text>
+        <rect class="f1" x="760" y="263" width="44" height="20"/><text class="b on" x="782" y="277" font-size="11" text-anchor="middle">Sim</text>
+        <text class="mono mu" x="24" y="308" font-size="9.5">O QUE A ANÁLISE ENCONTROU</text>
+        <text x="196" y="308" font-size="11">Sábado às 21h é o pico, e o forno é único. Cerveja pedida para uma turma com menores de idade.</text>
+        <text class="mono mu" x="24" y="326" font-size="9.5">DECISÃO</text>
+        <text class="b" x="196" y="326" font-size="11">Aceito com alteração: Entrega às 18h30, em duas levas, antes do pico do sábado. Sem bebida alcoólica no pedido.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 4.</b> As sete perguntas aplicadas à encomenda da formatura, na pizzaria. Dois “não”, e uma alteração combinada com o cliente.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:4%">#</th><th style="width:20%">Pergunta</th><th style="width:44%">O que confere</th><th>Quem costuma responder</th></tr></thead>
+      <tbody>
+        <tr><td class="num">1</td><td><strong>Especificação</strong></td><td>O produto e a especificação estão definidos, e a organização consegue cumpri-la?</td><td>Engenharia, ou quem conhece o produto.</td></tr>
+        <tr><td class="num">2</td><td><strong>Capacidade e prazo</strong></td><td>A quantidade e o prazo cabem na capacidade, considerando o que já foi aceito?</td><td>Programação da produção, ou o gerente.</td></tr>
+        <tr><td class="num">3</td><td><strong>Entrega e pós-entrega</strong></td><td>O local, a forma de entrega e o que vem depois dela estão combinados?</td><td>Expedição e atendimento.</td></tr>
+        <tr><td class="num">4</td><td><strong>Uso pretendido</strong></td><td>Os requisitos que o cliente não declarou, mas que o uso exige, foram considerados?</td><td>Engenharia e Qualidade, conversando com o cliente.</td></tr>
+        <tr><td class="num">5</td><td><strong>Requisitos legais</strong></td><td>Os requisitos legais e regulamentares do produto e do uso foram identificados?</td><td>Qualidade, ou quem acompanha a legislação.</td></tr>
+        <tr><td class="num">6</td><td><strong>Diferenças</strong></td><td>As diferenças em relação à proposta, ao pedido anterior ou ao catálogo foram resolvidas?</td><td>Comercial, comparando com a proposta.</td></tr>
+        <tr><td class="num">7</td><td><strong>Preço e condições</strong></td><td>O preço, o pagamento e as demais condições estão confirmados?</td><td>Comercial e financeiro.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:22%">Decisão</th><th style="width:40%">Quando</th><th>O que registrar</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Aceito</strong></td><td>Todas as respostas são “sim” ou “não se aplica”.</td><td>Quem analisou, a data da análise e a da confirmação.</td></tr>
+        <tr><td><strong>Aceito com alteração</strong></td><td>Houve um “não”, e o cliente aceitou outra condição: prazo, quantidade, especificação.</td><td>O que foi negociado, com o aceite do cliente.</td></tr>
+        <tr><td><strong>Recusado</strong></td><td>Houve um “não” que não tem solução aceitável.</td><td>O motivo, e como o cliente foi informado.</td></tr>
+        <tr><td><strong>Em análise</strong></td><td>Falta uma informação para decidir: a arte, o ensaio, a capacidade.</td><td>O que falta. Nada é confirmado ao cliente.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note">
+    <h4>O pedido verbal e a venda pelo catálogo</h4>
+    <p>Quando o cliente não manda o pedido por escrito, a norma pede que a organização confirme os requisitos antes de aceitar: ler o pedido de volta, mandar a confirmação por mensagem. Na venda pela internet, ou pelo catálogo, a análise pode ser feita sobre a informação publicada, desde que ela esteja certa e atualizada: o preço, o prazo, a área de entrega, os alergênicos.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 6 ============================ -->
+<section id="exemplos">
+  <p class="eyebrow">Módulo 6</p>
+  <h2>Exemplos resolvidos</h2>
+  <p>As encomendas de uma pizzaria e os pedidos de uma fábrica, com a oferta, a análise e as mudanças, e as quatro fontes de requisitos de um pedido novo. As organizações são as dos outros estudos da série. Os dois primeiros exemplos também estão preenchidos na planilha de apoio. Os dados são ilustrativos e foram criados para este treinamento.</p>
+
+  <h3>Exemplo 1. As encomendas da pizzaria</h3>
+  <dl class="ficha">
+    <div><dt>Organização</dt><dd>Pizzaria (loja com salão e delivery)</dd></div>
+    <div><dt>Processo</dt><dd>Registrar o pedido (P1)</dd></div>
+    <div><dt>Quem analisa</dt><dd>Pedido comum: atendente, na tela de confirmação. Encomenda de 20 pizzas ou mais: gerente da loja, antes de confirmar.</dd></div>
+    <div><dt>Registros</dt><dd>Encomendas e pedidos especiais de 22 a 28/03/2027, lidos em 29/03/2027.</dd></div>
+    <div><dt>Origem</dt><dd>Requisito 8.2.3 atendido em parte no diagnóstico de 2026: pedidos por telefone sem o complemento do endereço (RNC 2026-05).</dd></div>
+  </dl>
+  <div class="tbl">
+    <table class="aud">
+      <caption>A oferta · 3 itens</caption>
+      <thead><tr><th style="width:13%">Item</th><th style="width:25%">O que se oferece</th><th style="width:18%">Requisitos legais</th><th style="width:18%">O que não se garante</th><th>Onde o cliente é informado</th><th class="c">Capacidade confirmada?</th><th>Conferência</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Pizza no delivery</strong></td><td>Sabores e tamanhos do cardápio, com os ingredientes. Entrega em até 40 minutos na área de entrega.</td><td>Alergênicos informados no cardápio.</td><td>Ausência de glúten e de traços de leite: a cozinha é compartilhada. Entrega fora da área.</td><td>Cardápio, site e aplicativo.</td><td class="c">Sim</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td><strong>Retirada no balcão</strong></td><td>Os mesmos sabores e tamanhos, prontos em até 25 minutos.</td><td>Alergênicos informados no cardápio.</td><td>Reserva de horário exato.</td><td>Cardápio e telefone.</td><td class="c">Sim</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td><strong>Encomenda para eventos</strong></td><td>A partir de 20 pizzas, com 48 horas de antecedência, de terça a domingo, das 18h às 23h.</td><td>Alergênicos informados na confirmação. Bebida alcoólica só para maiores de 18 anos.</td><td>Montagem no local do evento.</td><td>Site e telefone.</td><td class="c no">Não</td><td><span class="chip s3">Capacidade não confirmada</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="tbl">
+    <table class="aud">
+      <caption>Pedidos · 8 analisados: 4 aceitos, 2 com alteração, 2 recusados · 2 a rever</caption>
+      <thead><tr><th style="width:6%">Nº<small>Data</small></th><th style="width:10%">Cliente<small>Canal</small></th><th style="width:22%">O que pede<small>Requisitos não declarados e legais identificados</small></th><th class="c">Prazo</th><th class="qa" title="Especificação">1</th><th class="qa" title="Capacidade e prazo">2</th><th class="qa" title="Entrega e pós-entrega">3</th><th class="qa" title="Uso pretendido">4</th><th class="qa" title="Requisitos legais">5</th><th class="qa" title="Diferenças">6</th><th class="qa" title="Preço e condições">7</th><th style="width:20%">Decisão<small>O que foi negociado, ou o motivo</small></th><th style="width:12%">Quem analisou<small>Datas</small></th><th>Conferência</th></tr></thead>
+      <tbody>
+        <tr><td class="n">E-31<small>22/03</small></td><td>Escritório de contabilidade<small>Telefone</small></td><td><strong>30 pizzas grandes, sexta 26/03 às 19h, no 8º andar de um prédio comercial.</strong><small>Entrega com elevador de serviço, combinada com a portaria.</small></td><td class="c">26/03</td><td class="qa">S</td><td class="qa">S</td><td class="qa">S</td><td class="qa">S</td><td class="qa">S</td><td class="qa">S</td><td class="qa">S</td><td><span class="chip s1">Aceito</span><small></small></td><td>Gerente da loja<small>Análise 22/03 · confirmação 22/03</small></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">T-1184<small>23/03</small></td><td>Cliente por telefone<small>Telefone</small></td><td><strong>Uma pizza grande meia calabresa, meia mussarela.</strong></td><td class="c">23/03</td><td class="qa">S</td><td class="qa">S</td><td class="qa">S</td><td class="qa">S</td><td class="qa">—</td><td class="qa">S</td><td class="qa">S</td><td><span class="chip s1">Aceito</span><small>Complemento do endereço pedido e lido de volta antes de confirmar.</small></td><td>Atendente do turno<small>Análise 23/03 · confirmação 23/03</small></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">A-772<small>24/03</small></td><td>Cliente pelo aplicativo<small>Aplicativo</small></td><td><strong>Pizza de mussarela “sem glúten”, para uma criança celíaca.</strong><small>Isenção total de glúten, inclusive de contaminação na cozinha.</small></td><td class="c">24/03</td><td class="qa">S</td><td class="qa">S</td><td class="qa">S</td><td class="qa no">N</td><td class="qa">S</td><td class="qa">S</td><td class="qa">S</td><td><span class="chip s3">Recusado</span><small>A cozinha não garante a ausência de glúten. Cliente informado pelo telefone, com o motivo.</small></td><td>Gerente da loja<small>Análise 24/03 · confirmação —</small></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">E-32<small>25/03</small></td><td>Comissão de formatura<small>Telefone</small></td><td><strong>50 pizzas grandes, sábado 27/03 às 21h, no salão de festas.</strong><small>Bebidas para a festa: o cliente pediu cerveja; a turma tem alunos menores de idade.</small></td><td class="c">27/03</td><td class="qa">S</td><td class="qa no">N</td><td class="qa">S</td><td class="qa">S</td><td class="qa no">N</td><td class="qa">S</td><td class="qa">S</td><td><span class="chip s2">Aceito com alteração</span><small>Entrega às 18h30, em duas levas, antes do pico do sábado. Sem bebida alcoólica no pedido.</small></td><td>Gerente da loja<small>Análise 25/03 · confirmação 25/03</small></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">E-33<small>25/03</small></td><td>Escola do bairro<small>Telefone</small></td><td><strong>20 pizzas para segunda 29/03, às 11h.</strong></td><td class="c">29/03</td><td class="qa">S</td><td class="qa no">N</td><td class="qa">S</td><td class="qa">S</td><td class="qa">S</td><td class="qa">S</td><td class="qa">S</td><td><span class="chip s3">Recusado</span><small>A loja não abre às segundas, e o horário de encomenda começa às 18h. O cliente não aceitou outro dia.</small></td><td>Gerente da loja<small>Análise 25/03 · confirmação —</small></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">T-1201<small>26/03</small></td><td>Cliente por telefone<small>Telefone</small></td><td><strong>Duas pizzas grandes, para entrega em um bairro vizinho.</strong></td><td class="c">26/03</td><td class="qa">S</td><td class="qa">S</td><td class="qa no">N</td><td class="qa">S</td><td class="qa">—</td><td class="qa">S</td><td class="qa">S</td><td><span class="chip s2">Aceito com alteração</span><small>O endereço fica fora da área de entrega. O cliente aceitou retirar no balcão.</small></td><td>Atendente do turno<small>Análise 26/03 · confirmação 26/03</small></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">E-34<small>26/03</small></td><td>Empresa de eventos<small>Telefone</small></td><td><strong>40 pizzas grandes, sábado 27/03 às 20h.</strong></td><td class="c">27/03</td><td class="qa">S</td><td class="qa no">N</td><td class="qa">S</td><td class="qa">S</td><td class="qa">S</td><td class="qa">S</td><td class="qa">S</td><td><span class="chip s1">Aceito</span><small></small></td><td>Atendente do turno<small>Análise 26/03 · confirmação 26/03</small></td><td><span class="chip s3">Aceito com pendência na análise</span></td></tr>
+        <tr><td class="n">E-35<small>26/03</small></td><td>Família do bairro<small>Telefone</small></td><td><strong>25 pizzas grandes, domingo 28/03 às 20h, para um aniversário.</strong></td><td class="c">28/03</td><td class="qa">S</td><td class="qa">S</td><td class="qa">S</td><td class="qa">S</td><td class="qa">S</td><td class="qa">S</td><td class="qa">S</td><td><span class="chip s1">Aceito</span><small></small></td><td>Gerente da loja<small>Análise 27/03 · confirmação 26/03</small></td><td><span class="chip s3">Analisado depois de aceitar</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p><small>Perguntas: 1 especificação · 2 capacidade e prazo · 3 entrega e pós-entrega · 4 uso pretendido · 5 requisitos legais · 6 diferenças · 7 preço e condições. S: sim. N: não. —: não se aplica.</small></p>
+  <div class="tbl">
+    <table class="aud">
+      <caption>Mudanças nos pedidos aceitos · 2</caption>
+      <thead><tr><th class="c">Data</th><th>Pedido</th><th style="width:28%">O que mudou<small>Quem pediu</small></th><th style="width:26%">Análise da mudança</th><th class="c">Documentos atualizados?</th><th>Quem foi informado</th><th>Conferência</th></tr></thead>
+      <tbody>
+        <tr><td class="c">24/03</td><td class="n">E-31</td><td><strong>De 30 para 35 pizzas, com 5 sabores trocados.</strong><small>Pedida por: Cliente, por telefone</small></td><td>Capacidade conferida pelo gerente: a sexta às 19h comporta.</td><td class="c">Sim</td><td>Pizzaiolo líder e líder da expedição</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="c">26/03</td><td class="n">E-32</td><td><strong>Mais 10 pizzas doces na segunda leva.</strong><small>Pedida por: Cliente, pelo aplicativo de mensagens</small></td><td>—</td><td class="c no">Não</td><td>—</td><td><span class="chip s3">Falta a análise</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p><strong>O que observar.</strong> A análise encontrou problema em cinco dos oito pedidos, e em quatro deles resolveu antes do compromisso: um horário diferente, outro dia, retirada no balcão, uma recusa honesta. A recusa da pizza sem glúten é o caso mais delicado: o cliente não disse que a criança era celíaca por acaso, e a resposta certa é a que está na oferta, que a cozinha não garante a ausência de glúten. O sábado 27/03 conta outra história. A formatura foi analisada pelo gerente e passou para as 18h30. No dia seguinte, a atendente aceitou mais 40 pizzas para as 20h do mesmo sábado, sem a análise de capacidade. E a mudança da formatura, mais 10 pizzas doces, chegou por mensagem e não foi a lugar nenhum. A raiz está na oferta: a loja oferece encomendas sem saber quantas cabem em um sábado à noite.</p>
+
+  <h3>Exemplo 2. Os pedidos da indústria</h3>
+  <dl class="ficha">
+    <div><dt>Organização</dt><dd>Indústria de embalagens plásticas</dd></div>
+    <div><dt>Processo</dt><dd>Vender e programar</dd></div>
+    <div><dt>Quem analisa</dt><dd>Gerente comercial, com a Programação para capacidade e prazo, a Engenharia para itens novos e a Qualidade para requisitos legais.</dd></div>
+    <div><dt>Registros</dt><dd>Pedidos e propostas de 01 a 15/06/2027, lidos em 16/06/2027.</dd></div>
+    <div><dt>Origem</dt><dd>Reclamações do cliente A por espessura e a certificação ISO 9001 prevista para dezembro (objetivo O4).</dd></div>
+  </dl>
+  <div class="tbl">
+    <table class="aud">
+      <caption>A oferta · 3 itens</caption>
+      <thead><tr><th style="width:13%">Item</th><th style="width:25%">O que se oferece</th><th style="width:18%">Requisitos legais</th><th style="width:18%">O que não se garante</th><th>Onde o cliente é informado</th><th class="c">Capacidade confirmada?</th><th>Conferência</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Filme liso</strong></td><td>Espessura de 30 a 80 µm, com tolerância de ±2 µm; largura de 300 a 1.200 mm; bobinas de até 800 mm de diâmetro.</td><td>Declaração de conformidade para contato com alimentos, a cada lote.</td><td>Tolerância de espessura menor que ±2 µm.</td><td>Catálogo técnico e proposta.</td><td class="c">Sim</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td><strong>Filme impresso</strong></td><td>Até seis cores, com a arte aprovada pelo cliente e os cilindros do cliente.</td><td>Tintas próprias para embalagem de alimentos.</td><td>Cores fora da tabela de tintas homologadas.</td><td>Catálogo técnico e proposta.</td><td class="c">Sim</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td><strong>Filme com resina reciclada</strong></td><td>Até 30% de resina reciclada, só na camada externa, por acordo de desenvolvimento.</td><td>Resina reciclada não é usada na camada em contato com o alimento.</td><td>Fornecimento regular antes da aprovação do lote piloto.</td><td>Proposta de desenvolvimento.</td><td class="c">Sim</td><td><span class="chip s1">OK</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="tbl">
+    <table class="aud">
+      <caption>Pedidos · 8 analisados: 3 aceitos, 3 com alteração, 1 recusado, 1 em análise · 2 a rever</caption>
+      <thead><tr><th style="width:6%">Nº<small>Data</small></th><th style="width:10%">Cliente<small>Canal</small></th><th style="width:22%">O que pede<small>Requisitos não declarados e legais identificados</small></th><th class="c">Prazo</th><th class="qa" title="Especificação">1</th><th class="qa" title="Capacidade e prazo">2</th><th class="qa" title="Entrega e pós-entrega">3</th><th class="qa" title="Uso pretendido">4</th><th class="qa" title="Requisitos legais">5</th><th class="qa" title="Diferenças">6</th><th class="qa" title="Preço e condições">7</th><th style="width:20%">Decisão<small>O que foi negociado, ou o motivo</small></th><th style="width:12%">Quem analisou<small>Datas</small></th><th>Conferência</th></tr></thead>
+      <tbody>
+        <tr><td class="n">PV-2231<small>01/06</small></td><td>Cliente A<small>E-mail</small></td><td><strong>12 t de filme liso de 40 µm, 600 mm, em 20 dias. Igual ao pedido de maio.</strong></td><td class="c">21/06</td><td class="qa">S</td><td class="qa">S</td><td class="qa">S</td><td class="qa">S</td><td class="qa">S</td><td class="qa">S</td><td class="qa">S</td><td><span class="chip s1">Aceito</span><small></small></td><td>Gerente comercial<small>Análise 01/06 · confirmação 01/06</small></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">PV-2232<small>02/06</small></td><td>Cliente B<small>E-mail</small></td><td><strong>30 t de filme liso de 50 µm em 10 dias.</strong></td><td class="c">12/06</td><td class="qa">S</td><td class="qa no">N</td><td class="qa">S</td><td class="qa">S</td><td class="qa">S</td><td class="qa">S</td><td class="qa">S</td><td><span class="chip s2">Aceito com alteração</span><small>15 t em 10 dias e 15 t em 25 dias, com o aceite do cliente por e-mail.</small></td><td>Gerente comercial<small>Análise 02/06 · confirmação 03/06</small></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">PR-118<small>03/06</small></td><td>Cliente C, alimentos congelados<small>Visita</small></td><td><strong>Filme liso de 50 µm para embalar vegetais congelados.</strong><small>Resistência ao impacto a -18 °C, que o filme padrão não tem. Declaração de conformidade para contato com alimentos.</small></td><td class="c">15/07</td><td class="qa">S</td><td class="qa">S</td><td class="qa">S</td><td class="qa no">N</td><td class="qa">S</td><td class="qa">S</td><td class="qa">S</td><td><span class="chip s2">Aceito com alteração</span><small>Lote de teste de 500 kg com a resina para baixa temperatura, ensaiado pelo cliente antes do pedido firme.</small></td><td>Gerente de engenharia<small>Análise 04/06 · confirmação 07/06</small></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">PV-2236<small>07/06</small></td><td>Cliente A<small>E-mail</small></td><td><strong>Item novo: filme de 35 µm com tolerância de ±1 µm.</strong></td><td class="c">30/06</td><td class="qa no">N</td><td class="qa">S</td><td class="qa">S</td><td class="qa">S</td><td class="qa">S</td><td class="qa">S</td><td class="qa">S</td><td><span class="chip s2">Aceito com alteração</span><small>Tolerância de ±2 µm, a capacidade do processo, aceita pelo cliente por e-mail.</small></td><td>Gerente de engenharia<small>Análise 08/06 · confirmação 09/06</small></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">PR-119<small>08/06</small></td><td>Cliente D<small>E-mail</small></td><td><strong>Filme com 50% de resina reciclada, para contato direto com queijos.</strong></td><td class="c">01/07</td><td class="qa">S</td><td class="qa">S</td><td class="qa">S</td><td class="qa">S</td><td class="qa no">N</td><td class="qa">S</td><td class="qa">S</td><td><span class="chip s3">Recusado</span><small>A resina reciclada não pode estar em contato com o alimento. Oferecido o filme com 30% na camada externa, em desenvolvimento.</small></td><td>Coordenador da Qualidade<small>Análise 09/06 · confirmação —</small></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">PV-2238<small>09/06</small></td><td>Cliente B<small>E-mail</small></td><td><strong>10 t de filme liso de 50 µm, com 620 mm de largura.</strong></td><td class="c">25/06</td><td class="qa">S</td><td class="qa">S</td><td class="qa">S</td><td class="qa">S</td><td class="qa">S</td><td class="qa no">N</td><td class="qa">S</td><td><span class="chip s1">Aceito</span><small></small></td><td>Gerente comercial<small>Análise 09/06 · confirmação 09/06</small></td><td><span class="chip s3">Aceito com pendência na análise</span></td></tr>
+        <tr><td class="n">PR-120<small>10/06</small></td><td>Cliente E<small>Visita</small></td><td><strong>Filme impresso em quatro cores para embalagem de biscoitos.</strong></td><td class="c">10/07</td><td class="qa no">N</td><td class="qa">S</td><td class="qa">S</td><td class="qa">S</td><td class="qa">S</td><td class="qa">S</td><td class="qa">S</td><td><span class="chip sl">Em análise</span><small>Aguardando a arte aprovada pelo cliente.</small></td><td>Gerente comercial<small>Análise 11/06 · confirmação —</small></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">PV-2241<small>11/06</small></td><td>Cliente A<small>Telefone</small></td><td><strong>8 t de filme liso de 40 µm, urgente, em 5 dias.</strong></td><td class="c">16/06</td><td class="qa">S</td><td class="qa">S</td><td class="qa">S</td><td class="qa">S</td><td class="qa">S</td><td class="qa">S</td><td class="qa">S</td><td><span class="chip s1">Aceito</span><small></small></td><td>Programação da produção<small>Análise 14/06 · confirmação 11/06</small></td><td><span class="chip s3">Analisado depois de aceitar</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p><small>Perguntas: 1 especificação · 2 capacidade e prazo · 3 entrega e pós-entrega · 4 uso pretendido · 5 requisitos legais · 6 diferenças · 7 preço e condições. S: sim. N: não. —: não se aplica.</small></p>
+  <div class="tbl">
+    <table class="aud">
+      <caption>Mudanças nos pedidos aceitos · 3</caption>
+      <thead><tr><th class="c">Data</th><th>Pedido</th><th style="width:28%">O que mudou<small>Quem pediu</small></th><th style="width:26%">Análise da mudança</th><th class="c">Documentos atualizados?</th><th>Quem foi informado</th><th>Conferência</th></tr></thead>
+      <tbody>
+        <tr><td class="c">04/06</td><td class="n">PV-2232</td><td><strong>Entrega no novo centro de distribuição do cliente.</strong><small>Pedida por: Comprador do cliente B</small></td><td>Frete recalculado e aceito pelo cliente.</td><td class="c">Sim</td><td>Expedição</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="c">11/06</td><td class="n">PV-2231</td><td><strong>De 12 para 16 t.</strong><small>Pedida por: Comprador do cliente A</small></td><td>Programação conferiu a extrusora 3. Compras confirmou a resina.</td><td class="c">Sim</td><td>Produção e Compras</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="c">12/06</td><td class="n">PV-2238</td><td><strong>Largura corrigida de 600 para 620 mm na ordem de produção.</strong><small>Pedida por: Programação da produção</small></td><td>Conferida com o pedido do cliente.</td><td class="c">Sim</td><td>—</td><td><span class="chip s3">Falta quem foi informado</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p><strong>O que observar.</strong> O pedido igual ao de maio teve uma análise curta, e isso está certo. O cliente B pediu o dobro do que cabia no prazo, e saiu com duas entregas. A tolerância de ±1 µm do cliente A foi negociada para ±2 µm, o que a oferta já dizia. A recusa do cliente D é a análise legal funcionando: o filme reciclado não pode tocar o alimento. Dois casos pedem atenção. O PV-2238 veio com 620 mm, e a proposta era de 600 mm: o comercial aceitou sem ver a diferença, e quem pegou foi a Programação, três dias depois, ao conferir a ordem. A correção foi feita na ordem, mas ninguém foi informado: a expedição e a Qualidade, que emitem a etiqueta e o laudo, não sabem da largura nova. E o pedido urgente de 8 t foi prometido por telefone na sexta e registrado na segunda: a análise veio depois do compromisso.</p>
+
+  <h3>Exemplo 3. As quatro fontes de um pedido novo</h3>
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 330" role="img" aria-label="As quatro fontes de requisitos do pedido PR-118 · Cliente C · filme para vegetais congelados. Declarados: Filme liso de 50 µm, bobinas de 600 mm, primeira entrega em julho. Não declarados, mas necessários: O filme vai ao freezer a -18 °C: precisa resistir ao impacto no frio, e o padrão fica quebradiço. Legais e regulamentares: Embalagem para alimentos: declaração de conformidade para contato com alimentos, a cada lote. Da organização: Item novo passa pela Engenharia. Material novo só com lote de teste aprovado. Aceito com alteração: lote de teste de 500 kg com a resina para baixa temperatura, ensaiado pelo cliente antes do pedido firme.">
+        <defs><marker id="a5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker></defs>
+        <rect class="bx-ink" x="300" y="112" width="300" height="68"/>
+        <text class="mono t-ground" x="314" y="132" font-size="9.5">O PEDIDO</text>
+        <text class="b t-ground" x="314" y="151" font-size="12">PR-118 · Cliente C</text>
+        <text class="t-ground" x="314" y="168" font-size="11">filme para vegetais congelados</text>
+        <rect class="bx" x="20" y="10" width="240" height="94"/>
+        <rect class="hd-p" x="20" y="10" width="6" height="94"/>
+        <text class="b" x="36" y="30" font-size="11.5">Declarados</text>
+        <text x="36" y="48.0" font-size="10.5">Filme liso de 50 µm, bobinas de 600</text>
+        <text x="36" y="61.5" font-size="10.5">mm, primeira entrega em julho.</text>
+        <path class="ln" d="M260 57 H280 V130 H300"/>
+        <rect class="bx" x="640" y="10" width="240" height="94"/>
+        <rect class="hd-d" x="640" y="10" width="6" height="94"/>
+        <text class="b" x="656" y="30" font-size="11.5">Não declarados, mas necessários</text>
+        <text x="656" y="48.0" font-size="10.5">O filme vai ao freezer a -18 °C:</text>
+        <text x="656" y="61.5" font-size="10.5">precisa resistir ao impacto no frio, e</text>
+        <text x="656" y="75.0" font-size="10.5">o padrão fica quebradiço.</text>
+        <path class="ln" d="M640 57 H620 V130 H600"/>
+        <rect class="bx" x="20" y="188" width="240" height="94"/>
+        <rect class="hd-c" x="20" y="188" width="6" height="94"/>
+        <text class="b" x="36" y="208" font-size="11.5">Legais e regulamentares</text>
+        <text x="36" y="226.0" font-size="10.5">Embalagem para alimentos: declaração</text>
+        <text x="36" y="239.5" font-size="10.5">de conformidade para contato com</text>
+        <text x="36" y="253.0" font-size="10.5">alimentos, a cada lote.</text>
+        <path class="ln" d="M260 235 H280 V162 H300"/>
+        <rect class="bx" x="640" y="188" width="240" height="94"/>
+        <rect class="hd-ink" x="640" y="188" width="6" height="94"/>
+        <text class="b" x="656" y="208" font-size="11.5">Da organização</text>
+        <text x="656" y="226.0" font-size="10.5">Item novo passa pela Engenharia.</text>
+        <text x="656" y="239.5" font-size="10.5">Material novo só com lote de teste</text>
+        <text x="656" y="253.0" font-size="10.5">aprovado.</text>
+        <path class="ln" d="M640 235 H620 V162 H600"/>
+        <line class="ln" x1="450" y1="181" x2="450" y2="284" marker-end="url(#a5)"/>
+        <rect class="bx-s2" x="250" y="286" width="400" height="38"/>
+        <text x="262" y="301" font-size="10.5">Aceito com alteração: lote de teste de 500 kg com a resina para baixa</text>
+        <text x="262" y="314" font-size="10.5">temperatura, ensaiado pelo cliente antes do pedido firme.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 5.</b> O pedido do cliente C, de alimentos congelados, visto pelas quatro fontes. O que mudou a decisão foi o que o cliente não declarou.</figcaption>
+  </figure>
+  <p><strong>O que observar.</strong> O cliente C pediu um filme que a fábrica faz todo dia: liso, 50 µm, 600 mm. A pergunta sobre o uso mudou tudo. Vegetais congelados vão ao freezer a -18 °C, e o filme padrão fica quebradiço no frio. O cliente não disse porque não sabia; a Engenharia perguntou porque sabia. Sem essa pergunta, a primeira entrega teria passado em todos os ensaios da fábrica e rasgado na câmara do cliente.</p>
+</section>
+
+<!-- ============================ MÓDULO 7 ============================ -->
+<section id="leitura">
+  <p class="eyebrow">Módulo 7</p>
+  <h2>Ler os registros</h2>
+  <p>Os registros de análise mostram duas coisas. Um por um, se cada pedido foi analisado antes do compromisso e se os “não” foram resolvidos. Em conjunto, quais perguntas mais encontram problema: é ali que a oferta, a capacidade ou a comunicação com o cliente precisam melhorar.</p>
+
+  <figure id="fig-bars">
+    <div class="scroll">
+      <svg id="bars" viewBox="0 0 900 368" role="img" aria-label="Respostas “não” por pergunta da análise, nos pedidos dos dois exemplos. Especificação: pizzaria 0, indústria 2. Capacidade e prazo: pizzaria 3, indústria 1. Entrega e pós-entrega: pizzaria 1, indústria 0. Uso pretendido: pizzaria 1, indústria 1. Requisitos legais: pizzaria 1, indústria 1. Diferenças: pizzaria 0, indústria 1. Preço e condições: pizzaria 0, indústria 0.">
+        <g font-size="11.5">
+          <rect class="f1" x="210" y="12" width="14" height="14"/><text x="232" y="24">Pizzaria · 8 pedidos</text>
+          <rect class="f2" x="400" y="12" width="14" height="14"/><text x="422" y="24">Indústria · 8 pedidos</text>
+        </g>
+        <line class="grid" x1="210.0" y1="42" x2="210.0" y2="328"/>
+        <text class="mu" x="210.0" y="344" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">0</text>
+        <line class="grid" x1="383.33333333333337" y1="42" x2="383.33333333333337" y2="328"/>
+        <text class="mu" x="383.33333333333337" y="344" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">1</text>
+        <line class="grid" x1="556.6666666666667" y1="42" x2="556.6666666666667" y2="328"/>
+        <text class="mu" x="556.6666666666667" y="344" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">2</text>
+        <line class="grid" x1="730.0" y1="42" x2="730.0" y2="328"/>
+        <text class="mu" x="730.0" y="344" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">3</text>
+        <text class="mono mu" x="470.0" y="362" font-size="10" text-anchor="middle">PEDIDOS COM RESPOSTA “NÃO”</text>
+        <text x="20" y="71" font-size="12"><tspan class="mono mu">1</tspan><tspan dx="8">Especificação</tspan></text>
+        <text class="mu" x="216.0" y="64" font-size="10.5" style="font-variant-numeric:tabular-nums">0</text>
+        <rect class="bar f2" data-k="0" x="210" y="69" width="346.7" height="14"/>
+        <text class="mu" x="562.7" y="80" font-size="10.5" style="font-variant-numeric:tabular-nums">2</text>
+        <text x="20" y="111" font-size="12"><tspan class="mono mu">2</tspan><tspan dx="8">Capacidade e prazo</tspan></text>
+        <rect class="bar f1" data-k="1" x="210" y="93" width="520.0" height="14"/>
+        <text class="mu" x="736.0" y="104" font-size="10.5" style="font-variant-numeric:tabular-nums">3</text>
+        <rect class="bar f2" data-k="1" x="210" y="109" width="173.3" height="14"/>
+        <text class="mu" x="389.3" y="120" font-size="10.5" style="font-variant-numeric:tabular-nums">1</text>
+        <text x="20" y="151" font-size="12"><tspan class="mono mu">3</tspan><tspan dx="8">Entrega e pós-entrega</tspan></text>
+        <rect class="bar f1" data-k="2" x="210" y="133" width="173.3" height="14"/>
+        <text class="mu" x="389.3" y="144" font-size="10.5" style="font-variant-numeric:tabular-nums">1</text>
+        <text class="mu" x="216.0" y="160" font-size="10.5" style="font-variant-numeric:tabular-nums">0</text>
+        <text x="20" y="191" font-size="12"><tspan class="mono mu">4</tspan><tspan dx="8">Uso pretendido</tspan></text>
+        <rect class="bar f1" data-k="3" x="210" y="173" width="173.3" height="14"/>
+        <text class="mu" x="389.3" y="184" font-size="10.5" style="font-variant-numeric:tabular-nums">1</text>
+        <rect class="bar f2" data-k="3" x="210" y="189" width="173.3" height="14"/>
+        <text class="mu" x="389.3" y="200" font-size="10.5" style="font-variant-numeric:tabular-nums">1</text>
+        <text x="20" y="231" font-size="12"><tspan class="mono mu">5</tspan><tspan dx="8">Requisitos legais</tspan></text>
+        <rect class="bar f1" data-k="4" x="210" y="213" width="173.3" height="14"/>
+        <text class="mu" x="389.3" y="224" font-size="10.5" style="font-variant-numeric:tabular-nums">1</text>
+        <rect class="bar f2" data-k="4" x="210" y="229" width="173.3" height="14"/>
+        <text class="mu" x="389.3" y="240" font-size="10.5" style="font-variant-numeric:tabular-nums">1</text>
+        <text x="20" y="271" font-size="12"><tspan class="mono mu">6</tspan><tspan dx="8">Diferenças</tspan></text>
+        <text class="mu" x="216.0" y="264" font-size="10.5" style="font-variant-numeric:tabular-nums">0</text>
+        <rect class="bar f2" data-k="5" x="210" y="269" width="173.3" height="14"/>
+        <text class="mu" x="389.3" y="280" font-size="10.5" style="font-variant-numeric:tabular-nums">1</text>
+        <text x="20" y="311" font-size="12"><tspan class="mono mu">7</tspan><tspan dx="8">Preço e condições</tspan></text>
+        <text class="mu" x="216.0" y="304" font-size="10.5" style="font-variant-numeric:tabular-nums">0</text>
+        <text class="mu" x="216.0" y="320" font-size="10.5" style="font-variant-numeric:tabular-nums">0</text>
+        <rect class="hit" x="14" y="48" width="872" height="40" tabindex="0" role="img" aria-label="Especificação: pizzaria 0, indústria 2" data-k="0" data-n="1 · Especificação" data-a="0" data-b="2" data-cx="470.0" data-cy="48"/>
+        <rect class="hit" x="14" y="88" width="872" height="40" tabindex="0" role="img" aria-label="Capacidade e prazo: pizzaria 3, indústria 1" data-k="1" data-n="2 · Capacidade e prazo" data-a="3" data-b="1" data-cx="470.0" data-cy="88"/>
+        <rect class="hit" x="14" y="128" width="872" height="40" tabindex="0" role="img" aria-label="Entrega e pós-entrega: pizzaria 1, indústria 0" data-k="2" data-n="3 · Entrega e pós-entrega" data-a="1" data-b="0" data-cx="470.0" data-cy="128"/>
+        <rect class="hit" x="14" y="168" width="872" height="40" tabindex="0" role="img" aria-label="Uso pretendido: pizzaria 1, indústria 1" data-k="3" data-n="4 · Uso pretendido" data-a="1" data-b="1" data-cx="470.0" data-cy="168"/>
+        <rect class="hit" x="14" y="208" width="872" height="40" tabindex="0" role="img" aria-label="Requisitos legais: pizzaria 1, indústria 1" data-k="4" data-n="5 · Requisitos legais" data-a="1" data-b="1" data-cx="470.0" data-cy="208"/>
+        <rect class="hit" x="14" y="248" width="872" height="40" tabindex="0" role="img" aria-label="Diferenças: pizzaria 0, indústria 1" data-k="5" data-n="6 · Diferenças" data-a="0" data-b="1" data-cx="470.0" data-cy="248"/>
+        <rect class="hit" x="14" y="288" width="872" height="40" tabindex="0" role="img" aria-label="Preço e condições: pizzaria 0, indústria 0" data-k="6" data-n="7 · Preço e condições" data-a="0" data-b="0" data-cx="470.0" data-cy="288"/>
+      </svg>
+    </div>
+    <div class="tip" id="bars-tip" hidden></div>
+    <figcaption><b>Figura 6.</b> Pedidos com resposta “não”, por pergunta, nos dois exemplos. Passe o mouse sobre as linhas para ver os valores.</figcaption>
+    <details class="data">
+      <summary>Ver os dados em tabela</summary>
+      <div class="tbl">
+        <table class="aud">
+          <thead><tr><th>Pergunta</th><th class="c">Pizzaria</th><th class="c">Indústria</th></tr></thead>
+          <tbody>
+            <tr><td>1 · Especificação</td><td class="c">0</td><td class="c">2</td></tr>
+            <tr><td>2 · Capacidade e prazo</td><td class="c">3</td><td class="c">1</td></tr>
+            <tr><td>3 · Entrega e pós-entrega</td><td class="c">1</td><td class="c">0</td></tr>
+            <tr><td>4 · Uso pretendido</td><td class="c">1</td><td class="c">1</td></tr>
+            <tr><td>5 · Requisitos legais</td><td class="c">1</td><td class="c">1</td></tr>
+            <tr><td>6 · Diferenças</td><td class="c">0</td><td class="c">1</td></tr>
+            <tr><td>7 · Preço e condições</td><td class="c">0</td><td class="c">0</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </details>
+  </figure>
+
+  <p>Na pizzaria, a pergunta que mais encontra problema é a da capacidade: 3 das 8 encomendas pediam mais do que a loja consegue no horário pedido. Duas foram resolvidas na análise, com outro horário ou outro dia. A terceira, a E-34, foi aceita pela atendente sem a análise do gerente, para o mesmo sábado da formatura. Na indústria, os problemas se espalham: a especificação que o processo não alcança, o uso que o cliente não contou, a lei, a diferença entre o pedido e a proposta. É por isso que a análise da fábrica envolve a Engenharia e a Qualidade, e não só o Comercial. Em nenhum dos dois casos a pergunta do preço pegou alguma coisa: é a que todos já fazem sem precisar de lista.</p>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:28%">Conferência</th><th style="width:38%">Regra deste material</th><th>O que fazer</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Aceito com pendência na análise</strong></td><td>A decisão foi “aceito”, e alguma resposta é “não”.</td><td>Resolver com o cliente antes da produção: é o caso mais urgente.</td></tr>
+        <tr><td><strong>Analisado depois de aceitar</strong></td><td>A data da análise é posterior à da confirmação.</td><td>Conferir se o resultado mudaria a decisão. Rever quem pode confirmar.</td></tr>
+        <tr><td><strong>Falta o que foi negociado</strong></td><td>Aceito com alteração, sem dizer qual.</td><td>Registrar a condição combinada e o aceite do cliente.</td></tr>
+        <tr><td><strong>Falta o motivo da recusa</strong></td><td>Recusado, sem o motivo.</td><td>Registrar o motivo e como o cliente foi informado.</td></tr>
+        <tr><td><strong>Mudança sem análise</strong></td><td>O pedido mudou e ninguém conferiu o efeito.</td><td>Analisar agora, antes da produção, e avisar quem produz.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note">
+    <h4>A pergunta que mais encontra problema</h4>
+    <p>Quando a mesma pergunta encontra problema semana após semana, a causa não está no pedido, está na oferta. Se a capacidade é o “não” mais comum, a oferta promete mais do que o processo entrega, ou o prazo publicado é curto demais. Se é a especificação, o catálogo oferece o que a fábrica não alcança. A correção é rever a oferta, e não pedir mais cuidado a quem atende.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 8 ============================ -->
+<section id="erros">
+  <p class="eyebrow">Módulo 8</p>
+  <h2>Erros comuns</h2>
+  <div class="errs">
+    <div><h4>Aceitar e depois ver</h4><p>“Pode deixar, a gente dá um jeito.” A análise vira uma corrida contra o prazo.</p><p class="fix"><b>Correção:</b> nenhuma confirmação antes da análise registrada.</p></div>
+    <div><h4>Analisar só o preço</h4><p>O comercial confere o preço e o pagamento, e a capacidade fica para a produção descobrir.</p><p class="fix"><b>Correção:</b> as sete perguntas, com quem responde cada uma.</p></div>
+    <div><h4>Não perguntar o uso</h4><p>O filme sai conforme e rasga no freezer do cliente.</p><p class="fix"><b>Correção:</b> perguntar sempre para que o produto vai ser usado.</p></div>
+    <div><h4>Esquecer a lei</h4><p>Cerveja na festa de formatura, material reciclado em contato com alimento.</p><p class="fix"><b>Correção:</b> os requisitos legais na oferta e na análise.</p></div>
+    <div><h4>Pedido verbal sem confirmação</h4><p>O endereço sem o complemento, o sabor entendido errado.</p><p class="fix"><b>Correção:</b> ler o pedido de volta, ou mandar a confirmação por escrito.</p></div>
+    <div><h4>Não comparar com a proposta</h4><p>O pedido veio com 620 mm, a proposta era de 600, e ninguém viu.</p><p class="fix"><b>Correção:</b> a pergunta das diferenças, com a proposta ao lado.</p></div>
+    <div><h4>Oferta acima da capacidade</h4><p>O site oferece encomendas todos os dias, e o sábado não comporta.</p><p class="fix"><b>Correção:</b> confirmar a capacidade antes de oferecer, e escrever os limites.</p></div>
+    <div><h4>Mudança por mensagem</h4><p>O cliente muda o pedido pelo celular de quem atendeu, e a cozinha nunca fica sabendo.</p><p class="fix"><b>Correção:</b> toda mudança entra no registro, passa pela análise e é informada.</p></div>
+    <div><h4>Recusar sem explicar</h4><p>“Não fazemos.” O cliente não entende, e não volta.</p><p class="fix"><b>Correção:</b> o motivo, e o que a organização pode oferecer no lugar.</p></div>
+    <div><h4>Análise só na cabeça</h4><p>O gerente experiente analisa tudo, e nada fica registrado.</p><p class="fix"><b>Correção:</b> o registro de quem analisou e do resultado, como a norma pede.</p></div>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 9 ============================ -->
+<section id="ferramentas">
+  <p class="eyebrow">Módulo 9</p>
+  <h2>A análise e outras ferramentas</h2>
+  <p>A análise de pedidos é a porta de entrada da operação. Recebe o que a organização sabe de si: a capacidade, a especificação, os riscos. Entrega à produção um pedido que cabe, e ao cliente uma promessa que será cumprida.</p>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:26%">Ferramenta</th><th style="width:37%">O que ela entrega à análise</th><th>O que recebe da análise</th></tr></thead>
+      <tbody>
+        <tr><td><a href="../ISO-9001/treinamento-iso-9001.html"><strong>ISO 9001 requisito a requisito</strong></a></td><td>Os requisitos 8.2.1 a 8.2.4, e a lacuna de cada organização.</td><td>A oferta, os registros de análise e as mudanças, como evidência.</td></tr>
+        <tr><td><a href="../Partes-Interessadas/treinamento-partes-interessadas.html"><strong>Partes interessadas</strong></a></td><td>Os requisitos dos clientes e os legais, por grupo.</td><td>Os requisitos novos que aparecem nos pedidos.</td></tr>
+        <tr><td><a href="../SIPOC/treinamento-sipoc.html"><strong>SIPOC</strong></a></td><td>O que o processo recebe e entrega, e os requisitos de cada saída.</td><td>O pedido aceito, como entrada do processo.</td></tr>
+        <tr><td><a href="../Riscos/treinamento-riscos.html"><strong>Matriz de riscos</strong></a></td><td>Os riscos de aceitar o que não cabe.</td><td>Os riscos de um item novo ou de um cliente novo.</td></tr>
+        <tr><td><a href="../Producao/treinamento-producao.html"><strong>Controle de produção e de serviço</strong></a></td><td>O que o processo alcança: os critérios e a variação.</td><td>O pedido com a especificação que o plano de controle vai conferir.</td></tr>
+        <tr><td><a href="../Liberacao/treinamento-liberacao.html"><strong>Liberação e produto não conforme</strong></a></td><td>Os defeitos que nascem de um pedido mal analisado.</td><td>Os critérios de aceitação combinados com o cliente.</td></tr>
+        <tr><td><a href="../Satisfacao/treinamento-satisfacao.html"><strong>Satisfação do cliente</strong></a></td><td>As reclamações que mostram o que a análise não viu.</td><td>A recusa e a alteração, explicadas ao cliente.</td></tr>
+        <tr><td><a href="../Informacao-Documentada/treinamento-informacao-documentada.html"><strong>Informação documentada</strong></a></td><td>O controle da versão do pedido e da especificação.</td><td>O registro da análise e das mudanças.</td></tr>
+        <tr><td><a href="../RACI/treinamento-raci.html"><strong>Matriz RACI</strong></a></td><td>Quem analisa, quem decide e quem é informado.</td><td>A responsabilidade por cada pergunta da análise.</td></tr>
+        <tr><td><a href="../Indicadores/treinamento-indicadores.html"><strong>Indicadores</strong></a></td><td>A medida de pedidos aceitos com pendência e de prazos cumpridos.</td><td>Os registros, somados por período.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 10 ============================ -->
+<section id="iso">
+  <p class="eyebrow">Módulo 10</p>
+  <h2>Nas normas ISO</h2>
+  <p>Os requisitos do cliente estão no requisito 8.2 da ISO 9001:2015, em quatro partes: a comunicação com o cliente, a definição dos requisitos do que se oferece, a análise crítica antes do compromisso e o controle das mudanças. A análise crítica tem um registro obrigatório: o resultado da análise e os requisitos novos.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 200" role="img" aria-label="O que a norma pede sobre os requisitos do cliente. 8.2.1 · Comunicar: Informar o cliente sobre o que se oferece, tratar consultas, pedidos, mudanças e reclamações. Neste estudo: os canais e o que não se garante. 8.2.2 · Definir: Definir os requisitos do que se oferece, inclusive os legais, e confirmar que é possível cumprir. Neste estudo: a aba Oferta. 8.2.3 · Analisar: Antes de se comprometer, analisar o pedido: declarados, não declarados, legais, diferenças. Neste estudo: as sete perguntas e o registro. 8.2.4 · Mudar: Quando o pedido muda, atualizar os documentos e informar as pessoas envolvidas. Neste estudo: a aba Mudanças.">
+        <rect class="bx" x="10" y="14" width="214" height="172"/>
+        <rect class="hd-ink" x="10" y="14" width="214" height="34"/>
+        <text class="b t-ground" x="22" y="36" font-size="11.5">8.2.1 · Comunicar</text>
+        <text x="22" y="70" font-size="11.5">Informar o cliente sobre o que</text>
+        <text x="22" y="86" font-size="11.5">se oferece, tratar consultas,</text>
+        <text x="22" y="102" font-size="11.5">pedidos, mudanças e reclamações.</text>
+        <text class="mu" x="22" y="152" font-size="11">Neste estudo: os canais e o que</text>
+        <text class="mu" x="22" y="167" font-size="11">não se garante</text>
+        <rect class="bx" x="232" y="14" width="214" height="172"/>
+        <rect class="hd-ink" x="232" y="14" width="214" height="34"/>
+        <text class="b t-ground" x="244" y="36" font-size="11.5">8.2.2 · Definir</text>
+        <text x="244" y="70" font-size="11.5">Definir os requisitos do que se</text>
+        <text x="244" y="86" font-size="11.5">oferece, inclusive os legais, e</text>
+        <text x="244" y="102" font-size="11.5">confirmar que é possível</text>
+        <text x="244" y="118" font-size="11.5">cumprir.</text>
+        <text class="mu" x="244" y="152" font-size="11">Neste estudo: a aba Oferta</text>
+        <rect class="bx" x="454" y="14" width="214" height="172"/>
+        <rect class="hd-ink" x="454" y="14" width="214" height="34"/>
+        <text class="b t-ground" x="466" y="36" font-size="11.5">8.2.3 · Analisar</text>
+        <text x="466" y="70" font-size="11.5">Antes de se comprometer,</text>
+        <text x="466" y="86" font-size="11.5">analisar o pedido: declarados,</text>
+        <text x="466" y="102" font-size="11.5">não declarados, legais,</text>
+        <text x="466" y="118" font-size="11.5">diferenças.</text>
+        <text class="mu" x="466" y="152" font-size="11">Neste estudo: as sete perguntas e</text>
+        <text class="mu" x="466" y="167" font-size="11">o registro</text>
+        <rect class="bx" x="676" y="14" width="214" height="172"/>
+        <rect class="hd-ink" x="676" y="14" width="214" height="34"/>
+        <text class="b t-ground" x="688" y="36" font-size="11.5">8.2.4 · Mudar</text>
+        <text x="688" y="70" font-size="11.5">Quando o pedido muda, atualizar</text>
+        <text x="688" y="86" font-size="11.5">os documentos e informar as</text>
+        <text x="688" y="102" font-size="11.5">pessoas envolvidas.</text>
+        <text class="mu" x="688" y="152" font-size="11">Neste estudo: a aba Mudanças</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 7.</b> O que a norma pede e onde este estudo responde. O texto da figura é um resumo, com palavras próprias.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:10%">Item</th><th style="width:32%">O que pede, em resumo</th><th style="width:27%">O que isso significa</th><th>Evidências que o auditor procura</th></tr></thead>
+      <tbody>
+        <tr><td class="num">8.2.1</td><td>Comunicar-se com o cliente sobre os produtos e serviços, as consultas, os contratos e pedidos e suas mudanças, o retorno e as reclamações, a propriedade do cliente e as ações de contingência</td><td>Os canais estão definidos, e o cliente sabe o que pode esperar.</td><td>Canais de pedido e de reclamação, informações publicadas.</td></tr>
+        <tr><td class="num">8.2.2</td><td>Definir os requisitos dos produtos e serviços, inclusive os legais e os que a organização considera necessários, e assegurar que ela consegue cumprir o que oferece</td><td>A oferta está escrita, e a organização confirmou que consegue cumpri-la.</td><td>Catálogo, especificações, limites de capacidade, requisitos legais.</td></tr>
+        <tr><td class="num">8.2.3.1</td><td>Antes de se comprometer, analisar os requisitos declarados, os não declarados mas necessários ao uso, os legais, os da organização e as diferenças em relação ao combinado antes. Confirmar o pedido verbal antes de aceitar</td><td>Nenhum pedido é aceito sem análise, e o verbal é confirmado.</td><td>Registros de análise com data anterior à confirmação.</td></tr>
+        <tr><td class="num">8.2.3.2</td><td>Reter a informação sobre o resultado da análise e sobre os requisitos novos</td><td>A análise fica registrada.</td><td>Pedido analisado, com quem analisou e o que foi decidido.</td></tr>
+        <tr><td class="num">8.2.4</td><td>Quando os requisitos mudam, alterar a informação documentada pertinente e informar as pessoas envolvidas</td><td>A mudança chega a quem produz, na versão certa.</td><td>Registro das mudanças, documentos revistos, aviso às áreas.</td></tr>
+        <tr><td class="num">8.5.5</td><td>Considerar, nas atividades pós-entrega, os requisitos do cliente e o retorno recebido</td><td>O que vem depois da entrega também é combinado.</td><td>Condições de troca e de garantia, na oferta.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pair">
+    <div class="box">
+      <h4>O que a ISO 9001 exige</h4>
+      <ul>
+        <li>Os requisitos do que se oferece, definidos, inclusive os legais.</li>
+        <li>A análise antes do compromisso com o cliente.</li>
+        <li>A confirmação do pedido que não vem por escrito.</li>
+        <li>O registro do resultado da análise.</li>
+        <li>A atualização dos documentos e o aviso às pessoas quando o pedido muda.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h4>O que a ISO 9001 não exige</h4>
+      <ul>
+        <li>Um formulário de análise para cada pedido do cardápio.</li>
+        <li>A assinatura do cliente em todo pedido.</li>
+        <li>Aceitar todo pedido que chega.</li>
+        <li>As sete perguntas e as conferências deste material.</li>
+        <li>Uma análise separada quando a venda é pelo catálogo, com a informação certa.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="note">
+    <h4>Pontos de atenção</h4>
+    <p>As constatações mais comuns são o pedido confirmado antes da análise, a análise que existe e não fica registrada, e a mudança de pedido que não chega à produção. O auditor costuma escolher um pedido entregue e voltar até a análise: a data, quem analisou, a especificação, a proposta. Depois, escolhe um pedido que mudou e pergunta como a produção ficou sabendo. Na venda pela internet, pergunta quem atualiza o que está publicado.</p>
+    <p>Este módulo usa a numeração da ISO 9001:2015 e resume os textos com palavras próprias. Confira sempre a edição vigente da norma antes de citar um requisito em relatório.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 11 ============================ -->
+<section id="reuniao">
+  <p class="eyebrow">Módulo 11</p>
+  <h2>A reunião da carteira de pedidos</h2>
+  <p>Uma vez por semana, quem vende e quem programa leem juntos os pedidos da semana seguinte, em 30 minutos. A reunião começa pelo que pode dar errado: os pedidos aceitos com pendência e as mudanças que ainda não foram analisadas.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 136" role="img" aria-label="Distribuição de uma reunião semanal de 30 minutos: 10 minutos para os pedidos aceitos com pendência e os analisados depois do aceite, 10 minutos para as mudanças, 5 minutos para os pedidos em análise e 5 minutos para as decisões.">
+        <g font-size="11.5" text-anchor="middle">
+          <rect class="hd-ink gap2" x="60" y="24" width="260" height="56"/><text class="t-ground b" x="190" y="49">Aceitos com pendência e</text><text class="t-ground b" x="190" y="64">analisados depois</text>
+          <rect class="hd-d gap2" x="320" y="24" width="260" height="56"/><text class="on b" x="450" y="56">Mudanças nos pedidos</text>
+          <rect class="bx" x="580" y="24" width="130" height="56"/><text x="645" y="56">Em análise</text>
+          <rect class="bx" x="710" y="24" width="130" height="56"/><text x="775" y="56">Decisões</text>
+        </g>
+        <g class="ln-mu" stroke-width="1">
+          <line x1="60" y1="82" x2="60" y2="94"/><line x1="320" y1="82" x2="320" y2="94"/><line x1="580" y1="82" x2="580" y2="94"/>
+          <line x1="710" y1="82" x2="710" y2="94"/><line x1="840" y1="82" x2="840" y2="94"/>
+        </g>
+        <g class="mono" font-size="10.5" text-anchor="middle">
+          <text class="mu" x="60" y="112">0</text><text class="mu" x="320" y="112">10</text><text class="mu" x="580" y="112">20</text>
+          <text class="mu" x="710" y="112">25</text><text class="mu" x="840" y="112">30</text>
+        </g>
+      </svg>
+    </div>
+    <figcaption><b>Figura 8.</b> Uma reunião semanal de 30 minutos, desenhada em escala. Os pedidos com pendência e as mudanças ocupam dois terços do tempo.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Momento</th><th style="width:42%">O que fazer</th><th>Perguntas que ajudam</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Aceitos com pendência</strong></td><td>Cada pedido aceito com um “não” na análise, ou analisado depois do aceite: o que falta, e quem fala com o cliente?</td><td>“Conseguimos cumprir isto, do jeito que prometemos?”</td></tr>
+        <tr><td><strong>Mudanças</strong></td><td>Cada mudança da semana: foi analisada, os documentos foram atualizados, quem produz sabe?</td><td>“A ordem de produção já está com a versão nova?”</td></tr>
+        <tr><td><strong>Em análise</strong></td><td>O que falta para decidir, e até quando o cliente espera a resposta.</td><td>“Quem vai buscar a informação que falta?”</td></tr>
+        <tr><td><strong>Decisões</strong></td><td>Conversas com clientes, revisões da oferta, mudanças de quem pode confirmar, com responsável e prazo.</td><td>“A oferta precisa mudar?”</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Leia os pedidos da semana seguinte, e não os da semana passada. A reunião serve para evitar o problema, e não para explicá-lo.</p>
+
+  <h3>Checklist dos requisitos do cliente</h3>
+  <p>Marque os itens conforme revisa a sua rotina. As marcações ficam salvas neste navegador.</p>
+  <ol class="check" id="checklist">
+    <li><label><input type="checkbox" id="ck-1"><span>Os canais de comunicação com o cliente estão definidos: informações, pedidos, mudanças e reclamações.</span></label></li>
+    <li><label><input type="checkbox" id="ck-2"><span>O que a organização oferece está definido, com a especificação de cada produto ou serviço.</span></label></li>
+    <li><label><input type="checkbox" id="ck-3"><span>Os requisitos legais aplicáveis ao que é oferecido estão identificados.</span></label></li>
+    <li><label><input type="checkbox" id="ck-4"><span>A organização confirmou que consegue cumprir o que oferece, inclusive a capacidade.</span></label></li>
+    <li><label><input type="checkbox" id="ck-5"><span>O que a organização não garante está informado ao cliente.</span></label></li>
+    <li><label><input type="checkbox" id="ck-6"><span>Todo pedido é analisado antes de a organização se comprometer a fornecer.</span></label></li>
+    <li><label><input type="checkbox" id="ck-7"><span>A análise considera os requisitos que o cliente não declarou, mas que o uso exige.</span></label></li>
+    <li><label><input type="checkbox" id="ck-8"><span>As diferenças entre o pedido e a proposta são resolvidas antes da confirmação.</span></label></li>
+    <li><label><input type="checkbox" id="ck-9"><span>O pedido verbal é confirmado com o cliente antes de ser aceito.</span></label></li>
+    <li><label><input type="checkbox" id="ck-10"><span>O resultado da análise fica registrado, com quem analisou e quando.</span></label></li>
+    <li><label><input type="checkbox" id="ck-11"><span>Quando o pedido muda, é analisado de novo, os documentos são atualizados e as pessoas são informadas.</span></label></li>
+    <li><label><input type="checkbox" id="ck-12"><span>O pedido aceito com alteração ou recusado tem o motivo registrado e comunicado ao cliente.</span></label></li>
+  </ol>
+  <div class="bar"><span><b id="ck-count">0</b> de 12 itens marcados</span><button class="btn" id="ck-reset" type="button">Limpar marcações</button></div>
+</section>
+
+<!-- ============================ MÓDULO 12 ============================ -->
+<section id="pratique">
+  <p class="eyebrow">Módulo 12</p>
+  <h2>Pratique</h2>
+  <h3>Exercício 1. O que a análise deixou passar?</h3>
+  <p>Cada item descreve um pedido aceito e o que aconteceu depois. Diga o que a análise deveria ter visto: um requisito do uso, que o cliente não declarou; um requisito legal; a capacidade ou o prazo; ou uma diferença em relação ao combinado.</p>
+  <div class="quiz" id="quiz"></div>
+  <div class="bar"><span>Acertos: <b id="qz-score">0</b> de <b id="qz-total">12</b></span><span>Respondidos: <b id="qz-done">0</b></span><button class="btn" id="qz-reset" type="button">Recomeçar</button></div>
+
+  <h3>Exercício 2. Monte a rotina da sua organização</h3>
+  <p>Escolha um produto ou um serviço. Abra a planilha de apoio e siga o roteiro.</p>
+  <ol>
+    <li>Na aba Oferta, escreva o que se oferece, a especificação, os requisitos legais, o que não se garante e onde o cliente é informado.</li>
+    <li>Para cada item da oferta, responda: a capacidade foi confirmada?</li>
+    <li>Na aba Pedidos, registre os pedidos de uma semana, com as respostas às sete perguntas, a decisão e as datas da análise e da confirmação.</li>
+    <li>Na aba Mudanças, registre as alterações nos pedidos aceitos, com a análise, os documentos e quem foi informado.</li>
+    <li>Leia a aba Painel: os pedidos a rever, as perguntas que mais encontram problema e as mudanças sem análise.</li>
+    <li>Se uma pergunta concentra os “não”, volte à oferta e veja o que precisa mudar.</li>
+    <li>Passe o checklist do módulo 11.</li>
+  </ol>
+  <p>Depois, escolha um pedido já entregue e volte até a análise. Se não der para saber quem analisou e quando, é por aí que a rotina começa.</p>
+</section>
+
+<!-- ============================ MÓDULO 13 ============================ -->
+<section id="planilha">
+  <p class="eyebrow">Módulo 13</p>
+  <h2>A planilha de apoio</h2>
+  <p>Este treinamento acompanha o arquivo <a id="xlsx-ref" href="Pedidos-modelo.xlsx">Pedidos-modelo.xlsx</a>, que fica na mesma pasta. As células em amarelo-claro são para preenchimento. As células cinza são calculadas.</p>
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Aba</th><th>Para que serve</th><th style="width:36%">O que ela calcula</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Instruções</strong></td><td>Legenda de cores, as regras de cálculo, ordem de preenchimento e premissas do modelo.</td><td>Nada. É só leitura.</td></tr>
+        <tr><td><strong>Oferta</strong></td><td>Até 12 itens, com a especificação, os requisitos legais, o que não se garante, onde o cliente é informado e se a capacidade foi confirmada.</td><td>A conferência de cada item.</td></tr>
+        <tr><td><strong>Pedidos</strong></td><td>Até 60 pedidos, com o que o cliente pede, as respostas às sete perguntas, a decisão, quem analisou e as datas.</td><td>A leitura da análise, as pendências e a conferência da decisão.</td></tr>
+        <tr><td><strong>Mudanças</strong></td><td>Até 30 mudanças, com o pedido, o que mudou, a análise, os documentos e quem foi informado.</td><td>A conferência de cada mudança.</td></tr>
+        <tr><td><strong>Painel</strong></td><td>Nada a preencher.</td><td>Os indicadores, as respostas “não” por pergunta, o gráfico e o aviso.</td></tr>
+        <tr><td><strong>Checklist</strong></td><td>Os mesmos 12 itens do módulo 11, com status Sim, Parcial ou Não.</td><td>Percentual atendido e situação da validação.</td></tr>
+        <tr><td><strong>Exemplo 1 e Exemplo 2</strong></td><td>A oferta, os pedidos e as mudanças da pizzaria e da indústria.</td><td>Leituras, conferências e respostas “não” por pergunta.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ GLOSSÁRIO ============================ -->
+<section id="glossario">
+  <p class="eyebrow">Referência</p>
+  <h2>Glossário</h2>
+  <dl class="gloss">
+    <div><dt>Análise crítica do pedido</dt><dd>A conferência, antes de aceitar, de que a organização consegue atender ao pedido.</dd></div>
+    <div><dt>Capacidade</dt><dd>O quanto o processo consegue produzir ou atender em um período, considerando o que já foi aceito.</dd></div>
+    <div><dt>Confirmação</dt><dd>O aceite comunicado ao cliente, com o que foi combinado.</dd></div>
+    <div><dt>Mudança no pedido</dt><dd>Qualquer alteração de requisito depois do aceite, pedida pelo cliente ou pela organização.</dd></div>
+    <div><dt>Oferta</dt><dd>O que a organização se dispõe a fornecer, com a especificação, os limites e o que não garante.</dd></div>
+    <div><dt>Pedido verbal</dt><dd>O pedido feito sem documento: pelo telefone, no balcão, na visita.</dd></div>
+    <div><dt>Proposta</dt><dd>O que a organização ofereceu ao cliente antes do pedido, com especificação, preço e prazo.</dd></div>
+    <div><dt>Requisito declarado</dt><dd>O que o cliente pede de forma explícita.</dd></div>
+    <div><dt>Requisito legal</dt><dd>O que a lei ou um regulamento exige do produto ou da forma de vender.</dd></div>
+    <div><dt>Requisito não declarado</dt><dd>O que o uso pretendido exige, mesmo que o cliente não diga.</dd></div>
+    <div><dt>Uso pretendido</dt><dd>Para que o cliente vai usar o produto, e em que condições.</dd></div>
+  </dl>
+</section>
+
+</main>
+</div>
+
+<footer>Material de estudo. Os exemplos, documentos e números são ilustrativos e foram criados para fins didáticos. As referências às normas ISO são resumos para estudo e não substituem o texto das normas.</footer>
+</div>
+
+<script>
+(function () {
+  function read(key) { try { return JSON.parse(localStorage.getItem(key) || 'null'); } catch (e) { return null; } }
+  function write(key, val) { try { localStorage.setItem(key, JSON.stringify(val)); } catch (e) {} }
+
+  /* ---------- Checklist ---------- */
+  var boxes = Array.prototype.slice.call(document.querySelectorAll('#checklist input'));
+  var count = document.getElementById('ck-count');
+  var saved = read('pedidos-checklist') || {};
+  function refreshChecks() {
+    var n = 0, state = {};
+    boxes.forEach(function (b) { if (b.checked) { n++; } state[b.id] = b.checked; });
+    count.textContent = n;
+    return state;
+  }
+  boxes.forEach(function (b) {
+    if (saved[b.id]) { b.checked = true; }
+    b.addEventListener('change', function () { write('pedidos-checklist', refreshChecks()); });
+  });
+  refreshChecks();
+  document.getElementById('ck-reset').addEventListener('click', function () {
+    boxes.forEach(function (b) { b.checked = false; });
+    write('pedidos-checklist', refreshChecks());
+  });
+
+  /* ---------- Exercício ---------- */
+  var KEYS = ['U', 'L', 'C', 'D'];
+  var LABEL = { U: 'Requisito do uso', L: 'Requisito legal', C: 'Capacidade ou prazo', D: 'Diferença do combinado' };
+  var NAMES = { U: 'um requisito do uso, que o cliente não declarou', L: 'um requisito legal', C: 'a capacidade ou o prazo', D: 'uma diferença em relação ao combinado' };
+  var ITEMS = [
+    { t: '“Pizza sem glúten para uma criança celíaca, aceita porque a loja tem massa sem glúten. A pizza foi feita na mesma bancada das outras.”', a: 'U', w: 'O uso exige ausência de contaminação, e a cozinha é compartilhada. O cliente não precisava dizer.' },
+    { t: '“50 pizzas para sábado às 21h, aceitas pela atendente. Na hora, a fila do forno atrasou todos os pedidos da noite.”', a: 'C', w: 'Sábado às 21h é o pico, e o forno é único. A capacidade não foi conferida.' },
+    { t: '“Filme liso de 50 µm para embalar vegetais congelados, com a especificação do filme comum. As embalagens rasgaram na câmara fria do cliente.”', a: 'U', w: 'O uso a -18 °C exige outra resina. O cliente não sabia que precisava dizer.' },
+    { t: '“Filme para embalagem de alimentos entregue sem a declaração de conformidade para contato com alimentos.”', a: 'L', w: 'É uma exigência legal para embalagens de alimentos, a cada lote.' },
+    { t: '“Pedido por e-mail com 620 mm de largura; a proposta era de 600 mm. A fábrica produziu 600 mm.”', a: 'D', w: 'A diferença entre o pedido e a proposta não foi vista nem resolvida antes do aceite.' },
+    { t: '“Filme com 50% de resina reciclada aceito para contato direto com queijos.”', a: 'L', w: 'Resina reciclada em contato com alimento esbarra na legislação de embalagens.' },
+    { t: '“8 t urgentes em 5 dias, prometidas por telefone. A extrusora estava ocupada com o pedido de outro cliente.”', a: 'C', w: 'A programação não foi consultada antes da promessa.' },
+    { t: '“O cliente trocou cinco sabores da encomenda por mensagem. A cozinha montou os sabores da ficha antiga.”', a: 'D', w: 'A mudança não passou pela análise e não chegou a quem produz.' },
+    { t: '“Encomenda de 20 pizzas e 30 cervejas para a festa de formatura de uma turma do ensino médio.”', a: 'L', w: 'Não se vende bebida alcoólica para menores de idade. A análise legal tirou a cerveja do pedido.' },
+    { t: '“Filme impresso com a arte antiga, porque a nova revisão foi para o e-mail do vendedor que estava de férias.”', a: 'D', w: 'A versão combinada com o cliente não era a que estava no pedido.' },
+    { t: '“Bobinas de 800 mm de diâmetro, o padrão, para a máquina nova do cliente, que aceita no máximo 600 mm.”', a: 'U', w: 'O limite da máquina do cliente é um requisito do uso. Perguntar teria resolvido.' },
+    { t: '“15 t prometidas para julho, mês da manutenção programada da extrusora 3.”', a: 'C', w: 'A capacidade do mês já estava reduzida, e a agenda de manutenção não foi consultada.' }
+  ];
+  var quiz = document.getElementById('quiz');
+  var score = document.getElementById('qz-score');
+  var done = document.getElementById('qz-done');
+  document.getElementById('qz-total').textContent = ITEMS.length;
+  var hits = 0, answered = 0;
+
+  function render() {
+    hits = 0; answered = 0; score.textContent = 0; done.textContent = 0;
+    quiz.textContent = '';
+    ITEMS.forEach(function (item, idx) {
+      var row = document.createElement('div'); row.className = 'q';
+      var p = document.createElement('p'); p.textContent = (idx + 1) + '. ' + item.t;
+      var opts = document.createElement('div'); opts.className = 'opts';
+      opts.setAttribute('role', 'group'); opts.setAttribute('aria-label', 'O que faltou no item ' + (idx + 1));
+      var why = document.createElement('p'); why.className = 'why'; why.hidden = true;
+      KEYS.forEach(function (k) {
+        var b = document.createElement('button');
+        b.type = 'button'; b.textContent = LABEL[k]; b.id = 'qz-' + idx + '-' + k;
+        b.setAttribute('data-k', k);
+        b.addEventListener('click', function () {
+          var ok = k === item.a;
+          Array.prototype.forEach.call(opts.children, function (o) {
+            o.disabled = true;
+            if (o.getAttribute('data-k') === item.a) { o.className = 'right'; }
+          });
+          if (!ok) { b.className = 'wrong'; }
+          var lead = document.createElement('b');
+          lead.textContent = (ok ? 'Certo. ' : 'A resposta é: ' + NAMES[item.a] + '. ');
+          why.textContent = ''; why.appendChild(lead); why.appendChild(document.createTextNode(item.w));
+          why.className = 'why ' + (ok ? 'ok' : 'no'); why.hidden = false;
+          answered++; if (ok) { hits++; }
+          score.textContent = hits; done.textContent = answered;
+        });
+        opts.appendChild(b);
+      });
+      row.appendChild(p); row.appendChild(opts); row.appendChild(why);
+      quiz.appendChild(row);
+    });
+  }
+  render();
+  document.getElementById('qz-reset').addEventListener('click', render);
+
+  /* ---------- Gráfico: leitura dos valores ---------- */
+  var fig = document.getElementById('fig-bars');
+  var tip = document.getElementById('bars-tip');
+  var svg = document.getElementById('bars');
+  var bars = document.querySelectorAll('#bars .bar');
+  function hide() {
+    tip.hidden = true;
+    Array.prototype.forEach.call(bars, function (b) { b.removeAttribute('opacity'); });
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('#bars .hit'), function (r) {
+    function show() {
+      var d = r.dataset;
+      Array.prototype.forEach.call(bars, function (b) {
+        b.setAttribute('opacity', b.getAttribute('data-k') === d.k ? '1' : '.4');
+      });
+      tip.textContent = '';
+      var strong = document.createElement('b'); strong.textContent = d.n;
+      tip.appendChild(strong);
+      tip.appendChild(document.createTextNode('Pizzaria: ' + d.a + ' · Indústria: ' + d.b));
+      var box = fig.getBoundingClientRect();
+      var pt = svg.createSVGPoint(); pt.x = parseFloat(d.cx); pt.y = parseFloat(d.cy);
+      var scr = pt.matrixTransform(svg.getScreenCTM());
+      tip.style.left = Math.min(Math.max(scr.x - box.left, 140), box.width - 140) + 'px';
+      tip.style.top = (scr.y - box.top + 4) + 'px';
+      tip.hidden = false;
+    }
+    r.addEventListener('pointerenter', show);
+    r.addEventListener('focus', show);
+    r.addEventListener('pointerleave', hide);
+    r.addEventListener('blur', hide);
+  });
+})();
+</script>
+</body>
+</html>
