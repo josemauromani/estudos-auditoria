@@ -204,7 +204,7 @@ tb.append(f'            <tr class="tot"><td>Total</td><td class="c">{GERAL[0]}</
 tb += ['          </tbody>', '        </table>']
 
 # ---- figura 9: estudos da série × seções da norma
-ORDEM = ["pi", "swot", "obj", "proc", "sipoc", "raci", "riscos", "ind", "gut", "par", "ishikawa", "w5h2", "pdca", "auditoria", "nc", "ac", "doc", "comp", "forn", "sat"]
+ORDEM = ["pi", "swot", "obj", "proc", "sipoc", "raci", "riscos", "prod", "ind", "gut", "par", "ishikawa", "w5h2", "pdca", "auditoria", "nc", "ac", "doc", "comp", "forn", "sat"]
 CX = lambda j: 350 + j * 80  # noqa: E731
 HD = {"base": "hd-ink", "p": "hd-p", "d": "hd-d", "c": "hd-c", "a": "hd-a"}
 RY, R0 = 32, 70
@@ -247,6 +247,11 @@ AJUDA = {
     "8.4.2": "Classifica os fornecedores por criticidade e registra o recebimento e as ocorrências.",
     "8.4.3": "Mostra o que o pedido de compra precisa informar ao fornecedor.",
     "8.2.1": "Traz o caminho da reclamação, com prazos de resposta e de solução.",
+    "8.5.1": "Traz o plano de controle: o que conferir em cada etapa, com critério, medição, registro e reação.",
+    "8.5.2": "Mostra a identificação e a situação do produto em cada etapa, e uma busca de rastreabilidade.",
+    "8.5.3": "Lista o que pertence a clientes e a fornecedores, com o cuidado e a comunicação das ocorrências.",
+    "8.5.4": "Registra como o produto é protegido em cada etapa, até a entrega.",
+    "8.5.6": "Traz o registro de mudanças, com a análise, a autorização e as ações decorrentes.",
     "8.7": "Separa a correção da saída não conforme da ação sobre a causa.",
     "9.1.1": "O estudo de Indicadores define o que medir, como e quando. O PDCA compara o resultado com a meta.",
     "9.1.2": "O estudo de Satisfação do cliente traz a pesquisa, o registro de reclamações e a devolutiva. O de Indicadores põe o resultado no painel.",
