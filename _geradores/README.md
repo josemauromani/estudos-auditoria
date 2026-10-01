@@ -40,6 +40,7 @@ Os nomes curtos dos estudos são:
 | `prod` | Controle de produção e de serviço | `Producao/` |
 | `lib` | Liberação e produto não conforme | `Liberacao/` |
 | `ped` | Requisitos do cliente e análise de pedidos | `Pedidos/` |
+| `proj` | Projeto e desenvolvimento | `Projeto/` |
 
 ## Preparação
 
@@ -80,7 +81,7 @@ O estudo de SWOT não tem arquivo de dados: os exemplos estão dentro de `build_
 
 ## Testes
 
-A pasta `testes/` tem os roteiros usados para conferir as fórmulas de dezesseis planilhas. Cada par preenche uma cópia do modelo com dados de teste, inclusive erros propositais, e lê os resultados depois do recálculo.
+A pasta `testes/` tem os roteiros usados para conferir as fórmulas de dezessete planilhas. Cada par preenche uma cópia do modelo com dados de teste, inclusive erros propositais, e lê os resultados depois do recálculo.
 
 ```bash
 PY=_geradores/.venv/bin/python

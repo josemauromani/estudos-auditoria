@@ -1,0 +1,1294 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Projeto e desenvolvimento</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<style>
+:root{
+  --ground:#F3F6F7; --surface:#FFFFFF; --sunk:#E9EEF0; --ink:#16242E; --muted:#566672; --rule:#D3DBE0;
+  --accent:#2B5C8A;
+  --s1:#2A6FB0; --s1-tint:#DCE8F3;
+  --s2:#D19A2E; --s2-tint:#F8EBCB;
+  --s3:#B0413E; --s3-tint:#F5DEDC;
+  --on-s2:#16242E;
+  --p:#2B5C8A; --p-tint:#DCE8F3;
+  --d:#A96A12; --d-tint:#F6E8CF;
+  --c:#1E7B73; --c-tint:#D9EEEB;
+  --a:#B0413E; --a-tint:#F5DEDC;
+  --on-hue:#FFFFFF;
+  --good:#1F7A4D; --good-tint:#DDF1E5;
+  --bad:#B0413E; --bad-tint:#F5DEDC;
+  --display:"Barlow Semi Condensed","Arial Narrow",Arial,sans-serif;
+  --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --ground:#0F171C; --surface:#172229; --sunk:#1E2B33; --ink:#E4EAED; --muted:#9BABB6; --rule:#2B3A44;
+    --accent:#86B7E3;
+  --s1:#4F97DB; --s1-tint:#1B2F42;
+  --s2:#B58E14; --s2-tint:#3A2C12;
+  --s3:#D14B45; --s3-tint:#3D1F1E;
+  --on-s2:#0F171C;
+    --p:#86B7E3; --p-tint:#1B2F42;
+    --d:#E2AC4F; --d-tint:#3A2C12;
+    --c:#5FC6BA; --c-tint:#15332F;
+    --a:#EC8E89; --a-tint:#3D1F1E;
+    --on-hue:#0F171C;
+    --good:#6FCF9B; --good-tint:#163326;
+    --bad:#EC8E89; --bad-tint:#3D1F1E;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --ground:#0F171C; --surface:#172229; --sunk:#1E2B33; --ink:#E4EAED; --muted:#9BABB6; --rule:#2B3A44;
+  --accent:#86B7E3;
+  --s1:#4F97DB; --s1-tint:#1B2F42;
+  --s2:#B58E14; --s2-tint:#3A2C12;
+  --s3:#D14B45; --s3-tint:#3D1F1E;
+  --on-s2:#0F171C;
+  --p:#86B7E3; --p-tint:#1B2F42;
+  --d:#E2AC4F; --d-tint:#3A2C12;
+  --c:#5FC6BA; --c-tint:#15332F;
+  --a:#EC8E89; --a-tint:#3D1F1E;
+  --on-hue:#0F171C;
+  --good:#6FCF9B; --good-tint:#163326;
+  --bad:#EC8E89; --bad-tint:#3D1F1E;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--ground);color:var(--ink);font:400 16px/1.65 var(--body);-webkit-text-size-adjust:100%}
+a{color:var(--accent);text-underline-offset:3px}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.page{max-width:1180px;margin-inline:auto;padding-inline:20px;padding-block:36px 80px}
+
+/* Cabeçalho */
+.mast{display:flex;flex-direction:column;gap:18px;padding-bottom:32px;border-bottom:1px solid var(--rule)}
+.tiles{display:flex;gap:6px}
+.tiles span{width:44px;height:44px;display:grid;place-items:center;font:700 24px/1 var(--display);color:var(--on-hue)}
+.tiles .p{background:var(--p)} .tiles .d{background:var(--d)} .tiles .c{background:var(--c)} .tiles .a{background:var(--a)}
+h1{font:700 clamp(2.3rem,6vw,3.6rem)/1.02 var(--display);letter-spacing:-.01em;margin:0;text-wrap:balance}
+.lead{font-size:1.15rem;line-height:1.55;max-width:62ch;margin:0;color:var(--ink)}
+.meta{display:flex;flex-direction:row;flex-wrap:wrap;gap:6px 22px;font:400 .8rem/1.4 var(--mono);color:var(--muted);margin:0;padding:0;list-style:none}
+
+/* Estrutura */
+.layout{display:grid;grid-template-columns:minmax(0,1fr);gap:32px;padding-top:32px}
+.toc{font-size:.92rem}
+.toc h2{font:500 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+.toc ol{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:2px 20px;counter-reset:toc}
+.toc li{counter-increment:toc}
+.toc a{display:flex;gap:10px;padding:5px 0;color:var(--ink);text-decoration:none;line-height:1.35}
+.toc a::before{content:counter(toc,decimal-leading-zero);font:400 .75rem/1.7 var(--mono);color:var(--muted)}
+.toc a:hover{color:var(--accent);text-decoration:underline}
+@media (min-width:1020px){
+  .layout{grid-template-columns:200px minmax(0,1fr);gap:64px}
+  .toc{position:sticky;top:calc(env(safe-area-inset-top,0px) + 24px);align-self:start}
+  .toc ol{grid-template-columns:1fr}
+}
+main{display:flex;flex-direction:column;gap:72px;min-width:0}
+section{display:flex;flex-direction:column;gap:20px;scroll-margin-top:24px}
+.eyebrow{font:500 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0}
+h2{font:700 clamp(1.7rem,4vw,2.2rem)/1.1 var(--display);margin:0;text-wrap:balance}
+h3{font:600 1.3rem/1.2 var(--display);margin:12px 0 0;text-wrap:balance}
+h4{font:600 .95rem/1.3 var(--body);margin:0}
+p{margin:0}
+section > p, section > ul, section > ol, section > h3{max-width:68ch}
+ul,ol{margin:0;padding-left:1.25em;display:flex;flex-direction:column;gap:6px}
+strong{font-weight:600}
+code{font:400 .88em var(--mono);background:var(--sunk);padding:1px 5px;border-radius:3px}
+
+/* Letras coloridas no texto */
+.k{display:inline-grid;place-items:center;width:1.45em;height:1.45em;font:700 .85em/1 var(--display);color:var(--on-hue);vertical-align:.05em}
+.k.p{background:var(--p)} .k.d{background:var(--d)} .k.c{background:var(--c)} .k.a{background:var(--a)}
+
+/* Figuras */
+figure{margin:0;display:flex;flex-direction:column;gap:10px;position:relative}
+.scroll{overflow-x:auto;background:var(--surface);border:1px solid var(--rule);padding:18px}
+.scroll svg{display:block;width:100%;min-width:820px;height:auto;color:var(--ink)}
+figcaption{font-size:.86rem;line-height:1.5;color:var(--muted);max-width:72ch}
+figcaption b{color:var(--ink);font-weight:600}
+svg text{font-family:var(--body);fill:var(--ink)}
+svg .disp{font-family:var(--display);font-weight:700}
+svg .mono{font-family:var(--mono);letter-spacing:.08em}
+svg .on{fill:var(--on-hue)}
+svg .mu{fill:var(--muted)}
+svg .b{font-weight:600}
+svg .ln{stroke:var(--ink);stroke-width:1.5;fill:none}
+svg .ln-mu{stroke:var(--muted);stroke-width:1.5;fill:none}
+svg .ln-bold{stroke:var(--ink);stroke-width:3;fill:none;stroke-linejoin:round;stroke-linecap:round}
+svg .dash{stroke-dasharray:5 4}
+svg .ah{fill:var(--ink)} svg .ah-mu{fill:var(--muted)}
+svg .bx{fill:var(--surface);stroke:var(--rule);stroke-width:1.5}
+svg .bx-ink{fill:var(--ink);stroke:var(--ink)}
+svg .t-ground{fill:var(--ground)}
+svg .bx-out{fill:none;stroke:var(--muted);stroke-width:1.5;stroke-dasharray:5 4}
+svg .bx-p{fill:var(--p-tint);stroke:var(--p);stroke-width:1.5} svg .hd-p{fill:var(--p)}
+svg .bx-d{fill:var(--d-tint);stroke:var(--d);stroke-width:1.5} svg .hd-d{fill:var(--d)}
+svg .bx-c{fill:var(--c-tint);stroke:var(--c);stroke-width:1.5} svg .hd-c{fill:var(--c)}
+svg .bx-a{fill:var(--a-tint);stroke:var(--a);stroke-width:1.5} svg .hd-a{fill:var(--a)}
+svg .gap{stroke:var(--surface);stroke-width:4}
+svg .gap2{stroke:var(--surface);stroke-width:2}
+svg .hub{fill:var(--surface)}
+
+/* Gráfico */
+svg .grid{stroke:var(--rule);stroke-width:1}
+svg .band{fill:var(--sunk)}
+svg .series{stroke:var(--accent);stroke-width:2;fill:none;stroke-linejoin:round;stroke-linecap:round}
+svg .pt{fill:var(--accent);stroke:var(--surface);stroke-width:2}
+svg .pt.on-hit{stroke:var(--ink)}
+svg .goal{stroke:var(--muted);stroke-width:1.5;stroke-dasharray:6 4;fill:none}
+svg .xh{stroke:var(--muted);stroke-width:1}
+svg .hit{fill:transparent;cursor:crosshair;outline:none}
+svg .root{fill:var(--accent);stroke:var(--surface);stroke-width:2}
+.tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--ground);padding:6px 10px;font-size:.78rem;line-height:1.4;transform:translate(-50%,calc(-100% - 14px));white-space:nowrap;z-index:2}
+.tip b{display:block;font:600 1.05rem/1.2 var(--body)}
+details.data{font-size:.88rem}
+details.data summary{cursor:pointer;font:400 .82rem var(--mono);color:var(--muted);padding:4px 0}
+details.data .tbl{margin-top:8px}
+details.data table{min-width:420px}
+
+/* Tabelas */
+.tbl{overflow-x:auto;border:1px solid var(--rule);background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:780px;font-size:.88rem;line-height:1.4}
+th,td{padding:9px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--rule)}
+tr:last-child > td{border-bottom:0}
+thead th{font:600 .8rem/1.3 var(--body);background:var(--sunk)}
+td.num{font-variant-numeric:tabular-nums;white-space:nowrap;font-family:var(--mono);font-size:.82rem}
+
+/* Situações */
+.chip{display:inline-block;padding:2px 8px;font:600 .76rem/1.45 var(--body);color:var(--on-hue);white-space:nowrap}
+.chip.s1{background:var(--s1)} .chip.s2{background:var(--s2);color:var(--on-s2)} .chip.s3{background:var(--s3)}
+.chip.sl{background:var(--sunk);color:var(--ink);box-shadow:inset 0 0 0 1px var(--rule)}
+svg .hd-ink{fill:var(--ink)}
+svg .f1{fill:var(--s1)} svg .f2{fill:var(--s2)} svg .f3{fill:var(--s3)} svg .f0{fill:var(--muted)}
+svg .o1{fill:var(--surface);stroke:var(--s1);stroke-width:2} svg .o2{fill:var(--surface);stroke:var(--s2);stroke-width:2} svg .o3{fill:var(--surface);stroke:var(--s3);stroke-width:2}
+svg .o0{fill:var(--surface);stroke:var(--muted);stroke-width:2}
+svg .bx-s1{fill:var(--s1-tint);stroke:var(--s1);stroke-width:1.5} svg .bx-s2{fill:var(--s2-tint);stroke:var(--s2);stroke-width:1.5} svg .bx-s3{fill:var(--s3-tint);stroke:var(--s3);stroke-width:1.5}
+svg .lk1{stroke:var(--s1);stroke-width:2} svg .lk2{stroke:var(--s2);stroke-width:2}
+svg .halo{paint-order:stroke;stroke:var(--surface);stroke-width:5px;stroke-linejoin:round}
+svg .hit:focus-visible{stroke:var(--accent);stroke-width:2}
+
+/* Tabelas dos exemplos */
+table.aud{font-size:.8rem;min-width:960px;line-height:1.4}
+table.aud th, table.aud td{padding:8px 9px}
+table.aud td.n{white-space:nowrap;font-weight:600;color:var(--muted)}
+table.aud td.c, table.aud th.c{text-align:center;font-variant-numeric:tabular-nums}
+table.aud td.no{background:var(--s3-tint)}
+table.aud td small, table.aud th small{display:block;color:var(--muted);font-size:.76rem;margin-top:3px;font-weight:400}
+table.aud caption{caption-side:top;text-align:left;padding:10px 12px;font:500 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);background:var(--sunk)}
+
+/* Ficha do projeto (acima de cada exemplo) */
+.ficha{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:0;border:1px solid var(--rule);background:var(--surface)}
+.ficha div{padding:12px 14px;border-right:1px solid var(--rule);border-bottom:1px solid var(--rule);margin:0 -1px -1px 0}
+.ficha dt{font:500 .68rem/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.ficha dd{margin:0;font-size:.9rem;line-height:1.4}
+dl{margin:0}
+
+/* Blocos */
+.pair{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.box{background:var(--surface);border:1px solid var(--rule);padding:18px 20px;display:flex;flex-direction:column;gap:10px}
+.box h4{font:600 1.1rem/1.2 var(--display)}
+.box ul{font-size:.93rem}
+.note{background:var(--sunk);padding:16px 20px;max-width:72ch;font-size:.94rem;display:flex;flex-direction:column;gap:6px}
+.note h4{font:500 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+
+/* Passo a passo */
+.steps{list-style:none;padding:0;counter-reset:st;gap:0;max-width:none;border-top:1px solid var(--rule)}
+.steps li{counter-increment:st;display:grid;grid-template-columns:44px minmax(0,1fr);gap:4px 12px;padding:16px 0;border-bottom:1px solid var(--rule)}
+.steps li::before{content:counter(st);font:700 1.7rem/1 var(--display);color:var(--muted);grid-row:span 2}
+.steps h4{font:600 1.1rem/1.25 var(--display)}
+.steps p{font-size:.95rem;max-width:64ch;grid-column:2}
+
+/* Erros comuns */
+.errs{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:0 40px;border-top:1px solid var(--rule)}
+.errs div{padding:16px 16px 16px 0;border-bottom:1px solid var(--rule);display:flex;flex-direction:column;gap:4px}
+.errs h4{font:600 1.05rem/1.25 var(--display)}
+.errs p{font-size:.92rem}
+.errs .fix{color:var(--muted)}
+.errs .fix b{color:var(--ink);font-weight:600}
+
+/* Checklist */
+.check{list-style:none;padding:0;gap:0;max-width:none;border:1px solid var(--rule);background:var(--surface)}
+.check li{border-bottom:1px solid var(--rule)}
+.check li:last-child{border-bottom:0}
+.check label{display:grid;grid-template-columns:22px minmax(0,1fr);gap:12px;padding:11px 16px;cursor:pointer;font-size:.94rem;align-items:start}
+.check input{width:18px;height:18px;margin:3px 0 0;accent-color:var(--c)}
+.check input:checked + span{color:var(--muted);text-decoration:line-through}
+.bar{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;font:400 .82rem var(--mono);color:var(--muted)}
+.bar b{color:var(--ink);font-weight:500}
+
+/* Exercício */
+.quiz{display:flex;flex-direction:column;gap:0;border:1px solid var(--rule);background:var(--surface)}
+.q{display:grid;grid-template-columns:minmax(0,1fr);gap:10px;padding:14px 16px;border-bottom:1px solid var(--rule)}
+.q:last-child{border-bottom:0}
+@media (min-width:720px){.q{grid-template-columns:minmax(0,1fr) auto;align-items:center}}
+.q p{font-size:.95rem}
+.q .why{grid-column:1/-1;font-size:.86rem;color:var(--muted)}
+.q .why b{font-weight:600}
+.q .why.ok b{color:var(--good)} .q .why.no b{color:var(--bad)}
+.opts{display:flex;gap:6px}
+.opts button{width:40px;height:40px;border:1.5px solid var(--rule);background:var(--surface);color:var(--ink);font:700 1.1rem/1 var(--display);cursor:pointer;border-radius:0}
+.opts button:hover:not(:disabled){border-color:var(--ink)}
+.opts button:disabled{cursor:default;opacity:.45}
+.opts button.right{background:var(--good-tint);border-color:var(--good);color:var(--good);opacity:1}
+.opts button.wrong{background:var(--bad-tint);border-color:var(--bad);color:var(--bad);opacity:1}
+.btn{border:1.5px solid var(--ink);background:transparent;color:var(--ink);font:500 .82rem var(--mono);padding:7px 14px;cursor:pointer;border-radius:0}
+.btn:hover{background:var(--ink);color:var(--ground)}
+
+/* Glossário */
+.gloss{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:0 40px;border-top:1px solid var(--rule)}
+.gloss div{padding:12px 0;border-bottom:1px solid var(--rule)}
+.gloss dt{font:600 1.02rem/1.3 var(--display)}
+.gloss dd{margin:2px 0 0;font-size:.9rem;color:var(--muted)}
+footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);font-size:.84rem;color:var(--muted);max-width:72ch}
+
+.quiz .opts{flex-wrap:wrap}
+.quiz .opts button{width:auto;min-width:40px;padding:0 11px;font-size:1rem}
+@media (min-width:720px){.q{grid-template-columns:minmax(0,1fr) auto}}
+</style>
+</head>
+<body>
+<div class="page" lang="pt-BR">
+
+<header class="mast">
+  <div class="tiles" aria-hidden="true"><span class="p">E</span><span class="d">S</span><span class="c">V</span></div>
+  <h1>Projeto e desenvolvimento na prática</h1>
+  <p class="lead">Um guia de estudo para planejar o desenvolvimento de um produto ou serviço, escrever as entradas, conferir as saídas, validar no uso real e controlar as mudanças até a liberação para a produção.</p>
+  <ul class="meta">
+    <li>Treinamento autoinstrucional</li>
+    <li>13 módulos</li>
+    <li>Leitura de cerca de 50 minutos</li>
+    <li>3 exemplos resolvidos e 2 exercícios</li>
+  </ul>
+</header>
+
+<div class="layout">
+
+<nav class="toc" aria-label="Sumário">
+  <h2>Sumário</h2>
+  <ol>
+    <li><a href="#o-que-e">O que é</a></li>
+    <li><a href="#quando">Quando usar</a></li>
+    <li><a href="#como">Como construir</a></li>
+    <li><a href="#entradas">As entradas</a></li>
+    <li><a href="#controles">Verificar, validar e analisar</a></li>
+    <li><a href="#exemplos">Exemplos resolvidos</a></li>
+    <li><a href="#leitura">Ler o andamento</a></li>
+    <li><a href="#erros">Erros comuns</a></li>
+    <li><a href="#ferramentas">O projeto e outras ferramentas</a></li>
+    <li><a href="#iso">Nas normas ISO</a></li>
+    <li><a href="#reuniao">A reunião de análise crítica</a></li>
+    <li><a href="#pratique">Pratique</a></li>
+    <li><a href="#planilha">A planilha de apoio</a></li>
+    <li><a href="#glossario">Glossário</a></li>
+  </ol>
+</nav>
+
+<main>
+
+<!-- ============================ MÓDULO 1 ============================ -->
+<section id="o-que-e">
+  <p class="eyebrow">Módulo 1</p>
+  <h2>O que é</h2>
+  <p>Projeto e desenvolvimento é o caminho entre uma necessidade e um produto, ou um serviço, que a organização sabe produzir de forma repetida. Um sabor novo no cardápio, um filme para um uso que a fábrica nunca atendeu, um serviço novo de entrega: em todos, alguém decide o que o produto precisa atender, transforma isso em uma receita ou uma especificação e confere se deu certo antes de vender.</p>
+  <p>As letras do título resumem o caminho: <span class="k p">E</span> as entradas, o que o projeto precisa atender; <span class="k d">S</span> as saídas, o que o projeto entrega para a produção; e <span class="k c">V</span> a validação, a prova de que o produto serve para o uso pretendido.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 300" role="img" aria-label="O projeto em forma de V. À esquerda, de cima para baixo: a necessidade e o uso pretendido viram as entradas do projeto. Embaixo, o desenvolvimento transforma as entradas em saídas. À direita, de baixo para cima: as saídas viram o produto. A verificação compara as saídas com as entradas. A validação compara o produto com o uso pretendido. As análises críticas acompanham cada passagem.">
+        <defs><marker id="a1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker><marker id="a1m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah-mu" d="M0 0 L10 5 L0 10 z"/></marker></defs>
+        <rect class="bx" x="20" y="20" width="240" height="64"/>
+        <text class="b" x="32" y="44" font-size="12">Necessidade e uso pretendido</text>
+        <text class="mu" x="32" y="61" font-size="10.5">Para que o cliente vai usar, e em que</text>
+        <text class="mu" x="32" y="74" font-size="10.5">condições</text>
+        <rect class="bx" x="640" y="20" width="240" height="64"/>
+        <text class="b" x="652" y="44" font-size="12">Produto, no uso real</text>
+        <text class="mu" x="652" y="61" font-size="10.5">O que o cliente recebe e usa</text>
+        <rect class="bx-s2" x="110" y="128" width="220" height="64"/>
+        <text class="b" x="122" y="152" font-size="12">Entradas do projeto</text>
+        <text class="mu" x="122" y="169" font-size="10.5">O que o projeto precisa atender</text>
+        <rect class="bx-s2" x="570" y="128" width="220" height="64"/>
+        <text class="b" x="582" y="152" font-size="12">Saídas do projeto</text>
+        <text class="mu" x="582" y="169" font-size="10.5">Especificação, receita, critérios</text>
+        <rect class="bx-ink" x="340" y="214" width="220" height="56"/>
+        <text class="b t-ground" x="352" y="238" font-size="12">Desenvolver</text>
+        <text class="t-ground" x="352" y="255" font-size="10.5">Transformar as entradas em saídas</text>
+        <path class="ln" d="M140 85 L180 126" marker-end="url(#a1)"/>
+        <path class="ln" d="M240 193 L338 232" marker-end="url(#a1)"/>
+        <path class="ln" d="M561 232 L660 194" marker-end="url(#a1)"/>
+        <path class="ln" d="M720 127 L760 86" marker-end="url(#a1)"/>
+        <line class="lk1" x1="331" y1="160" x2="569" y2="160"/>
+        <rect class="f1" x="378" y="146" width="144" height="28"/><text class="b on" x="450" y="165" font-size="12" text-anchor="middle">VERIFICAÇÃO</text>
+        <text class="mu halo" x="450" y="140" font-size="10.5" text-anchor="middle">as saídas atendem às entradas?</text>
+        <line class="lk2" x1="261" y1="52" x2="639" y2="52"/>
+        <rect class="f2" x="384" y="38" width="132" height="28"/><text class="b" x="450" y="57" font-size="12" text-anchor="middle" style="fill:var(--on-s2)">VALIDAÇÃO</text>
+        <text class="mu halo" x="450" y="86" font-size="10.5" text-anchor="middle">o produto serve para o uso pretendido?</text>
+        <text x="450" y="292" font-size="11.5" text-anchor="middle">A verificação olha para o que foi escrito. A validação olha para o que o cliente vai viver.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 1.</b> O projeto em forma de V. A verificação compara o que foi feito com o que foi escrito; a validação compara o produto com o uso real.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Elemento</th><th style="width:40%">O que é</th><th>Exemplo</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Entrada</strong></td><td>Um requisito que o projeto precisa atender.</td><td>Queda de dardo de pelo menos 300 g a -18 °C.</td></tr>
+        <tr><td><strong>Saída</strong></td><td>O que o projeto entrega para a produção e para o uso.</td><td>A especificação, a receita de extrusão, o critério de aceitação.</td></tr>
+        <tr><td><strong>Análise crítica</strong></td><td>A parada para decidir se o projeto segue, muda ou para.</td><td>A reunião antes do lote de teste.</td></tr>
+        <tr><td><strong>Verificação</strong></td><td>A conferência de que as saídas atendem às entradas.</td><td>Ensaiar o lote de teste e comparar com a especificação.</td></tr>
+        <tr><td><strong>Validação</strong></td><td>A conferência de que o produto serve para o uso pretendido.</td><td>Embalar, congelar e transportar no cliente por três semanas.</td></tr>
+        <tr><td><strong>Mudança de projeto</strong></td><td>Qualquer alteração em uma entrada ou em uma saída já aprovada.</td><td>Trocar a resina de fornecedor.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 2 ============================ -->
+<section id="quando">
+  <p class="eyebrow">Módulo 2</p>
+  <h2>Quando usar</h2>
+  <p>O requisito vale quando a organização define as características do que vai fornecer. Quem só produz pelo desenho do cliente, sem decidir nada sobre o produto, pode não ter projeto e desenvolvimento, e declara isso no escopo, com a justificativa.</p>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:28%">Momento</th><th style="width:38%">O que fazer</th><th>Resultado</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Produto ou serviço novo</strong></td><td>Abrir o projeto, com plano, entradas e controles.</td><td>O desenvolvimento tem dono, prazo e critério.</td></tr>
+        <tr><td><strong>Uso novo para um produto conhecido</strong></td><td>Tratar como projeto: o uso traz entradas novas.</td><td>O filme comum não vai ao freezer sem ser validado para isso.</td></tr>
+        <tr><td><strong>Fim de cada fase</strong></td><td>Analisar criticamente: o projeto segue, muda ou para?</td><td>O problema aparece antes de custar o lote.</td></tr>
+        <tr><td><strong>Saída pronta</strong></td><td>Verificar contra as entradas, com registro.</td><td>A especificação atende ao que foi pedido.</td></tr>
+        <tr><td><strong>Antes de liberar</strong></td><td>Validar no uso real, ou o mais perto dele.</td><td>O produto funciona onde o cliente vai usar.</td></tr>
+        <tr><td><strong>Qualquer mudança</strong></td><td>Analisar o impacto, autorizar e verificar de novo.</td><td>O que foi provado continua provado.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pair">
+    <div class="box">
+      <h4>É projeto e desenvolvimento</h4>
+      <ul>
+        <li>Um sabor novo, com receita, custo e tempo de forno a definir.</li>
+        <li>Um filme para um uso que a fábrica não atendia.</li>
+        <li>Um serviço novo: entrega agendada, assinatura, retirada.</li>
+        <li>Uma mudança grande em um produto que já existe.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h4>Pode não ser</h4>
+      <ul>
+        <li>Fabricar pelo desenho e pela especificação do cliente, sem alterar nada.</li>
+        <li>Revender um produto pronto, como ele vem.</li>
+        <li>O ajuste de rotina previsto no plano de controle.</li>
+        <li>Nesses casos, a exclusão do 8.3 é escrita no escopo, com o motivo.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 3 ============================ -->
+<section id="como">
+  <p class="eyebrow">Módulo 3</p>
+  <h2>Como construir</h2>
+  <p>O tamanho do controle acompanha o tamanho do projeto. Um sabor novo cabe em uma página; um material novo para alimentos congelados pede ensaios, laudos e o cliente junto. O erro mais comum é o contrário: o projeto grande tratado como teste informal, porque “sempre foi assim”.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 222" role="img" aria-label="As cinco etapas do trabalho. Planejar: Etapas, responsáveis, prazos, análises críticas, verificações e validações. Definir as entradas: Cliente, desempenho, lei, normas, projetos anteriores, falhas e a organização. Desenvolver as saídas: Especificação, receita, critérios de aceitação: o que a produção vai usar. Verificar e validar: Saídas contra entradas, e produto contra o uso. Analisar criticamente cada resultado. Liberar e controlar mudanças: Liberar só com a validação aprovada. Toda mudança é analisada e verificada de novo. A validação reprovada devolve o trabalho às entradas.">
+        <defs><marker id="a2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker><marker id="a2m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah-mu" d="M0 0 L10 5 L0 10 z"/></marker></defs>
+        <rect class="bx" x="12" y="16" width="164" height="140"/>
+        <text class="mono mu" x="24" y="36" font-size="10">ETAPA 1</text>
+        <text class="b" x="24" y="58" font-size="12.5">Planejar</text>
+        <text x="24" y="80.0" font-size="10.5">Etapas, responsáveis,</text>
+        <text x="24" y="94.5" font-size="10.5">prazos, análises críticas,</text>
+        <text x="24" y="109.0" font-size="10.5">verificações e validações.</text>
+        <line class="ln" x1="177" y1="78" x2="188" y2="78" marker-end="url(#a2)"/>
+        <rect class="bx-s2" x="190" y="16" width="164" height="140"/>
+        <text class="mono mu" x="202" y="36" font-size="10">ETAPA 2</text>
+        <text class="b" x="202" y="58" font-size="12.5">Definir as entradas</text>
+        <text x="202" y="80.0" font-size="10.5">Cliente, desempenho, lei,</text>
+        <text x="202" y="94.5" font-size="10.5">normas, projetos</text>
+        <text x="202" y="109.0" font-size="10.5">anteriores, falhas e a</text>
+        <text x="202" y="123.5" font-size="10.5">organização.</text>
+        <line class="ln" x1="355" y1="78" x2="366" y2="78" marker-end="url(#a2)"/>
+        <rect class="bx" x="368" y="16" width="164" height="140"/>
+        <text class="mono mu" x="380" y="36" font-size="10">ETAPA 3</text>
+        <text class="b" x="380" y="58" font-size="12.5">Desenvolver as saídas</text>
+        <text x="380" y="80.0" font-size="10.5">Especificação, receita,</text>
+        <text x="380" y="94.5" font-size="10.5">critérios de aceitação: o</text>
+        <text x="380" y="109.0" font-size="10.5">que a produção vai usar.</text>
+        <line class="ln" x1="533" y1="78" x2="544" y2="78" marker-end="url(#a2)"/>
+        <rect class="bx-s1" x="546" y="16" width="164" height="140"/>
+        <text class="mono mu" x="558" y="36" font-size="10">ETAPA 4</text>
+        <text class="b" x="558" y="58" font-size="12.5">Verificar e validar</text>
+        <text x="558" y="80.0" font-size="10.5">Saídas contra entradas, e</text>
+        <text x="558" y="94.5" font-size="10.5">produto contra o uso.</text>
+        <text x="558" y="109.0" font-size="10.5">Analisar criticamente cada</text>
+        <text x="558" y="123.5" font-size="10.5">resultado.</text>
+        <line class="ln" x1="711" y1="78" x2="722" y2="78" marker-end="url(#a2)"/>
+        <rect class="bx-ink" x="724" y="16" width="164" height="140"/>
+        <text class="mono t-ground" x="736" y="36" font-size="10">ETAPA 5</text>
+        <text class="b t-ground" x="736" y="58" font-size="12.5">Liberar e controlar</text>
+        <text class="b t-ground" x="736" y="73" font-size="12.5">mudanças</text>
+        <text class="t-ground" x="736" y="92.0" font-size="10.5">Liberar só com a validação</text>
+        <text class="t-ground" x="736" y="106.5" font-size="10.5">aprovada. Toda mudança é</text>
+        <text class="t-ground" x="736" y="121.0" font-size="10.5">analisada e verificada de</text>
+        <text class="t-ground" x="736" y="135.5" font-size="10.5">novo.</text>
+        <path class="ln-mu dash" d="M628.0 158 V186 H272.0 V162" marker-end="url(#a2m)"/>
+        <text class="mu halo" x="450.0" y="190" font-size="11" text-anchor="middle">a validação pode revelar uma entrada que faltava</text>
+        <text x="450" y="214" font-size="11.5" text-anchor="middle">As análises críticas acontecem ao fim de cada etapa: o projeto segue, muda ou para.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 2.</b> As cinco etapas. A volta tracejada é a mais importante: a validação reprovada mostra o que as entradas não diziam.</figcaption>
+  </figure>
+
+  <h3>Passo a passo</h3>
+  <ol class="steps">
+    <li><h4>Abra o projeto, com responsável e objetivo</h4><p>Um código, um nome, o cliente ou o usuário, a data pretendida. O responsável conduz; quem aprova está escrito.</p></li>
+    <li><h4>Faça o plano</h4><p>As etapas, com responsáveis e prazos, e onde ficam as análises críticas, as verificações e as validações. Diga quem participa: produção, qualidade, cliente.</p></li>
+    <li><h4>Escreva as entradas</h4><p>Pelos sete tipos: cliente, desempenho, lei, normas, projetos anteriores, falhas potenciais e a organização. Cada uma clara, mensurável e sem conflito com as outras.</p></li>
+    <li><h4>Ligue cada entrada a uma saída e a uma verificação</h4><p>Onde o projeto atende à entrada, e como se confere. Essa ligação é a matriz de rastreabilidade do projeto.</p></li>
+    <li><h4>Desenvolva as saídas</h4><p>A especificação, a receita, as instruções, os critérios de aceitação e o que é essencial para o uso seguro. É o que a produção vai usar.</p></li>
+    <li><h4>Verifique e analise criticamente</h4><p>As saídas contra as entradas. O que não atende vira ação, e a análise crítica decide se o projeto segue.</p></li>
+    <li><h4>Valide no uso real</h4><p>Com o cliente ou o usuário, nas condições de uso. A validação pode reprovar o que a verificação aprovou, e isso é um bom resultado.</p></li>
+    <li><h4>Libere e controle as mudanças</h4><p>Só com a validação aprovada e as entradas verificadas. Depois disso, toda mudança é analisada, autorizada e verificada de novo.</p></li>
+  </ol>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:26%">Papel</th><th style="width:28%">Quem costuma ser</th><th>O que faz</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Responsável pelo projeto</strong></td><td>Engenharia, ou o pizzaiolo líder.</td><td>Planeja, conduz e mantém o registro.</td></tr>
+        <tr><td><strong>Quem aprova</strong></td><td>A direção, ou o gerente.</td><td>Decide nas análises críticas e libera para a produção.</td></tr>
+        <tr><td><strong>Quem verifica</strong></td><td>Laboratório, qualidade, quem conhece o critério.</td><td>Confere as saídas contra as entradas.</td></tr>
+        <tr><td><strong>Quem valida</strong></td><td>O cliente ou o usuário, com a organização.</td><td>Usa o produto nas condições reais e diz se serve.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 4 ============================ -->
+<section id="entradas">
+  <p class="eyebrow">Módulo 4</p>
+  <h2>As entradas</h2>
+  <p>A qualidade do projeto é decidida nas entradas. Uma entrada que falta não é verificada, e o produto sai “conforme” com um defeito que ninguém procurou. A norma pede que as entradas sejam adequadas, completas e sem ambiguidade, e que os conflitos entre elas sejam resolvidos.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 318" role="img" aria-label="Os sete tipos de entrada de um projeto, com exemplos do filme para congelados. Cliente: O que o cliente pede e o que o uso dele exige. Exemplo: Bobinas de 600 mm, para a embaladora do cliente. Funcional ou de desempenho: O que o produto precisa fazer, e com que desempenho. Exemplo: Resistir ao impacto a -18 °C. Legal ou regulamentar: O que a lei exige do produto. Exemplo: Declaração de conformidade para contato com alimentos. Norma ou código: Normas técnicas e códigos que a organização decidiu seguir. Exemplo: O método de ensaio de queda de dardo. Projeto anterior: O que se aprendeu em projetos parecidos. Exemplo: O perfil de extrusão do filme de 40 µm. Falha potencial: O que pode dar errado no uso, e precisa ser evitado. Exemplo: Furo no pacote pelas pontas dos vegetais congelados. Da organização: O que a própria organização exige: custo, capacidade, insumos. Exemplo: Velocidade mínima de 40 m/min na extrusora.">
+        <rect class="bx" x="10" y="10" width="214" height="144"/>
+        <rect class="hd-p" x="10" y="10" width="214" height="30"/>
+        <text class="b on" x="22" y="30" font-size="11.5">Cliente</text>
+        <text x="22" y="60" font-size="11">O que o cliente pede e o que o</text>
+        <text x="22" y="74" font-size="11">uso dele exige.</text>
+        <text class="mono mu" x="22" y="96" font-size="9.5">NO FILME PARA CONGELADOS</text>
+        <text class="mu" x="22" y="112.0" font-size="10.5">Bobinas de 600 mm, para a</text>
+        <text class="mu" x="22" y="125.5" font-size="10.5">embaladora do cliente.</text>
+        <rect class="bx" x="232" y="10" width="214" height="144"/>
+        <rect class="hd-p" x="232" y="10" width="214" height="30"/>
+        <text class="b on" x="244" y="30" font-size="11.5">Funcional ou de desempenho</text>
+        <text x="244" y="60" font-size="11">O que o produto precisa fazer, e</text>
+        <text x="244" y="74" font-size="11">com que desempenho.</text>
+        <text class="mono mu" x="244" y="96" font-size="9.5">NO FILME PARA CONGELADOS</text>
+        <text class="mu" x="244" y="112.0" font-size="10.5">Resistir ao impacto a -18 °C.</text>
+        <rect class="bx" x="454" y="10" width="214" height="144"/>
+        <rect class="hd-c" x="454" y="10" width="214" height="30"/>
+        <text class="b on" x="466" y="30" font-size="11.5">Legal ou regulamentar</text>
+        <text x="466" y="60" font-size="11">O que a lei exige do produto.</text>
+        <text class="mono mu" x="466" y="82" font-size="9.5">NO FILME PARA CONGELADOS</text>
+        <text class="mu" x="466" y="98.0" font-size="10.5">Declaração de conformidade para</text>
+        <text class="mu" x="466" y="111.5" font-size="10.5">contato com alimentos.</text>
+        <rect class="bx" x="676" y="10" width="214" height="144"/>
+        <rect class="hd-c" x="676" y="10" width="214" height="30"/>
+        <text class="b on" x="688" y="30" font-size="11.5">Norma ou código</text>
+        <text x="688" y="60" font-size="11">Normas técnicas e códigos que a</text>
+        <text x="688" y="74" font-size="11">organização decidiu seguir.</text>
+        <text class="mono mu" x="688" y="96" font-size="9.5">NO FILME PARA CONGELADOS</text>
+        <text class="mu" x="688" y="112.0" font-size="10.5">O método de ensaio de queda de</text>
+        <text class="mu" x="688" y="125.5" font-size="10.5">dardo.</text>
+        <rect class="bx" x="10" y="164" width="288" height="144"/>
+        <rect class="hd-ink" x="10" y="164" width="288" height="30"/>
+        <text class="b t-ground" x="22" y="184" font-size="11.5">Projeto anterior</text>
+        <text x="22" y="214" font-size="11">O que se aprendeu em projetos parecidos.</text>
+        <text class="mono mu" x="22" y="236" font-size="9.5">NO FILME PARA CONGELADOS</text>
+        <text class="mu" x="22" y="252.0" font-size="10.5">O perfil de extrusão do filme de 40 µm.</text>
+        <rect class="bx" x="306" y="164" width="288" height="144"/>
+        <rect class="hd-a" x="306" y="164" width="288" height="30"/>
+        <text class="b on" x="318" y="184" font-size="11.5">Falha potencial</text>
+        <text x="318" y="214" font-size="11">O que pode dar errado no uso, e precisa ser</text>
+        <text x="318" y="228" font-size="11">evitado.</text>
+        <text class="mono mu" x="318" y="250" font-size="9.5">NO FILME PARA CONGELADOS</text>
+        <text class="mu" x="318" y="266.0" font-size="10.5">Furo no pacote pelas pontas dos vegetais</text>
+        <text class="mu" x="318" y="279.5" font-size="10.5">congelados.</text>
+        <rect class="bx" x="602" y="164" width="288" height="144"/>
+        <rect class="hd-d" x="602" y="164" width="288" height="30"/>
+        <text class="b on" x="614" y="184" font-size="11.5">Da organização</text>
+        <text x="614" y="214" font-size="11">O que a própria organização exige: custo,</text>
+        <text x="614" y="228" font-size="11">capacidade, insumos.</text>
+        <text class="mono mu" x="614" y="250" font-size="9.5">NO FILME PARA CONGELADOS</text>
+        <text class="mu" x="614" y="266.0" font-size="10.5">Velocidade mínima de 40 m/min na extrusora.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 3.</b> Os sete tipos de entrada, com exemplos do filme para congelados. Passar pelos sete é o jeito de não esquecer nenhum.</figcaption>
+  </figure>
+
+  <div class="pair">
+    <div class="box">
+      <h4>Entrada bem escrita</h4>
+      <ul>
+        <li>“Queda de dardo de pelo menos 300 g a -18 °C.”</li>
+        <li>“Tempo de forno de até 7 minutos, como o das outras pizzas.”</li>
+        <li>“Custo de insumos de até 30% do preço de venda.”</li>
+        <li>Tem número, condição e um jeito de conferir.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h4>Entrada mal escrita</h4>
+      <ul>
+        <li>“Filme resistente.”</li>
+        <li>“Sabor agradável.”</li>
+        <li>“Custo competitivo.”</li>
+        <li>“Atender ao cliente.”</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="note">
+    <h4>A entrada que só a validação revela</h4>
+    <p>Nenhuma lista de entradas é perfeita. Na indústria, ninguém escreveu que o filme precisava resistir às pontas dos vegetais congelados, porque ninguém tinha pensado nisso. O lote de teste passou em todos os ensaios, e os pacotes furaram no transporte. É por isso que a validação existe, e é por isso que ela acontece antes da liberação: a entrada que faltava vira entrada, e o projeto volta uma etapa, com custo pequeno.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 5 ============================ -->
+<section id="controles">
+  <p class="eyebrow">Módulo 5</p>
+  <h2>Verificar, validar e analisar</h2>
+  <p>A norma pede três controles diferentes, e a confusão entre eles é uma das constatações mais comuns em auditoria. Cada um responde a uma pergunta.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 262" role="img" aria-label="Os três controles do projeto. Análise crítica: O projeto está no caminho certo? Quando: Ao fim de cada fase, antes de gastar mais. Quem: Quem decide, com as áreas afetadas. Exemplo: Seguir para o lote de teste, com a especificação revista. Verificação: As saídas atendem às entradas? Quando: Quando há uma saída para conferir: o desenho, a receita, o lote de teste. Quem: Quem conhece o critério: laboratório, engenharia. Exemplo: O filme tem 50 µm e resiste a 420 g no ensaio de queda de dardo. Validação: O produto serve para o uso pretendido? Quando: Antes da liberação, no uso real ou o mais perto dele. Quem: O cliente, ou o usuário, com a organização. Exemplo: Os pacotes de brócolis sobrevivem ao transporte e a três semanas no freezer.">
+        <rect class="bx" x="10" y="10" width="284" height="242"/>
+        <rect class="hd-ink" x="10" y="10" width="284" height="56"/>
+        <text class="b t-ground" x="22" y="32" font-size="13">ANÁLISE CRÍTICA</text>
+        <text class="t-ground" x="22" y="52" font-size="11.5">O projeto está no caminho certo?</text>
+        <text class="mono mu" x="22" y="86" font-size="9.5">QUANDO</text>
+        <text x="22" y="101" font-size="11">Ao fim de cada fase, antes de gastar mais.</text>
+        <text class="mono mu" x="22" y="125" font-size="9.5">QUEM</text>
+        <text x="22" y="140" font-size="11">Quem decide, com as áreas afetadas.</text>
+        <text class="mono mu" x="22" y="164" font-size="9.5">NO EXEMPLO DA INDÚSTRIA</text>
+        <text x="22" y="179" font-size="11">Seguir para o lote de teste, com a</text>
+        <text x="22" y="193" font-size="11">especificação revista.</text>
+        <rect class="bx" x="306" y="10" width="284" height="242"/>
+        <rect class="f1" x="306" y="10" width="284" height="56"/>
+        <text class="b on" x="318" y="32" font-size="13">VERIFICAÇÃO</text>
+        <text class="on" x="318" y="52" font-size="11.5">As saídas atendem às entradas?</text>
+        <text class="mono mu" x="318" y="86" font-size="9.5">QUANDO</text>
+        <text x="318" y="101" font-size="11">Quando há uma saída para conferir: o</text>
+        <text x="318" y="115" font-size="11">desenho, a receita, o lote de teste.</text>
+        <text class="mono mu" x="318" y="139" font-size="9.5">QUEM</text>
+        <text x="318" y="154" font-size="11">Quem conhece o critério: laboratório,</text>
+        <text x="318" y="168" font-size="11">engenharia.</text>
+        <text class="mono mu" x="318" y="192" font-size="9.5">NO EXEMPLO DA INDÚSTRIA</text>
+        <text x="318" y="207" font-size="11">O filme tem 50 µm e resiste a 420 g no</text>
+        <text x="318" y="221" font-size="11">ensaio de queda de dardo.</text>
+        <rect class="bx" x="602" y="10" width="284" height="242"/>
+        <rect class="f2" x="602" y="10" width="284" height="56"/>
+        <text class="b " x="614" y="32" font-size="13" style="fill:var(--on-s2)">VALIDAÇÃO</text>
+        <text class="" x="614" y="52" font-size="11.5" style="fill:var(--on-s2)">O produto serve para o uso pretendido?</text>
+        <text class="mono mu" x="614" y="86" font-size="9.5">QUANDO</text>
+        <text x="614" y="101" font-size="11">Antes da liberação, no uso real ou o mais</text>
+        <text x="614" y="115" font-size="11">perto dele.</text>
+        <text class="mono mu" x="614" y="139" font-size="9.5">QUEM</text>
+        <text x="614" y="154" font-size="11">O cliente, ou o usuário, com a organização.</text>
+        <text class="mono mu" x="614" y="178" font-size="9.5">NO EXEMPLO DA INDÚSTRIA</text>
+        <text x="614" y="193" font-size="11">Os pacotes de brócolis sobrevivem ao</text>
+        <text x="614" y="207" font-size="11">transporte e a três semanas no freezer.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 4.</b> Os três controles do projeto. Podem acontecer na mesma reunião, mas respondem a perguntas diferentes e têm registros diferentes.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:22%">Resultado</th><th style="width:40%">Quando</th><th>O que registrar</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Aprovado</strong></td><td>O controle não encontrou problema.</td><td>O registro, com a data e quem participou.</td></tr>
+        <tr><td><strong>Aprovado com ressalvas</strong></td><td>Há um problema, e o projeto pode seguir enquanto ele é resolvido.</td><td>A ressalva, a ação e o prazo.</td></tr>
+        <tr><td><strong>Reprovado</strong></td><td>O problema impede o projeto de seguir.</td><td>O problema e a ação: entrada nova, saída revista, etapa refeita.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note">
+    <h4>A verificação não substitui a validação</h4>
+    <p>A verificação confere o que foi escrito: se a entrada está errada ou falta, a verificação aprova um produto que não serve. A validação confere o que vai acontecer com o cliente, e pega o que as entradas não disseram. Na pizzaria, a verificação mostrou que a pizza não leva ingrediente de origem animal; só a degustação com clientes mostrou se ela vende.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 6 ============================ -->
+<section id="exemplos">
+  <p class="eyebrow">Módulo 6</p>
+  <h2>Exemplos resolvidos</h2>
+  <p>Um sabor novo na pizzaria e um filme novo na indústria, com o plano, as entradas e as mudanças, e a história de uma validação que reprovou o que a verificação tinha aprovado. As organizações são as dos outros estudos da série; o projeto da indústria continua o pedido PR-118 do estudo de requisitos do cliente. Os dois primeiros exemplos também estão preenchidos na planilha de apoio. Os dados são ilustrativos e foram criados para este treinamento.</p>
+
+  <h3>Exemplo 1. A pizza vegana do cardápio de inverno</h3>
+  <dl class="ficha">
+    <div><dt>Organização</dt><dd>Pizzaria (loja com salão e delivery)</dd></div>
+    <div><dt>Projeto</dt><dd>P-03 · Pizza vegana do cardápio de inverno</dd></div>
+    <div><dt>Cliente ou usuário</dt><dd>Clientes do salão e do aplicativo</dd></div>
+    <div><dt>Objetivo</dt><dd>Uma pizza sem ingrediente de origem animal, com o sabor e o tempo de forno das outras, no cardápio de 01/06/2027.</dd></div>
+    <div><dt>Responsável</dt><dd>Pizzaiolo líder. Aprovação: gerente da loja e dono.</dd></div>
+    <div><dt>Período</dt><dd>De 05/04/2027 a 01/06/2027. Situação lida em 31/05/2027.</dd></div>
+    <div><dt>Origem</dt><dd>Requisito 8.3 atendido em parte no diagnóstico de 2026: sabores novos eram testados com a equipe, sem registro da receita aprovada nem do teste.</dd></div>
+  </dl>
+  <div class="tbl">
+    <table class="aud">
+      <caption>Plano do projeto · 7 etapas, 5 concluídas, 1 atrasada em 31/05/2027</caption>
+      <thead><tr><th class="c">#</th><th style="width:26%">Etapa<small>Registro</small></th><th>Tipo</th><th style="width:16%">Responsável<small>Participantes</small></th><th class="c">Prazo</th><th class="c">Concluída</th><th style="width:22%">Resultado<small>Ações e ressalvas</small></th><th>Conferência</th></tr></thead>
+      <tbody>
+        <tr><td class="c n">1</td><td><strong>Plano e entradas aprovados</strong><small>Ata de 05/04</small></td><td>Planejamento</td><td>Gerente da loja<small>Pizzaiolo líder e dono</small></td><td class="c">05/04</td><td class="c">05/04</td><td><span class="chip s1">Aprovado</span><small></small></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="c n">2</td><td><strong>Receita e ficha técnica, primeira versão</strong><small>Ficha técnica P-03 rev. 1</small></td><td>Desenvolvimento</td><td>Pizzaiolo líder<small>Segundo pizzaiolo</small></td><td class="c">23/04</td><td class="c">22/04</td><td><span class="chip s1">Aprovado</span><small></small></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="c n">3</td><td><strong>Ficha técnica, custo e teste de forno contra as entradas</strong><small>Planilha de verificação P-03</small></td><td>Verificação</td><td>Pizzaiolo líder<small>Gerente da loja</small></td><td class="c">30/04</td><td class="c no">03/05</td><td><span class="chip s2">Aprovado com ressalvas</span><small>Custo de 34% (E6): rever o recheio.</small></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="c n">4</td><td><strong>Análise crítica antes da degustação</strong><small>Ata de 07/05</small></td><td>Análise crítica</td><td>Gerente da loja<small>Dono e pizzaiolo líder</small></td><td class="c">07/05</td><td class="c">07/05</td><td><span class="chip s2">Aprovado com ressalvas</span><small>Seguir para a degustação. Resolver o custo até 25/05.</small></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="c n">5</td><td><strong>Degustação com 20 clientes no salão</strong><small>Fichas da degustação: nota média 4,3; 17 de 20 pediriam de novo</small></td><td>Validação</td><td>Gerente da loja<small>20 clientes, por convite</small></td><td class="c">21/05</td><td class="c">20/05</td><td><span class="chip s1">Aprovado</span><small></small></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="c n">6</td><td><strong>Custo recalculado, com o recheio novo</strong><small>—</small></td><td>Verificação</td><td>Pizzaiolo líder<small>Gerente da loja</small></td><td class="c">25/05</td><td class="c">—</td><td>—<small></small></td><td><span class="chip s3">Atrasada</span></td></tr>
+        <tr><td class="c n">7</td><td><strong>Inclusão no cardápio de inverno, com treinamento da equipe</strong><small>—</small></td><td>Liberação para produção</td><td>Gerente da loja<small>Toda a equipe</small></td><td class="c">01/06</td><td class="c">—</td><td>—<small></small></td><td><span class="chip s1">OK</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="tbl">
+    <table class="aud">
+      <caption>Entradas, saídas e verificação · 8 entradas: 6 atendem, 1 não atende, 1 pendente</caption>
+      <thead><tr><th>#</th><th style="width:30%">Entrada<small>Tipo · fonte</small></th><th style="width:20%">Saída que atende</th><th style="width:18%">Como verificar</th><th style="width:18%">Resultado<small>Evidência ou ação</small></th><th>Conferência</th></tr></thead>
+      <tbody>
+        <tr><td class="n">E1</td><td><strong>Nenhum ingrediente de origem animal, inclusive na massa e no molho.</strong><small>Cliente · Pedidos e comentários no aplicativo</small></td><td>Ficha técnica P-03, com todos os ingredientes</td><td>Conferência da ficha técnica e dos rótulos dos insumos</td><td><span class="chip s1">Atende</span><small>Rótulos conferidos em 20/04.</small></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">E2</td><td><strong>Alergênicos informados no cardápio e no aplicativo.</strong><small>Legal ou regulamentar · Requisito legal de rotulagem de alergênicos</small></td><td>Texto do cardápio e do aplicativo</td><td>Conferência do texto contra a ficha técnica</td><td><span class="chip s1">Atende</span><small>Texto conferido em 03/05.</small></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">E3</td><td><strong>Aviso de que a cozinha é compartilhada com produtos de origem animal.</strong><small>Falha potencial · Oferta: o que a loja não garante</small></td><td>Texto do cardápio</td><td>Conferência do texto</td><td><span class="chip s1">Atende</span><small>Texto conferido em 03/05.</small></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">E4</td><td><strong>Tempo de forno de até 7 minutos, como o das outras pizzas.</strong><small>Funcional ou de desempenho · Capacidade do forno no pico</small></td><td>Instrução de montagem e de forno</td><td>Teste no forno, com 10 pizzas</td><td><span class="chip s1">Atende</span><small>7 minutos a 300 °C, em 22/04.</small></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">E5</td><td><strong>Nota de pelo menos 4,0, de 1 a 5, na degustação da equipe.</strong><small>Funcional ou de desempenho · Padrão do cardápio</small></td><td>Receita final</td><td>Degustação com 8 pessoas da equipe</td><td><span class="chip s1">Atende</span><small>Nota média de 4,4, em 22/04.</small></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">E6</td><td><strong>Custo de insumos de até 30% do preço de venda.</strong><small>Da organização · Ficha técnica e custo por pizza (objetivo O6)</small></td><td>Ficha técnica, com o custo</td><td>Cálculo do custo</td><td><span class="chip s3">Não atende</span><small>Custo de 34%. Recheio trocado em 18/05; custo a recalcular.</small></td><td><span class="chip s2">Não atende: ação em curso</span></td></tr>
+        <tr><td class="n">E7</td><td><strong>Queijo vegetal que derreta sem queimar a 300 °C.</strong><small>Projeto anterior · Teste com outra marca, no projeto P-01 de 2026</small></td><td>Marca do queijo vegetal na ficha técnica</td><td>Teste no forno</td><td><span class="chip s1">Atende</span><small>Marca A aprovada em 22/04.</small></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">E8</td><td><strong>Fornecedor do queijo vegetal homologado.</strong><small>Da organização · Avaliação de fornecedores</small></td><td>Fornecedor na lista de homologados</td><td>Homologação</td><td>—<small></small></td><td><span class="chip s2">Verificação pendente</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="tbl">
+    <table class="aud">
+      <caption>Mudanças de projeto · 2</caption>
+      <thead><tr><th class="c">Data</th><th style="width:28%">O que mudou<small>Motivo</small></th><th style="width:24%">Análise do impacto</th><th style="width:22%">O que foi verificado de novo</th><th>Quem autorizou</th><th>Conferência</th></tr></thead>
+      <tbody>
+        <tr><td class="c">12/05</td><td><strong>Queijo vegetal da marca B no lugar da marca A.</strong><small>Falta no fornecedor.</small></td><td>—</td><td>—</td><td>Pizzaiolo líder</td><td><span class="chip s3">Falta a análise</span></td></tr>
+        <tr><td class="c">18/05</td><td><strong>Recheio de tofu defumado no lugar da castanha de caju.</strong><small>Custo de 34% na verificação.</small></td><td>Custo estimado em 29%, a confirmar.</td><td>—</td><td>Gerente da loja</td><td><span class="chip s3">Falta o que foi verificado de novo</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p><strong>O que observar.</strong> O plano tem os três controles: verificação, análise crítica e validação com clientes. A verificação achou o custo de 34%, e a análise crítica fez o certo: deixou o projeto seguir para a degustação e deu prazo para resolver o custo. O problema está nas mudanças. Em 12/05, por falta no fornecedor, o queijo vegetal mudou de marca sem nenhuma análise. A degustação de 20/05 foi feita com a marca B, e o teste de forno que aprovou o queijo, com a marca A. A validação aprovou uma receita que a verificação não conferiu, e o fornecedor da marca B nem está homologado. Na véspera do lançamento, o custo continua sem verificação e duas entradas continuam abertas. A planilha mostra o que a reunião precisa decidir: adiar a liberação, ou voltar à marca A e lançar com o custo provado.</p>
+
+  <h3>Exemplo 2. O filme para vegetais congelados</h3>
+  <dl class="ficha">
+    <div><dt>Organização</dt><dd>Indústria de embalagens plásticas</dd></div>
+    <div><dt>Projeto</dt><dd>D-07 · Filme para vegetais congelados</dd></div>
+    <div><dt>Cliente ou usuário</dt><dd>Cliente C, alimentos congelados (proposta PR-118)</dd></div>
+    <div><dt>Objetivo</dt><dd>Filme liso de 50 µm que resista ao freezer e ao transporte congelado, para produção regular a partir de outubro de 2027.</dd></div>
+    <div><dt>Responsável</dt><dd>Gerente de engenharia. Aprovação: diretor geral.</dd></div>
+    <div><dt>Período</dt><dd>De 07/06/2027 a 24/09/2027. Situação lida em 30/08/2027.</dd></div>
+    <div><dt>Origem</dt><dd>Pedido PR-118, aceito com alteração em 07/06: lote de teste antes do pedido firme.</dd></div>
+  </dl>
+  <div class="tbl">
+    <table class="aud">
+      <caption>Plano do projeto · 9 etapas, 6 concluídas, 1 atrasada em 30/08/2027</caption>
+      <thead><tr><th class="c">#</th><th style="width:26%">Etapa<small>Registro</small></th><th>Tipo</th><th style="width:16%">Responsável<small>Participantes</small></th><th class="c">Prazo</th><th class="c">Concluída</th><th style="width:22%">Resultado<small>Ações e ressalvas</small></th><th>Conferência</th></tr></thead>
+      <tbody>
+        <tr><td class="c n">1</td><td><strong>Plano do projeto e entradas, com o cliente</strong><small>Ata de 11/06</small></td><td>Planejamento</td><td>Gerente de engenharia<small>Comercial, Qualidade e cliente C</small></td><td class="c">11/06</td><td class="c">11/06</td><td><span class="chip s1">Aprovado</span><small></small></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="c n">2</td><td><strong>Especificação ES-D07 e receita RX-D07</strong><small>ES-D07 rev. 1 e RX-D07 rev. 1</small></td><td>Desenvolvimento</td><td>Gerente de engenharia<small>Produção</small></td><td class="c">25/06</td><td class="c">24/06</td><td><span class="chip s1">Aprovado</span><small></small></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="c n">3</td><td><strong>Análise crítica antes do lote de teste</strong><small>Ata de 28/06</small></td><td>Análise crítica</td><td>Gerente de engenharia<small>Qualidade, Produção e Comercial</small></td><td class="c">28/06</td><td class="c">28/06</td><td><span class="chip s1">Aprovado</span><small></small></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="c n">4</td><td><strong>Lote de teste de 500 kg: ensaios contra as entradas</strong><small>Relatório de ensaios RE-D07-1</small></td><td>Verificação</td><td>Laboratório<small>Engenharia</small></td><td class="c">16/07</td><td class="c">16/07</td><td><span class="chip s2">Aprovado com ressalvas</span><small>Velocidade de 38 m/min (E8): ajustar no lote 2.</small></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="c n">5</td><td><strong>Embalagem, congelamento e transporte no cliente C, por três semanas</strong><small>Relatório do cliente C, de 09/08</small></td><td>Validação</td><td>Gerente de engenharia<small>Cliente C</small></td><td class="c">06/08</td><td class="c no">09/08</td><td><span class="chip s3">Reprovado</span><small>Furos em 4% dos pacotes no transporte. Nova entrada E9: camada interna de 20 µm.</small></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="c n">6</td><td><strong>Análise crítica depois da validação</strong><small>Ata de 12/08</small></td><td>Análise crítica</td><td>Gerente de engenharia<small>Diretor geral, Qualidade e Comercial</small></td><td class="c">13/08</td><td class="c">12/08</td><td><span class="chip s1">Aprovado</span><small></small></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="c n">7</td><td><strong>Lote 2: ensaios, com perfuração e velocidade</strong><small>—</small></td><td>Verificação</td><td>Laboratório<small>Engenharia</small></td><td class="c">27/08</td><td class="c">—</td><td>—<small></small></td><td><span class="chip s3">Atrasada</span></td></tr>
+        <tr><td class="c n">8</td><td><strong>Segunda validação no cliente C</strong><small>—</small></td><td>Validação</td><td>Gerente de engenharia<small>Cliente C</small></td><td class="c">17/09</td><td class="c">—</td><td>—<small></small></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="c n">9</td><td><strong>Liberação para produção regular, com o plano de controle</strong><small>—</small></td><td>Liberação para produção</td><td>Gerente de engenharia<small>Produção e Qualidade</small></td><td class="c">24/09</td><td class="c">—</td><td>—<small></small></td><td><span class="chip s1">OK</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="tbl">
+    <table class="aud">
+      <caption>Entradas, saídas e verificação · 9 entradas: 7 atendem, 1 não atende, 1 pendente</caption>
+      <thead><tr><th>#</th><th style="width:30%">Entrada<small>Tipo · fonte</small></th><th style="width:20%">Saída que atende</th><th style="width:18%">Como verificar</th><th style="width:18%">Resultado<small>Evidência ou ação</small></th><th>Conferência</th></tr></thead>
+      <tbody>
+        <tr><td class="n">E1</td><td><strong>Espessura de 50 µm, com tolerância de ±2 µm.</strong><small>Cliente · Proposta PR-118</small></td><td>Especificação ES-D07</td><td>Micrômetro, cinco pontos, lote de teste</td><td><span class="chip s1">Atende</span><small>Média de 50,3 µm, em 16/07.</small></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">E2</td><td><strong>Largura de 600 mm e bobina de até 600 mm de diâmetro.</strong><small>Cliente · Visita à embaladora do cliente</small></td><td>Especificação ES-D07</td><td>Medição no lote de teste</td><td><span class="chip s1">Atende</span><small>600 mm e 580 mm de diâmetro.</small></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">E3</td><td><strong>Queda de dardo de pelo menos 300 g a -18 °C.</strong><small>Funcional ou de desempenho · Uso pretendido: freezer do cliente</small></td><td>Resina para baixa temperatura e receita RX-D07</td><td>Ensaio de queda de dardo a -18 °C</td><td><span class="chip s1">Atende</span><small>420 g, em 16/07.</small></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">E4</td><td><strong>Declaração de conformidade para contato com alimentos.</strong><small>Legal ou regulamentar · Legislação de embalagens para alimentos</small></td><td>Declaração DC-D07, com as resinas e o aditivo</td><td>Laudo de migração de laboratório externo</td><td><span class="chip s1">Atende</span><small>Laudo de 12/07.</small></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">E5</td><td><strong>Método de ensaio de queda de dardo da norma técnica.</strong><small>Norma ou código · Ficha técnica do cliente</small></td><td>Instrução de ensaio IE-12</td><td>Conferência da instrução com a norma</td><td><span class="chip s1">Atende</span><small>Instrução revista em 02/07.</small></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">E6</td><td><strong>Perfil de extrusão do filme de 40 µm como ponto de partida.</strong><small>Projeto anterior · Receita RX-40 da extrusora 3</small></td><td>Receita RX-D07</td><td>Lote de teste de 500 kg</td><td><span class="chip s1">Atende</span><small>Lote de teste de 15/07.</small></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">E7</td><td><strong>Selagem sem falhas na embaladora do cliente, a 120 °C.</strong><small>Cliente · Visita à embaladora do cliente</small></td><td>Faixa de selagem na especificação ES-D07</td><td>Ensaio de selagem no laboratório</td><td><span class="chip s1">Atende</span><small>Selagem conforme de 110 a 135 °C.</small></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">E8</td><td><strong>Velocidade de pelo menos 40 m/min na extrusora 3.</strong><small>Da organização · Custo-alvo da proposta</small></td><td>Receita RX-D07</td><td>Lote de teste</td><td><span class="chip s3">Não atende</span><small>38 m/min. Ajustar o resfriamento no lote 2.</small></td><td><span class="chip s2">Não atende: ação em curso</span></td></tr>
+        <tr><td class="n">E9</td><td><strong>Resistência à perfuração pelas pontas dos vegetais congelados.</strong><small>Falha potencial · Validação de 09/08: furos no transporte</small></td><td>Camada interna de 20 µm (ES-D07 rev. 2)</td><td>Ensaio de perfuração no lote 2</td><td>—<small></small></td><td><span class="chip s2">Verificação pendente</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="tbl">
+    <table class="aud">
+      <caption>Mudanças de projeto · 3</caption>
+      <thead><tr><th class="c">Data</th><th style="width:28%">O que mudou<small>Motivo</small></th><th style="width:24%">Análise do impacto</th><th style="width:22%">O que foi verificado de novo</th><th>Quem autorizou</th><th>Conferência</th></tr></thead>
+      <tbody>
+        <tr><td class="c">20/07</td><td><strong>Resina para baixa temperatura do fornecedor B no lugar do fornecedor A.</strong><small>Prazo de entrega do fornecedor A.</small></td><td>Fichas técnicas comparadas. Laudo de migração estendido à resina B.</td><td>Queda de dardo repetida com a resina B: 410 g, conforme.</td><td>Gerente de engenharia</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="c">12/08</td><td><strong>Camada interna de 15 para 20 µm.</strong><small>Validação de 09/08: furos no transporte.</small></td><td>Efeito na selagem, no custo e na espessura total avaliado.</td><td>Planejado no lote 2: perfuração, selagem e espessura.</td><td>Gerente de engenharia</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="c">22/08</td><td><strong>Espessura total de 50 para 52 µm, para compensar a camada interna.</strong><small>Pedido da Produção.</small></td><td>—</td><td>—</td><td>Líder do turno</td><td><span class="chip s3">Falta a análise</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p><strong>O que observar.</strong> O projeto da fábrica tem tudo o que a norma pede: plano com o cliente, entradas dos sete tipos, verificação em laboratório, validação no cliente e análises críticas. A validação reprovou o filme, e o sistema funcionou: entrou a E9, a camada interna mudou com análise e com a verificação planejada, e a segunda validação foi marcada. A troca de resina de julho também foi feita do jeito certo, com o ensaio repetido. A mudança de 22/08 é a exceção: a Produção engrossou o filme para 52 µm, no limite da tolerância de ±2 µm da entrada E1, sem análise e com a autorização do líder do turno. É uma mudança de projeto feita como ajuste de máquina, e o lote 2, que deveria verificá-la, está atrasado.</p>
+
+  <h3>Exemplo 3. A validação que reprovou o que a verificação aprovou</h3>
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 214" role="img" aria-label="A validação que revelou uma entrada que faltava. 15 e 16/07, Lote de teste: 500 kg com a receita RX-D07. Todas as entradas verificadas atendem, menos a velocidade. 19/07 a 09/08, Validação no cliente: Os pacotes de brócolis são embalados, congelados e transportados por três semanas. 09/08, Furos em 4% dos pacotes: As pontas dos vegetais congelados perfuram o filme no transporte. Nenhuma entrada pedia isso. 12/08, Nova entrada e mudança: E9: resistência à perfuração. Camada interna de 15 para 20 µm, com análise e verificação planejada. Até 17/09, Lote 2 e nova validação: A verificação inclui a entrada nova. A validação se repete no cliente.">
+        <defs><marker id="a5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker></defs>
+        <rect class="bx-s1" x="12" y="14" width="164" height="160"/>
+        <text class="mono mu" x="24" y="34" font-size="9.5">15 E 16/07</text>
+        <text class="b" x="24" y="54" font-size="12">Lote de teste</text>
+        <text x="24" y="76" font-size="10.5">500 kg com a receita</text>
+        <text x="24" y="90" font-size="10.5">RX-D07. Todas as entradas</text>
+        <text x="24" y="104" font-size="10.5">verificadas atendem, menos</text>
+        <text x="24" y="118" font-size="10.5">a velocidade.</text>
+        <line class="ln" x1="177" y1="94" x2="188" y2="94" marker-end="url(#a5)"/>
+        <rect class="bx" x="190" y="14" width="164" height="160"/>
+        <text class="mono mu" x="202" y="34" font-size="9.5">19/07 A 09/08</text>
+        <text class="b" x="202" y="54" font-size="12">Validação no cliente</text>
+        <text x="202" y="76" font-size="10.5">Os pacotes de brócolis são</text>
+        <text x="202" y="90" font-size="10.5">embalados, congelados e</text>
+        <text x="202" y="104" font-size="10.5">transportados por três</text>
+        <text x="202" y="118" font-size="10.5">semanas.</text>
+        <line class="ln" x1="355" y1="94" x2="366" y2="94" marker-end="url(#a5)"/>
+        <rect class="bx-s3" x="368" y="14" width="164" height="160"/>
+        <text class="mono mu" x="380" y="34" font-size="9.5">09/08</text>
+        <text class="b" x="380" y="54" font-size="12">Furos em 4% dos</text>
+        <text class="b" x="380" y="69" font-size="12">pacotes</text>
+        <text x="380" y="90" font-size="10.5">As pontas dos vegetais</text>
+        <text x="380" y="104" font-size="10.5">congelados perfuram o</text>
+        <text x="380" y="118" font-size="10.5">filme no transporte.</text>
+        <text x="380" y="132" font-size="10.5">Nenhuma entrada pedia</text>
+        <text x="380" y="146" font-size="10.5">isso.</text>
+        <line class="ln" x1="533" y1="94" x2="544" y2="94" marker-end="url(#a5)"/>
+        <rect class="bx-s2" x="546" y="14" width="164" height="160"/>
+        <text class="mono mu" x="558" y="34" font-size="9.5">12/08</text>
+        <text class="b" x="558" y="54" font-size="12">Nova entrada e mudança</text>
+        <text x="558" y="76" font-size="10.5">E9: resistência à</text>
+        <text x="558" y="90" font-size="10.5">perfuração. Camada interna</text>
+        <text x="558" y="104" font-size="10.5">de 15 para 20 µm, com</text>
+        <text x="558" y="118" font-size="10.5">análise e verificação</text>
+        <text x="558" y="132" font-size="10.5">planejada.</text>
+        <line class="ln" x1="711" y1="94" x2="722" y2="94" marker-end="url(#a5)"/>
+        <rect class="bx" x="724" y="14" width="164" height="160"/>
+        <text class="mono mu" x="736" y="34" font-size="9.5">ATÉ 17/09</text>
+        <text class="b" x="736" y="54" font-size="12">Lote 2 e nova</text>
+        <text class="b" x="736" y="69" font-size="12">validação</text>
+        <text x="736" y="90" font-size="10.5">A verificação inclui a</text>
+        <text x="736" y="104" font-size="10.5">entrada nova. A validação</text>
+        <text x="736" y="118" font-size="10.5">se repete no cliente.</text>
+        <text x="450" y="204" font-size="11.5" text-anchor="middle">O lote passou na verificação e falhou na validação. A entrada que faltava só apareceu no uso real.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 5.</b> Do lote de teste à segunda validação, no projeto D-07. O furo no transporte virou uma entrada nova.</figcaption>
+  </figure>
+  <p><strong>O que observar.</strong> Se o projeto tivesse parado na verificação, o filme teria sido liberado em julho e os furos teriam aparecido nos pedidos firmes, em toneladas, e não em 500 kg. A validação custou três semanas e um lote de teste; a falta dela custaria a confiança do cliente novo. O ponto mais fino é o que vem depois: a entrada nova volta para a matriz, com saída e verificação, e a validação se repete. Validar uma vez e mudar o produto depois não vale.</p>
+</section>
+
+<!-- ============================ MÓDULO 7 ============================ -->
+<section id="leitura">
+  <p class="eyebrow">Módulo 7</p>
+  <h2>Ler o andamento</h2>
+  <p>O projeto é lido de três jeitos: o plano, para ver o que atrasou; as entradas, para ver o que ainda não foi verificado; e as mudanças, para ver o que mudou sem análise. A liberação só acontece quando os três estão em dia.</p>
+
+  <figure id="fig-bars">
+    <div class="scroll">
+      <svg id="bars" viewBox="0 0 900 356" role="img" aria-label="Prazo e conclusão de cada etapa do projeto D-07 da indústria, lidos em 30 de agosto de 2027. 1, Plano do projeto e entradas, com o cliente: prazo 11/06, concluída em 11/06. 2, Especificação ES-D07 e receita RX-D07: prazo 25/06, concluída em 24/06. 3, Análise crítica antes do lote de teste: prazo 28/06, concluída em 28/06. 4, Lote de teste de 500 kg: ensaios contra as entradas: prazo 16/07, concluída em 16/07. 5, Embalagem, congelamento e transporte no cliente C, por três semanas: prazo 06/08, concluída em 09/08. 6, Análise crítica depois da validação: prazo 13/08, concluída em 12/08. 7, Lote 2: ensaios, com perfuração e velocidade: prazo 27/08, não concluída. 8, Segunda validação no cliente C: prazo 17/09, não concluída. 9, Liberação para produção regular, com o plano de controle: prazo 24/09, não concluída.">
+        <g font-size="11.5">
+          <circle class="f1" cx="336" cy="19" r="6"/><text x="348" y="23">Concluída no prazo</text>
+          <circle class="f2" cx="496" cy="19" r="6"/><text x="508" y="23">Com atraso</text>
+          <circle class="o3" cx="616" cy="19" r="6"/><text x="628" y="23">Atrasada</text>
+          <circle class="o0" cx="716" cy="19" r="6"/><text x="728" y="23">Prazo futuro</text>
+        </g>
+        <line class="grid" x1="330.0" y1="40" x2="330.0" y2="316"/>
+        <text class="mu" x="330.0" y="332" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">01/06</text>
+        <line class="grid" x1="463.9" y1="40" x2="463.9" y2="316"/>
+        <text class="mu" x="463.9" y="332" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">01/07</text>
+        <line class="grid" x1="602.2" y1="40" x2="602.2" y2="316"/>
+        <text class="mu" x="602.2" y="332" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">01/08</text>
+        <line class="grid" x1="740.6" y1="40" x2="740.6" y2="316"/>
+        <text class="mu" x="740.6" y="332" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">01/09</text>
+        <line class="goal" x1="731.7" y1="36" x2="731.7" y2="316"/>
+        <text class="mu halo" x="735.7" y="348" font-size="10.5">leitura: 30/08</text>
+        <text x="20" y="65.0" font-size="11.5"><tspan class="mono mu">1</tspan><tspan dx="8">Plano do projeto e entradas, com o cliente</tspan></text>
+        <circle class="pt f1" data-k="0" cx="374.6" cy="61.0" r="6"/>
+        <text x="20" y="95.0" font-size="11.5"><tspan class="mono mu">2</tspan><tspan dx="8">Especificação ES-D07 e receita RX-D07</tspan></text>
+        <circle class="pt f1" data-k="1" cx="432.6" cy="91.0" r="6"/>
+        <text x="20" y="125.0" font-size="11.5"><tspan class="mono mu">3</tspan><tspan dx="8">Análise crítica antes do lote de teste</tspan></text>
+        <circle class="pt f1" data-k="2" cx="450.5" cy="121.0" r="6"/>
+        <text x="20" y="155.0" font-size="11.5"><tspan class="mono mu">4</tspan><tspan dx="8">Lote de teste de 500 kg: ensaios contra as…</tspan></text>
+        <circle class="pt f1" data-k="3" cx="530.8" cy="151.0" r="6"/>
+        <text x="20" y="185.0" font-size="11.5"><tspan class="mono mu">5</tspan><tspan dx="8">Embalagem, congelamento e transporte no…</tspan></text>
+        <line class="ln-mu" x1="624.5" y1="181.0" x2="637.9" y2="181.0"/>
+        <circle class="o0" cx="624.5" cy="181.0" r="4"/>
+        <circle class="pt f2" data-k="4" cx="637.9" cy="181.0" r="6"/>
+        <text x="20" y="215.0" font-size="11.5"><tspan class="mono mu">6</tspan><tspan dx="8">Análise crítica depois da validação</tspan></text>
+        <circle class="pt f1" data-k="5" cx="651.3" cy="211.0" r="6"/>
+        <text x="20" y="245.0" font-size="11.5"><tspan class="mono mu">7</tspan><tspan dx="8">Lote 2: ensaios, com perfuração e velocidade</tspan></text>
+        <line class="ln-mu dash" x1="718.3" y1="241.0" x2="731.7" y2="241.0"/>
+        <circle class="pt o3" data-k="6" cx="718.3" cy="241.0" r="6"/>
+        <text x="20" y="275.0" font-size="11.5"><tspan class="mono mu">8</tspan><tspan dx="8">Segunda validação no cliente C</tspan></text>
+        <circle class="pt o0" data-k="7" cx="812.0" cy="271.0" r="6"/>
+        <text x="20" y="305.0" font-size="11.5"><tspan class="mono mu">9</tspan><tspan dx="8">Liberação para produção regular, com o…</tspan></text>
+        <circle class="pt o0" data-k="8" cx="843.2" cy="301.0" r="6"/>
+        <rect class="hit" x="14" y="46" width="872" height="30" tabindex="0" role="img" aria-label="1, Plano do projeto e entradas, com o cliente: prazo 11/06, no prazo" data-k="0" data-n="1 · Plano do projeto e entradas, com o cliente" data-p="11/06" data-c="11/06" data-s="no prazo" data-cx="374.6" data-cy="46"/>
+        <rect class="hit" x="14" y="76" width="872" height="30" tabindex="0" role="img" aria-label="2, Especificação ES-D07 e receita RX-D07: prazo 25/06, no prazo" data-k="1" data-n="2 · Especificação ES-D07 e receita RX-D07" data-p="25/06" data-c="24/06" data-s="no prazo" data-cx="432.6" data-cy="76"/>
+        <rect class="hit" x="14" y="106" width="872" height="30" tabindex="0" role="img" aria-label="3, Análise crítica antes do lote de teste: prazo 28/06, no prazo" data-k="2" data-n="3 · Análise crítica antes do lote de teste" data-p="28/06" data-c="28/06" data-s="no prazo" data-cx="450.5" data-cy="106"/>
+        <rect class="hit" x="14" y="136" width="872" height="30" tabindex="0" role="img" aria-label="4, Lote de teste de 500 kg: ensaios contra as entradas: prazo 16/07, no prazo" data-k="3" data-n="4 · Lote de teste de 500 kg: ensaios contra as entradas" data-p="16/07" data-c="16/07" data-s="no prazo" data-cx="530.8" data-cy="136"/>
+        <rect class="hit" x="14" y="166" width="872" height="30" tabindex="0" role="img" aria-label="5, Embalagem, congelamento e transporte no cliente C, por três semanas: prazo 06/08, com 3 dias de atraso" data-k="4" data-n="5 · Embalagem, congelamento e transporte no cliente C, por três semanas" data-p="06/08" data-c="09/08" data-s="com 3 dias de atraso" data-cx="637.9" data-cy="166"/>
+        <rect class="hit" x="14" y="196" width="872" height="30" tabindex="0" role="img" aria-label="6, Análise crítica depois da validação: prazo 13/08, no prazo" data-k="5" data-n="6 · Análise crítica depois da validação" data-p="13/08" data-c="12/08" data-s="no prazo" data-cx="651.3" data-cy="196"/>
+        <rect class="hit" x="14" y="226" width="872" height="30" tabindex="0" role="img" aria-label="7, Lote 2: ensaios, com perfuração e velocidade: prazo 27/08, atrasada" data-k="6" data-n="7 · Lote 2: ensaios, com perfuração e velocidade" data-p="27/08" data-c="—" data-s="atrasada" data-cx="718.3" data-cy="226"/>
+        <rect class="hit" x="14" y="256" width="872" height="30" tabindex="0" role="img" aria-label="8, Segunda validação no cliente C: prazo 17/09, prazo futuro" data-k="7" data-n="8 · Segunda validação no cliente C" data-p="17/09" data-c="—" data-s="prazo futuro" data-cx="812.0" data-cy="256"/>
+        <rect class="hit" x="14" y="286" width="872" height="30" tabindex="0" role="img" aria-label="9, Liberação para produção regular, com o plano de controle: prazo 24/09, prazo futuro" data-k="8" data-n="9 · Liberação para produção regular, com o plano de controle" data-p="24/09" data-c="—" data-s="prazo futuro" data-cx="843.2" data-cy="286"/>
+      </svg>
+    </div>
+    <div class="tip" id="bars-tip" hidden></div>
+    <figcaption><b>Figura 6.</b> Prazo e conclusão de cada etapa do projeto D-07, na leitura de 30/08. O círculo vazado é o prazo; o cheio, a conclusão. Passe o mouse sobre as linhas para ver os valores.</figcaption>
+    <details class="data">
+      <summary>Ver os dados em tabela</summary>
+      <div class="tbl">
+        <table class="aud">
+          <thead><tr><th>#</th><th>Etapa</th><th class="c">Prazo</th><th class="c">Concluída</th><th>Situação</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td>Plano do projeto e entradas, com o cliente</td><td class="c">11/06</td><td class="c">11/06</td><td>No prazo</td></tr>
+            <tr><td>2</td><td>Especificação ES-D07 e receita RX-D07</td><td class="c">25/06</td><td class="c">24/06</td><td>No prazo</td></tr>
+            <tr><td>3</td><td>Análise crítica antes do lote de teste</td><td class="c">28/06</td><td class="c">28/06</td><td>No prazo</td></tr>
+            <tr><td>4</td><td>Lote de teste de 500 kg: ensaios contra as entradas</td><td class="c">16/07</td><td class="c">16/07</td><td>No prazo</td></tr>
+            <tr><td>5</td><td>Embalagem, congelamento e transporte no cliente C, por três semanas</td><td class="c">06/08</td><td class="c">09/08</td><td>Com atraso</td></tr>
+            <tr><td>6</td><td>Análise crítica depois da validação</td><td class="c">13/08</td><td class="c">12/08</td><td>No prazo</td></tr>
+            <tr><td>7</td><td>Lote 2: ensaios, com perfuração e velocidade</td><td class="c">27/08</td><td class="c">—</td><td>Atrasada</td></tr>
+            <tr><td>8</td><td>Segunda validação no cliente C</td><td class="c">17/09</td><td class="c">—</td><td>Prazo futuro</td></tr>
+            <tr><td>9</td><td>Liberação para produção regular, com o plano de controle</td><td class="c">24/09</td><td class="c">—</td><td>Prazo futuro</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </details>
+  </figure>
+
+  <p>Até a validação, o projeto andou no prazo: o plano, a especificação, a análise crítica e o lote de teste terminaram no dia previsto ou antes. A validação no cliente terminou três dias depois do previsto e reprovou o filme. A análise crítica reagiu em três dias, com uma entrada nova e uma mudança analisada. O lote 2 deveria ter sido ensaiado em 27/08 e, na leitura de 30/08, ainda não tinha sido: a segunda validação e a liberação dependem dele. O gráfico mostra o que o cronograma em lista esconde: o projeto não está atrasado por acaso, e sim porque a validação encontrou o que a verificação não procurava.</p>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:28%">Conferência</th><th style="width:38%">Regra deste material</th><th>O que fazer</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Atrasada</strong></td><td>A etapa não foi concluída, e o prazo é anterior à data da leitura.</td><td>Saber o que falta, e o que depende dela.</td></tr>
+        <tr><td><strong>Falta a ação</strong></td><td>Resultado com ressalvas ou reprovado, sem a ação registrada.</td><td>Registrar a ação e o prazo antes de seguir.</td></tr>
+        <tr><td><strong>Liberado sem validação aprovada</strong></td><td>A liberação para produção foi concluída sem nenhuma validação aprovada.</td><td>Validar agora, e tratar o que já foi produzido.</td></tr>
+        <tr><td><strong>Verificação pendente</strong></td><td>A entrada não tem resultado de verificação.</td><td>Verificar antes da liberação.</td></tr>
+        <tr><td><strong>Não atende</strong></td><td>A verificação reprovou a entrada.</td><td>Com ação, acompanhar; sem ação, decidir na análise crítica.</td></tr>
+        <tr><td><strong>Mudança sem análise</strong></td><td>O projeto mudou, e ninguém avaliou o impacto.</td><td>Analisar, e decidir o que precisa ser verificado ou validado de novo.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note">
+    <h4>Antes de liberar</h4>
+    <p>Três perguntas, e todas precisam de “sim”: alguma validação foi aprovada? Todas as entradas foram verificadas e atendem? Todas as mudanças foram analisadas e verificadas de novo? O lançamento com data marcada é a maior pressão contra essas perguntas, e é exatamente quando elas mais importam.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 8 ============================ -->
+<section id="erros">
+  <p class="eyebrow">Módulo 8</p>
+  <h2>Erros comuns</h2>
+  <div class="errs">
+    <div><h4>Projeto sem plano</h4><p>“A gente vai testando até dar certo.” Ninguém sabe quando acaba nem quem decide.</p><p class="fix"><b>Correção:</b> etapas, responsáveis, prazos e os três controles, por escrito.</p></div>
+    <div><h4>Entrada vaga</h4><p>“Filme resistente.” Qualquer resultado passa.</p><p class="fix"><b>Correção:</b> número, condição e método de conferir.</p></div>
+    <div><h4>Esquecer um tipo de entrada</h4><p>A lei, a norma, a falha que já aconteceu em outro projeto.</p><p class="fix"><b>Correção:</b> passar pelos sete tipos, um por um.</p></div>
+    <div><h4>Verificar e chamar de validação</h4><p>O lote passou no laboratório, e o projeto foi liberado.</p><p class="fix"><b>Correção:</b> validar no uso real, com o cliente ou o usuário.</p></div>
+    <div><h4>Validar só com a equipe</h4><p>Quem fez a pizza acha que ela está ótima.</p><p class="fix"><b>Correção:</b> validar com quem vai usar, nas condições de uso.</p></div>
+    <div><h4>Análise crítica sem decisão</h4><p>A reunião aconteceu, e ninguém escreveu o que foi decidido.</p><p class="fix"><b>Correção:</b> ata com o resultado, as ressalvas e as ações.</p></div>
+    <div><h4>Mudança como ajuste</h4><p>A Produção engrossou o filme “para compensar”, sem falar com a Engenharia.</p><p class="fix"><b>Correção:</b> toda alteração de saída aprovada é mudança de projeto.</p></div>
+    <div><h4>Validar e depois mudar</h4><p>A marca do queijo mudou depois do teste de forno, e ninguém testou de novo.</p><p class="fix"><b>Correção:</b> a mudança diz o que precisa ser verificado ou validado outra vez.</p></div>
+    <div><h4>Liberar pela data</h4><p>O cardápio já foi impresso, então a pizza entra, com o custo sem conferir.</p><p class="fix"><b>Correção:</b> as três perguntas antes de liberar, com a data a serviço do projeto.</p></div>
+    <div><h4>Saída que a produção não usa</h4><p>A especificação ficou com a Engenharia, e a extrusora roda pela receita antiga.</p><p class="fix"><b>Correção:</b> as saídas chegam ao plano de controle e à instrução do posto.</p></div>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 9 ============================ -->
+<section id="ferramentas">
+  <p class="eyebrow">Módulo 9</p>
+  <h2>O projeto e outras ferramentas</h2>
+  <p>O projeto e desenvolvimento junta muitas ferramentas da série. Recebe os requisitos do cliente e os riscos; entrega à produção um plano de controle novo, e à organização um produto que ela sabe fazer.</p>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:26%">Ferramenta</th><th style="width:37%">O que ela entrega ao projeto</th><th>O que recebe do projeto</th></tr></thead>
+      <tbody>
+        <tr><td><a href="../ISO-9001/treinamento-iso-9001.html"><strong>ISO 9001 requisito a requisito</strong></a></td><td>O requisito 8.3, e a lacuna de cada organização.</td><td>O plano, as entradas, as verificações e as validações, como evidência.</td></tr>
+        <tr><td><a href="../Pedidos/treinamento-pedidos.html"><strong>Requisitos do cliente e análise de pedidos</strong></a></td><td>O pedido que vira projeto, e os requisitos não declarados.</td><td>O que a organização passa a oferecer, e o que não garante.</td></tr>
+        <tr><td><a href="../Partes-Interessadas/treinamento-partes-interessadas.html"><strong>Partes interessadas</strong></a></td><td>Os requisitos de clientes, de reguladores e da sociedade.</td><td>O requisito atendido pelo produto novo.</td></tr>
+        <tr><td><a href="../Riscos/treinamento-riscos.html"><strong>Matriz de riscos</strong></a></td><td>As falhas possíveis, que viram entradas.</td><td>Os riscos do produto novo, para tratar antes do lançamento.</td></tr>
+        <tr><td><a href="../5W2H/treinamento-5w2h.html"><strong>5W2H</strong></a></td><td>O plano detalhado das ações das análises críticas.</td><td>As ações, com responsável e prazo.</td></tr>
+        <tr><td><a href="../Fornecedores/treinamento-fornecedores.html"><strong>Avaliação de fornecedores</strong></a></td><td>A homologação do insumo novo.</td><td>O fornecedor e o item que precisam ser avaliados.</td></tr>
+        <tr><td><a href="../Producao/treinamento-producao.html"><strong>Controle de produção e de serviço</strong></a></td><td>O que o processo alcança hoje.</td><td>As saídas: critérios e controles do plano de controle novo.</td></tr>
+        <tr><td><a href="../Liberacao/treinamento-liberacao.html"><strong>Liberação e produto não conforme</strong></a></td><td>Os defeitos do produto já em produção, que ensinam o próximo projeto.</td><td>Os critérios de aceitação do produto novo.</td></tr>
+        <tr><td><a href="../Informacao-Documentada/treinamento-informacao-documentada.html"><strong>Informação documentada</strong></a></td><td>O controle de revisão da especificação e da receita.</td><td>O registro do projeto, que a norma pede.</td></tr>
+        <tr><td><a href="../Competencias/treinamento-competencias.html"><strong>Matriz de competências</strong></a></td><td>Quem sabe projetar, ensaiar e validar.</td><td>O treinamento da equipe no produto novo.</td></tr>
+        <tr><td><a href="../Analise-Critica/treinamento-analise-critica.html"><strong>Análise crítica pela direção</strong></a></td><td>Os recursos e as prioridades dos projetos.</td><td>A situação dos projetos e o que foi lançado.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 10 ============================ -->
+<section id="iso">
+  <p class="eyebrow">Módulo 10</p>
+  <h2>Nas normas ISO</h2>
+  <p>Projeto e desenvolvimento está no requisito 8.3 da ISO 9001:2015, em seis partes: a geral, o planejamento, as entradas, os controles, as saídas e as mudanças. Cada parte pede um registro. É o requisito que mais aparece como “não aplicável” nos escopos, e a exclusão só vale se a organização realmente não define as características do que fornece.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 180" role="img" aria-label="O que a norma pede sobre projeto e desenvolvimento. 8.3.2 · Planejar: Etapas, análises críticas, verificação, validação, responsáveis, recursos e o cliente. 8.3.3 · Entradas: Funcionais e de desempenho, legais, normas, projetos anteriores e falhas possíveis. 8.3.4 · Controles: Análises críticas, verificação, validação e ações sobre os problemas. 8.3.5 · Saídas: Atender às entradas, servir à produção, trazer os critérios de aceitação e o essencial ao uso seguro. 8.3.6 · Mudanças: Identificar, analisar, autorizar e registrar, prevenindo efeitos indesejados.">
+        <rect class="bx" x="10" y="14" width="170" height="152"/>
+        <rect class="hd-ink" x="10" y="14" width="170" height="34"/>
+        <text class="b t-ground" x="20" y="36" font-size="11.5">8.3.2 · Planejar</text>
+        <text x="20" y="68" font-size="11">Etapas, análises críticas,</text>
+        <text x="20" y="83" font-size="11">verificação, validação,</text>
+        <text x="20" y="98" font-size="11">responsáveis, recursos e o</text>
+        <text x="20" y="113" font-size="11">cliente.</text>
+        <rect class="bx" x="188" y="14" width="170" height="152"/>
+        <rect class="hd-ink" x="188" y="14" width="170" height="34"/>
+        <text class="b t-ground" x="198" y="36" font-size="11.5">8.3.3 · Entradas</text>
+        <text x="198" y="68" font-size="11">Funcionais e de</text>
+        <text x="198" y="83" font-size="11">desempenho, legais,</text>
+        <text x="198" y="98" font-size="11">normas, projetos</text>
+        <text x="198" y="113" font-size="11">anteriores e falhas</text>
+        <text x="198" y="128" font-size="11">possíveis.</text>
+        <rect class="bx" x="366" y="14" width="170" height="152"/>
+        <rect class="hd-ink" x="366" y="14" width="170" height="34"/>
+        <text class="b t-ground" x="376" y="36" font-size="11.5">8.3.4 · Controles</text>
+        <text x="376" y="68" font-size="11">Análises críticas,</text>
+        <text x="376" y="83" font-size="11">verificação, validação e</text>
+        <text x="376" y="98" font-size="11">ações sobre os problemas.</text>
+        <rect class="bx" x="544" y="14" width="170" height="152"/>
+        <rect class="hd-ink" x="544" y="14" width="170" height="34"/>
+        <text class="b t-ground" x="554" y="36" font-size="11.5">8.3.5 · Saídas</text>
+        <text x="554" y="68" font-size="11">Atender às entradas,</text>
+        <text x="554" y="83" font-size="11">servir à produção, trazer</text>
+        <text x="554" y="98" font-size="11">os critérios de aceitação</text>
+        <text x="554" y="113" font-size="11">e o essencial ao uso</text>
+        <text x="554" y="128" font-size="11">seguro.</text>
+        <rect class="bx" x="722" y="14" width="170" height="152"/>
+        <rect class="hd-ink" x="722" y="14" width="170" height="34"/>
+        <text class="b t-ground" x="732" y="36" font-size="11.5">8.3.6 · Mudanças</text>
+        <text x="732" y="68" font-size="11">Identificar, analisar,</text>
+        <text x="732" y="83" font-size="11">autorizar e registrar,</text>
+        <text x="732" y="98" font-size="11">prevenindo efeitos</text>
+        <text x="732" y="113" font-size="11">indesejados.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 7.</b> O que a norma pede em cada parte do requisito. O texto da figura é um resumo, com palavras próprias.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:10%">Item</th><th style="width:32%">O que pede, em resumo</th><th style="width:27%">O que isso significa</th><th>Evidências que o auditor procura</th></tr></thead>
+      <tbody>
+        <tr><td class="num">8.3.1</td><td>Estabelecer um processo de projeto e desenvolvimento adequado para assegurar a provisão posterior de produtos e serviços</td><td>O desenvolvimento é um processo, e não uma sequência de tentativas.</td><td>Procedimento ou rotina de projeto, e projetos conduzidos por ela.</td></tr>
+        <tr><td class="num">8.3.2</td><td>Planejar considerando a natureza e a complexidade, as etapas, as análises críticas, a verificação e a validação, as responsabilidades, os recursos, as interfaces, o envolvimento de clientes e usuários e o que a produção precisará</td><td>Cada projeto tem plano, e o tamanho do plano acompanha o do projeto.</td><td>Plano do projeto com etapas, responsáveis e controles.</td></tr>
+        <tr><td class="num">8.3.3</td><td>Determinar as entradas: funcionais e de desempenho, de projetos anteriores, legais, normas e códigos, e as consequências de falhas. Entradas adequadas, completas e sem ambiguidade; conflitos resolvidos</td><td>As entradas estão escritas, com número e sem contradição.</td><td>Lista de entradas, ligada às saídas e às verificações.</td></tr>
+        <tr><td class="num">8.3.4</td><td>Aplicar controles: resultados definidos, análises críticas, verificação de que as saídas atendem às entradas, validação de que o produto atende ao uso pretendido, ações sobre os problemas</td><td>Os três controles acontecem e ficam registrados.</td><td>Atas de análise crítica, relatórios de verificação e de validação.</td></tr>
+        <tr><td class="num">8.3.5</td><td>As saídas atendem às entradas, servem aos processos seguintes, incluem ou citam o monitoramento e os critérios de aceitação, e indicam as características essenciais ao uso seguro</td><td>A produção recebe tudo o que precisa para fazer o produto certo.</td><td>Especificação, receita, plano de controle e critérios de aceitação.</td></tr>
+        <tr><td class="num">8.3.6</td><td>Identificar, analisar criticamente e controlar as mudanças, retendo as mudanças, os resultados das análises, a autorização e as ações para evitar impactos adversos</td><td>Nenhuma mudança sem análise e sem autorização.</td><td>Registro de mudanças de projeto.</td></tr>
+        <tr><td class="num">4.3</td><td>Justificar o requisito considerado não aplicável, quando ele não afeta a capacidade de assegurar a conformidade</td><td>A exclusão do 8.3 precisa de motivo.</td><td>Escopo, com a justificativa.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pair">
+    <div class="box">
+      <h4>O que a ISO 9001 exige</h4>
+      <ul>
+        <li>Um processo de projeto, quando a organização define o que fornece.</li>
+        <li>Plano, entradas, controles, saídas e mudanças.</li>
+        <li>Verificação e validação, que são coisas diferentes.</li>
+        <li>Registro de cada parte do projeto.</li>
+        <li>Justificativa, quando o requisito é excluído.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h4>O que a ISO 9001 não exige</h4>
+      <ul>
+        <li>Um procedimento escrito único para todos os projetos.</li>
+        <li>O mesmo tamanho de controle para um sabor e para um material novo.</li>
+        <li>Validação em laboratório: o uso real costuma ser melhor.</li>
+        <li>Os sete tipos de entrada e as conferências deste material.</li>
+        <li>Que a organização projete: ela pode excluir, com motivo.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="note">
+    <h4>Pontos de atenção</h4>
+    <p>As constatações mais comuns são a exclusão do 8.3 por quem desenvolve produto, a validação confundida com verificação, a entrada legal esquecida e a mudança depois da validação sem nova verificação. O auditor costuma escolher um produto lançado no último ano e pedir o caminho completo: as entradas, onde cada uma foi atendida, a verificação, a validação e quem liberou. Depois, pergunta o que mudou desde o lançamento.</p>
+    <p>Este módulo usa a numeração da ISO 9001:2015 e resume os textos com palavras próprias. Confira sempre a edição vigente da norma antes de citar um requisito em relatório.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 11 ============================ -->
+<section id="reuniao">
+  <p class="eyebrow">Módulo 11</p>
+  <h2>A reunião de análise crítica</h2>
+  <p>A análise crítica é a reunião que decide se o projeto segue. Dura 40 minutos, com o responsável, quem aprova e as áreas afetadas: produção, qualidade, comercial e, quando faz sentido, o cliente. Termina com uma decisão escrita.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 136" role="img" aria-label="Distribuição de uma reunião de análise crítica de 40 minutos: 10 minutos para as entradas, 15 minutos para os resultados das verificações e das validações, 10 minutos para as mudanças e os riscos, e 5 minutos para a decisão.">
+        <g font-size="11.5" text-anchor="middle">
+          <rect class="bx" x="60" y="24" width="195" height="56"/><text x="157.5" y="49">Entradas: completas</text><text x="157.5" y="64">e sem conflito?</text>
+          <rect class="hd-ink gap2" x="255" y="24" width="292.5" height="56"/><text class="t-ground b" x="401" y="49">Resultados das verificações</text><text class="t-ground b" x="401" y="64">e das validações</text>
+          <rect class="hd-d gap2" x="547.5" y="24" width="195" height="56"/><text class="on b" x="645" y="49">Mudanças</text><text class="on b" x="645" y="64">e riscos</text>
+          <rect class="bx" x="742.5" y="24" width="97.5" height="56"/><text x="791" y="56">Decisão</text>
+        </g>
+        <g class="ln-mu" stroke-width="1">
+          <line x1="60" y1="82" x2="60" y2="94"/><line x1="255" y1="82" x2="255" y2="94"/><line x1="547.5" y1="82" x2="547.5" y2="94"/>
+          <line x1="742.5" y1="82" x2="742.5" y2="94"/><line x1="840" y1="82" x2="840" y2="94"/>
+        </g>
+        <g class="mono" font-size="10.5" text-anchor="middle">
+          <text class="mu" x="60" y="112">0</text><text class="mu" x="255" y="112">10</text><text class="mu" x="547.5" y="112">25</text>
+          <text class="mu" x="742.5" y="112">35</text><text class="mu" x="840" y="112">40</text>
+        </g>
+      </svg>
+    </div>
+    <figcaption><b>Figura 8.</b> Uma reunião de análise crítica de 40 minutos, desenhada em escala. Os resultados ocupam o maior bloco; a decisão escrita fecha a reunião.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Momento</th><th style="width:42%">O que fazer</th><th>Perguntas que ajudam</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Entradas</strong></td><td>Ler as entradas: falta algum tipo? Alguma conflita com outra? Apareceu alguma nova?</td><td>“O que o cliente vai fazer com isto que não está escrito aqui?”</td></tr>
+        <tr><td><strong>Resultados</strong></td><td>Ler as verificações e as validações: o que atende, o que não atende, o que está pendente.</td><td>“Este resultado é do produto que vamos lançar?”</td></tr>
+        <tr><td><strong>Mudanças e riscos</strong></td><td>Cada mudança desde a última reunião: foi analisada? O que precisa ser verificado de novo?</td><td>“Quem mudou isto, e quem autorizou?”</td></tr>
+        <tr><td><strong>Decisão</strong></td><td>Seguir, seguir com ressalvas, voltar uma etapa ou parar. Com ações, responsáveis e prazos.</td><td>“O que precisa ser verdade para liberar?”</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Na reunião antes da liberação, leia em voz alta as três perguntas do módulo 7. Se alguma resposta for “não”, a decisão já está tomada.</p>
+
+  <h3>Checklist do projeto e desenvolvimento</h3>
+  <p>Marque os itens conforme revisa o seu projeto. As marcações ficam salvas neste navegador.</p>
+  <ol class="check" id="checklist">
+    <li><label><input type="checkbox" id="ck-1"><span>Está decidido se a organização faz projeto e desenvolvimento, e a exclusão, se houver, está justificada.</span></label></li>
+    <li><label><input type="checkbox" id="ck-2"><span>Cada projeto tem um plano: etapas, responsáveis, prazos, análises críticas, verificações e validações.</span></label></li>
+    <li><label><input type="checkbox" id="ck-3"><span>O cliente e os usuários participam quando o projeto depende deles.</span></label></li>
+    <li><label><input type="checkbox" id="ck-4"><span>As entradas estão escritas: cliente, desempenho, requisitos legais, normas, projetos anteriores, falhas potenciais e a organização.</span></label></li>
+    <li><label><input type="checkbox" id="ck-5"><span>Cada entrada é clara, completa e não conflita com as outras.</span></label></li>
+    <li><label><input type="checkbox" id="ck-6"><span>Cada entrada tem a saída que a atende e o modo de verificar.</span></label></li>
+    <li><label><input type="checkbox" id="ck-7"><span>As saídas incluem os critérios de aceitação e o que é essencial para o uso seguro.</span></label></li>
+    <li><label><input type="checkbox" id="ck-8"><span>A verificação confere as saídas contra as entradas, com registro.</span></label></li>
+    <li><label><input type="checkbox" id="ck-9"><span>A validação confere o produto no uso pretendido, antes da liberação.</span></label></li>
+    <li><label><input type="checkbox" id="ck-10"><span>As análises críticas registram os problemas encontrados e as ações.</span></label></li>
+    <li><label><input type="checkbox" id="ck-11"><span>Toda mudança no projeto é analisada, autorizada e verificada de novo, com registro.</span></label></li>
+    <li><label><input type="checkbox" id="ck-12"><span>O projeto só é liberado para a produção com a validação aprovada e as entradas verificadas.</span></label></li>
+  </ol>
+  <div class="bar"><span><b id="ck-count">0</b> de 12 itens marcados</span><button class="btn" id="ck-reset" type="button">Limpar marcações</button></div>
+</section>
+
+<!-- ============================ MÓDULO 12 ============================ -->
+<section id="pratique">
+  <p class="eyebrow">Módulo 12</p>
+  <h2>Pratique</h2>
+  <h3>Exercício 1. Que controle é este?</h3>
+  <p>Cada item descreve uma atividade de um projeto. Diga o que ela é: verificação, validação, análise crítica ou mudança de projeto.</p>
+  <div class="quiz" id="quiz"></div>
+  <div class="bar"><span>Acertos: <b id="qz-score">0</b> de <b id="qz-total">12</b></span><span>Respondidos: <b id="qz-done">0</b></span><button class="btn" id="qz-reset" type="button">Recomeçar</button></div>
+
+  <h3>Exercício 2. Monte o projeto de um produto ou serviço</h3>
+  <p>Escolha um produto ou um serviço novo, ou o último que a sua organização lançou. Abra a planilha de apoio e siga o roteiro.</p>
+  <ol>
+    <li>Na aba Plano, escreva o projeto, o objetivo, o cliente ou o usuário e o responsável.</li>
+    <li>Liste as etapas, com tipo, responsável e prazo. Inclua ao menos uma análise crítica, uma verificação e uma validação.</li>
+    <li>Na aba Entradas, passe pelos sete tipos e escreva as entradas, com a fonte de cada uma.</li>
+    <li>Para cada entrada, escreva a saída que a atende e como verificar. Lance o resultado das verificações já feitas.</li>
+    <li>Na aba Mudanças, registre o que mudou depois de aprovado, com a análise, a autorização e o que foi verificado de novo.</li>
+    <li>Leia a aba Painel: as etapas atrasadas, as entradas pendentes, as mudanças sem análise e se o projeto pode ser liberado.</li>
+    <li>Passe o checklist do módulo 11.</li>
+  </ol>
+  <p>Se o produto já foi lançado, tente refazer o caminho de uma entrada até a validação. Onde o caminho se perde, está a lacuna do seu processo de projeto.</p>
+</section>
+
+<!-- ============================ MÓDULO 13 ============================ -->
+<section id="planilha">
+  <p class="eyebrow">Módulo 13</p>
+  <h2>A planilha de apoio</h2>
+  <p>Este treinamento acompanha o arquivo <a id="xlsx-ref" href="Projeto-modelo.xlsx">Projeto-modelo.xlsx</a>, que fica na mesma pasta. As células em amarelo-claro são para preenchimento. As células cinza são calculadas.</p>
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Aba</th><th>Para que serve</th><th style="width:36%">O que ela calcula</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Instruções</strong></td><td>Legenda de cores, as regras de cálculo, ordem de preenchimento e premissas do modelo.</td><td>Nada. É só leitura.</td></tr>
+        <tr><td><strong>Plano</strong></td><td>O projeto e até 20 etapas, com tipo, responsável, participantes, prazo, conclusão, resultado, ações e registro.</td><td>A conferência de cada etapa, os atrasos e se o plano tem os três controles.</td></tr>
+        <tr><td><strong>Entradas</strong></td><td>Até 30 entradas, com tipo, fonte, saída que atende, como verificar, resultado e evidência.</td><td>A conferência de cada entrada e as pendências.</td></tr>
+        <tr><td><strong>Mudanças</strong></td><td>Até 20 mudanças, com motivo, análise, o que foi verificado de novo e quem autorizou.</td><td>A conferência de cada mudança.</td></tr>
+        <tr><td><strong>Painel</strong></td><td>Nada a preencher.</td><td>Os indicadores, as entradas por tipo, o gráfico e a resposta à pergunta “pode liberar?”.</td></tr>
+        <tr><td><strong>Checklist</strong></td><td>Os mesmos 12 itens do módulo 11, com status Sim, Parcial ou Não.</td><td>Percentual atendido e situação da validação.</td></tr>
+        <tr><td><strong>Exemplo 1 e Exemplo 2</strong></td><td>Os projetos da pizzaria e da indústria.</td><td>Conferências de etapas, entradas e mudanças.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ GLOSSÁRIO ============================ -->
+<section id="glossario">
+  <p class="eyebrow">Referência</p>
+  <h2>Glossário</h2>
+  <dl class="gloss">
+    <div><dt>Análise crítica de projeto</dt><dd>A parada para decidir se o projeto segue, muda ou para, com registro da decisão.</dd></div>
+    <div><dt>Critério de aceitação</dt><dd>O que o produto precisa atender para ser liberado, definido nas saídas do projeto.</dd></div>
+    <div><dt>Entrada de projeto</dt><dd>Um requisito que o projeto precisa atender: do cliente, de desempenho, legal, de norma, de projeto anterior, de falha possível ou da organização.</dd></div>
+    <div><dt>Exclusão</dt><dd>A declaração, no escopo, de que um requisito não se aplica, com a justificativa.</dd></div>
+    <div><dt>Liberação para produção</dt><dd>A decisão de que o projeto terminou e o produto pode ser produzido e vendido.</dd></div>
+    <div><dt>Lote de teste</dt><dd>Uma produção pequena, feita para verificar as saídas antes da produção regular.</dd></div>
+    <div><dt>Matriz de rastreabilidade</dt><dd>A ligação de cada entrada com a saída que a atende e com a verificação.</dd></div>
+    <div><dt>Mudança de projeto</dt><dd>Qualquer alteração em uma entrada ou em uma saída já aprovada.</dd></div>
+    <div><dt>Saída de projeto</dt><dd>O que o projeto entrega: especificação, receita, instruções, critérios de aceitação.</dd></div>
+    <div><dt>Uso pretendido</dt><dd>Para que o cliente vai usar o produto, e em que condições.</dd></div>
+    <div><dt>Validação</dt><dd>A prova de que o produto serve para o uso pretendido.</dd></div>
+    <div><dt>Verificação</dt><dd>A prova de que as saídas atendem às entradas.</dd></div>
+  </dl>
+</section>
+
+</main>
+</div>
+
+<footer>Material de estudo. Os exemplos, documentos e números são ilustrativos e foram criados para fins didáticos. As referências às normas ISO são resumos para estudo e não substituem o texto das normas.</footer>
+</div>
+
+<script>
+(function () {
+  function read(key) { try { return JSON.parse(localStorage.getItem(key) || 'null'); } catch (e) { return null; } }
+  function write(key, val) { try { localStorage.setItem(key, JSON.stringify(val)); } catch (e) {} }
+
+  /* ---------- Checklist ---------- */
+  var boxes = Array.prototype.slice.call(document.querySelectorAll('#checklist input'));
+  var count = document.getElementById('ck-count');
+  var saved = read('projeto-checklist') || {};
+  function refreshChecks() {
+    var n = 0, state = {};
+    boxes.forEach(function (b) { if (b.checked) { n++; } state[b.id] = b.checked; });
+    count.textContent = n;
+    return state;
+  }
+  boxes.forEach(function (b) {
+    if (saved[b.id]) { b.checked = true; }
+    b.addEventListener('change', function () { write('projeto-checklist', refreshChecks()); });
+  });
+  refreshChecks();
+  document.getElementById('ck-reset').addEventListener('click', function () {
+    boxes.forEach(function (b) { b.checked = false; });
+    write('projeto-checklist', refreshChecks());
+  });
+
+  /* ---------- Exercício ---------- */
+  var KEYS = ['V', 'A', 'C', 'M'];
+  var LABEL = { V: 'Verificação', A: 'Validação', C: 'Análise crítica', M: 'Mudança de projeto' };
+  var NAMES = { V: 'verificação', A: 'validação', C: 'análise crítica', M: 'mudança de projeto' };
+  var ITEMS = [
+    { t: '“Medir a espessura do lote de teste e comparar com os 50 ±2 µm da especificação.”', a: 'V', w: 'Confere uma saída, o lote, contra uma entrada escrita.' },
+    { t: '“Embalar brócolis na máquina do cliente, congelar e transportar por três semanas.”', a: 'A', w: 'É o uso real, nas condições do cliente.' },
+    { t: '“Reunião da Engenharia com a Qualidade e o Comercial para decidir se o projeto segue para o lote de teste.”', a: 'C', w: 'A pergunta é se o projeto segue, e a resposta é uma decisão.' },
+    { t: '“Trocar a resina do fornecedor A pela do fornecedor B, por causa do prazo.”', a: 'M', w: 'Altera uma saída aprovada. Pede análise, autorização e nova verificação.' },
+    { t: '“Servir a pizza nova a 20 clientes no salão e pedir uma nota de 1 a 5.”', a: 'A', w: 'Quem vai comprar diz se o produto serve.' },
+    { t: '“Conferir na ficha técnica se nenhum ingrediente é de origem animal.”', a: 'V', w: 'A ficha técnica é uma saída; a ausência de ingrediente animal é uma entrada.' },
+    { t: '“Calcular o custo da ficha técnica e comparar com o limite de 30% do preço.”', a: 'V', w: 'Confere a saída contra uma entrada da organização.' },
+    { t: '“O gerente e o dono decidem seguir para a degustação e pedem para resolver o custo até 25/05.”', a: 'C', w: 'Decisão sobre o andamento, com ressalva e prazo.' },
+    { t: '“Aumentar a camada interna de 15 para 20 µm, depois dos furos no transporte.”', a: 'M', w: 'Altera a especificação aprovada, em resposta à validação.' },
+    { t: '“Ensaio de queda de dardo a -18 °C no laboratório: 420 g, com o mínimo de 300 g.”', a: 'V', w: 'Ensaio em laboratório contra um critério escrito. Não é o uso real.' },
+    { t: '“Piloto de duas semanas da pizza no aplicativo, acompanhando as reclamações e a recompra.”', a: 'A', w: 'O produto no uso real, com clientes de verdade.' },
+    { t: '“Queijo vegetal da marca B no lugar da marca A, por falta no fornecedor.”', a: 'M', w: 'Muda um ingrediente da receita aprovada. O teste de forno precisa ser refeito.' }
+  ];
+  var quiz = document.getElementById('quiz');
+  var score = document.getElementById('qz-score');
+  var done = document.getElementById('qz-done');
+  document.getElementById('qz-total').textContent = ITEMS.length;
+  var hits = 0, answered = 0;
+
+  function render() {
+    hits = 0; answered = 0; score.textContent = 0; done.textContent = 0;
+    quiz.textContent = '';
+    ITEMS.forEach(function (item, idx) {
+      var row = document.createElement('div'); row.className = 'q';
+      var p = document.createElement('p'); p.textContent = (idx + 1) + '. ' + item.t;
+      var opts = document.createElement('div'); opts.className = 'opts';
+      opts.setAttribute('role', 'group'); opts.setAttribute('aria-label', 'Que controle é o item ' + (idx + 1));
+      var why = document.createElement('p'); why.className = 'why'; why.hidden = true;
+      KEYS.forEach(function (k) {
+        var b = document.createElement('button');
+        b.type = 'button'; b.textContent = LABEL[k]; b.id = 'qz-' + idx + '-' + k;
+        b.setAttribute('data-k', k);
+        b.addEventListener('click', function () {
+          var ok = k === item.a;
+          Array.prototype.forEach.call(opts.children, function (o) {
+            o.disabled = true;
+            if (o.getAttribute('data-k') === item.a) { o.className = 'right'; }
+          });
+          if (!ok) { b.className = 'wrong'; }
+          var lead = document.createElement('b');
+          lead.textContent = (ok ? 'Certo. ' : 'A resposta é: ' + NAMES[item.a] + '. ');
+          why.textContent = ''; why.appendChild(lead); why.appendChild(document.createTextNode(item.w));
+          why.className = 'why ' + (ok ? 'ok' : 'no'); why.hidden = false;
+          answered++; if (ok) { hits++; }
+          score.textContent = hits; done.textContent = answered;
+        });
+        opts.appendChild(b);
+      });
+      row.appendChild(p); row.appendChild(opts); row.appendChild(why);
+      quiz.appendChild(row);
+    });
+  }
+  render();
+  document.getElementById('qz-reset').addEventListener('click', render);
+
+  /* ---------- Gráfico: leitura dos valores ---------- */
+  var fig = document.getElementById('fig-bars');
+  var tip = document.getElementById('bars-tip');
+  var svg = document.getElementById('bars');
+  var pts = document.querySelectorAll('#bars .pt');
+  function hide() {
+    tip.hidden = true;
+    Array.prototype.forEach.call(pts, function (b) { b.removeAttribute('opacity'); });
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('#bars .hit'), function (r) {
+    function show() {
+      var d = r.dataset;
+      Array.prototype.forEach.call(pts, function (b) {
+        b.setAttribute('opacity', b.getAttribute('data-k') === d.k ? '1' : '.4');
+      });
+      tip.textContent = '';
+      var strong = document.createElement('b'); strong.textContent = d.s.charAt(0).toUpperCase() + d.s.slice(1);
+      tip.appendChild(strong);
+      tip.appendChild(document.createTextNode(d.n + ' · prazo ' + d.p + ' · concluída ' + d.c));
+      var box = fig.getBoundingClientRect();
+      var pt = svg.createSVGPoint(); pt.x = parseFloat(d.cx); pt.y = parseFloat(d.cy);
+      var scr = pt.matrixTransform(svg.getScreenCTM());
+      tip.style.left = Math.min(Math.max(scr.x - box.left, 200), box.width - 200) + 'px';
+      tip.style.top = (scr.y - box.top + 4) + 'px';
+      tip.hidden = false;
+    }
+    r.addEventListener('pointerenter', show);
+    r.addEventListener('focus', show);
+    r.addEventListener('pointerleave', hide);
+    r.addEventListener('blur', hide);
+  });
+})();
+</script>
+</body>
+</html>

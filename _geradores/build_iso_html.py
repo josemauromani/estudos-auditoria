@@ -204,7 +204,7 @@ tb.append(f'            <tr class="tot"><td>Total</td><td class="c">{GERAL[0]}</
 tb += ['          </tbody>', '        </table>']
 
 # ---- figura 9: estudos da série × seções da norma
-ORDEM = ["pi", "swot", "obj", "ped", "proc", "sipoc", "raci", "riscos", "prod", "lib", "ind", "gut", "par", "ishikawa", "w5h2", "pdca", "auditoria", "nc", "ac", "doc", "comp", "forn", "sat"]
+ORDEM = ["pi", "swot", "obj", "ped", "proj", "proc", "sipoc", "raci", "riscos", "prod", "lib", "ind", "gut", "par", "ishikawa", "w5h2", "pdca", "auditoria", "nc", "ac", "doc", "comp", "forn", "sat"]
 CX = lambda j: 350 + j * 80  # noqa: E731
 HD = {"base": "hd-ink", "p": "hd-p", "d": "hd-d", "c": "hd-c", "a": "hd-a"}
 RY, R0 = 32, 70
@@ -245,6 +245,7 @@ AJUDA = {
     "5.1.2": "Traz os indicadores de satisfação e de reclamações que a direção acompanha.",
     "7.4": "As letras C e I da matriz mostram quem precisa ser consultado e informado.",
     "8.1": "Mostra as entradas e as saídas que a operação precisa controlar.",
+    "8.3": "Traz o plano do projeto, as entradas ligadas às saídas e às verificações, a validação no uso real e o registro das mudanças.",
     "8.4.1": "Traz os critérios de homologação, o índice de desempenho e as classes com conduta.",
     "8.4.2": "Classifica os fornecedores por criticidade e registra o recebimento e as ocorrências.",
     "8.4.3": "Mostra o que o pedido de compra precisa informar ao fornecedor.",

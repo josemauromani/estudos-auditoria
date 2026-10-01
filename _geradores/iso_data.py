@@ -46,6 +46,7 @@ ESTUDOS = {
     "prod": ("Controle de produção e de serviço", "../Producao/treinamento-producao.html"),
     "lib": ("Liberação e produto não conforme", "../Liberacao/treinamento-liberacao.html"),
     "ped": ("Requisitos do cliente e análise de pedidos", "../Pedidos/treinamento-pedidos.html"),
+    "proj": ("Projeto e desenvolvimento", "../Projeto/treinamento-projeto.html"),
 }
 
 
@@ -168,7 +169,7 @@ REQ = _req([
     ("8.3", "Projeto e desenvolvimento de produtos e serviços",
      "Estabelecer um processo de projeto e desenvolvimento com planejamento, entradas, controles, saídas e mudanças. Os controles incluem análises críticas, verificação e validação.",
      "Como uma ideia vira produto ou serviço, e como se confirma que ele funciona?",
-     "Plano de projeto, requisitos de entrada, registros de verificação e de validação.", ()),
+     "Plano de projeto, requisitos de entrada, registros de verificação e de validação.", ("proj",)),
     ("8.4.1", "Provedores externos: generalidades",
      "Assegurar que processos, produtos e serviços providos externamente atendam aos requisitos. Determinar e aplicar critérios para avaliar, selecionar, monitorar o desempenho e reavaliar os provedores externos.",
      "Como os fornecedores são escolhidos e acompanhados?",

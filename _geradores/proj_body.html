@@ -1,0 +1,631 @@
+<body>
+<div class="page" lang="pt-BR">
+
+<header class="mast">
+  <div class="tiles" aria-hidden="true"><span class="p">E</span><span class="d">S</span><span class="c">V</span></div>
+  <h1>Projeto e desenvolvimento na prática</h1>
+  <p class="lead">Um guia de estudo para planejar o desenvolvimento de um produto ou serviço, escrever as entradas, conferir as saídas, validar no uso real e controlar as mudanças até a liberação para a produção.</p>
+  <ul class="meta">
+    <li>Treinamento autoinstrucional</li>
+    <li>13 módulos</li>
+    <li>Leitura de cerca de 50 minutos</li>
+    <li>3 exemplos resolvidos e 2 exercícios</li>
+  </ul>
+</header>
+
+<div class="layout">
+
+<nav class="toc" aria-label="Sumário">
+  <h2>Sumário</h2>
+  <ol>
+    <li><a href="#o-que-e">O que é</a></li>
+    <li><a href="#quando">Quando usar</a></li>
+    <li><a href="#como">Como construir</a></li>
+    <li><a href="#entradas">As entradas</a></li>
+    <li><a href="#controles">Verificar, validar e analisar</a></li>
+    <li><a href="#exemplos">Exemplos resolvidos</a></li>
+    <li><a href="#leitura">Ler o andamento</a></li>
+    <li><a href="#erros">Erros comuns</a></li>
+    <li><a href="#ferramentas">O projeto e outras ferramentas</a></li>
+    <li><a href="#iso">Nas normas ISO</a></li>
+    <li><a href="#reuniao">A reunião de análise crítica</a></li>
+    <li><a href="#pratique">Pratique</a></li>
+    <li><a href="#planilha">A planilha de apoio</a></li>
+    <li><a href="#glossario">Glossário</a></li>
+  </ol>
+</nav>
+
+<main>
+
+<!-- ============================ MÓDULO 1 ============================ -->
+<section id="o-que-e">
+  <p class="eyebrow">Módulo 1</p>
+  <h2>O que é</h2>
+  <p>Projeto e desenvolvimento é o caminho entre uma necessidade e um produto, ou um serviço, que a organização sabe produzir de forma repetida. Um sabor novo no cardápio, um filme para um uso que a fábrica nunca atendeu, um serviço novo de entrega: em todos, alguém decide o que o produto precisa atender, transforma isso em uma receita ou uma especificação e confere se deu certo antes de vender.</p>
+  <p>As letras do título resumem o caminho: <span class="k p">E</span> as entradas, o que o projeto precisa atender; <span class="k d">S</span> as saídas, o que o projeto entrega para a produção; e <span class="k c">V</span> a validação, a prova de que o produto serve para o uso pretendido.</p>
+
+  <figure>
+    <div class="scroll">
+<!--VMODEL-->
+    </div>
+    <figcaption><b>Figura 1.</b> O projeto em forma de V. A verificação compara o que foi feito com o que foi escrito; a validação compara o produto com o uso real.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Elemento</th><th style="width:40%">O que é</th><th>Exemplo</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Entrada</strong></td><td>Um requisito que o projeto precisa atender.</td><td>Queda de dardo de pelo menos 300 g a -18 °C.</td></tr>
+        <tr><td><strong>Saída</strong></td><td>O que o projeto entrega para a produção e para o uso.</td><td>A especificação, a receita de extrusão, o critério de aceitação.</td></tr>
+        <tr><td><strong>Análise crítica</strong></td><td>A parada para decidir se o projeto segue, muda ou para.</td><td>A reunião antes do lote de teste.</td></tr>
+        <tr><td><strong>Verificação</strong></td><td>A conferência de que as saídas atendem às entradas.</td><td>Ensaiar o lote de teste e comparar com a especificação.</td></tr>
+        <tr><td><strong>Validação</strong></td><td>A conferência de que o produto serve para o uso pretendido.</td><td>Embalar, congelar e transportar no cliente por três semanas.</td></tr>
+        <tr><td><strong>Mudança de projeto</strong></td><td>Qualquer alteração em uma entrada ou em uma saída já aprovada.</td><td>Trocar a resina de fornecedor.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 2 ============================ -->
+<section id="quando">
+  <p class="eyebrow">Módulo 2</p>
+  <h2>Quando usar</h2>
+  <p>O requisito vale quando a organização define as características do que vai fornecer. Quem só produz pelo desenho do cliente, sem decidir nada sobre o produto, pode não ter projeto e desenvolvimento, e declara isso no escopo, com a justificativa.</p>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:28%">Momento</th><th style="width:38%">O que fazer</th><th>Resultado</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Produto ou serviço novo</strong></td><td>Abrir o projeto, com plano, entradas e controles.</td><td>O desenvolvimento tem dono, prazo e critério.</td></tr>
+        <tr><td><strong>Uso novo para um produto conhecido</strong></td><td>Tratar como projeto: o uso traz entradas novas.</td><td>O filme comum não vai ao freezer sem ser validado para isso.</td></tr>
+        <tr><td><strong>Fim de cada fase</strong></td><td>Analisar criticamente: o projeto segue, muda ou para?</td><td>O problema aparece antes de custar o lote.</td></tr>
+        <tr><td><strong>Saída pronta</strong></td><td>Verificar contra as entradas, com registro.</td><td>A especificação atende ao que foi pedido.</td></tr>
+        <tr><td><strong>Antes de liberar</strong></td><td>Validar no uso real, ou o mais perto dele.</td><td>O produto funciona onde o cliente vai usar.</td></tr>
+        <tr><td><strong>Qualquer mudança</strong></td><td>Analisar o impacto, autorizar e verificar de novo.</td><td>O que foi provado continua provado.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pair">
+    <div class="box">
+      <h4>É projeto e desenvolvimento</h4>
+      <ul>
+        <li>Um sabor novo, com receita, custo e tempo de forno a definir.</li>
+        <li>Um filme para um uso que a fábrica não atendia.</li>
+        <li>Um serviço novo: entrega agendada, assinatura, retirada.</li>
+        <li>Uma mudança grande em um produto que já existe.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h4>Pode não ser</h4>
+      <ul>
+        <li>Fabricar pelo desenho e pela especificação do cliente, sem alterar nada.</li>
+        <li>Revender um produto pronto, como ele vem.</li>
+        <li>O ajuste de rotina previsto no plano de controle.</li>
+        <li>Nesses casos, a exclusão do 8.3 é escrita no escopo, com o motivo.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 3 ============================ -->
+<section id="como">
+  <p class="eyebrow">Módulo 3</p>
+  <h2>Como construir</h2>
+  <p>O tamanho do controle acompanha o tamanho do projeto. Um sabor novo cabe em uma página; um material novo para alimentos congelados pede ensaios, laudos e o cliente junto. O erro mais comum é o contrário: o projeto grande tratado como teste informal, porque “sempre foi assim”.</p>
+
+  <figure>
+    <div class="scroll">
+<!--FLUXO-->
+    </div>
+    <figcaption><b>Figura 2.</b> As cinco etapas. A volta tracejada é a mais importante: a validação reprovada mostra o que as entradas não diziam.</figcaption>
+  </figure>
+
+  <h3>Passo a passo</h3>
+  <ol class="steps">
+    <li><h4>Abra o projeto, com responsável e objetivo</h4><p>Um código, um nome, o cliente ou o usuário, a data pretendida. O responsável conduz; quem aprova está escrito.</p></li>
+    <li><h4>Faça o plano</h4><p>As etapas, com responsáveis e prazos, e onde ficam as análises críticas, as verificações e as validações. Diga quem participa: produção, qualidade, cliente.</p></li>
+    <li><h4>Escreva as entradas</h4><p>Pelos sete tipos: cliente, desempenho, lei, normas, projetos anteriores, falhas potenciais e a organização. Cada uma clara, mensurável e sem conflito com as outras.</p></li>
+    <li><h4>Ligue cada entrada a uma saída e a uma verificação</h4><p>Onde o projeto atende à entrada, e como se confere. Essa ligação é a matriz de rastreabilidade do projeto.</p></li>
+    <li><h4>Desenvolva as saídas</h4><p>A especificação, a receita, as instruções, os critérios de aceitação e o que é essencial para o uso seguro. É o que a produção vai usar.</p></li>
+    <li><h4>Verifique e analise criticamente</h4><p>As saídas contra as entradas. O que não atende vira ação, e a análise crítica decide se o projeto segue.</p></li>
+    <li><h4>Valide no uso real</h4><p>Com o cliente ou o usuário, nas condições de uso. A validação pode reprovar o que a verificação aprovou, e isso é um bom resultado.</p></li>
+    <li><h4>Libere e controle as mudanças</h4><p>Só com a validação aprovada e as entradas verificadas. Depois disso, toda mudança é analisada, autorizada e verificada de novo.</p></li>
+  </ol>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:26%">Papel</th><th style="width:28%">Quem costuma ser</th><th>O que faz</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Responsável pelo projeto</strong></td><td>Engenharia, ou o pizzaiolo líder.</td><td>Planeja, conduz e mantém o registro.</td></tr>
+        <tr><td><strong>Quem aprova</strong></td><td>A direção, ou o gerente.</td><td>Decide nas análises críticas e libera para a produção.</td></tr>
+        <tr><td><strong>Quem verifica</strong></td><td>Laboratório, qualidade, quem conhece o critério.</td><td>Confere as saídas contra as entradas.</td></tr>
+        <tr><td><strong>Quem valida</strong></td><td>O cliente ou o usuário, com a organização.</td><td>Usa o produto nas condições reais e diz se serve.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 4 ============================ -->
+<section id="entradas">
+  <p class="eyebrow">Módulo 4</p>
+  <h2>As entradas</h2>
+  <p>A qualidade do projeto é decidida nas entradas. Uma entrada que falta não é verificada, e o produto sai “conforme” com um defeito que ninguém procurou. A norma pede que as entradas sejam adequadas, completas e sem ambiguidade, e que os conflitos entre elas sejam resolvidos.</p>
+
+  <figure>
+    <div class="scroll">
+<!--TIPOS-->
+    </div>
+    <figcaption><b>Figura 3.</b> Os sete tipos de entrada, com exemplos do filme para congelados. Passar pelos sete é o jeito de não esquecer nenhum.</figcaption>
+  </figure>
+
+  <div class="pair">
+    <div class="box">
+      <h4>Entrada bem escrita</h4>
+      <ul>
+        <li>“Queda de dardo de pelo menos 300 g a -18 °C.”</li>
+        <li>“Tempo de forno de até 7 minutos, como o das outras pizzas.”</li>
+        <li>“Custo de insumos de até 30% do preço de venda.”</li>
+        <li>Tem número, condição e um jeito de conferir.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h4>Entrada mal escrita</h4>
+      <ul>
+        <li>“Filme resistente.”</li>
+        <li>“Sabor agradável.”</li>
+        <li>“Custo competitivo.”</li>
+        <li>“Atender ao cliente.”</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="note">
+    <h4>A entrada que só a validação revela</h4>
+    <p>Nenhuma lista de entradas é perfeita. Na indústria, ninguém escreveu que o filme precisava resistir às pontas dos vegetais congelados, porque ninguém tinha pensado nisso. O lote de teste passou em todos os ensaios, e os pacotes furaram no transporte. É por isso que a validação existe, e é por isso que ela acontece antes da liberação: a entrada que faltava vira entrada, e o projeto volta uma etapa, com custo pequeno.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 5 ============================ -->
+<section id="controles">
+  <p class="eyebrow">Módulo 5</p>
+  <h2>Verificar, validar e analisar</h2>
+  <p>A norma pede três controles diferentes, e a confusão entre eles é uma das constatações mais comuns em auditoria. Cada um responde a uma pergunta.</p>
+
+  <figure>
+    <div class="scroll">
+<!--CONTROLES-->
+    </div>
+    <figcaption><b>Figura 4.</b> Os três controles do projeto. Podem acontecer na mesma reunião, mas respondem a perguntas diferentes e têm registros diferentes.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:22%">Resultado</th><th style="width:40%">Quando</th><th>O que registrar</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Aprovado</strong></td><td>O controle não encontrou problema.</td><td>O registro, com a data e quem participou.</td></tr>
+        <tr><td><strong>Aprovado com ressalvas</strong></td><td>Há um problema, e o projeto pode seguir enquanto ele é resolvido.</td><td>A ressalva, a ação e o prazo.</td></tr>
+        <tr><td><strong>Reprovado</strong></td><td>O problema impede o projeto de seguir.</td><td>O problema e a ação: entrada nova, saída revista, etapa refeita.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note">
+    <h4>A verificação não substitui a validação</h4>
+    <p>A verificação confere o que foi escrito: se a entrada está errada ou falta, a verificação aprova um produto que não serve. A validação confere o que vai acontecer com o cliente, e pega o que as entradas não disseram. Na pizzaria, a verificação mostrou que a pizza não leva ingrediente de origem animal; só a degustação com clientes mostrou se ela vende.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 6 ============================ -->
+<section id="exemplos">
+  <p class="eyebrow">Módulo 6</p>
+  <h2>Exemplos resolvidos</h2>
+  <p>Um sabor novo na pizzaria e um filme novo na indústria, com o plano, as entradas e as mudanças, e a história de uma validação que reprovou o que a verificação tinha aprovado. As organizações são as dos outros estudos da série; o projeto da indústria continua o pedido PR-118 do estudo de requisitos do cliente. Os dois primeiros exemplos também estão preenchidos na planilha de apoio. Os dados são ilustrativos e foram criados para este treinamento.</p>
+
+  <h3>Exemplo 1. A pizza vegana do cardápio de inverno</h3>
+<!--EX1HEAD-->
+<!--EX1ETAPAS-->
+<!--EX1ENTRADAS-->
+<!--EX1MUD-->
+  <p><strong>O que observar.</strong> O plano tem os três controles: verificação, análise crítica e validação com clientes. A verificação achou o custo de 34%, e a análise crítica fez o certo: deixou o projeto seguir para a degustação e deu prazo para resolver o custo. O problema está nas mudanças. Em 12/05, por falta no fornecedor, o queijo vegetal mudou de marca sem nenhuma análise. A degustação de 20/05 foi feita com a marca B, e o teste de forno que aprovou o queijo, com a marca A. A validação aprovou uma receita que a verificação não conferiu, e o fornecedor da marca B nem está homologado. Na véspera do lançamento, o custo continua sem verificação e duas entradas continuam abertas. A planilha mostra o que a reunião precisa decidir: adiar a liberação, ou voltar à marca A e lançar com o custo provado.</p>
+
+  <h3>Exemplo 2. O filme para vegetais congelados</h3>
+<!--EX2HEAD-->
+<!--EX2ETAPAS-->
+<!--EX2ENTRADAS-->
+<!--EX2MUD-->
+  <p><strong>O que observar.</strong> O projeto da fábrica tem tudo o que a norma pede: plano com o cliente, entradas dos sete tipos, verificação em laboratório, validação no cliente e análises críticas. A validação reprovou o filme, e o sistema funcionou: entrou a E9, a camada interna mudou com análise e com a verificação planejada, e a segunda validação foi marcada. A troca de resina de julho também foi feita do jeito certo, com o ensaio repetido. A mudança de 22/08 é a exceção: a Produção engrossou o filme para 52 µm, no limite da tolerância de ±2 µm da entrada E1, sem análise e com a autorização do líder do turno. É uma mudança de projeto feita como ajuste de máquina, e o lote 2, que deveria verificá-la, está atrasado.</p>
+
+  <h3>Exemplo 3. A validação que reprovou o que a verificação aprovou</h3>
+  <figure>
+    <div class="scroll">
+<!--EX3FIG-->
+    </div>
+    <figcaption><b>Figura 5.</b> Do lote de teste à segunda validação, no projeto D-07. O furo no transporte virou uma entrada nova.</figcaption>
+  </figure>
+  <p><strong>O que observar.</strong> Se o projeto tivesse parado na verificação, o filme teria sido liberado em julho e os furos teriam aparecido nos pedidos firmes, em toneladas, e não em 500 kg. A validação custou três semanas e um lote de teste; a falta dela custaria a confiança do cliente novo. O ponto mais fino é o que vem depois: a entrada nova volta para a matriz, com saída e verificação, e a validação se repete. Validar uma vez e mudar o produto depois não vale.</p>
+</section>
+
+<!-- ============================ MÓDULO 7 ============================ -->
+<section id="leitura">
+  <p class="eyebrow">Módulo 7</p>
+  <h2>Ler o andamento</h2>
+  <p>O projeto é lido de três jeitos: o plano, para ver o que atrasou; as entradas, para ver o que ainda não foi verificado; e as mudanças, para ver o que mudou sem análise. A liberação só acontece quando os três estão em dia.</p>
+
+  <figure id="fig-bars">
+    <div class="scroll">
+<!--CHART-->
+    </div>
+    <div class="tip" id="bars-tip" hidden></div>
+    <figcaption><b>Figura 6.</b> Prazo e conclusão de cada etapa do projeto D-07, na leitura de 30/08. O círculo vazado é o prazo; o cheio, a conclusão. Passe o mouse sobre as linhas para ver os valores.</figcaption>
+    <details class="data">
+      <summary>Ver os dados em tabela</summary>
+      <div class="tbl">
+<!--CHARTTABLE-->
+      </div>
+    </details>
+  </figure>
+
+<!--CHARTTEXT-->
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:28%">Conferência</th><th style="width:38%">Regra deste material</th><th>O que fazer</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Atrasada</strong></td><td>A etapa não foi concluída, e o prazo é anterior à data da leitura.</td><td>Saber o que falta, e o que depende dela.</td></tr>
+        <tr><td><strong>Falta a ação</strong></td><td>Resultado com ressalvas ou reprovado, sem a ação registrada.</td><td>Registrar a ação e o prazo antes de seguir.</td></tr>
+        <tr><td><strong>Liberado sem validação aprovada</strong></td><td>A liberação para produção foi concluída sem nenhuma validação aprovada.</td><td>Validar agora, e tratar o que já foi produzido.</td></tr>
+        <tr><td><strong>Verificação pendente</strong></td><td>A entrada não tem resultado de verificação.</td><td>Verificar antes da liberação.</td></tr>
+        <tr><td><strong>Não atende</strong></td><td>A verificação reprovou a entrada.</td><td>Com ação, acompanhar; sem ação, decidir na análise crítica.</td></tr>
+        <tr><td><strong>Mudança sem análise</strong></td><td>O projeto mudou, e ninguém avaliou o impacto.</td><td>Analisar, e decidir o que precisa ser verificado ou validado de novo.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note">
+    <h4>Antes de liberar</h4>
+    <p>Três perguntas, e todas precisam de “sim”: alguma validação foi aprovada? Todas as entradas foram verificadas e atendem? Todas as mudanças foram analisadas e verificadas de novo? O lançamento com data marcada é a maior pressão contra essas perguntas, e é exatamente quando elas mais importam.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 8 ============================ -->
+<section id="erros">
+  <p class="eyebrow">Módulo 8</p>
+  <h2>Erros comuns</h2>
+  <div class="errs">
+    <div><h4>Projeto sem plano</h4><p>“A gente vai testando até dar certo.” Ninguém sabe quando acaba nem quem decide.</p><p class="fix"><b>Correção:</b> etapas, responsáveis, prazos e os três controles, por escrito.</p></div>
+    <div><h4>Entrada vaga</h4><p>“Filme resistente.” Qualquer resultado passa.</p><p class="fix"><b>Correção:</b> número, condição e método de conferir.</p></div>
+    <div><h4>Esquecer um tipo de entrada</h4><p>A lei, a norma, a falha que já aconteceu em outro projeto.</p><p class="fix"><b>Correção:</b> passar pelos sete tipos, um por um.</p></div>
+    <div><h4>Verificar e chamar de validação</h4><p>O lote passou no laboratório, e o projeto foi liberado.</p><p class="fix"><b>Correção:</b> validar no uso real, com o cliente ou o usuário.</p></div>
+    <div><h4>Validar só com a equipe</h4><p>Quem fez a pizza acha que ela está ótima.</p><p class="fix"><b>Correção:</b> validar com quem vai usar, nas condições de uso.</p></div>
+    <div><h4>Análise crítica sem decisão</h4><p>A reunião aconteceu, e ninguém escreveu o que foi decidido.</p><p class="fix"><b>Correção:</b> ata com o resultado, as ressalvas e as ações.</p></div>
+    <div><h4>Mudança como ajuste</h4><p>A Produção engrossou o filme “para compensar”, sem falar com a Engenharia.</p><p class="fix"><b>Correção:</b> toda alteração de saída aprovada é mudança de projeto.</p></div>
+    <div><h4>Validar e depois mudar</h4><p>A marca do queijo mudou depois do teste de forno, e ninguém testou de novo.</p><p class="fix"><b>Correção:</b> a mudança diz o que precisa ser verificado ou validado outra vez.</p></div>
+    <div><h4>Liberar pela data</h4><p>O cardápio já foi impresso, então a pizza entra, com o custo sem conferir.</p><p class="fix"><b>Correção:</b> as três perguntas antes de liberar, com a data a serviço do projeto.</p></div>
+    <div><h4>Saída que a produção não usa</h4><p>A especificação ficou com a Engenharia, e a extrusora roda pela receita antiga.</p><p class="fix"><b>Correção:</b> as saídas chegam ao plano de controle e à instrução do posto.</p></div>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 9 ============================ -->
+<section id="ferramentas">
+  <p class="eyebrow">Módulo 9</p>
+  <h2>O projeto e outras ferramentas</h2>
+  <p>O projeto e desenvolvimento junta muitas ferramentas da série. Recebe os requisitos do cliente e os riscos; entrega à produção um plano de controle novo, e à organização um produto que ela sabe fazer.</p>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:26%">Ferramenta</th><th style="width:37%">O que ela entrega ao projeto</th><th>O que recebe do projeto</th></tr></thead>
+      <tbody>
+        <tr><td><a href="../ISO-9001/treinamento-iso-9001.html"><strong>ISO 9001 requisito a requisito</strong></a></td><td>O requisito 8.3, e a lacuna de cada organização.</td><td>O plano, as entradas, as verificações e as validações, como evidência.</td></tr>
+        <tr><td><a href="../Pedidos/treinamento-pedidos.html"><strong>Requisitos do cliente e análise de pedidos</strong></a></td><td>O pedido que vira projeto, e os requisitos não declarados.</td><td>O que a organização passa a oferecer, e o que não garante.</td></tr>
+        <tr><td><a href="../Partes-Interessadas/treinamento-partes-interessadas.html"><strong>Partes interessadas</strong></a></td><td>Os requisitos de clientes, de reguladores e da sociedade.</td><td>O requisito atendido pelo produto novo.</td></tr>
+        <tr><td><a href="../Riscos/treinamento-riscos.html"><strong>Matriz de riscos</strong></a></td><td>As falhas possíveis, que viram entradas.</td><td>Os riscos do produto novo, para tratar antes do lançamento.</td></tr>
+        <tr><td><a href="../5W2H/treinamento-5w2h.html"><strong>5W2H</strong></a></td><td>O plano detalhado das ações das análises críticas.</td><td>As ações, com responsável e prazo.</td></tr>
+        <tr><td><a href="../Fornecedores/treinamento-fornecedores.html"><strong>Avaliação de fornecedores</strong></a></td><td>A homologação do insumo novo.</td><td>O fornecedor e o item que precisam ser avaliados.</td></tr>
+        <tr><td><a href="../Producao/treinamento-producao.html"><strong>Controle de produção e de serviço</strong></a></td><td>O que o processo alcança hoje.</td><td>As saídas: critérios e controles do plano de controle novo.</td></tr>
+        <tr><td><a href="../Liberacao/treinamento-liberacao.html"><strong>Liberação e produto não conforme</strong></a></td><td>Os defeitos do produto já em produção, que ensinam o próximo projeto.</td><td>Os critérios de aceitação do produto novo.</td></tr>
+        <tr><td><a href="../Informacao-Documentada/treinamento-informacao-documentada.html"><strong>Informação documentada</strong></a></td><td>O controle de revisão da especificação e da receita.</td><td>O registro do projeto, que a norma pede.</td></tr>
+        <tr><td><a href="../Competencias/treinamento-competencias.html"><strong>Matriz de competências</strong></a></td><td>Quem sabe projetar, ensaiar e validar.</td><td>O treinamento da equipe no produto novo.</td></tr>
+        <tr><td><a href="../Analise-Critica/treinamento-analise-critica.html"><strong>Análise crítica pela direção</strong></a></td><td>Os recursos e as prioridades dos projetos.</td><td>A situação dos projetos e o que foi lançado.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 10 ============================ -->
+<section id="iso">
+  <p class="eyebrow">Módulo 10</p>
+  <h2>Nas normas ISO</h2>
+  <p>Projeto e desenvolvimento está no requisito 8.3 da ISO 9001:2015, em seis partes: a geral, o planejamento, as entradas, os controles, as saídas e as mudanças. Cada parte pede um registro. É o requisito que mais aparece como “não aplicável” nos escopos, e a exclusão só vale se a organização realmente não define as características do que fornece.</p>
+
+  <figure>
+    <div class="scroll">
+<!--ISOFIG-->
+    </div>
+    <figcaption><b>Figura 7.</b> O que a norma pede em cada parte do requisito. O texto da figura é um resumo, com palavras próprias.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:10%">Item</th><th style="width:32%">O que pede, em resumo</th><th style="width:27%">O que isso significa</th><th>Evidências que o auditor procura</th></tr></thead>
+      <tbody>
+        <tr><td class="num">8.3.1</td><td>Estabelecer um processo de projeto e desenvolvimento adequado para assegurar a provisão posterior de produtos e serviços</td><td>O desenvolvimento é um processo, e não uma sequência de tentativas.</td><td>Procedimento ou rotina de projeto, e projetos conduzidos por ela.</td></tr>
+        <tr><td class="num">8.3.2</td><td>Planejar considerando a natureza e a complexidade, as etapas, as análises críticas, a verificação e a validação, as responsabilidades, os recursos, as interfaces, o envolvimento de clientes e usuários e o que a produção precisará</td><td>Cada projeto tem plano, e o tamanho do plano acompanha o do projeto.</td><td>Plano do projeto com etapas, responsáveis e controles.</td></tr>
+        <tr><td class="num">8.3.3</td><td>Determinar as entradas: funcionais e de desempenho, de projetos anteriores, legais, normas e códigos, e as consequências de falhas. Entradas adequadas, completas e sem ambiguidade; conflitos resolvidos</td><td>As entradas estão escritas, com número e sem contradição.</td><td>Lista de entradas, ligada às saídas e às verificações.</td></tr>
+        <tr><td class="num">8.3.4</td><td>Aplicar controles: resultados definidos, análises críticas, verificação de que as saídas atendem às entradas, validação de que o produto atende ao uso pretendido, ações sobre os problemas</td><td>Os três controles acontecem e ficam registrados.</td><td>Atas de análise crítica, relatórios de verificação e de validação.</td></tr>
+        <tr><td class="num">8.3.5</td><td>As saídas atendem às entradas, servem aos processos seguintes, incluem ou citam o monitoramento e os critérios de aceitação, e indicam as características essenciais ao uso seguro</td><td>A produção recebe tudo o que precisa para fazer o produto certo.</td><td>Especificação, receita, plano de controle e critérios de aceitação.</td></tr>
+        <tr><td class="num">8.3.6</td><td>Identificar, analisar criticamente e controlar as mudanças, retendo as mudanças, os resultados das análises, a autorização e as ações para evitar impactos adversos</td><td>Nenhuma mudança sem análise e sem autorização.</td><td>Registro de mudanças de projeto.</td></tr>
+        <tr><td class="num">4.3</td><td>Justificar o requisito considerado não aplicável, quando ele não afeta a capacidade de assegurar a conformidade</td><td>A exclusão do 8.3 precisa de motivo.</td><td>Escopo, com a justificativa.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pair">
+    <div class="box">
+      <h4>O que a ISO 9001 exige</h4>
+      <ul>
+        <li>Um processo de projeto, quando a organização define o que fornece.</li>
+        <li>Plano, entradas, controles, saídas e mudanças.</li>
+        <li>Verificação e validação, que são coisas diferentes.</li>
+        <li>Registro de cada parte do projeto.</li>
+        <li>Justificativa, quando o requisito é excluído.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h4>O que a ISO 9001 não exige</h4>
+      <ul>
+        <li>Um procedimento escrito único para todos os projetos.</li>
+        <li>O mesmo tamanho de controle para um sabor e para um material novo.</li>
+        <li>Validação em laboratório: o uso real costuma ser melhor.</li>
+        <li>Os sete tipos de entrada e as conferências deste material.</li>
+        <li>Que a organização projete: ela pode excluir, com motivo.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="note">
+    <h4>Pontos de atenção</h4>
+    <p>As constatações mais comuns são a exclusão do 8.3 por quem desenvolve produto, a validação confundida com verificação, a entrada legal esquecida e a mudança depois da validação sem nova verificação. O auditor costuma escolher um produto lançado no último ano e pedir o caminho completo: as entradas, onde cada uma foi atendida, a verificação, a validação e quem liberou. Depois, pergunta o que mudou desde o lançamento.</p>
+    <p>Este módulo usa a numeração da ISO 9001:2015 e resume os textos com palavras próprias. Confira sempre a edição vigente da norma antes de citar um requisito em relatório.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 11 ============================ -->
+<section id="reuniao">
+  <p class="eyebrow">Módulo 11</p>
+  <h2>A reunião de análise crítica</h2>
+  <p>A análise crítica é a reunião que decide se o projeto segue. Dura 40 minutos, com o responsável, quem aprova e as áreas afetadas: produção, qualidade, comercial e, quando faz sentido, o cliente. Termina com uma decisão escrita.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 136" role="img" aria-label="Distribuição de uma reunião de análise crítica de 40 minutos: 10 minutos para as entradas, 15 minutos para os resultados das verificações e das validações, 10 minutos para as mudanças e os riscos, e 5 minutos para a decisão.">
+        <g font-size="11.5" text-anchor="middle">
+          <rect class="bx" x="60" y="24" width="195" height="56"/><text x="157.5" y="49">Entradas: completas</text><text x="157.5" y="64">e sem conflito?</text>
+          <rect class="hd-ink gap2" x="255" y="24" width="292.5" height="56"/><text class="t-ground b" x="401" y="49">Resultados das verificações</text><text class="t-ground b" x="401" y="64">e das validações</text>
+          <rect class="hd-d gap2" x="547.5" y="24" width="195" height="56"/><text class="on b" x="645" y="49">Mudanças</text><text class="on b" x="645" y="64">e riscos</text>
+          <rect class="bx" x="742.5" y="24" width="97.5" height="56"/><text x="791" y="56">Decisão</text>
+        </g>
+        <g class="ln-mu" stroke-width="1">
+          <line x1="60" y1="82" x2="60" y2="94"/><line x1="255" y1="82" x2="255" y2="94"/><line x1="547.5" y1="82" x2="547.5" y2="94"/>
+          <line x1="742.5" y1="82" x2="742.5" y2="94"/><line x1="840" y1="82" x2="840" y2="94"/>
+        </g>
+        <g class="mono" font-size="10.5" text-anchor="middle">
+          <text class="mu" x="60" y="112">0</text><text class="mu" x="255" y="112">10</text><text class="mu" x="547.5" y="112">25</text>
+          <text class="mu" x="742.5" y="112">35</text><text class="mu" x="840" y="112">40</text>
+        </g>
+      </svg>
+    </div>
+    <figcaption><b>Figura 8.</b> Uma reunião de análise crítica de 40 minutos, desenhada em escala. Os resultados ocupam o maior bloco; a decisão escrita fecha a reunião.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Momento</th><th style="width:42%">O que fazer</th><th>Perguntas que ajudam</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Entradas</strong></td><td>Ler as entradas: falta algum tipo? Alguma conflita com outra? Apareceu alguma nova?</td><td>“O que o cliente vai fazer com isto que não está escrito aqui?”</td></tr>
+        <tr><td><strong>Resultados</strong></td><td>Ler as verificações e as validações: o que atende, o que não atende, o que está pendente.</td><td>“Este resultado é do produto que vamos lançar?”</td></tr>
+        <tr><td><strong>Mudanças e riscos</strong></td><td>Cada mudança desde a última reunião: foi analisada? O que precisa ser verificado de novo?</td><td>“Quem mudou isto, e quem autorizou?”</td></tr>
+        <tr><td><strong>Decisão</strong></td><td>Seguir, seguir com ressalvas, voltar uma etapa ou parar. Com ações, responsáveis e prazos.</td><td>“O que precisa ser verdade para liberar?”</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Na reunião antes da liberação, leia em voz alta as três perguntas do módulo 7. Se alguma resposta for “não”, a decisão já está tomada.</p>
+
+  <h3>Checklist do projeto e desenvolvimento</h3>
+  <p>Marque os itens conforme revisa o seu projeto. As marcações ficam salvas neste navegador.</p>
+  <ol class="check" id="checklist">
+<!--CHECK-->
+  </ol>
+  <div class="bar"><span><b id="ck-count">0</b> de 12 itens marcados</span><button class="btn" id="ck-reset" type="button">Limpar marcações</button></div>
+</section>
+
+<!-- ============================ MÓDULO 12 ============================ -->
+<section id="pratique">
+  <p class="eyebrow">Módulo 12</p>
+  <h2>Pratique</h2>
+  <h3>Exercício 1. Que controle é este?</h3>
+  <p>Cada item descreve uma atividade de um projeto. Diga o que ela é: verificação, validação, análise crítica ou mudança de projeto.</p>
+  <div class="quiz" id="quiz"></div>
+  <div class="bar"><span>Acertos: <b id="qz-score">0</b> de <b id="qz-total">12</b></span><span>Respondidos: <b id="qz-done">0</b></span><button class="btn" id="qz-reset" type="button">Recomeçar</button></div>
+
+  <h3>Exercício 2. Monte o projeto de um produto ou serviço</h3>
+  <p>Escolha um produto ou um serviço novo, ou o último que a sua organização lançou. Abra a planilha de apoio e siga o roteiro.</p>
+  <ol>
+    <li>Na aba Plano, escreva o projeto, o objetivo, o cliente ou o usuário e o responsável.</li>
+    <li>Liste as etapas, com tipo, responsável e prazo. Inclua ao menos uma análise crítica, uma verificação e uma validação.</li>
+    <li>Na aba Entradas, passe pelos sete tipos e escreva as entradas, com a fonte de cada uma.</li>
+    <li>Para cada entrada, escreva a saída que a atende e como verificar. Lance o resultado das verificações já feitas.</li>
+    <li>Na aba Mudanças, registre o que mudou depois de aprovado, com a análise, a autorização e o que foi verificado de novo.</li>
+    <li>Leia a aba Painel: as etapas atrasadas, as entradas pendentes, as mudanças sem análise e se o projeto pode ser liberado.</li>
+    <li>Passe o checklist do módulo 11.</li>
+  </ol>
+  <p>Se o produto já foi lançado, tente refazer o caminho de uma entrada até a validação. Onde o caminho se perde, está a lacuna do seu processo de projeto.</p>
+</section>
+
+<!-- ============================ MÓDULO 13 ============================ -->
+<section id="planilha">
+  <p class="eyebrow">Módulo 13</p>
+  <h2>A planilha de apoio</h2>
+  <p>Este treinamento acompanha o arquivo <a id="xlsx-ref" href="Projeto-modelo.xlsx">Projeto-modelo.xlsx</a>, que fica na mesma pasta. As células em amarelo-claro são para preenchimento. As células cinza são calculadas.</p>
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Aba</th><th>Para que serve</th><th style="width:36%">O que ela calcula</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Instruções</strong></td><td>Legenda de cores, as regras de cálculo, ordem de preenchimento e premissas do modelo.</td><td>Nada. É só leitura.</td></tr>
+        <tr><td><strong>Plano</strong></td><td>O projeto e até 20 etapas, com tipo, responsável, participantes, prazo, conclusão, resultado, ações e registro.</td><td>A conferência de cada etapa, os atrasos e se o plano tem os três controles.</td></tr>
+        <tr><td><strong>Entradas</strong></td><td>Até 30 entradas, com tipo, fonte, saída que atende, como verificar, resultado e evidência.</td><td>A conferência de cada entrada e as pendências.</td></tr>
+        <tr><td><strong>Mudanças</strong></td><td>Até 20 mudanças, com motivo, análise, o que foi verificado de novo e quem autorizou.</td><td>A conferência de cada mudança.</td></tr>
+        <tr><td><strong>Painel</strong></td><td>Nada a preencher.</td><td>Os indicadores, as entradas por tipo, o gráfico e a resposta à pergunta “pode liberar?”.</td></tr>
+        <tr><td><strong>Checklist</strong></td><td>Os mesmos 12 itens do módulo 11, com status Sim, Parcial ou Não.</td><td>Percentual atendido e situação da validação.</td></tr>
+        <tr><td><strong>Exemplo 1 e Exemplo 2</strong></td><td>Os projetos da pizzaria e da indústria.</td><td>Conferências de etapas, entradas e mudanças.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ GLOSSÁRIO ============================ -->
+<section id="glossario">
+  <p class="eyebrow">Referência</p>
+  <h2>Glossário</h2>
+  <dl class="gloss">
+    <div><dt>Análise crítica de projeto</dt><dd>A parada para decidir se o projeto segue, muda ou para, com registro da decisão.</dd></div>
+    <div><dt>Critério de aceitação</dt><dd>O que o produto precisa atender para ser liberado, definido nas saídas do projeto.</dd></div>
+    <div><dt>Entrada de projeto</dt><dd>Um requisito que o projeto precisa atender: do cliente, de desempenho, legal, de norma, de projeto anterior, de falha possível ou da organização.</dd></div>
+    <div><dt>Exclusão</dt><dd>A declaração, no escopo, de que um requisito não se aplica, com a justificativa.</dd></div>
+    <div><dt>Liberação para produção</dt><dd>A decisão de que o projeto terminou e o produto pode ser produzido e vendido.</dd></div>
+    <div><dt>Lote de teste</dt><dd>Uma produção pequena, feita para verificar as saídas antes da produção regular.</dd></div>
+    <div><dt>Matriz de rastreabilidade</dt><dd>A ligação de cada entrada com a saída que a atende e com a verificação.</dd></div>
+    <div><dt>Mudança de projeto</dt><dd>Qualquer alteração em uma entrada ou em uma saída já aprovada.</dd></div>
+    <div><dt>Saída de projeto</dt><dd>O que o projeto entrega: especificação, receita, instruções, critérios de aceitação.</dd></div>
+    <div><dt>Uso pretendido</dt><dd>Para que o cliente vai usar o produto, e em que condições.</dd></div>
+    <div><dt>Validação</dt><dd>A prova de que o produto serve para o uso pretendido.</dd></div>
+    <div><dt>Verificação</dt><dd>A prova de que as saídas atendem às entradas.</dd></div>
+  </dl>
+</section>
+
+</main>
+</div>
+
+<footer>Material de estudo. Os exemplos, documentos e números são ilustrativos e foram criados para fins didáticos. As referências às normas ISO são resumos para estudo e não substituem o texto das normas.</footer>
+</div>
+
+<script>
+(function () {
+  function read(key) { try { return JSON.parse(localStorage.getItem(key) || 'null'); } catch (e) { return null; } }
+  function write(key, val) { try { localStorage.setItem(key, JSON.stringify(val)); } catch (e) {} }
+
+  /* ---------- Checklist ---------- */
+  var boxes = Array.prototype.slice.call(document.querySelectorAll('#checklist input'));
+  var count = document.getElementById('ck-count');
+  var saved = read('projeto-checklist') || {};
+  function refreshChecks() {
+    var n = 0, state = {};
+    boxes.forEach(function (b) { if (b.checked) { n++; } state[b.id] = b.checked; });
+    count.textContent = n;
+    return state;
+  }
+  boxes.forEach(function (b) {
+    if (saved[b.id]) { b.checked = true; }
+    b.addEventListener('change', function () { write('projeto-checklist', refreshChecks()); });
+  });
+  refreshChecks();
+  document.getElementById('ck-reset').addEventListener('click', function () {
+    boxes.forEach(function (b) { b.checked = false; });
+    write('projeto-checklist', refreshChecks());
+  });
+
+  /* ---------- Exercício ---------- */
+  var KEYS = ['V', 'A', 'C', 'M'];
+  var LABEL = { V: 'Verificação', A: 'Validação', C: 'Análise crítica', M: 'Mudança de projeto' };
+  var NAMES = { V: 'verificação', A: 'validação', C: 'análise crítica', M: 'mudança de projeto' };
+  var ITEMS = [
+    { t: '“Medir a espessura do lote de teste e comparar com os 50 ±2 µm da especificação.”', a: 'V', w: 'Confere uma saída, o lote, contra uma entrada escrita.' },
+    { t: '“Embalar brócolis na máquina do cliente, congelar e transportar por três semanas.”', a: 'A', w: 'É o uso real, nas condições do cliente.' },
+    { t: '“Reunião da Engenharia com a Qualidade e o Comercial para decidir se o projeto segue para o lote de teste.”', a: 'C', w: 'A pergunta é se o projeto segue, e a resposta é uma decisão.' },
+    { t: '“Trocar a resina do fornecedor A pela do fornecedor B, por causa do prazo.”', a: 'M', w: 'Altera uma saída aprovada. Pede análise, autorização e nova verificação.' },
+    { t: '“Servir a pizza nova a 20 clientes no salão e pedir uma nota de 1 a 5.”', a: 'A', w: 'Quem vai comprar diz se o produto serve.' },
+    { t: '“Conferir na ficha técnica se nenhum ingrediente é de origem animal.”', a: 'V', w: 'A ficha técnica é uma saída; a ausência de ingrediente animal é uma entrada.' },
+    { t: '“Calcular o custo da ficha técnica e comparar com o limite de 30% do preço.”', a: 'V', w: 'Confere a saída contra uma entrada da organização.' },
+    { t: '“O gerente e o dono decidem seguir para a degustação e pedem para resolver o custo até 25/05.”', a: 'C', w: 'Decisão sobre o andamento, com ressalva e prazo.' },
+    { t: '“Aumentar a camada interna de 15 para 20 µm, depois dos furos no transporte.”', a: 'M', w: 'Altera a especificação aprovada, em resposta à validação.' },
+    { t: '“Ensaio de queda de dardo a -18 °C no laboratório: 420 g, com o mínimo de 300 g.”', a: 'V', w: 'Ensaio em laboratório contra um critério escrito. Não é o uso real.' },
+    { t: '“Piloto de duas semanas da pizza no aplicativo, acompanhando as reclamações e a recompra.”', a: 'A', w: 'O produto no uso real, com clientes de verdade.' },
+    { t: '“Queijo vegetal da marca B no lugar da marca A, por falta no fornecedor.”', a: 'M', w: 'Muda um ingrediente da receita aprovada. O teste de forno precisa ser refeito.' }
+  ];
+  var quiz = document.getElementById('quiz');
+  var score = document.getElementById('qz-score');
+  var done = document.getElementById('qz-done');
+  document.getElementById('qz-total').textContent = ITEMS.length;
+  var hits = 0, answered = 0;
+
+  function render() {
+    hits = 0; answered = 0; score.textContent = 0; done.textContent = 0;
+    quiz.textContent = '';
+    ITEMS.forEach(function (item, idx) {
+      var row = document.createElement('div'); row.className = 'q';
+      var p = document.createElement('p'); p.textContent = (idx + 1) + '. ' + item.t;
+      var opts = document.createElement('div'); opts.className = 'opts';
+      opts.setAttribute('role', 'group'); opts.setAttribute('aria-label', 'Que controle é o item ' + (idx + 1));
+      var why = document.createElement('p'); why.className = 'why'; why.hidden = true;
+      KEYS.forEach(function (k) {
+        var b = document.createElement('button');
+        b.type = 'button'; b.textContent = LABEL[k]; b.id = 'qz-' + idx + '-' + k;
+        b.setAttribute('data-k', k);
+        b.addEventListener('click', function () {
+          var ok = k === item.a;
+          Array.prototype.forEach.call(opts.children, function (o) {
+            o.disabled = true;
+            if (o.getAttribute('data-k') === item.a) { o.className = 'right'; }
+          });
+          if (!ok) { b.className = 'wrong'; }
+          var lead = document.createElement('b');
+          lead.textContent = (ok ? 'Certo. ' : 'A resposta é: ' + NAMES[item.a] + '. ');
+          why.textContent = ''; why.appendChild(lead); why.appendChild(document.createTextNode(item.w));
+          why.className = 'why ' + (ok ? 'ok' : 'no'); why.hidden = false;
+          answered++; if (ok) { hits++; }
+          score.textContent = hits; done.textContent = answered;
+        });
+        opts.appendChild(b);
+      });
+      row.appendChild(p); row.appendChild(opts); row.appendChild(why);
+      quiz.appendChild(row);
+    });
+  }
+  render();
+  document.getElementById('qz-reset').addEventListener('click', render);
+
+  /* ---------- Gráfico: leitura dos valores ---------- */
+  var fig = document.getElementById('fig-bars');
+  var tip = document.getElementById('bars-tip');
+  var svg = document.getElementById('bars');
+  var pts = document.querySelectorAll('#bars .pt');
+  function hide() {
+    tip.hidden = true;
+    Array.prototype.forEach.call(pts, function (b) { b.removeAttribute('opacity'); });
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('#bars .hit'), function (r) {
+    function show() {
+      var d = r.dataset;
+      Array.prototype.forEach.call(pts, function (b) {
+        b.setAttribute('opacity', b.getAttribute('data-k') === d.k ? '1' : '.4');
+      });
+      tip.textContent = '';
+      var strong = document.createElement('b'); strong.textContent = d.s.charAt(0).toUpperCase() + d.s.slice(1);
+      tip.appendChild(strong);
+      tip.appendChild(document.createTextNode(d.n + ' · prazo ' + d.p + ' · concluída ' + d.c));
+      var box = fig.getBoundingClientRect();
+      var pt = svg.createSVGPoint(); pt.x = parseFloat(d.cx); pt.y = parseFloat(d.cy);
+      var scr = pt.matrixTransform(svg.getScreenCTM());
+      tip.style.left = Math.min(Math.max(scr.x - box.left, 200), box.width - 200) + 'px';
+      tip.style.top = (scr.y - box.top + 4) + 'px';
+      tip.hidden = false;
+    }
+    r.addEventListener('pointerenter', show);
+    r.addEventListener('focus', show);
+    r.addEventListener('pointerleave', hide);
+    r.addEventListener('blur', hide);
+  });
+})();
+</script>
+</body>
+</html>
