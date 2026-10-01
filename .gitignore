@@ -6,3 +6,5 @@ __pycache__/
 # arquivos de bloqueio do Excel e do LibreOffice
 ~$*
 .~lock.*#
+.vercel
+.env*
