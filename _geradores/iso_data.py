@@ -47,6 +47,7 @@ ESTUDOS = {
     "lib": ("Liberação e produto não conforme", "../Liberacao/treinamento-liberacao.html"),
     "ped": ("Requisitos do cliente e análise de pedidos", "../Pedidos/treinamento-pedidos.html"),
     "proj": ("Projeto e desenvolvimento", "../Projeto/treinamento-projeto.html"),
+    "esc": ("Escopo e liderança", "../Escopo/treinamento-escopo.html"),
 }
 
 
@@ -73,7 +74,7 @@ REQ = _req([
     ("4.3", "Determinando o escopo do sistema de gestão da qualidade",
      "Definir os limites e a aplicabilidade do sistema, considerando o contexto, as partes interessadas e os produtos e serviços. Justificar todo requisito considerado não aplicável.",
      "O que está dentro do sistema, e por que algum requisito não se aplica?",
-     "Declaração de escopo, com produtos, serviços, locais e justificativas.", ()),
+     "Declaração de escopo, com produtos, serviços, locais e justificativas.", ("esc",)),
     ("4.4", "Sistema de gestão da qualidade e seus processos",
      "Determinar os processos necessários, com entradas, saídas, sequência, interação, critérios, recursos, responsáveis, riscos e oportunidades. Avaliar os processos e melhorá-los.",
      "Quais são os processos, como se ligam e como se sabe que funcionam?",
@@ -82,7 +83,7 @@ REQ = _req([
     ("5.1.1", "Liderança e comprometimento: generalidades",
      "A alta direção deve demonstrar liderança: responder pela eficácia do sistema, assegurar política e objetivos compatíveis com a estratégia, integrar os requisitos aos processos do negócio, prover recursos e promover a melhoria.",
      "Como a direção participa do sistema, além de assinar documentos?",
-     "Entrevista com a direção, atas, decisões sobre recursos.", ()),
+     "Entrevista com a direção, atas, decisões sobre recursos.", ("esc",)),
     ("5.1.2", "Foco no cliente",
      "A alta direção deve assegurar que os requisitos do cliente e os legais sejam determinados e atendidos, que os riscos para a conformidade sejam tratados e que o foco na satisfação do cliente seja mantido.",
      "Como a direção acompanha o que o cliente pede e o que ele recebe?",

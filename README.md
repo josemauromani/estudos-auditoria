@@ -9,6 +9,7 @@ Para começar, abra o arquivo `index.html` no navegador.
 | Estudo | Pasta | Planilha |
 |---|---|---|
 | ISO 9001 requisito a requisito | `ISO-9001/` | `ISO-9001-modelo.xlsx` |
+| Escopo e liderança | `Escopo/` | `Escopo-modelo.xlsx` |
 | Partes interessadas | `Partes-Interessadas/` | `Partes-Interessadas-modelo.xlsx` |
 | Matriz SWOT | `SWOT/` | `SWOT-modelo.xlsx` |
 | Objetivos da qualidade | `Objetivos/` | `Objetivos-modelo.xlsx` |

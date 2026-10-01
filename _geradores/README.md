@@ -41,6 +41,7 @@ Os nomes curtos dos estudos são:
 | `lib` | Liberação e produto não conforme | `Liberacao/` |
 | `ped` | Requisitos do cliente e análise de pedidos | `Pedidos/` |
 | `proj` | Projeto e desenvolvimento | `Projeto/` |
+| `esc` | Escopo e liderança | `Escopo/` |
 
 ## Preparação
 
@@ -77,11 +78,11 @@ O estudo de SWOT não tem arquivo de dados: os exemplos estão dentro de `build_
 - **Funções compartilhadas:** os geradores de planilha reaproveitam o bloco inicial de `build_pdca.py`, até a linha `STATUS = [`. Não mova nem renomeie esse arquivo.
 - **Recálculo:** o `openpyxl` grava as fórmulas sem os valores. O LibreOffice abre o arquivo, calcula e grava de novo, para a planilha abrir já calculada.
 - **Painel:** o `index.html` não é gerado. Ao criar um estudo, acrescente à mão o cartão, a caixa da figura, as linhas das duas tabelas e as contagens do cabeçalho.
-- **Estudo da ISO 9001:** a matriz e a tabela do módulo 11 vêm do campo `estudos` de cada requisito, em `iso_data.py`. Ao criar um estudo, inclua-o ali. O estudo de Informação documentada também lê a lista `DOCS` desse arquivo.
+- **Estudo da ISO 9001:** a matriz e a tabela do módulo 11 vêm do campo `estudos` de cada requisito, em `iso_data.py`. Ao criar um estudo, inclua-o ali. O estudo de Informação documentada também lê a lista `DOCS` desse arquivo, e o de Escopo e liderança, a lista `REQ`.
 
 ## Testes
 
-A pasta `testes/` tem os roteiros usados para conferir as fórmulas de dezessete planilhas. Cada par preenche uma cópia do modelo com dados de teste, inclusive erros propositais, e lê os resultados depois do recálculo.
+A pasta `testes/` tem os roteiros usados para conferir as fórmulas de dezoito planilhas. Cada par preenche uma cópia do modelo com dados de teste, inclusive erros propositais, e lê os resultados depois do recálculo.
 
 ```bash
 PY=_geradores/.venv/bin/python
