@@ -42,6 +42,7 @@ ESTUDOS = {
     "sat": ("Satisfação do cliente", "../Satisfacao/treinamento-satisfacao.html"),
     "par": ("Pareto e folha de verificação", "../Pareto/treinamento-pareto.html"),
     "pi": ("Partes interessadas", "../Partes-Interessadas/treinamento-partes-interessadas.html"),
+    "obj": ("Objetivos da qualidade", "../Objetivos/treinamento-objetivos.html"),
 }
 
 
@@ -85,7 +86,7 @@ REQ = _req([
     ("5.2", "Política",
      "Estabelecer uma política da qualidade apropriada ao propósito e ao contexto, que sirva de base para os objetivos e inclua os compromissos de atender a requisitos e de melhorar. Comunicar a política e mantê-la disponível.",
      "O que a política diz, e como as pessoas a aplicam no trabalho?",
-     "Política documentada, divulgação, entrevistas com a equipe.", ()),
+     "Política documentada, divulgação, entrevistas com a equipe.", ("obj",)),
     ("5.3", "Papéis, responsabilidades e autoridades organizacionais",
      "Atribuir, comunicar e fazer entender as responsabilidades e as autoridades, inclusive pela conformidade do sistema, pelo relato do desempenho e pela integridade do sistema durante as mudanças.",
      "Quem responde por quê, e quem pode decidir?",
@@ -98,7 +99,7 @@ REQ = _req([
     ("6.2", "Objetivos da qualidade e planejamento para alcançá-los",
      "Estabelecer objetivos mensuráveis, coerentes com a política, monitorados e comunicados. Para cada objetivo, definir o que será feito, os recursos, o responsável, o prazo e a forma de avaliar o resultado.",
      "Quais são os objetivos, e qual é o plano para cada um?",
-     "Objetivos com indicador e meta. Planos de ação.", ("ind", "w5h2")),
+     "Objetivos com indicador e meta. Planos de ação.", ("obj", "ind", "w5h2")),
     ("6.3", "Planejamento de mudanças",
      "Realizar as mudanças no sistema de forma planejada, considerando o propósito, as consequências, a integridade do sistema, os recursos e as responsabilidades.",
      "Como foi planejada a última mudança importante?",

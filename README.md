@@ -11,6 +11,7 @@ Para começar, abra o arquivo `index.html` no navegador.
 | ISO 9001 requisito a requisito | `ISO-9001/` | `ISO-9001-modelo.xlsx` |
 | Partes interessadas | `Partes-Interessadas/` | `Partes-Interessadas-modelo.xlsx` |
 | Matriz SWOT | `SWOT/` | `SWOT-modelo.xlsx` |
+| Objetivos da qualidade | `Objetivos/` | `Objetivos-modelo.xlsx` |
 | Mapa de processos e diagrama de tartaruga | `Processos/` | `Processos-modelo.xlsx` |
 | SIPOC | `SIPOC/` | `SIPOC-modelo.xlsx` |
 | Matriz RACI | `RACI/` | `RACI-modelo.xlsx` |

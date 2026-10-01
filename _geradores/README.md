@@ -36,6 +36,7 @@ Os nomes curtos dos estudos são:
 | `sat` | Satisfação do cliente | `Satisfacao/` |
 | `par` | Pareto e folha de verificação | `Pareto/` |
 | `pi` | Partes interessadas | `Partes-Interessadas/` |
+| `obj` | Objetivos da qualidade | `Objetivos/` |
 
 ## Preparação
 
@@ -76,7 +77,7 @@ O estudo de SWOT não tem arquivo de dados: os exemplos estão dentro de `build_
 
 ## Testes
 
-A pasta `testes/` tem os roteiros usados para conferir as fórmulas de doze planilhas. Cada par preenche uma cópia do modelo com dados de teste, inclusive erros propositais, e lê os resultados depois do recálculo.
+A pasta `testes/` tem os roteiros usados para conferir as fórmulas de treze planilhas. Cada par preenche uma cópia do modelo com dados de teste, inclusive erros propositais, e lê os resultados depois do recálculo.
 
 ```bash
 PY=_geradores/.venv/bin/python

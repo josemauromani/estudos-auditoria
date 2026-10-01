@@ -4,7 +4,7 @@
 #   _geradores/gerar.sh <estudo> [pasta de saída]
 #   _geradores/gerar.sh todos   [pasta de saída]
 #
-# Estudos: pdca swot gut w5 ish raci aud nc iso risk ind proc ac doc comp forn sat par pi
+# Estudos: pdca swot gut w5 ish raci aud nc iso risk ind proc ac doc comp forn sat par pi obj
 # Sem a pasta de saída, os arquivos são gravados na pasta do próprio estudo.
 set -euo pipefail
 
@@ -35,6 +35,7 @@ forn|Fornecedores|treinamento-fornecedores.html|Fornecedores-modelo.xlsx
 sat|Satisfacao|treinamento-satisfacao.html|Satisfacao-modelo.xlsx
 par|Pareto|treinamento-pareto.html|Pareto-modelo.xlsx
 pi|Partes-Interessadas|treinamento-partes-interessadas.html|Partes-Interessadas-modelo.xlsx
+obj|Objetivos|treinamento-objetivos.html|Objetivos-modelo.xlsx
 "
 
 gerar() {
@@ -63,7 +64,7 @@ gerar() {
 
 if [ $# -lt 1 ]; then sed -n '2,9p' "$0" | sed 's/^# \{0,1\}//'; exit 1; fi
 if [ "$1" = "todos" ]; then
-  for n in pdca swot gut w5 ish raci aud nc iso risk ind proc ac doc comp forn sat par pi; do gerar "$n" "${2:-}"; done
+  for n in pdca swot gut w5 ish raci aud nc iso risk ind proc ac doc comp forn sat par pi obj; do gerar "$n" "${2:-}"; done
 else
   gerar "$1" "${2:-}"
 fi

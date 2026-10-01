@@ -1,0 +1,1351 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Objetivos da qualidade</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<style>
+:root{
+  --ground:#F3F6F7; --surface:#FFFFFF; --sunk:#E9EEF0; --ink:#16242E; --muted:#566672; --rule:#D3DBE0;
+  --accent:#2B5C8A;
+  --s1:#2A6FB0; --s1-tint:#DCE8F3;
+  --s2:#D19A2E; --s2-tint:#F8EBCB;
+  --s3:#B0413E; --s3-tint:#F5DEDC;
+  --on-s2:#16242E;
+  --p:#2B5C8A; --p-tint:#DCE8F3;
+  --d:#A96A12; --d-tint:#F6E8CF;
+  --c:#1E7B73; --c-tint:#D9EEEB;
+  --a:#B0413E; --a-tint:#F5DEDC;
+  --on-hue:#FFFFFF;
+  --good:#1F7A4D; --good-tint:#DDF1E5;
+  --bad:#B0413E; --bad-tint:#F5DEDC;
+  --display:"Barlow Semi Condensed","Arial Narrow",Arial,sans-serif;
+  --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --ground:#0F171C; --surface:#172229; --sunk:#1E2B33; --ink:#E4EAED; --muted:#9BABB6; --rule:#2B3A44;
+    --accent:#86B7E3;
+  --s1:#4F97DB; --s1-tint:#1B2F42;
+  --s2:#B58E14; --s2-tint:#3A2C12;
+  --s3:#D14B45; --s3-tint:#3D1F1E;
+  --on-s2:#0F171C;
+    --p:#86B7E3; --p-tint:#1B2F42;
+    --d:#E2AC4F; --d-tint:#3A2C12;
+    --c:#5FC6BA; --c-tint:#15332F;
+    --a:#EC8E89; --a-tint:#3D1F1E;
+    --on-hue:#0F171C;
+    --good:#6FCF9B; --good-tint:#163326;
+    --bad:#EC8E89; --bad-tint:#3D1F1E;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --ground:#0F171C; --surface:#172229; --sunk:#1E2B33; --ink:#E4EAED; --muted:#9BABB6; --rule:#2B3A44;
+  --accent:#86B7E3;
+  --s1:#4F97DB; --s1-tint:#1B2F42;
+  --s2:#B58E14; --s2-tint:#3A2C12;
+  --s3:#D14B45; --s3-tint:#3D1F1E;
+  --on-s2:#0F171C;
+  --p:#86B7E3; --p-tint:#1B2F42;
+  --d:#E2AC4F; --d-tint:#3A2C12;
+  --c:#5FC6BA; --c-tint:#15332F;
+  --a:#EC8E89; --a-tint:#3D1F1E;
+  --on-hue:#0F171C;
+  --good:#6FCF9B; --good-tint:#163326;
+  --bad:#EC8E89; --bad-tint:#3D1F1E;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--ground);color:var(--ink);font:400 16px/1.65 var(--body);-webkit-text-size-adjust:100%}
+a{color:var(--accent);text-underline-offset:3px}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.page{max-width:1180px;margin-inline:auto;padding-inline:20px;padding-block:36px 80px}
+
+/* Cabeçalho */
+.mast{display:flex;flex-direction:column;gap:18px;padding-bottom:32px;border-bottom:1px solid var(--rule)}
+.tiles{display:flex;gap:6px}
+.tiles span{width:44px;height:44px;display:grid;place-items:center;font:700 24px/1 var(--display);color:var(--on-hue)}
+.tiles .p{background:var(--p)} .tiles .d{background:var(--d)} .tiles .c{background:var(--c)} .tiles .a{background:var(--a)}
+h1{font:700 clamp(2.3rem,6vw,3.6rem)/1.02 var(--display);letter-spacing:-.01em;margin:0;text-wrap:balance}
+.lead{font-size:1.15rem;line-height:1.55;max-width:62ch;margin:0;color:var(--ink)}
+.meta{display:flex;flex-direction:row;flex-wrap:wrap;gap:6px 22px;font:400 .8rem/1.4 var(--mono);color:var(--muted);margin:0;padding:0;list-style:none}
+
+/* Estrutura */
+.layout{display:grid;grid-template-columns:minmax(0,1fr);gap:32px;padding-top:32px}
+.toc{font-size:.92rem}
+.toc h2{font:500 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+.toc ol{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:2px 20px;counter-reset:toc}
+.toc li{counter-increment:toc}
+.toc a{display:flex;gap:10px;padding:5px 0;color:var(--ink);text-decoration:none;line-height:1.35}
+.toc a::before{content:counter(toc,decimal-leading-zero);font:400 .75rem/1.7 var(--mono);color:var(--muted)}
+.toc a:hover{color:var(--accent);text-decoration:underline}
+@media (min-width:1020px){
+  .layout{grid-template-columns:200px minmax(0,1fr);gap:64px}
+  .toc{position:sticky;top:calc(env(safe-area-inset-top,0px) + 24px);align-self:start}
+  .toc ol{grid-template-columns:1fr}
+}
+main{display:flex;flex-direction:column;gap:72px;min-width:0}
+section{display:flex;flex-direction:column;gap:20px;scroll-margin-top:24px}
+.eyebrow{font:500 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0}
+h2{font:700 clamp(1.7rem,4vw,2.2rem)/1.1 var(--display);margin:0;text-wrap:balance}
+h3{font:600 1.3rem/1.2 var(--display);margin:12px 0 0;text-wrap:balance}
+h4{font:600 .95rem/1.3 var(--body);margin:0}
+p{margin:0}
+section > p, section > ul, section > ol, section > h3{max-width:68ch}
+ul,ol{margin:0;padding-left:1.25em;display:flex;flex-direction:column;gap:6px}
+strong{font-weight:600}
+code{font:400 .88em var(--mono);background:var(--sunk);padding:1px 5px;border-radius:3px}
+
+/* Letras coloridas no texto */
+.k{display:inline-grid;place-items:center;width:1.45em;height:1.45em;font:700 .85em/1 var(--display);color:var(--on-hue);vertical-align:.05em}
+.k.p{background:var(--p)} .k.d{background:var(--d)} .k.c{background:var(--c)} .k.a{background:var(--a)}
+
+/* Figuras */
+figure{margin:0;display:flex;flex-direction:column;gap:10px;position:relative}
+.scroll{overflow-x:auto;background:var(--surface);border:1px solid var(--rule);padding:18px}
+.scroll svg{display:block;width:100%;min-width:820px;height:auto;color:var(--ink)}
+figcaption{font-size:.86rem;line-height:1.5;color:var(--muted);max-width:72ch}
+figcaption b{color:var(--ink);font-weight:600}
+svg text{font-family:var(--body);fill:var(--ink)}
+svg .disp{font-family:var(--display);font-weight:700}
+svg .mono{font-family:var(--mono);letter-spacing:.08em}
+svg .on{fill:var(--on-hue)}
+svg .mu{fill:var(--muted)}
+svg .b{font-weight:600}
+svg .ln{stroke:var(--ink);stroke-width:1.5;fill:none}
+svg .ln-mu{stroke:var(--muted);stroke-width:1.5;fill:none}
+svg .ln-bold{stroke:var(--ink);stroke-width:3;fill:none;stroke-linejoin:round;stroke-linecap:round}
+svg .dash{stroke-dasharray:5 4}
+svg .ah{fill:var(--ink)} svg .ah-mu{fill:var(--muted)}
+svg .bx{fill:var(--surface);stroke:var(--rule);stroke-width:1.5}
+svg .bx-ink{fill:var(--ink);stroke:var(--ink)}
+svg .t-ground{fill:var(--ground)}
+svg .bx-out{fill:none;stroke:var(--muted);stroke-width:1.5;stroke-dasharray:5 4}
+svg .bx-p{fill:var(--p-tint);stroke:var(--p);stroke-width:1.5} svg .hd-p{fill:var(--p)}
+svg .bx-d{fill:var(--d-tint);stroke:var(--d);stroke-width:1.5} svg .hd-d{fill:var(--d)}
+svg .bx-c{fill:var(--c-tint);stroke:var(--c);stroke-width:1.5} svg .hd-c{fill:var(--c)}
+svg .bx-a{fill:var(--a-tint);stroke:var(--a);stroke-width:1.5} svg .hd-a{fill:var(--a)}
+svg .gap{stroke:var(--surface);stroke-width:4}
+svg .gap2{stroke:var(--surface);stroke-width:2}
+svg .hub{fill:var(--surface)}
+
+/* Gráfico */
+svg .grid{stroke:var(--rule);stroke-width:1}
+svg .band{fill:var(--sunk)}
+svg .series{stroke:var(--accent);stroke-width:2;fill:none;stroke-linejoin:round;stroke-linecap:round}
+svg .pt{fill:var(--accent);stroke:var(--surface);stroke-width:2}
+svg .pt.on-hit{stroke:var(--ink)}
+svg .goal{stroke:var(--muted);stroke-width:1.5;stroke-dasharray:6 4;fill:none}
+svg .xh{stroke:var(--muted);stroke-width:1}
+svg .hit{fill:transparent;cursor:crosshair;outline:none}
+svg .root{fill:var(--accent);stroke:var(--surface);stroke-width:2}
+.tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--ground);padding:6px 10px;font-size:.78rem;line-height:1.4;transform:translate(-50%,calc(-100% - 14px));white-space:nowrap;z-index:2}
+.tip b{display:block;font:600 1.05rem/1.2 var(--body)}
+details.data{font-size:.88rem}
+details.data summary{cursor:pointer;font:400 .82rem var(--mono);color:var(--muted);padding:4px 0}
+details.data .tbl{margin-top:8px}
+details.data table{min-width:420px}
+
+/* Tabelas */
+.tbl{overflow-x:auto;border:1px solid var(--rule);background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:780px;font-size:.88rem;line-height:1.4}
+th,td{padding:9px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--rule)}
+tr:last-child > td{border-bottom:0}
+thead th{font:600 .8rem/1.3 var(--body);background:var(--sunk)}
+td.num{font-variant-numeric:tabular-nums;white-space:nowrap;font-family:var(--mono);font-size:.82rem}
+
+/* Situações */
+.chip{display:inline-block;padding:2px 8px;font:600 .76rem/1.45 var(--body);color:var(--on-hue);white-space:nowrap}
+.chip.s1{background:var(--s1)} .chip.s2{background:var(--s2);color:var(--on-s2)} .chip.s3{background:var(--s3)}
+.chip.sl{background:var(--sunk);color:var(--ink);box-shadow:inset 0 0 0 1px var(--rule)}
+svg .hd-ink{fill:var(--ink)}
+svg .f1{fill:var(--s1)} svg .f2{fill:var(--s2)} svg .f3{fill:var(--s3)} svg .f0{fill:var(--muted)}
+svg .track{fill:var(--sunk)}
+svg .halo{paint-order:stroke;stroke:var(--surface);stroke-width:5px;stroke-linejoin:round}
+svg .hit:focus-visible{stroke:var(--accent);stroke-width:2}
+
+/* Tabelas dos exemplos */
+table.aud{font-size:.8rem;min-width:900px;line-height:1.4}
+table.aud th, table.aud td{padding:8px 9px}
+table.aud td.n{white-space:nowrap;font-weight:600;color:var(--muted)}
+table.aud td.c, table.aud th.c{text-align:center;font-variant-numeric:tabular-nums}
+table.aud td.ok{background:var(--s1-tint)}
+table.aud td small, table.aud th small{display:block;color:var(--muted);font-size:.76rem;margin-top:3px;font-weight:400}
+table.aud caption{caption-side:top;text-align:left;padding:10px 12px;font:500 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);background:var(--sunk)}
+
+/* Ficha do quadro (acima de cada exemplo) */
+.ficha{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:0;border:1px solid var(--rule);background:var(--surface)}
+.ficha div{padding:12px 14px;border-right:1px solid var(--rule);border-bottom:1px solid var(--rule);margin:0 -1px -1px 0}
+.ficha dt{font:500 .68rem/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.ficha dd{margin:0;font-size:.9rem;line-height:1.4}
+dl{margin:0}
+
+/* Blocos */
+.pair{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.box{background:var(--surface);border:1px solid var(--rule);padding:18px 20px;display:flex;flex-direction:column;gap:10px}
+.box h4{font:600 1.1rem/1.2 var(--display)}
+.box ul{font-size:.93rem}
+.note{background:var(--sunk);padding:16px 20px;max-width:72ch;font-size:.94rem;display:flex;flex-direction:column;gap:6px}
+.note h4{font:500 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+
+/* Passo a passo */
+.steps{list-style:none;padding:0;counter-reset:st;gap:0;max-width:none;border-top:1px solid var(--rule)}
+.steps li{counter-increment:st;display:grid;grid-template-columns:44px minmax(0,1fr);gap:4px 12px;padding:16px 0;border-bottom:1px solid var(--rule)}
+.steps li::before{content:counter(st);font:700 1.7rem/1 var(--display);color:var(--muted);grid-row:span 2}
+.steps h4{font:600 1.1rem/1.25 var(--display)}
+.steps p{font-size:.95rem;max-width:64ch;grid-column:2}
+
+/* Erros comuns */
+.errs{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:0 40px;border-top:1px solid var(--rule)}
+.errs div{padding:16px 16px 16px 0;border-bottom:1px solid var(--rule);display:flex;flex-direction:column;gap:4px}
+.errs h4{font:600 1.05rem/1.25 var(--display)}
+.errs p{font-size:.92rem}
+.errs .fix{color:var(--muted)}
+.errs .fix b{color:var(--ink);font-weight:600}
+
+/* Checklist */
+.check{list-style:none;padding:0;gap:0;max-width:none;border:1px solid var(--rule);background:var(--surface)}
+.check li{border-bottom:1px solid var(--rule)}
+.check li:last-child{border-bottom:0}
+.check label{display:grid;grid-template-columns:22px minmax(0,1fr);gap:12px;padding:11px 16px;cursor:pointer;font-size:.94rem;align-items:start}
+.check input{width:18px;height:18px;margin:3px 0 0;accent-color:var(--c)}
+.check input:checked + span{color:var(--muted);text-decoration:line-through}
+.bar{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;font:400 .82rem var(--mono);color:var(--muted)}
+.bar b{color:var(--ink);font-weight:500}
+
+/* Exercício */
+.quiz{display:flex;flex-direction:column;gap:0;border:1px solid var(--rule);background:var(--surface)}
+.q{display:grid;grid-template-columns:minmax(0,1fr);gap:10px;padding:14px 16px;border-bottom:1px solid var(--rule)}
+.q:last-child{border-bottom:0}
+@media (min-width:720px){.q{grid-template-columns:minmax(0,1fr) auto;align-items:center}}
+.q p{font-size:.95rem}
+.q .why{grid-column:1/-1;font-size:.86rem;color:var(--muted)}
+.q .why b{font-weight:600}
+.q .why.ok b{color:var(--good)} .q .why.no b{color:var(--bad)}
+.opts{display:flex;gap:6px}
+.opts button{width:40px;height:40px;border:1.5px solid var(--rule);background:var(--surface);color:var(--ink);font:700 1.1rem/1 var(--display);cursor:pointer;border-radius:0}
+.opts button:hover:not(:disabled){border-color:var(--ink)}
+.opts button:disabled{cursor:default;opacity:.45}
+.opts button.right{background:var(--good-tint);border-color:var(--good);color:var(--good);opacity:1}
+.opts button.wrong{background:var(--bad-tint);border-color:var(--bad);color:var(--bad);opacity:1}
+.btn{border:1.5px solid var(--ink);background:transparent;color:var(--ink);font:500 .82rem var(--mono);padding:7px 14px;cursor:pointer;border-radius:0}
+.btn:hover{background:var(--ink);color:var(--ground)}
+
+/* Glossário */
+.gloss{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:0 40px;border-top:1px solid var(--rule)}
+.gloss div{padding:12px 0;border-bottom:1px solid var(--rule)}
+.gloss dt{font:600 1.02rem/1.3 var(--display)}
+.gloss dd{margin:2px 0 0;font-size:.9rem;color:var(--muted)}
+footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);font-size:.84rem;color:var(--muted);max-width:72ch}
+
+.quiz .opts{flex-wrap:wrap}
+.quiz .opts button{width:auto;min-width:40px;padding:0 11px;font-size:1rem}
+@media (min-width:720px){.q{grid-template-columns:minmax(0,1fr) auto}}
+</style>
+</head>
+<body>
+<div class="page" lang="pt-BR">
+
+<header class="mast">
+  <div class="tiles" aria-hidden="true"><span class="p">P</span><span class="d">O</span><span class="c">A</span></div>
+  <h1>Objetivos da qualidade na prática</h1>
+  <p class="lead">Um guia de estudo para transformar a política da qualidade em poucos objetivos com medida, meta e prazo, dar a cada um deles um plano, e acompanhar até alcançar.</p>
+  <ul class="meta">
+    <li>Treinamento autoinstrucional</li>
+    <li>13 módulos</li>
+    <li>Leitura de cerca de 50 minutos</li>
+    <li>3 exemplos resolvidos e 2 exercícios</li>
+  </ul>
+</header>
+
+<div class="layout">
+
+<nav class="toc" aria-label="Sumário">
+  <h2>Sumário</h2>
+  <ol>
+    <li><a href="#o-que-e">O que é</a></li>
+    <li><a href="#quando">Quando usar</a></li>
+    <li><a href="#como">Como construir</a></li>
+    <li><a href="#escrever">Escrever um objetivo</a></li>
+    <li><a href="#plano">O plano para alcançar</a></li>
+    <li><a href="#exemplos">Exemplos resolvidos</a></li>
+    <li><a href="#leitura">Ler o acompanhamento</a></li>
+    <li><a href="#erros">Erros comuns</a></li>
+    <li><a href="#ferramentas">Os objetivos e outras ferramentas</a></li>
+    <li><a href="#iso">Nas normas ISO</a></li>
+    <li><a href="#reuniao">A reunião de acompanhamento</a></li>
+    <li><a href="#pratique">Pratique</a></li>
+    <li><a href="#planilha">A planilha de apoio</a></li>
+    <li><a href="#glossario">Glossário</a></li>
+  </ol>
+</nav>
+
+<main>
+
+<!-- ============================ MÓDULO 1 ============================ -->
+<section id="o-que-e">
+  <p class="eyebrow">Módulo 1</p>
+  <h2>O que é</h2>
+  <p>Objetivo da qualidade é um resultado que a organização decide alcançar em um prazo, escrito de modo que se possa medir. “Melhorar o atendimento” é uma intenção. “Reduzir as reclamações de 1,9 para 1,5 por 100 pedidos até dezembro” é um objetivo: tem verbo, medida, meta e prazo, e dá para saber, todo mês, se está chegando.</p>
+  <p>Os objetivos ficam entre a política e as ações. A política diz o que a organização se compromete a fazer. Os objetivos dizem quanto, e até quando. As ações dizem como. As letras do título são essa cadeia: <span class="k p">P</span> política, <span class="k d">O</span> objetivo e <span class="k c">A</span> ação.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 350" role="img" aria-label="A cadeia da política à ação, com um fio da pizzaria. Política: Entregar a pizza certa, quente e no prazo. Objetivo: Entregar 96% dos pedidos em até 40 minutos. Processo: Entregas em até 40 minutos no pico: 94% Ação: Rever a escala do pico com a entrega dos novos condomínios, em março. Cada nível tem a sua medida.">
+        <defs><marker id="a1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker></defs>
+        <text class="mono mu" x="10" y="32" font-size="10">POLÍTICA</text>
+        <text class="mu" x="10" y="50" font-size="10.5">A que nos comprometemos?</text>
+        <rect class="bx-ink" x="160" y="14" width="196" height="62"/>
+        <text class="mono t-ground" x="170" y="30" font-size="9.5">C1</text>
+        <text class="t-ground" x="170" y="45" font-size="10.5">Entregar a pizza certa, quente e</text>
+        <text class="t-ground" x="170" y="58" font-size="10.5">no prazo.</text>
+        <rect class="bx" x="366" y="14" width="196" height="62"/>
+        <text class="mono mu" x="376" y="30" font-size="9.5">C2</text>
+        <text class="" x="376" y="45" font-size="10.5">Cuidar da segurança do alimento e</text>
+        <text class="" x="376" y="58" font-size="10.5">de quem trabalha.</text>
+        <rect class="bx" x="572" y="14" width="196" height="62"/>
+        <text class="mono mu" x="582" y="30" font-size="9.5">C3</text>
+        <text class="" x="582" y="45" font-size="10.5">Ouvir o cliente e melhorar todo</text>
+        <text class="" x="582" y="58" font-size="10.5">mês.</text>
+        <text class="mono mu" x="782" y="30" font-size="9.5">COMO SE MEDE</text>
+        <text class="mu" x="782" y="45" font-size="10.5">—</text>
+        <text class="mono mu" x="10" y="116" font-size="10">OBJETIVO</text>
+        <text class="mu" x="10" y="134" font-size="10.5">Quanto, e até quando?</text>
+        <rect class="bx-ink" x="160" y="98" width="196" height="62"/>
+        <text class="mono t-ground" x="170" y="114" font-size="9.5">O1</text>
+        <text class="t-ground" x="170" y="129" font-size="10.5">Entregar 96% dos pedidos em até 40</text>
+        <text class="t-ground" x="170" y="142" font-size="10.5">minutos.</text>
+        <line class="ln" x1="258.0" y1="76" x2="258.0" y2="95" marker-end="url(#a1)"/>
+        <rect class="bx" x="366" y="98" width="196" height="62"/>
+        <text class="mono mu" x="376" y="114" font-size="9.5">O4</text>
+        <text class="" x="376" y="129" font-size="10.5">Reduzir os pedidos refeitos por</text>
+        <text class="" x="376" y="142" font-size="10.5">erro para 1,5%.</text>
+        <rect class="bx" x="572" y="98" width="196" height="62"/>
+        <text class="mono mu" x="582" y="114" font-size="9.5">O6</text>
+        <text class="" x="582" y="129" font-size="10.5">Reduzir o desperdício de insumos</text>
+        <text class="" x="582" y="142" font-size="10.5">para 3,5%.</text>
+        <text class="mono mu" x="782" y="114" font-size="9.5">COMO SE MEDE</text>
+        <text class="mu" x="782" y="129" font-size="10.5">Entregas em até 40</text>
+        <text class="mu" x="782" y="142" font-size="10.5">minutos, todo mês</text>
+        <text class="mono mu" x="10" y="200" font-size="10">PROCESSO</text>
+        <text class="mu" x="10" y="218" font-size="10.5">Quem entrega o quê?</text>
+        <rect class="bx" x="160" y="182" width="196" height="62"/>
+        <text class="mono mu" x="170" y="198" font-size="9.5">P1</text>
+        <text class="" x="170" y="213" font-size="10.5">Pedidos com endereço completo:</text>
+        <text class="" x="170" y="226" font-size="10.5">100%</text>
+        <rect class="bx" x="366" y="182" width="196" height="62"/>
+        <text class="mono mu" x="376" y="198" font-size="9.5">P2</text>
+        <text class="" x="376" y="213" font-size="10.5">Pedidos que esperam mais de 10</text>
+        <text class="" x="376" y="226" font-size="10.5">minutos pelo forno: até 5%</text>
+        <rect class="bx-ink" x="572" y="182" width="196" height="62"/>
+        <text class="mono t-ground" x="582" y="198" font-size="9.5">P3</text>
+        <text class="t-ground" x="582" y="213" font-size="10.5">Entregas em até 40 minutos no</text>
+        <text class="t-ground" x="582" y="226" font-size="10.5">pico: 94%</text>
+        <line class="ln" x1="258.0" y1="160" x2="670.0" y2="179" marker-end="url(#a1)"/>
+        <text class="mono mu" x="782" y="198" font-size="9.5">COMO SE MEDE</text>
+        <text class="mu" x="782" y="213" font-size="10.5">A medida de cada</text>
+        <text class="mu" x="782" y="226" font-size="10.5">processo, todo mês</text>
+        <text class="mono mu" x="10" y="284" font-size="10">AÇÃO</text>
+        <text class="mu" x="10" y="302" font-size="10.5">O que será feito?</text>
+        <rect class="bx-ink" x="160" y="266" width="196" height="62"/>
+        <text class="mono t-ground" x="170" y="282" font-size="9.5">A1</text>
+        <text class="t-ground" x="170" y="297" font-size="10.5">Rever a escala do pico com a</text>
+        <text class="t-ground" x="170" y="310" font-size="10.5">entrega dos novos condomínios, em</text>
+        <text class="t-ground" x="170" y="323" font-size="10.5">março.</text>
+        <line class="ln" x1="670.0" y1="244" x2="258.0" y2="263" marker-end="url(#a1)"/>
+        <rect class="bx" x="366" y="266" width="196" height="62"/>
+        <text class="mono mu" x="376" y="282" font-size="9.5">A2</text>
+        <text class="" x="376" y="297" font-size="10.5">Estudar a compra do segundo forno,</text>
+        <text class="" x="376" y="310" font-size="10.5">segundo item do Pareto dos</text>
+        <text class="" x="376" y="323" font-size="10.5">atrasos.</text>
+        <text class="mono mu" x="782" y="282" font-size="9.5">COMO SE MEDE</text>
+        <text class="mu" x="782" y="297" font-size="10.5">Entregas no pico,</text>
+        <text class="mu" x="782" y="310" font-size="10.5">por semana</text>
+        <text x="450" y="344" font-size="11.5" text-anchor="middle">A caixa escura é um fio da pizzaria: do compromisso C1 ao plano do objetivo O1. Cada nível tem a sua medida.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 1.</b> A cadeia da política à ação, com um fio da pizzaria. Cada nível responde a uma pergunta: a que nos comprometemos, quanto queremos, quem faz, e o que será feito.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:22%">Nível</th><th style="width:38%">O que é</th><th>Exemplo</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Política da qualidade</strong></td><td>Os compromissos da organização, escritos pela direção. Mudam pouco.</td><td>“Entregar a pizza certa, quente e no prazo.”</td></tr>
+        <tr><td><strong>Objetivo da qualidade</strong></td><td>Um resultado com medida, meta e prazo, ligado a um compromisso.</td><td>“Entregar 96% dos pedidos em até 40 minutos até dezembro.”</td></tr>
+        <tr><td><strong>Objetivo do processo</strong></td><td>A parte do objetivo que cabe a um processo.</td><td>“Registrar 100% dos pedidos com o endereço completo.”</td></tr>
+        <tr><td><strong>Ação</strong></td><td>O que será feito, por quem, até quando e com que recursos.</td><td>“Rever a escala do pico em março, com dois entregadores extras.”</td></tr>
+        <tr><td><strong>Indicador</strong></td><td>A medida que diz se o objetivo está sendo alcançado.</td><td>Entregas em até 40 minutos, todo mês.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 2 ============================ -->
+<section id="quando">
+  <p class="eyebrow">Módulo 2</p>
+  <h2>Quando usar</h2>
+  <p>Os objetivos são definidos uma vez por ano, logo depois da análise crítica, e acompanhados todo mês. Entre um ano e outro, um objetivo novo entra quando um fato muda o que importa: um cliente que exige certificação, um indicador que saiu da meta, um requisito legal novo.</p>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:30%">Momento</th><th style="width:34%">O que fazer</th><th>Resultado</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Depois da análise crítica</strong></td><td>Transformar as decisões em objetivos do ano, com meta e plano.</td><td>O quadro de objetivos, em uma página.</td></tr>
+        <tr><td><strong>Depois da Matriz SWOT</strong></td><td>Levar as estratégias escolhidas para objetivos com número.</td><td>Estratégia que vira resultado medido.</td></tr>
+        <tr><td><strong>Todo mês</strong></td><td>Registrar o resultado, ler a situação e decidir sobre o que está em risco.</td><td>Objetivos que não ficam para dezembro.</td></tr>
+        <tr><td><strong>Indicador fora da meta</strong></td><td>Avaliar se vira objetivo, com plano, ou se basta a análise de causa.</td><td>Um problema que ganha dono e prazo.</td></tr>
+        <tr><td><strong>Requisito novo de uma parte</strong></td><td>Abrir um objetivo quando a organização ainda não atende.</td><td>O requisito com caminho até ser atendido.</td></tr>
+        <tr><td><strong>Antes da próxima análise crítica</strong></td><td>Fechar o quadro: alcançado, não alcançado, e por quê.</td><td>A entrada “c2” da análise crítica.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pair">
+    <div class="box">
+      <h4>Vira objetivo quando</h4>
+      <ul>
+        <li>O resultado pede mudança, e não só rotina.</li>
+        <li>Depende de mais de um processo, ou de recurso da direção.</li>
+        <li>Tem prazo: um ano, um semestre, uma data.</li>
+        <li>A direção quer acompanhar de perto.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h4>Fica como indicador de rotina quando</h4>
+      <ul>
+        <li>O resultado já é alcançado e só precisa ser mantido.</li>
+        <li>O desvio tem causa conhecida e tratamento no processo.</li>
+        <li>É uma medida de controle, e não de melhoria: temperatura, calibração.</li>
+        <li>Já há um ciclo PDCA ou uma ação corretiva cuidando dele.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 3 ============================ -->
+<section id="como">
+  <p class="eyebrow">Módulo 3</p>
+  <h2>Como construir</h2>
+  <p>O quadro de objetivos é feito em uma reunião com a direção e os donos dos processos, e revisto a cada mês. O erro mais comum é começar pelos objetivos: eles saem da política, da estratégia, da análise crítica e das partes interessadas. Sem essas fontes, viram uma lista de desejos.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 206" role="img" aria-label="As cinco etapas do trabalho. Partir da política: Cada objetivo responde a um compromisso da política e a uma fonte: estratégia, análise crítica, parte interessada. Escolher poucos: De quatro a oito. O que não cabe fica para o ano seguinte, ou vira indicador de rotina. Escrever com medida: Indicador, valor de partida, meta e prazo. Um responsável por objetivo. Planejar: O que será feito, com que recursos, por quem, até quando e como se avalia. Acompanhar e rever: Resultado a cada mês, situação e decisão. Objetivos revistos na análise crítica. A revisão devolve o trabalho à primeira etapa.">
+        <defs><marker id="a2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker><marker id="a2m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah-mu" d="M0 0 L10 5 L0 10 z"/></marker></defs>
+        <rect class="bx-p" x="12" y="16" width="164" height="124"/>
+        <text class="mono mu" x="24" y="36" font-size="10">1 · P</text>
+        <text class="b" x="24" y="58" font-size="13">Partir da política</text>
+        <text x="24" y="80.0" font-size="10.5">Cada objetivo responde a</text>
+        <text x="24" y="94.5" font-size="10.5">um compromisso da política</text>
+        <text x="24" y="109.0" font-size="10.5">e a uma fonte: estratégia,</text>
+        <text x="24" y="123.5" font-size="10.5">análise crítica, parte</text>
+        <line class="ln" x1="177" y1="78" x2="188" y2="78" marker-end="url(#a2)"/>
+        <rect class="bx-d" x="190" y="16" width="164" height="124"/>
+        <text class="mono mu" x="202" y="36" font-size="10">2 · O</text>
+        <text class="b" x="202" y="58" font-size="13">Escolher poucos</text>
+        <text x="202" y="80.0" font-size="10.5">De quatro a oito. O que</text>
+        <text x="202" y="94.5" font-size="10.5">não cabe fica para o ano</text>
+        <text x="202" y="109.0" font-size="10.5">seguinte, ou vira</text>
+        <text x="202" y="123.5" font-size="10.5">indicador de rotina.</text>
+        <line class="ln" x1="355" y1="78" x2="366" y2="78" marker-end="url(#a2)"/>
+        <rect class="bx-d" x="368" y="16" width="164" height="124"/>
+        <text class="mono mu" x="380" y="36" font-size="10">3 · A</text>
+        <text class="b" x="380" y="58" font-size="13">Escrever com medida</text>
+        <text x="380" y="80.0" font-size="10.5">Indicador, valor de</text>
+        <text x="380" y="94.5" font-size="10.5">partida, meta e prazo. Um</text>
+        <text x="380" y="109.0" font-size="10.5">responsável por objetivo.</text>
+        <line class="ln" x1="533" y1="78" x2="544" y2="78" marker-end="url(#a2)"/>
+        <rect class="bx-c" x="546" y="16" width="164" height="124"/>
+        <text class="mono mu" x="558" y="36" font-size="10">4 · A</text>
+        <text class="b" x="558" y="58" font-size="13">Planejar</text>
+        <text x="558" y="80.0" font-size="10.5">O que será feito, com que</text>
+        <text x="558" y="94.5" font-size="10.5">recursos, por quem, até</text>
+        <text x="558" y="109.0" font-size="10.5">quando e como se avalia.</text>
+        <line class="ln" x1="711" y1="78" x2="722" y2="78" marker-end="url(#a2)"/>
+        <rect class="bx-ink" x="724" y="16" width="164" height="124"/>
+        <text class="mono t-ground" x="736" y="36" font-size="10">5 · A</text>
+        <text class="b t-ground" x="736" y="58" font-size="13">Acompanhar e rever</text>
+        <text class="t-ground" x="736" y="80.0" font-size="10.5">Resultado a cada mês,</text>
+        <text class="t-ground" x="736" y="94.5" font-size="10.5">situação e decisão.</text>
+        <text class="t-ground" x="736" y="109.0" font-size="10.5">Objetivos revistos na</text>
+        <text class="t-ground" x="736" y="123.5" font-size="10.5">análise crítica.</text>
+        <path class="ln-mu dash" d="M806.0 142 V170 H94.0 V146" marker-end="url(#a2m)"/>
+        <text class="mu halo" x="450" y="174" font-size="11" text-anchor="middle">na análise crítica, os objetivos do ano seguinte saem dos resultados deste</text>
+        <text x="450" y="198" font-size="11.5" text-anchor="middle">P: política. O: objetivo. A: ação.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 2.</b> As cinco etapas. A última devolve o trabalho à primeira: os objetivos do ano seguinte saem da análise crítica dos resultados.</figcaption>
+  </figure>
+
+  <h3>Passo a passo</h3>
+  <ol class="steps">
+    <li><h4>Releia a política e as fontes</h4><p>A política da qualidade, as estratégias da SWOT, as decisões da análise crítica, os requisitos das partes interessadas e os indicadores fora da meta. Cada objetivo precisa vir de algum lugar.</p></li>
+    <li><h4>Liste os candidatos</h4><p>Tudo o que a organização gostaria de alcançar no ano. A lista é longa, e esta é a hora de ser.</p></li>
+    <li><h4>Escolha de quatro a oito</h4><p>Pelo peso para o cliente e para o negócio, e pela capacidade de fazer. O que ficou de fora vai para o ano seguinte, ou vira indicador de rotina.</p></li>
+    <li><h4>Escreva cada um com as cinco perguntas</h4><p>O quê, quanto, até quando, quem e como se mede. O valor de partida entra junto com a meta: sem ele, não se sabe o tamanho do passo.</p></li>
+    <li><h4>Desdobre nos processos</h4><p>Pergunte a cada dono de processo: o que o seu processo precisa entregar para este objetivo? A resposta é o objetivo do processo, com a sua medida.</p></li>
+    <li><h4>Faça o plano</h4><p>Para cada objetivo: o que será feito, com que recursos, por quem, até quando e como se avalia. Os prazos das ações vêm antes do prazo do objetivo.</p></li>
+    <li><h4>Comunique</h4><p>Cada pessoa sabe os objetivos do seu processo e como contribui. É o que a norma chama de conscientização.</p></li>
+    <li><h4>Acompanhe e decida</h4><p>Resultado a cada mês, situação lida e decisão sobre o que está em risco. Na análise crítica, o fechamento do ano e os objetivos do ano seguinte.</p></li>
+  </ol>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Papel</th><th style="width:26%">Quem costuma ser</th><th>O que faz</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Quem define</strong></td><td>A direção.</td><td>Escolhe os objetivos, aprova as metas e provê os recursos.</td></tr>
+        <tr><td><strong>Quem responde</strong></td><td>O dono do processo, um por objetivo.</td><td>Conduz o plano, registra o resultado e explica a situação.</td></tr>
+        <tr><td><strong>Quem mede</strong></td><td>Qualidade, ou quem cuida dos indicadores.</td><td>Mantém o quadro, calcula a situação e prepara a reunião.</td></tr>
+        <tr><td><strong>Quem executa</strong></td><td>As equipes dos processos.</td><td>Fazem as ações e conhecem o objetivo a que servem.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 4 ============================ -->
+<section id="escrever">
+  <p class="eyebrow">Módulo 4</p>
+  <h2>Escrever um objetivo</h2>
+  <p>Um objetivo bem escrito responde a cinco perguntas na própria frase ou na ficha ao lado dela. Se uma pergunta fica sem resposta, o objetivo não pode ser acompanhado, e em dezembro cada pessoa dirá que ele foi alcançado de um jeito.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 262" role="img" aria-label="As partes do objetivo O2 da pizzaria. A frase: reduzir as reclamações para no máximo 1,5 por 100 pedidos até 31 de dezembro de 2027. O quê: o verbo reduzir e o indicador reclamações. Quanto: a meta de 1,5, a partir da base de 1,9. Até quando: o prazo. Na ficha: quem, o atendente líder; como se mede, reclamações por 100 pedidos, no registro, todo mês; e o plano, com duas ações.">
+        <text class="mono mu" x="22" y="38" font-size="9.5">O QUÊ · verbo</text>
+        <rect class="bx-p" x="20" y="48" width="110" height="44"/>
+        <text class="b" x="32" y="75" font-size="13">Reduzir</text>
+        <text class="mono mu" x="146" y="38" font-size="9.5">O QUÊ · indicador</text>
+        <rect class="bx-p" x="144" y="48" width="150" height="44"/>
+        <text class="b" x="156" y="75" font-size="13">as reclamações</text>
+        <text class="mono mu" x="310" y="38" font-size="9.5">QUANTO · meta, a partir da base</text>
+        <rect class="bx-d" x="308" y="48" width="300" height="44"/>
+        <text class="b" x="320" y="75" font-size="13">para no máximo 1,5 por 100 pedidos</text>
+        <text class="mono mu" x="624" y="38" font-size="9.5">ATÉ QUANDO · prazo</text>
+        <rect class="bx-c" x="622" y="48" width="170" height="44"/>
+        <text class="b" x="634" y="75" font-size="13">até 31/12/2027</text>
+        <text class="mu" x="798" y="75" font-size="11">base: 1,9</text>
+        <rect class="bx" x="20" y="120" width="270" height="70"/>
+        <text class="b mono mu" x="30" y="140" font-size="11">QUEM</text>
+        <text class="mu" x="30" y="156" font-size="10">Atendente líder, no processo medir e melhorar.</text>
+        <rect class="bx" x="304" y="120" width="290" height="70"/>
+        <text class="b mono mu" x="314" y="140" font-size="11">COMO SE MEDE</text>
+        <text class="mu" x="314" y="156" font-size="10">Reclamações por 100 pedidos, no registro de</text>
+        <text class="mu" x="314" y="170" font-size="10">reclamações, mensal.</text>
+        <rect class="bx-ink" x="608" y="120" width="282" height="70"/>
+        <text class="b t-ground mono" x="618" y="140" font-size="11">PLANO</text>
+        <text class="t-ground" x="618" y="156" font-size="10">Tratar o motivo mais frequente de cada mês, com</text>
+        <text class="t-ground" x="618" y="170" font-size="10">o Pareto das reclamações; Combinar a entrega na</text>
+        <text class="t-ground" x="618" y="184" font-size="10">porta com as administrações dos condomínios.</text>
+        <text x="450" y="226" font-size="11.5" text-anchor="middle">A frase responde a três perguntas. A ficha responde às outras duas, e traz o plano.</text>
+        <text class="mu" x="450" y="246" font-size="11" text-anchor="middle">Sem a base, não se sabe o tamanho do passo. Sem o plano, a meta é um desejo.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 3.</b> As partes de um objetivo, no exemplo das reclamações da pizzaria. A frase traz o quê, quanto e até quando. A ficha traz quem e como se mede.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:18%">Pergunta</th><th style="width:40%">O que responde</th><th>No exemplo O2 da pizzaria</th></tr></thead>
+      <tbody>
+        <tr><td><strong>O quê</strong></td><td>O verbo e o resultado: reduzir, alcançar, manter, obter.</td><td>Reduzir as reclamações</td></tr>
+        <tr><td><strong>Quanto</strong></td><td>A meta, com número e unidade, e o valor de partida.</td><td>De 1,9 para no máximo 1,5 por 100 pedidos</td></tr>
+        <tr><td><strong>Até quando</strong></td><td>O prazo, com data.</td><td>Até 31/12/2027</td></tr>
+        <tr><td><strong>Quem</strong></td><td>O responsável pelo resultado, e o processo.</td><td>Atendente líder, no processo de medir e melhorar</td></tr>
+        <tr><td><strong>Como se mede</strong></td><td>O indicador, a fonte e a frequência.</td><td>Reclamações por 100 pedidos, no registro, todo mês</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:20%">Tipo</th><th style="width:36%">Quando usar</th><th style="width:22%">Como se mede</th><th>Exemplo</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Melhorar</strong></td><td>O resultado atual não serve, e o valor de partida é conhecido.</td><td>Indicador, da base até a meta.</td><td>Reduzir o refugo de 2,6% para 2,0%.</td></tr>
+        <tr><td><strong>Manter</strong></td><td>O resultado serve, e pode se perder com uma mudança: mais volume, equipe nova.</td><td>Indicador, com a meta igual ou próxima da base.</td><td>Manter 96% das entregas na data confirmada.</td></tr>
+        <tr><td><strong>Realizar</strong></td><td>O objetivo é um feito, e não um número: certificar, lançar, implantar.</td><td>Etapas concluídas, de um total definido.</td><td>Obter a certificação até dezembro: seis etapas.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pair">
+    <div class="box">
+      <h4>Objetivo bem escrito</h4>
+      <ul>
+        <li>“Reduzir as reclamações de 1,9 para no máximo 1,5 por 100 pedidos até dezembro de 2027.”</li>
+        <li>“Obter a certificação ISO 9001 até 17 de dezembro, em seis etapas.”</li>
+        <li>“Dar indicador e meta aos quatro processos que não têm, até 26 de fevereiro.”</li>
+        <li>Tem verbo, número, data e dono.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h4>Objetivo mal escrito</h4>
+      <ul>
+        <li>“Melhorar a satisfação do cliente.”</li>
+        <li>“Ser referência em qualidade no bairro.”</li>
+        <li>“Reduzir o refugo.”</li>
+        <li>“Atender a 100% dos requisitos da norma.”</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="note">
+    <h4>Sobre a meta</h4>
+    <p>A meta sai de três lugares: do histórico, do que o cliente ou a lei exige, e do que a ação planejada pode entregar. Uma meta sem histórico é um palpite; uma meta sem ação é um desejo. No exemplo 1, a meta de 96% de entregas no prazo é um ponto acima do resultado de 2026, porque a única ação nova, a escala do pico, vale cerca de um ponto. O segundo forno, que valeria mais, ainda está em estudo.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 5 ============================ -->
+<section id="plano">
+  <p class="eyebrow">Módulo 5</p>
+  <h2>O plano para alcançar</h2>
+  <p>A norma pede, para cada objetivo, cinco respostas: o que será feito, com que recursos, quem será o responsável, quando será concluído e como o resultado será avaliado. É a ficha do objetivo. Sem ela, o objetivo é uma meta pendurada na parede.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 326" role="img" aria-label="A ficha do objetivo O1 da pizzaria: Entregar 96% dos pedidos em até 40 minutos. Compromisso C1. Origem: Estratégia (SWOT). Indicador Entregas em até 40 minutos, base 95, meta 96, prazo 31/12/2027. Responsável: Líder da expedição, no processo Entregar o pedido (P3). Ações: Rever a escala do pico com a entrega dos novos condomínios, em março. Recursos: Dois entregadores extras nas sextas e nos sábados. Responsável: Líder da expedição. Prazo: 31/03/2027. Avaliação: Entregas no prazo nas noites de pico, por semana. Estudar a compra do segundo forno, segundo item do Pareto dos atrasos. Recursos: Orçamento de R$ 38.000. Responsável: Pizzaiolo líder. Prazo: 30/06/2027. Avaliação: Decisão dos sócios em junho.">
+        <rect class="bx" x="20" y="10" width="860" height="306"/>
+        <rect class="hd-ink" x="20" y="10" width="860" height="36"/>
+        <text class="b t-ground" x="36" y="33" font-size="13">O1 · Entregar 96% dos pedidos em até 40 minutos.</text>
+        <text class="mono mu" x="36" y="62" font-size="9.5">COMPROMISSO</text>
+        <text x="36" y="78" font-size="11">C1 · Entregar a pizza certa, quente e no</text>
+        <text x="36" y="91" font-size="11">prazo.</text>
+        <text class="mono mu" x="322" y="62" font-size="9.5">ORIGEM</text>
+        <text x="322" y="78" font-size="11">Estratégia (SWOT)</text>
+        <text class="mono mu" x="608" y="62" font-size="9.5">INDICADOR</text>
+        <text x="608" y="78" font-size="11">Entregas em até 40 minutos, mensal</text>
+        <text class="mono mu" x="36" y="114" font-size="9.5">BASE → META · PRAZO</text>
+        <text x="36" y="130" font-size="11">95% → 96% · até 31/12/2027</text>
+        <text class="mono mu" x="322" y="114" font-size="9.5">RESPONSÁVEL</text>
+        <text x="322" y="130" font-size="11">Líder da expedição</text>
+        <text class="mono mu" x="608" y="114" font-size="9.5">PROCESSO</text>
+        <text x="608" y="130" font-size="11">Entregar o pedido (P3)</text>
+        <rect class="band" x="20" y="166" width="860" height="24"/>
+        <text class="mono mu" x="36" y="182" font-size="9.5">O QUE SERÁ FEITO</text>
+        <text class="mono mu" x="316" y="182" font-size="9.5">RECURSOS</text>
+        <text class="mono mu" x="496" y="182" font-size="9.5">QUEM</text>
+        <text class="mono mu" x="626" y="182" font-size="9.5">ATÉ QUANDO</text>
+        <text class="mono mu" x="722" y="182" font-size="9.5">COMO SE AVALIA</text>
+        <line class="grid" x1="20" y1="244" x2="880" y2="244"/>
+        <text x="36" y="209" font-size="10.5">Rever a escala do pico com a entrega dos novos</text>
+        <text x="36" y="222" font-size="10.5">condomínios, em março.</text>
+        <text x="316" y="209" font-size="10.5">Dois entregadores extras nas</text>
+        <text x="316" y="222" font-size="10.5">sextas e nos sábados</text>
+        <text x="496" y="209" font-size="10.5">Líder da expedição</text>
+        <text x="626" y="209" font-size="10.5">31/03/2027</text>
+        <text x="722" y="209" font-size="10.5">Entregas no prazo nas</text>
+        <text x="722" y="222" font-size="10.5">noites de pico, por</text>
+        <text x="722" y="235" font-size="10.5">semana.</text>
+        <line class="grid" x1="20" y1="296" x2="880" y2="296"/>
+        <text x="36" y="261" font-size="10.5">Estudar a compra do segundo forno, segundo item</text>
+        <text x="36" y="274" font-size="10.5">do Pareto dos atrasos.</text>
+        <text x="316" y="261" font-size="10.5">Orçamento de R$ 38.000</text>
+        <text x="496" y="261" font-size="10.5">Pizzaiolo líder</text>
+        <text x="626" y="261" font-size="10.5">30/06/2027</text>
+        <text x="722" y="261" font-size="10.5">Decisão dos sócios em</text>
+        <text x="722" y="274" font-size="10.5">junho.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 4.</b> A ficha do objetivo O1 da pizzaria, com as cinco respostas do requisito 6.2.2. Cada ação tem o seu prazo, anterior ao prazo do objetivo, e a sua medida de avaliação.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:18%">Resposta do 6.2.2</th><th style="width:36%">O que é</th><th>No exemplo O2 da pizzaria</th></tr></thead>
+      <tbody>
+        <tr><td><strong>O que será feito</strong></td><td>As ações, uma a uma, com verbo.</td><td>Combinar a entrega na porta com as administrações dos condomínios.</td></tr>
+        <tr><td><strong>Recursos</strong></td><td>Pessoas, dinheiro, equipamento ou tempo.</td><td>Duas horas do gerente por condomínio.</td></tr>
+        <tr><td><strong>Quem</strong></td><td>O responsável por cada ação.</td><td>Gerente da loja.</td></tr>
+        <tr><td><strong>Até quando</strong></td><td>O prazo de cada ação, anterior ao do objetivo.</td><td>30/04/2027.</td></tr>
+        <tr><td><strong>Como se avalia</strong></td><td>A medida que dirá se funcionou.</td><td>Reclamações de pizza fria por condomínio, todo mês.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Situação da ação</th><th style="width:40%">Quando</th><th>O que fazer</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Não iniciada</strong></td><td>Ainda não começou. Normal antes do prazo; problema depois dele.</td><td>Conferir o recurso e a data de início.</td></tr>
+        <tr><td><strong>Em andamento</strong></td><td>Começou e não terminou.</td><td>Perguntar o que falta e se o prazo se mantém.</td></tr>
+        <tr><td><strong>Concluída</strong></td><td>Terminou, com data.</td><td>Ler a medida de avaliação: funcionou?</td></tr>
+        <tr><td><strong>Atrasada</strong></td><td>Não iniciada ou em andamento, com o prazo vencido.</td><td>Decidir: novo prazo, novo recurso ou nova ação.</td></tr>
+        <tr><td><strong>Cancelada</strong></td><td>Deixou de fazer sentido.</td><td>Registrar o motivo e substituir, se o objetivo continua.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note">
+    <h4>Ação que não move o objetivo</h4>
+    <p>Uma ação concluída não garante o objetivo. No exemplo 1, a conferência do pedido na tela foi concluída em fevereiro, e os pedidos refeitos caíram: a ação funcionou. A ficha técnica, que reduziria o desperdício, não começou, e o desperdício não se moveu. A leitura certa junta as duas colunas: o que foi feito, e o que o indicador fez em seguida.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 6 ============================ -->
+<section id="exemplos">
+  <p class="eyebrow">Módulo 6</p>
+  <h2>Exemplos resolvidos</h2>
+  <p>Os objetivos de 2027 de uma loja e de uma fábrica, com o acompanhamento dos primeiros meses, e o desdobramento de um objetivo nos processos. As organizações são as dos outros estudos da série. Os dois primeiros exemplos também estão preenchidos na planilha de apoio. Os dados são ilustrativos e foram criados para este treinamento.</p>
+
+  <h3>Exemplo 1. Os objetivos de 2027 da pizzaria</h3>
+  <dl class="ficha">
+    <div><dt>Organização</dt><dd>Pizzaria (loja com salão e delivery)</dd></div>
+    <div><dt>Definição</dt><dd>19/02/2027. Gerente da loja, com o dono e os três líderes. Ano de 2027.</dd></div>
+    <div><dt>Política da qualidade</dt><dd>Entregar a pizza certa, quente e no prazo, cuidar da segurança do alimento e de quem trabalha, e ouvir o cliente para melhorar todo mês.</dd></div>
+    <div><dt>Origem</dt><dd>Análise crítica de 14/12/2026: objetivos e metas para o ano, com indicador e meta para os processos que não tinham.</dd></div>
+    <div><dt>Acompanhamento</dt><dd>Resultados até Abr/2027, lidos em 07/05/2027.</dd></div>
+  </dl>
+  <div class="tbl">
+    <table class="aud">
+      <caption>Quadro de objetivos · 7 objetivos, 3 compromissos da política</caption>
+      <thead><tr><th class="c">#</th><th style="width:26%">Objetivo<small>Compromisso · origem</small></th><th style="width:16%">Indicador<small>Unidade</small></th><th class="c">Base</th><th class="c">Meta</th><th class="c">Prazo</th><th style="width:14%">Processo<small>Responsável</small></th><th class="c">Último</th><th>Situação</th><th class="c">Caminho</th></tr></thead>
+      <tbody>
+        <tr><td class="c n">O1</td><td><strong>Entregar 96% dos pedidos em até 40 minutos.</strong><small>C1 · Entregar a pizza certa, quente e no prazo. · Estratégia (SWOT)</small></td><td>Entregas em até 40 minutos<small>% · maior é melhor</small></td><td class="c">95</td><td class="c">96</td><td class="c">31/12/2027</td><td>Entregar o pedido (P3)<small>Líder da expedição</small></td><td class="c">95</td><td><span class="chip s3">Em risco</span></td><td class="c">0%</td></tr>
+        <tr><td class="c n">O2</td><td><strong>Reduzir as reclamações para no máximo 1,5 por 100 pedidos.</strong><small>C3 · Ouvir o cliente e melhorar todo mês. · Análise crítica</small></td><td>Reclamações por 100 pedidos<small>por 100 pedidos · menor é melhor</small></td><td class="c">1,9</td><td class="c">1,5</td><td class="c">31/12/2027</td><td>Medir e melhorar (G2)<small>Atendente líder</small></td><td class="c">1,4</td><td><span class="chip s1">Alcançado</span></td><td class="c">100%</td></tr>
+        <tr><td class="c n">O3</td><td><strong>Alcançar a nota média 4,3 na pesquisa depois da entrega.</strong><small>C3 · Ouvir o cliente e melhorar todo mês. · Análise crítica</small></td><td>Nota média das três perguntas<small>de 1 a 5 · maior é melhor</small></td><td class="c">—</td><td class="c">4,3</td><td class="c">30/06/2027</td><td>Medir e melhorar (G2)<small>Atendente líder</small></td><td class="c">4,53</td><td><span class="chip s1">Alcançado</span></td><td class="c">—</td></tr>
+        <tr><td class="c n">O4</td><td><strong>Reduzir os pedidos refeitos por erro para 1,5%.</strong><small>C1 · Entregar a pizza certa, quente e no prazo. · Indicador fora da meta</small></td><td>Pedidos refeitos por erro<small>% · menor é melhor</small></td><td class="c">2</td><td class="c">1,5</td><td class="c">30/06/2027</td><td>Produzir e embalar (P2)<small>Pizzaiolo líder</small></td><td class="c">1,3</td><td><span class="chip s1">Alcançado</span></td><td class="c">100%</td></tr>
+        <tr><td class="c n">O5</td><td><strong>Dar indicador e meta aos quatro processos que não têm.</strong><small>C3 · Ouvir o cliente e melhorar todo mês. · Análise crítica</small></td><td>Processos com indicador e meta<small>de 9 · maior é melhor</small></td><td class="c">5</td><td class="c">9</td><td class="c">26/02/2027</td><td>Planejar e dirigir a loja (G1)<small>Gerente da loja</small></td><td class="c">9</td><td><span class="chip s1">Alcançado</span></td><td class="c">100%</td></tr>
+        <tr><td class="c n">O6</td><td><strong>Reduzir o desperdício de insumos para 3,5%.</strong><small>C1 · Entregar a pizza certa, quente e no prazo. · Estratégia (SWOT)</small></td><td>Desperdício de insumos<small>% · menor é melhor</small></td><td class="c">3,9</td><td class="c">3,5</td><td class="c">31/12/2027</td><td>Produzir e embalar (P2)<small>Gerente da loja</small></td><td class="c">3,9</td><td><span class="chip s3">Em risco</span></td><td class="c">0%</td></tr>
+        <tr><td class="c n">O7</td><td><strong>Treinar toda a equipe nas funções da matriz de competências.</strong><small>C2 · Cuidar da segurança do alimento e de quem trabalha. · Parte interessada</small></td><td>Cobertura da matriz de competências<small>% · maior é melhor</small></td><td class="c">60</td><td class="c">100</td><td class="c">29/10/2027</td><td>Treinar a equipe (A3)<small>Gerente da loja</small></td><td class="c">75</td><td><span class="chip s2">No caminho</span></td><td class="c">38%</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="tbl">
+    <table class="aud">
+      <caption>Planos · 11 ações, 6 concluídas, 1 atrasadas em 07/05/2027</caption>
+      <thead><tr><th class="c">Obj.</th><th style="width:30%">O que será feito</th><th style="width:17%">Recursos</th><th>Quem</th><th class="c">Até quando</th><th>Status</th><th style="width:20%">Como se avalia</th></tr></thead>
+      <tbody>
+        <tr><td class="c n">O1</td><td>Rever a escala do pico com a entrega dos novos condomínios, em março.</td><td>Dois entregadores extras nas sextas e nos sábados</td><td>Líder da expedição</td><td class="c">31/03/2027</td><td><span class="chip s1">Concluída</span><small>26/03/2027</small></td><td>Entregas no prazo nas noites de pico, por semana.</td></tr>
+        <tr><td class="c n">O1</td><td>Estudar a compra do segundo forno, segundo item do Pareto dos atrasos.</td><td>Orçamento de R$ 38.000</td><td>Pizzaiolo líder</td><td class="c">30/06/2027</td><td><span class="chip sl">Em andamento</span></td><td>Decisão dos sócios em junho.</td></tr>
+        <tr><td class="c n">O2</td><td>Tratar o motivo mais frequente de cada mês, com o Pareto das reclamações.</td><td>Uma hora da reunião mensal</td><td>Atendente líder</td><td class="c">31/12/2027</td><td><span class="chip sl">Em andamento</span></td><td>Reclamações do motivo tratado, no mês seguinte.</td></tr>
+        <tr><td class="c n">O2</td><td>Combinar a entrega na porta com as administrações dos condomínios.</td><td>Duas horas do gerente por condomínio</td><td>Gerente da loja</td><td class="c">30/04/2027</td><td><span class="chip s1">Concluída</span><small>10/04/2027</small></td><td>Reclamações de pizza fria por condomínio, todo mês.</td></tr>
+        <tr><td class="c n">O3</td><td>Imprimir o código da pesquisa nas caixas e divulgar aos clientes.</td><td>Etiquetas: R$ 300</td><td>Atendente líder</td><td class="c">29/01/2027</td><td><span class="chip s1">Concluída</span><small>27/01/2027</small></td><td>Taxa de resposta, todo mês.</td></tr>
+        <tr><td class="c n">O3</td><td>Ler os comentários na reunião mensal e responder aos clientes.</td><td>—</td><td>Gerente da loja</td><td class="c">30/06/2027</td><td><span class="chip sl">Em andamento</span></td><td>Nota por pergunta, todo mês.</td></tr>
+        <tr><td class="c n">O4</td><td>Conferir o pedido na tela antes de montar, com a etiqueta rubricada.</td><td>—</td><td>Pizzaiolo líder</td><td class="c">28/02/2027</td><td><span class="chip s1">Concluída</span><small>20/02/2027</small></td><td>Pedidos refeitos, todo mês.</td></tr>
+        <tr><td class="c n">O5</td><td>Definir o indicador do salão, das compras, da manutenção e do treinamento, com os líderes.</td><td>Quatro reuniões de uma hora</td><td>Gerente da loja</td><td class="c">26/02/2027</td><td><span class="chip s1">Concluída</span><small>24/02/2027</small></td><td>Processos com indicador no painel.</td></tr>
+        <tr><td class="c n">O6</td><td>Implantar a ficha técnica e o custo por pizza.</td><td>Oito horas do gerente e do pizzaiolo</td><td>Gerente da loja</td><td class="c">30/04/2027</td><td><span class="chip s3">Atrasada</span><small>não iniciada</small></td><td>Desperdício por insumo, todo mês.</td></tr>
+        <tr><td class="c n">O7</td><td>Treinar o segundo pizzaiolo na regulagem do forno.</td><td>Oito horas</td><td>Pizzaiolo líder</td><td class="c">22/01/2027</td><td><span class="chip s1">Concluída</span><small>20/01/2027</small></td><td>Avaliação no posto, pelo pizzaiolo líder.</td></tr>
+        <tr><td class="c n">O7</td><td>Cumprir o plano de treinamento do primeiro semestre.</td><td>Quatro horas por semana</td><td>Gerente da loja</td><td class="c">30/06/2027</td><td><span class="chip sl">Em andamento</span></td><td>Cobertura da matriz, todo mês.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="tbl">
+    <table class="aud">
+      <caption>Acompanhamento · resultados de 2027</caption>
+      <thead><tr><th class="c">#</th><th style="width:28%">Indicador</th><th class="c">Base</th><th class="c">Jan</th><th class="c">Fev</th><th class="c">Mar</th><th class="c">Abr</th><th class="c">Meta</th><th>Situação</th></tr></thead>
+      <tbody>
+        <tr><td class="c n">O1</td><td><strong>Entregas em até 40 minutos</strong><small>%</small></td><td class="c">95</td><td class="c">95</td><td class="c">94</td><td class="c ok">96</td><td class="c">95</td><td class="c">96</td><td><span class="chip s3">Em risco</span></td></tr>
+        <tr><td class="c n">O2</td><td><strong>Reclamações por 100 pedidos</strong><small>por 100 pedidos</small></td><td class="c">1,9</td><td class="c">1,9</td><td class="c">1,9</td><td class="c">1,6</td><td class="c ok">1,4</td><td class="c">1,5</td><td><span class="chip s1">Alcançado</span></td></tr>
+        <tr><td class="c n">O3</td><td><strong>Nota média das três perguntas</strong><small>de 1 a 5</small></td><td class="c">—</td><td class="c">—</td><td class="c ok">4,33</td><td class="c ok">4,43</td><td class="c ok">4,53</td><td class="c">4,3</td><td><span class="chip s1">Alcançado</span></td></tr>
+        <tr><td class="c n">O4</td><td><strong>Pedidos refeitos por erro</strong><small>%</small></td><td class="c">2</td><td class="c">1,6</td><td class="c ok">1,5</td><td class="c ok">1,4</td><td class="c ok">1,3</td><td class="c">1,5</td><td><span class="chip s1">Alcançado</span></td></tr>
+        <tr><td class="c n">O5</td><td><strong>Processos com indicador e meta</strong><small>de 9</small></td><td class="c">5</td><td class="c">5</td><td class="c">7</td><td class="c ok">9</td><td class="c ok">9</td><td class="c">9</td><td><span class="chip s1">Alcançado</span></td></tr>
+        <tr><td class="c n">O6</td><td><strong>Desperdício de insumos</strong><small>%</small></td><td class="c">3,9</td><td class="c">3,9</td><td class="c">4</td><td class="c">3,8</td><td class="c">3,9</td><td class="c">3,5</td><td><span class="chip s3">Em risco</span></td></tr>
+        <tr><td class="c n">O7</td><td><strong>Cobertura da matriz de competências</strong><small>%</small></td><td class="c">60</td><td class="c">—</td><td class="c">60</td><td class="c">68</td><td class="c">75</td><td class="c">100</td><td><span class="chip s2">No caminho</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p><small>Célula em azul-claro: resultado que atende à meta.</small></p>
+  <p><strong>O que observar.</strong> Os sete objetivos saíram da análise crítica de dezembro, da SWOT e das partes interessadas, e cada um responde a um dos três compromissos da política. Em maio, quatro estão alcançados, e dois deles antes do prazo: a nota da pesquisa e os pedidos refeitos. Os dois em risco contam histórias diferentes. O desperdício não se moveu porque a única ação, a ficha técnica, não começou: é um problema de execução. As entregas no prazo ficaram em 95% depois da escala revista: a ação foi feita, e não bastou. É um problema de plano, e a decisão sobre o segundo forno é que vai resolver. A cobertura da matriz de competências está no caminho, com cinco meses pela frente.</p>
+
+  <h3>Exemplo 2. Os objetivos de 2027 da indústria</h3>
+  <dl class="ficha">
+    <div><dt>Organização</dt><dd>Indústria de embalagens plásticas</dd></div>
+    <div><dt>Definição</dt><dd>18/02/2027. Diretor geral, com os gerentes e o Coordenador da Qualidade. Ano de 2027.</dd></div>
+    <div><dt>Política da qualidade</dt><dd>Entregar embalagens conformes e no prazo, cumprir os requisitos legais e os dos clientes, e melhorar os processos reduzindo as perdas.</dd></div>
+    <div><dt>Origem</dt><dd>Análise crítica de 18/02/2027: a certificação e a linha com material reciclado entram nos objetivos do ano.</dd></div>
+    <div><dt>Acompanhamento</dt><dd>Resultados até Jun/2027, lidos em 09/07/2027.</dd></div>
+  </dl>
+  <div class="tbl">
+    <table class="aud">
+      <caption>Quadro de objetivos · 7 objetivos, 3 compromissos da política</caption>
+      <thead><tr><th class="c">#</th><th style="width:26%">Objetivo<small>Compromisso · origem</small></th><th style="width:16%">Indicador<small>Unidade</small></th><th class="c">Base</th><th class="c">Meta</th><th class="c">Prazo</th><th style="width:14%">Processo<small>Responsável</small></th><th class="c">Último</th><th>Situação</th><th class="c">Caminho</th></tr></thead>
+      <tbody>
+        <tr><td class="c n">O1</td><td><strong>Reduzir o refugo para 2,0% do peso produzido.</strong><small>C3 · Melhorar os processos e reduzir as perdas. · Análise crítica</small></td><td>Refugo<small>% do peso · menor é melhor</small></td><td class="c">2,6</td><td class="c">2</td><td class="c">31/12/2027</td><td>Extrusão<small>Gerente industrial</small></td><td class="c">2,2</td><td><span class="chip s2">No caminho</span></td><td class="c">67%</td></tr>
+        <tr><td class="c n">O2</td><td><strong>Reduzir as reclamações para no máximo 50 por milhão de peças.</strong><small>C2 · Cumprir os requisitos legais e os dos clientes. · Parte interessada</small></td><td>Reclamações por milhão de peças<small>por milhão · menor é melhor</small></td><td class="c">62</td><td class="c">50</td><td class="c">30/06/2027</td><td>Comercial e Qualidade<small>Gerente comercial</small></td><td class="c">38</td><td><span class="chip s1">Alcançado</span></td><td class="c">100%</td></tr>
+        <tr><td class="c n">O3</td><td><strong>Manter 96% das entregas na data confirmada.</strong><small>C1 · Entregar embalagens conformes e no prazo. · Requisito legal ou contratual</small></td><td>Entregas no prazo<small>% · maior é melhor</small></td><td class="c">97</td><td class="c">96</td><td class="c">31/12/2027</td><td>Expedição<small>Líder da expedição</small></td><td class="c">97</td><td><span class="chip s1">Alcançado</span></td><td class="c">100%</td></tr>
+        <tr><td class="c n">O4</td><td><strong>Obter a certificação ISO 9001 até dezembro.</strong><small>C2 · Cumprir os requisitos legais e os dos clientes. · Estratégia (SWOT)</small></td><td>Etapas concluídas, de seis<small>etapas · maior é melhor</small></td><td class="c">0</td><td class="c">6</td><td class="c">17/12/2027</td><td>Gestão do sistema<small>Coordenador da Qualidade</small></td><td class="c">2</td><td><span class="chip s2">No caminho</span></td><td class="c">33%</td></tr>
+        <tr><td class="c n">O5</td><td><strong>Produzir e aprovar o lote piloto com 30% de resina reciclada.</strong><small>C3 · Melhorar os processos e reduzir as perdas. · Parte interessada</small></td><td>Etapas concluídas, de quatro<small>etapas · maior é melhor</small></td><td class="c">0</td><td class="c">4</td><td class="c">30/09/2027</td><td>Engenharia<small>Gerente de engenharia</small></td><td class="c">2</td><td><span class="chip s2">No caminho</span></td><td class="c">50%</td></tr>
+        <tr><td class="c n">O6</td><td><strong>Encerrar as não conformidades em até 60 dias.</strong><small>C3 · Melhorar os processos e reduzir as perdas. · Análise crítica</small></td><td>Prazo médio de encerramento<small>dias · menor é melhor</small></td><td class="c">74</td><td class="c">60</td><td class="c">30/06/2027</td><td>Gestão do sistema<small>Coordenador da Qualidade</small></td><td class="c">52</td><td><span class="chip s1">Alcançado</span></td><td class="c">100%</td></tr>
+        <tr><td class="c n">O7</td><td><strong>Manter 100% dos fornecedores críticos avaliados a cada semestre.</strong><small>C2 · Cumprir os requisitos legais e os dos clientes. · Auditoria ou não conformidade</small></td><td>Fornecedores críticos avaliados<small>% · maior é melhor</small></td><td class="c">100</td><td class="c">100</td><td class="c">31/12/2027</td><td>Suprimentos<small>Gerente de Suprimentos</small></td><td class="c">92</td><td><span class="chip s3">Em risco</span></td><td class="c">0%</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="tbl">
+    <table class="aud">
+      <caption>Planos · 13 ações, 7 concluídas, 2 atrasadas em 09/07/2027</caption>
+      <thead><tr><th class="c">Obj.</th><th style="width:30%">O que será feito</th><th style="width:17%">Recursos</th><th>Quem</th><th class="c">Até quando</th><th>Status</th><th style="width:20%">Como se avalia</th></tr></thead>
+      <tbody>
+        <tr><td class="c n">O1</td><td>Instalar o medidor de espessura em linha nas extrusoras 3 e 4.</td><td>Dois medidores, com instalação: R$ 96.000</td><td>Gerente de engenharia</td><td class="c">30/06/2027</td><td><span class="chip s3">Atrasada</span><small>em andamento</small></td><td>Refugo por espessura, por extrusora, todo mês.</td></tr>
+        <tr><td class="c n">O1</td><td>Conduzir o ciclo PDCA do refugo, com o Pareto por defeito a cada mês.</td><td>Equipe de melhoria, quatro horas por semana</td><td>Gerente industrial</td><td class="c">31/12/2027</td><td><span class="chip sl">Em andamento</span></td><td>Refugo total, todo mês.</td></tr>
+        <tr><td class="c n">O2</td><td>Visitar o cliente A e combinar um plano conjunto.</td><td>Uma visita</td><td>Gerente comercial</td><td class="c">19/03/2027</td><td><span class="chip s1">Concluída</span><small>12/03/2027</small></td><td>Reclamações do cliente A, todo mês.</td></tr>
+        <tr><td class="c n">O2</td><td>Inspecionar 100% das bobinas do cliente A até a instalação do medidor.</td><td>Um inspetor por turno</td><td>Gerente industrial</td><td class="c">30/06/2027</td><td><span class="chip s3">Atrasada</span><small>em andamento</small></td><td>Bobinas reprovadas na inspeção, por semana.</td></tr>
+        <tr><td class="c n">O3</td><td>Rever a programação do segmento de alimentos, que deu nota 7,8 ao prazo.</td><td>—</td><td>Gerente comercial</td><td class="c">31/03/2027</td><td><span class="chip s1">Concluída</span><small>26/03/2027</small></td><td>Entregas no prazo por segmento, todo mês.</td></tr>
+        <tr><td class="c n">O4</td><td>Contratar o organismo de certificação.</td><td>R$ 38.000</td><td>Diretor geral</td><td class="c">30/04/2027</td><td><span class="chip s1">Concluída</span><small>23/04/2027</small></td><td>Contrato assinado.</td></tr>
+        <tr><td class="c n">O4</td><td>Formar mais quatro auditores internos.</td><td>Curso de 16 horas: R$ 6.000</td><td>Gerente de RH</td><td class="c">28/05/2027</td><td><span class="chip s1">Concluída</span><small>21/05/2027</small></td><td>Auditores aprovados no curso.</td></tr>
+        <tr><td class="c n">O4</td><td>Concluir o ciclo de auditorias internas nos nove processos.</td><td>Dez auditores, dois dias por processo</td><td>Coordenador da Qualidade</td><td class="c">31/08/2027</td><td><span class="chip sl">Em andamento</span></td><td>Processos auditados, todo mês.</td></tr>
+        <tr><td class="c n">O5</td><td>Homologar o fornecedor de resina reciclada.</td><td>Ensaios externos: R$ 12.000</td><td>Gerente de Suprimentos</td><td class="c">31/03/2027</td><td><span class="chip s1">Concluída</span><small>29/03/2027</small></td><td>Laudo dos ensaios.</td></tr>
+        <tr><td class="c n">O5</td><td>Produzir o lote piloto de uma tonelada.</td><td>Uma tonelada de resina: R$ 9.000</td><td>Gerente de engenharia</td><td class="c">30/06/2027</td><td><span class="chip s1">Concluída</span><small>24/06/2027</small></td><td>Lote produzido e identificado.</td></tr>
+        <tr><td class="c n">O5</td><td>Ensaiar o lote e apresentar ao cliente.</td><td>Laboratório interno</td><td>Gerente de engenharia</td><td class="c">30/09/2027</td><td><span class="chip sl">Não iniciada</span></td><td>Aprovação do cliente por escrito.</td></tr>
+        <tr><td class="c n">O6</td><td>Acompanhar as não conformidades abertas na reunião mensal de indicadores.</td><td>—</td><td>Coordenador da Qualidade</td><td class="c">05/03/2027</td><td><span class="chip s1">Concluída</span><small>05/03/2027</small></td><td>Prazo médio, todo mês.</td></tr>
+        <tr><td class="c n">O7</td><td>Avaliar o segundo fornecedor de resina no primeiro recebimento.</td><td>—</td><td>Comprador sênior</td><td class="c">30/07/2027</td><td><span class="chip sl">Não iniciada</span></td><td>Avaliação registrada.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="tbl">
+    <table class="aud">
+      <caption>Acompanhamento · resultados de 2027</caption>
+      <thead><tr><th class="c">#</th><th style="width:28%">Indicador</th><th class="c">Base</th><th class="c">Jan</th><th class="c">Fev</th><th class="c">Mar</th><th class="c">Abr</th><th class="c">Mai</th><th class="c">Jun</th><th class="c">Meta</th><th>Situação</th></tr></thead>
+      <tbody>
+        <tr><td class="c n">O1</td><td><strong>Refugo</strong><small>% do peso</small></td><td class="c">2,6</td><td class="c">2,5</td><td class="c">2,5</td><td class="c">2,4</td><td class="c">2,3</td><td class="c">2,2</td><td class="c">2,2</td><td class="c">2</td><td><span class="chip s2">No caminho</span></td></tr>
+        <tr><td class="c n">O2</td><td><strong>Reclamações por milhão de peças</strong><small>por milhão</small></td><td class="c">62</td><td class="c">58</td><td class="c">55</td><td class="c ok">47</td><td class="c ok">44</td><td class="c ok">40</td><td class="c ok">38</td><td class="c">50</td><td><span class="chip s1">Alcançado</span></td></tr>
+        <tr><td class="c n">O3</td><td><strong>Entregas no prazo</strong><small>%</small></td><td class="c">97</td><td class="c ok">97</td><td class="c ok">96</td><td class="c ok">97</td><td class="c ok">97</td><td class="c ok">98</td><td class="c ok">97</td><td class="c">96</td><td><span class="chip s1">Alcançado</span></td></tr>
+        <tr><td class="c n">O4</td><td><strong>Etapas concluídas, de seis</strong><small>etapas</small></td><td class="c">0</td><td class="c">0</td><td class="c">0</td><td class="c">0</td><td class="c">1</td><td class="c">2</td><td class="c">2</td><td class="c">6</td><td><span class="chip s2">No caminho</span></td></tr>
+        <tr><td class="c n">O5</td><td><strong>Etapas concluídas, de quatro</strong><small>etapas</small></td><td class="c">0</td><td class="c">0</td><td class="c">0</td><td class="c">1</td><td class="c">1</td><td class="c">1</td><td class="c">2</td><td class="c">4</td><td><span class="chip s2">No caminho</span></td></tr>
+        <tr><td class="c n">O6</td><td><strong>Prazo médio de encerramento</strong><small>dias</small></td><td class="c">74</td><td class="c">70</td><td class="c">66</td><td class="c">61</td><td class="c ok">58</td><td class="c ok">55</td><td class="c ok">52</td><td class="c">60</td><td><span class="chip s1">Alcançado</span></td></tr>
+        <tr><td class="c n">O7</td><td><strong>Fornecedores críticos avaliados</strong><small>%</small></td><td class="c">100</td><td class="c ok">100</td><td class="c ok">100</td><td class="c ok">100</td><td class="c ok">100</td><td class="c ok">100</td><td class="c">92</td><td class="c">100</td><td><span class="chip s3">Em risco</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p><small>Célula em azul-claro: resultado que atende à meta.</small></p>
+  <p><strong>O que observar.</strong> A fábrica tem dois objetivos do tipo “realizar”, medidos por etapas: a certificação e o lote piloto com resina reciclada. Os dois estão no caminho, e o quadro mostra em que etapa cada um está. O refugo está no caminho pelo ciclo PDCA, mas a ação que mais pesa, o medidor de espessura, venceu em junho sem ser instalada: o objetivo pode parar em 2,2%. O objetivo dos fornecedores avaliados, que era de manutenção, saiu da meta em junho por um motivo bom: o segundo fornecedor de resina foi homologado e ainda não foi avaliado. Um objetivo de manutenção também precisa de ação quando algo muda.</p>
+
+  <h3>Exemplo 3. O desdobramento de um objetivo nos processos</h3>
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 318" role="img" aria-label="O desdobramento do objetivo O1 da pizzaria. Compromisso: C1 · Entregar a pizza certa, quente e no prazo. Objetivo: O1 · Entregar 96% dos pedidos em até 40 minutos. Registrar o pedido (P1): Pedidos com endereço completo: 100% Ação: Campo de complemento obrigatório na tela. Produzir e embalar (P2): Pedidos que esperam mais de 10 minutos pelo forno: até 5% Ação: Estudo do segundo forno até junho. Entregar o pedido (P3): Entregas em até 40 minutos no pico: 94% Ação: Escala do pico revista em março.">
+        <defs><marker id="a5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker></defs>
+        <rect class="bx" x="250" y="10" width="400" height="46"/>
+        <text class="mono mu" x="262" y="28" font-size="9.5">POLÍTICA</text><text x="262" y="45" font-size="11.5">C1 · Entregar a pizza certa, quente e no prazo.</text>
+        <line class="ln" x1="450" y1="57" x2="450" y2="72" marker-end="url(#a5)"/>
+        <rect class="bx-ink" x="250" y="76" width="400" height="50"/>
+        <text class="mono t-ground" x="262" y="94" font-size="9.5">OBJETIVO DA LOJA</text><text class="b t-ground" x="262" y="113" font-size="12">O1 · Entregar 96% dos pedidos em até 40 minutos.</text>
+        <path class="ln" d="M450 127 V146 H153 V160" marker-end="url(#a5)"/>
+        <rect class="bx-p" x="20" y="164" width="266" height="68"/>
+        <text class="mono mu" x="30" y="182" font-size="9.5">OBJETIVO DO PROCESSO · P1</text>
+        <text class="b" x="30" y="199" font-size="11.5">Registrar o pedido</text>
+        <text x="30" y="215" font-size="10.5">Pedidos com endereço completo: 100%</text>
+        <line class="ln" x1="153" y1="233" x2="153" y2="248" marker-end="url(#a5)"/>
+        <rect class="bx-c" x="20" y="252" width="266" height="54"/>
+        <text class="mono mu" x="30" y="270" font-size="9.5">AÇÃO</text>
+        <text x="30" y="286" font-size="10.5">Campo de complemento obrigatório na tela.</text>
+        <path class="ln" d="M450 127 V146 H447 V160" marker-end="url(#a5)"/>
+        <rect class="bx-p" x="314" y="164" width="266" height="68"/>
+        <text class="mono mu" x="324" y="182" font-size="9.5">OBJETIVO DO PROCESSO · P2</text>
+        <text class="b" x="324" y="199" font-size="11.5">Produzir e embalar</text>
+        <text x="324" y="215" font-size="10.5">Pedidos que esperam mais de 10 minutos pelo</text>
+        <text x="324" y="228" font-size="10.5">forno: até 5%</text>
+        <line class="ln" x1="447" y1="233" x2="447" y2="248" marker-end="url(#a5)"/>
+        <rect class="bx-c" x="314" y="252" width="266" height="54"/>
+        <text class="mono mu" x="324" y="270" font-size="9.5">AÇÃO</text>
+        <text x="324" y="286" font-size="10.5">Estudo do segundo forno até junho.</text>
+        <path class="ln" d="M450 127 V146 H741 V160" marker-end="url(#a5)"/>
+        <rect class="bx-p" x="608" y="164" width="266" height="68"/>
+        <text class="mono mu" x="618" y="182" font-size="9.5">OBJETIVO DO PROCESSO · P3</text>
+        <text class="b" x="618" y="199" font-size="11.5">Entregar o pedido</text>
+        <text x="618" y="215" font-size="10.5">Entregas em até 40 minutos no pico: 94%</text>
+        <line class="ln" x1="741" y1="233" x2="741" y2="248" marker-end="url(#a5)"/>
+        <rect class="bx-c" x="608" y="252" width="266" height="54"/>
+        <text class="mono mu" x="618" y="270" font-size="9.5">AÇÃO</text>
+        <text x="618" y="286" font-size="10.5">Escala do pico revista em março.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 5.</b> O objetivo O1 da pizzaria, desdobrado nos três processos que mais pesam para ele. Cada processo recebe a sua parte, com a sua medida, e cada parte tem uma ação.</figcaption>
+  </figure>
+  <p><strong>O que observar.</strong> “Entregar 96% em até 40 minutos” é um objetivo do processo de entrega, mas o atraso nasce antes: no pedido registrado sem complemento e na fila do forno. O desdobramento pergunta a cada processo o que ele precisa entregar para que o objetivo da loja aconteça, e dá a cada um uma medida própria. É assim que o objetivo chega a quem registra o pedido e a quem assa a pizza, e é isso que a norma quer dizer quando pede objetivos “nas funções, níveis e processos pertinentes”.</p>
+</section>
+
+<!-- ============================ MÓDULO 7 ============================ -->
+<section id="leitura">
+  <p class="eyebrow">Módulo 7</p>
+  <h2>Ler o acompanhamento</h2>
+  <p>A cada mês, o quadro responde a duas perguntas por objetivo: o último resultado atende à meta? Se não, está mais perto dela do que no início? As respostas dão a situação, e o caminho percorrido mostra quanto falta.</p>
+
+  <figure id="fig-bars">
+    <div class="scroll">
+      <svg id="bars" viewBox="0 0 900 378" role="img" aria-label="O caminho percorrido por cada objetivo da pizzaria, da base até a meta, em maio de 2027. O1, Entregas em até 40 minutos: base 95, último 95, meta 96, em risco, 0% do caminho. O2, Reclamações por 100 pedidos: base 1,9, último 1,4, meta 1,5, alcançado, 100% do caminho. O3, Nota média das três perguntas: base —, último 4,53, meta 4,3, alcançado. O4, Pedidos refeitos por erro: base 2, último 1,3, meta 1,5, alcançado, 100% do caminho. O5, Processos com indicador e meta: base 5, último 9, meta 9, alcançado, 100% do caminho. O6, Desperdício de insumos: base 3,9, último 3,9, meta 3,5, em risco, 0% do caminho. O7, Cobertura da matriz de competências: base 60, último 75, meta 100, no caminho, 38% do caminho.">
+        <g font-size="11.5">
+          <rect class="f1" x="300" y="12" width="14" height="14"/><text x="322" y="24">Alcançado</text>
+          <rect class="f2" x="399.4" y="12" width="14" height="14"/><text x="421.4" y="24">No caminho</text>
+          <rect class="f3" x="505.4" y="12" width="14" height="14"/><text x="527.4" y="24">Em risco</text>
+        </g>
+        <line class="grid" x1="300" y1="42" x2="300" y2="330"/>
+        <text class="mu" x="300" y="346" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">base</text>
+        <line class="grid" x1="390.0" y1="42" x2="390.0" y2="330"/>
+        <text class="mu" x="390.0" y="346" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">25%</text>
+        <line class="grid" x1="480.0" y1="42" x2="480.0" y2="330"/>
+        <text class="mu" x="480.0" y="346" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">50%</text>
+        <line class="grid" x1="570.0" y1="42" x2="570.0" y2="330"/>
+        <text class="mu" x="570.0" y="346" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">75%</text>
+        <line class="goal" x1="660" y1="42" x2="660" y2="330"/>
+        <text class="mu" x="660" y="346" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">meta</text>
+        <text class="mono mu" x="480.0" y="366" font-size="10" text-anchor="middle">CAMINHO PERCORRIDO</text>
+        <text x="20" y="75.0" font-size="12"><tspan class="b">O1</tspan><tspan> · Entregas em até 40 minutos</tspan></text>
+        <rect class="track" x="300" y="60.0" width="360" height="20"/>
+        <text class="halo" x="670" y="75.0" font-size="10.5"><tspan class="b">Em risco</tspan><tspan class="mu"> · 95 → 95 · meta 96</tspan></text>
+        <text x="20" y="115.0" font-size="12"><tspan class="b">O2</tspan><tspan> · Reclamações por 100 pedidos</tspan></text>
+        <rect class="track" x="300" y="100.0" width="360" height="20"/>
+        <rect class="bar f1" data-k="1" x="300" y="100.0" width="360.0" height="20"/>
+        <text class="halo" x="670" y="115.0" font-size="10.5"><tspan class="b">Alcançado</tspan><tspan class="mu"> · 1,9 → 1,4 · meta 1,5</tspan></text>
+        <text x="20" y="155.0" font-size="12"><tspan class="b">O3</tspan><tspan> · Nota média das três perguntas</tspan></text>
+        <rect class="track" x="300" y="140.0" width="360" height="20"/>
+        <rect class="bar f1" data-k="2" x="300" y="140.0" width="360.0" height="20"/>
+        <text class="halo" x="670" y="155.0" font-size="10.5"><tspan class="b">Alcançado</tspan><tspan class="mu"> · 4,53 · meta 4,3, sem base</tspan></text>
+        <text x="20" y="195.0" font-size="12"><tspan class="b">O4</tspan><tspan> · Pedidos refeitos por erro</tspan></text>
+        <rect class="track" x="300" y="180.0" width="360" height="20"/>
+        <rect class="bar f1" data-k="3" x="300" y="180.0" width="360.0" height="20"/>
+        <text class="halo" x="670" y="195.0" font-size="10.5"><tspan class="b">Alcançado</tspan><tspan class="mu"> · 2 → 1,3 · meta 1,5</tspan></text>
+        <text x="20" y="235.0" font-size="12"><tspan class="b">O5</tspan><tspan> · Processos com indicador e meta</tspan></text>
+        <rect class="track" x="300" y="220.0" width="360" height="20"/>
+        <rect class="bar f1" data-k="4" x="300" y="220.0" width="360.0" height="20"/>
+        <text class="halo" x="670" y="235.0" font-size="10.5"><tspan class="b">Alcançado</tspan><tspan class="mu"> · 5 → 9 · meta 9</tspan></text>
+        <text x="20" y="275.0" font-size="12"><tspan class="b">O6</tspan><tspan> · Desperdício de insumos</tspan></text>
+        <rect class="track" x="300" y="260.0" width="360" height="20"/>
+        <text class="halo" x="670" y="275.0" font-size="10.5"><tspan class="b">Em risco</tspan><tspan class="mu"> · 3,9 → 3,9 · meta 3,5</tspan></text>
+        <text x="20" y="315.0" font-size="12"><tspan class="b">O7</tspan><tspan> · Cobertura da matriz de competências</tspan></text>
+        <rect class="track" x="300" y="300.0" width="360" height="20"/>
+        <rect class="bar f2" data-k="6" x="300" y="300.0" width="135.0" height="20"/>
+        <text class="halo" x="670" y="315.0" font-size="10.5"><tspan class="b">No caminho</tspan><tspan class="mu"> · 60 → 75 · meta 100</tspan></text>
+        <rect class="hit" x="14" y="50" width="872" height="40" tabindex="0" role="img" aria-label="O1, Entregas em até 40 minutos: Em risco, base 95, último 95, meta 96" data-k="0" data-n="O1 · Entregas em até 40 minutos" data-s="Em risco" data-p="0" data-b="95" data-u="95" data-m="96" data-un="%" data-cx="480.0"/>
+        <rect class="hit" x="14" y="90" width="872" height="40" tabindex="0" role="img" aria-label="O2, Reclamações por 100 pedidos: Alcançado, base 1,9, último 1,4, meta 1,5" data-k="1" data-n="O2 · Reclamações por 100 pedidos" data-s="Alcançado" data-p="100" data-b="1,9" data-u="1,4" data-m="1,5" data-un="por 100 pedidos" data-cx="480.0"/>
+        <rect class="hit" x="14" y="130" width="872" height="40" tabindex="0" role="img" aria-label="O3, Nota média das três perguntas: Alcançado, base —, último 4,53, meta 4,3" data-k="2" data-n="O3 · Nota média das três perguntas" data-s="Alcançado" data-p="" data-b="—" data-u="4,53" data-m="4,3" data-un="de 1 a 5" data-cx="480.0"/>
+        <rect class="hit" x="14" y="170" width="872" height="40" tabindex="0" role="img" aria-label="O4, Pedidos refeitos por erro: Alcançado, base 2, último 1,3, meta 1,5" data-k="3" data-n="O4 · Pedidos refeitos por erro" data-s="Alcançado" data-p="100" data-b="2" data-u="1,3" data-m="1,5" data-un="%" data-cx="480.0"/>
+        <rect class="hit" x="14" y="210" width="872" height="40" tabindex="0" role="img" aria-label="O5, Processos com indicador e meta: Alcançado, base 5, último 9, meta 9" data-k="4" data-n="O5 · Processos com indicador e meta" data-s="Alcançado" data-p="100" data-b="5" data-u="9" data-m="9" data-un="de 9" data-cx="480.0"/>
+        <rect class="hit" x="14" y="250" width="872" height="40" tabindex="0" role="img" aria-label="O6, Desperdício de insumos: Em risco, base 3,9, último 3,9, meta 3,5" data-k="5" data-n="O6 · Desperdício de insumos" data-s="Em risco" data-p="0" data-b="3,9" data-u="3,9" data-m="3,5" data-un="%" data-cx="480.0"/>
+        <rect class="hit" x="14" y="290" width="872" height="40" tabindex="0" role="img" aria-label="O7, Cobertura da matriz de competências: No caminho, base 60, último 75, meta 100" data-k="6" data-n="O7 · Cobertura da matriz de competências" data-s="No caminho" data-p="38" data-b="60" data-u="75" data-m="100" data-un="%" data-cx="480.0"/>
+      </svg>
+    </div>
+    <div class="tip" id="bars-tip" hidden></div>
+    <figcaption><b>Figura 6.</b> O caminho percorrido por cada objetivo da pizzaria, da base até a meta, em maio de 2027. Passe o mouse sobre as barras para ver os valores.</figcaption>
+    <details class="data">
+      <summary>Ver os dados em tabela</summary>
+      <div class="tbl">
+        <table class="aud">
+          <thead><tr><th>Objetivo</th><th>Indicador</th><th class="c">Base</th><th class="c">Último</th><th class="c">Meta</th><th class="c">Caminho</th><th>Situação</th></tr></thead>
+          <tbody>
+            <tr><td><strong>O1</strong></td><td>Entregas em até 40 minutos</td><td class="c">95</td><td class="c">95</td><td class="c">96</td><td class="c">0%</td><td>Em risco</td></tr>
+            <tr><td><strong>O2</strong></td><td>Reclamações por 100 pedidos</td><td class="c">1,9</td><td class="c">1,4</td><td class="c">1,5</td><td class="c">100%</td><td>Alcançado</td></tr>
+            <tr><td><strong>O3</strong></td><td>Nota média das três perguntas</td><td class="c">—</td><td class="c">4,53</td><td class="c">4,3</td><td class="c">—</td><td>Alcançado</td></tr>
+            <tr><td><strong>O4</strong></td><td>Pedidos refeitos por erro</td><td class="c">2</td><td class="c">1,3</td><td class="c">1,5</td><td class="c">100%</td><td>Alcançado</td></tr>
+            <tr><td><strong>O5</strong></td><td>Processos com indicador e meta</td><td class="c">5</td><td class="c">9</td><td class="c">9</td><td class="c">100%</td><td>Alcançado</td></tr>
+            <tr><td><strong>O6</strong></td><td>Desperdício de insumos</td><td class="c">3,9</td><td class="c">3,9</td><td class="c">3,5</td><td class="c">0%</td><td>Em risco</td></tr>
+            <tr><td><strong>O7</strong></td><td>Cobertura da matriz de competências</td><td class="c">60</td><td class="c">75</td><td class="c">100</td><td class="c">38%</td><td>No caminho</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </details>
+  </figure>
+
+  <p>Em 07/05/2027, 4 dos 7 objetivos estão alcançados, 1 está no caminho e 2 estão em risco. Os dois em risco têm o mesmo caminho percorrido, zero, e causas diferentes: no desperdício, a ação não começou; nas entregas no prazo, a ação foi feita e não bastou. O quadro não distingue os dois casos; a reunião distingue, lendo o plano ao lado do indicador. A cobertura da matriz de competências está em 38% do caminho em maio, com prazo em outubro: adiantada. O objetivo da pesquisa não tem base, porque a pesquisa não existia em 2026; a planilha o lê só pela meta.</p>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:22%">Situação</th><th style="width:40%">Regra deste material</th><th>O que fazer</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Alcançado</strong></td><td>O último resultado atende à meta.</td><td>Manter até o prazo. Se for cedo, perguntar se a meta era baixa.</td></tr>
+        <tr><td><strong>No caminho</strong></td><td>Não atende, mas está melhor do que a base.</td><td>Conferir se o ritmo chega à meta no prazo.</td></tr>
+        <tr><td><strong>Em risco</strong></td><td>Não atende, e não está melhor do que a base.</td><td>Olhar as ações: não começaram, ou não bastam?</td></tr>
+        <tr><td><strong>Em andamento</strong></td><td>Não atende, e não há base para comparar.</td><td>Acompanhar. Registrar a base no primeiro resultado.</td></tr>
+        <tr><td><strong>Não alcançado</strong></td><td>O prazo venceu sem atender à meta.</td><td>Decidir na análise crítica: novo prazo, nova meta ou encerrar.</td></tr>
+        <tr><td><strong>Sem resultado</strong></td><td>Nenhum resultado registrado.</td><td>Conferir a medição. Objetivo sem medida não existe.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note">
+    <h4>O caminho percorrido</h4>
+    <p>É a parte da distância entre a base e a meta que o último resultado já cobriu: de 0% a 100%. Um objetivo com 38% em maio, com prazo em outubro, está adiantado; um com 38% em setembro está atrasado. Para o objetivo de manutenção, o caminho é 100% enquanto a meta é atendida, e 0% quando não é.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 8 ============================ -->
+<section id="erros">
+  <p class="eyebrow">Módulo 8</p>
+  <h2>Erros comuns</h2>
+  <div class="errs">
+    <div><h4>Objetivo sem número</h4><p>“Melhorar o atendimento.” Em dezembro, todos dizem que melhorou.</p><p class="fix"><b>Correção:</b> indicador, base, meta e prazo, na frase ou na ficha.</p></div>
+    <div><h4>Objetivos demais</h4><p>Quinze objetivos, e nenhum com plano.</p><p class="fix"><b>Correção:</b> de quatro a oito. O resto vira indicador de rotina.</p></div>
+    <div><h4>Objetivo sem fonte</h4><p>“Reduzir o refugo” aparece todo ano, sem ligação com a política ou com a estratégia.</p><p class="fix"><b>Correção:</b> cada objetivo responde a um compromisso e a uma fonte.</p></div>
+    <div><h4>Meta sem base</h4><p>“Atingir 95%”, sem saber de onde se parte.</p><p class="fix"><b>Correção:</b> o valor de partida entra junto com a meta.</p></div>
+    <div><h4>Objetivo sem plano</h4><p>A meta está escrita, e ninguém sabe o que fazer para chegar nela.</p><p class="fix"><b>Correção:</b> as cinco respostas do requisito 6.2.2, por objetivo.</p></div>
+    <div><h4>Dois donos, ou nenhum</h4><p>“Responsável: a Qualidade e a Produção.”</p><p class="fix"><b>Correção:</b> uma pessoa responde pelo objetivo; outras, pelas ações.</p></div>
+    <div><h4>Olhar só em dezembro</h4><p>O quadro é atualizado para a análise crítica, e as surpresas aparecem lá.</p><p class="fix"><b>Correção:</b> resultado e situação todo mês, com decisão sobre o que está em risco.</p></div>
+    <div><h4>Confundir ação feita com objetivo alcançado</h4><p>“A escala foi revista”, e as entregas no prazo não subiram.</p><p class="fix"><b>Correção:</b> ler o indicador depois da ação, e não só o status dela.</p></div>
+    <div><h4>Objetivo que ninguém conhece</h4><p>O quadro existe, e a equipe do forno nunca o viu.</p><p class="fix"><b>Correção:</b> desdobrar nos processos e comunicar: cada um sabe a sua parte.</p></div>
+    <div><h4>Meta sem desafio, ou impossível</h4><p>96% quando já se faz 97%; ou 100% sem nenhuma ação nova.</p><p class="fix"><b>Correção:</b> a meta sai do histórico, do requisito e do que a ação pode entregar.</p></div>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 9 ============================ -->
+<section id="ferramentas">
+  <p class="eyebrow">Módulo 9</p>
+  <h2>Os objetivos e outras ferramentas</h2>
+  <p>Os objetivos são o ponto em que o planejamento vira número. Recebem a política, a estratégia, os requisitos das partes e as decisões da direção; entregam metas aos indicadores, planos ao 5W2H e resultados à análise crítica.</p>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:26%">Ferramenta</th><th style="width:37%">O que ela entrega aos objetivos</th><th>O que recebe dos objetivos</th></tr></thead>
+      <tbody>
+        <tr><td><a href="../ISO-9001/treinamento-iso-9001.html"><strong>ISO 9001 requisito a requisito</strong></a></td><td>Os requisitos 5.2 e 6.2, e a lacuna de cada organização.</td><td>O quadro de objetivos e os planos, como evidência.</td></tr>
+        <tr><td><a href="../SWOT/treinamento-swot.html"><strong>Matriz SWOT</strong></a></td><td>As estratégias escolhidas, que pedem um número e um prazo.</td><td>O resultado de cada estratégia, para a revisão.</td></tr>
+        <tr><td><a href="../Partes-Interessadas/treinamento-partes-interessadas.html"><strong>Partes interessadas</strong></a></td><td>Os requisitos ainda não atendidos, que viram objetivos.</td><td>A situação do requisito, atualizada pelo indicador.</td></tr>
+        <tr><td><a href="../Indicadores/treinamento-indicadores.html"><strong>Indicadores</strong></a></td><td>A medida, a fonte e o histórico de cada objetivo.</td><td>A meta e o prazo, e a prioridade na leitura do painel.</td></tr>
+        <tr><td><a href="../Processos/treinamento-processos.html"><strong>Mapa de processos e tartaruga</strong></a></td><td>Os processos em que cada objetivo se desdobra, com os seus indicadores.</td><td>O objetivo de cada processo.</td></tr>
+        <tr><td><a href="../5W2H/treinamento-5w2h.html"><strong>5W2H</strong></a></td><td>O plano detalhado de cada ação, com custo.</td><td>As ações do plano do objetivo.</td></tr>
+        <tr><td><a href="../PDCA/treinamento-pdca.html"><strong>PDCA</strong></a></td><td>O método para os objetivos de melhoria que pedem análise de causa.</td><td>O problema e a meta do ciclo.</td></tr>
+        <tr><td><a href="../Riscos/treinamento-riscos.html"><strong>Matriz de riscos</strong></a></td><td>Os riscos que podem impedir um objetivo, com resposta.</td><td>O objetivo do processo, que é o que o risco ameaça.</td></tr>
+        <tr><td><a href="../Competencias/treinamento-competencias.html"><strong>Matriz de competências</strong></a></td><td>A cobertura da matriz, como medida de um objetivo de pessoas.</td><td>O objetivo de treinar, com meta e prazo.</td></tr>
+        <tr><td><a href="../Satisfacao/treinamento-satisfacao.html"><strong>Satisfação do cliente</strong></a></td><td>A nota e as reclamações, como medidas de objetivos voltados ao cliente.</td><td>A meta da pesquisa e das reclamações.</td></tr>
+        <tr><td><a href="../Analise-Critica/treinamento-analise-critica.html"><strong>Análise crítica pela direção</strong></a></td><td>As decisões de melhoria, mudança e recursos, que viram objetivos do ano.</td><td>A entrada “c2”: quanto de cada objetivo foi alcançado.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 10 ============================ -->
+<section id="iso">
+  <p class="eyebrow">Módulo 10</p>
+  <h2>Nas normas ISO</h2>
+  <p>Os objetivos da qualidade estão no requisito 6.2 da ISO 9001:2015, dividido em duas partes: o que os objetivos devem ser, e o que o plano para cada um deve conter. Eles se apoiam na política, do requisito 5.2, e devem ser conhecidos pelas pessoas, pelo requisito 7.3. A norma pede que os objetivos sejam mantidos como informação documentada: é um dos poucos documentos obrigatórios.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 190" role="img" aria-label="O que a norma pede sobre objetivos da qualidade. 5.2 · Partir da política: A política da qualidade é a base dos objetivos. Neste estudo: Compromissos C1 a C4 e a ligação de cada objetivo. 6.2.1 · Objetivos mensuráveis: Coerentes com a política, nos processos pertinentes, monitorados e comunicados. Neste estudo: Indicador, base, meta, prazo e desdobramento. 6.2.2 · Planejar como alcançar: O que será feito, recursos, responsável, prazo e avaliação. Neste estudo: A ficha do objetivo e a aba Planos. 9.3 · Avaliar o alcance: A análise crítica considera quanto de cada objetivo foi alcançado. Neste estudo: Situação, caminho percorrido e fechamento do ano.">
+        <rect class="bx" x="10" y="14" width="214" height="162"/>
+        <rect class="hd-ink" x="10" y="14" width="214" height="34"/>
+        <text class="b t-ground" x="22" y="36" font-size="12">5.2 · Partir da política</text>
+        <text x="22" y="70" font-size="11.5">A política da qualidade é a base</text>
+        <text x="22" y="86" font-size="11.5">dos objetivos.</text>
+        <text class="mu" x="22" y="138" font-size="11">Neste estudo: Compromissos C1 a C4</text>
+        <text class="mu" x="22" y="153" font-size="11">e a ligação de cada objetivo</text>
+        <rect class="bx" x="232" y="14" width="214" height="162"/>
+        <rect class="hd-ink" x="232" y="14" width="214" height="34"/>
+        <text class="b t-ground" x="244" y="36" font-size="12">6.2.1 · Objetivos mensuráveis</text>
+        <text x="244" y="70" font-size="11.5">Coerentes com a política, nos</text>
+        <text x="244" y="86" font-size="11.5">processos pertinentes,</text>
+        <text x="244" y="102" font-size="11.5">monitorados e comunicados.</text>
+        <text class="mu" x="244" y="138" font-size="11">Neste estudo: Indicador, base,</text>
+        <text class="mu" x="244" y="153" font-size="11">meta, prazo e desdobramento</text>
+        <rect class="bx" x="454" y="14" width="214" height="162"/>
+        <rect class="hd-ink" x="454" y="14" width="214" height="34"/>
+        <text class="b t-ground" x="466" y="36" font-size="12">6.2.2 · Planejar como alcançar</text>
+        <text x="466" y="70" font-size="11.5">O que será feito, recursos,</text>
+        <text x="466" y="86" font-size="11.5">responsável, prazo e avaliação.</text>
+        <text class="mu" x="466" y="138" font-size="11">Neste estudo: A ficha do objetivo</text>
+        <text class="mu" x="466" y="153" font-size="11">e a aba Planos</text>
+        <rect class="bx" x="676" y="14" width="214" height="162"/>
+        <rect class="hd-ink" x="676" y="14" width="214" height="34"/>
+        <text class="b t-ground" x="688" y="36" font-size="12">9.3 · Avaliar o alcance</text>
+        <text x="688" y="70" font-size="11.5">A análise crítica considera</text>
+        <text x="688" y="86" font-size="11.5">quanto de cada objetivo foi</text>
+        <text x="688" y="102" font-size="11.5">alcançado.</text>
+        <text class="mu" x="688" y="138" font-size="11">Neste estudo: Situação, caminho</text>
+        <text class="mu" x="688" y="153" font-size="11">percorrido e fechamento do ano</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 7.</b> O que a norma pede e onde este estudo responde. O texto da figura é um resumo, com palavras próprias.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:10%">Item</th><th style="width:32%">O que pede, em resumo</th><th style="width:27%">O que isso significa</th><th>Evidências que o auditor procura</th></tr></thead>
+      <tbody>
+        <tr><td class="num">6.2.1</td><td>Estabelecer objetivos da qualidade nas funções, níveis e processos pertinentes. Os objetivos devem ser coerentes com a política, mensuráveis, considerar os requisitos aplicáveis, ser monitorados, comunicados e atualizados. Manter informação documentada</td><td>Poucos objetivos, com número, ligados à política, desdobrados nos processos, acompanhados e conhecidos.</td><td>Quadro de objetivos, com indicador, meta, prazo e resultados.</td></tr>
+        <tr><td class="num">6.2.2</td><td>Ao planejar como alcançar os objetivos, determinar o que será feito, os recursos, o responsável, o prazo e como os resultados serão avaliados</td><td>Cada objetivo tem uma ficha com as cinco respostas.</td><td>Planos de ação ligados a cada objetivo.</td></tr>
+        <tr><td class="num">5.2.1</td><td>Estabelecer uma política da qualidade que sirva de base para os objetivos e inclua o compromisso de atender aos requisitos e de melhorar</td><td>A política é a fonte dos objetivos.</td><td>Política escrita, e objetivos ligados a ela.</td></tr>
+        <tr><td class="num">5.1.1</td><td>A alta direção assegura que a política e os objetivos são compatíveis com o contexto e com a direção estratégica</td><td>Objetivos saem da estratégia, e a direção responde por eles.</td><td>Ata da definição dos objetivos, com a direção.</td></tr>
+        <tr><td class="num">7.3</td><td>As pessoas devem conhecer a política, os objetivos pertinentes e a sua contribuição</td><td>Cada equipe conhece o objetivo do seu processo.</td><td>Objetivos no posto de trabalho; respostas em entrevista.</td></tr>
+        <tr><td class="num">9.3.2</td><td>A análise crítica considera o grau em que os objetivos foram alcançados</td><td>O fechamento do quadro vai à direção.</td><td>Ata da análise crítica, entrada “c2”.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pair">
+    <div class="box">
+      <h4>O que a ISO 9001 exige</h4>
+      <ul>
+        <li>Objetivos mensuráveis, coerentes com a política e com os requisitos.</li>
+        <li>Objetivos nos processos e nos níveis pertinentes.</li>
+        <li>Objetivos monitorados, comunicados e atualizados.</li>
+        <li>Para cada um, o plano: o quê, recursos, quem, quando e como avaliar.</li>
+        <li>Informação documentada sobre os objetivos.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h4>O que a ISO 9001 não exige</h4>
+      <ul>
+        <li>Um número de objetivos, mínimo ou máximo.</li>
+        <li>Um objetivo por processo.</li>
+        <li>Metas anuais: o prazo é o que a organização definir.</li>
+        <li>As cinco perguntas, as situações e o caminho percorrido deste material.</li>
+        <li>Alcançar todos os objetivos: pede acompanhar e agir.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="note">
+    <h4>Pontos de atenção</h4>
+    <p>As constatações mais comuns são o objetivo sem medida (“melhorar a comunicação”), o objetivo sem plano, e o quadro que ninguém atualiza entre uma análise crítica e outra. O auditor também pergunta a quem está no posto de trabalho qual é o objetivo do seu processo: a resposta mostra se o requisito 7.3 foi atendido. Objetivo não alcançado não é uma não conformidade; não alcançado e sem decisão registrada, é.</p>
+    <p>Este módulo usa a numeração da ISO 9001:2015 e resume os textos com palavras próprias. Confira sempre a edição vigente da norma antes de citar um requisito em relatório.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 11 ============================ -->
+<section id="reuniao">
+  <p class="eyebrow">Módulo 11</p>
+  <h2>A reunião de acompanhamento</h2>
+  <p>O quadro é lido todo mês, em uma reunião de 45 minutos, com os responsáveis pelos objetivos. Antes dela, os resultados estão lançados e a situação, calculada. A reunião gasta o tempo com o que está em risco e com as ações atrasadas, e não com o que vai bem.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 136" role="img" aria-label="Distribuição de uma reunião de acompanhamento de 45 minutos: 5 minutos para o quadro geral, 10 minutos para os objetivos alcançados e no caminho, 20 minutos para os objetivos em risco e as ações atrasadas, 5 minutos para as decisões e 5 minutos para o fecho.">
+        <g font-size="11.5" text-anchor="middle">
+          <rect class="bx" x="60" y="24" width="86.7" height="56"/><text x="103.3" y="56" font-size="10.5">O quadro</text>
+          <rect class="bx" x="146.7" y="24" width="173.3" height="56"/><text x="233.3" y="49">Alcançados e</text><text x="233.3" y="64">no caminho</text>
+          <rect class="hd-ink gap2" x="320" y="24" width="346.7" height="56"/><text class="t-ground b" x="493.3" y="56">Em risco e ações atrasadas</text>
+          <rect class="hd-d gap2" x="666.7" y="24" width="86.7" height="56"/><text class="on b" x="710" y="56">Decisões</text>
+          <rect class="bx" x="753.3" y="24" width="86.7" height="56"/><text x="796.7" y="56" font-size="10.5">Fecho</text>
+        </g>
+        <g class="ln-mu" stroke-width="1">
+          <line x1="60" y1="82" x2="60" y2="94"/><line x1="146.7" y1="82" x2="146.7" y2="94"/><line x1="320" y1="82" x2="320" y2="94"/>
+          <line x1="666.7" y1="82" x2="666.7" y2="94"/><line x1="753.3" y1="82" x2="753.3" y2="94"/><line x1="840" y1="82" x2="840" y2="94"/>
+        </g>
+        <g class="mono" font-size="10.5" text-anchor="middle">
+          <text class="mu" x="60" y="112">0</text><text class="mu" x="146.7" y="112">5</text><text class="mu" x="320" y="112">15</text>
+          <text class="mu" x="666.7" y="112">35</text><text class="mu" x="753.3" y="112">40</text><text class="mu" x="840" y="112">45</text>
+        </g>
+      </svg>
+    </div>
+    <figcaption><b>Figura 8.</b> Uma reunião de acompanhamento de 45 minutos, desenhada em escala. Os objetivos em risco e as ações atrasadas ocupam quase metade do tempo.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Momento</th><th style="width:42%">O que fazer</th><th>Frases que ajudam</th></tr></thead>
+      <tbody>
+        <tr><td><strong>O quadro</strong></td><td>Ler a situação dos objetivos: quantos alcançados, no caminho, em risco. Conferir se todos têm resultado do mês.</td><td>“Algum objetivo ficou sem medição?”</td></tr>
+        <tr><td><strong>Alcançados e no caminho</strong></td><td>Passar rápido. Perguntar se o ritmo chega à meta no prazo, e se o alcançado se mantém.</td><td>“Neste ritmo, chegamos em dezembro?”</td></tr>
+        <tr><td><strong>Em risco e ações atrasadas</strong></td><td>Um por um: a ação não começou, ou foi feita e não bastou? O que falta: recurso, decisão, outra ação?</td><td>“O que foi feito, e o que o indicador fez depois?”</td></tr>
+        <tr><td><strong>Decisões</strong></td><td>Novo prazo, novo recurso, nova ação ou meta revista, com responsável. Registrar.</td><td>“Quem leva isto, e até quando?”</td></tr>
+        <tr><td><strong>Fecho</strong></td><td>O que vai à direção, e o que entra na próxima análise crítica.</td><td>“O que a direção precisa decidir?”</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Na reunião, leia o indicador antes do status da ação. “Concluída” diz que a ação foi feita; só o indicador diz se ela funcionou.</p>
+
+  <h3>Checklist dos objetivos da qualidade</h3>
+  <p>Marque os itens conforme revisa o seu quadro. As marcações ficam salvas neste navegador.</p>
+  <ol class="check" id="checklist">
+    <li><label><input type="checkbox" id="ck-1"><span>A política da qualidade está escrita, com compromissos que podem virar objetivos.</span></label></li>
+    <li><label><input type="checkbox" id="ck-2"><span>Cada objetivo responde a um compromisso da política e a uma fonte: estratégia, análise crítica, parte interessada ou requisito.</span></label></li>
+    <li><label><input type="checkbox" id="ck-3"><span>São poucos objetivos, de quatro a oito, e cabem em uma página.</span></label></li>
+    <li><label><input type="checkbox" id="ck-4"><span>Cada objetivo tem verbo, indicador, valor de partida, meta e prazo.</span></label></li>
+    <li><label><input type="checkbox" id="ck-5"><span>Cada objetivo tem um responsável, e um só.</span></label></li>
+    <li><label><input type="checkbox" id="ck-6"><span>Cada objetivo tem plano: o que será feito, com que recursos, por quem, até quando e como se avalia.</span></label></li>
+    <li><label><input type="checkbox" id="ck-7"><span>O prazo de cada ação é anterior ao prazo do objetivo.</span></label></li>
+    <li><label><input type="checkbox" id="ck-8"><span>Os objetivos foram desdobrados nos processos que mais pesam para cada um.</span></label></li>
+    <li><label><input type="checkbox" id="ck-9"><span>Os resultados são registrados na frequência definida, e a situação é lida a cada mês.</span></label></li>
+    <li><label><input type="checkbox" id="ck-10"><span>Objetivo em risco ou ação atrasada tem decisão registrada, com responsável e prazo.</span></label></li>
+    <li><label><input type="checkbox" id="ck-11"><span>A equipe conhece os objetivos do seu processo e sabe como contribui para eles.</span></label></li>
+    <li><label><input type="checkbox" id="ck-12"><span>Os objetivos são revistos na análise crítica, e os do ano seguinte saem dela.</span></label></li>
+  </ol>
+  <div class="bar"><span><b id="ck-count">0</b> de 12 itens marcados</span><button class="btn" id="ck-reset" type="button">Limpar marcações</button></div>
+</section>
+
+<!-- ============================ MÓDULO 12 ============================ -->
+<section id="pratique">
+  <p class="eyebrow">Módulo 12</p>
+  <h2>Pratique</h2>
+  <h3>Exercício 1. O que falta neste objetivo?</h3>
+  <p>Cada item traz um objetivo como foi escrito. Diga o que falta nele: a medida, o prazo, o dono ou o plano, ou se está completo.</p>
+  <div class="quiz" id="quiz"></div>
+  <div class="bar"><span>Acertos: <b id="qz-score">0</b> de <b id="qz-total">12</b></span><span>Respondidos: <b id="qz-done">0</b></span><button class="btn" id="qz-reset" type="button">Recomeçar</button></div>
+
+  <h3>Exercício 2. Monte o quadro de objetivos da sua organização</h3>
+  <p>Escolha a organização inteira, ou uma unidade. Abra a planilha de apoio e siga o roteiro.</p>
+  <ol>
+    <li>Na aba Objetivos, escreva a política da qualidade e os seus compromissos, em até quatro frases.</li>
+    <li>Liste os candidatos a objetivo, com a fonte de cada um. Escolha de quatro a oito.</li>
+    <li>Para cada objetivo, escreva o indicador, a base, a meta, o prazo, o processo e o responsável.</li>
+    <li>Na aba Planos, escreva as ações de cada objetivo, com recursos, responsável, prazo e como se avalia.</li>
+    <li>Na aba Acompanhamento, lance os resultados dos meses que já passaram.</li>
+    <li>Leia a aba Painel: a situação de cada objetivo, o caminho percorrido e as ações atrasadas.</li>
+    <li>Escolha um objetivo e desdobre-o em dois processos, como no exemplo 3.</li>
+    <li>Passe o checklist do módulo 11.</li>
+  </ol>
+  <p>Depois, pergunte a uma pessoa de cada processo qual é o objetivo do processo dela. Se a resposta não vier, o passo que falta é a comunicação, e não o quadro.</p>
+</section>
+
+<!-- ============================ MÓDULO 13 ============================ -->
+<section id="planilha">
+  <p class="eyebrow">Módulo 13</p>
+  <h2>A planilha de apoio</h2>
+  <p>Este treinamento acompanha o arquivo <a id="xlsx-ref" href="Objetivos-modelo.xlsx">Objetivos-modelo.xlsx</a>, que fica na mesma pasta. As células em amarelo-claro são para preenchimento. As células cinza são calculadas.</p>
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Aba</th><th>Para que serve</th><th style="width:36%">O que ela calcula</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Instruções</strong></td><td>Legenda de cores, as regras de cálculo, ordem de preenchimento e premissas do modelo.</td><td>Nada. É só leitura.</td></tr>
+        <tr><td><strong>Objetivos</strong></td><td>A política, com até quatro compromissos, e até 12 objetivos, com fonte, indicador, base, meta, prazo, processo e responsável.</td><td>A conferência de cada objetivo e o tipo: melhorar, manter ou realizar.</td></tr>
+        <tr><td><strong>Planos</strong></td><td>Até 36 ações, ligadas aos objetivos, com recursos, responsável, prazo, status e como se avalia.</td><td>A conferência de cada ação e as ações atrasadas.</td></tr>
+        <tr><td><strong>Acompanhamento</strong></td><td>Os resultados de cada objetivo, em até 12 períodos.</td><td>O último resultado, o caminho percorrido e a situação.</td></tr>
+        <tr><td><strong>Painel</strong></td><td>A data da análise.</td><td>Objetivos por situação, por compromisso, ações atrasadas, o gráfico do caminho percorrido e o aviso.</td></tr>
+        <tr><td><strong>Checklist</strong></td><td>Os mesmos 12 itens do módulo 11, com status Sim, Parcial ou Não.</td><td>Percentual atendido e situação da validação.</td></tr>
+        <tr><td><strong>Exemplo 1 e Exemplo 2</strong></td><td>Os objetivos de 2027 da pizzaria e da indústria, com os planos e os resultados.</td><td>Situações, caminho percorrido e contagens.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ GLOSSÁRIO ============================ -->
+<section id="glossario">
+  <p class="eyebrow">Referência</p>
+  <h2>Glossário</h2>
+  <dl class="gloss">
+    <div><dt>Ação</dt><dd>O que será feito para alcançar o objetivo, com recursos, responsável e prazo.</dd></div>
+    <div><dt>Base</dt><dd>O valor de partida do indicador, antes das ações.</dd></div>
+    <div><dt>Caminho percorrido</dt><dd>A parte da distância entre a base e a meta que o último resultado já cobriu.</dd></div>
+    <div><dt>Compromisso</dt><dd>Cada uma das frases da política da qualidade a que os objetivos respondem.</dd></div>
+    <div><dt>Desdobramento</dt><dd>A parte de um objetivo que cabe a cada processo, com a sua própria medida.</dd></div>
+    <div><dt>Indicador</dt><dd>A medida que diz se o objetivo está sendo alcançado.</dd></div>
+    <div><dt>Meta</dt><dd>O valor do indicador que o objetivo pretende alcançar, com o sentido: maior ou menor é melhor.</dd></div>
+    <div><dt>Objetivo da qualidade</dt><dd>Resultado a alcançar, ligado à política, com indicador, meta e prazo.</dd></div>
+    <div><dt>Objetivo de manutenção</dt><dd>Objetivo cuja meta é igual ou próxima da base: manter o que já se alcançou.</dd></div>
+    <div><dt>Objetivo de realização</dt><dd>Objetivo medido por etapas concluídas: certificar, lançar, implantar.</dd></div>
+    <div><dt>Política da qualidade</dt><dd>Os compromissos da organização com a qualidade, escritos pela direção.</dd></div>
+    <div><dt>Situação</dt><dd>A leitura do objetivo no último resultado: alcançado, no caminho, em risco, em andamento, não alcançado ou sem resultado.</dd></div>
+  </dl>
+</section>
+
+</main>
+</div>
+
+<footer>Material de estudo. Os exemplos, documentos e números são ilustrativos e foram criados para fins didáticos. As referências às normas ISO são resumos para estudo e não substituem o texto das normas.</footer>
+</div>
+
+<script>
+(function () {
+  function read(key) { try { return JSON.parse(localStorage.getItem(key) || 'null'); } catch (e) { return null; } }
+  function write(key, val) { try { localStorage.setItem(key, JSON.stringify(val)); } catch (e) {} }
+
+  /* ---------- Checklist ---------- */
+  var boxes = Array.prototype.slice.call(document.querySelectorAll('#checklist input'));
+  var count = document.getElementById('ck-count');
+  var saved = read('objetivos-checklist') || {};
+  function refreshChecks() {
+    var n = 0, state = {};
+    boxes.forEach(function (b) { if (b.checked) { n++; } state[b.id] = b.checked; });
+    count.textContent = n;
+    return state;
+  }
+  boxes.forEach(function (b) {
+    if (saved[b.id]) { b.checked = true; }
+    b.addEventListener('change', function () { write('objetivos-checklist', refreshChecks()); });
+  });
+  refreshChecks();
+  document.getElementById('ck-reset').addEventListener('click', function () {
+    boxes.forEach(function (b) { b.checked = false; });
+    write('objetivos-checklist', refreshChecks());
+  });
+
+  /* ---------- Exercício ---------- */
+  var KEYS = ['M', 'P', 'D', 'C'];
+  var LABEL = { M: 'Falta a medida', P: 'Falta o prazo', D: 'Falta o dono ou o plano', C: 'Está completo' };
+  var NAMES = { M: 'falta a medida', P: 'falta o prazo', D: 'falta o dono ou o plano', C: 'está completo' };
+  var ITEMS = [
+    { t: '“Melhorar a satisfação do cliente.”', a: 'M', w: 'Não há indicador, base nem meta. Em dezembro, cada um dirá se melhorou.' },
+    { t: '“Entregar 96% dos pedidos em até 40 minutos até dezembro de 2027. Responsável: líder da expedição. Ação: escala do pico revista em março.”', a: 'C', w: 'Tem verbo, medida, meta, prazo, dono e ação.' },
+    { t: '“Reduzir o refugo para 2,0% do peso produzido.”', a: 'P', w: 'A medida está certa. Falta dizer até quando.' },
+    { t: '“Obter a certificação ISO 9001 até 17 de dezembro, em seis etapas. Responsável: Coordenador da Qualidade. Organismo contratado em abril, auditorias internas até agosto.”', a: 'C', w: 'Objetivo de realização, com etapas, prazo, dono e plano.' },
+    { t: '“Reduzir as reclamações de 62 para 50 por milhão de peças até junho.”', a: 'D', w: 'Medida e prazo estão lá. Não há quem responda, nem o que será feito.' },
+    { t: '“Ser referência em qualidade no bairro.”', a: 'M', w: 'Não há como medir “referência”.' },
+    { t: '“Reduzir o desperdício de insumos de 3,9% para 3,5% até dezembro. Responsável: gerente da loja. Ações: nenhuma definida.”', a: 'D', w: 'O dono existe, e o plano não. Sem ação, a meta é um desejo.' },
+    { t: '“Aumentar a nota da pesquisa de satisfação.”', a: 'M', w: 'Aumentar quanto, a partir de quanto? Falta a meta.' },
+    { t: '“Dar indicador e meta aos quatro processos que não têm, até 26 de fevereiro. Responsável: gerente da loja, em quatro reuniões com os líderes.”', a: 'C', w: 'Objetivo de realização, com a medida em processos, o prazo, o dono e o plano.' },
+    { t: '“Manter 100% dos fornecedores críticos avaliados.”', a: 'P', w: 'Avaliados até quando, ou a cada quanto tempo? Falta o prazo.' },
+    { t: '“Reduzir o prazo de encerramento das não conformidades de 74 para 60 dias.”', a: 'P', w: 'Base e meta estão certas. Falta a data.' },
+    { t: '“Lançar a linha com resina reciclada em 2027.”', a: 'M', w: 'O que conta como lançado? Faltam as etapas que medem a realização.' }
+  ];
+  var quiz = document.getElementById('quiz');
+  var score = document.getElementById('qz-score');
+  var done = document.getElementById('qz-done');
+  document.getElementById('qz-total').textContent = ITEMS.length;
+  var hits = 0, answered = 0;
+
+  function render() {
+    hits = 0; answered = 0; score.textContent = 0; done.textContent = 0;
+    quiz.textContent = '';
+    ITEMS.forEach(function (item, idx) {
+      var row = document.createElement('div'); row.className = 'q';
+      var p = document.createElement('p'); p.textContent = (idx + 1) + '. ' + item.t;
+      var opts = document.createElement('div'); opts.className = 'opts';
+      opts.setAttribute('role', 'group'); opts.setAttribute('aria-label', 'O que falta no item ' + (idx + 1));
+      var why = document.createElement('p'); why.className = 'why'; why.hidden = true;
+      KEYS.forEach(function (k) {
+        var b = document.createElement('button');
+        b.type = 'button'; b.textContent = LABEL[k]; b.id = 'qz-' + idx + '-' + k;
+        b.setAttribute('data-k', k);
+        b.addEventListener('click', function () {
+          var ok = k === item.a;
+          Array.prototype.forEach.call(opts.children, function (o) {
+            o.disabled = true;
+            if (o.getAttribute('data-k') === item.a) { o.className = 'right'; }
+          });
+          if (!ok) { b.className = 'wrong'; }
+          var lead = document.createElement('b');
+          lead.textContent = (ok ? 'Certo. ' : 'A resposta é: ' + NAMES[item.a] + '. ');
+          why.textContent = ''; why.appendChild(lead); why.appendChild(document.createTextNode(item.w));
+          why.className = 'why ' + (ok ? 'ok' : 'no'); why.hidden = false;
+          answered++; if (ok) { hits++; }
+          score.textContent = hits; done.textContent = answered;
+        });
+        opts.appendChild(b);
+      });
+      row.appendChild(p); row.appendChild(opts); row.appendChild(why);
+      quiz.appendChild(row);
+    });
+  }
+  render();
+  document.getElementById('qz-reset').addEventListener('click', render);
+
+  /* ---------- Gráfico: leitura dos valores ---------- */
+  var fig = document.getElementById('fig-bars');
+  var tip = document.getElementById('bars-tip');
+  var svg = document.getElementById('bars');
+  var bars = document.querySelectorAll('#bars .bar');
+  function hide() {
+    tip.hidden = true;
+    Array.prototype.forEach.call(bars, function (b) { b.removeAttribute('opacity'); });
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('#bars .hit'), function (r) {
+    function show() {
+      var d = r.dataset;
+      Array.prototype.forEach.call(bars, function (b) {
+        b.setAttribute('opacity', b.getAttribute('data-k') === d.k ? '1' : '.4');
+      });
+      tip.textContent = '';
+      var strong = document.createElement('b'); strong.textContent = d.s + (d.p ? ' · ' + d.p + '% do caminho' : '');
+      tip.appendChild(strong);
+      tip.appendChild(document.createTextNode(d.n));
+      tip.appendChild(document.createElement('br'));
+      tip.appendChild(document.createTextNode('Base ' + d.b + ' · Último ' + d.u + ' · Meta ' + d.m + ' ' + d.un));
+      var box = fig.getBoundingClientRect(), rb = r.getBoundingClientRect();
+      var pt = svg.createSVGPoint(); pt.x = parseFloat(d.cx); pt.y = 0;
+      var scr = pt.matrixTransform(svg.getScreenCTM());
+      tip.style.left = Math.min(Math.max(scr.x - box.left, 190), box.width - 190) + 'px';
+      tip.style.top = (rb.top - box.top + 4) + 'px';
+      tip.hidden = false;
+    }
+    r.addEventListener('pointerenter', show);
+    r.addEventListener('focus', show);
+    r.addEventListener('pointerleave', hide);
+    r.addEventListener('blur', hide);
+  });
+})();
+</script>
+</body>
+</html>
