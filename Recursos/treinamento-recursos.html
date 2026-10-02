@@ -1,0 +1,1427 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Recursos, infraestrutura e ambiente</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<style>
+:root{
+  --ground:#F3F6F7; --surface:#FFFFFF; --sunk:#E9EEF0; --ink:#16242E; --muted:#566672; --rule:#D3DBE0;
+  --accent:#2B5C8A;
+  --s1:#2A6FB0; --s1-tint:#DCE8F3;
+  --s2:#D19A2E; --s2-tint:#F8EBCB;
+  --s3:#B0413E; --s3-tint:#F5DEDC;
+  --on-s2:#16242E;
+  --p:#2B5C8A; --p-tint:#DCE8F3;
+  --d:#A96A12; --d-tint:#F6E8CF;
+  --c:#1E7B73; --c-tint:#D9EEEB;
+  --a:#B0413E; --a-tint:#F5DEDC;
+  --on-hue:#FFFFFF;
+  --good:#1F7A4D; --good-tint:#DDF1E5;
+  --bad:#B0413E; --bad-tint:#F5DEDC;
+  --display:"Barlow Semi Condensed","Arial Narrow",Arial,sans-serif;
+  --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --ground:#0F171C; --surface:#172229; --sunk:#1E2B33; --ink:#E4EAED; --muted:#9BABB6; --rule:#2B3A44;
+    --accent:#86B7E3;
+  --s1:#4F97DB; --s1-tint:#1B2F42;
+  --s2:#B58E14; --s2-tint:#3A2C12;
+  --s3:#D14B45; --s3-tint:#3D1F1E;
+  --on-s2:#0F171C;
+    --p:#86B7E3; --p-tint:#1B2F42;
+    --d:#E2AC4F; --d-tint:#3A2C12;
+    --c:#5FC6BA; --c-tint:#15332F;
+    --a:#EC8E89; --a-tint:#3D1F1E;
+    --on-hue:#0F171C;
+    --good:#6FCF9B; --good-tint:#163326;
+    --bad:#EC8E89; --bad-tint:#3D1F1E;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --ground:#0F171C; --surface:#172229; --sunk:#1E2B33; --ink:#E4EAED; --muted:#9BABB6; --rule:#2B3A44;
+  --accent:#86B7E3;
+  --s1:#4F97DB; --s1-tint:#1B2F42;
+  --s2:#B58E14; --s2-tint:#3A2C12;
+  --s3:#D14B45; --s3-tint:#3D1F1E;
+  --on-s2:#0F171C;
+  --p:#86B7E3; --p-tint:#1B2F42;
+  --d:#E2AC4F; --d-tint:#3A2C12;
+  --c:#5FC6BA; --c-tint:#15332F;
+  --a:#EC8E89; --a-tint:#3D1F1E;
+  --on-hue:#0F171C;
+  --good:#6FCF9B; --good-tint:#163326;
+  --bad:#EC8E89; --bad-tint:#3D1F1E;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--ground);color:var(--ink);font:400 16px/1.65 var(--body);-webkit-text-size-adjust:100%}
+a{color:var(--accent);text-underline-offset:3px}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.page{max-width:1180px;margin-inline:auto;padding-inline:20px;padding-block:36px 80px}
+
+/* Cabeçalho */
+.mast{display:flex;flex-direction:column;gap:18px;padding-bottom:32px;border-bottom:1px solid var(--rule)}
+.tiles{display:flex;gap:6px}
+.tiles span{width:44px;height:44px;display:grid;place-items:center;font:700 24px/1 var(--display);color:var(--on-hue)}
+.tiles .p{background:var(--p)} .tiles .d{background:var(--d)} .tiles .c{background:var(--c)} .tiles .a{background:var(--a)}
+h1{font:700 clamp(2.3rem,6vw,3.6rem)/1.02 var(--display);letter-spacing:-.01em;margin:0;text-wrap:balance}
+.lead{font-size:1.15rem;line-height:1.55;max-width:62ch;margin:0;color:var(--ink)}
+.meta{display:flex;flex-direction:row;flex-wrap:wrap;gap:6px 22px;font:400 .8rem/1.4 var(--mono);color:var(--muted);margin:0;padding:0;list-style:none}
+
+/* Estrutura */
+.layout{display:grid;grid-template-columns:minmax(0,1fr);gap:32px;padding-top:32px}
+.toc{font-size:.92rem}
+.toc h2{font:500 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+.toc ol{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:2px 20px;counter-reset:toc}
+.toc li{counter-increment:toc}
+.toc a{display:flex;gap:10px;padding:5px 0;color:var(--ink);text-decoration:none;line-height:1.35}
+.toc a::before{content:counter(toc,decimal-leading-zero);font:400 .75rem/1.7 var(--mono);color:var(--muted)}
+.toc a:hover{color:var(--accent);text-decoration:underline}
+@media (min-width:1020px){
+  .layout{grid-template-columns:200px minmax(0,1fr);gap:64px}
+  .toc{position:sticky;top:calc(env(safe-area-inset-top,0px) + 24px);align-self:start}
+  .toc ol{grid-template-columns:1fr}
+}
+main{display:flex;flex-direction:column;gap:72px;min-width:0}
+section{display:flex;flex-direction:column;gap:20px;scroll-margin-top:24px}
+.eyebrow{font:500 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0}
+h2{font:700 clamp(1.7rem,4vw,2.2rem)/1.1 var(--display);margin:0;text-wrap:balance}
+h3{font:600 1.3rem/1.2 var(--display);margin:12px 0 0;text-wrap:balance}
+h4{font:600 .95rem/1.3 var(--body);margin:0}
+p{margin:0}
+section > p, section > ul, section > ol, section > h3{max-width:68ch}
+ul,ol{margin:0;padding-left:1.25em;display:flex;flex-direction:column;gap:6px}
+strong{font-weight:600}
+code{font:400 .88em var(--mono);background:var(--sunk);padding:1px 5px;border-radius:3px}
+
+/* Letras coloridas no texto */
+.k{display:inline-grid;place-items:center;width:1.45em;height:1.45em;font:700 .85em/1 var(--display);color:var(--on-hue);vertical-align:.05em}
+.k.p{background:var(--p)} .k.d{background:var(--d)} .k.c{background:var(--c)} .k.a{background:var(--a)}
+
+/* Figuras */
+figure{margin:0;display:flex;flex-direction:column;gap:10px;position:relative}
+.scroll{overflow-x:auto;background:var(--surface);border:1px solid var(--rule);padding:18px}
+.scroll svg{display:block;width:100%;min-width:820px;height:auto;color:var(--ink)}
+figcaption{font-size:.86rem;line-height:1.5;color:var(--muted);max-width:72ch}
+figcaption b{color:var(--ink);font-weight:600}
+svg text{font-family:var(--body);fill:var(--ink)}
+svg .disp{font-family:var(--display);font-weight:700}
+svg .mono{font-family:var(--mono);letter-spacing:.08em}
+svg .on{fill:var(--on-hue)}
+svg .mu{fill:var(--muted)}
+svg .b{font-weight:600}
+svg .ln{stroke:var(--ink);stroke-width:1.5;fill:none}
+svg .ln-mu{stroke:var(--muted);stroke-width:1.5;fill:none}
+svg .ln-bold{stroke:var(--ink);stroke-width:3;fill:none;stroke-linejoin:round;stroke-linecap:round}
+svg .dash{stroke-dasharray:5 4}
+svg .ah{fill:var(--ink)} svg .ah-mu{fill:var(--muted)}
+svg .bx{fill:var(--surface);stroke:var(--rule);stroke-width:1.5}
+svg .bx-ink{fill:var(--ink);stroke:var(--ink)}
+svg .t-ground{fill:var(--ground)}
+svg .bx-out{fill:none;stroke:var(--muted);stroke-width:1.5;stroke-dasharray:5 4}
+svg .bx-p{fill:var(--p-tint);stroke:var(--p);stroke-width:1.5} svg .hd-p{fill:var(--p)}
+svg .bx-d{fill:var(--d-tint);stroke:var(--d);stroke-width:1.5} svg .hd-d{fill:var(--d)}
+svg .bx-c{fill:var(--c-tint);stroke:var(--c);stroke-width:1.5} svg .hd-c{fill:var(--c)}
+svg .bx-a{fill:var(--a-tint);stroke:var(--a);stroke-width:1.5} svg .hd-a{fill:var(--a)}
+svg .gap{stroke:var(--surface);stroke-width:4}
+svg .gap2{stroke:var(--surface);stroke-width:2}
+svg .hub{fill:var(--surface)}
+
+/* Gráfico */
+svg .grid{stroke:var(--rule);stroke-width:1}
+svg .band{fill:var(--sunk)}
+svg .series{stroke:var(--accent);stroke-width:2;fill:none;stroke-linejoin:round;stroke-linecap:round}
+svg .pt{fill:var(--accent);stroke:var(--surface);stroke-width:2}
+svg .pt.on-hit{stroke:var(--ink)}
+svg .goal{stroke:var(--muted);stroke-width:1.5;stroke-dasharray:6 4;fill:none}
+svg .xh{stroke:var(--muted);stroke-width:1}
+svg .hit{fill:transparent;cursor:crosshair;outline:none}
+svg .root{fill:var(--accent);stroke:var(--surface);stroke-width:2}
+.tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--ground);padding:6px 10px;font-size:.78rem;line-height:1.4;transform:translate(-50%,calc(-100% - 14px));white-space:nowrap;z-index:2}
+.tip b{display:block;font:600 1.05rem/1.2 var(--body)}
+details.data{font-size:.88rem}
+details.data summary{cursor:pointer;font:400 .82rem var(--mono);color:var(--muted);padding:4px 0}
+details.data .tbl{margin-top:8px}
+details.data table{min-width:420px}
+
+/* Tabelas */
+.tbl{overflow-x:auto;border:1px solid var(--rule);background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:780px;font-size:.88rem;line-height:1.4}
+th,td{padding:9px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--rule)}
+tr:last-child > td{border-bottom:0}
+thead th{font:600 .8rem/1.3 var(--body);background:var(--sunk)}
+td.num{font-variant-numeric:tabular-nums;white-space:nowrap;font-family:var(--mono);font-size:.82rem}
+
+/* Situações */
+.chip{display:inline-block;padding:2px 8px;font:600 .76rem/1.45 var(--body);color:var(--on-hue);white-space:nowrap}
+.chip.s1{background:var(--s1)} .chip.s2{background:var(--s2);color:var(--on-s2)} .chip.s3{background:var(--s3)}
+.chip.sl{background:var(--sunk);color:var(--ink);box-shadow:inset 0 0 0 1px var(--rule)}
+svg .hd-ink{fill:var(--ink)}
+svg .f1{fill:var(--s1)} svg .f2{fill:var(--s2)} svg .f3{fill:var(--s3)} svg .f0{fill:var(--muted)}
+svg .bx-s1{fill:var(--s1-tint);stroke:var(--s1);stroke-width:1.5} svg .bx-s2{fill:var(--s2-tint);stroke:var(--s2);stroke-width:1.5} svg .bx-s3{fill:var(--s3-tint);stroke:var(--s3);stroke-width:1.5}
+svg .zone{fill:var(--s1-tint)}
+svg .halo{paint-order:stroke;stroke:var(--surface);stroke-width:5px;stroke-linejoin:round}
+svg .hit:focus-visible{stroke:var(--accent);stroke-width:2}
+
+/* Tabelas dos exemplos */
+table.aud{font-size:.8rem;min-width:960px;line-height:1.4}
+table.aud th, table.aud td{padding:8px 9px}
+table.aud td.n{white-space:nowrap;font-weight:600;color:var(--muted)}
+table.aud td.c, table.aud th.c{text-align:center;font-variant-numeric:tabular-nums}
+table.aud td.no{background:var(--s3-tint)}
+table.aud td small, table.aud th small{display:block;color:var(--muted);font-size:.76rem;margin-top:3px;font-weight:400}
+table.aud caption{caption-side:top;text-align:left;padding:10px 12px;font:500 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);background:var(--sunk)}
+
+/* Ficha da organização (acima de cada exemplo) */
+.ficha{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:0;border:1px solid var(--rule);background:var(--surface)}
+.ficha div{padding:12px 14px;border-right:1px solid var(--rule);border-bottom:1px solid var(--rule);margin:0 -1px -1px 0}
+.ficha dt{font:500 .68rem/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.ficha dd{margin:0;font-size:.9rem;line-height:1.4}
+dl{margin:0}
+
+/* Blocos */
+.pair{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.box{background:var(--surface);border:1px solid var(--rule);padding:18px 20px;display:flex;flex-direction:column;gap:10px}
+.box h4{font:600 1.1rem/1.2 var(--display)}
+.box ul{font-size:.93rem}
+.note{background:var(--sunk);padding:16px 20px;max-width:72ch;font-size:.94rem;display:flex;flex-direction:column;gap:6px}
+.note h4{font:500 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+
+/* Passo a passo */
+.steps{list-style:none;padding:0;counter-reset:st;gap:0;max-width:none;border-top:1px solid var(--rule)}
+.steps li{counter-increment:st;display:grid;grid-template-columns:44px minmax(0,1fr);gap:4px 12px;padding:16px 0;border-bottom:1px solid var(--rule)}
+.steps li::before{content:counter(st);font:700 1.7rem/1 var(--display);color:var(--muted);grid-row:span 2}
+.steps h4{font:600 1.1rem/1.25 var(--display)}
+.steps p{font-size:.95rem;max-width:64ch;grid-column:2}
+
+/* Erros comuns */
+.errs{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:0 40px;border-top:1px solid var(--rule)}
+.errs div{padding:16px 16px 16px 0;border-bottom:1px solid var(--rule);display:flex;flex-direction:column;gap:4px}
+.errs h4{font:600 1.05rem/1.25 var(--display)}
+.errs p{font-size:.92rem}
+.errs .fix{color:var(--muted)}
+.errs .fix b{color:var(--ink);font-weight:600}
+
+/* Checklist */
+.check{list-style:none;padding:0;gap:0;max-width:none;border:1px solid var(--rule);background:var(--surface)}
+.check li{border-bottom:1px solid var(--rule)}
+.check li:last-child{border-bottom:0}
+.check label{display:grid;grid-template-columns:22px minmax(0,1fr);gap:12px;padding:11px 16px;cursor:pointer;font-size:.94rem;align-items:start}
+.check input{width:18px;height:18px;margin:3px 0 0;accent-color:var(--c)}
+.check input:checked + span{color:var(--muted);text-decoration:line-through}
+.bar{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;font:400 .82rem var(--mono);color:var(--muted)}
+.bar b{color:var(--ink);font-weight:500}
+
+/* Exercício */
+.quiz{display:flex;flex-direction:column;gap:0;border:1px solid var(--rule);background:var(--surface)}
+.q{display:grid;grid-template-columns:minmax(0,1fr);gap:10px;padding:14px 16px;border-bottom:1px solid var(--rule)}
+.q:last-child{border-bottom:0}
+@media (min-width:720px){.q{grid-template-columns:minmax(0,1fr) auto;align-items:center}}
+.q p{font-size:.95rem}
+.q .why{grid-column:1/-1;font-size:.86rem;color:var(--muted)}
+.q .why b{font-weight:600}
+.q .why.ok b{color:var(--good)} .q .why.no b{color:var(--bad)}
+.opts{display:flex;gap:6px}
+.opts button{width:40px;height:40px;border:1.5px solid var(--rule);background:var(--surface);color:var(--ink);font:700 1.1rem/1 var(--display);cursor:pointer;border-radius:0}
+.opts button:hover:not(:disabled){border-color:var(--ink)}
+.opts button:disabled{cursor:default;opacity:.45}
+.opts button.right{background:var(--good-tint);border-color:var(--good);color:var(--good);opacity:1}
+.opts button.wrong{background:var(--bad-tint);border-color:var(--bad);color:var(--bad);opacity:1}
+.btn{border:1.5px solid var(--ink);background:transparent;color:var(--ink);font:500 .82rem var(--mono);padding:7px 14px;cursor:pointer;border-radius:0}
+.btn:hover{background:var(--ink);color:var(--ground)}
+
+/* Glossário */
+.gloss{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:0 40px;border-top:1px solid var(--rule)}
+.gloss div{padding:12px 0;border-bottom:1px solid var(--rule)}
+.gloss dt{font:600 1.02rem/1.3 var(--display)}
+.gloss dd{margin:2px 0 0;font-size:.9rem;color:var(--muted)}
+footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);font-size:.84rem;color:var(--muted);max-width:72ch}
+
+.quiz .opts{flex-wrap:wrap}
+.quiz .opts button{width:auto;min-width:40px;padding:0 11px;font-size:1rem}
+@media (min-width:720px){.q{grid-template-columns:minmax(0,1fr) auto}}
+</style>
+</head>
+<body>
+<div class="page" lang="pt-BR">
+
+<header class="mast">
+  <div class="tiles" aria-hidden="true"><span class="p">D</span><span class="d">M</span><span class="c">A</span></div>
+  <h1>Recursos, infraestrutura e ambiente na prática</h1>
+  <p class="lead">Um guia de estudo para dimensionar as pessoas pela demanda do pico, manter a infraestrutura que o processo usa, preparar a contingência para quando ela parar e controlar o ambiente em que o trabalho acontece.</p>
+  <ul class="meta">
+    <li>Treinamento autoinstrucional</li>
+    <li>14 módulos</li>
+    <li>Leitura de cerca de 50 minutos</li>
+    <li>3 exemplos resolvidos e 2 exercícios</li>
+  </ul>
+</header>
+
+<div class="layout">
+
+<nav class="toc" aria-label="Sumário">
+  <h2>Sumário</h2>
+  <ol>
+    <li><a href="#o-que-e">O que é</a></li>
+    <li><a href="#quando">Quando usar</a></li>
+    <li><a href="#como">Como construir</a></li>
+    <li><a href="#pessoas">Dimensionar as pessoas</a></li>
+    <li><a href="#infraestrutura">Manter a infraestrutura</a></li>
+    <li><a href="#ambiente">O ambiente dos processos</a></li>
+    <li><a href="#exemplos">Exemplos resolvidos</a></li>
+    <li><a href="#leitura">Ler a disponibilidade</a></li>
+    <li><a href="#erros">Erros comuns</a></li>
+    <li><a href="#ferramentas">Os recursos e outras ferramentas</a></li>
+    <li><a href="#iso">Nas normas ISO</a></li>
+    <li><a href="#ronda">A ronda dos recursos</a></li>
+    <li><a href="#pratique">Pratique</a></li>
+    <li><a href="#planilha">A planilha de apoio</a></li>
+    <li><a href="#glossario">Glossário</a></li>
+  </ol>
+</nav>
+
+<main>
+
+<!-- ============================ MÓDULO 1 ============================ -->
+<section id="o-que-e">
+  <p class="eyebrow">Módulo 1</p>
+  <h2>O que é</h2>
+  <p>Um processo bem desenhado não funciona sozinho. Ele precisa de gente suficiente na hora em que o trabalho chega, de equipamentos e sistemas que não parem, e de um lugar em condições de produzir. Quando falta qualquer um dos três, o mesmo processo, com o mesmo procedimento, entrega outro resultado: a pizza atrasa, a bobina sai fina, o pedido sai trocado.</p>
+  <p>As letras do título são os três movimentos: <span class="k p">D</span> dimensionar as pessoas pela demanda, <span class="k d">M</span> manter a infraestrutura e ter um plano para quando ela parar, e <span class="k c">A</span> controlar o ambiente em que o trabalho acontece.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 236" role="img" aria-label="O que o processo precisa para funcionar. Pessoas e recursos, requisito 7.1.1 e 7.1.2: Quantas pessoas, em que turnos, e o que mais o processo consome: orçamento, tempo, material. Infraestrutura, requisito 7.1.3: Prédio, equipamentos, veículos, sistemas e comunicação: o que precisa funcionar. Ambiente, requisito 7.1.4: Temperatura, limpeza, luz, ruído, carga de trabalho, pausas e convivência. Os três sustentam o processo, que transforma as entradas em produto conforme.">
+        <defs><marker id="a0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker></defs>
+        <rect class="bx-p" x="12" y="14" width="284" height="112"/>
+        <rect class="hd-p" x="12" y="14" width="284" height="32"/>
+        <text class="b on" x="24" y="35" font-size="12.5">Pessoas e recursos</text>
+        <text class="mono on" x="284" y="34" font-size="10" text-anchor="end">7.1.1 e 7.1.2</text>
+        <text x="24" y="66" font-size="11">Quantas pessoas, em que turnos, e o que mais</text>
+        <text x="24" y="81" font-size="11">o processo consome: orçamento, tempo,</text>
+        <text x="24" y="96" font-size="11">material.</text>
+        <line class="ln" x1="154" y1="127" x2="154" y2="150" marker-end="url(#a0)"/>
+        <rect class="bx-d" x="308" y="14" width="284" height="112"/>
+        <rect class="hd-d" x="308" y="14" width="284" height="32"/>
+        <text class="b on" x="320" y="35" font-size="12.5">Infraestrutura</text>
+        <text class="mono on" x="580" y="34" font-size="10" text-anchor="end">7.1.3</text>
+        <text x="320" y="66" font-size="11">Prédio, equipamentos, veículos, sistemas e</text>
+        <text x="320" y="81" font-size="11">comunicação: o que precisa funcionar.</text>
+        <line class="ln" x1="450" y1="127" x2="450" y2="150" marker-end="url(#a0)"/>
+        <rect class="bx-c" x="604" y="14" width="284" height="112"/>
+        <rect class="hd-c" x="604" y="14" width="284" height="32"/>
+        <text class="b on" x="616" y="35" font-size="12.5">Ambiente</text>
+        <text class="mono on" x="876" y="34" font-size="10" text-anchor="end">7.1.4</text>
+        <text x="616" y="66" font-size="11">Temperatura, limpeza, luz, ruído, carga de</text>
+        <text x="616" y="81" font-size="11">trabalho, pausas e convivência.</text>
+        <line class="ln" x1="746" y1="127" x2="746" y2="150" marker-end="url(#a0)"/>
+        <rect class="bx-ink" x="12" y="154" width="876" height="44"/>
+        <text class="b t-ground" x="450" y="181" font-size="12.5" text-anchor="middle">O processo: transforma as entradas em produto conforme, todos os dias, também no pico.</text>
+        <text class="mu" x="450" y="224" font-size="11" text-anchor="middle">Sem gente suficiente, sem equipamento funcionando ou num ambiente fora do limite, o mesmo processo produz outro resultado.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 1.</b> Os três blocos de recursos que sustentam o processo, com os requisitos da ISO 9001 que tratam de cada um.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Elemento</th><th style="width:40%">O que é</th><th>Exemplo</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Demanda no pico</strong></td><td>O maior volume de trabalho que chega numa hora, num turno ou num dia.</td><td>29 entregas por hora na sexta, às 21h.</td></tr>
+        <tr><td><strong>Produtividade</strong></td><td>Quanto uma pessoa consegue fazer por unidade de tempo, com qualidade.</td><td>3 entregas por hora por entregador.</td></tr>
+        <tr><td><strong>Infraestrutura</strong></td><td>Prédio, instalações, equipamentos, veículos, sistemas e comunicação.</td><td>Forno, câmara fria, motos, sistema de pedidos.</td></tr>
+        <tr><td><strong>Manutenção preventiva</strong></td><td>O cuidado feito antes da quebra, num intervalo definido.</td><td>Revisão trimestral do compressor da câmara fria.</td></tr>
+        <tr><td><strong>Contingência</strong></td><td>O que fazer quando um item crítico para, decidido antes.</td><td>Freezer reserva e caixas com gelo.</td></tr>
+        <tr><td><strong>Ambiente</strong></td><td>As condições físicas, sociais e psicológicas do lugar de trabalho que afetam o produto.</td><td>Salão de impressão acima de 28 °C.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 2 ============================ -->
+<section id="quando">
+  <p class="eyebrow">Módulo 2</p>
+  <h2>Quando usar</h2>
+  <p>Os recursos são revistos quando algo muda na demanda, no processo ou no lugar, e acompanhados todo mês. O momento de planejar é antes do problema: a escala do pico se monta antes da sexta, e a contingência se escreve antes da quebra.</p>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:28%">Momento</th><th style="width:38%">O que fazer</th><th>Resultado</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Processo novo ou ampliado</strong></td><td>Listar as funções, os equipamentos e as condições que ele exige.</td><td>O processo começa com o que precisa.</td></tr>
+        <tr><td><strong>Mudança na demanda</strong></td><td>Refazer a conta das pessoas para o novo pico.</td><td>A escala acompanha o movimento.</td></tr>
+        <tr><td><strong>Equipamento novo</strong></td><td>Definir a criticidade, a preventiva e a contingência.</td><td>Ele entra no plano no primeiro dia.</td></tr>
+        <tr><td><strong>Depois de uma quebra</strong></td><td>Registrar o tempo parado, a causa, a ação e o produto afetado.</td><td>A quebra ensina, e o produto é avaliado.</td></tr>
+        <tr><td><strong>Todo mês</strong></td><td>Ler as preventivas, a disponibilidade e as medições do ambiente.</td><td>O desvio aparece antes de virar reclamação.</td></tr>
+        <tr><td><strong>Na análise crítica</strong></td><td>Levar a falta de gente, as paradas e o ambiente fora do limite.</td><td>A direção decide os recursos com dados.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pair">
+    <div class="box">
+      <h4>Sinais de recurso faltando</h4>
+      <ul>
+        <li>O atraso se repete no mesmo dia e na mesma hora.</li>
+        <li>Horas extras sempre no mesmo turno.</li>
+        <li>A preventiva é adiada porque "a máquina não pode parar".</li>
+        <li>Ninguém sabe o que fazer quando o sistema cai.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h4>Sinais de recurso bem cuidado</h4>
+      <ul>
+        <li>A escala do pico vem de uma conta, e não do costume.</li>
+        <li>Toda função tem alguém qualificado em cada turno.</li>
+        <li>Cada item crítico tem preventiva no prazo e contingência escrita.</li>
+        <li>O ambiente tem limite, medição e ação.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 3 ============================ -->
+<section id="como">
+  <p class="eyebrow">Módulo 3</p>
+  <h2>Como construir</h2>
+  <p>O controle dos recursos cabe em quatro listas: as pessoas por função e período, a infraestrutura, o registro das manutenções e os fatores do ambiente. O erro mais comum é tratar cada lista como um cadastro. Elas só servem quando alguém lê o que mostram e decide.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 236" role="img" aria-label="As cinco etapas do trabalho. Listar o que o processo usa: As funções, os equipamentos, os sistemas, os veículos e as condições do lugar. Dimensionar as pessoas: Pela demanda do pico, e não pelo costume. Com quem cubra as ausências. Manter a infraestrutura: Preventiva no prazo para o que é crítico, e um plano para quando parar. Controlar o ambiente: Os fatores físicos, sociais e psicológicos, com limite e medição. Ler e reagir: Falta de gente, parada e ambiente fora do limite viram ação, e o produto afetado é avaliado. O que a leitura mostra volta ao dimensionamento, à manutenção e ao controle do ambiente.">
+        <defs><marker id="a2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker><marker id="a2m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah-mu" d="M0 0 L10 5 L0 10 z"/></marker></defs>
+        <rect class="bx" x="12" y="16" width="164" height="152"/>
+        <text class="mono mu" x="24" y="36" font-size="10">ETAPA 1</text>
+        <text class="b" x="24" y="58" font-size="12.5">Listar o que o</text>
+        <text class="b" x="24" y="73" font-size="12.5">processo usa</text>
+        <text x="24" y="100.0" font-size="10.5">As funções, os</text>
+        <text x="24" y="114.5" font-size="10.5">equipamentos, os</text>
+        <text x="24" y="129.0" font-size="10.5">sistemas, os veículos e</text>
+        <text x="24" y="143.5" font-size="10.5">as condições do lugar.</text>
+        <line class="ln" x1="177" y1="84" x2="188" y2="84" marker-end="url(#a2)"/>
+        <rect class="bx-p" x="190" y="16" width="164" height="152"/>
+        <text class="mono mu" x="202" y="36" font-size="10">ETAPA 2</text>
+        <text class="b" x="202" y="58" font-size="12.5">Dimensionar as</text>
+        <text class="b" x="202" y="73" font-size="12.5">pessoas</text>
+        <text x="202" y="100.0" font-size="10.5">Pela demanda do pico, e</text>
+        <text x="202" y="114.5" font-size="10.5">não pelo costume. Com</text>
+        <text x="202" y="129.0" font-size="10.5">quem cubra as ausências.</text>
+        <line class="ln" x1="355" y1="84" x2="366" y2="84" marker-end="url(#a2)"/>
+        <rect class="bx-d" x="368" y="16" width="164" height="152"/>
+        <text class="mono mu" x="380" y="36" font-size="10">ETAPA 3</text>
+        <text class="b" x="380" y="58" font-size="12.5">Manter a</text>
+        <text class="b" x="380" y="73" font-size="12.5">infraestrutura</text>
+        <text x="380" y="100.0" font-size="10.5">Preventiva no prazo para</text>
+        <text x="380" y="114.5" font-size="10.5">o que é crítico, e um</text>
+        <text x="380" y="129.0" font-size="10.5">plano para quando parar.</text>
+        <line class="ln" x1="533" y1="84" x2="544" y2="84" marker-end="url(#a2)"/>
+        <rect class="bx-c" x="546" y="16" width="164" height="152"/>
+        <text class="mono mu" x="558" y="36" font-size="10">ETAPA 4</text>
+        <text class="b" x="558" y="58" font-size="12.5">Controlar o</text>
+        <text class="b" x="558" y="73" font-size="12.5">ambiente</text>
+        <text x="558" y="100.0" font-size="10.5">Os fatores físicos,</text>
+        <text x="558" y="114.5" font-size="10.5">sociais e psicológicos,</text>
+        <text x="558" y="129.0" font-size="10.5">com limite e medição.</text>
+        <line class="ln" x1="711" y1="84" x2="722" y2="84" marker-end="url(#a2)"/>
+        <rect class="bx-ink" x="724" y="16" width="164" height="152"/>
+        <text class="mono t-ground" x="736" y="36" font-size="10">ETAPA 5</text>
+        <text class="b t-ground" x="736" y="58" font-size="12.5">Ler e reagir</text>
+        <text class="t-ground" x="736" y="85.0" font-size="10.5">Falta de gente, parada e</text>
+        <text class="t-ground" x="736" y="99.5" font-size="10.5">ambiente fora do limite</text>
+        <text class="t-ground" x="736" y="114.0" font-size="10.5">viram ação, e o produto</text>
+        <text class="t-ground" x="736" y="128.5" font-size="10.5">afetado é avaliado.</text>
+        <path class="ln-mu dash" d="M806.0 170 V198 H272.0 V174" marker-end="url(#a2m)"/>
+        <text class="mu halo" x="539.0" y="202" font-size="11" text-anchor="middle">o que a leitura mostra muda a escala, o plano de manutenção e o controle</text>
+        <text x="450" y="228" font-size="11.5" text-anchor="middle">A etapa escura é a que fecha o ciclo: a falta de gente, a parada e o ambiente fora viram ação.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 2.</b> As cinco etapas. A última transforma as listas em decisões: contratar, remanejar, consertar, ventilar.</figcaption>
+  </figure>
+
+  <h3>Passo a passo</h3>
+  <ol class="steps">
+    <li><h4>Liste o que cada processo usa</h4><p>Use o mapa de processos e o SIPOC: cada função, cada equipamento, cada sistema, cada veículo e cada condição do lugar que o processo precisa.</p></li>
+    <li><h4>Meça a demanda do pico</h4><p>Pedidos por hora, máquinas em operação, cargas por turno. A média esconde o problema: dimensione pelo pico.</p></li>
+    <li><h4>Calcule as pessoas necessárias</h4><p>A demanda do pico dividida pela produtividade de uma pessoa, arredondada para cima. Compare com a escala e com quem está qualificado.</p></li>
+    <li><h4>Classifique a infraestrutura</h4><p>Alta criticidade: se parar, o produto ou a entrega param. Média: atrapalha, mas há como seguir. Baixa: há reserva, ou a falta não afeta o produto.</p></li>
+    <li><h4>Planeje a manutenção e a contingência</h4><p>Preventiva com intervalo para o que é crítico ou médio. Contingência escrita para tudo o que é crítico.</p></li>
+    <li><h4>Registre as paradas</h4><p>Cada corretiva com o tempo parado, a causa, a ação e o produto afetado. A disponibilidade sai desse registro.</p></li>
+    <li><h4>Defina os fatores do ambiente</h4><p>Só os que afetam o produto ou o serviço, cada um com limite, forma de controle e frequência.</p></li>
+    <li><h4>Leia todo mês e reaja</h4><p>Falta de gente, preventiva atrasada, disponibilidade abaixo da meta, ambiente fora: cada um vira ação com responsável.</p></li>
+  </ol>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:26%">Papel</th><th style="width:28%">Quem costuma ser</th><th>O que faz</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Quem dimensiona</strong></td><td>O gerente ou o supervisor da área.</td><td>Mede a demanda, faz a conta e monta a escala.</td></tr>
+        <tr><td><strong>Quem mantém</strong></td><td>A manutenção, própria ou contratada.</td><td>Faz as preventivas, atende as quebras e registra.</td></tr>
+        <tr><td><strong>Quem opera</strong></td><td>Quem usa o equipamento no dia a dia.</td><td>Avisa do ruído estranho, aplica a contingência, mede o ambiente.</td></tr>
+        <tr><td><strong>Quem decide</strong></td><td>A direção.</td><td>Aprova contratações, compras e obras, com os dados das listas.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 4 ============================ -->
+<section id="pessoas">
+  <p class="eyebrow">Módulo 4</p>
+  <h2>Dimensionar as pessoas</h2>
+  <p>A conta é simples: a demanda do pico dividida pelo que uma pessoa consegue fazer no mesmo tempo, arredondada para cima. Se o pico é de 29 entregas por hora e cada entregador faz 3, são necessários 10. O difícil é medir o pico, e não a média, e aceitar o resultado quando ele contraria o costume.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 270" role="img" aria-label="Entregas pedidas por hora na sexta-feira 16/04/2027 e a capacidade da escala, de 3 entregas por entregador por hora. 18h: 6 entregas pedidas, 6 entregadores, capacidade de 18. 19h: 14 entregas pedidas, 6 entregadores, capacidade de 18. 20h: 27 entregas pedidas, 8 entregadores, capacidade de 24. 21h: 29 entregas pedidas, 8 entregadores, capacidade de 24. 22h: 18 entregas pedidas, 6 entregadores, capacidade de 18. 23h: 9 entregas pedidas, 6 entregadores, capacidade de 18. Às 20h e às 21h, os pedidos passam da capacidade.">
+        <g font-size="11.5">
+          <rect class="f1" x="120" y="12" width="14" height="14"/><text x="142" y="24">Dentro da capacidade</text>
+          <rect class="f3" x="300" y="12" width="14" height="14"/><text x="322" y="24">Acima da capacidade</text>
+          <line class="ln-bold" x1="480" y1="19" x2="508" y2="19"/><text x="516" y="24">Capacidade da escala</text>
+        </g>
+        <line class="grid" x1="120" y1="214.0" x2="860" y2="214.0"/>
+        <text class="mu" x="110" y="218.0" font-size="11" text-anchor="end" style="font-variant-numeric:tabular-nums">0</text>
+        <line class="grid" x1="120" y1="189.7" x2="860" y2="189.7"/>
+        <text class="mu" x="110" y="193.7" font-size="11" text-anchor="end" style="font-variant-numeric:tabular-nums">5</text>
+        <line class="grid" x1="120" y1="165.4" x2="860" y2="165.4"/>
+        <text class="mu" x="110" y="169.4" font-size="11" text-anchor="end" style="font-variant-numeric:tabular-nums">10</text>
+        <line class="grid" x1="120" y1="141.1" x2="860" y2="141.1"/>
+        <text class="mu" x="110" y="145.1" font-size="11" text-anchor="end" style="font-variant-numeric:tabular-nums">15</text>
+        <line class="grid" x1="120" y1="116.9" x2="860" y2="116.9"/>
+        <text class="mu" x="110" y="120.9" font-size="11" text-anchor="end" style="font-variant-numeric:tabular-nums">20</text>
+        <line class="grid" x1="120" y1="92.6" x2="860" y2="92.6"/>
+        <text class="mu" x="110" y="96.6" font-size="11" text-anchor="end" style="font-variant-numeric:tabular-nums">25</text>
+        <line class="grid" x1="120" y1="68.3" x2="860" y2="68.3"/>
+        <text class="mu" x="110" y="72.3" font-size="11" text-anchor="end" style="font-variant-numeric:tabular-nums">30</text>
+        <line class="grid" x1="120" y1="44.0" x2="860" y2="44.0"/>
+        <text class="mu" x="110" y="48.0" font-size="11" text-anchor="end" style="font-variant-numeric:tabular-nums">35</text>
+        <text class="mono mu" x="20" y="129.0" font-size="10">ENTREGAS</text><text class="mono mu" x="20" y="143.0" font-size="10">POR HORA</text>
+        <rect class="f1" x="147.1" y="184.9" width="69.1" height="29.1"/>
+        <text class="b halo" x="181.7" y="176.9" font-size="11.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">6</text>
+        <text class="mu" x="181.7" y="232" font-size="11" text-anchor="middle">18h · 6 entregadores</text>
+        <rect class="f1" x="270.5" y="146.0" width="69.1" height="68.0"/>
+        <text class="b halo" x="305.0" y="138.0" font-size="11.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">14</text>
+        <text class="mu" x="305.0" y="232" font-size="11" text-anchor="middle">19h · 6 entregadores</text>
+        <rect class="f3" x="393.8" y="82.9" width="69.1" height="131.1"/>
+        <text class="b halo" x="428.3" y="74.9" font-size="11.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">27</text>
+        <text class="mu" x="428.3" y="232" font-size="11" text-anchor="middle">20h · 8 entregadores</text>
+        <rect class="f3" x="517.1" y="73.1" width="69.1" height="140.9"/>
+        <text class="b halo" x="551.7" y="65.1" font-size="11.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">29</text>
+        <text class="mu" x="551.7" y="232" font-size="11" text-anchor="middle">21h · 8 entregadores</text>
+        <rect class="f1" x="640.5" y="126.6" width="69.1" height="87.4"/>
+        <text class="b halo" x="675.0" y="118.6" font-size="11.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">18</text>
+        <text class="mu" x="675.0" y="232" font-size="11" text-anchor="middle">22h · 6 entregadores</text>
+        <rect class="f1" x="763.8" y="170.3" width="69.1" height="43.7"/>
+        <text class="b halo" x="798.3" y="162.3" font-size="11.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">9</text>
+        <text class="mu" x="798.3" y="232" font-size="11" text-anchor="middle">23h · 6 entregadores</text>
+        <path class="ln-bold" d="M120.0 126.6 L243.3 126.6 L243.3 126.6 L366.7 126.6 L366.7 97.4 L490.0 97.4 L490.0 97.4 L613.3 97.4 L613.3 126.6 L736.7 126.6 L736.7 126.6 L860.0 126.6"/>
+        <line class="ln" x1="120" y1="214" x2="860" y2="214"/>
+        <text class="mu halo" x="358.7" y="101.4" font-size="10.5" text-anchor="end">capacidade no pico: 24</text>
+        <text x="450" y="258" font-size="11.5" text-anchor="middle">No pico, 29 entregas por hora pedem 10 entregadores. A escala tinha 8: o atraso já estava na escala.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 3.</b> A sexta-feira 16/04/2027 da pizzaria. A escala de 8 entregadores parecia folgada no total da noite, mas não dava conta das duas horas de pico.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:22%">Pergunta</th><th style="width:42%">O que conferir</th><th>Exemplo</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Qual é o pico?</strong></td><td>A maior demanda por hora ou por turno, medida no sistema, e não estimada.</td><td>29 entregas entre 21h e 22h.</td></tr>
+        <tr><td><strong>Qual é a produtividade?</strong></td><td>Quanto uma pessoa faz bem feito, e não no limite.</td><td>3 entregas por hora, com ida e volta de 20 minutos.</td></tr>
+        <tr><td><strong>Quem está qualificado?</strong></td><td>Dos escalados, quantos sabem fazer sozinhos.</td><td>Dois atendentes novos no sábado, sem ninguém que conheça o sistema.</td></tr>
+        <tr><td><strong>E quando alguém falta?</strong></td><td>Folguista, banco de reserva, treinamento cruzado.</td><td>Um operador de extrusão a menos no turno C desde as férias.</td></tr>
+        <tr><td><strong>O que vem de fora?</strong></td><td>O que é contratado: entregas, manutenção, laboratório.</td><td>Entregador extra com moto própria, chamado pelo grupo.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note">
+    <h4>Recursos não são só pessoas</h4>
+    <p>O requisito 7.1.1 pede que a organização pense nos recursos de que o sistema precisa e no que eles permitem ou limitam: o orçamento, o tempo das pessoas, a capacidade de uma máquina, o que só um fornecedor faz. Antes de aceitar um pedido grande, a pergunta é a mesma da escala: existe recurso para atender no prazo? O estudo de Requisitos do cliente faz essa pergunta pedido a pedido. Este estudo a faz para o processo inteiro.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 5 ============================ -->
+<section id="infraestrutura">
+  <p class="eyebrow">Módulo 5</p>
+  <h2>Manter a infraestrutura</h2>
+  <p>A infraestrutura inclui tudo o que o processo usa e não é consumido: prédio e instalações, equipamentos, veículos, sistemas e comunicação. A norma pede que ela seja determinada, provida e mantida. Na prática, cada item recebe uma criticidade, e a criticidade define o cuidado: preventiva no prazo e contingência escrita para o que não pode parar.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 262" role="img" aria-label="Um mês da extrusora 3, em julho de 2027: 744 horas programadas e 3 quebras, que somam 40 horas paradas: 06/07, 14 horas, 18/07, 20 horas, 27/07, 6 horas. Disponibilidade de 94,6 %, contra a meta de 95 %. Tempo médio entre quebras de 234,7 horas e tempo médio de reparo de 13,3 horas.">
+        <rect class="f1" x="40" y="56" width="820" height="34"/>
+        <rect class="f3 gap2" x="181.1" y="50" width="15.4" height="46"/>
+        <text class="b halo" x="188.8" y="40" font-size="11" text-anchor="middle">06/07 · 14 h</text>
+        <rect class="f3 gap2" x="491.9" y="50" width="22.0" height="46"/>
+        <text class="b halo" x="502.9" y="40" font-size="11" text-anchor="middle">18/07 · 20 h</text>
+        <rect class="f3 gap2" x="744.3" y="50" width="6.6" height="46"/>
+        <text class="b halo" x="747.6" y="40" font-size="11" text-anchor="middle">27/07 · 6 h</text>
+        <line class="grid" x1="40.0" y1="96" x2="40.0" y2="104"/>
+        <text class="mu" x="40.0" y="118" font-size="10.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">01/07</text>
+        <line class="grid" x1="225.2" y1="96" x2="225.2" y2="104"/>
+        <text class="mu" x="225.2" y="118" font-size="10.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">08/07</text>
+        <line class="grid" x1="410.3" y1="96" x2="410.3" y2="104"/>
+        <text class="mu" x="410.3" y="118" font-size="10.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">15/07</text>
+        <line class="grid" x1="595.5" y1="96" x2="595.5" y2="104"/>
+        <text class="mu" x="595.5" y="118" font-size="10.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">22/07</text>
+        <line class="grid" x1="780.6" y1="96" x2="780.6" y2="104"/>
+        <text class="mu" x="780.6" y="118" font-size="10.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">29/07</text>
+        <line class="grid" x1="860" y1="96" x2="860" y2="104"/>
+        <rect class="bx-s3" x="40" y="136" width="260" height="84"/>
+        <text class="mono mu" x="54" y="156" font-size="9.5">DISPONIBILIDADE</text>
+        <text class="disp" x="54" y="186" font-size="24" style="font-variant-numeric:tabular-nums">94,6 %</text>
+        <text class="mu" x="54" y="208" font-size="10.5">(744 − 40) ÷ 744. Meta: 95 %.</text>
+        <rect class="bx" x="320" y="136" width="260" height="84"/>
+        <text class="mono mu" x="334" y="156" font-size="9.5">TEMPO MÉDIO ENTRE QUEBRAS</text>
+        <text class="disp" x="334" y="186" font-size="24" style="font-variant-numeric:tabular-nums">234,7 h</text>
+        <text class="mu" x="334" y="208" font-size="10.5">704 horas funcionando ÷ 3 quebras.</text>
+        <rect class="bx" x="600" y="136" width="260" height="84"/>
+        <text class="mono mu" x="614" y="156" font-size="9.5">TEMPO MÉDIO DE REPARO</text>
+        <text class="disp" x="614" y="186" font-size="24" style="font-variant-numeric:tabular-nums">13,3 h</text>
+        <text class="mu" x="614" y="208" font-size="10.5">40 horas paradas ÷ 3 quebras.</text>
+        <text x="450" y="248" font-size="11.5" text-anchor="middle">As três quebras de julho vieram de peças que a preventiva atrasada teria trocado ou medido.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 4.</b> Julho da extrusora 3, em escala de tempo. As faixas vermelhas são as quebras. Os três números contam a mesma história de jeitos diferentes.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:22%">Medida</th><th style="width:40%">Como se calcula</th><th>O que diz</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Disponibilidade</strong></td><td>Horas programadas menos horas paradas por quebra, divididas pelas horas programadas.</td><td>Quanto do tempo planejado o item esteve pronto para produzir.</td></tr>
+        <tr><td><strong>Tempo médio entre quebras</strong></td><td>Horas funcionando divididas pelo número de quebras.</td><td>Com que frequência o item quebra. Quanto maior, melhor.</td></tr>
+        <tr><td><strong>Tempo médio de reparo</strong></td><td>Horas paradas divididas pelo número de quebras.</td><td>Quanto demora para voltar. Quanto menor, melhor.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:18%">Criticidade</th><th style="width:40%">Quando</th><th>O que este material pede</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Alta</strong></td><td>Se parar, o produto ou a entrega param, ou o produto sai não conforme.</td><td>Preventiva com intervalo, no prazo, e contingência escrita.</td></tr>
+        <tr><td><strong>Média</strong></td><td>Atrapalha, mas há como seguir por algum tempo.</td><td>Preventiva com intervalo, no prazo.</td></tr>
+        <tr><td><strong>Baixa</strong></td><td>Há reserva, ou a falta não afeta o produto.</td><td>Pode ficar só com a corretiva, por decisão registrada.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note">
+    <h4>Sistemas também são infraestrutura</h4>
+    <p>O sistema de pedidos, o ERP e a rede são infraestrutura como o forno. Para eles, a preventiva é a atualização planejada e a cópia de segurança, e a contingência é o caminho manual: o bloco de pedidos em papel, a planilha do dia. Cópia de segurança que nunca foi restaurada é uma esperança, e não uma cópia: o teste de restauração entra no plano como qualquer preventiva.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 6 ============================ -->
+<section id="ambiente">
+  <p class="eyebrow">Módulo 6</p>
+  <h2>O ambiente dos processos</h2>
+  <p>O ambiente é o conjunto de condições em que o trabalho acontece. A norma cita três grupos de fatores: físicos, sociais e psicológicos. O critério para um fator entrar na lista é um só: ele afeta o produto ou o serviço? A temperatura da cozinha entra porque muda a massa. O cansaço do turno da noite entra porque leva a ajustes errados.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 222" role="img" aria-label="Os fatores do ambiente, em três grupos. Físico: Temperatura e umidade, Limpeza e higiene, Iluminação, Ruído e vibração. Social: Horas extras e escalas, Convivência sem conflito, Tratamento justo, Comunicação entre turnos. Psicológico: Carga de trabalho no pico, Pausas e descanso, Pressão do prazo, Reconhecimento. Um fator entra no controle quando afeta o produto ou o serviço.">
+        <rect class="bx-p" x="12" y="14" width="284" height="160"/>
+        <rect class="hd-p" x="12" y="14" width="284" height="32"/>
+        <text class="b on" x="24" y="35" font-size="12.5">Físico</text>
+        <rect class="hd-p" x="26" y="67" width="7" height="7"/>
+        <text x="42" y="74" font-size="11.5">Temperatura e umidade</text>
+        <rect class="hd-p" x="26" y="94" width="7" height="7"/>
+        <text x="42" y="101" font-size="11.5">Limpeza e higiene</text>
+        <rect class="hd-p" x="26" y="121" width="7" height="7"/>
+        <text x="42" y="128" font-size="11.5">Iluminação</text>
+        <rect class="hd-p" x="26" y="148" width="7" height="7"/>
+        <text x="42" y="155" font-size="11.5">Ruído e vibração</text>
+        <rect class="bx-d" x="308" y="14" width="284" height="160"/>
+        <rect class="hd-d" x="308" y="14" width="284" height="32"/>
+        <text class="b on" x="320" y="35" font-size="12.5">Social</text>
+        <rect class="hd-d" x="322" y="67" width="7" height="7"/>
+        <text x="338" y="74" font-size="11.5">Horas extras e escalas</text>
+        <rect class="hd-d" x="322" y="94" width="7" height="7"/>
+        <text x="338" y="101" font-size="11.5">Convivência sem conflito</text>
+        <rect class="hd-d" x="322" y="121" width="7" height="7"/>
+        <text x="338" y="128" font-size="11.5">Tratamento justo</text>
+        <rect class="hd-d" x="322" y="148" width="7" height="7"/>
+        <text x="338" y="155" font-size="11.5">Comunicação entre turnos</text>
+        <rect class="bx-c" x="604" y="14" width="284" height="160"/>
+        <rect class="hd-c" x="604" y="14" width="284" height="32"/>
+        <text class="b on" x="616" y="35" font-size="12.5">Psicológico</text>
+        <rect class="hd-c" x="618" y="67" width="7" height="7"/>
+        <text x="634" y="74" font-size="11.5">Carga de trabalho no pico</text>
+        <rect class="hd-c" x="618" y="94" width="7" height="7"/>
+        <text x="634" y="101" font-size="11.5">Pausas e descanso</text>
+        <rect class="hd-c" x="618" y="121" width="7" height="7"/>
+        <text x="634" y="128" font-size="11.5">Pressão do prazo</text>
+        <rect class="hd-c" x="618" y="148" width="7" height="7"/>
+        <text x="634" y="155" font-size="11.5">Reconhecimento</text>
+        <text x="450" y="200" font-size="11.5" text-anchor="middle">A norma não pede conforto: pede o ambiente de que o processo precisa para o produto sair conforme.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 5.</b> Os três grupos de fatores do ambiente, com exemplos. A lista de cada organização é menor: só o que afeta o produto.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:22%">Para cada fator</th><th style="width:42%">O que definir</th><th>Exemplo</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Por que afeta</strong></td><td>A ligação entre o fator e o produto, numa frase.</td><td>Acima de 28 °C, a tinta seca no anilox e a cor varia.</td></tr>
+        <tr><td><strong>Limite</strong></td><td>Um mínimo, um máximo ou os dois, com a unidade.</td><td>De 18 a 28 °C.</td></tr>
+        <tr><td><strong>Controle</strong></td><td>Como se mede, quem mede e com que frequência.</td><td>Termo-higrômetro lido a cada turno.</td></tr>
+        <tr><td><strong>Ação</strong></td><td>O que se faz quando a medição sai do limite.</td><td>Ventilação forçada, e climatização no orçamento.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note">
+    <h4>Ambiente, segurança e bem-estar</h4>
+    <p>Muitos fatores do ambiente também são assunto de segurança e saúde do trabalho: ruído, calor, jornada, pausas. A legislação trabalhista e a ISO 45001 cuidam deles pela pessoa. A ISO 9001 olha pelo produto: o ruído que impede ouvir o alarme da extrusora, a jornada que faz o operador errar a regulagem. As duas visões se somam, e um controle bem feito atende às duas.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 7 ============================ -->
+<section id="exemplos">
+  <p class="eyebrow">Módulo 7</p>
+  <h2>Exemplos resolvidos</h2>
+  <p>As pessoas, a infraestrutura, as manutenções e o ambiente de uma pizzaria e de uma fábrica num mês, e a quebra da câmara fria da pizzaria contada hora a hora. As organizações são as dos outros estudos da série. Os dois primeiros exemplos também estão preenchidos na planilha de apoio. Os dados são ilustrativos e foram criados para este treinamento.</p>
+
+  <h3>Exemplo 1. A pizzaria em abril</h3>
+  <dl class="ficha">
+    <div><dt>Organização</dt><dd>Pizzaria (loja com salão e delivery)</dd></div>
+    <div><dt>Responsável</dt><dd>Gerente da loja, com o pizzaiolo líder</dd></div>
+    <div><dt>Período</dt><dd>01/04/2027 a 30/04/2027. Meta de disponibilidade: 97 %.</dd></div>
+    <div><dt>Horas programadas</dt><dd>Loja aberta das 18h à meia-noite: 180 horas no mês. Câmara fria e sistema ligados o tempo todo.</dd></div>
+    <div><dt>Origem</dt><dd>Requisitos 7.1.1, 7.1.3 e 7.1.4 atendidos no diagnóstico de 2026, mas a escala de pico era feita de cabeça, e a quebra da câmara fria em abril mostrou que não havia plano para ela parar.</dd></div>
+  </dl>
+  <div class="tbl">
+    <table class="aud">
+      <caption>Pessoas no pico · 8 funções e períodos, 2 com falta de gente: 3 pessoas a menos</caption>
+      <thead><tr><th style="width:22%">Função<small>Período</small></th><th class="c">Demanda no pico</th><th class="c">Produtividade</th><th class="c">Necessárias</th><th class="c">Escaladas</th><th class="c">Qualificadas</th><th>Situação</th><th>Conferência</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Atendimento</strong><small>Sexta, 19h às 23h</small></td><td class="c">40<small>pedidos por hora</small></td><td class="c">20<small>por pessoa</small></td><td class="c"><strong>2</strong></td><td class="c">2</td><td class="c">2</td><td><span class="chip s2">Justo</span></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td><strong>Atendimento</strong><small>Sábado, 19h às 23h</small></td><td class="c">36<small>pedidos por hora</small></td><td class="c">20<small>por pessoa</small></td><td class="c"><strong>2</strong></td><td class="c">2</td><td class="c no">0</td><td><span class="chip s2">Justo</span></td><td><span class="chip s3">Sem pessoa qualificada na escala</span></td></tr>
+        <tr><td><strong>Pizzaiolo</strong><small>Sexta, 20h às 22h</small></td><td class="c">60<small>pizzas por hora</small></td><td class="c">20<small>por pessoa</small></td><td class="c"><strong>3</strong></td><td class="c">3</td><td class="c">2</td><td><span class="chip s2">Justo</span></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td><strong>Forneiro</strong><small>Sexta, 20h às 22h</small></td><td class="c">60<small>pizzas por hora</small></td><td class="c">40<small>por pessoa</small></td><td class="c"><strong>2</strong></td><td class="c no">1</td><td class="c">1</td><td><span class="chip s3">Falta gente</span></td><td><span class="chip s3">Falta 1 pessoa</span></td></tr>
+        <tr><td><strong>Expedição</strong><small>Sexta, 20h às 22h</small></td><td class="c">40<small>pedidos por hora</small></td><td class="c">30<small>por pessoa</small></td><td class="c"><strong>2</strong></td><td class="c">2</td><td class="c">1</td><td><span class="chip s2">Justo</span></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td><strong>Entregador</strong><small>Sexta, 20h às 22h</small></td><td class="c">29<small>entregas por hora</small></td><td class="c">3<small>por pessoa</small></td><td class="c"><strong>10</strong></td><td class="c no">8</td><td class="c">8</td><td><span class="chip s3">Falta gente</span></td><td><span class="chip s3">Faltam 2 pessoas</span></td></tr>
+        <tr><td><strong>Entregador</strong><small>Terça, 19h às 22h</small></td><td class="c">10<small>entregas por hora</small></td><td class="c">3<small>por pessoa</small></td><td class="c"><strong>4</strong></td><td class="c">4</td><td class="c">4</td><td><span class="chip s2">Justo</span></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td><strong>Salão</strong><small>Sexta, 20h às 22h</small></td><td class="c">30<small>clientes por hora</small></td><td class="c">15<small>por pessoa</small></td><td class="c"><strong>2</strong></td><td class="c">3</td><td class="c">3</td><td><span class="chip s1">Com folga</span></td><td><span class="chip s1">OK</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="tbl">
+    <table class="aud">
+      <caption>Infraestrutura · 9 itens, 6 críticos. Preventivas: 2 em dia, 4 vencem em 7 dias, 2 atrasadas, 1 sem plano</caption>
+      <thead><tr><th>Código</th><th style="width:20%">Item<small>Tipo · local</small></th><th>Criticidade</th><th style="width:12%">Preventiva</th><th class="c">Próxima</th><th>Situação</th><th style="width:22%">Contingência</th><th class="c">Disponibilidade<small>Quebras · horas paradas</small></th><th>Conferência</th></tr></thead>
+      <tbody>
+        <tr><td class="n">FOR-01</td><td><strong>Forno de lastro a gás</strong><small>Equipamento · Cozinha</small></td><td>Alta</td><td>todo mês<small>última: 02/04/2027</small></td><td class="c">02/05/2027</td><td><span class="chip s2">Vence em 7 dias</span></td><td>Forno elétrico reserva, com metade da capacidade, e cardápio reduzido.</td><td class="c">98,3 %<small>1 quebra · 3 h</small></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">CAM-01</td><td><strong>Câmara fria</strong><small>Equipamento · Estoque</small></td><td>Alta</td><td>a cada 3 meses<small>última: 10/01/2027</small></td><td class="c">10/04/2027</td><td><span class="chip s3">Atrasada</span></td><td>Freezer reserva e caixas térmicas com gelo. Acima de 5 °C, medir cada item com o TER-01.</td><td class="c">98,8 %<small>1 quebra · 9 h</small></td><td><span class="chip s3">Preventiva atrasada</span></td></tr>
+        <tr><td class="n">MAS-01</td><td><strong>Masseira</strong><small>Equipamento · Produção</small></td><td>Média</td><td>a cada 6 meses<small>última: 15/11/2026</small></td><td class="c">15/05/2027</td><td><span class="chip s1">Em dia</span></td><td>—</td><td class="c">100,0 %<small>0 quebras · 0 h</small></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">MOT-01</td><td><strong>Moto de entrega 1</strong><small>Transporte · Expedição</small></td><td>Alta</td><td>todo mês<small>última: 05/04/2027</small></td><td class="c">05/05/2027</td><td><span class="chip s2">Vence em 7 dias</span></td><td>Entregador extra com moto própria, chamado pelo grupo.</td><td class="c">100,0 %<small>0 quebras · 0 h</small></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">MOT-02</td><td><strong>Moto de entrega 2</strong><small>Transporte · Expedição</small></td><td>Alta</td><td>todo mês<small>última: 05/04/2027</small></td><td class="c">05/05/2027</td><td><span class="chip s2">Vence em 7 dias</span></td><td>Entregador extra com moto própria, chamado pelo grupo.</td><td class="c no">93,3 %<small>1 quebra · 12 h</small></td><td><span class="chip s3">Disponibilidade abaixo da meta</span></td></tr>
+        <tr><td class="n">MOT-03</td><td><strong>Moto de entrega 3</strong><small>Transporte · Expedição</small></td><td>Alta</td><td>todo mês<small>última: 15/02/2027</small></td><td class="c">15/03/2027</td><td><span class="chip s3">Atrasada</span></td><td>Entregador extra com moto própria, chamado pelo grupo.</td><td class="c">100,0 %<small>0 quebras · 0 h</small></td><td><span class="chip s3">Preventiva atrasada</span></td></tr>
+        <tr><td class="n">SIS-01</td><td><strong>Sistema de pedidos</strong><small>TI e software · Atendimento</small></td><td>Alta</td><td>todo mês<small>última: 01/04/2027</small></td><td class="c">01/05/2027</td><td><span class="chip s2">Vence em 7 dias</span></td><td>Bloco de pedidos em papel e telefone fixo.</td><td class="c">99,2 %<small>1 quebra · 1,5 h</small></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">EXA-01</td><td><strong>Coifa e exaustão</strong><small>Edifício e instalações · Cozinha</small></td><td>Média</td><td>a cada 3 meses<small>última: 20/03/2027</small></td><td class="c">20/06/2027</td><td><span class="chip s1">Em dia</span></td><td>—</td><td class="c">100,0 %<small>0 quebras · 0 h</small></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">SEL-01</td><td><strong>Seladora de embalagens</strong><small>Equipamento · Expedição</small></td><td>Baixa</td><td>—<small>sem preventiva</small></td><td class="c">—</td><td><span class="chip sl">Sem plano</span></td><td>—</td><td class="c">—</td><td><span class="chip s1">OK</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="tbl">
+    <table class="aud">
+      <caption>Manutenções · 8 registros. No período, 4 corretivas, 25,5 horas paradas, 2 com produto afetado</caption>
+      <thead><tr><th class="c">Data</th><th>Código</th><th>Tipo</th><th class="c">Parado</th><th style="width:26%">O que aconteceu<small>Causa</small></th><th style="width:22%">Ação</th><th style="width:16%">Produto afetado<small>Tratamento</small></th><th>Conferência</th></tr></thead>
+      <tbody>
+        <tr><td class="c">01/04</td><td class="n">SIS-01</td><td>Preventiva</td><td class="c">0 h</td><td>Atualização do sistema e cópia de segurança testada.</td><td>—</td><td>—</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="c">02/04</td><td class="n">FOR-01</td><td>Preventiva</td><td class="c">0 h</td><td>Limpeza dos queimadores e teste da válvula de segurança.</td><td>—</td><td>—</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="c">05/04</td><td class="n">MOT-01</td><td>Preventiva</td><td class="c">0 h</td><td>Revisão mensal: óleo, freios, pneus e luzes.</td><td>—</td><td>—</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="c">05/04</td><td class="n">MOT-02</td><td>Preventiva</td><td class="c">0 h</td><td>Revisão mensal: óleo, freios, pneus e luzes.</td><td>—</td><td>—</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="c">12/04</td><td class="n">CAM-01</td><td>Corretiva</td><td class="c">9 h</td><td>Compressor parado. Câmara a 11 °C na abertura da cozinha.<small>Causa: Capacitor do compressor queimado. A revisão de 10/04 não tinha sido feita.</small></td><td>Capacitor trocado. Alarme de temperatura instalado, contingência escrita e revisão marcada para 05/05.</td><td>Sim<small>18 kg de mussarela e molho descartados (RNC 2027-27).</small></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="c">16/04</td><td class="n">SIS-01</td><td>Corretiva</td><td class="c">1,5 h</td><td>Sistema fora do ar na sexta, das 20h às 21h30.<small>Causa: Atualização automática disparada no horário de pico.</small></td><td>Atualização automática desligada. Atualizar só às segundas, de manhã.</td><td>Não</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="c">19/04</td><td class="n">MOT-02</td><td>Corretiva</td><td class="c">12 h</td><td>Corrente da transmissão partiu durante uma entrega.<small>Causa: Corrente gasta, que a revisão não confere.</small></td><td>Corrente trocada e incluída no roteiro da revisão mensal.</td><td>Sim<small>1 pedido entregue com 50 minutos de atraso. Desconto dado ao cliente.</small></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="c">26/04</td><td class="n">FOR-01</td><td>Corretiva</td><td class="c">3 h</td><td>Chama apagando no lastro do fundo.<small>Causa: não registrada</small></td><td>—</td><td>Não</td><td><span class="chip s3">Falta a causa</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="tbl">
+    <table class="aud">
+      <caption>Ambiente · 6 fatores, 3 fora do limite, 1 sem medição</caption>
+      <thead><tr><th style="width:16%">Fator<small>Tipo · local</small></th><th style="width:20%">Por que afeta o produto</th><th>Limite</th><th style="width:16%">Controle</th><th class="c">Medido</th><th>Situação</th><th style="width:18%">Ação</th><th>Conferência</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Temperatura da cozinha</strong><small>Físico · Cozinha</small></td><td>Acima de 32 °C, a massa passa do ponto e o pizzaiolo perde o ritmo.</td><td>no máximo 32 °C</td><td>Termômetro de parede, lido às 21h, todo dia</td><td class="c no">34 °C</td><td><span class="chip s3">Fora</span></td><td>Coifa limpa em 22/04. Segundo ventilador pedido para maio.</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td><strong>Temperatura da câmara fria</strong><small>Físico · Estoque</small></td><td>Acima de 5 °C, os insumos estragam.</td><td>0 a 5 °C</td><td>Visor lido na abertura e no fechamento. Alarme desde 13/04</td><td class="c">3,5 °C</td><td><span class="chip s1">Dentro</span></td><td>—</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td><strong>Limpeza da bancada e dos utensílios</strong><small>Físico · Cozinha</small></td><td>Bancada suja contamina a massa e o recheio.</td><td>no mínimo 95 % do checklist</td><td>Checklist de limpeza no fechamento, conferido pelo gerente</td><td class="c no">88 % do checklist</td><td><span class="chip s3">Fora</span></td><td>—</td><td><span class="chip s3">Fora do limite: falta a ação</span></td></tr>
+        <tr><td><strong>Iluminação da expedição</strong><small>Físico · Expedição</small></td><td>Com pouca luz, o pedido sai com o sabor trocado.</td><td>no mínimo 500 lux</td><td>Medição com luxímetro a cada 6 meses</td><td class="c">—</td><td><span class="chip s2">Sem medição</span></td><td>—</td><td><span class="chip s3">Falta a medição</span></td></tr>
+        <tr><td><strong>Pizzas por pizzaiolo no pico</strong><small>Psicológico · Cozinha</small></td><td>Acima de 20 por hora, a montagem perde o padrão.</td><td>no máximo 20 pizzas/h</td><td>Pedidos do sistema divididos pelos pizzaiolos, toda sexta</td><td class="c no">24 pizzas/h</td><td><span class="chip s3">Fora</span></td><td>Rever a escala da sexta em maio, com a demanda de abril.</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td><strong>Horas extras por pessoa na semana</strong><small>Social · Loja</small></td><td>Equipe cansada erra mais e falta mais.</td><td>no máximo 6 h</td><td>Folha de ponto, toda semana</td><td class="c">5 h</td><td><span class="chip s1">Dentro</span></td><td>—</td><td><span class="chip s1">OK</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p><strong>O que observar.</strong> A conta das pessoas explica dois problemas antigos. Na sexta, faltam 2 entregadores e 1 forneiro no pico: os atrasos das noites de sexta, tratados como falta de esforço, estavam na escala. No sábado, os dois atendentes são novos, e nenhum conhece o sistema de pedidos trocado sem treinamento. Na infraestrutura, a câmara fria quebrou dois dias depois de vencer a revisão, e continua com a revisão atrasada. A moto 3 está sem revisão desde fevereiro, e a moto 2 ficou abaixo da meta por uma corrente que a revisão nem olhava. A última chama do forno ainda não tem causa. No ambiente, a cozinha passou de 32 °C e já tem ação, mas a limpeza da bancada ficou em 88 % do checklist sem que ninguém decidisse nada, e a luz da expedição, ligada aos pedidos trocados, nunca foi medida.</p>
+
+  <h3>Exemplo 2. A indústria em julho</h3>
+  <dl class="ficha">
+    <div><dt>Organização</dt><dd>Indústria de embalagens plásticas</dd></div>
+    <div><dt>Responsável</dt><dd>Supervisor de manutenção, com o gerente de produção</dd></div>
+    <div><dt>Período</dt><dd>01/07/2027 a 31/07/2027. Meta de disponibilidade: 95 %.</dd></div>
+    <div><dt>Horas programadas</dt><dd>Três turnos, todos os dias: 744 horas no mês. A impressora trabalha em dois turnos: 496 horas.</dd></div>
+    <div><dt>Origem</dt><dd>Análise crítica do semestre: as paradas da extrusora 3 foram a segunda causa dos atrasos, e o turno da noite trabalha com gente a menos desde as férias de junho.</dd></div>
+  </dl>
+  <div class="tbl">
+    <table class="aud">
+      <caption>Pessoas no pico · 8 funções e períodos, 2 com falta de gente: 2 pessoas a menos</caption>
+      <thead><tr><th style="width:22%">Função<small>Período</small></th><th class="c">Demanda no pico</th><th class="c">Produtividade</th><th class="c">Necessárias</th><th class="c">Escaladas</th><th class="c">Qualificadas</th><th>Situação</th><th>Conferência</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Operador de extrusão</strong><small>Turno A</small></td><td class="c">3<small>extrusoras em operação</small></td><td class="c">1<small>por pessoa</small></td><td class="c"><strong>3</strong></td><td class="c">3</td><td class="c">3</td><td><span class="chip s2">Justo</span></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td><strong>Operador de extrusão</strong><small>Turno B</small></td><td class="c">3<small>extrusoras em operação</small></td><td class="c">1<small>por pessoa</small></td><td class="c"><strong>3</strong></td><td class="c">3</td><td class="c">3</td><td><span class="chip s2">Justo</span></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td><strong>Operador de extrusão</strong><small>Turno C</small></td><td class="c">3<small>extrusoras em operação</small></td><td class="c">1<small>por pessoa</small></td><td class="c"><strong>3</strong></td><td class="c no">2</td><td class="c">2</td><td><span class="chip s3">Falta gente</span></td><td><span class="chip s3">Falta 1 pessoa</span></td></tr>
+        <tr><td><strong>Impressor</strong><small>Turno A</small></td><td class="c">1<small>impressoras em operação</small></td><td class="c">1<small>por pessoa</small></td><td class="c"><strong>1</strong></td><td class="c">1</td><td class="c">1</td><td><span class="chip s2">Justo</span></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td><strong>Rebobinador</strong><small>Turno A</small></td><td class="c">24<small>bobinas por hora</small></td><td class="c">8<small>por pessoa</small></td><td class="c"><strong>3</strong></td><td class="c">3</td><td class="c">3</td><td><span class="chip s2">Justo</span></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td><strong>Rebobinador</strong><small>Turno C</small></td><td class="c">24<small>bobinas por hora</small></td><td class="c">8<small>por pessoa</small></td><td class="c"><strong>3</strong></td><td class="c no">2</td><td class="c">2</td><td><span class="chip s3">Falta gente</span></td><td><span class="chip s3">Falta 1 pessoa</span></td></tr>
+        <tr><td><strong>Técnico de laboratório</strong><small>Turno A</small></td><td class="c">5<small>ensaios por hora</small></td><td class="c">6<small>por pessoa</small></td><td class="c"><strong>1</strong></td><td class="c">1</td><td class="c">1</td><td><span class="chip s2">Justo</span></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td><strong>Expedição</strong><small>Turno A</small></td><td class="c">4<small>cargas por hora</small></td><td class="c">2<small>por pessoa</small></td><td class="c"><strong>2</strong></td><td class="c">3</td><td class="c">3</td><td><span class="chip s1">Com folga</span></td><td><span class="chip s1">OK</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="tbl">
+    <table class="aud">
+      <caption>Infraestrutura · 10 itens, 6 críticos. Preventivas: 7 em dia, 1 vencem em 7 dias, 1 atrasada, 1 sem plano</caption>
+      <thead><tr><th>Código</th><th style="width:20%">Item<small>Tipo · local</small></th><th>Criticidade</th><th style="width:12%">Preventiva</th><th class="c">Próxima</th><th>Situação</th><th style="width:22%">Contingência</th><th class="c">Disponibilidade<small>Quebras · horas paradas</small></th><th>Conferência</th></tr></thead>
+      <tbody>
+        <tr><td class="n">EXT-01</td><td><strong>Extrusora 1</strong><small>Equipamento · Extrusão</small></td><td>Alta</td><td>a cada 3 meses<small>última: 10/05/2027</small></td><td class="c">10/08/2027</td><td><span class="chip s1">Em dia</span></td><td>Pedidos urgentes passam para a extrusora 2.</td><td class="c">100,0 %<small>0 quebras · 0 h</small></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">EXT-03</td><td><strong>Extrusora 3</strong><small>Equipamento · Extrusão</small></td><td>Alta</td><td>a cada 3 meses<small>última: 15/03/2027</small></td><td class="c">15/06/2027</td><td><span class="chip s3">Atrasada</span></td><td>Pedidos redistribuídos entre as extrusoras 1 e 2, com hora extra.</td><td class="c no">94,6 %<small>3 quebras · 40 h</small></td><td><span class="chip s3">Preventiva atrasada</span></td></tr>
+        <tr><td class="n">IMP-01</td><td><strong>Impressora flexográfica</strong><small>Equipamento · Impressão</small></td><td>Alta</td><td>todo mês<small>última: 20/07/2027</small></td><td class="c">20/08/2027</td><td><span class="chip s1">Em dia</span></td><td>Impressão de pedidos urgentes em terceiro homologado.</td><td class="c">99,2 %<small>1 quebra · 4 h</small></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">REB-01</td><td><strong>Rebobinadeira</strong><small>Equipamento · Rebobinamento</small></td><td>Média</td><td>a cada 6 meses<small>última: 20/02/2027</small></td><td class="c">20/08/2027</td><td><span class="chip s1">Em dia</span></td><td>—</td><td class="c">100,0 %<small>0 quebras · 0 h</small></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">CMP-01</td><td><strong>Compressor de ar</strong><small>Equipamento · Utilidades</small></td><td>Alta</td><td>a cada 3 meses<small>última: 02/06/2027</small></td><td class="c">02/09/2027</td><td><span class="chip s1">Em dia</span></td><td class="no">—</td><td class="c">100,0 %<small>0 quebras · 0 h</small></td><td><span class="chip s3">Crítico sem contingência</span></td></tr>
+        <tr><td class="n">CHI-01</td><td><strong>Chiller de água gelada</strong><small>Equipamento · Utilidades</small></td><td>Alta</td><td>a cada 6 meses<small>última: 10/04/2027</small></td><td class="c">10/10/2027</td><td><span class="chip s1">Em dia</span></td><td>Água da torre de resfriamento, com as extrusoras em velocidade reduzida.</td><td class="c">98,9 %<small>1 quebra · 8 h</small></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">EMP-01</td><td><strong>Empilhadeira</strong><small>Transporte · Expedição</small></td><td>Média</td><td>a cada 3 meses<small>última: 05/05/2027</small></td><td class="c">05/08/2027</td><td><span class="chip s2">Vence em 7 dias</span></td><td>—</td><td class="c">100,0 %<small>0 quebras · 0 h</small></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">ERP-01</td><td><strong>Sistema de gestão (ERP)</strong><small>TI e software · Escritório</small></td><td>Alta</td><td>a cada 3 meses<small>última: 03/07/2027</small></td><td class="c">03/10/2027</td><td><span class="chip s1">Em dia</span></td><td>Cópia diária fora da fábrica. Pedidos em planilha por até um dia.</td><td class="c">—</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">EXS-01</td><td><strong>Exaustão de solventes da impressão</strong><small>Edifício e instalações · Impressão</small></td><td>Média</td><td>uma vez por ano<small>última: 15/09/2026</small></td><td class="c">15/09/2027</td><td><span class="chip s1">Em dia</span></td><td>—</td><td class="c">100,0 %<small>0 quebras · 0 h</small></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">SEL-01</td><td><strong>Seladora manual</strong><small>Equipamento · Expedição</small></td><td>Baixa</td><td>—<small>sem preventiva</small></td><td class="c">—</td><td><span class="chip sl">Sem plano</span></td><td>—</td><td class="c">—</td><td><span class="chip s1">OK</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="tbl">
+    <table class="aud">
+      <caption>Manutenções · 8 registros. No período, 5 corretivas, 52 horas paradas, 3 com produto afetado</caption>
+      <thead><tr><th class="c">Data</th><th>Código</th><th>Tipo</th><th class="c">Parado</th><th style="width:26%">O que aconteceu<small>Causa</small></th><th style="width:22%">Ação</th><th style="width:16%">Produto afetado<small>Tratamento</small></th><th>Conferência</th></tr></thead>
+      <tbody>
+        <tr><td class="c">28/06<small>fora do período</small></td><td class="n">EXT-03</td><td>Corretiva</td><td class="c">10 h</td><td>Resistência da zona 2 queimou.<small>Causa: Resistência no fim da vida útil.</small></td><td>Resistência trocada.</td><td>Não</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="c">03/07</td><td class="n">ERP-01</td><td>Preventiva</td><td class="c">0 h</td><td>Teste de restauração da cópia de segurança: dados recuperados em 40 minutos.</td><td>—</td><td>—</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="c">06/07</td><td class="n">EXT-03</td><td>Corretiva</td><td class="c">14 h</td><td>Resistência da zona 3 queimou.<small>Causa: Resistência no fim da vida útil. A troca estava prevista na preventiva de junho, adiada.</small></td><td>Resistência trocada. Preventiva remarcada para 07/08, com os pedidos redistribuídos.</td><td>Sim<small>Bobina em produção segregada e moída (RNC 2027-29).</small></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="c">12/07</td><td class="n">IMP-01</td><td>Corretiva</td><td class="c">4 h</td><td>Anilox entupido: falha na cor.<small>Causa: Limpeza do anilox esquecida na troca do turno C.</small></td><td>Limpeza do anilox incluída no roteiro da troca de turno.</td><td>Não</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="c">18/07</td><td class="n">EXT-03</td><td>Corretiva</td><td class="c">20 h</td><td>Espessura variando ao longo da bobina.<small>Causa: Rosca desgastada. O desgaste só é medido na preventiva, que está atrasada.</small></td><td>Rosca recuperada. Medição da rosca antecipada para a preventiva de 07/08.</td><td>Sim<small>6 bobinas com espessura fora segregadas (RNC 2027-30).</small></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="c">20/07</td><td class="n">IMP-01</td><td>Preventiva</td><td class="c">6 h</td><td>Troca das facas e limpeza geral.</td><td>—</td><td>—</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="c">22/07</td><td class="n">CHI-01</td><td>Corretiva</td><td class="c">8 h</td><td>Vazamento de gás refrigerante: água acima de 18 °C.<small>Causa: Conexão trincada por vibração.</small></td><td>Conexão trocada e suporte antivibração instalado.</td><td class="no">Sim<small>sem tratamento registrado</small></td><td><span class="chip s3">Produto afetado sem tratamento</span></td></tr>
+        <tr><td class="c">27/07</td><td class="n">EXT-03</td><td>Corretiva</td><td class="c">6 h</td><td>Leitura instável da temperatura da zona 3.<small>Causa: Cabo do termopar danificado pela vibração.</small></td><td>Cabo trocado e termopar TER-Z3 verificado contra o padrão PAD-01.</td><td>Não</td><td><span class="chip s1">OK</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="tbl">
+    <table class="aud">
+      <caption>Ambiente · 6 fatores, 3 fora do limite, 1 sem medição</caption>
+      <thead><tr><th style="width:16%">Fator<small>Tipo · local</small></th><th style="width:20%">Por que afeta o produto</th><th>Limite</th><th style="width:16%">Controle</th><th class="c">Medido</th><th>Situação</th><th style="width:18%">Ação</th><th>Conferência</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Temperatura do salão de impressão</strong><small>Físico · Impressão</small></td><td>Acima de 28 °C, a tinta seca no anilox e a cor varia.</td><td>18 a 28 °C</td><td>Termo-higrômetro lido a cada turno</td><td class="c no">31 °C</td><td><span class="chip s3">Fora</span></td><td>Ventilação forçada no turno A. Climatização no orçamento de 2028.</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td><strong>Umidade do salão de impressão</strong><small>Físico · Impressão</small></td><td>Abaixo de 40 %, a eletricidade estática atrai pó para o filme.</td><td>40 a 65 %</td><td>Termo-higrômetro lido a cada turno</td><td class="c">52 %</td><td><span class="chip s1">Dentro</span></td><td>—</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td><strong>Ruído na extrusão</strong><small>Físico · Extrusão</small></td><td>Acima de 85 dB(A), o operador não ouve o alarme da extrusora.</td><td>no máximo 85 dB(A)</td><td>Medição a cada 6 meses</td><td class="c no">88 dB(A)</td><td><span class="chip s3">Fora</span></td><td>Alarme luminoso instalado nas três extrusoras. Protetor auricular obrigatório.</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td><strong>Limpeza da área de rebobinamento</strong><small>Físico · Rebobinamento</small></td><td>Pó sobre o filme vira reclamação de sujeira.</td><td>no mínimo 95 % do checklist</td><td>Checklist de limpeza a cada turno</td><td class="c">97 % do checklist</td><td><span class="chip s1">Dentro</span></td><td>—</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td><strong>Horas extras por operador no mês</strong><small>Social · Turno C</small></td><td>Turno com gente a menos, e cansada, erra a regulagem.</td><td>no máximo 16 h</td><td>Folha de ponto, todo mês</td><td class="c no">22 h</td><td><span class="chip s3">Fora</span></td><td>—</td><td><span class="chip s3">Fora do limite: falta a ação</span></td></tr>
+        <tr><td><strong>Pausas cumpridas no turno da noite</strong><small>Psicológico · Turno C</small></td><td>Sem pausa, a atenção cai de madrugada, quando os ajustes errados se concentram.</td><td>no mínimo 90 % das pausas</td><td>Registro de pausas no posto</td><td class="c">—</td><td><span class="chip s2">Sem medição</span></td><td>—</td><td><span class="chip s3">Falta a medição</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p><strong>O que observar.</strong> Os problemas da fábrica se encadeiam. A preventiva da extrusora 3, vencida em 15/06, foi adiada porque a máquina "não podia parar". Em julho, ela parou três vezes, por 40 horas, e duas das quebras vieram de peças que a preventiva teria trocado ou medido. A disponibilidade caiu para 94,6 %, abaixo da meta. O turno C trabalha com um operador de extrusão e um rebobinador a menos, faz 22 horas extras por pessoa no mês, e não mede se as pausas são cumpridas. O compressor de ar, de que as três extrusoras dependem, não tem contingência. O registro da quebra do chiller diz que houve produto afetado, mas não diz o que se fez com ele. O registro de 28/06 é de junho e fica fora da conta de julho.</p>
+
+  <h3>Exemplo 3. A quebra da câmara fria</h3>
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 222" role="img" aria-label="A quebra da câmara fria da pizzaria. 10/04, Revisão vencida: A revisão trimestral da câmara fria vencia em 10/04. Ninguém olhou a data. 12/04, 15h, Compressor parado: Na abertura da cozinha, o visor marca 11 °C. Não havia alarme. 12/04, 15h20, Contingência improvisada: Insumos para o freezer reserva e para caixas com gelo. Cada item medido com o TER-01. 12/04, 24h, Reparo: Capacitor do compressor trocado às 22h. A câmara volta a 4 °C à meia-noite: 9 horas parada. 13/04, Produto e prevenção: 18 kg descartados (RNC 2027-27). Contingência escrita, alarme instalado, revisão marcada.">
+        <defs><marker id="a5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker></defs>
+        <rect class="bx-s2" x="12" y="14" width="164" height="168"/>
+        <text class="mono mu" x="24" y="34" font-size="9.5">10/04</text>
+        <text class="b" x="24" y="54" font-size="12">Revisão vencida</text>
+        <text x="24" y="76" font-size="10.5">A revisão trimestral da</text>
+        <text x="24" y="90" font-size="10.5">câmara fria vencia em</text>
+        <text x="24" y="104" font-size="10.5">10/04. Ninguém olhou a</text>
+        <text x="24" y="118" font-size="10.5">data.</text>
+        <line class="ln" x1="177" y1="96" x2="188" y2="96" marker-end="url(#a5)"/>
+        <rect class="bx-s3" x="190" y="14" width="164" height="168"/>
+        <text class="mono mu" x="202" y="34" font-size="9.5">12/04, 15H</text>
+        <text class="b" x="202" y="54" font-size="12">Compressor parado</text>
+        <text x="202" y="76" font-size="10.5">Na abertura da cozinha, o</text>
+        <text x="202" y="90" font-size="10.5">visor marca 11 °C. Não</text>
+        <text x="202" y="104" font-size="10.5">havia alarme.</text>
+        <line class="ln" x1="355" y1="96" x2="366" y2="96" marker-end="url(#a5)"/>
+        <rect class="bx" x="368" y="14" width="164" height="168"/>
+        <text class="mono mu" x="380" y="34" font-size="9.5">12/04, 15H20</text>
+        <text class="b" x="380" y="54" font-size="12">Contingência</text>
+        <text class="b" x="380" y="69" font-size="12">improvisada</text>
+        <text x="380" y="90" font-size="10.5">Insumos para o freezer</text>
+        <text x="380" y="104" font-size="10.5">reserva e para caixas com</text>
+        <text x="380" y="118" font-size="10.5">gelo. Cada item medido</text>
+        <text x="380" y="132" font-size="10.5">com o TER-01.</text>
+        <line class="ln" x1="533" y1="96" x2="544" y2="96" marker-end="url(#a5)"/>
+        <rect class="bx-s1" x="546" y="14" width="164" height="168"/>
+        <text class="mono mu" x="558" y="34" font-size="9.5">12/04, 24H</text>
+        <text class="b" x="558" y="54" font-size="12">Reparo</text>
+        <text x="558" y="76" font-size="10.5">Capacitor do compressor</text>
+        <text x="558" y="90" font-size="10.5">trocado às 22h. A câmara</text>
+        <text x="558" y="104" font-size="10.5">volta a 4 °C à</text>
+        <text x="558" y="118" font-size="10.5">meia-noite: 9 horas</text>
+        <text x="558" y="132" font-size="10.5">parada.</text>
+        <line class="ln" x1="711" y1="96" x2="722" y2="96" marker-end="url(#a5)"/>
+        <rect class="bx-ink" x="724" y="14" width="164" height="168"/>
+        <text class="mono t-ground" x="736" y="34" font-size="9.5">13/04</text>
+        <text class="b t-ground" x="736" y="54" font-size="12">Produto e prevenção</text>
+        <text class="t-ground" x="736" y="76" font-size="10.5">18 kg descartados</text>
+        <text class="t-ground" x="736" y="90" font-size="10.5">(RNC 2027-27).</text>
+        <text class="t-ground" x="736" y="104" font-size="10.5">Contingência escrita,</text>
+        <text class="t-ground" x="736" y="118" font-size="10.5">alarme instalado, revisão</text>
+        <text class="t-ground" x="736" y="132" font-size="10.5">marcada.</text>
+        <text x="450" y="210" font-size="11.5" text-anchor="middle">A contingência funcionou porque alguém improvisou bem. Escrita, ela funciona em qualquer turno.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 6.</b> Da revisão vencida às ações de prevenção, em quatro dias. A contingência só foi escrita depois de usada.</figcaption>
+  </figure>
+  <p><strong>O que observar.</strong> A loja reagiu bem no dia: tirou os insumos da câmara, mediu cada um com o termômetro de espeto e descartou o que passou do limite. O que faltou veio antes: a revisão vencida sem aviso, nenhum alarme de temperatura e nenhuma contingência escrita. Se a quebra tivesse acontecido num domingo, com outra equipe, os 18 kg descartados poderiam ter ido para as pizzas. Depois da quebra, a loja fez o que a norma pede: tratou o produto afetado como não conforme, registrou a causa e mudou o que permitiu a falha. A revisão, porém, ainda está marcada para 05/05: no fim de abril, a câmara continua atrasada.</p>
+</section>
+
+<!-- ============================ MÓDULO 8 ============================ -->
+<section id="leitura">
+  <p class="eyebrow">Módulo 8</p>
+  <h2>Ler a disponibilidade</h2>
+  <p>A disponibilidade de cada item mostra onde as quebras pesaram no mês. Ela é lida junto com a meta e com a situação da preventiva: um item abaixo da meta, com a preventiva atrasada, pede a preventiva antes de qualquer outra ação.</p>
+
+  <figure id="fig-bars">
+    <div class="scroll">
+      <svg id="bars" viewBox="0 0 900 558" role="img" aria-label="Disponibilidade de cada item com horas programadas, no mês de cada exemplo. Meta de 97 % na pizzaria e de 95 % na indústria. FOR-01: 98,3 %. CAM-01: 98,8 %. MAS-01: 100,0 %. MOT-01: 100,0 %. MOT-02: 93,3 %. MOT-03: 100,0 %. SIS-01: 99,2 %. EXA-01: 100,0 %. EXT-01: 100,0 %. EXT-03: 94,6 %. IMP-01: 99,2 %. REB-01: 100,0 %. CMP-01: 100,0 %. CHI-01: 98,9 %. EMP-01: 100,0 %. EXS-01: 100,0 %.">
+        <g font-size="11.5">
+          <rect class="f1" x="330" y="12" width="14" height="14"/><text x="352" y="24">Na meta ou acima</text>
+          <rect class="f3" x="510" y="12" width="14" height="14"/><text x="532" y="24">Abaixo da meta</text>
+          <line class="goal" x1="690" y1="19" x2="718" y2="19"/><text x="726" y="24">Meta</text>
+        </g>
+        <line class="grid" x1="330.0" y1="40" x2="330.0" y2="514"/>
+        <text class="mu" x="330.0" y="530" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">90 %</text>
+        <line class="grid" x1="436.0" y1="40" x2="436.0" y2="514"/>
+        <text class="mu" x="436.0" y="530" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">92 %</text>
+        <line class="grid" x1="542.0" y1="40" x2="542.0" y2="514"/>
+        <text class="mu" x="542.0" y="530" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">94 %</text>
+        <line class="grid" x1="648.0" y1="40" x2="648.0" y2="514"/>
+        <text class="mu" x="648.0" y="530" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">96 %</text>
+        <line class="grid" x1="754.0" y1="40" x2="754.0" y2="514"/>
+        <text class="mu" x="754.0" y="530" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">98 %</text>
+        <line class="grid" x1="860.0" y1="40" x2="860.0" y2="514"/>
+        <text class="mu" x="860.0" y="530" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">100 %</text>
+        <text class="mono mu" x="595.0" y="550" font-size="10" text-anchor="middle">DISPONIBILIDADE NO MÊS · O EIXO COMEÇA EM 90 %</text>
+        <text class="mono mu" x="20" y="63" font-size="10">PIZZARIA</text>
+        <text x="36" y="89" font-size="11.5"><tspan class="b">FOR-01</tspan><tspan class="mu" dx="8">Forno de lastro a gás</tspan></text>
+        <rect class="bar f1" data-k="1" x="330" y="78" width="441.7" height="14"/>
+        <text class="b on" x="765.7" y="89" font-size="10.5" text-anchor="end" style="font-variant-numeric:tabular-nums">98,3 %</text>
+        <text x="36" y="115" font-size="11.5"><tspan class="b">CAM-01</tspan><tspan class="mu" dx="8">Câmara fria</tspan></text>
+        <rect class="bar f1" data-k="2" x="330" y="104" width="463.8" height="14"/>
+        <text class="b on" x="787.8" y="115" font-size="10.5" text-anchor="end" style="font-variant-numeric:tabular-nums">98,8 %</text>
+        <text x="36" y="141" font-size="11.5"><tspan class="b">MAS-01</tspan><tspan class="mu" dx="8">Masseira</tspan></text>
+        <rect class="bar f1" data-k="3" x="330" y="130" width="530.0" height="14"/>
+        <text class="b on" x="854.0" y="141" font-size="10.5" text-anchor="end" style="font-variant-numeric:tabular-nums">100,0 %</text>
+        <text x="36" y="167" font-size="11.5"><tspan class="b">MOT-01</tspan><tspan class="mu" dx="8">Moto de entrega 1</tspan></text>
+        <rect class="bar f1" data-k="4" x="330" y="156" width="530.0" height="14"/>
+        <text class="b on" x="854.0" y="167" font-size="10.5" text-anchor="end" style="font-variant-numeric:tabular-nums">100,0 %</text>
+        <text x="36" y="193" font-size="11.5"><tspan class="b">MOT-02</tspan><tspan class="mu" dx="8">Moto de entrega 2</tspan></text>
+        <rect class="bar f3" data-k="5" x="330" y="182" width="176.7" height="14"/>
+        <text class="b on" x="500.7" y="193" font-size="10.5" text-anchor="end" style="font-variant-numeric:tabular-nums">93,3 %</text>
+        <text x="36" y="219" font-size="11.5"><tspan class="b">MOT-03</tspan><tspan class="mu" dx="8">Moto de entrega 3</tspan></text>
+        <rect class="bar f1" data-k="6" x="330" y="208" width="530.0" height="14"/>
+        <text class="b on" x="854.0" y="219" font-size="10.5" text-anchor="end" style="font-variant-numeric:tabular-nums">100,0 %</text>
+        <text x="36" y="245" font-size="11.5"><tspan class="b">SIS-01</tspan><tspan class="mu" dx="8">Sistema de pedidos</tspan></text>
+        <rect class="bar f1" data-k="7" x="330" y="234" width="485.8" height="14"/>
+        <text class="b on" x="809.8" y="245" font-size="10.5" text-anchor="end" style="font-variant-numeric:tabular-nums">99,2 %</text>
+        <text x="36" y="271" font-size="11.5"><tspan class="b">EXA-01</tspan><tspan class="mu" dx="8">Coifa e exaustão</tspan></text>
+        <rect class="bar f1" data-k="8" x="330" y="260" width="530.0" height="14"/>
+        <text class="b on" x="854.0" y="271" font-size="10.5" text-anchor="end" style="font-variant-numeric:tabular-nums">100,0 %</text>
+        <text class="mono mu" x="20" y="297" font-size="10">INDÚSTRIA</text>
+        <line class="goal" x1="701.0" y1="74" x2="701.0" y2="278"/>
+        <text x="36" y="323" font-size="11.5"><tspan class="b">EXT-01</tspan><tspan class="mu" dx="8">Extrusora 1</tspan></text>
+        <rect class="bar f1" data-k="10" x="330" y="312" width="530.0" height="14"/>
+        <text class="b on" x="854.0" y="323" font-size="10.5" text-anchor="end" style="font-variant-numeric:tabular-nums">100,0 %</text>
+        <text x="36" y="349" font-size="11.5"><tspan class="b">EXT-03</tspan><tspan class="mu" dx="8">Extrusora 3</tspan></text>
+        <rect class="bar f3" data-k="11" x="330" y="338" width="245.1" height="14"/>
+        <text class="b on" x="569.1" y="349" font-size="10.5" text-anchor="end" style="font-variant-numeric:tabular-nums">94,6 %</text>
+        <text x="36" y="375" font-size="11.5"><tspan class="b">IMP-01</tspan><tspan class="mu" dx="8">Impressora flexográfica</tspan></text>
+        <rect class="bar f1" data-k="12" x="330" y="364" width="487.3" height="14"/>
+        <text class="b on" x="811.3" y="375" font-size="10.5" text-anchor="end" style="font-variant-numeric:tabular-nums">99,2 %</text>
+        <text x="36" y="401" font-size="11.5"><tspan class="b">REB-01</tspan><tspan class="mu" dx="8">Rebobinadeira</tspan></text>
+        <rect class="bar f1" data-k="13" x="330" y="390" width="530.0" height="14"/>
+        <text class="b on" x="854.0" y="401" font-size="10.5" text-anchor="end" style="font-variant-numeric:tabular-nums">100,0 %</text>
+        <text x="36" y="427" font-size="11.5"><tspan class="b">CMP-01</tspan><tspan class="mu" dx="8">Compressor de ar</tspan></text>
+        <rect class="bar f1" data-k="14" x="330" y="416" width="530.0" height="14"/>
+        <text class="b on" x="854.0" y="427" font-size="10.5" text-anchor="end" style="font-variant-numeric:tabular-nums">100,0 %</text>
+        <text x="36" y="453" font-size="11.5"><tspan class="b">CHI-01</tspan><tspan class="mu" dx="8">Chiller de água gelada</tspan></text>
+        <rect class="bar f1" data-k="15" x="330" y="442" width="473.0" height="14"/>
+        <text class="b on" x="797.0" y="453" font-size="10.5" text-anchor="end" style="font-variant-numeric:tabular-nums">98,9 %</text>
+        <text x="36" y="479" font-size="11.5"><tspan class="b">EMP-01</tspan><tspan class="mu" dx="8">Empilhadeira</tspan></text>
+        <rect class="bar f1" data-k="16" x="330" y="468" width="530.0" height="14"/>
+        <text class="b on" x="854.0" y="479" font-size="10.5" text-anchor="end" style="font-variant-numeric:tabular-nums">100,0 %</text>
+        <text x="36" y="505" font-size="11.5"><tspan class="b">EXS-01</tspan><tspan class="mu" dx="8">Exaustão de solventes da impressão</tspan></text>
+        <rect class="bar f1" data-k="17" x="330" y="494" width="530.0" height="14"/>
+        <text class="b on" x="854.0" y="505" font-size="10.5" text-anchor="end" style="font-variant-numeric:tabular-nums">100,0 %</text>
+        <line class="goal" x1="595.0" y1="308" x2="595.0" y2="512"/>
+        <rect class="hit" x="14" y="72" width="872" height="26" tabindex="0" role="img" aria-label="FOR-01, Forno de lastro a gás: 98,3 %, 1 quebra, 3 h parado" data-k="1" data-n="FOR-01 · Forno de lastro a gás" data-s="98,3 %" data-p="meta de 97 %" data-d="1 quebra, 3 h parado" data-cx="771.7" data-cy="72"/>
+        <rect class="hit" x="14" y="98" width="872" height="26" tabindex="0" role="img" aria-label="CAM-01, Câmara fria: 98,8 %, 1 quebra, 9 h parado" data-k="2" data-n="CAM-01 · Câmara fria" data-s="98,8 %" data-p="meta de 97 %" data-d="1 quebra, 9 h parado" data-cx="793.8" data-cy="98"/>
+        <rect class="hit" x="14" y="124" width="872" height="26" tabindex="0" role="img" aria-label="MAS-01, Masseira: 100,0 %, sem quebras" data-k="3" data-n="MAS-01 · Masseira" data-s="100,0 %" data-p="meta de 97 %" data-d="sem quebras" data-cx="860.0" data-cy="124"/>
+        <rect class="hit" x="14" y="150" width="872" height="26" tabindex="0" role="img" aria-label="MOT-01, Moto de entrega 1: 100,0 %, sem quebras" data-k="4" data-n="MOT-01 · Moto de entrega 1" data-s="100,0 %" data-p="meta de 97 %" data-d="sem quebras" data-cx="860.0" data-cy="150"/>
+        <rect class="hit" x="14" y="176" width="872" height="26" tabindex="0" role="img" aria-label="MOT-02, Moto de entrega 2: 93,3 %, 1 quebra, 12 h parado" data-k="5" data-n="MOT-02 · Moto de entrega 2" data-s="93,3 %" data-p="meta de 97 %" data-d="1 quebra, 12 h parado" data-cx="506.7" data-cy="176"/>
+        <rect class="hit" x="14" y="202" width="872" height="26" tabindex="0" role="img" aria-label="MOT-03, Moto de entrega 3: 100,0 %, sem quebras" data-k="6" data-n="MOT-03 · Moto de entrega 3" data-s="100,0 %" data-p="meta de 97 %" data-d="sem quebras" data-cx="860.0" data-cy="202"/>
+        <rect class="hit" x="14" y="228" width="872" height="26" tabindex="0" role="img" aria-label="SIS-01, Sistema de pedidos: 99,2 %, 1 quebra, 1,5 h parado" data-k="7" data-n="SIS-01 · Sistema de pedidos" data-s="99,2 %" data-p="meta de 97 %" data-d="1 quebra, 1,5 h parado" data-cx="815.8" data-cy="228"/>
+        <rect class="hit" x="14" y="254" width="872" height="26" tabindex="0" role="img" aria-label="EXA-01, Coifa e exaustão: 100,0 %, sem quebras" data-k="8" data-n="EXA-01 · Coifa e exaustão" data-s="100,0 %" data-p="meta de 97 %" data-d="sem quebras" data-cx="860.0" data-cy="254"/>
+        <rect class="hit" x="14" y="306" width="872" height="26" tabindex="0" role="img" aria-label="EXT-01, Extrusora 1: 100,0 %, sem quebras" data-k="10" data-n="EXT-01 · Extrusora 1" data-s="100,0 %" data-p="meta de 95 %" data-d="sem quebras" data-cx="860.0" data-cy="306"/>
+        <rect class="hit" x="14" y="332" width="872" height="26" tabindex="0" role="img" aria-label="EXT-03, Extrusora 3: 94,6 %, 3 quebras, 40 h parado" data-k="11" data-n="EXT-03 · Extrusora 3" data-s="94,6 %" data-p="meta de 95 %" data-d="3 quebras, 40 h parado" data-cx="575.1" data-cy="332"/>
+        <rect class="hit" x="14" y="358" width="872" height="26" tabindex="0" role="img" aria-label="IMP-01, Impressora flexográfica: 99,2 %, 1 quebra, 4 h parado" data-k="12" data-n="IMP-01 · Impressora flexográfica" data-s="99,2 %" data-p="meta de 95 %" data-d="1 quebra, 4 h parado" data-cx="817.3" data-cy="358"/>
+        <rect class="hit" x="14" y="384" width="872" height="26" tabindex="0" role="img" aria-label="REB-01, Rebobinadeira: 100,0 %, sem quebras" data-k="13" data-n="REB-01 · Rebobinadeira" data-s="100,0 %" data-p="meta de 95 %" data-d="sem quebras" data-cx="860.0" data-cy="384"/>
+        <rect class="hit" x="14" y="410" width="872" height="26" tabindex="0" role="img" aria-label="CMP-01, Compressor de ar: 100,0 %, sem quebras" data-k="14" data-n="CMP-01 · Compressor de ar" data-s="100,0 %" data-p="meta de 95 %" data-d="sem quebras" data-cx="860.0" data-cy="410"/>
+        <rect class="hit" x="14" y="436" width="872" height="26" tabindex="0" role="img" aria-label="CHI-01, Chiller de água gelada: 98,9 %, 1 quebra, 8 h parado" data-k="15" data-n="CHI-01 · Chiller de água gelada" data-s="98,9 %" data-p="meta de 95 %" data-d="1 quebra, 8 h parado" data-cx="803.0" data-cy="436"/>
+        <rect class="hit" x="14" y="462" width="872" height="26" tabindex="0" role="img" aria-label="EMP-01, Empilhadeira: 100,0 %, sem quebras" data-k="16" data-n="EMP-01 · Empilhadeira" data-s="100,0 %" data-p="meta de 95 %" data-d="sem quebras" data-cx="860.0" data-cy="462"/>
+        <rect class="hit" x="14" y="488" width="872" height="26" tabindex="0" role="img" aria-label="EXS-01, Exaustão de solventes da impressão: 100,0 %, sem quebras" data-k="17" data-n="EXS-01 · Exaustão de solventes da impressão" data-s="100,0 %" data-p="meta de 95 %" data-d="sem quebras" data-cx="860.0" data-cy="488"/>
+      </svg>
+    </div>
+    <div class="tip" id="bars-tip" hidden></div>
+    <figcaption><b>Figura 7.</b> Disponibilidade dos itens com horas programadas, no mês de cada exemplo. O eixo começa em 90 % para mostrar as diferenças. Passe o mouse sobre as linhas para ver os valores.</figcaption>
+    <details class="data">
+      <summary>Ver os dados em tabela</summary>
+      <div class="tbl">
+        <table class="aud">
+          <thead><tr><th>Código</th><th>Item</th><th class="c">Programadas</th><th class="c">Quebras</th><th class="c">Horas paradas</th><th class="c">Disponibilidade</th><th class="c">Meta</th></tr></thead>
+          <tbody>
+            <tr><td>FOR-01</td><td>Forno de lastro a gás</td><td class="c">180 h</td><td class="c">1</td><td class="c">3 h</td><td class="c">98,3 %</td><td class="c">97 %</td></tr>
+            <tr><td>CAM-01</td><td>Câmara fria</td><td class="c">720 h</td><td class="c">1</td><td class="c">9 h</td><td class="c">98,8 %</td><td class="c">97 %</td></tr>
+            <tr><td>MAS-01</td><td>Masseira</td><td class="c">180 h</td><td class="c">0</td><td class="c">0 h</td><td class="c">100,0 %</td><td class="c">97 %</td></tr>
+            <tr><td>MOT-01</td><td>Moto de entrega 1</td><td class="c">180 h</td><td class="c">0</td><td class="c">0 h</td><td class="c">100,0 %</td><td class="c">97 %</td></tr>
+            <tr><td>MOT-02</td><td>Moto de entrega 2</td><td class="c">180 h</td><td class="c">1</td><td class="c">12 h</td><td class="c">93,3 %</td><td class="c">97 %</td></tr>
+            <tr><td>MOT-03</td><td>Moto de entrega 3</td><td class="c">180 h</td><td class="c">0</td><td class="c">0 h</td><td class="c">100,0 %</td><td class="c">97 %</td></tr>
+            <tr><td>SIS-01</td><td>Sistema de pedidos</td><td class="c">180 h</td><td class="c">1</td><td class="c">1,5 h</td><td class="c">99,2 %</td><td class="c">97 %</td></tr>
+            <tr><td>EXA-01</td><td>Coifa e exaustão</td><td class="c">180 h</td><td class="c">0</td><td class="c">0 h</td><td class="c">100,0 %</td><td class="c">97 %</td></tr>
+            <tr><td>EXT-01</td><td>Extrusora 1</td><td class="c">744 h</td><td class="c">0</td><td class="c">0 h</td><td class="c">100,0 %</td><td class="c">95 %</td></tr>
+            <tr><td>EXT-03</td><td>Extrusora 3</td><td class="c">744 h</td><td class="c">3</td><td class="c">40 h</td><td class="c">94,6 %</td><td class="c">95 %</td></tr>
+            <tr><td>IMP-01</td><td>Impressora flexográfica</td><td class="c">496 h</td><td class="c">1</td><td class="c">4 h</td><td class="c">99,2 %</td><td class="c">95 %</td></tr>
+            <tr><td>REB-01</td><td>Rebobinadeira</td><td class="c">744 h</td><td class="c">0</td><td class="c">0 h</td><td class="c">100,0 %</td><td class="c">95 %</td></tr>
+            <tr><td>CMP-01</td><td>Compressor de ar</td><td class="c">744 h</td><td class="c">0</td><td class="c">0 h</td><td class="c">100,0 %</td><td class="c">95 %</td></tr>
+            <tr><td>CHI-01</td><td>Chiller de água gelada</td><td class="c">744 h</td><td class="c">1</td><td class="c">8 h</td><td class="c">98,9 %</td><td class="c">95 %</td></tr>
+            <tr><td>EMP-01</td><td>Empilhadeira</td><td class="c">744 h</td><td class="c">0</td><td class="c">0 h</td><td class="c">100,0 %</td><td class="c">95 %</td></tr>
+            <tr><td>EXS-01</td><td>Exaustão de solventes da impressão</td><td class="c">496 h</td><td class="c">0</td><td class="c">0 h</td><td class="c">100,0 %</td><td class="c">95 %</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </details>
+  </figure>
+
+  <p>Na pizzaria, só a moto 2 ficou abaixo da meta de 97 %, por uma única quebra de 12 horas num mês de 180 horas programadas. A câmara fria, com 9 horas paradas, ficou acima da meta porque funciona 720 horas no mês, e mesmo assim foi a quebra que mais custou: 18 kg de insumos. A disponibilidade mede o tempo, e não o estrago. Na indústria, a extrusora 3 ficou abaixo da meta de 95 %, e o chiller, com uma quebra só, parou as três extrusoras ao mesmo tempo. Por isso a criticidade e o produto afetado são lidos junto com a disponibilidade.</p>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Situação</th><th style="width:40%">Regra deste material</th><th>O que fazer</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Em dia</strong></td><td>A próxima preventiva está a mais de 7 dias.</td><td>Seguir o plano.</td></tr>
+        <tr><td><strong>Vence em 7 dias</strong></td><td>A próxima preventiva está a 7 dias ou menos.</td><td>Confirmar a data, as peças e quem faz.</td></tr>
+        <tr><td><strong>Atrasada</strong></td><td>A data passou, ou o plano existe e nunca foi feito.</td><td>Fazer antes de qualquer outra ação no item.</td></tr>
+        <tr><td><strong>Sem plano</strong></td><td>O item não tem intervalo de preventiva.</td><td>Aceitável só na criticidade baixa, por decisão registrada.</td></tr>
+        <tr><td><strong>Abaixo da meta</strong></td><td>A disponibilidade do mês ficou abaixo da meta.</td><td>Ler as causas das quebras e agir na mais frequente.</td></tr>
+        <tr><td><strong>Falta gente</strong></td><td>As pessoas escaladas não cobrem a demanda do pico.</td><td>Rever a escala, remanejar ou contratar.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note">
+    <h4>Por que a preventiva não entra na conta</h4>
+    <p>Neste material, a disponibilidade conta só as paradas por quebra. A preventiva é planejada: ela sai das horas programadas, e não das horas disponíveis. Contá-la como parada leva ao efeito contrário do desejado: quem adia a preventiva melhora o indicador no mês e piora a máquina no trimestre, como mostra a extrusora 3.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 9 ============================ -->
+<section id="erros">
+  <p class="eyebrow">Módulo 9</p>
+  <h2>Erros comuns</h2>
+  <div class="errs">
+    <div><h4>Escala pela média</h4><p>O total da noite cabe na escala, e o pico das 21h não cabe.</p><p class="fix"><b>Correção:</b> dimensionar pela demanda da hora de pico.</p></div>
+    <div><h4>Escala sem qualificação</h4><p>O número de pessoas está certo, e nenhuma delas sabe operar o sistema.</p><p class="fix"><b>Correção:</b> ao menos uma pessoa qualificada em cada função e período.</p></div>
+    <div><h4>"A máquina não pode parar"</h4><p>A preventiva é adiada para não perder produção, e a máquina para sozinha, na pior hora.</p><p class="fix"><b>Correção:</b> preventiva atrasada no item crítico é tratada como prioridade da produção.</p></div>
+    <div><h4>Contingência de cabeça</h4><p>O líder sabe o que fazer quando a câmara para. O turno de domingo, não.</p><p class="fix"><b>Correção:</b> a contingência escrita, perto do equipamento.</p></div>
+    <div><h4>Quebra sem registro</h4><p>A máquina foi consertada e voltou a rodar. Ninguém anotou o tempo nem a causa.</p><p class="fix"><b>Correção:</b> toda corretiva registrada, com causa e ação.</p></div>
+    <div><h4>Parada sem olhar o produto</h4><p>O equipamento foi consertado, e o produto feito durante a falha seguiu para o cliente.</p><p class="fix"><b>Correção:</b> perguntar em toda quebra se o produto foi afetado, e tratar como não conforme.</p></div>
+    <div><h4>Cópia de segurança nunca testada</h4><p>A cópia é feita todo dia. No dia em que precisou, não abriu.</p><p class="fix"><b>Correção:</b> teste de restauração no plano, como preventiva.</p></div>
+    <div><h4>Ambiente sem limite</h4><p>"A cozinha é quente", sem dizer quanto é quente demais.</p><p class="fix"><b>Correção:</b> um limite numérico, com medição e frequência.</p></div>
+    <div><h4>Medir e não agir</h4><p>A medição está fora do limite há semanas, e a planilha só registra.</p><p class="fix"><b>Correção:</b> toda medição fora do limite com uma ação e um responsável.</p></div>
+    <div><h4>Esquecer os fatores humanos</h4><p>A lista do ambiente tem temperatura e limpeza, e nada sobre jornada, pausas ou carga de trabalho.</p><p class="fix"><b>Correção:</b> incluir os fatores sociais e psicológicos que afetam o produto.</p></div>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 10 ============================ -->
+<section id="ferramentas">
+  <p class="eyebrow">Módulo 10</p>
+  <h2>Os recursos e outras ferramentas</h2>
+  <p>Os recursos estão por baixo de todos os processos. Por isso este estudo recebe dados de quase todos os outros e devolve a eles o que faltava: gente, máquina funcionando e lugar adequado.</p>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:26%">Ferramenta</th><th style="width:37%">O que ela entrega aos recursos</th><th>O que recebe dos recursos</th></tr></thead>
+      <tbody>
+        <tr><td><a href="../ISO-9001/treinamento-iso-9001.html"><strong>ISO 9001 requisito a requisito</strong></a></td><td>Os requisitos 7.1.1 a 7.1.4, e a lacuna de cada organização.</td><td>As listas e os registros, como evidência.</td></tr>
+        <tr><td><a href="../Processos/treinamento-processos.html"><strong>Mapa de processos e tartaruga</strong></a></td><td>Os processos e, na tartaruga, os recursos de cada um.</td><td>A lista do que cada processo usa.</td></tr>
+        <tr><td><a href="../Competencias/treinamento-competencias.html"><strong>Matriz de competências</strong></a></td><td>Quem está qualificado em cada função.</td><td>A coluna de qualificados da escala, e as lacunas a treinar.</td></tr>
+        <tr><td><a href="../Calibracao/treinamento-calibracao.html"><strong>Calibração e recursos de medição</strong></a></td><td>O controle dos instrumentos, a parte do 7.1 que trata da medição.</td><td>A verificação do instrumento depois de um reparo.</td></tr>
+        <tr><td><a href="../Producao/treinamento-producao.html"><strong>Controle de produção e de serviço</strong></a></td><td>O plano de controle, que supõe infraestrutura e ambiente adequados.</td><td>Os equipamentos mantidos e o ambiente dentro do limite.</td></tr>
+        <tr><td><a href="../Riscos/treinamento-riscos.html"><strong>Matriz de riscos</strong></a></td><td>A avaliação do risco de cada item parar.</td><td>A criticidade, a preventiva e a contingência.</td></tr>
+        <tr><td><a href="../Liberacao/treinamento-liberacao.html"><strong>Liberação e produto não conforme</strong></a></td><td>O registro do produto afetado por uma quebra.</td><td>A pergunta "o produto foi afetado?" em toda corretiva.</td></tr>
+        <tr><td><a href="../Pareto/treinamento-pareto.html"><strong>Pareto e folha de verificação</strong></a></td><td>As causas das quebras, em ordem.</td><td>O registro das manutenções, com as causas.</td></tr>
+        <tr><td><a href="../Indicadores/treinamento-indicadores.html"><strong>Indicadores de desempenho</strong></a></td><td>A ficha do indicador de disponibilidade.</td><td>As horas programadas e as horas paradas.</td></tr>
+        <tr><td><a href="../Pedidos/treinamento-pedidos.html"><strong>Requisitos do cliente e análise de pedidos</strong></a></td><td>A confirmação de capacidade antes do aceite.</td><td>A capacidade real, de pessoas e de máquinas.</td></tr>
+        <tr><td><a href="../Fornecedores/treinamento-fornecedores.html"><strong>Avaliação de fornecedores</strong></a></td><td>A avaliação da manutenção e da assistência técnica contratadas.</td><td>O tempo de reparo de cada fornecedor.</td></tr>
+        <tr><td><a href="../Analise-Critica/treinamento-analise-critica.html"><strong>Análise crítica pela direção</strong></a></td><td>As decisões sobre os recursos, uma das saídas obrigatórias.</td><td>A falta de gente, as paradas e o ambiente fora, como entrada.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 11 ============================ -->
+<section id="iso">
+  <p class="eyebrow">Módulo 11</p>
+  <h2>Nas normas ISO</h2>
+  <p>Os recursos estão no requisito 7.1 da ISO 9001:2015. Os quatro primeiros itens tratam do que este estudo cobre: os recursos em geral, as pessoas, a infraestrutura e o ambiente. Os dois últimos, os recursos de medição e o conhecimento organizacional, têm estudos ou módulos próprios na série.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 200" role="img" aria-label="O que a norma pede sobre recursos, infraestrutura e ambiente. 7.1.1 · Recursos: Determinar e prover os recursos do sistema, pensando no que existe dentro e no que precisa vir de fora. Neste estudo: a demanda e a escala. 7.1.2 · Pessoas: Determinar e prover as pessoas necessárias para operar os processos e o sistema. Neste estudo: as pessoas no pico. 7.1.3 · Infraestrutura: Determinar, prover e manter prédios, equipamentos, transporte e tecnologia da informação. Neste estudo: a preventiva e a contingência. 7.1.4 · Ambiente: Determinar, prover e manter o ambiente necessário: fatores físicos, sociais e psicológicos. Neste estudo: os fatores com limite.">
+        <rect class="bx" x="10" y="14" width="214" height="172"/>
+        <rect class="hd-ink" x="10" y="14" width="214" height="34"/>
+        <text class="b t-ground" x="22" y="36" font-size="11.5">7.1.1 · Recursos</text>
+        <text x="22" y="70" font-size="11.5">Determinar e prover os recursos</text>
+        <text x="22" y="86" font-size="11.5">do sistema, pensando no que</text>
+        <text x="22" y="102" font-size="11.5">existe dentro e no que precisa</text>
+        <text x="22" y="118" font-size="11.5">vir de fora.</text>
+        <text class="mu" x="22" y="160" font-size="11">Neste estudo: a demanda e a escala</text>
+        <rect class="bx" x="232" y="14" width="214" height="172"/>
+        <rect class="hd-ink" x="232" y="14" width="214" height="34"/>
+        <text class="b t-ground" x="244" y="36" font-size="11.5">7.1.2 · Pessoas</text>
+        <text x="244" y="70" font-size="11.5">Determinar e prover as pessoas</text>
+        <text x="244" y="86" font-size="11.5">necessárias para operar os</text>
+        <text x="244" y="102" font-size="11.5">processos e o sistema.</text>
+        <text class="mu" x="244" y="160" font-size="11">Neste estudo: as pessoas no pico</text>
+        <rect class="bx" x="454" y="14" width="214" height="172"/>
+        <rect class="hd-ink" x="454" y="14" width="214" height="34"/>
+        <text class="b t-ground" x="466" y="36" font-size="11.5">7.1.3 · Infraestrutura</text>
+        <text x="466" y="70" font-size="11.5">Determinar, prover e manter</text>
+        <text x="466" y="86" font-size="11.5">prédios, equipamentos,</text>
+        <text x="466" y="102" font-size="11.5">transporte e tecnologia da</text>
+        <text x="466" y="118" font-size="11.5">informação.</text>
+        <text class="mu" x="466" y="160" font-size="11">Neste estudo: a preventiva e a</text>
+        <text class="mu" x="466" y="175" font-size="11">contingência</text>
+        <rect class="bx" x="676" y="14" width="214" height="172"/>
+        <rect class="hd-ink" x="676" y="14" width="214" height="34"/>
+        <text class="b t-ground" x="688" y="36" font-size="11.5">7.1.4 · Ambiente</text>
+        <text x="688" y="70" font-size="11.5">Determinar, prover e manter o</text>
+        <text x="688" y="86" font-size="11.5">ambiente necessário: fatores</text>
+        <text x="688" y="102" font-size="11.5">físicos, sociais e psicológicos.</text>
+        <text class="mu" x="688" y="160" font-size="11">Neste estudo: os fatores com</text>
+        <text class="mu" x="688" y="175" font-size="11">limite</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 8.</b> O que a norma pede e onde este estudo responde. O texto da figura é um resumo, com palavras próprias.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:10%">Item</th><th style="width:32%">O que pede, em resumo</th><th style="width:27%">O que isso significa</th><th>Evidências que o auditor procura</th></tr></thead>
+      <tbody>
+        <tr><td class="num">7.1.1</td><td>Determinar e prover os recursos do sistema, considerando as capacidades e as restrições dos recursos internos e o que obter de provedores externos</td><td>Saber do que o sistema precisa, e de onde vem.</td><td>Orçamento, plano de investimento, contratos de serviço.</td></tr>
+        <tr><td class="num">7.1.2</td><td>Determinar e prover as pessoas necessárias para operar o sistema e controlar os processos</td><td>Gente suficiente, e qualificada, onde o trabalho acontece.</td><td>Quadro de pessoal, escalas, conta do dimensionamento.</td></tr>
+        <tr><td class="num">7.1.3</td><td>Determinar, prover e manter a infraestrutura: prédios, equipamentos, software, transporte, tecnologia da informação e comunicação</td><td>O que o processo usa funciona, e é cuidado antes de quebrar.</td><td>Lista de equipamentos, plano e registros de manutenção, cópias de segurança.</td></tr>
+        <tr><td class="num">7.1.4</td><td>Determinar, prover e manter o ambiente necessário para a operação, com a combinação de fatores humanos e físicos</td><td>As condições que afetam o produto estão sob controle.</td><td>Fatores com limite, registros de medição, ações.</td></tr>
+        <tr><td class="num">6.1</td><td>Abordar os riscos e as oportunidades</td><td>A parada de um item crítico é um risco, e a contingência é a resposta.</td><td>Matriz de riscos com os itens críticos.</td></tr>
+        <tr><td class="num">9.3.3</td><td>Incluir nas saídas da análise crítica as necessidades de recursos</td><td>A direção decide os recursos com os dados das listas.</td><td>Ata da análise crítica com as decisões.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pair">
+    <div class="box">
+      <h4>O que a ISO 9001 exige</h4>
+      <ul>
+        <li>Recursos e pessoas determinados e providos.</li>
+        <li>Infraestrutura determinada, provida e mantida.</li>
+        <li>Ambiente determinado, provido e mantido.</li>
+        <li>As necessidades de recursos tratadas pela direção.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h4>O que a ISO 9001 não exige</h4>
+      <ul>
+        <li>Um registro de manutenção específico, embora seja a evidência mais comum.</li>
+        <li>Uma fórmula de dimensionamento ou de disponibilidade.</li>
+        <li>As situações, as metas e as regras deste material.</li>
+        <li>Controlar fatores do ambiente que não afetam o produto.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="note">
+    <h4>Pontos de atenção</h4>
+    <p>As constatações mais comuns são a preventiva atrasada em equipamento crítico, a quebra sem registro, a cópia de segurança nunca testada e o fator do ambiente sem limite. O auditor costuma escolher um equipamento no posto, pedir o plano de manutenção e o último registro, e perguntar ao operador: "o que você faz se ele parar agora?". Nas pessoas, compara a escala com o volume do dia mais cheio da semana.</p>
+    <p>Este módulo usa a numeração da ISO 9001:2015 e resume os textos com palavras próprias. Confira sempre a edição vigente da norma antes de citar um requisito em relatório.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 12 ============================ -->
+<section id="ronda">
+  <p class="eyebrow">Módulo 12</p>
+  <h2>A ronda dos recursos</h2>
+  <p>Uma vez por mês, quem responde pela área faz uma ronda de 30 minutos: confere a escala do pico, passa pelos equipamentos críticos, mede o ambiente nos postos e decide o que fazer.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 136" role="img" aria-label="Distribuição de uma ronda dos recursos de 30 minutos: 5 minutos para a escala do pico, 10 minutos para os equipamentos críticos, 10 minutos para o ambiente nos postos e 5 minutos para as decisões.">
+        <g font-size="11.5" text-anchor="middle">
+          <rect class="bx" x="60" y="24" width="130" height="56"/><text x="125" y="49">Escala do</text><text x="125" y="64">pico</text>
+          <rect class="hd-ink gap2" x="190" y="24" width="260" height="56"/><text class="t-ground b" x="320" y="49">Equipamentos críticos:</text><text class="t-ground b" x="320" y="64">preventiva e contingência</text>
+          <rect class="hd-d gap2" x="450" y="24" width="260" height="56"/><text class="on b" x="580" y="49">Ambiente nos postos:</text><text class="on b" x="580" y="64">medir e perguntar</text>
+          <rect class="bx" x="710" y="24" width="130" height="56"/><text x="775" y="56">Decisões</text>
+        </g>
+        <g class="ln-mu" stroke-width="1">
+          <line x1="60" y1="82" x2="60" y2="94"/><line x1="190" y1="82" x2="190" y2="94"/><line x1="450" y1="82" x2="450" y2="94"/>
+          <line x1="710" y1="82" x2="710" y2="94"/><line x1="840" y1="82" x2="840" y2="94"/>
+        </g>
+        <g class="mono" font-size="10.5" text-anchor="middle">
+          <text class="mu" x="60" y="112">0</text><text class="mu" x="190" y="112">5</text><text class="mu" x="450" y="112">15</text>
+          <text class="mu" x="710" y="112">25</text><text class="mu" x="840" y="112">30</text>
+        </g>
+      </svg>
+    </div>
+    <figcaption><b>Figura 9.</b> Uma ronda de 30 minutos, desenhada em escala. Os equipamentos e o ambiente ocupam dois terços do tempo, e acontecem no posto.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Momento</th><th style="width:42%">O que fazer</th><th>Perguntas que ajudam</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Escala do pico</strong></td><td>A conta das pessoas do dia mais cheio, os qualificados, as ausências do mês.</td><td>"Quem cobre se alguém faltar na sexta?"</td></tr>
+        <tr><td><strong>Equipamentos críticos</strong></td><td>Preventivas atrasadas e vencendo, quebras do mês, contingência no posto.</td><td>"Se este parar agora, o que você faz?"</td></tr>
+        <tr><td><strong>Ambiente nos postos</strong></td><td>Medir na hora o que tem limite. Ouvir quem trabalha sobre calor, pausas e carga.</td><td>"O que atrapalha o seu trabalho no pico?"</td></tr>
+        <tr><td><strong>Decisões</strong></td><td>Escala, preventivas, compras, ações de ambiente, com responsável e prazo.</td><td>"O que precisa ir para a análise crítica?"</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>No posto, peça ao operador para mostrar a contingência do equipamento. Se ele precisar procurar, ela ainda não existe na prática.</p>
+
+  <h3>Checklist dos recursos, da infraestrutura e do ambiente</h3>
+  <p>Marque os itens conforme revisa os seus recursos. As marcações ficam salvas neste navegador.</p>
+  <ol class="check" id="checklist">
+    <li><label><input type="checkbox" id="ck-1"><span>As pessoas de cada processo estão dimensionadas pela demanda do pico, e não pelo costume.</span></label></li>
+    <li><label><input type="checkbox" id="ck-2"><span>Cada função e turno tem ao menos uma pessoa qualificada na escala.</span></label></li>
+    <li><label><input type="checkbox" id="ck-3"><span>Há um plano para as ausências: férias, faltas e afastamentos.</span></label></li>
+    <li><label><input type="checkbox" id="ck-4"><span>A infraestrutura que afeta o produto está listada, com a criticidade de cada item.</span></label></li>
+    <li><label><input type="checkbox" id="ck-5"><span>Cada item crítico tem manutenção preventiva com intervalo, feita no prazo.</span></label></li>
+    <li><label><input type="checkbox" id="ck-6"><span>Cada item crítico tem uma contingência escrita para quando parar.</span></label></li>
+    <li><label><input type="checkbox" id="ck-7"><span>As paradas são registradas com o tempo parado, a causa e a ação.</span></label></li>
+    <li><label><input type="checkbox" id="ck-8"><span>A disponibilidade dos itens críticos é acompanhada contra uma meta.</span></label></li>
+    <li><label><input type="checkbox" id="ck-9"><span>Quando uma parada afeta o produto, ele é avaliado e tratado como não conforme.</span></label></li>
+    <li><label><input type="checkbox" id="ck-10"><span>Os sistemas de informação têm cópia de segurança, e a restauração é testada.</span></label></li>
+    <li><label><input type="checkbox" id="ck-11"><span>Os fatores do ambiente que afetam o produto estão definidos, físicos, sociais e psicológicos, com limite e controle.</span></label></li>
+    <li><label><input type="checkbox" id="ck-12"><span>O ambiente é medido, e o que está fora do limite tem ação.</span></label></li>
+  </ol>
+  <div class="bar"><span><b id="ck-count">0</b> de 12 itens marcados</span><button class="btn" id="ck-reset" type="button">Limpar marcações</button></div>
+</section>
+
+<!-- ============================ MÓDULO 13 ============================ -->
+<section id="pratique">
+  <p class="eyebrow">Módulo 13</p>
+  <h2>Pratique</h2>
+  <h3>Exercício 1. Onde está a falha?</h3>
+  <p>Cada item descreve uma situação. Diga onde está a falha: nas pessoas (7.1.2), na infraestrutura (7.1.3), no ambiente (7.1.4), ou se está em ordem.</p>
+  <div class="quiz" id="quiz"></div>
+  <div class="bar"><span>Acertos: <b id="qz-score">0</b> de <b id="qz-total">12</b></span><span>Respondidos: <b id="qz-done">0</b></span><button class="btn" id="qz-reset" type="button">Recomeçar</button></div>
+
+  <h3>Exercício 2. Monte o controle dos seus recursos</h3>
+  <p>Abra a planilha de apoio e siga o roteiro.</p>
+  <ol>
+    <li>Na aba Pessoas, liste as funções do processo no período de maior movimento, com a demanda do pico, a produtividade, as pessoas escaladas e as qualificadas.</li>
+    <li>Na aba Infraestrutura, informe o período e a meta de disponibilidade, e liste os itens com a criticidade, a preventiva, a contingência e as horas programadas.</li>
+    <li>Na aba Manutenções, lance as preventivas e as corretivas do período, com o tempo parado, a causa, a ação e o produto afetado.</li>
+    <li>Na aba Ambiente, liste os fatores que afetam o produto, com o limite, o controle e a última medição.</li>
+    <li>Leia a aba Painel: a falta de gente, as preventivas atrasadas, os itens abaixo da meta, os registros incompletos e o ambiente fora do limite.</li>
+    <li>Passe o checklist do módulo 12.</li>
+  </ol>
+  <p>Depois, escolha o equipamento mais crítico da sua área e pergunte a quem o opera o que fazer se ele parar agora. A resposta diz se a contingência existe.</p>
+</section>
+
+<!-- ============================ MÓDULO 14 ============================ -->
+<section id="planilha">
+  <p class="eyebrow">Módulo 14</p>
+  <h2>A planilha de apoio</h2>
+  <p>Este treinamento acompanha o arquivo <a id="xlsx-ref" href="Recursos-modelo.xlsx">Recursos-modelo.xlsx</a>, que fica na mesma pasta. As células em amarelo-claro são para preenchimento. As células cinza são calculadas.</p>
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Aba</th><th>Para que serve</th><th style="width:36%">O que ela calcula</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Instruções</strong></td><td>Legenda de cores, as regras de cálculo, ordem de preenchimento e premissas do modelo.</td><td>Nada. É só leitura.</td></tr>
+        <tr><td><strong>Pessoas</strong></td><td>Até 30 funções e períodos, com a demanda do pico, a produtividade, as pessoas escaladas e as qualificadas.</td><td>As pessoas necessárias, a folga ou a falta, a situação e a conferência.</td></tr>
+        <tr><td><strong>Infraestrutura</strong></td><td>O período, a meta e até 40 itens, com tipo, local, criticidade, preventiva, contingência e horas programadas.</td><td>A próxima preventiva, a situação, as quebras, as horas paradas, a disponibilidade e a conferência.</td></tr>
+        <tr><td><strong>Manutenções</strong></td><td>Até 80 registros de preventivas e corretivas, com o tempo parado, a causa, a ação e o produto afetado.</td><td>O nome do item e a conferência.</td></tr>
+        <tr><td><strong>Ambiente</strong></td><td>Até 30 fatores, com o tipo, o motivo, o limite, o controle, a medição e a ação.</td><td>A situação e a conferência.</td></tr>
+        <tr><td><strong>Painel</strong></td><td>Nada a preencher.</td><td>Os números das quatro abas, o gráfico das preventivas e o aviso.</td></tr>
+        <tr><td><strong>Checklist</strong></td><td>Os mesmos 12 itens do módulo 12, com status Sim, Parcial ou Não.</td><td>Percentual atendido e situação da validação.</td></tr>
+        <tr><td><strong>Exemplo 1 e Exemplo 2</strong></td><td>As pessoas, a infraestrutura, as manutenções e o ambiente da pizzaria e da indústria.</td><td>As mesmas contas das abas de entrada.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ GLOSSÁRIO ============================ -->
+<section id="glossario">
+  <p class="eyebrow">Referência</p>
+  <h2>Glossário</h2>
+  <dl class="gloss">
+    <div><dt>Ambiente para a operação dos processos</dt><dd>As condições do lugar de trabalho, físicas, sociais e psicológicas, que afetam a conformidade do produto.</dd></div>
+    <div><dt>Contingência</dt><dd>O que fazer quando um item crítico para, decidido e escrito antes da parada.</dd></div>
+    <div><dt>Criticidade</dt><dd>O quanto a parada de um item afeta o produto ou a entrega: alta, média ou baixa.</dd></div>
+    <div><dt>Demanda no pico</dt><dd>O maior volume de trabalho que chega num intervalo, como uma hora ou um turno.</dd></div>
+    <div><dt>Disponibilidade</dt><dd>A parte das horas programadas em que o item esteve pronto para produzir.</dd></div>
+    <div><dt>Infraestrutura</dt><dd>Prédios, instalações, equipamentos, veículos, sistemas e comunicação usados pelos processos.</dd></div>
+    <div><dt>Manutenção corretiva</dt><dd>O reparo feito depois da quebra.</dd></div>
+    <div><dt>Manutenção preventiva</dt><dd>O cuidado feito antes da quebra, num intervalo definido.</dd></div>
+    <div><dt>Produtividade</dt><dd>Quanto uma pessoa faz, com qualidade, por unidade de tempo.</dd></div>
+    <div><dt>Tempo médio de reparo</dt><dd>As horas paradas divididas pelo número de quebras. Em inglês, MTTR.</dd></div>
+    <div><dt>Tempo médio entre quebras</dt><dd>As horas funcionando divididas pelo número de quebras. Em inglês, MTBF.</dd></div>
+    <div><dt>Teste de restauração</dt><dd>A recuperação de uma cópia de segurança, feita para provar que ela funciona.</dd></div>
+  </dl>
+</section>
+
+</main>
+</div>
+
+<footer>Material de estudo. Os exemplos, documentos e números são ilustrativos e foram criados para fins didáticos. As referências às normas ISO são resumos para estudo e não substituem o texto das normas.</footer>
+</div>
+
+<script>
+(function () {
+  function read(key) { try { return JSON.parse(localStorage.getItem(key) || 'null'); } catch (e) { return null; } }
+  function write(key, val) { try { localStorage.setItem(key, JSON.stringify(val)); } catch (e) {} }
+
+  /* ---------- Checklist ---------- */
+  var boxes = Array.prototype.slice.call(document.querySelectorAll('#checklist input'));
+  var count = document.getElementById('ck-count');
+  var saved = read('recursos-checklist') || {};
+  function refreshChecks() {
+    var n = 0, state = {};
+    boxes.forEach(function (b) { if (b.checked) { n++; } state[b.id] = b.checked; });
+    count.textContent = n;
+    return state;
+  }
+  boxes.forEach(function (b) {
+    if (saved[b.id]) { b.checked = true; }
+    b.addEventListener('change', function () { write('recursos-checklist', refreshChecks()); });
+  });
+  refreshChecks();
+  document.getElementById('ck-reset').addEventListener('click', function () {
+    boxes.forEach(function (b) { b.checked = false; });
+    write('recursos-checklist', refreshChecks());
+  });
+
+  /* ---------- Exercício ---------- */
+  var KEYS = ['P', 'I', 'A', 'O'];
+  var LABEL = { P: 'Pessoas', I: 'Infraestrutura', A: 'Ambiente', O: 'Em ordem' };
+  var NAMES = { P: 'pessoas (7.1.2)', I: 'infraestrutura (7.1.3)', A: 'ambiente (7.1.4)', O: 'em ordem' };
+  var ITEMS = [
+    { t: '“Na sexta, o pico é de 29 entregas por hora. São 8 entregadores, e cada um faz 3 entregas por hora.”', a: 'P', w: '8 × 3 = 24 entregas por hora. O pico pede 10 entregadores.' },
+    { t: '“A preventiva da extrusora foi adiada duas vezes, porque a máquina não podia parar.”', a: 'I', w: 'Item crítico com a preventiva atrasada. A máquina vai parar, na hora que ela escolher.' },
+    { t: '“O salão de impressão chega a 31 °C à tarde, e a cor varia entre as bobinas.”', a: 'A', w: 'Fator físico fora do limite, com efeito no produto.' },
+    { t: '“O compressor de ar, de que todas as máquinas dependem, não tem plano para quando parar.”', a: 'I', w: 'Item crítico sem contingência.' },
+    { t: '“O termômetro de parede da cozinha é lido todo dia às 21h. Hoje marcou 28 °C, e o limite é 32 °C.”', a: 'O', w: 'Fator com limite, medição e resultado dentro.' },
+    { t: '“Os operadores da noite não fazem as pausas, e os ajustes errados se concentram de madrugada.”', a: 'A', w: 'Fator psicológico: o cansaço afeta o produto.' },
+    { t: '“Os dois atendentes do sábado começaram esta semana, e nenhum dos dois conhece o sistema de pedidos.”', a: 'P', w: 'O número está certo, mas não há ninguém qualificado na escala.' },
+    { t: '“A cópia de segurança do sistema de pedidos é feita todo dia, e nunca foi restaurada.”', a: 'I', w: 'Sistemas são infraestrutura. A restauração precisa ser testada.' },
+    { t: '“O checklist de limpeza da bancada foi cumprido em 88 % dos dias, contra o mínimo de 95 %.”', a: 'A', w: 'Fator físico fora do limite, e ainda sem ação.' },
+    { t: '“Um operador por extrusora em cada turno, todos qualificados, e um folguista treinado para as férias.”', a: 'O', w: 'Escala pelo que o processo pede, com cobertura de ausência.' },
+    { t: '“A moto de entrega 3 está sem revisão desde fevereiro.”', a: 'I', w: 'Transporte também é infraestrutura, e a preventiva está atrasada.' },
+    { t: '“A expedição tem pouca luz, e os pedidos saem com o sabor trocado.”', a: 'A', w: 'Fator físico que afeta o serviço. Precisa de limite e medição.' }
+  ];
+  var quiz = document.getElementById('quiz');
+  var score = document.getElementById('qz-score');
+  var done = document.getElementById('qz-done');
+  document.getElementById('qz-total').textContent = ITEMS.length;
+  var hits = 0, answered = 0;
+
+  function render() {
+    hits = 0; answered = 0; score.textContent = 0; done.textContent = 0;
+    quiz.textContent = '';
+    ITEMS.forEach(function (item, idx) {
+      var row = document.createElement('div'); row.className = 'q';
+      var p = document.createElement('p'); p.textContent = (idx + 1) + '. ' + item.t;
+      var opts = document.createElement('div'); opts.className = 'opts';
+      opts.setAttribute('role', 'group'); opts.setAttribute('aria-label', 'Onde está a falha no item ' + (idx + 1));
+      var why = document.createElement('p'); why.className = 'why'; why.hidden = true;
+      KEYS.forEach(function (k) {
+        var b = document.createElement('button');
+        b.type = 'button'; b.textContent = LABEL[k]; b.id = 'qz-' + idx + '-' + k;
+        b.setAttribute('data-k', k);
+        b.addEventListener('click', function () {
+          var ok = k === item.a;
+          Array.prototype.forEach.call(opts.children, function (o) {
+            o.disabled = true;
+            if (o.getAttribute('data-k') === item.a) { o.className = 'right'; }
+          });
+          if (!ok) { b.className = 'wrong'; }
+          var lead = document.createElement('b');
+          lead.textContent = (ok ? 'Certo. ' : 'A resposta é: ' + NAMES[item.a] + '. ');
+          why.textContent = ''; why.appendChild(lead); why.appendChild(document.createTextNode(item.w));
+          why.className = 'why ' + (ok ? 'ok' : 'no'); why.hidden = false;
+          answered++; if (ok) { hits++; }
+          score.textContent = hits; done.textContent = answered;
+        });
+        opts.appendChild(b);
+      });
+      row.appendChild(p); row.appendChild(opts); row.appendChild(why);
+      quiz.appendChild(row);
+    });
+  }
+  render();
+  document.getElementById('qz-reset').addEventListener('click', render);
+
+  /* ---------- Gráfico: leitura dos valores ---------- */
+  var fig = document.getElementById('fig-bars');
+  var tip = document.getElementById('bars-tip');
+  var svg = document.getElementById('bars');
+  var bars = document.querySelectorAll('#bars .bar');
+  function hide() {
+    tip.hidden = true;
+    Array.prototype.forEach.call(bars, function (b) { b.removeAttribute('opacity'); });
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('#bars .hit'), function (r) {
+    function show() {
+      var d = r.dataset;
+      Array.prototype.forEach.call(bars, function (b) {
+        b.setAttribute('opacity', b.getAttribute('data-k') === d.k ? '1' : '.4');
+      });
+      tip.textContent = '';
+      var strong = document.createElement('b'); strong.textContent = d.s + ' · ' + d.d;
+      tip.appendChild(strong);
+      tip.appendChild(document.createTextNode(d.n + ' · ' + d.p));
+      var box = fig.getBoundingClientRect();
+      var pt = svg.createSVGPoint(); pt.x = parseFloat(d.cx); pt.y = parseFloat(d.cy);
+      var scr = pt.matrixTransform(svg.getScreenCTM());
+      tip.style.left = Math.min(Math.max(scr.x - box.left, 180), box.width - 180) + 'px';
+      tip.style.top = (scr.y - box.top + 4) + 'px';
+      tip.hidden = false;
+    }
+    r.addEventListener('pointerenter', show);
+    r.addEventListener('focus', show);
+    r.addEventListener('pointerleave', hide);
+    r.addEventListener('blur', hide);
+  });
+})();
+</script>
+</body>
+</html>

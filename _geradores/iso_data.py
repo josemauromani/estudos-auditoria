@@ -49,6 +49,7 @@ ESTUDOS = {
     "proj": ("Projeto e desenvolvimento", "../Projeto/treinamento-projeto.html"),
     "esc": ("Escopo e liderança", "../Escopo/treinamento-escopo.html"),
     "cal": ("Calibração e recursos de medição", "../Calibracao/treinamento-calibracao.html"),
+    "rec": ("Recursos, infraestrutura e ambiente", "../Recursos/treinamento-recursos.html"),
 }
 
 
@@ -114,15 +115,15 @@ REQ = _req([
     ("7.1.1", "Recursos: generalidades e pessoas (7.1.1 e 7.1.2)",
      "Determinar e prover os recursos necessários, considerando o que existe internamente e o que precisa vir de fora. Determinar e prover as pessoas necessárias para operar o sistema e os processos.",
      "Os recursos e as pessoas são suficientes para o que foi planejado?",
-     "Orçamento, quadro de pessoal, escalas de trabalho.", ()),
+     "Orçamento, quadro de pessoal, escalas de trabalho.", ("rec",)),
     ("7.1.3", "Infraestrutura",
      "Determinar, prover e manter a infraestrutura necessária: edifícios, equipamentos, software, transporte e tecnologia da informação.",
      "Como os equipamentos e os sistemas são mantidos?",
-     "Plano e registros de manutenção, cópias de segurança.", ()),
+     "Plano e registros de manutenção, cópias de segurança.", ("rec",)),
     ("7.1.4", "Ambiente para a operação dos processos",
      "Determinar, prover e manter o ambiente necessário, com os fatores físicos, sociais e psicológicos que afetam a conformidade.",
      "Que condições do ambiente afetam o produto ou o serviço?",
-     "Controles de temperatura, limpeza, ruído e carga de trabalho.", ()),
+     "Controles de temperatura, limpeza, ruído e carga de trabalho.", ("rec",)),
     ("7.1.5", "Recursos de monitoramento e medição",
      "Assegurar que os recursos usados para medir e monitorar sejam adequados e mantidos. Quando a rastreabilidade da medição for requisito, calibrar ou verificar os instrumentos, identificá-los e protegê-los.",
      "Como se sabe que os instrumentos medem certo?",
