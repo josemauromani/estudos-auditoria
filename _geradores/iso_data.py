@@ -50,6 +50,7 @@ ESTUDOS = {
     "esc": ("Escopo e liderança", "../Escopo/treinamento-escopo.html"),
     "cal": ("Calibração e recursos de medição", "../Calibracao/treinamento-calibracao.html"),
     "rec": ("Recursos, infraestrutura e ambiente", "../Recursos/treinamento-recursos.html"),
+    "con": ("Conhecimento organizacional e pós-entrega", "../Conhecimento/treinamento-conhecimento.html"),
 }
 
 
@@ -131,7 +132,7 @@ REQ = _req([
     ("7.1.6", "Conhecimento organizacional",
      "Determinar o conhecimento necessário para operar os processos, mantê-lo e torná-lo disponível. Diante de mudanças, avaliar como obter o conhecimento que falta.",
      "O que acontece se a pessoa que sabe fazer sair da organização?",
-     "Instruções, lições aprendidas, treinamento no posto de trabalho.", ()),
+     "Instruções, lições aprendidas, treinamento no posto de trabalho.", ("con",)),
     ("7.2", "Competência",
      "Determinar a competência necessária das pessoas que afetam o desempenho do sistema, assegurar que elas sejam competentes, agir para obter a competência que falta e avaliar a eficácia dessas ações.",
      "Que competência o cargo exige, e como se sabe que a pessoa a tem?",
@@ -204,7 +205,7 @@ REQ = _req([
     ("8.5.5", "Atividades pós-entrega",
      "Atender aos requisitos das atividades pós-entrega, considerando os requisitos legais, as consequências indesejadas, a vida útil, os requisitos do cliente e o retorno recebido.",
      "O que a organização faz depois da entrega?",
-     "Garantia, assistência técnica, atendimento a reclamações.", ()),
+     "Garantia, assistência técnica, atendimento a reclamações.", ("con",)),
     ("8.5.6", "Controle de mudanças",
      "Analisar e controlar as mudanças na produção ou na provisão do serviço, para manter a conformidade. Registrar o resultado da análise, quem autorizou e as ações necessárias.",
      "Quem autoriza uma mudança no processo, e onde isso fica registrado?",

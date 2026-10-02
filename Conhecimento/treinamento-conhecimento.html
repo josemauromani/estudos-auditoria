@@ -1,0 +1,1409 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Conhecimento e pós-entrega</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<style>
+:root{
+  --ground:#F3F6F7; --surface:#FFFFFF; --sunk:#E9EEF0; --ink:#16242E; --muted:#566672; --rule:#D3DBE0;
+  --accent:#2B5C8A;
+  --s1:#2A6FB0; --s1-tint:#DCE8F3;
+  --s2:#D19A2E; --s2-tint:#F8EBCB;
+  --s3:#B0413E; --s3-tint:#F5DEDC;
+  --on-s2:#16242E;
+  --p:#2B5C8A; --p-tint:#DCE8F3;
+  --d:#A96A12; --d-tint:#F6E8CF;
+  --c:#1E7B73; --c-tint:#D9EEEB;
+  --a:#B0413E; --a-tint:#F5DEDC;
+  --on-hue:#FFFFFF;
+  --good:#1F7A4D; --good-tint:#DDF1E5;
+  --bad:#B0413E; --bad-tint:#F5DEDC;
+  --display:"Barlow Semi Condensed","Arial Narrow",Arial,sans-serif;
+  --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --ground:#0F171C; --surface:#172229; --sunk:#1E2B33; --ink:#E4EAED; --muted:#9BABB6; --rule:#2B3A44;
+    --accent:#86B7E3;
+  --s1:#4F97DB; --s1-tint:#1B2F42;
+  --s2:#B58E14; --s2-tint:#3A2C12;
+  --s3:#D14B45; --s3-tint:#3D1F1E;
+  --on-s2:#0F171C;
+    --p:#86B7E3; --p-tint:#1B2F42;
+    --d:#E2AC4F; --d-tint:#3A2C12;
+    --c:#5FC6BA; --c-tint:#15332F;
+    --a:#EC8E89; --a-tint:#3D1F1E;
+    --on-hue:#0F171C;
+    --good:#6FCF9B; --good-tint:#163326;
+    --bad:#EC8E89; --bad-tint:#3D1F1E;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --ground:#0F171C; --surface:#172229; --sunk:#1E2B33; --ink:#E4EAED; --muted:#9BABB6; --rule:#2B3A44;
+  --accent:#86B7E3;
+  --s1:#4F97DB; --s1-tint:#1B2F42;
+  --s2:#B58E14; --s2-tint:#3A2C12;
+  --s3:#D14B45; --s3-tint:#3D1F1E;
+  --on-s2:#0F171C;
+  --p:#86B7E3; --p-tint:#1B2F42;
+  --d:#E2AC4F; --d-tint:#3A2C12;
+  --c:#5FC6BA; --c-tint:#15332F;
+  --a:#EC8E89; --a-tint:#3D1F1E;
+  --on-hue:#0F171C;
+  --good:#6FCF9B; --good-tint:#163326;
+  --bad:#EC8E89; --bad-tint:#3D1F1E;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--ground);color:var(--ink);font:400 16px/1.65 var(--body);-webkit-text-size-adjust:100%}
+a{color:var(--accent);text-underline-offset:3px}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.page{max-width:1180px;margin-inline:auto;padding-inline:20px;padding-block:36px 80px}
+
+/* Cabeçalho */
+.mast{display:flex;flex-direction:column;gap:18px;padding-bottom:32px;border-bottom:1px solid var(--rule)}
+.tiles{display:flex;gap:6px}
+.tiles span{width:44px;height:44px;display:grid;place-items:center;font:700 24px/1 var(--display);color:var(--on-hue)}
+.tiles .p{background:var(--p)} .tiles .d{background:var(--d)} .tiles .c{background:var(--c)} .tiles .a{background:var(--a)}
+h1{font:700 clamp(2.3rem,6vw,3.6rem)/1.02 var(--display);letter-spacing:-.01em;margin:0;text-wrap:balance}
+.lead{font-size:1.15rem;line-height:1.55;max-width:62ch;margin:0;color:var(--ink)}
+.meta{display:flex;flex-direction:row;flex-wrap:wrap;gap:6px 22px;font:400 .8rem/1.4 var(--mono);color:var(--muted);margin:0;padding:0;list-style:none}
+
+/* Estrutura */
+.layout{display:grid;grid-template-columns:minmax(0,1fr);gap:32px;padding-top:32px}
+.toc{font-size:.92rem}
+.toc h2{font:500 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+.toc ol{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:2px 20px;counter-reset:toc}
+.toc li{counter-increment:toc}
+.toc a{display:flex;gap:10px;padding:5px 0;color:var(--ink);text-decoration:none;line-height:1.35}
+.toc a::before{content:counter(toc,decimal-leading-zero);font:400 .75rem/1.7 var(--mono);color:var(--muted)}
+.toc a:hover{color:var(--accent);text-decoration:underline}
+@media (min-width:1020px){
+  .layout{grid-template-columns:200px minmax(0,1fr);gap:64px}
+  .toc{position:sticky;top:calc(env(safe-area-inset-top,0px) + 24px);align-self:start}
+  .toc ol{grid-template-columns:1fr}
+}
+main{display:flex;flex-direction:column;gap:72px;min-width:0}
+section{display:flex;flex-direction:column;gap:20px;scroll-margin-top:24px}
+.eyebrow{font:500 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0}
+h2{font:700 clamp(1.7rem,4vw,2.2rem)/1.1 var(--display);margin:0;text-wrap:balance}
+h3{font:600 1.3rem/1.2 var(--display);margin:12px 0 0;text-wrap:balance}
+h4{font:600 .95rem/1.3 var(--body);margin:0}
+p{margin:0}
+section > p, section > ul, section > ol, section > h3{max-width:68ch}
+ul,ol{margin:0;padding-left:1.25em;display:flex;flex-direction:column;gap:6px}
+strong{font-weight:600}
+code{font:400 .88em var(--mono);background:var(--sunk);padding:1px 5px;border-radius:3px}
+
+/* Letras coloridas no texto */
+.k{display:inline-grid;place-items:center;width:1.45em;height:1.45em;font:700 .85em/1 var(--display);color:var(--on-hue);vertical-align:.05em}
+.k.p{background:var(--p)} .k.d{background:var(--d)} .k.c{background:var(--c)} .k.a{background:var(--a)}
+
+/* Figuras */
+figure{margin:0;display:flex;flex-direction:column;gap:10px;position:relative}
+.scroll{overflow-x:auto;background:var(--surface);border:1px solid var(--rule);padding:18px}
+.scroll svg{display:block;width:100%;min-width:820px;height:auto;color:var(--ink)}
+figcaption{font-size:.86rem;line-height:1.5;color:var(--muted);max-width:72ch}
+figcaption b{color:var(--ink);font-weight:600}
+svg text{font-family:var(--body);fill:var(--ink)}
+svg .disp{font-family:var(--display);font-weight:700}
+svg .mono{font-family:var(--mono);letter-spacing:.08em}
+svg .on{fill:var(--on-hue)}
+svg .mu{fill:var(--muted)}
+svg .b{font-weight:600}
+svg .ln{stroke:var(--ink);stroke-width:1.5;fill:none}
+svg .ln-mu{stroke:var(--muted);stroke-width:1.5;fill:none}
+svg .ln-bold{stroke:var(--ink);stroke-width:3;fill:none;stroke-linejoin:round;stroke-linecap:round}
+svg .dash{stroke-dasharray:5 4}
+svg .ah{fill:var(--ink)} svg .ah-mu{fill:var(--muted)}
+svg .bx{fill:var(--surface);stroke:var(--rule);stroke-width:1.5}
+svg .bx-ink{fill:var(--ink);stroke:var(--ink)}
+svg .t-ground{fill:var(--ground)}
+svg .bx-out{fill:none;stroke:var(--muted);stroke-width:1.5;stroke-dasharray:5 4}
+svg .bx-p{fill:var(--p-tint);stroke:var(--p);stroke-width:1.5} svg .hd-p{fill:var(--p)}
+svg .bx-d{fill:var(--d-tint);stroke:var(--d);stroke-width:1.5} svg .hd-d{fill:var(--d)}
+svg .bx-c{fill:var(--c-tint);stroke:var(--c);stroke-width:1.5} svg .hd-c{fill:var(--c)}
+svg .bx-a{fill:var(--a-tint);stroke:var(--a);stroke-width:1.5} svg .hd-a{fill:var(--a)}
+svg .gap{stroke:var(--surface);stroke-width:4}
+svg .gap2{stroke:var(--surface);stroke-width:2}
+svg .hub{fill:var(--surface)}
+
+/* Gráfico */
+svg .grid{stroke:var(--rule);stroke-width:1}
+svg .band{fill:var(--sunk)}
+svg .series{stroke:var(--accent);stroke-width:2;fill:none;stroke-linejoin:round;stroke-linecap:round}
+svg .pt{fill:var(--accent);stroke:var(--surface);stroke-width:2}
+svg .pt.on-hit{stroke:var(--ink)}
+svg .goal{stroke:var(--muted);stroke-width:1.5;stroke-dasharray:6 4;fill:none}
+svg .xh{stroke:var(--muted);stroke-width:1}
+svg .hit{fill:transparent;cursor:crosshair;outline:none}
+svg .root{fill:var(--accent);stroke:var(--surface);stroke-width:2}
+.tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--ground);padding:6px 10px;font-size:.78rem;line-height:1.4;transform:translate(-50%,calc(-100% - 14px));white-space:nowrap;z-index:2}
+.tip b{display:block;font:600 1.05rem/1.2 var(--body)}
+details.data{font-size:.88rem}
+details.data summary{cursor:pointer;font:400 .82rem var(--mono);color:var(--muted);padding:4px 0}
+details.data .tbl{margin-top:8px}
+details.data table{min-width:420px}
+
+/* Tabelas */
+.tbl{overflow-x:auto;border:1px solid var(--rule);background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:780px;font-size:.88rem;line-height:1.4}
+th,td{padding:9px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--rule)}
+tr:last-child > td{border-bottom:0}
+thead th{font:600 .8rem/1.3 var(--body);background:var(--sunk)}
+td.num{font-variant-numeric:tabular-nums;white-space:nowrap;font-family:var(--mono);font-size:.82rem}
+
+/* Situações */
+.chip{display:inline-block;padding:2px 8px;font:600 .76rem/1.45 var(--body);color:var(--on-hue);white-space:nowrap}
+.chip.s1{background:var(--s1)} .chip.s2{background:var(--s2);color:var(--on-s2)} .chip.s3{background:var(--s3)}
+.chip.sl{background:var(--sunk);color:var(--ink);box-shadow:inset 0 0 0 1px var(--rule)}
+svg .hd-ink{fill:var(--ink)}
+svg .f1{fill:var(--s1)} svg .f2{fill:var(--s2)} svg .f3{fill:var(--s3)} svg .f0{fill:var(--muted)}
+svg .bx-s1{fill:var(--s1-tint);stroke:var(--s1);stroke-width:1.5} svg .bx-s2{fill:var(--s2-tint);stroke:var(--s2);stroke-width:1.5} svg .bx-s3{fill:var(--s3-tint);stroke:var(--s3);stroke-width:1.5}
+svg .tick{stroke:var(--ink);stroke-width:2.5}
+svg .halo{paint-order:stroke;stroke:var(--surface);stroke-width:5px;stroke-linejoin:round}
+svg .hit:focus-visible{stroke:var(--accent);stroke-width:2}
+
+/* Tabelas dos exemplos */
+table.aud{font-size:.8rem;min-width:960px;line-height:1.4}
+table.aud th, table.aud td{padding:8px 9px}
+table.aud td.n{white-space:nowrap;font-weight:600;color:var(--muted)}
+table.aud td.c, table.aud th.c{text-align:center;font-variant-numeric:tabular-nums}
+table.aud td.no{background:var(--s3-tint)}
+table.aud td small, table.aud th small{display:block;color:var(--muted);font-size:.76rem;margin-top:3px;font-weight:400}
+table.aud caption{caption-side:top;text-align:left;padding:10px 12px;font:500 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);background:var(--sunk)}
+
+/* Ficha da organização (acima de cada exemplo) */
+.ficha{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:0;border:1px solid var(--rule);background:var(--surface)}
+.ficha div{padding:12px 14px;border-right:1px solid var(--rule);border-bottom:1px solid var(--rule);margin:0 -1px -1px 0}
+.ficha dt{font:500 .68rem/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.ficha dd{margin:0;font-size:.9rem;line-height:1.4}
+dl{margin:0}
+
+/* Blocos */
+.pair{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.box{background:var(--surface);border:1px solid var(--rule);padding:18px 20px;display:flex;flex-direction:column;gap:10px}
+.box h4{font:600 1.1rem/1.2 var(--display)}
+.box ul{font-size:.93rem}
+.note{background:var(--sunk);padding:16px 20px;max-width:72ch;font-size:.94rem;display:flex;flex-direction:column;gap:6px}
+.note h4{font:500 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+
+/* Passo a passo */
+.steps{list-style:none;padding:0;counter-reset:st;gap:0;max-width:none;border-top:1px solid var(--rule)}
+.steps li{counter-increment:st;display:grid;grid-template-columns:44px minmax(0,1fr);gap:4px 12px;padding:16px 0;border-bottom:1px solid var(--rule)}
+.steps li::before{content:counter(st);font:700 1.7rem/1 var(--display);color:var(--muted);grid-row:span 2}
+.steps h4{font:600 1.1rem/1.25 var(--display)}
+.steps p{font-size:.95rem;max-width:64ch;grid-column:2}
+
+/* Erros comuns */
+.errs{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:0 40px;border-top:1px solid var(--rule)}
+.errs div{padding:16px 16px 16px 0;border-bottom:1px solid var(--rule);display:flex;flex-direction:column;gap:4px}
+.errs h4{font:600 1.05rem/1.25 var(--display)}
+.errs p{font-size:.92rem}
+.errs .fix{color:var(--muted)}
+.errs .fix b{color:var(--ink);font-weight:600}
+
+/* Checklist */
+.check{list-style:none;padding:0;gap:0;max-width:none;border:1px solid var(--rule);background:var(--surface)}
+.check li{border-bottom:1px solid var(--rule)}
+.check li:last-child{border-bottom:0}
+.check label{display:grid;grid-template-columns:22px minmax(0,1fr);gap:12px;padding:11px 16px;cursor:pointer;font-size:.94rem;align-items:start}
+.check input{width:18px;height:18px;margin:3px 0 0;accent-color:var(--c)}
+.check input:checked + span{color:var(--muted);text-decoration:line-through}
+.bar{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;font:400 .82rem var(--mono);color:var(--muted)}
+.bar b{color:var(--ink);font-weight:500}
+
+/* Exercício */
+.quiz{display:flex;flex-direction:column;gap:0;border:1px solid var(--rule);background:var(--surface)}
+.q{display:grid;grid-template-columns:minmax(0,1fr);gap:10px;padding:14px 16px;border-bottom:1px solid var(--rule)}
+.q:last-child{border-bottom:0}
+@media (min-width:720px){.q{grid-template-columns:minmax(0,1fr) auto;align-items:center}}
+.q p{font-size:.95rem}
+.q .why{grid-column:1/-1;font-size:.86rem;color:var(--muted)}
+.q .why b{font-weight:600}
+.q .why.ok b{color:var(--good)} .q .why.no b{color:var(--bad)}
+.opts{display:flex;gap:6px}
+.opts button{width:40px;height:40px;border:1.5px solid var(--rule);background:var(--surface);color:var(--ink);font:700 1.1rem/1 var(--display);cursor:pointer;border-radius:0}
+.opts button:hover:not(:disabled){border-color:var(--ink)}
+.opts button:disabled{cursor:default;opacity:.45}
+.opts button.right{background:var(--good-tint);border-color:var(--good);color:var(--good);opacity:1}
+.opts button.wrong{background:var(--bad-tint);border-color:var(--bad);color:var(--bad);opacity:1}
+.btn{border:1.5px solid var(--ink);background:transparent;color:var(--ink);font:500 .82rem var(--mono);padding:7px 14px;cursor:pointer;border-radius:0}
+.btn:hover{background:var(--ink);color:var(--ground)}
+
+/* Glossário */
+.gloss{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:0 40px;border-top:1px solid var(--rule)}
+.gloss div{padding:12px 0;border-bottom:1px solid var(--rule)}
+.gloss dt{font:600 1.02rem/1.3 var(--display)}
+.gloss dd{margin:2px 0 0;font-size:.9rem;color:var(--muted)}
+footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);font-size:.84rem;color:var(--muted);max-width:72ch}
+
+.quiz .opts{flex-wrap:wrap}
+.quiz .opts button{width:auto;min-width:40px;padding:0 11px;font-size:1rem}
+@media (min-width:720px){.q{grid-template-columns:minmax(0,1fr) auto}}
+</style>
+</head>
+<body>
+<div class="page" lang="pt-BR">
+
+<header class="mast">
+  <div class="tiles" aria-hidden="true"><span class="p">M</span><span class="d">P</span><span class="c">A</span></div>
+  <h1>Conhecimento organizacional e pós-entrega na prática</h1>
+  <p class="lead">Um guia de estudo para mapear o que a organização precisa saber, proteger o conhecimento que só uma pessoa tem, definir o que se faz depois da entrega e transformar cada reclamação em lição aprendida.</p>
+  <ul class="meta">
+    <li>Treinamento autoinstrucional</li>
+    <li>14 módulos</li>
+    <li>Leitura de cerca de 50 minutos</li>
+    <li>3 exemplos resolvidos e 2 exercícios</li>
+  </ul>
+</header>
+
+<div class="layout">
+
+<nav class="toc" aria-label="Sumário">
+  <h2>Sumário</h2>
+  <ol>
+    <li><a href="#o-que-e">O que é</a></li>
+    <li><a href="#quando">Quando usar</a></li>
+    <li><a href="#como">Como construir</a></li>
+    <li><a href="#mapa">O conhecimento exposto</a></li>
+    <li><a href="#transferir">Transferir e aprender</a></li>
+    <li><a href="#pos">O pós-entrega</a></li>
+    <li><a href="#exemplos">Exemplos resolvidos</a></li>
+    <li><a href="#leitura">Ler os atendimentos</a></li>
+    <li><a href="#erros">Erros comuns</a></li>
+    <li><a href="#ferramentas">O conhecimento e outras ferramentas</a></li>
+    <li><a href="#iso">Nas normas ISO</a></li>
+    <li><a href="#ronda">A ronda do aprendizado</a></li>
+    <li><a href="#pratique">Pratique</a></li>
+    <li><a href="#planilha">A planilha de apoio</a></li>
+    <li><a href="#glossario">Glossário</a></li>
+  </ol>
+</nav>
+
+<main>
+
+<!-- ============================ MÓDULO 1 ============================ -->
+<section id="o-que-e">
+  <p class="eyebrow">Módulo 1</p>
+  <h2>O que é</h2>
+  <p>Toda organização sabe coisas que não estão em lugar nenhum: o jeito de regular o forno, o ponto da massa num dia quente, o acerto de cor que o cliente aprova. Esse conhecimento faz o produto sair certo, e vai embora com quem o tem. A norma pede que a organização saiba o que precisa saber, mantenha esse conhecimento e o torne disponível.</p>
+  <p>O pós-entrega é o que a organização faz depois que o produto chega ao cliente: atende a reclamação, cumpre a garantia, presta assistência, orienta o uso. É também a melhor fonte de conhecimento novo, porque mostra o produto no uso real. Por isso os dois temas estão juntos neste estudo.</p>
+  <p>As letras do título são os três movimentos: <span class="k p">M</span> mapear o conhecimento e proteger o que está exposto, <span class="k d">P</span> definir e cumprir o pós-entrega, e <span class="k c">A</span> aprender, levando cada caso para um documento ou um treinamento.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 222" role="img" aria-label="O ciclo do aprendizado. Processo: Faz o produto com o que a organização sabe. Entrega: O produto chega ao cliente, e começa a vida útil. Pós-entrega: Reclamação, garantia, assistência, orientação de uso. Lição aprendida: O que o caso ensinou, escrito e com destino. Conhecimento: O documento, a instrução e o treinamento mudam. O conhecimento atualizado volta ao processo.">
+        <defs><marker id="a1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker><marker id="a1m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah-mu" d="M0 0 L10 5 L0 10 z"/></marker></defs>
+        <rect class="bx" x="12" y="16" width="164" height="118"/>
+        <text class="b" x="24" y="40" font-size="12.5">Processo</text>
+        <text x="24" y="63.0" font-size="10.5">Faz o produto com o que</text>
+        <text x="24" y="77.5" font-size="10.5">a organização sabe.</text>
+        <line class="ln" x1="177" y1="75.0" x2="188" y2="75.0" marker-end="url(#a1)"/>
+        <rect class="bx" x="190" y="16" width="164" height="118"/>
+        <text class="b" x="202" y="40" font-size="12.5">Entrega</text>
+        <text x="202" y="63.0" font-size="10.5">O produto chega ao</text>
+        <text x="202" y="77.5" font-size="10.5">cliente, e começa a vida</text>
+        <text x="202" y="92.0" font-size="10.5">útil.</text>
+        <line class="ln" x1="355" y1="75.0" x2="366" y2="75.0" marker-end="url(#a1)"/>
+        <rect class="bx-c" x="368" y="16" width="164" height="118"/>
+        <text class="b" x="380" y="40" font-size="12.5">Pós-entrega</text>
+        <text x="380" y="63.0" font-size="10.5">Reclamação, garantia,</text>
+        <text x="380" y="77.5" font-size="10.5">assistência, orientação</text>
+        <text x="380" y="92.0" font-size="10.5">de uso.</text>
+        <line class="ln" x1="533" y1="75.0" x2="544" y2="75.0" marker-end="url(#a1)"/>
+        <rect class="bx-d" x="546" y="16" width="164" height="118"/>
+        <text class="b" x="558" y="40" font-size="12.5">Lição aprendida</text>
+        <text x="558" y="63.0" font-size="10.5">O que o caso ensinou,</text>
+        <text x="558" y="77.5" font-size="10.5">escrito e com destino.</text>
+        <line class="ln" x1="711" y1="75.0" x2="722" y2="75.0" marker-end="url(#a1)"/>
+        <rect class="bx-p" x="724" y="16" width="164" height="118"/>
+        <text class="b" x="736" y="40" font-size="12.5">Conhecimento</text>
+        <text x="736" y="63.0" font-size="10.5">O documento, a instrução</text>
+        <text x="736" y="77.5" font-size="10.5">e o treinamento mudam.</text>
+        <path class="ln-mu dash" d="M806.0 136 V164 H94.0 V140" marker-end="url(#a1m)"/>
+        <text class="mu halo" x="450.0" y="168" font-size="11" text-anchor="middle">o conhecimento atualizado muda o jeito de fazer</text>
+        <text x="450" y="200" font-size="11.5" text-anchor="middle">O pós-entrega é a parte do ciclo que mais ensina, porque mostra o produto no uso real.</text>
+        <text class="mu" x="450" y="216" font-size="11" text-anchor="middle">Sem a lição aprendida, a reclamação é resolvida e o processo continua igual.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 1.</b> O ciclo do aprendizado. O pós-entrega abastece as lições, e as lições mudam o que a organização sabe.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Elemento</th><th style="width:40%">O que é</th><th>Exemplo</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Conhecimento organizacional</strong></td><td>O que a organização precisa saber para operar os processos e entregar produto conforme.</td><td>A regulagem da extrusora para filme de 40 µm.</td></tr>
+        <tr><td><strong>Conhecimento exposto</strong></td><td>O conhecimento importante que está só na cabeça de alguém, ou de poucas pessoas.</td><td>A regulagem do forno, que só o pizzaiolo líder conhece.</td></tr>
+        <tr><td><strong>Lição aprendida</strong></td><td>O que um caso ensinou, escrito, com destino num documento ou num treinamento.</td><td>A bolsa térmica fica fechada até a entrega.</td></tr>
+        <tr><td><strong>Pós-entrega</strong></td><td>As atividades depois da entrega: reclamação, garantia, devolução, assistência, orientação.</td><td>O laudo da reclamação técnica em 5 dias.</td></tr>
+        <tr><td><strong>Política de pós-entrega</strong></td><td>O que a organização faz depois da entrega de cada produto, com os prazos.</td><td>Troca ou devolução do valor da massa congelada.</td></tr>
+        <tr><td><strong>Prazo de resposta</strong></td><td>Em quanto tempo a organização se compromete a resolver.</td><td>No mesmo dia para a pizza entregue.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 2 ============================ -->
+<section id="quando">
+  <p class="eyebrow">Módulo 2</p>
+  <h2>Quando usar</h2>
+  <p>O mapa do conhecimento é feito uma vez e revisto quando algo muda: uma pessoa vai sair, um processo novo começa, um produto novo entra em linha. O pós-entrega acontece todo dia, e as lições são lidas todo mês.</p>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:28%">Momento</th><th style="width:38%">O que fazer</th><th>Resultado</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Alguém vai sair</strong></td><td>Ver no mapa o que essa pessoa sabe sozinha, e começar a transferência com meses de antecedência.</td><td>O conhecimento fica.</td></tr>
+        <tr><td><strong>Processo ou produto novo</strong></td><td>Listar o que é preciso saber, e de onde vem: dentro, cliente, fornecedor, consultor.</td><td>O processo começa sabendo.</td></tr>
+        <tr><td><strong>Depois de uma quebra, uma reclamação ou uma auditoria</strong></td><td>Registrar a lição, com o que se aprendeu e onde vai entrar.</td><td>O caso ensina uma vez só.</td></tr>
+        <tr><td><strong>Produto novo à venda</strong></td><td>Definir a política de pós-entrega: o que se faz, os prazos, o que a lei e o cliente pedem.</td><td>O cliente sabe o que esperar.</td></tr>
+        <tr><td><strong>A cada atendimento</strong></td><td>Registrar com o prazo, a causa e o custo.</td><td>O pós-entrega vira dado.</td></tr>
+        <tr><td><strong>Todo mês</strong></td><td>Ler o mapa, as lições pendentes e os atendimentos fora do prazo.</td><td>Nada fica parado sem dono.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pair">
+    <div class="box">
+      <h4>Sinais de conhecimento exposto</h4>
+      <ul>
+        <li>"Só ele sabe fazer isso."</li>
+        <li>O problema some nas férias de uma pessoa e volta quando ela retorna, ou o contrário.</li>
+        <li>O procedimento existe, e ninguém o segue, porque o jeito real é outro.</li>
+        <li>A mesma reclamação volta meses depois.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h4>Sinais de aprendizado funcionando</h4>
+      <ul>
+        <li>Cada lição tem um documento de destino e um responsável.</li>
+        <li>O conhecimento crítico tem pelo menos duas pessoas que fazem sozinhas.</li>
+        <li>Quem vai sair passa meses ensinando, e não uma semana.</li>
+        <li>As reclamações resolvidas têm causa registrada.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 3 ============================ -->
+<section id="como">
+  <p class="eyebrow">Módulo 3</p>
+  <h2>Como construir</h2>
+  <p>O trabalho cabe em quatro listas: o mapa do conhecimento, as lições aprendidas, a política de pós-entrega e os atendimentos. As duas primeiras olham para dentro; as duas últimas, para o cliente. O que as liga é a lição aprendida.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 236" role="img" aria-label="As cinco etapas do trabalho. Mapear o conhecimento: O que é preciso saber para cada processo dar certo, e quem sabe. Proteger o que está exposto: Escrever, treinar e acompanhar o que só uma pessoa sabe. Definir o pós-entrega: O que a organização faz depois da entrega, com prazo, pela lei e pelo cliente. Atender e registrar: Cada reclamação, garantia ou assistência, com prazo, causa e custo. Transformar em lição: O que se aprendeu vai para um documento ou um treinamento, e não fica na conversa. A lição aprendida volta ao mapa do conhecimento.">
+        <defs><marker id="a2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker><marker id="a2m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah-mu" d="M0 0 L10 5 L0 10 z"/></marker></defs>
+        <rect class="bx" x="12" y="16" width="164" height="152"/>
+        <text class="mono mu" x="24" y="36" font-size="10">ETAPA 1</text>
+        <text class="b" x="24" y="58" font-size="12.5">Mapear o</text>
+        <text class="b" x="24" y="73" font-size="12.5">conhecimento</text>
+        <text x="24" y="96.0" font-size="10.5">O que é preciso saber</text>
+        <text x="24" y="110.5" font-size="10.5">para cada processo dar</text>
+        <text x="24" y="125.0" font-size="10.5">certo, e quem sabe.</text>
+        <line class="ln" x1="177" y1="84" x2="188" y2="84" marker-end="url(#a2)"/>
+        <rect class="bx-p" x="190" y="16" width="164" height="152"/>
+        <text class="mono mu" x="202" y="36" font-size="10">ETAPA 2</text>
+        <text class="b" x="202" y="58" font-size="12.5">Proteger o que está</text>
+        <text class="b" x="202" y="73" font-size="12.5">exposto</text>
+        <text x="202" y="96.0" font-size="10.5">Escrever, treinar e</text>
+        <text x="202" y="110.5" font-size="10.5">acompanhar o que só uma</text>
+        <text x="202" y="125.0" font-size="10.5">pessoa sabe.</text>
+        <line class="ln" x1="355" y1="84" x2="366" y2="84" marker-end="url(#a2)"/>
+        <rect class="bx-d" x="368" y="16" width="164" height="152"/>
+        <text class="mono mu" x="380" y="36" font-size="10">ETAPA 3</text>
+        <text class="b" x="380" y="58" font-size="12.5">Definir o</text>
+        <text class="b" x="380" y="73" font-size="12.5">pós-entrega</text>
+        <text x="380" y="96.0" font-size="10.5">O que a organização faz</text>
+        <text x="380" y="110.5" font-size="10.5">depois da entrega, com</text>
+        <text x="380" y="125.0" font-size="10.5">prazo, pela lei e pelo</text>
+        <text x="380" y="139.5" font-size="10.5">cliente.</text>
+        <line class="ln" x1="533" y1="84" x2="544" y2="84" marker-end="url(#a2)"/>
+        <rect class="bx-c" x="546" y="16" width="164" height="152"/>
+        <text class="mono mu" x="558" y="36" font-size="10">ETAPA 4</text>
+        <text class="b" x="558" y="58" font-size="12.5">Atender e registrar</text>
+        <text x="558" y="81.0" font-size="10.5">Cada reclamação, garantia</text>
+        <text x="558" y="95.5" font-size="10.5">ou assistência, com</text>
+        <text x="558" y="110.0" font-size="10.5">prazo, causa e custo.</text>
+        <line class="ln" x1="711" y1="84" x2="722" y2="84" marker-end="url(#a2)"/>
+        <rect class="bx-ink" x="724" y="16" width="164" height="152"/>
+        <text class="mono t-ground" x="736" y="36" font-size="10">ETAPA 5</text>
+        <text class="b t-ground" x="736" y="58" font-size="12.5">Transformar em</text>
+        <text class="b t-ground" x="736" y="73" font-size="12.5">lição</text>
+        <text class="t-ground" x="736" y="96.0" font-size="10.5">O que se aprendeu vai</text>
+        <text class="t-ground" x="736" y="110.5" font-size="10.5">para um documento ou um</text>
+        <text class="t-ground" x="736" y="125.0" font-size="10.5">treinamento, e não fica</text>
+        <text class="t-ground" x="736" y="139.5" font-size="10.5">na conversa.</text>
+        <path class="ln-mu dash" d="M806.0 170 V198 H94.0 V174" marker-end="url(#a2m)"/>
+        <text class="mu halo" x="450.0" y="202" font-size="11" text-anchor="middle">a lição aprendida atualiza o mapa do conhecimento</text>
+        <text x="450" y="228" font-size="11.5" text-anchor="middle">As duas primeiras etapas olham para dentro; as três últimas, para o que acontece com o cliente.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 2.</b> As cinco etapas. A última fecha o ciclo: o caso do cliente muda o que a organização sabe.</figcaption>
+  </figure>
+
+  <h3>Passo a passo</h3>
+  <ol class="steps">
+    <li><h4>Liste o que cada processo precisa saber</h4><p>Percorra o mapa de processos e o plano de controle. Pergunte a quem faz: "o que você sabe que não está escrito?".</p></li>
+    <li><h4>Classifique cada conhecimento</h4><p>A criticidade: alta se, sem ele, o produto sai errado. A forma: só na cabeça, escrito, ou escrito e treinado. Quantas pessoas sabem fazer sozinhas.</p></li>
+    <li><h4>Marque as saídas previstas</h4><p>Aposentadoria, mudança, fim de contrato, promoção. A saída anunciada é o melhor momento para transferir, e o mais desperdiçado.</p></li>
+    <li><h4>Planeje a transferência do que está exposto</h4><p>Para cada conhecimento crítico ou em risco: o que fazer, quem faz, até quando.</p></li>
+    <li><h4>Escreva a política de pós-entrega</h4><p>Para cada produto: o que se faz, o prazo mínimo da lei ou do contrato, o prazo aceito e o prazo de resposta.</p></li>
+    <li><h4>Registre os atendimentos</h4><p>Reclamação, garantia, devolução, assistência, orientação: a data, o tipo, a resolução, a causa e o custo.</p></li>
+    <li><h4>Transforme em lição</h4><p>O que o caso ensinou, onde isso vai entrar e quem leva até lá. Lição sem destino é só um registro.</p></li>
+    <li><h4>Leia todo mês</h4><p>Conhecimentos críticos sem ação, lições paradas, atendimentos fora do prazo, políticas abaixo da lei.</p></li>
+  </ol>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:26%">Papel</th><th style="width:28%">Quem costuma ser</th><th>O que faz</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Quem sabe</strong></td><td>O operador experiente, o técnico, o líder.</td><td>Ensina, escreve com ajuda, revisa o que foi escrito.</td></tr>
+        <tr><td><strong>Quem mantém o mapa</strong></td><td>A Qualidade, ou o gerente da área.</td><td>Atualiza o mapa, acompanha as ações e as lições.</td></tr>
+        <tr><td><strong>Quem atende o cliente</strong></td><td>O atendimento, o comercial, a assistência técnica.</td><td>Registra, resolve no prazo e devolve a causa.</td></tr>
+        <tr><td><strong>Quem decide</strong></td><td>A direção.</td><td>Garante tempo para a transferência e aprova a política de pós-entrega.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 4 ============================ -->
+<section id="mapa">
+  <p class="eyebrow">Módulo 4</p>
+  <h2>O conhecimento exposto</h2>
+  <p>Um conhecimento está exposto quando a organização pode perdê-lo de uma hora para outra. Este material mede a exposição com três perguntas que somam pontos: em que forma ele está, quantas pessoas sabem fazer sozinhas e se alguma delas tem saída prevista. A criticidade decide quanto a exposição pesa.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 360" role="img" aria-label="Matriz de exposição do conhecimento. Os pontos somam a forma, de 2 para só na cabeça a 0 para escrito e treinado, e as pessoas que sabem, de 2 para uma pessoa a 0 para três ou mais. Uma saída prevista soma 1 ponto. K-01: 5 pontos, crítico. K-02: 2 pontos, em risco. K-03: 0 pontos, sob controle. K-04: 0 pontos, sob controle. K-05: 3 pontos, em risco. K-06: 2 pontos, em risco. K-07: 2 pontos, sob controle. C-01: 3 pontos, crítico. C-02: 4 pontos, crítico. C-03: 4 pontos, crítico. C-04: 1 pontos, sob controle. C-05: 1 pontos, sob controle. C-06: 3 pontos, em risco. C-07: 0 pontos, sob controle.">
+        <text class="b" x="350.0" y="34" font-size="12" text-anchor="middle">Só na cabeça</text>
+        <text class="mono mu" x="350.0" y="50" font-size="9.5" text-anchor="middle">+2 PONTOS</text>
+        <text class="b" x="550.0" y="34" font-size="12" text-anchor="middle">Escrito</text>
+        <text class="mono mu" x="550.0" y="50" font-size="9.5" text-anchor="middle">+1 PONTO</text>
+        <text class="b" x="750.0" y="34" font-size="12" text-anchor="middle">Escrito e treinado</text>
+        <text class="mono mu" x="750.0" y="50" font-size="9.5" text-anchor="middle">+0 PONTOS</text>
+        <text class="b" x="236" y="101.0" font-size="12" text-anchor="end">1 pessoa ou ninguém</text>
+        <text class="mono mu" x="236" y="117.0" font-size="9.5" text-anchor="end">+2 PONTOS</text>
+        <rect class="bx-s3" x="252" y="66" width="196" height="70"/>
+        <text class="disp mu" x="438" y="88" font-size="16" text-anchor="end" style="font-variant-numeric:tabular-nums">4</text>
+        <text class="b" x="262" y="106" font-size="11.5" style="font-variant-numeric:tabular-nums">K-01+1</text>
+        <text class="b" x="318" y="106" font-size="11.5" style="font-variant-numeric:tabular-nums">C-02</text>
+        <text class="b" x="374" y="106" font-size="11.5" style="font-variant-numeric:tabular-nums">C-03</text>
+        <rect class="bx-s3" x="452" y="66" width="196" height="70"/>
+        <text class="disp mu" x="638" y="88" font-size="16" text-anchor="end" style="font-variant-numeric:tabular-nums">3</text>
+        <text class="b" x="462" y="106" font-size="11.5" style="font-variant-numeric:tabular-nums">C-06</text>
+        <rect class="bx-s2" x="652" y="66" width="196" height="70"/>
+        <text class="disp mu" x="838" y="88" font-size="16" text-anchor="end" style="font-variant-numeric:tabular-nums">2</text>
+        <text class="b" x="236" y="175.0" font-size="12" text-anchor="end">2 pessoas</text>
+        <text class="mono mu" x="236" y="191.0" font-size="9.5" text-anchor="end">+1 PONTO</text>
+        <rect class="bx-s3" x="252" y="140" width="196" height="70"/>
+        <text class="disp mu" x="438" y="162" font-size="16" text-anchor="end" style="font-variant-numeric:tabular-nums">3</text>
+        <text class="b" x="262" y="180" font-size="11.5" style="font-variant-numeric:tabular-nums">K-05</text>
+        <rect class="bx-s2" x="452" y="140" width="196" height="70"/>
+        <text class="disp mu" x="638" y="162" font-size="16" text-anchor="end" style="font-variant-numeric:tabular-nums">2</text>
+        <text class="b" x="462" y="180" font-size="11.5" style="font-variant-numeric:tabular-nums">K-02</text>
+        <text class="b" x="518" y="180" font-size="11.5" style="font-variant-numeric:tabular-nums">K-06</text>
+        <text class="b" x="574" y="180" font-size="11.5" style="font-variant-numeric:tabular-nums">C-01+1</text>
+        <rect class="bx-s1" x="652" y="140" width="196" height="70"/>
+        <text class="disp mu" x="838" y="162" font-size="16" text-anchor="end" style="font-variant-numeric:tabular-nums">1</text>
+        <text class="b" x="662" y="180" font-size="11.5" style="font-variant-numeric:tabular-nums">C-04</text>
+        <text class="b" x="236" y="249.0" font-size="12" text-anchor="end">3 pessoas ou mais</text>
+        <text class="mono mu" x="236" y="265.0" font-size="9.5" text-anchor="end">+0 PONTOS</text>
+        <rect class="bx-s2" x="252" y="214" width="196" height="70"/>
+        <text class="disp mu" x="438" y="236" font-size="16" text-anchor="end" style="font-variant-numeric:tabular-nums">2</text>
+        <text class="b" x="262" y="254" font-size="11.5" style="font-variant-numeric:tabular-nums">K-07</text>
+        <rect class="bx-s1" x="452" y="214" width="196" height="70"/>
+        <text class="disp mu" x="638" y="236" font-size="16" text-anchor="end" style="font-variant-numeric:tabular-nums">1</text>
+        <text class="b" x="462" y="254" font-size="11.5" style="font-variant-numeric:tabular-nums">C-05</text>
+        <rect class="bx-s1" x="652" y="214" width="196" height="70"/>
+        <text class="disp mu" x="838" y="236" font-size="16" text-anchor="end" style="font-variant-numeric:tabular-nums">0</text>
+        <text class="b" x="662" y="254" font-size="11.5" style="font-variant-numeric:tabular-nums">K-03</text>
+        <text class="b" x="718" y="254" font-size="11.5" style="font-variant-numeric:tabular-nums">K-04</text>
+        <text class="b" x="774" y="254" font-size="11.5" style="font-variant-numeric:tabular-nums">C-07</text>
+        <text class="mu" x="236" y="34" font-size="10.5" text-anchor="end">Pessoas que sabem ↓ · forma →</text>
+        <rect class="bx-s3" x="20" y="301" width="14" height="14"/><text x="40" y="312" font-size="11">3 ou mais: crítico (alta) ou em risco (média)</text>
+        <rect class="bx-s2" x="310" y="301" width="14" height="14"/><text x="330" y="312" font-size="11">2: em risco (alta ou média)</text>
+        <rect class="bx-s1" x="600" y="301" width="14" height="14"/><text x="620" y="312" font-size="11">0 ou 1, ou criticidade baixa: sob controle</text>
+        <text class="mu" x="450" y="338" font-size="11" text-anchor="middle">“+1”: quem sabe tem saída prevista, e o ponto a mais está somado na situação. K são os conhecimentos da pizzaria; C, os da indústria.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 3.</b> A matriz de exposição, com os conhecimentos dos dois exemplos. O canto de cima, à esquerda, é onde a organização perde o que sabe.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Pergunta</th><th style="width:22%">Pontos</th><th>Por quê</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Em que forma está?</strong></td><td>Só na cabeça: 2. Escrito: 1. Escrito e treinado: 0.</td><td>O escrito sobrevive à pessoa. O treinado já foi testado por outra.</td></tr>
+        <tr><td><strong>Quantas pessoas sabem fazer sozinhas?</strong></td><td>Uma ou nenhuma: 2. Duas: 1. Três ou mais: 0.</td><td>Férias, doença e troca de turno acontecem. Uma pessoa não cobre.</td></tr>
+        <tr><td><strong>Alguém que sabe vai sair?</strong></td><td>Sim: 1.</td><td>A saída anunciada transforma o risco em data.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note">
+    <h4>O documento não é o conhecimento</h4>
+    <p>A ficha de regulagem da extrusora está escrita, e mesmo assim o conhecimento da indústria está crítico: só duas pessoas sabem usar a ficha, e uma delas se aposenta em dezembro. Um documento que ninguém mais consegue seguir protege pouco. Por isso este material separa "escrito" de "escrito e treinado", e conta as pessoas que fazem sozinhas, e não as que leram.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 5 ============================ -->
+<section id="transferir">
+  <p class="eyebrow">Módulo 5</p>
+  <h2>Transferir e aprender</h2>
+  <p>Transferir é levar o conhecimento de quem sabe para o papel e para outras pessoas. Aprender é trazer o conhecimento novo, dos casos do dia a dia, para dentro da organização. São dois sentidos do mesmo movimento.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 252" role="img" aria-label="Os três degraus do conhecimento. Só na cabeça: O conhecimento existe, mas só em quem faz. Some com a pessoa. Exemplo: A regulagem do forno, que só o pizzaiolo líder conhece. Escrito: Está num documento que outra pessoa pode ler. Exemplo: A ficha de regulagem da extrusora 3. Escrito e treinado: Está escrito, e outras pessoas já fizeram sozinhas. Exemplo: As receitas, que quatro pizzaiolos seguem. Para subir do primeiro ao segundo, escrever. Do segundo ao terceiro, acompanhar, gravar e fazer rodízio.">
+        <defs><marker id="a4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker></defs>
+        <rect class="bx-s3" x="12" y="120" width="284" height="100"/>
+        <text class="b" x="26" y="144" font-size="13">Só na cabeça</text>
+        <text x="26" y="164.0" font-size="11">O conhecimento existe, mas só em quem faz.</text>
+        <text x="26" y="178.5" font-size="11">Some com a pessoa.</text>
+        <text class="mu" x="26" y="197.0" font-size="10.5">Ex.: A regulagem do forno, que só o pizzaiolo</text>
+        <text class="mu" x="26" y="211.0" font-size="10.5">líder conhece.</text>
+        <rect class="bx-s2" x="308" y="74" width="284" height="146"/>
+        <text class="b" x="322" y="98" font-size="13">Escrito</text>
+        <text x="322" y="118.0" font-size="11">Está num documento que outra pessoa pode</text>
+        <text x="322" y="132.5" font-size="11">ler.</text>
+        <text class="mu" x="322" y="151.0" font-size="10.5">Ex.: A ficha de regulagem da extrusora 3.</text>
+        <rect class="bx-s1" x="604" y="28" width="284" height="192"/>
+        <text class="b" x="618" y="52" font-size="13">Escrito e treinado</text>
+        <text x="618" y="72.0" font-size="11">Está escrito, e outras pessoas já fizeram</text>
+        <text x="618" y="86.5" font-size="11">sozinhas.</text>
+        <text class="mu" x="618" y="105.0" font-size="10.5">Ex.: As receitas, que quatro pizzaiolos</text>
+        <text class="mu" x="618" y="119.0" font-size="10.5">seguem.</text>
+        <text class="mu halo" x="300" y="100" font-size="11" text-anchor="end">escrever →</text>
+        <text class="mu halo" x="596" y="54" font-size="11" text-anchor="end">acompanhar, gravar, rodízio →</text>
+        <text x="450" y="244" font-size="11.5" text-anchor="middle">Escrito não basta: o conhecimento só está protegido quando outra pessoa já fez sozinha.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 4.</b> Os três degraus do conhecimento. Cada degrau pede um jeito diferente de transferir.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:20%">Jeito</th><th style="width:44%">Como</th><th>Serve para</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Escrever</strong></td><td>Instrução curta, com fotos, feita por quem sabe e testada por quem não sabe.</td><td>Sequências, valores, critérios.</td></tr>
+        <tr><td><strong>Acompanhar</strong></td><td>Quem não sabe faz junto com quem sabe, até fazer sozinho, com registro.</td><td>Ajustes finos, decisões no olho.</td></tr>
+        <tr><td><strong>Gravar</strong></td><td>Vídeo curto do jeito certo, guardado onde o posto alcança.</td><td>Movimentos, sons, aparências.</td></tr>
+        <tr><td><strong>Fazer rodízio</strong></td><td>Mais de uma pessoa passa pela tarefa, de forma planejada.</td><td>Manter o que já foi transferido.</td></tr>
+        <tr><td><strong>Buscar fora</strong></td><td>Fabricante, cliente, consultor, curso, norma técnica.</td><td>O que ninguém dentro sabe.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note">
+    <h4>A lição aprendida precisa de destino</h4>
+    <p>Uma lição registrada e não incorporada é uma promessa. A pizzaria escreveu em março que a observação do pedido precisava sair em destaque na etiqueta, e em maio recebeu a mesma reclamação. Por isso cada lição, neste material, tem três campos que não podem faltar: o que se aprendeu, onde isso vai entrar e quem leva até lá. E a lição pendente há mais de 60 dias vira aviso.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 6 ============================ -->
+<section id="pos">
+  <p class="eyebrow">Módulo 6</p>
+  <h2>O pós-entrega</h2>
+  <p>A norma não diz o que fazer depois da entrega. Diz o que considerar para decidir: a lei, os riscos do uso, a vida útil, o que o cliente exige e o que o cliente já reclamou. O resultado é uma política por produto, com o que se faz e com os prazos.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 280" role="img" aria-label="O que considerar ao definir o pós-entrega. Requisitos legais: Prazos para reclamar, troca e recolhimento, pela lei. Consequências indesejadas: O que pode dar errado no uso, e como evitar ou reagir. Natureza, uso e vida útil: Quanto tempo o produto dura, e como o cliente o usa. Requisitos do cliente: O que o contrato ou o pedido exige depois da entrega. Retorno do cliente: O que as reclamações e as perguntas já mostraram. As cinco considerações definem a política de pós-entrega de cada produto: o que se faz, o prazo para reclamar e o prazo de resposta.">
+        <defs><marker id="a5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker></defs>
+        <rect class="bx" x="12" y="12" width="520" height="42"/>
+        <text class="b" x="26" y="38" font-size="12">Requisitos legais</text>
+        <text class="mu" x="210" y="38" font-size="10.5">Prazos para reclamar, troca e recolhimento, pela lei.</text>
+        <path class="ln-mu" d="M533 33 H560 V130"/>
+        <rect class="bx" x="12" y="60" width="520" height="42"/>
+        <text class="b" x="26" y="86" font-size="12">Consequências indesejadas</text>
+        <text class="mu" x="210" y="86" font-size="10.5">O que pode dar errado no uso, e como evitar ou reagir.</text>
+        <path class="ln-mu" d="M533 81 H560 V130"/>
+        <rect class="bx" x="12" y="108" width="520" height="42"/>
+        <text class="b" x="26" y="134" font-size="12">Natureza, uso e vida útil</text>
+        <text class="mu" x="210" y="134" font-size="10.5">Quanto tempo o produto dura, e como o cliente o usa.</text>
+        <path class="ln-mu" d="M533 129 H560 V130"/>
+        <rect class="bx" x="12" y="156" width="520" height="42"/>
+        <text class="b" x="26" y="182" font-size="12">Requisitos do cliente</text>
+        <text class="mu" x="210" y="182" font-size="10.5">O que o contrato ou o pedido exige depois da entrega.</text>
+        <path class="ln-mu" d="M533 177 H560 V130"/>
+        <rect class="bx" x="12" y="204" width="520" height="42"/>
+        <text class="b" x="26" y="230" font-size="12">Retorno do cliente</text>
+        <text class="mu" x="210" y="230" font-size="10.5">O que as reclamações e as perguntas já mostraram.</text>
+        <path class="ln-mu" d="M533 225 H560 V130"/>
+        <line class="ln" x1="560" y1="130" x2="586" y2="130" marker-end="url(#a5)"/>
+        <rect class="bx-ink" x="590" y="40" width="298" height="180"/>
+        <text class="b t-ground" x="606" y="68" font-size="13">Política de pós-entrega</text>
+        <rect class="f2" x="606" y="87" width="8" height="8"/><text class="t-ground" x="622" y="96" font-size="11.5">O que se faz depois da entrega</text>
+        <rect class="f2" x="606" y="113" width="8" height="8"/><text class="t-ground" x="622" y="122" font-size="11.5">O prazo para o cliente reclamar</text>
+        <rect class="f2" x="606" y="139" width="8" height="8"/><text class="t-ground" x="622" y="148" font-size="11.5">O prazo para responder</text>
+        <rect class="f2" x="606" y="165" width="8" height="8"/><text class="t-ground" x="622" y="174" font-size="11.5">O que se quer evitar no uso</text>
+        <text x="450" y="272" font-size="11.5" text-anchor="middle">Uma política por produto ou serviço. O prazo aceito nunca é menor que o da lei ou o do contrato.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 5.</b> As cinco considerações e a política que sai delas. O texto da figura é um resumo, com palavras próprias.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:22%">Tipo de atendimento</th><th style="width:42%">O que é</th><th>Pede a causa?</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Reclamação</strong></td><td>O cliente aponta um problema no produto ou no serviço.</td><td>Sim. Sem causa, a reclamação volta.</td></tr>
+        <tr><td><strong>Garantia</strong></td><td>O produto falhou dentro do prazo prometido.</td><td>Sim.</td></tr>
+        <tr><td><strong>Devolução</strong></td><td>O cliente devolve o produto, por defeito ou por direito.</td><td>Sim.</td></tr>
+        <tr><td><strong>Assistência técnica</strong></td><td>Ajuda no uso, na instalação, no ajuste.</td><td>Não, mas pode gerar lição.</td></tr>
+        <tr><td><strong>Orientação de uso</strong></td><td>Uma pergunta do cliente sobre como usar ou guardar.</td><td>Não. Perguntas repetidas viram lição para a embalagem.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note">
+    <h4>O prazo da lei vem antes do prazo da casa</h4>
+    <p>No Brasil, o Código de Defesa do Consumidor dá ao consumidor um prazo para reclamar de defeitos aparentes, maior para produtos duráveis do que para os não duráveis. Um cartaz que diz "reclamações só no dia" não reduz esse prazo. Entre empresas, quem define o prazo é o contrato. Por isso a política registra o mínimo da lei ou do contrato ao lado do prazo que a organização aceita, e o aceito nunca pode ser menor. Confira a legislação vigente e os contratos antes de definir os seus prazos: este material traz exemplos ilustrativos.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 7 ============================ -->
+<section id="exemplos">
+  <p class="eyebrow">Módulo 7</p>
+  <h2>Exemplos resolvidos</h2>
+  <p>O conhecimento, as lições, a política e os atendimentos de uma pizzaria e de uma fábrica, e uma reclamação que voltou porque a lição não tinha destino. As organizações são as dos outros estudos da série. Os dois primeiros exemplos também estão preenchidos na planilha de apoio. Os dados são ilustrativos e foram criados para este treinamento.</p>
+
+  <h3>Exemplo 1. A pizzaria em maio</h3>
+  <dl class="ficha">
+    <div><dt>Organização</dt><dd>Pizzaria (loja com salão e delivery)</dd></div>
+    <div><dt>Responsável</dt><dd>Gerente da loja</dd></div>
+    <div><dt>Leitura</dt><dd>31/05/2027.</dd></div>
+    <div><dt>Mudança prevista</dt><dd>O pizzaiolo líder, há 12 anos na loja, muda de cidade em agosto de 2027.</dd></div>
+    <div><dt>Origem</dt><dd>Diagnóstico ISO de 2026: requisito 7.1.6 atendido em parte. As receitas estavam escritas, e a regulagem do forno só o pizzaiolo líder conhecia.</dd></div>
+  </dl>
+  <div class="tbl">
+    <table class="aud">
+      <caption>Mapa do conhecimento · 7 conhecimentos: 1 crítico, 3 em risco, 3 sob controle</caption>
+      <thead><tr><th>Código</th><th style="width:24%">Conhecimento<small>Processo · criticidade</small></th><th style="width:16%">Forma<small>Onde está</small></th><th class="c">Quem sabe</th><th class="c">Saída prevista</th><th class="c">Pontos</th><th>Situação</th><th style="width:24%">Ação de transferência</th><th>Conferência</th></tr></thead>
+      <tbody>
+        <tr><td class="n">K-01</td><td><strong>Regulagem do forno e da chama do lastro</strong><small>Produção · criticidade alta</small></td><td>Só na cabeça<small>sem documento</small></td><td class="c no">1</td><td class="c">Sim</td><td class="c"><strong>5</strong></td><td><span class="chip s3">Crítico</span></td><td>O pizzaiolo líder escreve a regulagem, grava um vídeo e acompanha os dois pizzaiolos no forno.<small>prazo: 30/06/2027</small></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">K-02</td><td><strong>Ponto da massa pela temperatura da cozinha</strong><small>Produção · criticidade alta</small></td><td>Escrito<small>Receita RC-01</small></td><td class="c">2</td><td class="c">Não</td><td class="c"><strong>2</strong></td><td><span class="chip s2">Em risco</span></td><td>—</td><td><span class="chip s3">Falta a ação de transferência</span></td></tr>
+        <tr><td class="n">K-03</td><td><strong>Receitas das pizzas</strong><small>Produção · criticidade alta</small></td><td>Escrito e treinado<small>Receitas RC-01 a RC-24</small></td><td class="c">4</td><td class="c">Não</td><td class="c"><strong>0</strong></td><td><span class="chip s1">Sob controle</span></td><td>—</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">K-04</td><td><strong>Montagem e conferência do pedido</strong><small>Expedição · criticidade alta</small></td><td>Escrito e treinado<small>Instrução IT-05</small></td><td class="c">3</td><td class="c">Não</td><td class="c"><strong>0</strong></td><td><span class="chip s1">Sob controle</span></td><td>—</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">K-05</td><td><strong>Uso do sistema de pedidos novo</strong><small>Atendimento · criticidade média</small></td><td>Só na cabeça<small>sem documento</small></td><td class="c">2</td><td class="c">Não</td><td class="c"><strong>3</strong></td><td><span class="chip s2">Em risco</span></td><td>O gerente escreve o passo a passo do sábado, com as telas.<small>prazo: —</small></td><td><span class="chip s3">Falta o prazo da ação</span></td></tr>
+        <tr><td class="n">K-06</td><td><strong>Contingência da câmara fria</strong><small>Estoque · criticidade alta</small></td><td>Escrito<small>Contingência CT-02, na porta da câmara</small></td><td class="c">2</td><td class="c">Não</td><td class="c"><strong>2</strong></td><td><span class="chip s2">Em risco</span></td><td>Treinar a equipe do domingo na contingência, com simulação.<small>prazo: 15/06/2027</small></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">K-07</td><td><strong>Rotas e atalhos do bairro</strong><small>Entrega · criticidade baixa</small></td><td>Só na cabeça<small>sem documento</small></td><td class="c">3</td><td class="c">Não</td><td class="c"><strong>2</strong></td><td><span class="chip s1">Sob controle</span></td><td>—</td><td><span class="chip s1">OK</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="tbl">
+    <table class="aud">
+      <caption>Lições aprendidas · 6 registradas, 3 pendentes, 1 há mais de 60 dias</caption>
+      <thead><tr><th>Nº</th><th class="c">Data</th><th>Origem</th><th style="width:20%">O que aconteceu</th><th style="width:22%">O que aprendemos</th><th style="width:16%">Onde incorporar<small>Responsável · conhecimento</small></th><th>Situação</th><th>Conferência</th></tr></thead>
+      <tbody>
+        <tr><td class="n">L-01</td><td class="c">05/03</td><td>Reclamação</td><td>Pizza chegou fria.</td><td>A bolsa térmica fica fechada até a entrega, e a pizza sai com 65 °C ou mais.</td><td>Instrução IT-05<small>Gerente da loja · K-04</small></td><td><span class="chip s1">Incorporada</span><small>em 15/03</small></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">L-02</td><td class="c">22/03</td><td>Reclamação</td><td>Cliente pediu sem cebola e recebeu com cebola.</td><td>A observação do pedido precisa sair em destaque na etiqueta.</td><td>Etiqueta do sistema de pedidos<small>sem responsável · K-05</small></td><td><span class="chip s2">Pendente</span><small>há 70 dias</small></td><td><span class="chip s3">Pendente há mais de 60 dias</span></td></tr>
+        <tr><td class="n">L-03</td><td class="c">13/04</td><td>Quebra</td><td>Câmara fria parou, e a contingência foi improvisada.</td><td>A contingência precisa estar escrita e na porta da câmara.</td><td>Contingência CT-02<small>Gerente da loja · K-06</small></td><td><span class="chip s1">Incorporada</span><small>em 20/04</small></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">L-04</td><td class="c">19/04</td><td>Quebra</td><td>Corrente da moto partiu na entrega.</td><td>A revisão mensal precisa conferir a corrente.</td><td>Roteiro de revisão das motos<small>Gerente da loja</small></td><td><span class="chip s1">Incorporada</span><small>em 25/04</small></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">L-05</td><td class="c">26/04</td><td>Quebra</td><td>Chama do forno apagando, e só o pizzaiolo líder sabia regular.</td><td>A regulagem do forno precisa estar escrita.</td><td>Instrução do forno IT-08<small>Pizzaiolo líder · K-01</small></td><td><span class="chip s2">Pendente</span><small>há 35 dias</small></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">L-06</td><td class="c">10/05</td><td>Pós-entrega</td><td>Clientes perguntam como reaquecer a pizza.</td><td>—</td><td>Embalagem<small>sem responsável</small></td><td><span class="chip s2">Pendente</span><small>há 21 dias</small></td><td><span class="chip s3">Falta o que aprendemos</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="tbl">
+    <table class="aud">
+      <caption>Política de pós-entrega · 3 produtos</caption>
+      <thead><tr><th style="width:18%">Produto<small>Vida útil</small></th><th class="c">Mínimo para reclamar<small>Lei ou contrato</small></th><th class="c">Prazo aceito</th><th style="width:26%">O que se faz</th><th class="c">Prazo de resposta</th><th style="width:18%">O que se quer evitar</th><th>Conferência</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Pizza entregue</strong><small>Consumo no dia; até 3 dias na geladeira</small></td><td class="c">30 dias</td><td class="c no">1 dia</td><td>Reposição ou desconto, e orientação de reaquecimento.</td><td class="c">1 dia</td><td>Cliente comer a pizza depois de 3 dias.</td><td><span class="chip s3">Prazo aceito menor que o mínimo</span></td></tr>
+        <tr><td><strong>Pizza no salão</strong><small>Consumo no local</small></td><td class="c">30 dias</td><td class="c">30 dias</td><td>Troca na hora.</td><td class="c">0 dias</td><td>—</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td><strong>Massa congelada para levar</strong><small>60 dias no freezer</small></td><td class="c">30 dias</td><td class="c">30 dias</td><td>Troca ou devolução do valor, e orientação de armazenagem na embalagem.</td><td class="c">2 dias</td><td>Descongelar e congelar de novo.</td><td><span class="chip s1">OK</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="tbl">
+    <table class="aud">
+      <caption>Atendimentos depois da entrega · 8 no período, 2 abertos, 83 % dos resolvidos no prazo, custo de R$ 195</caption>
+      <thead><tr><th>Nº</th><th class="c">Abertura</th><th style="width:24%">Relato<small>Cliente · produto</small></th><th>Tipo</th><th class="c">Resolução<small>Dias de prazo</small></th><th>Situação</th><th style="width:22%">Causa<small>Lição</small></th><th class="c">Custo</th><th>Conferência</th></tr></thead>
+      <tbody>
+        <tr><td class="n">A-01</td><td class="c">03/05</td><td><strong>Pizza fria.</strong><small>Cliente do bairro A · Pizza entregue</small></td><td>Reclamação</td><td class="c">03/05<small>0 de 1 dias</small></td><td><span class="chip s1">No prazo</span></td><td>Entregador com 4 pedidos na mesma rota.<small>Lição L-01</small></td><td class="c">R$ 45</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">A-02</td><td class="c">07/05</td><td><strong>Sabor trocado: pediu sem cebola.</strong><small>Cliente do bairro B · Pizza entregue</small></td><td>Reclamação</td><td class="c">07/05<small>0 de 1 dias</small></td><td><span class="chip s1">No prazo</span></td><td>Observação do pedido sem destaque na etiqueta.<small>Lição L-02</small></td><td class="c">R$ 60</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">A-03</td><td class="c">14/05</td><td><strong>Borda queimada.</strong><small>Cliente do bairro A · Pizza entregue</small></td><td>Reclamação</td><td class="c">16/05<small>2 de 1 dias</small></td><td><span class="chip s3">Fora do prazo</span></td><td>Chama irregular no forno.<small>Lição L-05</small></td><td class="c">R$ 50</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">A-04</td><td class="c">15/05</td><td><strong>Como descongelar a massa.</strong><small>Cliente do balcão · Massa congelada para levar</small></td><td>Orientação de uso</td><td class="c">15/05<small>0 de 2 dias</small></td><td><span class="chip s1">No prazo</span></td><td>—</td><td class="c">R$ 0</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">A-05</td><td class="c">21/05</td><td><strong>Atraso de uma hora.</strong><small>Cliente do bairro C · Pizza entregue</small></td><td>Reclamação</td><td class="c">22/05<small>1 de 1 dias</small></td><td><span class="chip s1">No prazo</span></td><td>—</td><td class="c">R$ 40</td><td><span class="chip s3">Falta a causa</span></td></tr>
+        <tr><td class="n">A-06</td><td class="c">28/05</td><td><strong>Pacote rasgado, massa com gelo.</strong><small>Cliente do balcão · Massa congelada para levar</small></td><td>Devolução</td><td class="c">aberto<small>3 de 2 dias</small></td><td><span class="chip s3">Aberto e atrasado</span></td><td>—</td><td class="c">—</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">A-07</td><td class="c">30/05</td><td><strong>Refrigerante quente.</strong><small>Mesa 12 · Pizza no salão</small></td><td>Reclamação</td><td class="c">30/05<small>0 de 0 dias</small></td><td><span class="chip s1">No prazo</span></td><td>Geladeira do salão desligada à tarde.</td><td class="c">R$ 0</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">A-08</td><td class="c">31/05</td><td><strong>Faltou o refrigerante do combo.</strong><small>Cliente do bairro B · Pizza entregue</small></td><td>Reclamação</td><td class="c">aberto<small>0 de 1 dias</small></td><td><span class="chip s2">Aberto no prazo</span></td><td>—</td><td class="c">—</td><td><span class="chip s1">OK</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p><strong>O que observar.</strong> O conhecimento mais exposto da loja é a regulagem do forno: só na cabeça, de uma pessoa, que sai em agosto. A loja agiu a tempo, com três meses de transferência. O ponto da massa está escrito, mas só dois sabem fazer e não há ação, e o passo a passo do sistema novo não tem prazo. Nas lições, a da etiqueta está parada há 70 dias, e a pergunta sobre como reaquecer foi registrada sem dizer o que se aprendeu. No pós-entrega, a política da pizza entregue aceita reclamação só no dia, abaixo do mínimo da lei. Dos atendimentos resolvidos, 5 de 6 ficaram no prazo. O atraso de uma hora foi resolvido sem causa, e a massa devolvida em 28/05 ainda está aberta, fora do prazo.</p>
+
+  <h3>Exemplo 2. A indústria em setembro</h3>
+  <dl class="ficha">
+    <div><dt>Organização</dt><dd>Indústria de embalagens plásticas</dd></div>
+    <div><dt>Responsável</dt><dd>Analista da Qualidade, com o gerente de produção</dd></div>
+    <div><dt>Leitura</dt><dd>30/09/2027.</dd></div>
+    <div><dt>Mudança prevista</dt><dd>O operador sênior da extrusão se aposenta em dezembro de 2027. O filme D-07 entrou em produção em setembro.</dd></div>
+    <div><dt>Origem</dt><dd>Análise crítica de julho: as quebras da extrusora 3 mostraram que o desgaste da rosca só era medido pelo técnico do fabricante.</dd></div>
+  </dl>
+  <div class="tbl">
+    <table class="aud">
+      <caption>Mapa do conhecimento · 7 conhecimentos: 3 críticos, 1 em risco, 3 sob controle</caption>
+      <thead><tr><th>Código</th><th style="width:24%">Conhecimento<small>Processo · criticidade</small></th><th style="width:16%">Forma<small>Onde está</small></th><th class="c">Quem sabe</th><th class="c">Saída prevista</th><th class="c">Pontos</th><th>Situação</th><th style="width:24%">Ação de transferência</th><th>Conferência</th></tr></thead>
+      <tbody>
+        <tr><td class="n">C-01</td><td><strong>Regulagem da extrusora 3 para filme de 38 a 42 µm</strong><small>Extrusão · criticidade alta</small></td><td>Escrito<small>Ficha de regulagem FR-03</small></td><td class="c">2</td><td class="c">Sim</td><td class="c"><strong>3</strong></td><td><span class="chip s3">Crítico</span></td><td>O operador sênior acompanha os operadores do turno C por dois meses.<small>prazo: 30/11/2027</small></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">C-02</td><td><strong>Troca de clichês e acerto de cor</strong><small>Impressão · criticidade alta</small></td><td>Só na cabeça<small>sem documento</small></td><td class="c no">1</td><td class="c">Não</td><td class="c"><strong>4</strong></td><td><span class="chip s3">Crítico</span></td><td>—</td><td><span class="chip s3">Falta a ação de transferência</span></td></tr>
+        <tr><td class="n">C-03</td><td><strong>Medição da rosca e diagnóstico de desgaste</strong><small>Manutenção · criticidade alta</small></td><td>Só na cabeça<small>sem documento</small></td><td class="c no">1</td><td class="c">Não</td><td class="c"><strong>4</strong></td><td><span class="chip s3">Crítico</span></td><td>O contrato com o fabricante inclui o treinamento do mecânico na medição.<small>prazo: 31/10/2027</small></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">C-04</td><td><strong>Ensaio de resistência da solda</strong><small>Laboratório · criticidade alta</small></td><td>Escrito e treinado<small>Procedimento PE-11</small></td><td class="c">2</td><td class="c">Não</td><td class="c"><strong>1</strong></td><td><span class="chip s1">Sob controle</span></td><td>—</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">C-05</td><td><strong>Formulação do filme D-07</strong><small>Projeto · criticidade alta</small></td><td>Escrito<small>Dossiê do projeto D-07</small></td><td class="c">3</td><td class="c">Não</td><td class="c"><strong>1</strong></td><td><span class="chip s1">Sob controle</span></td><td>—</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">C-06</td><td><strong>Restauração do sistema de gestão</strong><small>TI · criticidade média</small></td><td>Escrito<small>sem documento</small></td><td class="c no">1</td><td class="c">Não</td><td class="c"><strong>3</strong></td><td><span class="chip s2">Em risco</span></td><td>O analista de TI treina o supervisor administrativo.<small>prazo: 15/10/2027</small></td><td><span class="chip s3">Falta onde está escrito</span></td></tr>
+        <tr><td class="n">C-07</td><td><strong>Tratamento de reclamação técnica</strong><small>Qualidade · criticidade média</small></td><td>Escrito e treinado<small>Procedimento PQ-08</small></td><td class="c">3</td><td class="c">Não</td><td class="c"><strong>0</strong></td><td><span class="chip s1">Sob controle</span></td><td>—</td><td><span class="chip s1">OK</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="tbl">
+    <table class="aud">
+      <caption>Lições aprendidas · 7 registradas, 3 pendentes, 2 há mais de 60 dias</caption>
+      <thead><tr><th>Nº</th><th class="c">Data</th><th>Origem</th><th style="width:20%">O que aconteceu</th><th style="width:22%">O que aprendemos</th><th style="width:16%">Onde incorporar<small>Responsável · conhecimento</small></th><th>Situação</th><th>Conferência</th></tr></thead>
+      <tbody>
+        <tr><td class="n">I-01</td><td class="c">24/05</td><td>Reclamação</td><td>Cliente A reclamou de filme fino no lote 135.</td><td>Reclamação de espessura dispara a verificação do micrômetro do posto.</td><td>Procedimento PQ-08<small>Analista da Qualidade · C-07</small></td><td><span class="chip s1">Incorporada</span><small>em 20/06</small></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">I-02</td><td class="c">12/06</td><td>Não conformidade</td><td>Micrômetro de 1 µm era grosso demais para a tolerância.</td><td>Na compra de instrumentos, a resolução cabe 10 vezes na tolerância.</td><td>Procedimento de compras PC-02<small>Comprador</small></td><td><span class="chip s2">Pendente</span><small>há 110 dias</small></td><td><span class="chip s3">Pendente há mais de 60 dias</span></td></tr>
+        <tr><td class="n">I-03</td><td class="c">06/07</td><td>Quebra</td><td>Resistência da zona 3 queimou, com a preventiva adiada.</td><td>Preventiva de item crítico só é adiada com análise da direção.</td><td>Plano de manutenção PM-01<small>Supervisor de manutenção</small></td><td><span class="chip s1">Incorporada</span><small>em 10/08</small></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">I-04</td><td class="c">18/07</td><td>Quebra</td><td>Rosca desgastada, medida só na preventiva.</td><td>O desgaste da rosca é medido todo mês.</td><td>Plano de manutenção PM-01<small>Supervisor de manutenção · C-03</small></td><td><span class="chip s1">Incorporada</span><small>em 10/08</small></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">I-05</td><td class="c">22/07</td><td>Quebra</td><td>Chiller parou, e o produto afetado não foi registrado.</td><td>Toda quebra registra o produto afetado e o destino dele.</td><td>Formulário de manutenção FM-02<small>Supervisor de manutenção</small></td><td><span class="chip s2">Pendente</span><small>há 70 dias</small></td><td><span class="chip s3">Pendente há mais de 60 dias</span></td></tr>
+        <tr><td class="n">I-06</td><td class="c">30/08</td><td>Projeto</td><td>Ensaio a -18 °C quase feito com a câmara vencida.</td><td>Ensaio só começa com os instrumentos conferidos.</td><td>Procedimento PE-14<small>Laboratório · C-04</small></td><td><span class="chip s1">Incorporada</span><small>em 10/09</small></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">I-07</td><td class="c">15/09</td><td>Pós-entrega</td><td>Bobina telescopada no transporte para o cliente B.</td><td>Bobina acima de 600 mm viaja com cantoneira.</td><td>—<small>sem responsável</small></td><td><span class="chip s2">Pendente</span><small>há 15 dias</small></td><td><span class="chip s3">Falta onde incorporar</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="tbl">
+    <table class="aud">
+      <caption>Política de pós-entrega · 3 produtos</caption>
+      <thead><tr><th style="width:18%">Produto<small>Vida útil</small></th><th class="c">Mínimo para reclamar<small>Lei ou contrato</small></th><th class="c">Prazo aceito</th><th style="width:26%">O que se faz</th><th class="c">Prazo de resposta</th><th style="width:18%">O que se quer evitar</th><th>Conferência</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Filme para congelados D-07</strong><small>12 meses em estoque, de 15 a 30 °C</small></td><td class="c">90 dias</td><td class="c">90 dias</td><td>Laudo da reclamação técnica, visita técnica quando pedida, reposição do lote.</td><td class="c">5 dias</td><td>Embalagem rompendo no freezer do consumidor.</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td><strong>Filme liso padrão</strong><small>12 meses em estoque</small></td><td class="c">30 dias</td><td class="c">30 dias</td><td>Laudo da reclamação técnica e reposição do lote.</td><td class="c">5 dias</td><td>—</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td><strong>Filme impresso</strong><small>12 meses em estoque</small></td><td class="c">60 dias</td><td class="c no">30 dias</td><td>Laudo da reclamação técnica, prova de cor e reposição do lote.</td><td class="c">5 dias</td><td>Cor diferente da marca do cliente na gôndola.</td><td><span class="chip s3">Prazo aceito menor que o mínimo</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="tbl">
+    <table class="aud">
+      <caption>Atendimentos depois da entrega · 8 no período, 2 abertos, 67 % dos resolvidos no prazo, custo de R$ 13.000</caption>
+      <thead><tr><th>Nº</th><th class="c">Abertura</th><th style="width:24%">Relato<small>Cliente · produto</small></th><th>Tipo</th><th class="c">Resolução<small>Dias de prazo</small></th><th>Situação</th><th style="width:22%">Causa<small>Lição</small></th><th class="c">Custo</th><th>Conferência</th></tr></thead>
+      <tbody>
+        <tr><td class="n">N-01</td><td class="c">02/08</td><td><strong>Cor fora do padrão no lote 151.</strong><small>Cliente A · Filme impresso</small></td><td>Reclamação</td><td class="c">06/08<small>4 de 5 dias</small></td><td><span class="chip s1">No prazo</span></td><td>Acerto de cor feito sem a prova aprovada pelo cliente.</td><td class="c">R$ 3.200</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">N-02</td><td class="c">10/08</td><td><strong>Bobinas com furos.</strong><small>Cliente B · Filme liso padrão</small></td><td>Garantia</td><td class="c">18/08<small>8 de 5 dias</small></td><td><span class="chip s3">Fora do prazo</span></td><td>Contaminação no material reciclado.</td><td class="c">R$ 5.400</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">N-03</td><td class="c">20/08</td><td><strong>Ajuste da seladora do cliente ao filme novo.</strong><small>Cliente C · Filme para congelados D-07</small></td><td>Assistência técnica</td><td class="c">22/08<small>2 de 5 dias</small></td><td><span class="chip s1">No prazo</span></td><td>—</td><td class="c">R$ 800</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">N-04</td><td class="c">05/09</td><td><strong>Rolo com emenda não sinalizada.</strong><small>Cliente A · Filme impresso</small></td><td>Devolução</td><td class="c">12/09<small>7 de 5 dias</small></td><td><span class="chip s3">Fora do prazo</span></td><td>Emenda sem fita colorida no turno C.</td><td class="c">R$ 2.100</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">N-05</td><td class="c">15/09</td><td><strong>Bobina telescopada no transporte.</strong><small>Cliente B · Filme liso padrão</small></td><td>Reclamação</td><td class="c">19/09<small>4 de 5 dias</small></td><td><span class="chip s1">No prazo</span></td><td>Bobina larga sem cantoneira.<small>Lição I-07</small></td><td class="c">R$ 1.500</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">N-06</td><td class="c">22/09</td><td><strong>Temperatura de selagem.</strong><small>Cliente D · Filme liso padrão</small></td><td>Orientação de uso</td><td class="c">22/09<small>0 de 5 dias</small></td><td><span class="chip s1">No prazo</span></td><td>—</td><td class="c">R$ 0</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">N-07</td><td class="c">23/09</td><td><strong>Odor de solvente nas bobinas.</strong><small>Cliente A · Filme impresso</small></td><td>Reclamação</td><td class="c">aberto<small>7 de 5 dias</small></td><td><span class="chip s3">Aberto e atrasado</span></td><td>—</td><td class="c">—</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">N-08</td><td class="c">26/09</td><td><strong>Embalagem rasgando a -18 °C no teste do cliente.</strong><small>Cliente C · Filme para congelados D-07</small></td><td>Reclamação</td><td class="c">aberto<small>4 de 5 dias</small></td><td><span class="chip s2">Aberto no prazo</span></td><td>—</td><td class="c">—</td><td><span class="chip s1">OK</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p><strong>O que observar.</strong> Três conhecimentos estão críticos. A regulagem da extrusora 3 está escrita, mas o operador sênior se aposenta, e a transferência foi planejada. A medição da rosca, que explicou as quebras de julho, só o técnico do fabricante sabia, e o contrato novo inclui o treinamento do mecânico. O acerto de cor, que causou a reclamação N-01, está só na cabeça de um impressor, sem ação. Duas lições estão paradas há mais de 60 dias, uma delas desde junho. A política do filme impresso aceita 30 dias, e o contrato do cliente A exige 60. Dos atendimentos resolvidos, 2 de 6 passaram do prazo de 5 dias, e o odor de solvente está aberto há 7 dias.</p>
+
+  <h3>Exemplo 3. A mesma reclamação, duas vezes</h3>
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 222" role="img" aria-label="A mesma reclamação, duas vezes. 22/03, Reclamação: Cliente pediu sem cebola e recebeu com cebola. Reposição na hora. 22/03, Lição registrada: A observação precisa sair em destaque na etiqueta. Ninguém ficou com a tarefa. Abril, Lição parada: O sistema de pedidos é trocado, e a etiqueta continua igual. 07/05, A mesma reclamação: Sabor trocado de novo. R$ 60 de reposição, e um cliente que talvez não volte. 31/05, Na leitura: A lição aparece com 70 dias pendente. Agora precisa de responsável e prazo.">
+        <defs><marker id="a6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker></defs>
+        <rect class="bx-s2" x="12" y="14" width="164" height="168"/>
+        <text class="mono mu" x="24" y="34" font-size="10">22/03</text>
+        <text class="b" x="24" y="56" font-size="12.5">Reclamação</text>
+        <text x="24" y="79.0" font-size="10.5">Cliente pediu sem cebola</text>
+        <text x="24" y="93.5" font-size="10.5">e recebeu com cebola.</text>
+        <text x="24" y="108.0" font-size="10.5">Reposição na hora.</text>
+        <line class="ln" x1="177" y1="96" x2="188" y2="96" marker-end="url(#a6)"/>
+        <rect class="bx" x="190" y="14" width="164" height="168"/>
+        <text class="mono mu" x="202" y="34" font-size="10">22/03</text>
+        <text class="b" x="202" y="56" font-size="12.5">Lição registrada</text>
+        <text x="202" y="79.0" font-size="10.5">A observação precisa sair</text>
+        <text x="202" y="93.5" font-size="10.5">em destaque na etiqueta.</text>
+        <text x="202" y="108.0" font-size="10.5">Ninguém ficou com a</text>
+        <text x="202" y="122.5" font-size="10.5">tarefa.</text>
+        <line class="ln" x1="355" y1="96" x2="366" y2="96" marker-end="url(#a6)"/>
+        <rect class="bx-s2" x="368" y="14" width="164" height="168"/>
+        <text class="mono mu" x="380" y="34" font-size="10">ABRIL</text>
+        <text class="b" x="380" y="56" font-size="12.5">Lição parada</text>
+        <text x="380" y="79.0" font-size="10.5">O sistema de pedidos é</text>
+        <text x="380" y="93.5" font-size="10.5">trocado, e a etiqueta</text>
+        <text x="380" y="108.0" font-size="10.5">continua igual.</text>
+        <line class="ln" x1="533" y1="96" x2="544" y2="96" marker-end="url(#a6)"/>
+        <rect class="bx-s3" x="546" y="14" width="164" height="168"/>
+        <text class="mono mu" x="558" y="34" font-size="10">07/05</text>
+        <text class="b" x="558" y="56" font-size="12.5">A mesma reclamação</text>
+        <text x="558" y="79.0" font-size="10.5">Sabor trocado de novo.</text>
+        <text x="558" y="93.5" font-size="10.5">R$ 60 de reposição, e um</text>
+        <text x="558" y="108.0" font-size="10.5">cliente que talvez não</text>
+        <text x="558" y="122.5" font-size="10.5">volte.</text>
+        <line class="ln" x1="711" y1="96" x2="722" y2="96" marker-end="url(#a6)"/>
+        <rect class="bx-ink" x="724" y="14" width="164" height="168"/>
+        <text class="mono t-ground" x="736" y="34" font-size="10">31/05</text>
+        <text class="b t-ground" x="736" y="56" font-size="12.5">Na leitura</text>
+        <text class="t-ground" x="736" y="79.0" font-size="10.5">A lição aparece com 70</text>
+        <text class="t-ground" x="736" y="93.5" font-size="10.5">dias pendente. Agora</text>
+        <text class="t-ground" x="736" y="108.0" font-size="10.5">precisa de responsável e</text>
+        <text class="t-ground" x="736" y="122.5" font-size="10.5">prazo.</text>
+        <text x="450" y="210" font-size="11.5" text-anchor="middle">A lição estava escrita desde março. Faltou o destino com dono: a etiqueta continuou a mesma.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 6.</b> Da primeira reclamação à segunda, em 46 dias. A lição estava registrada, sem responsável e sem prazo.</figcaption>
+  </figure>
+  <p><strong>O que observar.</strong> A loja fez quase tudo certo em março: resolveu a reclamação na hora, achou a causa e escreveu a lição. Faltou o último passo, que é o que muda o processo: alguém ajustar a etiqueta. Em abril, a troca do sistema de pedidos era a ocasião perfeita, e passou. Em maio, o mesmo erro custou outra reposição. O registro da lição sem responsável é o sinal que a leitura mensal deveria ter pegado. A regra deste material, de avisar a lição pendente há mais de 60 dias, pega o caso na leitura de 31/05, e não antes. Um prazo menor, ou um responsável desde o primeiro dia, teria evitado a segunda reclamação.</p>
+</section>
+
+<!-- ============================ MÓDULO 8 ============================ -->
+<section id="leitura">
+  <p class="eyebrow">Módulo 8</p>
+  <h2>Ler os atendimentos</h2>
+  <p>Cada atendimento é lido contra o prazo de resposta do produto. O que passou do prazo, resolvido ou não, é o primeiro sinal de que o pós-entrega precisa de gente, de método ou de poder para resolver.</p>
+
+  <figure id="fig-bars">
+    <div class="scroll">
+      <svg id="bars" viewBox="0 0 900 558" role="img" aria-label="Dias para resolver cada atendimento, contra o prazo de resposta do produto. A-01: 0 dias, prazo de 1, no prazo. A-02: 0 dias, prazo de 1, no prazo. A-03: 2 dias, prazo de 1, fora do prazo. A-04: 0 dias, prazo de 2, no prazo. A-05: 1 dias, prazo de 1, no prazo. A-06: 3 dias, prazo de 2, aberto e atrasado. A-07: 0 dias, prazo de 0, no prazo. A-08: 0 dias, prazo de 1, aberto no prazo. N-01: 4 dias, prazo de 5, no prazo. N-02: 8 dias, prazo de 5, fora do prazo. N-03: 2 dias, prazo de 5, no prazo. N-04: 7 dias, prazo de 5, fora do prazo. N-05: 4 dias, prazo de 5, no prazo. N-06: 0 dias, prazo de 5, no prazo. N-07: 7 dias, prazo de 5, aberto e atrasado. N-08: 4 dias, prazo de 5, aberto no prazo.">
+        <g font-size="11.5">
+          <rect class="f1" x="330" y="12" width="14" height="14"/><text x="352" y="24">No prazo</text>
+          <rect class="f2" x="480" y="12" width="14" height="14"/><text x="502" y="24">Aberto, ainda no prazo</text>
+          <rect class="f3" x="630" y="12" width="14" height="14"/><text x="652" y="24">Fora do prazo</text>
+          <line class="tick" x1="790" y1="11" x2="790" y2="27"/><text x="800" y="24">Prazo</text>
+        </g>
+        <line class="ln" x1="330.0" y1="40" x2="330.0" y2="514"/>
+        <text class="mu" x="330.0" y="530" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">0</text>
+        <line class="grid" x1="436.0" y1="40" x2="436.0" y2="514"/>
+        <text class="mu" x="436.0" y="530" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">2</text>
+        <line class="grid" x1="542.0" y1="40" x2="542.0" y2="514"/>
+        <text class="mu" x="542.0" y="530" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">4</text>
+        <line class="grid" x1="648.0" y1="40" x2="648.0" y2="514"/>
+        <text class="mu" x="648.0" y="530" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">6</text>
+        <line class="grid" x1="754.0" y1="40" x2="754.0" y2="514"/>
+        <text class="mu" x="754.0" y="530" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">8</text>
+        <line class="grid" x1="860.0" y1="40" x2="860.0" y2="514"/>
+        <text class="mu" x="860.0" y="530" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">10</text>
+        <text class="mono mu" x="595.0" y="550" font-size="10" text-anchor="middle">DIAS DA ABERTURA À RESOLUÇÃO, OU ATÉ A LEITURA SE ABERTO</text>
+        <text class="mono mu" x="20" y="63" font-size="10">PIZZARIA</text>
+        <text x="36" y="89" font-size="11.5"><tspan class="b">A-01</tspan><tspan class="mu" dx="8">Pizza fria.</tspan></text>
+        <rect class="bar f1" data-k="1" x="330" y="78" width="3.0" height="14"/>
+        <line class="tick" x1="383.0" y1="74" x2="383.0" y2="96"/>
+        <text class="mu halo" x="391.0" y="89" font-size="10.5" style="font-variant-numeric:tabular-nums">0 d</text>
+        <text x="36" y="115" font-size="11.5"><tspan class="b">A-02</tspan><tspan class="mu" dx="8">Sabor trocado: pediu sem cebola.</tspan></text>
+        <rect class="bar f1" data-k="2" x="330" y="104" width="3.0" height="14"/>
+        <line class="tick" x1="383.0" y1="100" x2="383.0" y2="122"/>
+        <text class="mu halo" x="391.0" y="115" font-size="10.5" style="font-variant-numeric:tabular-nums">0 d</text>
+        <text x="36" y="141" font-size="11.5"><tspan class="b">A-03</tspan><tspan class="mu" dx="8">Borda queimada.</tspan></text>
+        <rect class="bar f3" data-k="3" x="330" y="130" width="106.0" height="14"/>
+        <line class="tick" x1="383.0" y1="126" x2="383.0" y2="148"/>
+        <text class="mu halo" x="444.0" y="141" font-size="10.5" style="font-variant-numeric:tabular-nums">2 d</text>
+        <text x="36" y="167" font-size="11.5"><tspan class="b">A-04</tspan><tspan class="mu" dx="8">Como descongelar a massa.</tspan></text>
+        <rect class="bar f1" data-k="4" x="330" y="156" width="3.0" height="14"/>
+        <line class="tick" x1="436.0" y1="152" x2="436.0" y2="174"/>
+        <text class="mu halo" x="444.0" y="167" font-size="10.5" style="font-variant-numeric:tabular-nums">0 d</text>
+        <text x="36" y="193" font-size="11.5"><tspan class="b">A-05</tspan><tspan class="mu" dx="8">Atraso de uma hora.</tspan></text>
+        <rect class="bar f1" data-k="5" x="330" y="182" width="53.0" height="14"/>
+        <line class="tick" x1="383.0" y1="178" x2="383.0" y2="200"/>
+        <text class="mu halo" x="391.0" y="193" font-size="10.5" style="font-variant-numeric:tabular-nums">1 d</text>
+        <text x="36" y="219" font-size="11.5"><tspan class="b">A-06</tspan><tspan class="mu" dx="8">Pacote rasgado, massa com gelo.</tspan></text>
+        <rect class="bar f3" data-k="6" x="330" y="208" width="159.0" height="14"/>
+        <line class="tick" x1="436.0" y1="204" x2="436.0" y2="226"/>
+        <text class="mu halo" x="497.0" y="219" font-size="10.5" style="font-variant-numeric:tabular-nums">3 d</text>
+        <text x="36" y="245" font-size="11.5"><tspan class="b">A-07</tspan><tspan class="mu" dx="8">Refrigerante quente.</tspan></text>
+        <rect class="bar f1" data-k="7" x="330" y="234" width="3.0" height="14"/>
+        <line class="tick" x1="330.0" y1="230" x2="330.0" y2="252"/>
+        <text class="mu halo" x="338.0" y="245" font-size="10.5" style="font-variant-numeric:tabular-nums">0 d</text>
+        <text x="36" y="271" font-size="11.5"><tspan class="b">A-08</tspan><tspan class="mu" dx="8">Faltou o refrigerante do combo.</tspan></text>
+        <rect class="bar f2" data-k="8" x="330" y="260" width="3.0" height="14"/>
+        <line class="tick" x1="383.0" y1="256" x2="383.0" y2="278"/>
+        <text class="mu halo" x="391.0" y="271" font-size="10.5" style="font-variant-numeric:tabular-nums">0 d</text>
+        <text class="mono mu" x="20" y="297" font-size="10">INDÚSTRIA</text>
+        <text x="36" y="323" font-size="11.5"><tspan class="b">N-01</tspan><tspan class="mu" dx="8">Cor fora do padrão no lote 151.</tspan></text>
+        <rect class="bar f1" data-k="10" x="330" y="312" width="212.0" height="14"/>
+        <line class="tick" x1="595.0" y1="308" x2="595.0" y2="330"/>
+        <text class="mu halo" x="603.0" y="323" font-size="10.5" style="font-variant-numeric:tabular-nums">4 d</text>
+        <text x="36" y="349" font-size="11.5"><tspan class="b">N-02</tspan><tspan class="mu" dx="8">Bobinas com furos.</tspan></text>
+        <rect class="bar f3" data-k="11" x="330" y="338" width="424.0" height="14"/>
+        <line class="tick" x1="595.0" y1="334" x2="595.0" y2="356"/>
+        <text class="mu halo" x="762.0" y="349" font-size="10.5" style="font-variant-numeric:tabular-nums">8 d</text>
+        <text x="36" y="375" font-size="11.5"><tspan class="b">N-03</tspan><tspan class="mu" dx="8">Ajuste da seladora do cliente ao…</tspan></text>
+        <rect class="bar f1" data-k="12" x="330" y="364" width="106.0" height="14"/>
+        <line class="tick" x1="595.0" y1="360" x2="595.0" y2="382"/>
+        <text class="mu halo" x="603.0" y="375" font-size="10.5" style="font-variant-numeric:tabular-nums">2 d</text>
+        <text x="36" y="401" font-size="11.5"><tspan class="b">N-04</tspan><tspan class="mu" dx="8">Rolo com emenda não sinalizada.</tspan></text>
+        <rect class="bar f3" data-k="13" x="330" y="390" width="371.0" height="14"/>
+        <line class="tick" x1="595.0" y1="386" x2="595.0" y2="408"/>
+        <text class="mu halo" x="709.0" y="401" font-size="10.5" style="font-variant-numeric:tabular-nums">7 d</text>
+        <text x="36" y="427" font-size="11.5"><tspan class="b">N-05</tspan><tspan class="mu" dx="8">Bobina telescopada no transporte.</tspan></text>
+        <rect class="bar f1" data-k="14" x="330" y="416" width="212.0" height="14"/>
+        <line class="tick" x1="595.0" y1="412" x2="595.0" y2="434"/>
+        <text class="mu halo" x="603.0" y="427" font-size="10.5" style="font-variant-numeric:tabular-nums">4 d</text>
+        <text x="36" y="453" font-size="11.5"><tspan class="b">N-06</tspan><tspan class="mu" dx="8">Temperatura de selagem.</tspan></text>
+        <rect class="bar f1" data-k="15" x="330" y="442" width="3.0" height="14"/>
+        <line class="tick" x1="595.0" y1="438" x2="595.0" y2="460"/>
+        <text class="mu halo" x="603.0" y="453" font-size="10.5" style="font-variant-numeric:tabular-nums">0 d</text>
+        <text x="36" y="479" font-size="11.5"><tspan class="b">N-07</tspan><tspan class="mu" dx="8">Odor de solvente nas bobinas.</tspan></text>
+        <rect class="bar f3" data-k="16" x="330" y="468" width="371.0" height="14"/>
+        <line class="tick" x1="595.0" y1="464" x2="595.0" y2="486"/>
+        <text class="mu halo" x="709.0" y="479" font-size="10.5" style="font-variant-numeric:tabular-nums">7 d</text>
+        <text x="36" y="505" font-size="11.5"><tspan class="b">N-08</tspan><tspan class="mu" dx="8">Embalagem rasgando a -18 °C no…</tspan></text>
+        <rect class="bar f2" data-k="17" x="330" y="494" width="212.0" height="14"/>
+        <line class="tick" x1="595.0" y1="490" x2="595.0" y2="512"/>
+        <text class="mu halo" x="603.0" y="505" font-size="10.5" style="font-variant-numeric:tabular-nums">4 d</text>
+        <rect class="hit" x="14" y="72" width="872" height="26" tabindex="0" role="img" aria-label="A-01, Pizza fria.: 0 dias, prazo de 1, no prazo" data-k="1" data-n="A-01 · Pizza fria." data-s="No prazo" data-d="0 de 1 dias" data-p="Reclamação" data-cx="330.0" data-cy="72"/>
+        <rect class="hit" x="14" y="98" width="872" height="26" tabindex="0" role="img" aria-label="A-02, Sabor trocado: pediu sem cebola.: 0 dias, prazo de 1, no prazo" data-k="2" data-n="A-02 · Sabor trocado: pediu sem cebola." data-s="No prazo" data-d="0 de 1 dias" data-p="Reclamação" data-cx="330.0" data-cy="98"/>
+        <rect class="hit" x="14" y="124" width="872" height="26" tabindex="0" role="img" aria-label="A-03, Borda queimada.: 2 dias, prazo de 1, fora do prazo" data-k="3" data-n="A-03 · Borda queimada." data-s="Fora do prazo" data-d="2 de 1 dias" data-p="Reclamação" data-cx="436.0" data-cy="124"/>
+        <rect class="hit" x="14" y="150" width="872" height="26" tabindex="0" role="img" aria-label="A-04, Como descongelar a massa.: 0 dias, prazo de 2, no prazo" data-k="4" data-n="A-04 · Como descongelar a massa." data-s="No prazo" data-d="0 de 2 dias" data-p="Orientação de uso" data-cx="330.0" data-cy="150"/>
+        <rect class="hit" x="14" y="176" width="872" height="26" tabindex="0" role="img" aria-label="A-05, Atraso de uma hora.: 1 dias, prazo de 1, no prazo" data-k="5" data-n="A-05 · Atraso de uma hora." data-s="No prazo" data-d="1 de 1 dias" data-p="Reclamação" data-cx="383.0" data-cy="176"/>
+        <rect class="hit" x="14" y="202" width="872" height="26" tabindex="0" role="img" aria-label="A-06, Pacote rasgado, massa com gelo.: 3 dias, prazo de 2, aberto e atrasado" data-k="6" data-n="A-06 · Pacote rasgado, massa com gelo." data-s="Aberto e atrasado" data-d="3 de 2 dias" data-p="Devolução" data-cx="489.0" data-cy="202"/>
+        <rect class="hit" x="14" y="228" width="872" height="26" tabindex="0" role="img" aria-label="A-07, Refrigerante quente.: 0 dias, prazo de 0, no prazo" data-k="7" data-n="A-07 · Refrigerante quente." data-s="No prazo" data-d="0 de 0 dias" data-p="Reclamação" data-cx="330.0" data-cy="228"/>
+        <rect class="hit" x="14" y="254" width="872" height="26" tabindex="0" role="img" aria-label="A-08, Faltou o refrigerante do combo.: 0 dias, prazo de 1, aberto no prazo" data-k="8" data-n="A-08 · Faltou o refrigerante do combo." data-s="Aberto no prazo" data-d="0 de 1 dias" data-p="Reclamação" data-cx="330.0" data-cy="254"/>
+        <rect class="hit" x="14" y="306" width="872" height="26" tabindex="0" role="img" aria-label="N-01, Cor fora do padrão no lote 151.: 4 dias, prazo de 5, no prazo" data-k="10" data-n="N-01 · Cor fora do padrão no lote 151." data-s="No prazo" data-d="4 de 5 dias" data-p="Reclamação" data-cx="542.0" data-cy="306"/>
+        <rect class="hit" x="14" y="332" width="872" height="26" tabindex="0" role="img" aria-label="N-02, Bobinas com furos.: 8 dias, prazo de 5, fora do prazo" data-k="11" data-n="N-02 · Bobinas com furos." data-s="Fora do prazo" data-d="8 de 5 dias" data-p="Garantia" data-cx="754.0" data-cy="332"/>
+        <rect class="hit" x="14" y="358" width="872" height="26" tabindex="0" role="img" aria-label="N-03, Ajuste da seladora do cliente ao filme novo.: 2 dias, prazo de 5, no prazo" data-k="12" data-n="N-03 · Ajuste da seladora do cliente ao filme novo." data-s="No prazo" data-d="2 de 5 dias" data-p="Assistência técnica" data-cx="436.0" data-cy="358"/>
+        <rect class="hit" x="14" y="384" width="872" height="26" tabindex="0" role="img" aria-label="N-04, Rolo com emenda não sinalizada.: 7 dias, prazo de 5, fora do prazo" data-k="13" data-n="N-04 · Rolo com emenda não sinalizada." data-s="Fora do prazo" data-d="7 de 5 dias" data-p="Devolução" data-cx="701.0" data-cy="384"/>
+        <rect class="hit" x="14" y="410" width="872" height="26" tabindex="0" role="img" aria-label="N-05, Bobina telescopada no transporte.: 4 dias, prazo de 5, no prazo" data-k="14" data-n="N-05 · Bobina telescopada no transporte." data-s="No prazo" data-d="4 de 5 dias" data-p="Reclamação" data-cx="542.0" data-cy="410"/>
+        <rect class="hit" x="14" y="436" width="872" height="26" tabindex="0" role="img" aria-label="N-06, Temperatura de selagem.: 0 dias, prazo de 5, no prazo" data-k="15" data-n="N-06 · Temperatura de selagem." data-s="No prazo" data-d="0 de 5 dias" data-p="Orientação de uso" data-cx="330.0" data-cy="436"/>
+        <rect class="hit" x="14" y="462" width="872" height="26" tabindex="0" role="img" aria-label="N-07, Odor de solvente nas bobinas.: 7 dias, prazo de 5, aberto e atrasado" data-k="16" data-n="N-07 · Odor de solvente nas bobinas." data-s="Aberto e atrasado" data-d="7 de 5 dias" data-p="Reclamação" data-cx="701.0" data-cy="462"/>
+        <rect class="hit" x="14" y="488" width="872" height="26" tabindex="0" role="img" aria-label="N-08, Embalagem rasgando a -18 °C no teste do cliente.: 4 dias, prazo de 5, aberto no prazo" data-k="17" data-n="N-08 · Embalagem rasgando a -18 °C no teste do cliente." data-s="Aberto no prazo" data-d="4 de 5 dias" data-p="Reclamação" data-cx="542.0" data-cy="488"/>
+      </svg>
+    </div>
+    <div class="tip" id="bars-tip" hidden></div>
+    <figcaption><b>Figura 7.</b> Dias da abertura à resolução de cada atendimento, com o prazo de resposta marcado. Passe o mouse sobre as linhas para ver os valores.</figcaption>
+    <details class="data">
+      <summary>Ver os dados em tabela</summary>
+      <div class="tbl">
+        <table class="aud">
+          <thead><tr><th>Nº</th><th>Relato</th><th>Tipo</th><th class="c">Dias</th><th class="c">Prazo</th><th>Situação</th></tr></thead>
+          <tbody>
+            <tr><td>A-01</td><td>Pizza fria.</td><td>Reclamação</td><td class="c">0</td><td class="c">1</td><td>No prazo</td></tr>
+            <tr><td>A-02</td><td>Sabor trocado: pediu sem cebola.</td><td>Reclamação</td><td class="c">0</td><td class="c">1</td><td>No prazo</td></tr>
+            <tr><td>A-03</td><td>Borda queimada.</td><td>Reclamação</td><td class="c">2</td><td class="c">1</td><td>Fora do prazo</td></tr>
+            <tr><td>A-04</td><td>Como descongelar a massa.</td><td>Orientação de uso</td><td class="c">0</td><td class="c">2</td><td>No prazo</td></tr>
+            <tr><td>A-05</td><td>Atraso de uma hora.</td><td>Reclamação</td><td class="c">1</td><td class="c">1</td><td>No prazo</td></tr>
+            <tr><td>A-06</td><td>Pacote rasgado, massa com gelo.</td><td>Devolução</td><td class="c">3</td><td class="c">2</td><td>Aberto e atrasado</td></tr>
+            <tr><td>A-07</td><td>Refrigerante quente.</td><td>Reclamação</td><td class="c">0</td><td class="c">0</td><td>No prazo</td></tr>
+            <tr><td>A-08</td><td>Faltou o refrigerante do combo.</td><td>Reclamação</td><td class="c">0</td><td class="c">1</td><td>Aberto no prazo</td></tr>
+            <tr><td>N-01</td><td>Cor fora do padrão no lote 151.</td><td>Reclamação</td><td class="c">4</td><td class="c">5</td><td>No prazo</td></tr>
+            <tr><td>N-02</td><td>Bobinas com furos.</td><td>Garantia</td><td class="c">8</td><td class="c">5</td><td>Fora do prazo</td></tr>
+            <tr><td>N-03</td><td>Ajuste da seladora do cliente ao filme novo.</td><td>Assistência técnica</td><td class="c">2</td><td class="c">5</td><td>No prazo</td></tr>
+            <tr><td>N-04</td><td>Rolo com emenda não sinalizada.</td><td>Devolução</td><td class="c">7</td><td class="c">5</td><td>Fora do prazo</td></tr>
+            <tr><td>N-05</td><td>Bobina telescopada no transporte.</td><td>Reclamação</td><td class="c">4</td><td class="c">5</td><td>No prazo</td></tr>
+            <tr><td>N-06</td><td>Temperatura de selagem.</td><td>Orientação de uso</td><td class="c">0</td><td class="c">5</td><td>No prazo</td></tr>
+            <tr><td>N-07</td><td>Odor de solvente nas bobinas.</td><td>Reclamação</td><td class="c">7</td><td class="c">5</td><td>Aberto e atrasado</td></tr>
+            <tr><td>N-08</td><td>Embalagem rasgando a -18 °C no teste do cliente.</td><td>Reclamação</td><td class="c">4</td><td class="c">5</td><td>Aberto no prazo</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </details>
+  </figure>
+
+  <p>Na pizzaria, o prazo de um dia é curto e, na maioria das vezes, cumprido. Os dois atrasos são de tipos diferentes: a borda queimada esperou dois dias porque ninguém sabia regular o forno sem o pizzaiolo líder, e a massa devolvida espera uma decisão de troca ou devolução que ninguém tomou. Na indústria, os atrasos se concentram nos casos que pedem análise: a garantia dos furos e a emenda sem sinal passaram de 5 dias porque dependiam do laboratório. O prazo de resposta só é realista quando quem resolve tem tempo para isso.</p>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Situação</th><th style="width:40%">Regra deste material</th><th>O que fazer</th></tr></thead>
+      <tbody>
+        <tr><td><strong>No prazo</strong></td><td>Resolvido em até o prazo de resposta do produto.</td><td>Registrar a causa e ver se gera lição.</td></tr>
+        <tr><td><strong>Fora do prazo</strong></td><td>Resolvido depois do prazo.</td><td>Entender por que demorou.</td></tr>
+        <tr><td><strong>Aberto no prazo</strong></td><td>Ainda sem resolução, dentro do prazo na data da leitura.</td><td>Acompanhar.</td></tr>
+        <tr><td><strong>Aberto e atrasado</strong></td><td>Ainda sem resolução, e o prazo já passou.</td><td>Resolver antes de qualquer outro, e avisar o cliente.</td></tr>
+        <tr><td><strong>Crítico</strong></td><td>Conhecimento de criticidade alta com 3 pontos ou mais.</td><td>Ação de transferência com prazo.</td></tr>
+        <tr><td><strong>Lição parada</strong></td><td>Pendente há mais de 60 dias.</td><td>Dar responsável e prazo, ou descartar com motivo.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note">
+    <h4>O custo do pós-entrega</h4>
+    <p>Reposições, descontos, fretes e horas de laboratório são o preço da não qualidade que chegou ao cliente. A indústria gastou R$ 13.000 em dois meses com oito atendimentos; a pizzaria, R$ 195 em um mês. Somar o custo por causa mostra onde a lição vale mais, e é um bom dado para a análise crítica pela direção.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 9 ============================ -->
+<section id="erros">
+  <p class="eyebrow">Módulo 9</p>
+  <h2>Erros comuns</h2>
+  <div class="errs">
+    <div><h4>Mapa só de documentos</h4><p>A lista do conhecimento é a lista mestra de documentos, e o que não está escrito fica de fora.</p><p class="fix"><b>Correção:</b> perguntar a quem faz o que não está escrito.</p></div>
+    <div><h4>Escrito igual a protegido</h4><p>O procedimento existe, e só uma pessoa consegue segui-lo.</p><p class="fix"><b>Correção:</b> contar quem faz sozinho, e não quem leu.</p></div>
+    <div><h4>Transferência na última semana</h4><p>A saída foi anunciada em março, e a passagem começou na véspera.</p><p class="fix"><b>Correção:</b> saída prevista entra no mapa no dia do anúncio.</p></div>
+    <div><h4>Lição sem destino</h4><p>A lição foi escrita na ata e ficou lá.</p><p class="fix"><b>Correção:</b> onde vai entrar e quem leva, em toda lição.</p></div>
+    <div><h4>Lição sem o que se aprendeu</h4><p>O registro conta o caso, e não diz o que muda.</p><p class="fix"><b>Correção:</b> uma frase com a regra nova.</p></div>
+    <div><h4>Prazo da casa menor que o da lei</h4><p>"Reclamações só no dia", num produto em que a lei dá mais tempo.</p><p class="fix"><b>Correção:</b> o mínimo legal ou contratual ao lado do prazo aceito.</p></div>
+    <div><h4>Reclamação sem causa</h4><p>A reposição foi feita, e ninguém perguntou por que aconteceu.</p><p class="fix"><b>Correção:</b> causa registrada em toda reclamação, garantia e devolução resolvida.</p></div>
+    <div><h4>Pós-entrega sem prazo</h4><p>O cliente espera, e ninguém sabe quanto tempo é demais.</p><p class="fix"><b>Correção:</b> prazo de resposta por produto, e leitura dos atrasados.</p></div>
+    <div><h4>Perguntas que não viram lição</h4><p>Vinte clientes perguntaram como reaquecer, e a embalagem continua igual.</p><p class="fix"><b>Correção:</b> orientações repetidas viram lição para a embalagem ou o manual.</p></div>
+    <div><h4>Só conhecimento de dentro</h4><p>O que o fabricante, o cliente ou o mercado sabem não entra no mapa.</p><p class="fix"><b>Correção:</b> registrar também as fontes externas, como contratos de treinamento.</p></div>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 10 ============================ -->
+<section id="ferramentas">
+  <p class="eyebrow">Módulo 10</p>
+  <h2>O conhecimento e outras ferramentas</h2>
+  <p>Quase todos os estudos da série produzem conhecimento: uma causa encontrada, um controle novo, um critério ajustado. Este estudo é o lugar onde esse conhecimento é guardado, e o pós-entrega é a porta por onde o cliente traz o que a organização ainda não sabe.</p>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:26%">Ferramenta</th><th style="width:37%">O que ela entrega ao conhecimento</th><th>O que recebe do conhecimento</th></tr></thead>
+      <tbody>
+        <tr><td><a href="../ISO-9001/treinamento-iso-9001.html"><strong>ISO 9001 requisito a requisito</strong></a></td><td>Os requisitos 7.1.6 e 8.5.5, e a lacuna de cada organização.</td><td>O mapa, as lições e os atendimentos, como evidência.</td></tr>
+        <tr><td><a href="../Competencias/treinamento-competencias.html"><strong>Matriz de competências</strong></a></td><td>Quem domina cada tarefa, e o plano de treinamento.</td><td>O conhecimento a transferir, e quem deve aprender.</td></tr>
+        <tr><td><a href="../Informacao-Documentada/treinamento-informacao-documentada.html"><strong>Informação documentada</strong></a></td><td>O controle dos documentos onde as lições entram.</td><td>Os documentos novos e as revisões.</td></tr>
+        <tr><td><a href="../Satisfacao/treinamento-satisfacao.html"><strong>Satisfação do cliente</strong></a></td><td>A pesquisa e o registro das reclamações.</td><td>O prazo de resposta e a causa de cada atendimento.</td></tr>
+        <tr><td><a href="../Nao-Conformidade/treinamento-nao-conformidade.html"><strong>Não conformidade e ação corretiva</strong></a></td><td>A análise de causa das reclamações graves.</td><td>A lição que padroniza a correção.</td></tr>
+        <tr><td><a href="../Liberacao/treinamento-liberacao.html"><strong>Liberação e produto não conforme</strong></a></td><td>O tratamento do produto devolvido ou recolhido.</td><td>O atendimento que deu origem ao registro.</td></tr>
+        <tr><td><a href="../Recursos/treinamento-recursos.html"><strong>Recursos, infraestrutura e ambiente</strong></a></td><td>As quebras e as paradas, com causa.</td><td>As lições de manutenção, e a coluna de qualificados da escala.</td></tr>
+        <tr><td><a href="../Projeto/treinamento-projeto.html"><strong>Projeto e desenvolvimento</strong></a></td><td>O conhecimento gerado no projeto, e o que veio de fora.</td><td>As lições de projetos anteriores, como entrada.</td></tr>
+        <tr><td><a href="../Pedidos/treinamento-pedidos.html"><strong>Requisitos do cliente e análise de pedidos</strong></a></td><td>Os requisitos do cliente depois da entrega, no contrato.</td><td>O mínimo contratual da política de pós-entrega.</td></tr>
+        <tr><td><a href="../Riscos/treinamento-riscos.html"><strong>Matriz de riscos</strong></a></td><td>O risco de perder uma pessoa-chave.</td><td>Os conhecimentos críticos, como riscos a tratar.</td></tr>
+        <tr><td><a href="../Analise-Critica/treinamento-analise-critica.html"><strong>Análise crítica pela direção</strong></a></td><td>As decisões sobre tempo e recursos para a transferência.</td><td>O retorno do cliente e o custo do pós-entrega, como entrada.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 11 ============================ -->
+<section id="iso">
+  <p class="eyebrow">Módulo 11</p>
+  <h2>Nas normas ISO</h2>
+  <p>O conhecimento organizacional é o requisito 7.1.6 da ISO 9001:2015, o último dos recursos. As atividades pós-entrega são o requisito 8.5.5, dentro da produção e da provisão do serviço. A norma lembra que o conhecimento pode vir de dentro, como a experiência e as lições aprendidas, ou de fora, como normas, eventos técnicos, clientes e fornecedores.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 200" role="img" aria-label="O que a norma pede sobre conhecimento organizacional e pós-entrega. 7.1.6 · Determinar: Determinar o conhecimento necessário para operar os processos e obter produtos conformes. Neste estudo: o mapa do conhecimento. 7.1.6 · Manter: Manter esse conhecimento e torná-lo disponível na medida necessária. Neste estudo: a forma e quem sabe. 7.1.6 · Obter o que falta: Diante de mudanças, considerar o que se sabe e como obter o conhecimento adicional. Neste estudo: a ação de transferência. 8.5.5 · Pós-entrega: Atender às atividades pós-entrega, definidas pela lei, pelos riscos, pela vida útil, pelo cliente e pelo retorno. Neste estudo: a política e os atendimentos.">
+        <rect class="bx" x="10" y="14" width="214" height="172"/>
+        <rect class="hd-ink" x="10" y="14" width="214" height="34"/>
+        <text class="b t-ground" x="22" y="36" font-size="11.5">7.1.6 · Determinar</text>
+        <text x="22" y="70" font-size="11.5">Determinar o conhecimento</text>
+        <text x="22" y="86" font-size="11.5">necessário para operar os</text>
+        <text x="22" y="102" font-size="11.5">processos e obter produtos</text>
+        <text x="22" y="118" font-size="11.5">conformes.</text>
+        <text class="mu" x="22" y="160" font-size="11">Neste estudo: o mapa do</text>
+        <text class="mu" x="22" y="175" font-size="11">conhecimento</text>
+        <rect class="bx" x="232" y="14" width="214" height="172"/>
+        <rect class="hd-ink" x="232" y="14" width="214" height="34"/>
+        <text class="b t-ground" x="244" y="36" font-size="11.5">7.1.6 · Manter</text>
+        <text x="244" y="70" font-size="11.5">Manter esse conhecimento e</text>
+        <text x="244" y="86" font-size="11.5">torná-lo disponível na medida</text>
+        <text x="244" y="102" font-size="11.5">necessária.</text>
+        <text class="mu" x="244" y="160" font-size="11">Neste estudo: a forma e quem sabe</text>
+        <rect class="bx" x="454" y="14" width="214" height="172"/>
+        <rect class="hd-ink" x="454" y="14" width="214" height="34"/>
+        <text class="b t-ground" x="466" y="36" font-size="11.5">7.1.6 · Obter o que falta</text>
+        <text x="466" y="70" font-size="11.5">Diante de mudanças, considerar o</text>
+        <text x="466" y="86" font-size="11.5">que se sabe e como obter o</text>
+        <text x="466" y="102" font-size="11.5">conhecimento adicional.</text>
+        <text class="mu" x="466" y="160" font-size="11">Neste estudo: a ação de</text>
+        <text class="mu" x="466" y="175" font-size="11">transferência</text>
+        <rect class="bx" x="676" y="14" width="214" height="172"/>
+        <rect class="hd-ink" x="676" y="14" width="214" height="34"/>
+        <text class="b t-ground" x="688" y="36" font-size="11.5">8.5.5 · Pós-entrega</text>
+        <text x="688" y="70" font-size="11.5">Atender às atividades</text>
+        <text x="688" y="86" font-size="11.5">pós-entrega, definidas pela lei,</text>
+        <text x="688" y="102" font-size="11.5">pelos riscos, pela vida útil,</text>
+        <text x="688" y="118" font-size="11.5">pelo cliente e pelo retorno.</text>
+        <text class="mu" x="688" y="160" font-size="11">Neste estudo: a política e os</text>
+        <text class="mu" x="688" y="175" font-size="11">atendimentos</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 8.</b> O que a norma pede e onde este estudo responde. O texto da figura é um resumo, com palavras próprias.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:10%">Item</th><th style="width:32%">O que pede, em resumo</th><th style="width:27%">O que isso significa</th><th>Evidências que o auditor procura</th></tr></thead>
+      <tbody>
+        <tr><td class="num">7.1.6</td><td>Determinar o conhecimento necessário para operar os processos e obter produtos conformes, mantê-lo e torná-lo disponível na medida necessária</td><td>Saber o que se sabe, e não depender da memória de uma pessoa.</td><td>Mapa do conhecimento, instruções, registros de treinamento no posto.</td></tr>
+        <tr><td class="num">7.1.6</td><td>Diante de mudanças e tendências, considerar o conhecimento atual e como obter o adicional</td><td>A saída, o produto novo e a máquina nova pedem conhecimento novo.</td><td>Planos de transferência, contratos de treinamento, lições aprendidas.</td></tr>
+        <tr><td class="num">8.5.5</td><td>Atender aos requisitos das atividades pós-entrega, definindo a extensão com base na lei, nas consequências indesejadas, na natureza, no uso e na vida útil, nos requisitos do cliente e no retorno do cliente</td><td>O que se faz depois da entrega é decidido, e não improvisado.</td><td>Política de garantia, registro de atendimentos, prazos cumpridos.</td></tr>
+        <tr><td class="num">9.1.2</td><td>Monitorar a percepção do cliente</td><td>O pós-entrega é uma das fontes dessa percepção.</td><td>Indicadores de reclamação e de prazo de resposta.</td></tr>
+        <tr><td class="num">10.3</td><td>Melhorar continuamente</td><td>A lição incorporada é a forma mais simples de melhoria.</td><td>Lições com destino e documentos revisados.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pair">
+    <div class="box">
+      <h4>O que a ISO 9001 exige</h4>
+      <ul>
+        <li>O conhecimento necessário determinado, mantido e disponível.</li>
+        <li>Atenção ao conhecimento adicional diante de mudanças.</li>
+        <li>Atividades pós-entrega definidas e cumpridas.</li>
+        <li>As cinco considerações na definição do pós-entrega.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h4>O que a ISO 9001 não exige</h4>
+      <ul>
+        <li>Um "mapa do conhecimento" com esse nome, nem a pontuação deste material.</li>
+        <li>Escrever todo o conhecimento: parte dele se mantém pelo treinamento.</li>
+        <li>Um registro formal de lições aprendidas, embora ajude muito.</li>
+        <li>Garantia além da lei e do contrato.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="note">
+    <h4>Pontos de atenção</h4>
+    <p>O auditor costuma perguntar a um operador experiente o que ele sabe que não está escrito, e depois perguntar ao gerente o que acontece se esse operador sair. No pós-entrega, pede a política de garantia, escolhe três reclamações e confere prazo, causa e o que mudou depois. As constatações mais comuns são o conhecimento crítico dependente de uma pessoa, a reclamação sem causa e a política que contraria a lei.</p>
+    <p>Este módulo usa a numeração da ISO 9001:2015 e resume os textos com palavras próprias. Confira sempre a edição vigente da norma antes de citar um requisito em relatório.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 12 ============================ -->
+<section id="ronda">
+  <p class="eyebrow">Módulo 12</p>
+  <h2>A ronda do aprendizado</h2>
+  <p>Uma vez por mês, quem mantém o mapa reserva 30 minutos: lê os conhecimentos críticos, cobra as lições paradas, revê os atendimentos atrasados e decide.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 136" role="img" aria-label="Distribuição de uma ronda do aprendizado de 30 minutos: 5 minutos para os conhecimentos críticos, 10 minutos para as lições pendentes, 10 minutos para os atendimentos atrasados e sem causa, e 5 minutos para as decisões.">
+        <g font-size="11.5" text-anchor="middle">
+          <rect class="bx" x="60" y="24" width="130" height="56"/><text x="125" y="49">Conhecimentos</text><text x="125" y="64">críticos</text>
+          <rect class="hd-ink gap2" x="190" y="24" width="260" height="56"/><text class="t-ground b" x="320" y="49">Lições pendentes:</text><text class="t-ground b" x="320" y="64">destino, dono e prazo</text>
+          <rect class="hd-d gap2" x="450" y="24" width="260" height="56"/><text class="on b" x="580" y="49">Atendimentos atrasados</text><text class="on b" x="580" y="64">e sem causa</text>
+          <rect class="bx" x="710" y="24" width="130" height="56"/><text x="775" y="56">Decisões</text>
+        </g>
+        <g class="ln-mu" stroke-width="1">
+          <line x1="60" y1="82" x2="60" y2="94"/><line x1="190" y1="82" x2="190" y2="94"/><line x1="450" y1="82" x2="450" y2="94"/>
+          <line x1="710" y1="82" x2="710" y2="94"/><line x1="840" y1="82" x2="840" y2="94"/>
+        </g>
+        <g class="mono" font-size="10.5" text-anchor="middle">
+          <text class="mu" x="60" y="112">0</text><text class="mu" x="190" y="112">5</text><text class="mu" x="450" y="112">15</text>
+          <text class="mu" x="710" y="112">25</text><text class="mu" x="840" y="112">30</text>
+        </g>
+      </svg>
+    </div>
+    <figcaption><b>Figura 9.</b> Uma ronda de 30 minutos, desenhada em escala. As lições e os atendimentos ocupam dois terços do tempo.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Momento</th><th style="width:42%">O que fazer</th><th>Perguntas que ajudam</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Conhecimentos críticos</strong></td><td>As ações de transferência: andando, paradas, vencidas. Saídas anunciadas no mês.</td><td>"Quem já fez sozinho desde o mês passado?"</td></tr>
+        <tr><td><strong>Lições pendentes</strong></td><td>Cada lição sem destino, sem dono ou parada há muito tempo.</td><td>"Em que documento isso entra, e quem leva?"</td></tr>
+        <tr><td><strong>Atendimentos</strong></td><td>Os abertos e atrasados, os resolvidos sem causa, as perguntas repetidas.</td><td>"Por que este demorou?"</td></tr>
+        <tr><td><strong>Decisões</strong></td><td>Ações, prazos, mudanças na política, assuntos para a análise crítica.</td><td>"O que o cliente nos ensinou este mês?"</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Na ronda, pergunte a quem faz uma tarefa crítica: "se você faltar amanhã, quem faz?". Se a resposta for um nome que não está no mapa, o mapa está desatualizado.</p>
+
+  <h3>Checklist do conhecimento e do pós-entrega</h3>
+  <p>Marque os itens conforme revisa o que a sua organização sabe e o que faz depois da entrega. As marcações ficam salvas neste navegador.</p>
+  <ol class="check" id="checklist">
+    <li><label><input type="checkbox" id="ck-1"><span>O conhecimento necessário para cada processo está mapeado, com a criticidade.</span></label></li>
+    <li><label><input type="checkbox" id="ck-2"><span>Para cada conhecimento, sabe-se quantas pessoas o dominam e onde está escrito.</span></label></li>
+    <li><label><input type="checkbox" id="ck-3"><span>O conhecimento crítico que só uma pessoa sabe tem ação de transferência com prazo.</span></label></li>
+    <li><label><input type="checkbox" id="ck-4"><span>Saídas previstas, como aposentadoria e mudança, entram no mapa com antecedência.</span></label></li>
+    <li><label><input type="checkbox" id="ck-5"><span>As lições aprendidas são registradas, com o que aconteceu e o que se aprendeu.</span></label></li>
+    <li><label><input type="checkbox" id="ck-6"><span>Cada lição tem destino: um documento, uma instrução ou um treinamento.</span></label></li>
+    <li><label><input type="checkbox" id="ck-7"><span>Lições pendentes são lidas todo mês, e nenhuma fica parada sem responsável.</span></label></li>
+    <li><label><input type="checkbox" id="ck-8"><span>O que a organização faz depois da entrega está definido para cada produto ou serviço.</span></label></li>
+    <li><label><input type="checkbox" id="ck-9"><span>Os prazos aceitos para reclamar respeitam a lei e os contratos.</span></label></li>
+    <li><label><input type="checkbox" id="ck-10"><span>As reclamações, garantias e assistências são registradas, com prazo de resposta.</span></label></li>
+    <li><label><input type="checkbox" id="ck-11"><span>Cada reclamação resolvida tem a causa registrada.</span></label></li>
+    <li><label><input type="checkbox" id="ck-12"><span>O que o pós-entrega ensina volta como lição aprendida.</span></label></li>
+  </ol>
+  <div class="bar"><span><b id="ck-count">0</b> de 12 itens marcados</span><button class="btn" id="ck-reset" type="button">Limpar marcações</button></div>
+</section>
+
+<!-- ============================ MÓDULO 13 ============================ -->
+<section id="pratique">
+  <p class="eyebrow">Módulo 13</p>
+  <h2>Pratique</h2>
+  <h3>Exercício 1. O que está faltando?</h3>
+  <p>Cada item descreve uma situação. Diga o que falta: proteger um conhecimento exposto, dar destino a uma lição, acertar o pós-entrega, ou se está em ordem.</p>
+  <div class="quiz" id="quiz"></div>
+  <div class="bar"><span>Acertos: <b id="qz-score">0</b> de <b id="qz-total">12</b></span><span>Respondidos: <b id="qz-done">0</b></span><button class="btn" id="qz-reset" type="button">Recomeçar</button></div>
+
+  <h3>Exercício 2. Monte o seu mapa e a sua política</h3>
+  <p>Abra a planilha de apoio e siga o roteiro.</p>
+  <ol>
+    <li>Na aba Conhecimento, informe a data da leitura e liste o que cada processo precisa saber, com a criticidade, a forma, quantas pessoas sabem e as saídas previstas.</li>
+    <li>Para cada conhecimento crítico ou em risco, escreva a ação de transferência e o prazo.</li>
+    <li>Na aba Lições, registre os últimos casos que ensinaram alguma coisa, com o destino e o responsável.</li>
+    <li>Na aba Pós-entrega, escreva a política de cada produto: o mínimo da lei ou do contrato, o prazo aceito, o que se faz e o prazo de resposta.</li>
+    <li>Na aba Atendimentos, lance as reclamações, garantias e assistências do último mês.</li>
+    <li>Leia a aba Painel e passe o checklist do módulo 12.</li>
+  </ol>
+  <p>Depois, escolha a pessoa mais experiente da sua área e pergunte o que ela sabe que não está escrito. Comece o mapa pela resposta.</p>
+</section>
+
+<!-- ============================ MÓDULO 14 ============================ -->
+<section id="planilha">
+  <p class="eyebrow">Módulo 14</p>
+  <h2>A planilha de apoio</h2>
+  <p>Este treinamento acompanha o arquivo <a id="xlsx-ref" href="Conhecimento-modelo.xlsx">Conhecimento-modelo.xlsx</a>, que fica na mesma pasta. As células em amarelo-claro são para preenchimento. As células cinza são calculadas.</p>
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Aba</th><th>Para que serve</th><th style="width:36%">O que ela calcula</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Instruções</strong></td><td>Legenda de cores, as regras de cálculo, ordem de preenchimento e premissas do modelo.</td><td>Nada. É só leitura.</td></tr>
+        <tr><td><strong>Conhecimento</strong></td><td>A data da leitura e até 40 conhecimentos, com processo, criticidade, forma, onde está, quem sabe, saída prevista e ação.</td><td>Os pontos de exposição, a situação e a conferência.</td></tr>
+        <tr><td><strong>Lições</strong></td><td>Até 60 lições, com origem, o que aconteceu, o que se aprendeu, destino, responsável e data de incorporação.</td><td>A situação, os dias pendentes e a conferência.</td></tr>
+        <tr><td><strong>Pós-entrega</strong></td><td>Até 20 produtos, com vida útil, prazos, o que se faz e o que se quer evitar.</td><td>A conferência da política.</td></tr>
+        <tr><td><strong>Atendimentos</strong></td><td>Até 80 atendimentos, com abertura, produto, tipo, resolução, custo, causa e lição.</td><td>O prazo do produto, os dias, a situação e a conferência.</td></tr>
+        <tr><td><strong>Painel</strong></td><td>Nada a preencher.</td><td>Os números das quatro abas, o gráfico do conhecimento e o aviso.</td></tr>
+        <tr><td><strong>Checklist</strong></td><td>Os mesmos 12 itens do módulo 12, com status Sim, Parcial ou Não.</td><td>Percentual atendido e situação da validação.</td></tr>
+        <tr><td><strong>Exemplo 1 e Exemplo 2</strong></td><td>O conhecimento, as lições, a política e os atendimentos da pizzaria e da indústria.</td><td>As mesmas contas das abas de entrada.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ GLOSSÁRIO ============================ -->
+<section id="glossario">
+  <p class="eyebrow">Referência</p>
+  <h2>Glossário</h2>
+  <dl class="gloss">
+    <div><dt>Atividades pós-entrega</dt><dd>O que a organização faz depois que o produto chega ao cliente: garantia, assistência, atendimento a reclamações, recolhimento.</dd></div>
+    <div><dt>Conhecimento explícito</dt><dd>O conhecimento que está escrito, gravado ou desenhado, e pode ser lido por outra pessoa.</dd></div>
+    <div><dt>Conhecimento organizacional</dt><dd>O conhecimento específico da organização, ganho com a experiência, usado para alcançar os objetivos.</dd></div>
+    <div><dt>Conhecimento tácito</dt><dd>O conhecimento que está só em quem faz: o jeito, o olho, o ouvido.</dd></div>
+    <div><dt>Exposição</dt><dd>Neste material, a pontuação que mede o quanto um conhecimento pode ser perdido.</dd></div>
+    <div><dt>Garantia</dt><dd>O compromisso de reparar, trocar ou devolver o valor se o produto falhar dentro de um prazo.</dd></div>
+    <div><dt>Lição aprendida</dt><dd>O que um caso ensinou, escrito e com destino num documento ou num treinamento.</dd></div>
+    <div><dt>Política de pós-entrega</dt><dd>O que a organização faz depois da entrega de cada produto, com os prazos.</dd></div>
+    <div><dt>Prazo de resposta</dt><dd>O tempo em que a organização se compromete a resolver um atendimento.</dd></div>
+    <div><dt>Recolhimento</dt><dd>A retirada do mercado de um produto que pode causar dano, por iniciativa da organização ou por exigência legal.</dd></div>
+    <div><dt>Transferência de conhecimento</dt><dd>A passagem do conhecimento de quem sabe para o papel e para outras pessoas.</dd></div>
+    <div><dt>Vida útil</dt><dd>O tempo em que o produto mantém as características prometidas, quando usado e guardado como indicado.</dd></div>
+  </dl>
+</section>
+
+</main>
+</div>
+
+<footer>Material de estudo. Os exemplos, documentos e números são ilustrativos e foram criados para fins didáticos. As referências às normas ISO e à legislação são resumos para estudo e não substituem os textos originais.</footer>
+</div>
+
+<script>
+(function () {
+  function read(key) { try { return JSON.parse(localStorage.getItem(key) || 'null'); } catch (e) { return null; } }
+  function write(key, val) { try { localStorage.setItem(key, JSON.stringify(val)); } catch (e) {} }
+
+  /* ---------- Checklist ---------- */
+  var boxes = Array.prototype.slice.call(document.querySelectorAll('#checklist input'));
+  var count = document.getElementById('ck-count');
+  var saved = read('conhecimento-checklist') || {};
+  function refreshChecks() {
+    var n = 0, state = {};
+    boxes.forEach(function (b) { if (b.checked) { n++; } state[b.id] = b.checked; });
+    count.textContent = n;
+    return state;
+  }
+  boxes.forEach(function (b) {
+    if (saved[b.id]) { b.checked = true; }
+    b.addEventListener('change', function () { write('conhecimento-checklist', refreshChecks()); });
+  });
+  refreshChecks();
+  document.getElementById('ck-reset').addEventListener('click', function () {
+    boxes.forEach(function (b) { b.checked = false; });
+    write('conhecimento-checklist', refreshChecks());
+  });
+
+  /* ---------- Exercício ---------- */
+  var KEYS = ['C', 'L', 'P', 'O'];
+  var LABEL = { C: 'Proteger o conhecimento', L: 'Dar destino à lição', P: 'Acertar o pós-entrega', O: 'Em ordem' };
+  var NAMES = { C: 'proteger o conhecimento', L: 'dar destino à lição', P: 'acertar o pós-entrega', O: 'em ordem' };
+  var ITEMS = [
+    { t: '“Só o pizzaiolo líder sabe regular o forno, e ele muda de cidade em agosto.”', a: 'C', w: 'Conhecimento crítico, na cabeça de uma pessoa, com saída prevista.' },
+    { t: '“A lição da etiqueta foi registrada em março. Ninguém ficou com a tarefa, e a etiqueta continua igual.”', a: 'L', w: 'Lição sem responsável não chega ao processo.' },
+    { t: '“O cartaz da loja diz: reclamações só no dia da compra.”', a: 'P', w: 'O prazo aceito não pode ser menor que o da lei.' },
+    { t: '“As receitas estão escritas, e quatro pizzaiolos as seguem sozinhos.”', a: 'O', w: 'Escrito e treinado, com várias pessoas: sob controle.' },
+    { t: '“O acerto de cor da impressora, que o cliente aprova, só um impressor sabe fazer.”', a: 'C', w: 'Conhecimento crítico exposto, sem ação.' },
+    { t: '“A reclamação de atraso foi resolvida com desconto, sem causa registrada.”', a: 'P', w: 'Reclamação resolvida pede a causa, ou volta.' },
+    { t: '“Vinte clientes perguntaram como reaquecer a pizza, e a embalagem continua igual.”', a: 'L', w: 'Perguntas repetidas são uma lição para a embalagem.' },
+    { t: '“O contrato do cliente exige 60 dias para reclamar, e a política da fábrica aceita 30.”', a: 'P', w: 'O prazo aceito está abaixo do mínimo contratual.' },
+    { t: '“O operador sênior se aposenta em dezembro e acompanha o turno C desde setembro, com prazo até novembro.”', a: 'O', w: 'Saída prevista com transferência planejada e em andamento.' },
+    { t: '“A lição sobre a medição da rosca entrou no plano de manutenção, com data de revisão.”', a: 'O', w: 'Lição com destino, incorporada.' },
+    { t: '“O ponto da massa está na receita, mas só dois pizzaiolos acertam num dia quente, e não há plano.”', a: 'C', w: 'Escrito não basta. Em risco, sem ação de transferência.' },
+    { t: '“A lição do micrômetro grosso está pendente há 110 dias no procedimento de compras.”', a: 'L', w: 'Lição parada há mais de 60 dias.' }
+  ];
+  var quiz = document.getElementById('quiz');
+  var score = document.getElementById('qz-score');
+  var done = document.getElementById('qz-done');
+  document.getElementById('qz-total').textContent = ITEMS.length;
+  var hits = 0, answered = 0;
+
+  function render() {
+    hits = 0; answered = 0; score.textContent = 0; done.textContent = 0;
+    quiz.textContent = '';
+    ITEMS.forEach(function (item, idx) {
+      var row = document.createElement('div'); row.className = 'q';
+      var p = document.createElement('p'); p.textContent = (idx + 1) + '. ' + item.t;
+      var opts = document.createElement('div'); opts.className = 'opts';
+      opts.setAttribute('role', 'group'); opts.setAttribute('aria-label', 'O que falta no item ' + (idx + 1));
+      var why = document.createElement('p'); why.className = 'why'; why.hidden = true;
+      KEYS.forEach(function (k) {
+        var b = document.createElement('button');
+        b.type = 'button'; b.textContent = LABEL[k]; b.id = 'qz-' + idx + '-' + k;
+        b.setAttribute('data-k', k);
+        b.addEventListener('click', function () {
+          var ok = k === item.a;
+          Array.prototype.forEach.call(opts.children, function (o) {
+            o.disabled = true;
+            if (o.getAttribute('data-k') === item.a) { o.className = 'right'; }
+          });
+          if (!ok) { b.className = 'wrong'; }
+          var lead = document.createElement('b');
+          lead.textContent = (ok ? 'Certo. ' : 'A resposta é: ' + NAMES[item.a] + '. ');
+          why.textContent = ''; why.appendChild(lead); why.appendChild(document.createTextNode(item.w));
+          why.className = 'why ' + (ok ? 'ok' : 'no'); why.hidden = false;
+          answered++; if (ok) { hits++; }
+          score.textContent = hits; done.textContent = answered;
+        });
+        opts.appendChild(b);
+      });
+      row.appendChild(p); row.appendChild(opts); row.appendChild(why);
+      quiz.appendChild(row);
+    });
+  }
+  render();
+  document.getElementById('qz-reset').addEventListener('click', render);
+
+  /* ---------- Gráfico: leitura dos valores ---------- */
+  var fig = document.getElementById('fig-bars');
+  var tip = document.getElementById('bars-tip');
+  var svg = document.getElementById('bars');
+  var bars = document.querySelectorAll('#bars .bar');
+  function hide() {
+    tip.hidden = true;
+    Array.prototype.forEach.call(bars, function (b) { b.removeAttribute('opacity'); });
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('#bars .hit'), function (r) {
+    function show() {
+      var d = r.dataset;
+      Array.prototype.forEach.call(bars, function (b) {
+        b.setAttribute('opacity', b.getAttribute('data-k') === d.k ? '1' : '.4');
+      });
+      tip.textContent = '';
+      var strong = document.createElement('b'); strong.textContent = d.s + ' · ' + d.d;
+      tip.appendChild(strong);
+      tip.appendChild(document.createTextNode(d.n + ' · ' + d.p));
+      var box = fig.getBoundingClientRect();
+      var pt = svg.createSVGPoint(); pt.x = parseFloat(d.cx); pt.y = parseFloat(d.cy);
+      var scr = pt.matrixTransform(svg.getScreenCTM());
+      tip.style.left = Math.min(Math.max(scr.x - box.left, 180), box.width - 180) + 'px';
+      tip.style.top = (scr.y - box.top + 4) + 'px';
+      tip.hidden = false;
+    }
+    r.addEventListener('pointerenter', show);
+    r.addEventListener('focus', show);
+    r.addEventListener('pointerleave', hide);
+    r.addEventListener('blur', hide);
+  });
+})();
+</script>
+</body>
+</html>

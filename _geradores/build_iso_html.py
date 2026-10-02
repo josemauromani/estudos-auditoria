@@ -204,7 +204,7 @@ tb.append(f'            <tr class="tot"><td>Total</td><td class="c">{GERAL[0]}</
 tb += ['          </tbody>', '        </table>']
 
 # ---- figura 9: estudos da série × seções da norma
-ORDEM = ["esc", "pi", "swot", "obj", "ped", "proj", "proc", "sipoc", "raci", "riscos", "prod", "lib", "ind", "gut", "par", "ishikawa", "w5h2", "pdca", "auditoria", "nc", "ac", "doc", "comp", "cal", "rec", "forn", "sat"]
+ORDEM = ["esc", "pi", "swot", "obj", "ped", "proj", "proc", "sipoc", "raci", "riscos", "prod", "lib", "ind", "gut", "par", "ishikawa", "w5h2", "pdca", "auditoria", "nc", "ac", "doc", "comp", "cal", "rec", "con", "forn", "sat"]
 CX = lambda j: 350 + j * 80  # noqa: E731
 HD = {"base": "hd-ink", "p": "hd-p", "d": "hd-d", "c": "hd-c", "a": "hd-a"}
 RY, R0 = 32, 70
@@ -244,6 +244,8 @@ AJUDA = {
     "7.1.1": "Traz a conta das pessoas pela demanda do pico, com as escaladas, as qualificadas e a falta de gente.",
     "7.1.3": "Traz a criticidade de cada item, a preventiva no prazo, a contingência escrita e a disponibilidade calculada das paradas.",
     "7.1.4": "Traz os fatores físicos, sociais e psicológicos que afetam o produto, com limite, controle, medição e ação.",
+    "7.1.6": "Traz o mapa do conhecimento com a exposição de cada um, as ações de transferência e o registro das lições aprendidas.",
+    "8.5.5": "Traz a política de pós-entrega por produto, com os prazos da lei e do contrato, e o registro dos atendimentos com prazo e causa.",
     "7.1.5": "Traz a lista de instrumentos, a adequação, a leitura do certificado, a situação de cada um e a avaliação dos resultados anteriores.",
     "7.5": "Traz a lista mestra, a tabela de retenção dos registros e a lista de documentos externos.",
     "7.2": "Traz a matriz por função, a escala de níveis, o plano de treinamento e a avaliação da eficácia.",
