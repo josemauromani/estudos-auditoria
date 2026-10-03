@@ -1,0 +1,1417 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Técnica de auditoria</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<style>
+:root{
+  --ground:#F3F6F7; --surface:#FFFFFF; --sunk:#E9EEF0; --ink:#16242E; --muted:#566672; --rule:#D3DBE0;
+  --accent:#2B5C8A;
+  --s1:#2A6FB0; --s1-tint:#DCE8F3;
+  --s2:#D19A2E; --s2-tint:#F8EBCB;
+  --s3:#B0413E; --s3-tint:#F5DEDC;
+  --on-s2:#16242E;
+  --p:#2B5C8A; --p-tint:#DCE8F3;
+  --d:#A96A12; --d-tint:#F6E8CF;
+  --c:#1E7B73; --c-tint:#D9EEEB;
+  --a:#B0413E; --a-tint:#F5DEDC;
+  --on-hue:#FFFFFF;
+  --good:#1F7A4D; --good-tint:#DDF1E5;
+  --bad:#B0413E; --bad-tint:#F5DEDC;
+  --display:"Barlow Semi Condensed","Arial Narrow",Arial,sans-serif;
+  --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --ground:#0F171C; --surface:#172229; --sunk:#1E2B33; --ink:#E4EAED; --muted:#9BABB6; --rule:#2B3A44;
+    --accent:#86B7E3;
+  --s1:#4F97DB; --s1-tint:#1B2F42;
+  --s2:#B58E14; --s2-tint:#3A2C12;
+  --s3:#D14B45; --s3-tint:#3D1F1E;
+  --on-s2:#0F171C;
+    --p:#86B7E3; --p-tint:#1B2F42;
+    --d:#E2AC4F; --d-tint:#3A2C12;
+    --c:#5FC6BA; --c-tint:#15332F;
+    --a:#EC8E89; --a-tint:#3D1F1E;
+    --on-hue:#0F171C;
+    --good:#6FCF9B; --good-tint:#163326;
+    --bad:#EC8E89; --bad-tint:#3D1F1E;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --ground:#0F171C; --surface:#172229; --sunk:#1E2B33; --ink:#E4EAED; --muted:#9BABB6; --rule:#2B3A44;
+  --accent:#86B7E3;
+  --s1:#4F97DB; --s1-tint:#1B2F42;
+  --s2:#B58E14; --s2-tint:#3A2C12;
+  --s3:#D14B45; --s3-tint:#3D1F1E;
+  --on-s2:#0F171C;
+  --p:#86B7E3; --p-tint:#1B2F42;
+  --d:#E2AC4F; --d-tint:#3A2C12;
+  --c:#5FC6BA; --c-tint:#15332F;
+  --a:#EC8E89; --a-tint:#3D1F1E;
+  --on-hue:#0F171C;
+  --good:#6FCF9B; --good-tint:#163326;
+  --bad:#EC8E89; --bad-tint:#3D1F1E;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--ground);color:var(--ink);font:400 16px/1.65 var(--body);-webkit-text-size-adjust:100%}
+a{color:var(--accent);text-underline-offset:3px}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.page{max-width:1180px;margin-inline:auto;padding-inline:20px;padding-block:36px 80px}
+
+/* Cabeçalho */
+.mast{display:flex;flex-direction:column;gap:18px;padding-bottom:32px;border-bottom:1px solid var(--rule)}
+.tiles{display:flex;gap:6px}
+.tiles span{width:44px;height:44px;display:grid;place-items:center;font:700 24px/1 var(--display);color:var(--on-hue)}
+.tiles .p{background:var(--p)} .tiles .d{background:var(--d)} .tiles .c{background:var(--c)} .tiles .a{background:var(--a)}
+h1{font:700 clamp(2.3rem,6vw,3.6rem)/1.02 var(--display);letter-spacing:-.01em;margin:0;text-wrap:balance}
+.lead{font-size:1.15rem;line-height:1.55;max-width:62ch;margin:0;color:var(--ink)}
+.meta{display:flex;flex-direction:row;flex-wrap:wrap;gap:6px 22px;font:400 .8rem/1.4 var(--mono);color:var(--muted);margin:0;padding:0;list-style:none}
+
+/* Estrutura */
+.layout{display:grid;grid-template-columns:minmax(0,1fr);gap:32px;padding-top:32px}
+.toc{font-size:.92rem}
+.toc h2{font:500 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+.toc ol{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:2px 20px;counter-reset:toc}
+.toc li{counter-increment:toc}
+.toc a{display:flex;gap:10px;padding:5px 0;color:var(--ink);text-decoration:none;line-height:1.35}
+.toc a::before{content:counter(toc,decimal-leading-zero);font:400 .75rem/1.7 var(--mono);color:var(--muted)}
+.toc a:hover{color:var(--accent);text-decoration:underline}
+@media (min-width:1020px){
+  .layout{grid-template-columns:200px minmax(0,1fr);gap:64px}
+  .toc{position:sticky;top:calc(env(safe-area-inset-top,0px) + 24px);align-self:start}
+  .toc ol{grid-template-columns:1fr}
+}
+main{display:flex;flex-direction:column;gap:72px;min-width:0}
+section{display:flex;flex-direction:column;gap:20px;scroll-margin-top:24px}
+.eyebrow{font:500 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0}
+h2{font:700 clamp(1.7rem,4vw,2.2rem)/1.1 var(--display);margin:0;text-wrap:balance}
+h3{font:600 1.3rem/1.2 var(--display);margin:12px 0 0;text-wrap:balance}
+h4{font:600 .95rem/1.3 var(--body);margin:0}
+p{margin:0}
+section > p, section > ul, section > ol, section > h3{max-width:68ch}
+ul,ol{margin:0;padding-left:1.25em;display:flex;flex-direction:column;gap:6px}
+strong{font-weight:600}
+code{font:400 .88em var(--mono);background:var(--sunk);padding:1px 5px;border-radius:3px}
+
+/* Letras coloridas no texto */
+.k{display:inline-grid;place-items:center;width:1.45em;height:1.45em;font:700 .85em/1 var(--display);color:var(--on-hue);vertical-align:.05em}
+.k.p{background:var(--p)} .k.d{background:var(--d)} .k.c{background:var(--c)} .k.a{background:var(--a)}
+
+/* Figuras */
+figure{margin:0;display:flex;flex-direction:column;gap:10px;position:relative}
+.scroll{overflow-x:auto;background:var(--surface);border:1px solid var(--rule);padding:18px}
+.scroll svg{display:block;width:100%;min-width:820px;height:auto;color:var(--ink)}
+figcaption{font-size:.86rem;line-height:1.5;color:var(--muted);max-width:72ch}
+figcaption b{color:var(--ink);font-weight:600}
+svg text{font-family:var(--body);fill:var(--ink)}
+svg .disp{font-family:var(--display);font-weight:700}
+svg .mono{font-family:var(--mono);letter-spacing:.08em}
+svg .on{fill:var(--on-hue)}
+svg .mu{fill:var(--muted)}
+svg .b{font-weight:600}
+svg .ln{stroke:var(--ink);stroke-width:1.5;fill:none}
+svg .ln-mu{stroke:var(--muted);stroke-width:1.5;fill:none}
+svg .ln-bold{stroke:var(--ink);stroke-width:3;fill:none;stroke-linejoin:round;stroke-linecap:round}
+svg .dash{stroke-dasharray:5 4}
+svg .ah{fill:var(--ink)} svg .ah-mu{fill:var(--muted)}
+svg .bx{fill:var(--surface);stroke:var(--rule);stroke-width:1.5}
+svg .bx-ink{fill:var(--ink);stroke:var(--ink)}
+svg .t-ground{fill:var(--ground)}
+svg .bx-out{fill:none;stroke:var(--muted);stroke-width:1.5;stroke-dasharray:5 4}
+svg .bx-p{fill:var(--p-tint);stroke:var(--p);stroke-width:1.5} svg .hd-p{fill:var(--p)}
+svg .bx-d{fill:var(--d-tint);stroke:var(--d);stroke-width:1.5} svg .hd-d{fill:var(--d)}
+svg .bx-c{fill:var(--c-tint);stroke:var(--c);stroke-width:1.5} svg .hd-c{fill:var(--c)}
+svg .bx-a{fill:var(--a-tint);stroke:var(--a);stroke-width:1.5} svg .hd-a{fill:var(--a)}
+svg .gap{stroke:var(--surface);stroke-width:4}
+svg .gap2{stroke:var(--surface);stroke-width:2}
+svg .hub{fill:var(--surface)}
+
+/* Gráfico */
+svg .grid{stroke:var(--rule);stroke-width:1}
+svg .band{fill:var(--sunk)}
+svg .series{stroke:var(--accent);stroke-width:2;fill:none;stroke-linejoin:round;stroke-linecap:round}
+svg .pt{fill:var(--accent);stroke:var(--surface);stroke-width:2}
+svg .pt.on-hit{stroke:var(--ink)}
+svg .goal{stroke:var(--muted);stroke-width:1.5;stroke-dasharray:6 4;fill:none}
+svg .xh{stroke:var(--muted);stroke-width:1}
+svg .hit{fill:transparent;cursor:crosshair;outline:none}
+svg .root{fill:var(--accent);stroke:var(--surface);stroke-width:2}
+.tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--ground);padding:6px 10px;font-size:.78rem;line-height:1.4;transform:translate(-50%,calc(-100% - 14px));white-space:nowrap;z-index:2}
+.tip b{display:block;font:600 1.05rem/1.2 var(--body)}
+details.data{font-size:.88rem}
+details.data summary{cursor:pointer;font:400 .82rem var(--mono);color:var(--muted);padding:4px 0}
+details.data .tbl{margin-top:8px}
+details.data table{min-width:420px}
+
+/* Tabelas */
+.tbl{overflow-x:auto;border:1px solid var(--rule);background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:780px;font-size:.88rem;line-height:1.4}
+th,td{padding:9px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--rule)}
+tr:last-child > td{border-bottom:0}
+thead th{font:600 .8rem/1.3 var(--body);background:var(--sunk)}
+td.num{font-variant-numeric:tabular-nums;white-space:nowrap;font-family:var(--mono);font-size:.82rem}
+
+/* Situações */
+.chip{display:inline-block;padding:2px 8px;font:600 .76rem/1.45 var(--body);color:var(--on-hue);white-space:nowrap}
+.chip.s1{background:var(--s1)} .chip.s2{background:var(--s2);color:var(--on-s2)} .chip.s3{background:var(--s3)}
+.chip.sl{background:var(--sunk);color:var(--ink);box-shadow:inset 0 0 0 1px var(--rule)}
+svg .hd-ink{fill:var(--ink)}
+svg .f1{fill:var(--s1)} svg .f2{fill:var(--s2)} svg .f3{fill:var(--s3)} svg .f0{fill:var(--muted)}
+svg .bx-s1{fill:var(--s1-tint);stroke:var(--s1);stroke-width:1.5} svg .bx-s2{fill:var(--s2-tint);stroke:var(--s2);stroke-width:1.5} svg .bx-s3{fill:var(--s3-tint);stroke:var(--s3);stroke-width:1.5}
+svg .tick{stroke:var(--ink);stroke-width:2.5}
+svg .halo{paint-order:stroke;stroke:var(--surface);stroke-width:5px;stroke-linejoin:round}
+svg .hit:focus-visible{stroke:var(--accent);stroke-width:2}
+
+/* Tabelas dos exemplos */
+table.aud{font-size:.8rem;min-width:960px;line-height:1.4}
+table.aud th, table.aud td{padding:8px 9px}
+table.aud td.n{white-space:nowrap;font-weight:600;color:var(--muted)}
+table.aud td.c, table.aud th.c{text-align:center;font-variant-numeric:tabular-nums}
+table.aud td.no{background:var(--s3-tint)}
+table.aud td small, table.aud th small{display:block;color:var(--muted);font-size:.76rem;margin-top:3px;font-weight:400}
+table.aud caption{caption-side:top;text-align:left;padding:10px 12px;font:500 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);background:var(--sunk)}
+table.aud tr.tot td{font-weight:600;background:var(--sunk)}
+
+/* Ficha da auditoria (acima de cada exemplo) */
+.ficha{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:0;border:1px solid var(--rule);background:var(--surface)}
+.ficha div{padding:12px 14px;border-right:1px solid var(--rule);border-bottom:1px solid var(--rule);margin:0 -1px -1px 0}
+.ficha dt{font:500 .68rem/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.ficha dd{margin:0;font-size:.9rem;line-height:1.4}
+dl{margin:0}
+
+/* Blocos */
+.pair{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.box{background:var(--surface);border:1px solid var(--rule);padding:18px 20px;display:flex;flex-direction:column;gap:10px}
+.box h4{font:600 1.1rem/1.2 var(--display)}
+.box ul{font-size:.93rem}
+.note{background:var(--sunk);padding:16px 20px;max-width:72ch;font-size:.94rem;display:flex;flex-direction:column;gap:6px}
+.note h4{font:500 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+
+/* Passo a passo */
+.steps{list-style:none;padding:0;counter-reset:st;gap:0;max-width:none;border-top:1px solid var(--rule)}
+.steps li{counter-increment:st;display:grid;grid-template-columns:44px minmax(0,1fr);gap:4px 12px;padding:16px 0;border-bottom:1px solid var(--rule)}
+.steps li::before{content:counter(st);font:700 1.7rem/1 var(--display);color:var(--muted);grid-row:span 2}
+.steps h4{font:600 1.1rem/1.25 var(--display)}
+.steps p{font-size:.95rem;max-width:64ch;grid-column:2}
+
+/* Erros comuns */
+.errs{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:0 40px;border-top:1px solid var(--rule)}
+.errs div{padding:16px 16px 16px 0;border-bottom:1px solid var(--rule);display:flex;flex-direction:column;gap:4px}
+.errs h4{font:600 1.05rem/1.25 var(--display)}
+.errs p{font-size:.92rem}
+.errs .fix{color:var(--muted)}
+.errs .fix b{color:var(--ink);font-weight:600}
+
+/* Checklist */
+.check{list-style:none;padding:0;gap:0;max-width:none;border:1px solid var(--rule);background:var(--surface)}
+.check li{border-bottom:1px solid var(--rule)}
+.check li:last-child{border-bottom:0}
+.check label{display:grid;grid-template-columns:22px minmax(0,1fr);gap:12px;padding:11px 16px;cursor:pointer;font-size:.94rem;align-items:start}
+.check input{width:18px;height:18px;margin:3px 0 0;accent-color:var(--c)}
+.check input:checked + span{color:var(--muted);text-decoration:line-through}
+.bar{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;font:400 .82rem var(--mono);color:var(--muted)}
+.bar b{color:var(--ink);font-weight:500}
+
+/* Exercício */
+.quiz{display:flex;flex-direction:column;gap:0;border:1px solid var(--rule);background:var(--surface)}
+.q{display:grid;grid-template-columns:minmax(0,1fr);gap:10px;padding:14px 16px;border-bottom:1px solid var(--rule)}
+.q:last-child{border-bottom:0}
+@media (min-width:720px){.q{grid-template-columns:minmax(0,1fr) auto;align-items:center}}
+.q p{font-size:.95rem}
+.q .why{grid-column:1/-1;font-size:.86rem;color:var(--muted)}
+.q .why b{font-weight:600}
+.q .why.ok b{color:var(--good)} .q .why.no b{color:var(--bad)}
+.opts{display:flex;gap:6px}
+.opts button{width:40px;height:40px;border:1.5px solid var(--rule);background:var(--surface);color:var(--ink);font:700 1.1rem/1 var(--display);cursor:pointer;border-radius:0}
+.opts button:hover:not(:disabled){border-color:var(--ink)}
+.opts button:disabled{cursor:default;opacity:.45}
+.opts button.right{background:var(--good-tint);border-color:var(--good);color:var(--good);opacity:1}
+.opts button.wrong{background:var(--bad-tint);border-color:var(--bad);color:var(--bad);opacity:1}
+.btn{border:1.5px solid var(--ink);background:transparent;color:var(--ink);font:500 .82rem var(--mono);padding:7px 14px;cursor:pointer;border-radius:0}
+.btn:hover{background:var(--ink);color:var(--ground)}
+
+/* Glossário */
+.gloss{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:0 40px;border-top:1px solid var(--rule)}
+.gloss div{padding:12px 0;border-bottom:1px solid var(--rule)}
+.gloss dt{font:600 1.02rem/1.3 var(--display)}
+.gloss dd{margin:2px 0 0;font-size:.9rem;color:var(--muted)}
+footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);font-size:.84rem;color:var(--muted);max-width:72ch}
+
+.quiz .opts{flex-wrap:wrap}
+.quiz .opts button{width:auto;min-width:40px;padding:0 11px;font-size:1rem}
+@media (min-width:720px){.q{grid-template-columns:minmax(0,1fr) auto}}
+</style>
+</head>
+<body>
+<div class="page" lang="pt-BR">
+
+<header class="mast">
+  <div class="tiles" aria-hidden="true"><span class="p">P</span><span class="d">A</span><span class="c">E</span></div>
+  <h1>Técnica de auditoria na prática</h1>
+  <p class="lead">Um guia de estudo para o trabalho do auditor em campo, com base nas diretrizes da ISO 19011: perguntar sem induzir, escolher e dimensionar a amostra, pesar a força de cada evidência e avaliar os auditores pela auditoria testemunhada.</p>
+  <ul class="meta">
+    <li>Treinamento autoinstrucional</li>
+    <li>14 módulos</li>
+    <li>Leitura de cerca de 50 minutos</li>
+    <li>3 exemplos resolvidos e 2 exercícios</li>
+  </ul>
+</header>
+
+<div class="layout">
+
+<nav class="toc" aria-label="Sumário">
+  <h2>Sumário</h2>
+  <ol>
+    <li><a href="#o-que-e">O que é</a></li>
+    <li><a href="#quando">Quando usar</a></li>
+    <li><a href="#como">Como conduzir</a></li>
+    <li><a href="#entrevista">A entrevista</a></li>
+    <li><a href="#amostragem">A amostragem</a></li>
+    <li><a href="#evidencia">A força da evidência</a></li>
+    <li><a href="#exemplos">Exemplos resolvidos</a></li>
+    <li><a href="#leitura">Ler as amostras</a></li>
+    <li><a href="#erros">Erros comuns</a></li>
+    <li><a href="#ferramentas">A técnica e outras ferramentas</a></li>
+    <li><a href="#iso">Nas normas ISO</a></li>
+    <li><a href="#avaliar">Avaliar o auditor</a></li>
+    <li><a href="#pratique">Pratique</a></li>
+    <li><a href="#planilha">A planilha de apoio</a></li>
+    <li><a href="#glossario">Glossário</a></li>
+  </ol>
+</nav>
+
+<main>
+
+<!-- ============================ MÓDULO 1 ============================ -->
+<section id="o-que-e">
+  <p class="eyebrow">Módulo 1</p>
+  <h2>O que é</h2>
+  <p>O estudo de <a href="../Auditoria/treinamento-auditoria.html">Auditoria interna</a> mostra o que a auditoria precisa ter: programa, plano, lista de verificação, constatações e relatório. Este estudo trata de como o auditor trabalha em campo. Duas auditorias com o mesmo plano chegam a conclusões diferentes conforme o auditor pergunta, escolhe o que ver e decide quando a evidência basta.</p>
+  <p>As letras do título são os três instrumentos do auditor: <span class="k p">P</span> a pergunta, que abre o assunto sem sugerir a resposta, <span class="k d">A</span> a amostra, que decide quanto ver e de onde, e <span class="k c">E</span> a evidência, que só sustenta uma constatação quando é verificável e suficiente.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 214" role="img" aria-label="O caminho de uma evidência. Pergunta: O que o critério pede, transformado em pergunta aberta. Fonte: Quem responde, o que se observa, que registro se lê. Amostra: Quantos casos, escolhidos pelo auditor. Critério: A régua: o requisito ou o documento que diz como deveria ser. Constatação: Conforme, não conforme ou oportunidade, com a evidência. Sem qualquer um dos cinco, a constatação não se sustenta.">
+        <defs><marker id="a1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker></defs>
+        <rect class="bx" x="12" y="16" width="164" height="128"/>
+        <text class="b" x="24" y="40" font-size="12.5">Pergunta</text>
+        <text x="24" y="63.0" font-size="10.5">O que o critério pede,</text>
+        <text x="24" y="77.5" font-size="10.5">transformado em pergunta</text>
+        <text x="24" y="92.0" font-size="10.5">aberta.</text>
+        <line class="ln" x1="177" y1="80.0" x2="188" y2="80.0" marker-end="url(#a1)"/>
+        <rect class="bx-p" x="190" y="16" width="164" height="128"/>
+        <text class="b" x="202" y="40" font-size="12.5">Fonte</text>
+        <text x="202" y="63.0" font-size="10.5">Quem responde, o que se</text>
+        <text x="202" y="77.5" font-size="10.5">observa, que registro se</text>
+        <text x="202" y="92.0" font-size="10.5">lê.</text>
+        <line class="ln" x1="355" y1="80.0" x2="366" y2="80.0" marker-end="url(#a1)"/>
+        <rect class="bx-d" x="368" y="16" width="164" height="128"/>
+        <text class="b" x="380" y="40" font-size="12.5">Amostra</text>
+        <text x="380" y="63.0" font-size="10.5">Quantos casos, escolhidos</text>
+        <text x="380" y="77.5" font-size="10.5">pelo auditor.</text>
+        <line class="ln" x1="533" y1="80.0" x2="544" y2="80.0" marker-end="url(#a1)"/>
+        <rect class="bx-c" x="546" y="16" width="164" height="128"/>
+        <text class="b" x="558" y="40" font-size="12.5">Critério</text>
+        <text x="558" y="63.0" font-size="10.5">A régua: o requisito ou o</text>
+        <text x="558" y="77.5" font-size="10.5">documento que diz como</text>
+        <text x="558" y="92.0" font-size="10.5">deveria ser.</text>
+        <line class="ln" x1="711" y1="80.0" x2="722" y2="80.0" marker-end="url(#a1)"/>
+        <rect class="bx-ink" x="724" y="16" width="164" height="128"/>
+        <text class="b t-ground" x="736" y="40" font-size="12.5">Constatação</text>
+        <text class="t-ground" x="736" y="63.0" font-size="10.5">Conforme, não conforme ou</text>
+        <text class="t-ground" x="736" y="77.5" font-size="10.5">oportunidade, com a</text>
+        <text class="t-ground" x="736" y="92.0" font-size="10.5">evidência.</text>
+        <text x="450" y="176" font-size="11.5" text-anchor="middle">Toda constatação passa pelos cinco. Se faltar um, ela é opinião, e não achado de auditoria.</text>
+        <text class="mu" x="450" y="196" font-size="11" text-anchor="middle">A técnica do auditor está nos três do meio: de quem ouvir, quanto ver e contra o que comparar.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 1.</b> O caminho de uma evidência, da pergunta à constatação.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Elemento</th><th style="width:40%">O que é</th><th>Exemplo</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Critério de auditoria</strong></td><td>A referência contra a qual a evidência é comparada.</td><td>Requisito 7.1.5, instrução do salão na revisão 2.</td></tr>
+        <tr><td><strong>Evidência de auditoria</strong></td><td>Registros, declarações e fatos verificáveis, ligados ao critério.</td><td>Planilha FR-07 com a verificação de 15/03.</td></tr>
+        <tr><td><strong>População</strong></td><td>O conjunto de onde a amostra é tirada.</td><td>As 620 comandas do salão de fevereiro.</td></tr>
+        <tr><td><strong>Amostra</strong></td><td>Os casos que o auditor de fato verifica.</td><td>20 comandas, uma a cada 31.</td></tr>
+        <tr><td><strong>Corroboração</strong></td><td>A confirmação de uma evidência por outra fonte.</td><td>O garçom diz, e a comanda mostra.</td></tr>
+        <tr><td><strong>Auditoria testemunhada</strong></td><td>A auditoria acompanhada por um avaliador, que observa o auditor trabalhar.</td><td>O consultor observando a primeira auditoria do salão.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 2 ============================ -->
+<section id="quando">
+  <p class="eyebrow">Módulo 2</p>
+  <h2>Quando usar</h2>
+  <p>A técnica é usada em toda auditoria, interna ou de fornecedor. Este estudo é útil sobretudo em três momentos: na formação de auditores novos, na preparação de cada auditoria e na avaliação periódica de quem audita.</p>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:28%">Momento</th><th style="width:38%">O que fazer</th><th>Resultado</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Na preparação</strong></td><td>Transformar cada item da lista em pergunta aberta e dimensionar as amostras.</td><td>O auditor chega sabendo o que e quanto ver.</td></tr>
+        <tr><td><strong>Na reunião de abertura</strong></td><td>Avisar que o auditor escolhe as amostras e vai aos postos.</td><td>Ninguém separa pastas "para facilitar".</td></tr>
+        <tr><td><strong>Durante a coleta</strong></td><td>Perguntar, ver, ler; anotar cada amostra com o tamanho e o resultado.</td><td>Cada constatação tem a origem anotada.</td></tr>
+        <tr><td><strong>Antes de escrever a constatação</strong></td><td>Conferir a força da evidência e, se for o caso, ampliar a amostra.</td><td>Nenhuma não conformidade se apoia só no que alguém disse.</td></tr>
+        <tr><td><strong>Na formação de auditores</strong></td><td>Auditar em dupla, com o novo observando e depois sendo observado.</td><td>A técnica se aprende no campo.</td></tr>
+        <tr><td><strong>Uma vez por ano</strong></td><td>Avaliar cada auditor numa auditoria testemunhada.</td><td>O programa sabe quem pode liderar.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pair">
+    <div class="box">
+      <h4>Sinais de técnica fraca</h4>
+      <ul>
+        <li>O relatório diz "algumas comandas sem horário", sem dizer quantas de quantas.</li>
+        <li>As não conformidades citam o que alguém disse.</li>
+        <li>O auditor fala mais que o auditado.</li>
+        <li>As amostras são as pastas que estavam em cima da mesa.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h4>Sinais de técnica firme</h4>
+      <ul>
+        <li>"3 de 20 comandas de fevereiro, escolhidas uma a cada 31."</li>
+        <li>Cada não conformidade tem um registro ou uma observação.</li>
+        <li>O auditor pede para ver, e segue o que viu.</li>
+        <li>O auditado sabe de cada constatação antes do encerramento.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 3 ============================ -->
+<section id="como">
+  <p class="eyebrow">Módulo 3</p>
+  <h2>Como conduzir</h2>
+  <p>O trabalho em campo alterna coletar e comparar até a evidência bastar. A constatação só é escrita no fim desse vaivém, e é mostrada ao auditado na hora.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 236" role="img" aria-label="As cinco etapas do trabalho em campo. Preparar a amostra: O que verificar, de que população, com quantos registros e a partir de onde. Abrir: Objetivo, escopo, critérios e plano confirmados com quem será auditado. Coletar: Perguntar, ver acontecer e ler os registros, no local de trabalho. Comparar: Cada evidência contra o critério: o requisito, o procedimento, o contrato. Concluir e comunicar: A constatação escrita, corroborada e mostrada ao auditado na hora. Quando a amostra mostra um desvio isolado, o auditor volta a coletar.">
+        <defs><marker id="a2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker><marker id="a2m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah-mu" d="M0 0 L10 5 L0 10 z"/></marker></defs>
+        <rect class="bx" x="12" y="16" width="164" height="152"/>
+        <text class="mono mu" x="24" y="36" font-size="10">ETAPA 1</text>
+        <text class="b" x="24" y="58" font-size="12.5">Preparar a amostra</text>
+        <text x="24" y="81.0" font-size="10.5">O que verificar, de que</text>
+        <text x="24" y="95.5" font-size="10.5">população, com quantos</text>
+        <text x="24" y="110.0" font-size="10.5">registros e a partir de</text>
+        <text x="24" y="124.5" font-size="10.5">onde.</text>
+        <line class="ln" x1="177" y1="84" x2="188" y2="84" marker-end="url(#a2)"/>
+        <rect class="bx-p" x="190" y="16" width="164" height="152"/>
+        <text class="mono mu" x="202" y="36" font-size="10">ETAPA 2</text>
+        <text class="b" x="202" y="58" font-size="12.5">Abrir</text>
+        <text x="202" y="81.0" font-size="10.5">Objetivo, escopo,</text>
+        <text x="202" y="95.5" font-size="10.5">critérios e plano</text>
+        <text x="202" y="110.0" font-size="10.5">confirmados com quem será</text>
+        <text x="202" y="124.5" font-size="10.5">auditado.</text>
+        <line class="ln" x1="355" y1="84" x2="366" y2="84" marker-end="url(#a2)"/>
+        <rect class="bx-d" x="368" y="16" width="164" height="152"/>
+        <text class="mono mu" x="380" y="36" font-size="10">ETAPA 3</text>
+        <text class="b" x="380" y="58" font-size="12.5">Coletar</text>
+        <text x="380" y="81.0" font-size="10.5">Perguntar, ver acontecer</text>
+        <text x="380" y="95.5" font-size="10.5">e ler os registros, no</text>
+        <text x="380" y="110.0" font-size="10.5">local de trabalho.</text>
+        <line class="ln" x1="533" y1="84" x2="544" y2="84" marker-end="url(#a2)"/>
+        <rect class="bx-c" x="546" y="16" width="164" height="152"/>
+        <text class="mono mu" x="558" y="36" font-size="10">ETAPA 4</text>
+        <text class="b" x="558" y="58" font-size="12.5">Comparar</text>
+        <text x="558" y="81.0" font-size="10.5">Cada evidência contra o</text>
+        <text x="558" y="95.5" font-size="10.5">critério: o requisito, o</text>
+        <text x="558" y="110.0" font-size="10.5">procedimento, o contrato.</text>
+        <line class="ln" x1="711" y1="84" x2="722" y2="84" marker-end="url(#a2)"/>
+        <rect class="bx-ink" x="724" y="16" width="164" height="152"/>
+        <text class="mono t-ground" x="736" y="36" font-size="10">ETAPA 5</text>
+        <text class="b t-ground" x="736" y="58" font-size="12.5">Concluir e</text>
+        <text class="b t-ground" x="736" y="73" font-size="12.5">comunicar</text>
+        <text class="t-ground" x="736" y="96.0" font-size="10.5">A constatação escrita,</text>
+        <text class="t-ground" x="736" y="110.5" font-size="10.5">corroborada e mostrada ao</text>
+        <text class="t-ground" x="736" y="125.0" font-size="10.5">auditado na hora.</text>
+        <path class="ln-mu dash" d="M628.0 170 V198 H450.0 V174" marker-end="url(#a2m)"/>
+        <text class="mu halo" x="539.0" y="202" font-size="11" text-anchor="middle">desvio isolado: ampliar a amostra</text>
+        <text x="450" y="228" font-size="11.5" text-anchor="middle">Coletar e comparar se alternam até a evidência bastar. Só então a constatação é escrita.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 2.</b> As cinco etapas em campo. A volta da quarta para a terceira é a técnica: quando a amostra mostra um desvio isolado, o auditor coleta mais.</figcaption>
+  </figure>
+
+  <h3>Passo a passo</h3>
+  <ol class="steps">
+    <li><h4>Transforme a lista em perguntas</h4><p>Cada item da lista de verificação vira uma pergunta aberta, com o requisito e o registro esperado ao lado.</p></li>
+    <li><h4>Dimensione as amostras</h4><p>Para cada registro a ver: a população, o risco, o tamanho e o passo. O ponto de partida é sorteado pelo auditor.</p></li>
+    <li><h4>Comece pelo posto</h4><p>Veja o trabalho acontecendo antes de ler os papéis. O que se observa orienta o que pedir.</p></li>
+    <li><h4>Pergunte, e depois peça para ver</h4><p>A pergunta aberta abre o assunto; o "mostre-me" troca a palavra pela evidência.</p></li>
+    <li><h4>Siga uma trilha</h4><p>De um registro ao seguinte: do pedido à produção, da produção à expedição, ou ao contrário.</p></li>
+    <li><h4>Anote a amostra</h4><p>O tamanho, a escolha, o que se encontrou. "3 de 20" é evidência; "algumas" não é.</p></li>
+    <li><h4>Corrobore antes de concluir</h4><p>A não conformidade precisa de duas fontes, uma delas objetiva. Um desvio isolado pede amostra maior.</p></li>
+    <li><h4>Mostre na hora</h4><p>Cada constatação é lida com o auditado quando aparece, para corrigir mal-entendidos antes do encerramento.</p></li>
+  </ol>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:26%">Papel</th><th style="width:28%">Quem costuma ser</th><th>O que faz em campo</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Auditor líder</strong></td><td>O auditor mais experiente da equipe.</td><td>Conduz a abertura, distribui os assuntos, decide as constatações e o encerramento.</td></tr>
+        <tr><td><strong>Auditor</strong></td><td>Outro auditor treinado, de outra área.</td><td>Coleta nos assuntos dele e traz as evidências ao líder.</td></tr>
+        <tr><td><strong>Guia</strong></td><td>Alguém da área auditada.</td><td>Leva aos postos e apresenta as pessoas. Não responde por elas.</td></tr>
+        <tr><td><strong>Observador</strong></td><td>O avaliador dos auditores, ou um auditor em formação.</td><td>Acompanha sem interferir e anota como o auditor trabalha.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 4 ============================ -->
+<section id="entrevista">
+  <p class="eyebrow">Módulo 4</p>
+  <h2>A entrevista</h2>
+  <p>A entrevista é a fonte mais usada e a mais frágil. Ela mostra como as pessoas entendem o trabalho, e por isso é valiosa; mas o que alguém diz que faz pode não ser o que faz. A técnica está em abrir o assunto sem sugerir a resposta e em passar logo da palavra à evidência.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 250" role="img" aria-label="O funil de perguntas, do aberto ao fechado. Aberta: Como vocês sabem que o termômetro mede certo? Abre o assunto sem sugerir a resposta. Mostre-me: Pode me mostrar a última verificação? Troca a palavra pela evidência. Seguimento: E o que foi feito com as leituras de antes? Segue a trilha que a resposta abriu. Confirmação: Então as leituras de 08 a 14/03 não foram revistas? Fecha o ponto, com uma pergunta fechada.">
+        <path class="bx-p" d="M20.0 14 H380.0 L345.0 62 H55.0 Z"/>
+        <text class="b" x="200" y="43" font-size="12.5" text-anchor="middle">Aberta</text>
+        <text x="400" y="36" font-size="12">Como vocês sabem que o termômetro mede certo?</text>
+        <text class="mu" x="400" y="53" font-size="10.5">Abre o assunto sem sugerir a resposta.</text>
+        <path class="bx-d" d="M55.0 68 H345.0 L310.0 116 H90.0 Z"/>
+        <text class="b" x="200" y="97" font-size="12.5" text-anchor="middle">Mostre-me</text>
+        <text x="400" y="90" font-size="12">Pode me mostrar a última verificação?</text>
+        <text class="mu" x="400" y="107" font-size="10.5">Troca a palavra pela evidência.</text>
+        <path class="bx-c" d="M90.0 122 H310.0 L275.0 170 H125.0 Z"/>
+        <text class="b" x="200" y="151" font-size="12.5" text-anchor="middle">Seguimento</text>
+        <text x="400" y="144" font-size="12">E o que foi feito com as leituras de antes?</text>
+        <text class="mu" x="400" y="161" font-size="10.5">Segue a trilha que a resposta abriu.</text>
+        <path class="bx-ink" d="M125.0 176 H275.0 L240.0 224 H160.0 Z"/>
+        <text class="b t-ground" x="200" y="205" font-size="12.5" text-anchor="middle">Confirmação</text>
+        <text x="400" y="198" font-size="12">Então as leituras de 08 a 14/03 não foram revistas?</text>
+        <text class="mu" x="400" y="215" font-size="10.5">Fecha o ponto, com uma pergunta fechada.</text>
+        <text x="450" y="242" font-size="11.5" text-anchor="middle">Do largo ao estreito: a pergunta fechada só aparece no fim, para confirmar o que a evidência já mostrou.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 3.</b> O funil de perguntas, com as perguntas da auditoria da pizzaria. A pergunta fechada vem no fim, para confirmar.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:16%">Tipo</th><th style="width:26%">Como é</th><th style="width:32%">Exemplo</th><th>Serve para</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Aberta</strong></td><td>Como, o que, quem, quando, onde.</td><td>“Como é feita a conferência do pedido?”</td><td>Começar um assunto.</td></tr>
+        <tr><td><strong>Mostre-me</strong></td><td>Pede o objeto, o registro, a tela.</td><td>“Pode me mostrar o último registro?”</td><td>Passar da palavra à evidência.</td></tr>
+        <tr><td><strong>Seguimento</strong></td><td>Puxa o fio da resposta anterior.</td><td>“E depois que a bobina foi segregada?”</td><td>Seguir uma trilha.</td></tr>
+        <tr><td><strong>Hipotética</strong></td><td>Uma situação que pode acontecer.</td><td>“O que você faz se o termômetro marcar 7 °C?”</td><td>Testar o conhecimento do procedimento.</td></tr>
+        <tr><td><strong>Confirmação</strong></td><td>Fechada, para resumir o que se entendeu.</td><td>“Então a escala de sábado não foi revista?”</td><td>Fechar um ponto antes da constatação.</td></tr>
+        <tr><td><strong>Indutora</strong></td><td>Sugere a resposta esperada.</td><td>“Vocês verificam o termômetro, certo?”</td><td>Evitar: a resposta vem pronta.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note">
+    <h4>Quem fala mais</h4>
+    <p>Numa boa entrevista, o auditado fala muito mais do que o auditor. O auditor pergunta, espera e anota. O silêncio depois de uma resposta curta costuma trazer o resto da história. Entreviste quem faz o trabalho, no lugar onde ele acontece, e não só o gerente na sala de reuniões. E explique no começo que a auditoria olha o processo, e não a pessoa.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 5 ============================ -->
+<section id="amostragem">
+  <p class="eyebrow">Módulo 5</p>
+  <h2>A amostragem</h2>
+  <p>A auditoria nunca vê tudo. Ela vê uma amostra e conclui sobre o conjunto, e por isso toda conclusão carrega alguma incerteza. A técnica está em decidir antes quanto ver, de acordo com o tamanho da população e o risco, e em escolher os casos de um jeito que o auditado não controle.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 220" role="img" aria-label="Amostragem sistemática nas 48 notas de recebimento de fevereiro: amostra de 12, uma a cada 4, a partir da 3ª. Notas escolhidas: 3, 7, 11, 15, 19, 23, 27, 31, 35, 39, 43, 47.">
+        <rect class="bx" x="42" y="40" width="28" height="28"/>
+        <text class="mu" x="56.0" y="58" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">1</text>
+        <rect class="bx" x="76" y="40" width="28" height="28"/>
+        <text class="mu" x="90.0" y="58" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">2</text>
+        <rect class="f1" x="110" y="40" width="28" height="28"/>
+        <text class="b on" x="124.0" y="58" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">3</text>
+        <rect class="bx" x="144" y="40" width="28" height="28"/>
+        <text class="mu" x="158.0" y="58" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">4</text>
+        <rect class="bx" x="178" y="40" width="28" height="28"/>
+        <text class="mu" x="192.0" y="58" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">5</text>
+        <rect class="bx" x="212" y="40" width="28" height="28"/>
+        <text class="mu" x="226.0" y="58" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">6</text>
+        <rect class="f1" x="246" y="40" width="28" height="28"/>
+        <text class="b on" x="260.0" y="58" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">7</text>
+        <rect class="bx" x="280" y="40" width="28" height="28"/>
+        <text class="mu" x="294.0" y="58" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">8</text>
+        <rect class="bx" x="314" y="40" width="28" height="28"/>
+        <text class="mu" x="328.0" y="58" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">9</text>
+        <rect class="bx" x="348" y="40" width="28" height="28"/>
+        <text class="mu" x="362.0" y="58" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">10</text>
+        <rect class="f1" x="382" y="40" width="28" height="28"/>
+        <text class="b on" x="396.0" y="58" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">11</text>
+        <rect class="bx" x="416" y="40" width="28" height="28"/>
+        <text class="mu" x="430.0" y="58" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">12</text>
+        <rect class="bx" x="450" y="40" width="28" height="28"/>
+        <text class="mu" x="464.0" y="58" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">13</text>
+        <rect class="bx" x="484" y="40" width="28" height="28"/>
+        <text class="mu" x="498.0" y="58" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">14</text>
+        <rect class="f1" x="518" y="40" width="28" height="28"/>
+        <text class="b on" x="532.0" y="58" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">15</text>
+        <rect class="bx" x="552" y="40" width="28" height="28"/>
+        <text class="mu" x="566.0" y="58" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">16</text>
+        <rect class="bx" x="586" y="40" width="28" height="28"/>
+        <text class="mu" x="600.0" y="58" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">17</text>
+        <rect class="bx" x="620" y="40" width="28" height="28"/>
+        <text class="mu" x="634.0" y="58" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">18</text>
+        <rect class="f1" x="654" y="40" width="28" height="28"/>
+        <text class="b on" x="668.0" y="58" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">19</text>
+        <rect class="bx" x="688" y="40" width="28" height="28"/>
+        <text class="mu" x="702.0" y="58" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">20</text>
+        <rect class="bx" x="722" y="40" width="28" height="28"/>
+        <text class="mu" x="736.0" y="58" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">21</text>
+        <rect class="bx" x="756" y="40" width="28" height="28"/>
+        <text class="mu" x="770.0" y="58" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">22</text>
+        <rect class="f1" x="790" y="40" width="28" height="28"/>
+        <text class="b on" x="804.0" y="58" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">23</text>
+        <rect class="bx" x="824" y="40" width="28" height="28"/>
+        <text class="mu" x="838.0" y="58" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">24</text>
+        <rect class="bx" x="42" y="90" width="28" height="28"/>
+        <text class="mu" x="56.0" y="108" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">25</text>
+        <rect class="bx" x="76" y="90" width="28" height="28"/>
+        <text class="mu" x="90.0" y="108" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">26</text>
+        <rect class="f1" x="110" y="90" width="28" height="28"/>
+        <text class="b on" x="124.0" y="108" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">27</text>
+        <rect class="bx" x="144" y="90" width="28" height="28"/>
+        <text class="mu" x="158.0" y="108" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">28</text>
+        <rect class="bx" x="178" y="90" width="28" height="28"/>
+        <text class="mu" x="192.0" y="108" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">29</text>
+        <rect class="bx" x="212" y="90" width="28" height="28"/>
+        <text class="mu" x="226.0" y="108" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">30</text>
+        <rect class="f1" x="246" y="90" width="28" height="28"/>
+        <text class="b on" x="260.0" y="108" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">31</text>
+        <rect class="bx" x="280" y="90" width="28" height="28"/>
+        <text class="mu" x="294.0" y="108" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">32</text>
+        <rect class="bx" x="314" y="90" width="28" height="28"/>
+        <text class="mu" x="328.0" y="108" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">33</text>
+        <rect class="bx" x="348" y="90" width="28" height="28"/>
+        <text class="mu" x="362.0" y="108" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">34</text>
+        <rect class="f1" x="382" y="90" width="28" height="28"/>
+        <text class="b on" x="396.0" y="108" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">35</text>
+        <rect class="bx" x="416" y="90" width="28" height="28"/>
+        <text class="mu" x="430.0" y="108" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">36</text>
+        <rect class="bx" x="450" y="90" width="28" height="28"/>
+        <text class="mu" x="464.0" y="108" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">37</text>
+        <rect class="bx" x="484" y="90" width="28" height="28"/>
+        <text class="mu" x="498.0" y="108" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">38</text>
+        <rect class="f1" x="518" y="90" width="28" height="28"/>
+        <text class="b on" x="532.0" y="108" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">39</text>
+        <rect class="bx" x="552" y="90" width="28" height="28"/>
+        <text class="mu" x="566.0" y="108" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">40</text>
+        <rect class="bx" x="586" y="90" width="28" height="28"/>
+        <text class="mu" x="600.0" y="108" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">41</text>
+        <rect class="bx" x="620" y="90" width="28" height="28"/>
+        <text class="mu" x="634.0" y="108" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">42</text>
+        <rect class="f1" x="654" y="90" width="28" height="28"/>
+        <text class="b on" x="668.0" y="108" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">43</text>
+        <rect class="bx" x="688" y="90" width="28" height="28"/>
+        <text class="mu" x="702.0" y="108" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">44</text>
+        <rect class="bx" x="722" y="90" width="28" height="28"/>
+        <text class="mu" x="736.0" y="108" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">45</text>
+        <rect class="bx" x="756" y="90" width="28" height="28"/>
+        <text class="mu" x="770.0" y="108" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">46</text>
+        <rect class="f1" x="790" y="90" width="28" height="28"/>
+        <text class="b on" x="804.0" y="108" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">47</text>
+        <rect class="bx" x="824" y="90" width="28" height="28"/>
+        <text class="mu" x="838.0" y="108" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">48</text>
+        <text class="mono mu" x="42" y="26" font-size="10">48 NOTAS DE RECEBIMENTO DE FEVEREIRO, NA ORDEM DA PASTA</text>
+        <text x="42" y="168" font-size="11.5"><tspan class="b">População 48, risco alto:</tspan> amostra de 12. Passo de 48 ÷ 12 = 4. Início sorteado entre 1 e 4: a 3ª nota.</text>
+        <text class="mu" x="42" y="190" font-size="11">Depois, de 4 em 4: 3, 7, 11, 15, 19, 23, 27, 31, 35, 39, 43, 47. O auditado não escolhe, e nenhum dia do mês fica de fora.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 4.</b> A amostragem sistemática, nas notas de recebimento da pizzaria. O sorteio decide só o ponto de partida.</figcaption>
+  </figure>
+
+  <h3>Quantos registros ver</h3>
+  <p>Este material usa uma tabela simples: uma amostra-base pela população, multiplicada pelo fator de risco, com mínimo de 3. Até 5 casos, vê-se todos.</p>
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:28%">População</th><th class="c">Amostra-base</th><th class="c">Risco alto<small>× 1,5</small></th><th class="c">Risco médio<small>× 1,0</small></th><th class="c">Risco baixo<small>× 0,6</small></th></tr></thead>
+      <tbody>
+        <tr><td><strong>Até 5</strong></td><td class="c">Todos</td><td class="c">Todos</td><td class="c">Todos</td><td class="c">Todos</td></tr>
+        <tr><td><strong>De 6 a 20</strong></td><td class="c">5</td><td class="c">8</td><td class="c">5</td><td class="c">3</td></tr>
+        <tr><td><strong>De 21 a 50</strong></td><td class="c">8</td><td class="c">12</td><td class="c">8</td><td class="c">5</td></tr>
+        <tr><td><strong>De 51 a 100</strong></td><td class="c">10</td><td class="c">15</td><td class="c">10</td><td class="c">6</td></tr>
+        <tr><td><strong>De 101 a 500</strong></td><td class="c">15</td><td class="c">23</td><td class="c">15</td><td class="c">9</td></tr>
+        <tr><td><strong>Acima de 500</strong></td><td class="c">20</td><td class="c">30</td><td class="c">20</td><td class="c">12</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note">
+    <h4>O que fazer com um desvio</h4>
+    <p>Nenhum desvio: a amostra é conforme, o que não prova que não haja desvios fora dela. Um desvio só: ainda não é padrão; amplie a amostra, de preferência dobrando, antes de concluir. Dois desvios ou mais: o problema se repete, e a não conformidade está sustentada. E se a amostra planejada não pôde ser vista inteira, como os checklists que faltavam na pasta, registre que ela ficou incompleta: a falta também é informação.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 6 ============================ -->
+<section id="evidencia">
+  <p class="eyebrow">Módulo 6</p>
+  <h2>A força da evidência</h2>
+  <p>Há três fontes de evidência: o que as pessoas dizem, o que o auditor vê e o que está registrado. Cada uma pode falhar sozinha. Quando duas contam a mesma história, a evidência é forte. Este material usa essa regra para decidir quando uma constatação pode ser escrita.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 270" role="img" aria-label="O triângulo da evidência. Entrevista: O que as pessoas dizem que fazem. Observação: O que o auditor vê acontecer. Registro: O que ficou escrito. Forte: duas fontes ou mais. Média: só observação ou só registro. Fraca: só entrevista. Toda não conformidade precisa de evidência forte.">
+        <path class="bx-s1" d="M230 30 L80 220 L380 220 Z"/>
+        <circle class="hd-p" cx="230" cy="30" r="9"/>
+        <circle class="hd-d" cx="80" cy="220" r="9"/>
+        <circle class="hd-c" cx="380" cy="220" r="9"/>
+        <text class="b" x="230" y="14" font-size="12" text-anchor="middle">Entrevista</text>
+        <text class="b" x="70" y="248" font-size="12" text-anchor="end">Observação</text>
+        <text class="b" x="390" y="248" font-size="12">Registro</text>
+        <text class="b" x="230" y="160" font-size="13" text-anchor="middle">Forte</text>
+        <text class="mu" x="230" y="177" font-size="10.5" text-anchor="middle">duas fontes ou mais</text>
+        <rect class="bx-s1" x="470" y="22" width="418" height="66"/>
+        <text class="b" x="486" y="46" font-size="12.5">Forte</text>
+        <text x="560" y="46" font-size="11.5">Duas fontes ou mais, uma delas objetiva.</text>
+        <text class="mu" x="486" y="70" font-size="11">Basta para uma não conformidade.</text>
+        <rect class="bx-s2" x="470" y="98" width="418" height="66"/>
+        <text class="b" x="486" y="122" font-size="12.5">Média</text>
+        <text x="560" y="122" font-size="11.5">Só observação, ou só registro.</text>
+        <text class="mu" x="486" y="146" font-size="11">Basta para conforme ou oportunidade.</text>
+        <rect class="bx-s3" x="470" y="174" width="418" height="66"/>
+        <text class="b" x="486" y="198" font-size="12.5">Fraca</text>
+        <text x="560" y="198" font-size="11.5">Só o que alguém disse.</text>
+        <text class="mu" x="486" y="222" font-size="11">Pede outra fonte antes de concluir.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 5.</b> O triângulo da evidência e as três forças. A não conformidade precisa do centro do triângulo.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:20%">Fonte</th><th style="width:40%">Pontos fortes</th><th>Cuidados</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Entrevista</strong></td><td>Mostra como as pessoas entendem o trabalho, e as razões.</td><td>A pessoa pode dizer o que acha que o auditor quer ouvir.</td></tr>
+        <tr><td><strong>Observação</strong></td><td>Mostra o que acontece de verdade, agora.</td><td>As pessoas trabalham diferente quando são observadas, e o momento pode não ser típico.</td></tr>
+        <tr><td><strong>Registro</strong></td><td>Mostra o passado, com data, e permite amostra.</td><td>O registro pode ter sido preenchido depois, ou de qualquer jeito.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note">
+    <h4>Seguir a trilha</h4>
+    <p>A trilha liga as fontes umas às outras. O auditor vê uma bobina segregada no posto, pede o registro de produto não conforme, e do registro vai ao lote, à folha de processo e ao instrumento usado. Cada passo confirma ou desmente o anterior. Uma trilha completa, em cada processo auditado, vale mais do que dez perguntas soltas. O estudo do <a href="../Caso-Integrado/treinamento-caso-integrado.html">Caso integrado</a> mostra a mesma ideia em escala maior, de estudo em estudo.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 7 ============================ -->
+<section id="exemplos">
+  <p class="eyebrow">Módulo 7</p>
+  <h2>Exemplos resolvidos</h2>
+  <p>Duas auditorias internas, com as amostras, as evidências e a avaliação dos auditores feita por quem acompanhou, e o fio de uma única pergunta. As organizações são as dos outros estudos da série. Os dois primeiros exemplos também estão preenchidos na planilha de apoio. Os dados são ilustrativos e foram criados para este treinamento.</p>
+
+  <h3>Exemplo 1. A auditoria do salão e do recebimento da pizzaria</h3>
+  <dl class="ficha">
+    <div><dt>Auditoria</dt><dd>2027-02 · Atender no salão e receber insumos, em 18/03/2027.</dd></div>
+    <div><dt>Organização</dt><dd>Pizzaria (loja com salão e delivery)</dd></div>
+    <div><dt>Auditor líder</dt><dd>Atendente do turno do almoço</dd></div>
+    <div><dt>Equipe</dt><dd>Pizzaiolo do turno do almoço</dd></div>
+    <div><dt>Observador</dt><dd>Consultor que acompanhou a primeira auditoria do salão</dd></div>
+    <div><dt>Critérios</dt><dd>ISO 9001:2015, requisitos 7 e 8. Instrução do salão IT-SAL-01 rev. 2. Rotina de recebimento de insumos.</dd></div>
+  </dl>
+  <div class="tbl">
+    <table class="aud">
+      <caption>Amostras · 5 populações, 51 registros verificados, 4 desvios</caption>
+      <thead><tr><th style="width:30%">O que se verifica<small>Requisito · período</small></th><th class="c">População</th><th>Risco</th><th class="c">Amostra<small>Sistemática</small></th><th class="c">Verificados</th><th class="c">Desvios</th><th style="width:26%">Conclusão</th><th>Conferência</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Comandas do salão: mesa e horário anotados</strong><small>8.5.1 · Fevereiro de 2027</small></td><td class="c">620</td><td>Médio</td><td class="c"><strong>20</strong><small>1 a cada 31, a partir da 7ª</small></td><td class="c">20</td><td class="c no">3</td><td><span class="chip s3">Desvio repetido: não conformidade</span><small>Três comandas sem mesa ou sem horário, todas de sábado.</small></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td><strong>Leituras de temperatura da câmara fria</strong><small>7.1.4 · Fevereiro de 2027</small></td><td class="c">56</td><td>Médio</td><td class="c"><strong>10</strong><small>1 a cada 5, a partir da 2ª</small></td><td class="c">10</td><td class="c no">1</td><td><span class="chip s2">Desvio isolado: ampliar a amostra</span><small>Leitura do domingo, 14/02, sem anotação.</small></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td><strong>Notas de recebimento com a temperatura anotada</strong><small>8.4 · Fevereiro de 2027</small></td><td class="c">48</td><td>Alto</td><td class="c"><strong>12</strong><small>1 a cada 4, a partir da 3ª</small></td><td class="c">12</td><td class="c">0</td><td><span class="chip s1">Conforme na amostra</span></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td><strong>Fichas de treinamento da equipe nova do salão</strong><small>7.2 · Admissões de 2027</small></td><td class="c">6</td><td>Baixo</td><td class="c"><strong>3</strong><small>1 a cada 2, a partir da 1ª</small></td><td class="c">3</td><td class="c">0</td><td><span class="chip s1">Conforme na amostra</span></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td><strong>Checklists de limpeza do salão</strong><small>7.1.4 · Fevereiro de 2027</small></td><td class="c">28</td><td>Médio</td><td class="c"><strong>8</strong><small>1 a cada 3, a partir da 2ª</small></td><td class="c no">6</td><td class="c">0</td><td><span class="chip s2">Amostra incompleta</span><small>Dois checklists não estavam na pasta no dia.</small></td><td><span class="chip s1">OK</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="tbl">
+    <table class="aud">
+      <caption>Evidências · 9 perguntas: 3 conformes, 4 não conformidades, 1 oportunidade</caption>
+      <thead><tr><th>Requisito</th><th style="width:56%">Pergunta<small>As fontes de evidência</small></th><th>Constatação</th><th>Força</th><th>Conferência</th></tr></thead>
+      <tbody>
+        <tr><td class="n">8.5.1</td><td><strong>Como a comanda do salão registra a mesa e o horário?</strong><small><b>Entrevista:</b> Garçom do turno da noite</small><small><b>Observação:</b> Duas comandas abertas na hora; uma sem horário</small><small><b>Registro:</b> 20 comandas de fevereiro: 3 sem mesa ou sem horário</small></td><td><span class="chip s3">Não conformidade</span></td><td><span class="chip s1">Forte</span></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">7.1.5</td><td><strong>Como vocês sabem que o termômetro da câmara mede certo?</strong><small><b>Entrevista:</b> Pizzaiolo líder: “verificamos todo mês”</small><small><b>Registro:</b> Planilha FR-07: termômetro da câmara verificado em 15/03, reprovado e trocado; leituras anteriores não revistas</small></td><td><span class="chip s3">Não conformidade</span></td><td><span class="chip s1">Forte</span></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">8.4</td><td><strong>Como o recebimento confere a temperatura dos refrigerados?</strong><small><b>Entrevista:</b> Atendente que recebe</small><small><b>Observação:</b> Recebimento do laticínio às 15h: temperatura medida e anotada</small><small><b>Registro:</b> 12 notas de fevereiro com a temperatura anotada</small></td><td><span class="chip s1">Conforme</span></td><td><span class="chip s1">Forte</span></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">7.2</td><td><strong>Quem treinou a equipe nova do salão, e como?</strong><small><b>Entrevista:</b> Gerente da loja</small><small><b>Registro:</b> 3 fichas de treinamento assinadas, com a instrução IT-SAL-01</small></td><td><span class="chip s1">Conforme</span></td><td><span class="chip s1">Forte</span></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">8.2.1</td><td><strong>O cliente do salão é avisado do tempo de espera?</strong><small><b>Entrevista:</b> Garçom: “nem sempre avisamos”</small></td><td><span class="chip s3">Não conformidade</span></td><td><span class="chip s3">Fraca</span></td><td><span class="chip s3">Não conformidade sem corroboração</span></td></tr>
+        <tr><td class="n">9.1.2</td><td><strong>Como as reclamações do salão são registradas?</strong><small><b>Entrevista:</b> Gerente da loja</small><small><b>Registro:</b> Registro de reclamações só com o delivery; o salão não aparece</small></td><td><span class="chip s2">Oportunidade de melhoria</span></td><td><span class="chip s1">Forte</span></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">7.5</td><td><strong>A instrução do salão em uso é a vigente?</strong><small><b>Observação:</b> Instrução no balcão na revisão 1</small><small><b>Registro:</b> Lista mestra: IT-SAL-01 na revisão 2, de 10/02/2027</small></td><td><span class="chip s3">Não conformidade</span></td><td><span class="chip s1">Forte</span></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">8.5.4</td><td><strong>Como os insumos são guardados depois do recebimento?</strong><small><b>Entrevista:</b> Pizzaiolo do turno</small><small><b>Observação:</b> Câmara organizada, com etiquetas de validade</small></td><td><span class="chip s1">Conforme</span></td><td><span class="chip s1">Forte</span></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">8.5.1</td><td><strong>Como a pizza do salão é conferida antes de servir?</strong><small><b>Entrevista:</b> Pizzaiolo do turno</small><small><b>Observação:</b> Conferência do sabor pela comanda, no passa-pratos</small></td><td>—</td><td><span class="chip s1">Forte</span></td><td><span class="chip s3">Falta a constatação</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="tbl">
+    <table class="aud">
+      <caption>Avaliação dos auditores em campo · notas de 0 a 3, “—” para não observado</caption>
+      <thead><tr><th>Etapa</th><th style="width:42%">Critério</th><th class="c">Atendente do turno do almoço<small>Auditor líder</small></th><th class="c">Pizzaiolo do turno do almoço<small>Auditor</small></th></tr></thead>
+      <tbody>
+        <tr><td>Preparação</td><td>Leu os documentos e o relatório da auditoria anterior antes de ir a campo.</td><td class="c">2</td><td class="c">1</td></tr>
+        <tr><td>Preparação</td><td>Preparou a lista de verificação e o tamanho das amostras com antecedência.</td><td class="c">2</td><td class="c">1</td></tr>
+        <tr><td>Abertura</td><td>Confirmou o objetivo, o escopo, os critérios e o plano na reunião de abertura.</td><td class="c">3</td><td class="c">—</td></tr>
+        <tr><td>Entrevista</td><td>Fez perguntas abertas e pediu para ver: “mostre-me”.</td><td class="c">2</td><td class="c">2</td></tr>
+        <tr><td>Entrevista</td><td>Ouviu sem interromper e sem sugerir a resposta.</td><td class="c">1</td><td class="c">2</td></tr>
+        <tr><td>Amostra</td><td>Escolheu a amostra, em vez de aceitar a oferecida pelo auditado.<small>Critério crítico</small></td><td class="c">3</td><td class="c">2</td></tr>
+        <tr><td>Amostra</td><td>Anotou o tamanho de cada amostra e o que encontrou nela.</td><td class="c">2</td><td class="c">1</td></tr>
+        <tr><td>Evidência</td><td>Corroborou o que ouviu com observação ou registro.<small>Critério crítico</small></td><td class="c no">1</td><td class="c">2</td></tr>
+        <tr><td>Evidência</td><td>Seguiu ao menos uma trilha até o fim, de um registro ao seguinte.</td><td class="c">2</td><td class="c">3</td></tr>
+        <tr><td>Constatação</td><td>Escreveu cada não conformidade com requisito, evidência e desvio.<small>Critério crítico</small></td><td class="c">2</td><td class="c">—</td></tr>
+        <tr><td>Constatação</td><td>Não apontou culpados nem ditou a solução.</td><td class="c">3</td><td class="c">2</td></tr>
+        <tr><td>Encerramento</td><td>Comunicou as constatações durante a auditoria, sem surpresa no encerramento.</td><td class="c">—</td><td class="c">2</td></tr>
+        <tr class="tot"><td></td><td>Pontos</td><td class="c">23 de 33<small>11 observados</small></td><td class="c">18 de 30<small>10 observados</small></td></tr>
+        <tr class="tot"><td></td><td>Percentual</td><td class="c">70 %</td><td class="c">60 %</td></tr>
+        <tr class="tot"><td></td><td>Nível</td><td class="c"><span class="chip s3">Em formação</span></td><td class="c"><span class="chip s2">Apto a auditar em equipe</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p><strong>O que observar.</strong> As amostras foram bem planejadas e escolhidas pelos auditores, com o ponto de partida sorteado. As comandas sustentam a não conformidade: 3 desvios em 20, repetidos, e vistos também na hora. A leitura de temperatura que faltou num domingo ainda não sustenta nada: é um desvio em dez, e a amostra precisa crescer. Os checklists de limpeza ficaram em 6 de 8, porque dois não estavam na pasta. Nas evidências, a não conformidade sobre o aviso do tempo de espera se apoia só no que um garçom disse, e a última pergunta ficou sem constatação. A avaliação conta o mesmo: o auditor líder conduziu bem a abertura e a amostra, mas não corroborou o que ouviu, e um critério crítico com nota 1 o deixa em formação, mesmo com 70 % dos pontos.</p>
+
+  <h3>Exemplo 2. A auditoria da produção da indústria</h3>
+  <dl class="ficha">
+    <div><dt>Auditoria</dt><dd>2027-11 · Produção (extrusão e rebobinamento), em 06/10/2027.</dd></div>
+    <div><dt>Organização</dt><dd>Indústria de embalagens plásticas</dd></div>
+    <div><dt>Auditor líder</dt><dd>Coordenador da Qualidade</dd></div>
+    <div><dt>Equipe</dt><dd>Engenheiro de processos e Analista de RH (auditor em formação)</dd></div>
+    <div><dt>Observador</dt><dd>Gerente de RH, que mantém a avaliação dos auditores internos</dd></div>
+    <div><dt>Critérios</dt><dd>ISO 9001:2015, requisitos 7.1, 7.2, 8.5 e 8.7. Plano de controle da extrusão rev. 6. Procedimento de mudanças PG-05.</dd></div>
+  </dl>
+  <div class="tbl">
+    <table class="aud">
+      <caption>Amostras · 5 populações, 60 registros verificados, 3 desvios</caption>
+      <thead><tr><th style="width:30%">O que se verifica<small>Requisito · período</small></th><th class="c">População</th><th>Risco</th><th class="c">Amostra<small>Sistemática</small></th><th class="c">Verificados</th><th class="c">Desvios</th><th style="width:26%">Conclusão</th><th>Conferência</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Registros de espessura por bobina, com cinco pontos</strong><small>8.5.1 · Julho e agosto de 2027</small></td><td class="c">1.150</td><td>Alto</td><td class="c"><strong>30</strong><small>1 a cada 38, a partir da 12ª</small></td><td class="c">30</td><td class="c">0</td><td><span class="chip s1">Conforme na amostra</span></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td><strong>Registros de mudança de processo, com autorização</strong><small>8.5.6 · 2027 até setembro</small></td><td class="c">9</td><td>Alto</td><td class="c"><strong>8</strong><small>1 a cada 1, a partir da 1ª</small></td><td class="c">8</td><td class="c no">2</td><td><span class="chip s3">Desvio repetido: não conformidade</span><small>Duas mudanças de velocidade do turno C sem autorização.</small></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td><strong>Ordens de manutenção corretiva, com o produto afetado</strong><small>7.1.3 · Julho e agosto de 2027</small></td><td class="c">14</td><td>Médio</td><td class="c"><strong>5</strong><small>1 a cada 2, a partir da 2ª</small></td><td class="c">5</td><td class="c no">1</td><td><span class="chip s2">Desvio isolado: ampliar a amostra</span><small>Quebra do chiller, 22/07: produto afetado sem destino.</small></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td><strong>Instrumentos do posto com etiqueta em dia</strong><small>7.1.5 · Na data da auditoria</small></td><td class="c">25</td><td>Alto</td><td class="c"><strong>12</strong><small>1 a cada 2, a partir da 1ª</small></td><td class="c">12</td><td class="c">0</td><td><span class="chip s1">Conforme na amostra</span></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td><strong>Registros de treinamento do turno C</strong><small>7.2 · Admissões e remanejamentos de 2027</small></td><td class="c">12</td><td>Médio</td><td class="c"><strong>5</strong><small>1 a cada 2, a partir da 2ª</small></td><td class="c">5</td><td class="c">0</td><td><span class="chip s1">Conforme na amostra</span></td><td><span class="chip s1">OK</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="tbl">
+    <table class="aud">
+      <caption>Evidências · 8 perguntas: 5 conformes, 2 não conformidades, 1 oportunidade</caption>
+      <thead><tr><th>Requisito</th><th style="width:56%">Pergunta<small>As fontes de evidência</small></th><th>Constatação</th><th>Força</th><th>Conferência</th></tr></thead>
+      <tbody>
+        <tr><td class="n">8.5.6</td><td><strong>Como uma mudança de processo é autorizada?</strong><small><b>Entrevista:</b> Líder do turno C</small><small><b>Registro:</b> 8 registros de mudança de 2027: 2 sem autorização</small></td><td><span class="chip s3">Não conformidade</span></td><td><span class="chip s1">Forte</span></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">8.5.1</td><td><strong>Como a espessura é medida na extrusora 3?</strong><small><b>Entrevista:</b> Operador do turno A</small><small><b>Observação:</b> Medição em cinco pontos com o micrômetro de 0,1 µm</small><small><b>Registro:</b> 30 bobinas de julho e agosto, todas com os cinco pontos</small></td><td><span class="chip s1">Conforme</span></td><td><span class="chip s1">Forte</span></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">7.1.3</td><td><strong>O que acontece com o produto quando uma máquina quebra?</strong><small><b>Entrevista:</b> Supervisor de manutenção</small><small><b>Registro:</b> 5 ordens corretivas: 1 sem o destino do produto afetado</small></td><td><span class="chip s2">Oportunidade de melhoria</span></td><td><span class="chip s1">Forte</span></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">7.1.6</td><td><strong>Quem mais sabe regular a extrusora 3?</strong><small><b>Entrevista:</b> Operador sênior e operador do turno C</small><small><b>Observação:</b> Operador do turno C regulando com acompanhamento</small><small><b>Registro:</b> Mapa do conhecimento, C-01, ação até 30/11</small></td><td><span class="chip s1">Conforme</span></td><td><span class="chip s1">Forte</span></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">7.1.5</td><td><strong>Os instrumentos do posto estão identificados e em dia?</strong><small><b>Observação:</b> 12 instrumentos com etiqueta em dia</small><small><b>Registro:</b> Lista de instrumentos de 30/09</small></td><td><span class="chip s1">Conforme</span></td><td><span class="chip s1">Forte</span></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">7.2</td><td><strong>O operador novo do turno C foi treinado na regulagem?</strong><small><b>Entrevista:</b> Operador novo: “aprendi com o colega”</small></td><td><span class="chip s3">Não conformidade</span></td><td><span class="chip s3">Fraca</span></td><td><span class="chip s3">Não conformidade sem corroboração</span></td></tr>
+        <tr><td class="n">9.1.3</td><td><strong>Como o refugo da extrusão é analisado?</strong><small><b>Entrevista:</b> Gerente industrial</small><small><b>Registro:</b> Painel de indicadores de setembro, com o Pareto do refugo</small></td><td><span class="chip s1">Conforme</span></td><td><span class="chip s1">Forte</span></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">8.7</td><td><strong>O que se faz com a bobina fora de espessura?</strong><small><b>Entrevista:</b> Líder do turno</small><small><b>Observação:</b> Bobina com etiqueta vermelha na área de segregação</small><small><b>Registro:</b> Registro de produto não conforme de 03/10</small></td><td><span class="chip s1">Conforme</span></td><td><span class="chip s1">Forte</span></td><td><span class="chip s1">OK</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="tbl">
+    <table class="aud">
+      <caption>Avaliação dos auditores em campo · notas de 0 a 3, “—” para não observado</caption>
+      <thead><tr><th>Etapa</th><th style="width:42%">Critério</th><th class="c">Coordenador da Qualidade<small>Auditor líder</small></th><th class="c">Engenheiro de processos<small>Auditor</small></th><th class="c">Analista de RH<small>Auditor em formação</small></th></tr></thead>
+      <tbody>
+        <tr><td>Preparação</td><td>Leu os documentos e o relatório da auditoria anterior antes de ir a campo.</td><td class="c">3</td><td class="c">2</td><td class="c">2</td></tr>
+        <tr><td>Preparação</td><td>Preparou a lista de verificação e o tamanho das amostras com antecedência.</td><td class="c">3</td><td class="c">2</td><td class="c">1</td></tr>
+        <tr><td>Abertura</td><td>Confirmou o objetivo, o escopo, os critérios e o plano na reunião de abertura.</td><td class="c">3</td><td class="c">—</td><td class="c">—</td></tr>
+        <tr><td>Entrevista</td><td>Fez perguntas abertas e pediu para ver: “mostre-me”.</td><td class="c">3</td><td class="c">2</td><td class="c">2</td></tr>
+        <tr><td>Entrevista</td><td>Ouviu sem interromper e sem sugerir a resposta.</td><td class="c">2</td><td class="c">2</td><td class="c">2</td></tr>
+        <tr><td>Amostra</td><td>Escolheu a amostra, em vez de aceitar a oferecida pelo auditado.<small>Critério crítico</small></td><td class="c">3</td><td class="c">3</td><td class="c no">1</td></tr>
+        <tr><td>Amostra</td><td>Anotou o tamanho de cada amostra e o que encontrou nela.</td><td class="c">3</td><td class="c">2</td><td class="c">1</td></tr>
+        <tr><td>Evidência</td><td>Corroborou o que ouviu com observação ou registro.<small>Critério crítico</small></td><td class="c">3</td><td class="c">2</td><td class="c no">1</td></tr>
+        <tr><td>Evidência</td><td>Seguiu ao menos uma trilha até o fim, de um registro ao seguinte.</td><td class="c">3</td><td class="c">3</td><td class="c">—</td></tr>
+        <tr><td>Constatação</td><td>Escreveu cada não conformidade com requisito, evidência e desvio.<small>Critério crítico</small></td><td class="c">3</td><td class="c">2</td><td class="c">—</td></tr>
+        <tr><td>Constatação</td><td>Não apontou culpados nem ditou a solução.</td><td class="c">2</td><td class="c">1</td><td class="c">2</td></tr>
+        <tr><td>Encerramento</td><td>Comunicou as constatações durante a auditoria, sem surpresa no encerramento.</td><td class="c">3</td><td class="c">2</td><td class="c">—</td></tr>
+        <tr class="tot"><td></td><td>Pontos</td><td class="c">34 de 36<small>12 observados</small></td><td class="c">23 de 33<small>11 observados</small></td><td class="c">12 de 24<small>8 observados</small></td></tr>
+        <tr class="tot"><td></td><td>Percentual</td><td class="c">94 %</td><td class="c">70 %</td><td class="c">50 %</td></tr>
+        <tr class="tot"><td></td><td>Nível</td><td class="c"><span class="chip s1">Apto a liderar</span></td><td class="c"><span class="chip s2">Apto a auditar em equipe</span></td><td class="c"><span class="chip s3">Em formação</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p><strong>O que observar.</strong> A população grande, de 1.150 registros de espessura, foi tratada com 30 casos, uma bobina a cada 38, e nenhum desvio: a medição em cinco pontos com o micrômetro novo está sendo seguida. As mudanças de processo são poucas, 9 no ano, e de risco alto, então quase todas foram vistas: 2 sem autorização sustentam a não conformidade. A quebra do chiller sem destino do produto é um desvio em cinco, e virou oportunidade de melhoria até a amostra ser ampliada. A não conformidade do treinamento do operador novo, de novo, se apoia só numa frase. A avaliação mostra três níveis: o coordenador pode liderar, o engenheiro audita em equipe, e a analista de RH, que aceitou a amostra oferecida e não corroborou o que ouviu, segue em formação.</p>
+
+  <h3>Exemplo 3. O fio de uma pergunta</h3>
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 236" role="img" aria-label="O fio de uma pergunta, na auditoria da pizzaria. Aberta: “Como vocês sabem que o termômetro da câmara mede certo?” Resposta: “Verificamos todo mês.” Mostre-me: “Pode me mostrar a última verificação?” Resposta: Planilha FR-07: em 15/03, o termômetro marcou 2 °C a menos. Foi trocado. Seguimento: “E o que foi feito com as leituras de antes?” Resposta: “Nada. O termômetro novo está certo.” Mostre-me: “Posso ver as leituras de 08 a 14/03?” Resposta: De 2,9 a 4,1 °C. Com o erro, até 6,1 °C, acima do limite de 5 °C. Constatação: Não conformidade com o 7.1.5 Resposta: Termômetro reprovado em 15/03 sem avaliação das leituras anteriores, que podem ter passado de 5 °C.">
+        <defs><marker id="a6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker></defs>
+        <rect class="bx-p" x="12" y="14" width="164" height="186"/>
+        <text class="mono mu" x="24" y="34" font-size="9.5">ABERTA</text>
+        <text class="b" x="24" y="54" font-size="11">“Como vocês sabem que o</text>
+        <text class="b" x="24" y="68" font-size="11">termômetro da câmara</text>
+        <text class="b" x="24" y="82" font-size="11">mede certo?”</text>
+        <text class="mu" x="24" y="104.0" font-size="10.5">“Verificamos todo mês.”</text>
+        <line class="ln" x1="177" y1="100" x2="188" y2="100" marker-end="url(#a6)"/>
+        <rect class="bx-d" x="190" y="14" width="164" height="186"/>
+        <text class="mono mu" x="202" y="34" font-size="9.5">MOSTRE-ME</text>
+        <text class="b" x="202" y="54" font-size="11">“Pode me mostrar a</text>
+        <text class="b" x="202" y="68" font-size="11">última verificação?”</text>
+        <text class="mu" x="202" y="90.0" font-size="10.5">Planilha FR-07: em 15/03,</text>
+        <text class="mu" x="202" y="103.5" font-size="10.5">o termômetro marcou 2 °C</text>
+        <text class="mu" x="202" y="117.0" font-size="10.5">a menos. Foi trocado.</text>
+        <line class="ln" x1="355" y1="100" x2="366" y2="100" marker-end="url(#a6)"/>
+        <rect class="bx-c" x="368" y="14" width="164" height="186"/>
+        <text class="mono mu" x="380" y="34" font-size="9.5">SEGUIMENTO</text>
+        <text class="b" x="380" y="54" font-size="11">“E o que foi feito com</text>
+        <text class="b" x="380" y="68" font-size="11">as leituras de antes?”</text>
+        <text class="mu" x="380" y="90.0" font-size="10.5">“Nada. O termômetro novo</text>
+        <text class="mu" x="380" y="103.5" font-size="10.5">está certo.”</text>
+        <line class="ln" x1="533" y1="100" x2="544" y2="100" marker-end="url(#a6)"/>
+        <rect class="bx-d" x="546" y="14" width="164" height="186"/>
+        <text class="mono mu" x="558" y="34" font-size="9.5">MOSTRE-ME</text>
+        <text class="b" x="558" y="54" font-size="11">“Posso ver as leituras</text>
+        <text class="b" x="558" y="68" font-size="11">de 08 a 14/03?”</text>
+        <text class="mu" x="558" y="90.0" font-size="10.5">De 2,9 a 4,1 °C. Com o</text>
+        <text class="mu" x="558" y="103.5" font-size="10.5">erro, até 6,1 °C, acima</text>
+        <text class="mu" x="558" y="117.0" font-size="10.5">do limite de 5 °C.</text>
+        <line class="ln" x1="711" y1="100" x2="722" y2="100" marker-end="url(#a6)"/>
+        <rect class="bx-ink" x="724" y="14" width="164" height="186"/>
+        <text class="mono t-ground" x="736" y="34" font-size="9.5">CONSTATAÇÃO</text>
+        <text class="b t-ground" x="736" y="54" font-size="11">Não conformidade com o</text>
+        <text class="b t-ground" x="736" y="68" font-size="11">7.1.5</text>
+        <text class="t-ground" x="736" y="90.0" font-size="10.5">Termômetro reprovado em</text>
+        <text class="t-ground" x="736" y="103.5" font-size="10.5">15/03 sem avaliação das</text>
+        <text class="t-ground" x="736" y="117.0" font-size="10.5">leituras anteriores, que</text>
+        <text class="t-ground" x="736" y="130.5" font-size="10.5">podem ter passado de</text>
+        <text class="t-ground" x="736" y="144.0" font-size="10.5">5 °C.</text>
+        <text x="450" y="226" font-size="11.5" text-anchor="middle">Quatro perguntas, nenhuma indutora. A não conformidade saiu dos registros, e não da opinião do auditor.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 6.</b> Da pergunta aberta à não conformidade do 7.1.5, na auditoria da pizzaria. Cada resposta abriu a pergunta seguinte.</figcaption>
+  </figure>
+  <p><strong>O que observar.</strong> A primeira resposta, "verificamos todo mês", era verdadeira e encerraria o assunto para um auditor apressado. O "mostre-me" levou ao registro de 15/03, e o registro mostrou o termômetro reprovado. A pergunta de seguimento revelou o que faltava: ninguém olhou as leituras feitas com o termômetro errado. O auditor não precisou opinar. Pediu as leituras da semana anterior, fez a conta com o erro e chegou a valores acima de 5 °C. A constatação tem requisito, evidência e desvio, e duas fontes. É a mesma lacuna que o estudo de <a href="../Calibracao/treinamento-calibracao.html">Calibração</a> aponta no exemplo da pizzaria.</p>
+</section>
+
+<!-- ============================ MÓDULO 8 ============================ -->
+<section id="leitura">
+  <p class="eyebrow">Módulo 8</p>
+  <h2>Ler as amostras</h2>
+  <p>Ao fim da auditoria, o auditor líder lê as amostras juntas: quantas foram vistas inteiras, quantas mostraram desvio e quantos desvios cada uma teve. É essa leitura que decide entre não conformidade, oportunidade e amostra a ampliar.</p>
+
+  <figure id="fig-bars">
+    <div class="scroll">
+      <svg id="bars" viewBox="0 0 900 426" role="img" aria-label="Registros verificados em cada amostra, com o tamanho planejado e os desvios. Comandas do salão: mesa e horário anotados: 20 de 20, 3 desvios, desvio repetido: não conformidade. Leituras de temperatura da câmara fria: 10 de 10, 1 desvios, desvio isolado: ampliar a amostra. Notas de recebimento com a temperatura anotada: 12 de 12, 0 desvios, conforme na amostra. Fichas de treinamento da equipe nova do salão: 3 de 3, 0 desvios, conforme na amostra. Checklists de limpeza do salão: 6 de 8, 0 desvios, amostra incompleta. Registros de espessura por bobina, com cinco pontos: 30 de 30, 0 desvios, conforme na amostra. Registros de mudança de processo, com autorização: 8 de 8, 2 desvios, desvio repetido: não conformidade. Ordens de manutenção corretiva, com o produto afetado: 5 de 5, 1 desvios, desvio isolado: ampliar a amostra. Instrumentos do posto com etiqueta em dia: 12 de 12, 0 desvios, conforme na amostra. Registros de treinamento do turno C: 5 de 5, 0 desvios, conforme na amostra.">
+        <g font-size="11.5">
+          <rect class="f1" x="380" y="12" width="14" height="14"/><text x="402" y="24">Conforme na amostra</text>
+          <rect class="f2" x="545" y="12" width="14" height="14"/><text x="567" y="24">Isolado ou incompleta</text>
+          <rect class="f3" x="710" y="12" width="14" height="14"/><text x="732" y="24">Desvio repetido</text>
+        </g>
+        <line class="ln" x1="380.0" y1="40" x2="380.0" y2="382"/>
+        <text class="mu" x="380.0" y="398" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">0</text>
+        <line class="grid" x1="500.0" y1="40" x2="500.0" y2="382"/>
+        <text class="mu" x="500.0" y="398" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">8</text>
+        <line class="grid" x1="620.0" y1="40" x2="620.0" y2="382"/>
+        <text class="mu" x="620.0" y="398" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">16</text>
+        <line class="grid" x1="740.0" y1="40" x2="740.0" y2="382"/>
+        <text class="mu" x="740.0" y="398" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">24</text>
+        <line class="grid" x1="860.0" y1="40" x2="860.0" y2="382"/>
+        <text class="mu" x="860.0" y="398" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">32</text>
+        <text class="mono mu" x="620.0" y="418" font-size="10" text-anchor="middle">REGISTROS VERIFICADOS · O TRAÇO É O TAMANHO PLANEJADO</text>
+        <text class="mono mu" x="20" y="64" font-size="10">PIZZARIA</text>
+        <text x="36" y="92" font-size="11"><tspan>Comandas do salão: mesa e horário anotados</tspan></text>
+        <rect class="bar f3" data-k="1" x="380" y="80" width="300.0" height="16"/>
+        <line class="tick" x1="680.0" y1="76" x2="680.0" y2="100"/>
+        <text class="mu halo" x="688.0" y="92" font-size="10.5" style="font-variant-numeric:tabular-nums">3 desvios em 20</text>
+        <text x="36" y="120" font-size="11"><tspan>Leituras de temperatura da câmara fria</tspan></text>
+        <rect class="bar f2" data-k="2" x="380" y="108" width="150.0" height="16"/>
+        <line class="tick" x1="530.0" y1="104" x2="530.0" y2="128"/>
+        <text class="mu halo" x="538.0" y="120" font-size="10.5" style="font-variant-numeric:tabular-nums">1 desvio em 10</text>
+        <text x="36" y="148" font-size="11"><tspan>Notas de recebimento com a temperatura anotada</tspan></text>
+        <rect class="bar f1" data-k="3" x="380" y="136" width="180.0" height="16"/>
+        <line class="tick" x1="560.0" y1="132" x2="560.0" y2="156"/>
+        <text class="mu halo" x="568.0" y="148" font-size="10.5" style="font-variant-numeric:tabular-nums">0 desvios em 12</text>
+        <text x="36" y="176" font-size="11"><tspan>Fichas de treinamento da equipe nova do salão</tspan></text>
+        <rect class="bar f1" data-k="4" x="380" y="164" width="45.0" height="16"/>
+        <line class="tick" x1="425.0" y1="160" x2="425.0" y2="184"/>
+        <text class="mu halo" x="433.0" y="176" font-size="10.5" style="font-variant-numeric:tabular-nums">0 desvios em 3</text>
+        <text x="36" y="204" font-size="11"><tspan>Checklists de limpeza do salão</tspan></text>
+        <rect class="bar f2" data-k="5" x="380" y="192" width="90.0" height="16"/>
+        <line class="tick" x1="500.0" y1="188" x2="500.0" y2="212"/>
+        <text class="mu halo" x="508.0" y="204" font-size="10.5" style="font-variant-numeric:tabular-nums">0 desvios em 6</text>
+        <text class="mono mu" x="20" y="232" font-size="10">INDÚSTRIA</text>
+        <text x="36" y="260" font-size="11"><tspan>Registros de espessura por bobina, com cinco…</tspan></text>
+        <rect class="bar f1" data-k="7" x="380" y="248" width="450.0" height="16"/>
+        <line class="tick" x1="830.0" y1="244" x2="830.0" y2="268"/>
+        <text class="b on" x="822.0" y="260" font-size="10.5" text-anchor="end" style="font-variant-numeric:tabular-nums">0 desvios em 30</text>
+        <text x="36" y="288" font-size="11"><tspan>Registros de mudança de processo, com…</tspan></text>
+        <rect class="bar f3" data-k="8" x="380" y="276" width="120.0" height="16"/>
+        <line class="tick" x1="500.0" y1="272" x2="500.0" y2="296"/>
+        <text class="mu halo" x="508.0" y="288" font-size="10.5" style="font-variant-numeric:tabular-nums">2 desvios em 8</text>
+        <text x="36" y="316" font-size="11"><tspan>Ordens de manutenção corretiva, com o produto…</tspan></text>
+        <rect class="bar f2" data-k="9" x="380" y="304" width="75.0" height="16"/>
+        <line class="tick" x1="455.0" y1="300" x2="455.0" y2="324"/>
+        <text class="mu halo" x="463.0" y="316" font-size="10.5" style="font-variant-numeric:tabular-nums">1 desvio em 5</text>
+        <text x="36" y="344" font-size="11"><tspan>Instrumentos do posto com etiqueta em dia</tspan></text>
+        <rect class="bar f1" data-k="10" x="380" y="332" width="180.0" height="16"/>
+        <line class="tick" x1="560.0" y1="328" x2="560.0" y2="352"/>
+        <text class="mu halo" x="568.0" y="344" font-size="10.5" style="font-variant-numeric:tabular-nums">0 desvios em 12</text>
+        <text x="36" y="372" font-size="11"><tspan>Registros de treinamento do turno C</tspan></text>
+        <rect class="bar f1" data-k="11" x="380" y="360" width="75.0" height="16"/>
+        <line class="tick" x1="455.0" y1="356" x2="455.0" y2="380"/>
+        <text class="mu halo" x="463.0" y="372" font-size="10.5" style="font-variant-numeric:tabular-nums">0 desvios em 5</text>
+        <rect class="hit" x="14" y="74" width="872" height="28" tabindex="0" role="img" aria-label="Comandas do salão: mesa e horário anotados: 20 de 20, 3 desvios, desvio repetido: não conformidade" data-k="1" data-n="Comandas do salão: mesa e horário anotados" data-s="Desvio repetido: não conformidade" data-d="3 desvios em 20 de 20" data-p="população 620" data-cx="680.0" data-cy="74"/>
+        <rect class="hit" x="14" y="102" width="872" height="28" tabindex="0" role="img" aria-label="Leituras de temperatura da câmara fria: 10 de 10, 1 desvios, desvio isolado: ampliar a amostra" data-k="2" data-n="Leituras de temperatura da câmara fria" data-s="Desvio isolado: ampliar a amostra" data-d="1 desvios em 10 de 10" data-p="população 56" data-cx="530.0" data-cy="102"/>
+        <rect class="hit" x="14" y="130" width="872" height="28" tabindex="0" role="img" aria-label="Notas de recebimento com a temperatura anotada: 12 de 12, 0 desvios, conforme na amostra" data-k="3" data-n="Notas de recebimento com a temperatura anotada" data-s="Conforme na amostra" data-d="0 desvios em 12 de 12" data-p="população 48" data-cx="560.0" data-cy="130"/>
+        <rect class="hit" x="14" y="158" width="872" height="28" tabindex="0" role="img" aria-label="Fichas de treinamento da equipe nova do salão: 3 de 3, 0 desvios, conforme na amostra" data-k="4" data-n="Fichas de treinamento da equipe nova do salão" data-s="Conforme na amostra" data-d="0 desvios em 3 de 3" data-p="população 6" data-cx="425.0" data-cy="158"/>
+        <rect class="hit" x="14" y="186" width="872" height="28" tabindex="0" role="img" aria-label="Checklists de limpeza do salão: 6 de 8, 0 desvios, amostra incompleta" data-k="5" data-n="Checklists de limpeza do salão" data-s="Amostra incompleta" data-d="0 desvios em 6 de 8" data-p="população 28" data-cx="470.0" data-cy="186"/>
+        <rect class="hit" x="14" y="242" width="872" height="28" tabindex="0" role="img" aria-label="Registros de espessura por bobina, com cinco pontos: 30 de 30, 0 desvios, conforme na amostra" data-k="7" data-n="Registros de espessura por bobina, com cinco pontos" data-s="Conforme na amostra" data-d="0 desvios em 30 de 30" data-p="população 1.150" data-cx="830.0" data-cy="242"/>
+        <rect class="hit" x="14" y="270" width="872" height="28" tabindex="0" role="img" aria-label="Registros de mudança de processo, com autorização: 8 de 8, 2 desvios, desvio repetido: não conformidade" data-k="8" data-n="Registros de mudança de processo, com autorização" data-s="Desvio repetido: não conformidade" data-d="2 desvios em 8 de 8" data-p="população 9" data-cx="500.0" data-cy="270"/>
+        <rect class="hit" x="14" y="298" width="872" height="28" tabindex="0" role="img" aria-label="Ordens de manutenção corretiva, com o produto afetado: 5 de 5, 1 desvios, desvio isolado: ampliar a amostra" data-k="9" data-n="Ordens de manutenção corretiva, com o produto afetado" data-s="Desvio isolado: ampliar a amostra" data-d="1 desvios em 5 de 5" data-p="população 14" data-cx="455.0" data-cy="298"/>
+        <rect class="hit" x="14" y="326" width="872" height="28" tabindex="0" role="img" aria-label="Instrumentos do posto com etiqueta em dia: 12 de 12, 0 desvios, conforme na amostra" data-k="10" data-n="Instrumentos do posto com etiqueta em dia" data-s="Conforme na amostra" data-d="0 desvios em 12 de 12" data-p="população 25" data-cx="560.0" data-cy="326"/>
+        <rect class="hit" x="14" y="354" width="872" height="28" tabindex="0" role="img" aria-label="Registros de treinamento do turno C: 5 de 5, 0 desvios, conforme na amostra" data-k="11" data-n="Registros de treinamento do turno C" data-s="Conforme na amostra" data-d="0 desvios em 5 de 5" data-p="população 12" data-cx="455.0" data-cy="354"/>
+      </svg>
+    </div>
+    <div class="tip" id="bars-tip" hidden></div>
+    <figcaption><b>Figura 7.</b> Registros verificados em cada amostra dos dois exemplos, com o tamanho planejado marcado. Passe o mouse sobre as linhas para ver os valores.</figcaption>
+    <details class="data">
+      <summary>Ver os dados em tabela</summary>
+      <div class="tbl">
+        <table class="aud">
+          <thead><tr><th>O que se verifica</th><th class="c">População</th><th class="c">Planejada</th><th class="c">Verificados</th><th class="c">Desvios</th><th>Conclusão</th></tr></thead>
+          <tbody>
+            <tr><td>Comandas do salão: mesa e horário anotados</td><td class="c">620</td><td class="c">20</td><td class="c">20</td><td class="c">3</td><td>Desvio repetido: não conformidade</td></tr>
+            <tr><td>Leituras de temperatura da câmara fria</td><td class="c">56</td><td class="c">10</td><td class="c">10</td><td class="c">1</td><td>Desvio isolado: ampliar a amostra</td></tr>
+            <tr><td>Notas de recebimento com a temperatura anotada</td><td class="c">48</td><td class="c">12</td><td class="c">12</td><td class="c">0</td><td>Conforme na amostra</td></tr>
+            <tr><td>Fichas de treinamento da equipe nova do salão</td><td class="c">6</td><td class="c">3</td><td class="c">3</td><td class="c">0</td><td>Conforme na amostra</td></tr>
+            <tr><td>Checklists de limpeza do salão</td><td class="c">28</td><td class="c">8</td><td class="c">6</td><td class="c">0</td><td>Amostra incompleta</td></tr>
+            <tr><td>Registros de espessura por bobina, com cinco pontos</td><td class="c">1.150</td><td class="c">30</td><td class="c">30</td><td class="c">0</td><td>Conforme na amostra</td></tr>
+            <tr><td>Registros de mudança de processo, com autorização</td><td class="c">9</td><td class="c">8</td><td class="c">8</td><td class="c">2</td><td>Desvio repetido: não conformidade</td></tr>
+            <tr><td>Ordens de manutenção corretiva, com o produto afetado</td><td class="c">14</td><td class="c">5</td><td class="c">5</td><td class="c">1</td><td>Desvio isolado: ampliar a amostra</td></tr>
+            <tr><td>Instrumentos do posto com etiqueta em dia</td><td class="c">25</td><td class="c">12</td><td class="c">12</td><td class="c">0</td><td>Conforme na amostra</td></tr>
+            <tr><td>Registros de treinamento do turno C</td><td class="c">12</td><td class="c">5</td><td class="c">5</td><td class="c">0</td><td>Conforme na amostra</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </details>
+  </figure>
+
+  <p>Na pizzaria, 51 registros foram vistos em cinco amostras, com 4 desvios: 3 numa só, as comandas. Na indústria, 60 registros, com 3 desvios: 2 nas mudanças de processo. Nas duas, a amostra com um único desvio ficou para ampliar, e não virou não conformidade por pressa. A barra que não chega ao traço, nos checklists de limpeza da pizzaria, é uma amostra incompleta: a conclusão sobre ela precisa dizer isso.</p>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:26%">Conclusão</th><th style="width:38%">Regra deste material</th><th>O que fazer</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Conforme na amostra</strong></td><td>Amostra completa, sem desvio.</td><td>Registrar o tamanho. Não afirmar que não há desvios.</td></tr>
+        <tr><td><strong>Desvio isolado</strong></td><td>Amostra completa, com um desvio.</td><td>Ampliar a amostra antes de concluir. Até lá, oportunidade ou ponto a verificar.</td></tr>
+        <tr><td><strong>Desvio repetido</strong></td><td>Amostra completa, com dois desvios ou mais.</td><td>Não conformidade, com o tamanho da amostra na evidência.</td></tr>
+        <tr><td><strong>Amostra incompleta</strong></td><td>Menos registros verificados do que o planejado.</td><td>Registrar por quê, e completar se possível.</td></tr>
+        <tr><td><strong>Evidência fraca</strong></td><td>Só entrevista.</td><td>Corroborar antes de escrever qualquer não conformidade.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note">
+    <h4>Amostra também se escreve</h4>
+    <p>A evidência de uma constatação inclui a amostra: "em 20 comandas de fevereiro, escolhidas uma a cada 31 a partir da 7ª, 3 estavam sem mesa ou sem horário". Quem lê o relatório entende o tamanho do problema, e quem trata a não conformidade sabe onde procurar. O estudo de <a href="../Auditoria/treinamento-auditoria.html">Auditoria interna</a> traz a anatomia completa da constatação.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 9 ============================ -->
+<section id="erros">
+  <p class="eyebrow">Módulo 9</p>
+  <h2>Erros comuns</h2>
+  <div class="errs">
+    <div><h4>Pergunta indutora</h4><p>"Vocês verificam o termômetro, certo?"</p><p class="fix"><b>Correção:</b> "Como vocês sabem que o termômetro mede certo?"</p></div>
+    <div><h4>Ficar na palavra</h4><p>A resposta convenceu, e o auditor seguiu para o próximo item.</p><p class="fix"><b>Correção:</b> "Pode me mostrar?" depois de toda resposta importante.</p></div>
+    <div><h4>Amostra oferecida</h4><p>A gerente separou três pastas "para facilitar".</p><p class="fix"><b>Correção:</b> o auditor escolhe, e avisa disso na abertura.</p></div>
+    <div><h4>Amostra sem tamanho</h4><p>"Algumas comandas estavam sem horário."</p><p class="fix"><b>Correção:</b> "3 de 20", com o critério da escolha.</p></div>
+    <div><h4>Concluir com um caso</h4><p>Um registro errado vira não conformidade.</p><p class="fix"><b>Correção:</b> ampliar a amostra antes de concluir.</p></div>
+    <div><h4>Não conformidade de ouvir dizer</h4><p>"O garçom disse que nem sempre avisa."</p><p class="fix"><b>Correção:</b> observar o atendimento ou buscar o registro.</p></div>
+    <div><h4>Auditar a sala de reuniões</h4><p>O dia inteiro com o gerente, longe dos postos.</p><p class="fix"><b>Correção:</b> começar pelo posto, e entrevistar quem faz.</p></div>
+    <div><h4>Falar mais que o auditado</h4><p>O auditor explica o requisito e conta como a outra empresa faz.</p><p class="fix"><b>Correção:</b> perguntar, esperar e anotar.</p></div>
+    <div><h4>Trilha interrompida</h4><p>O auditor viu a bobina segregada e não pediu o registro.</p><p class="fix"><b>Correção:</b> seguir ao menos uma trilha até o fim em cada processo.</p></div>
+    <div><h4>Auditor sem avaliação</h4><p>Quem fez o curso audita sozinho, e ninguém o viu em campo.</p><p class="fix"><b>Correção:</b> auditoria testemunhada, com critérios escritos.</p></div>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 10 ============================ -->
+<section id="ferramentas">
+  <p class="eyebrow">Módulo 10</p>
+  <h2>A técnica e outras ferramentas</h2>
+  <p>A técnica de auditoria usa o que os outros estudos produzem como critério e como evidência, e devolve a eles constatações que se sustentam.</p>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:26%">Ferramenta</th><th style="width:37%">O que ela entrega à técnica</th><th>O que recebe da técnica</th></tr></thead>
+      <tbody>
+        <tr><td><a href="../Auditoria/treinamento-auditoria.html"><strong>Auditoria interna</strong></a></td><td>O programa, o plano, a lista de verificação e a anatomia da constatação.</td><td>Perguntas melhores, amostras dimensionadas e evidência corroborada.</td></tr>
+        <tr><td><a href="../ISO-9001/treinamento-iso-9001.html"><strong>ISO 9001 requisito a requisito</strong></a></td><td>Os requisitos, com a pergunta e as evidências de cada um.</td><td>A pergunta virada em pergunta aberta.</td></tr>
+        <tr><td><a href="../Nao-Conformidade/treinamento-nao-conformidade.html"><strong>Não conformidade e ação corretiva</strong></a></td><td>O tratamento do que a auditoria encontra.</td><td>Constatações com amostra e evidência, que facilitam achar a causa.</td></tr>
+        <tr><td><a href="../Competencias/treinamento-competencias.html"><strong>Matriz de competências</strong></a></td><td>A forma de registrar o nível e o plano de treinamento.</td><td>A avaliação de cada auditor, como entrada.</td></tr>
+        <tr><td><a href="../Producao/treinamento-producao.html"><strong>Controle de produção e de serviço</strong></a></td><td>O plano de controle e os registros, que viram população de amostra.</td><td>A verificação de que o plano é seguido.</td></tr>
+        <tr><td><a href="../Informacao-Documentada/treinamento-informacao-documentada.html"><strong>Informação documentada</strong></a></td><td>A lista mestra, que mostra a revisão vigente.</td><td>A constatação do documento desatualizado no posto.</td></tr>
+        <tr><td><a href="../Caso-Integrado/treinamento-caso-integrado.html"><strong>Caso integrado</strong></a></td><td>O fio de um problema pelos registros, em escala maior.</td><td>A trilha, como técnica de campo.</td></tr>
+        <tr><td><a href="../Fornecedores/treinamento-fornecedores.html"><strong>Avaliação de fornecedores</strong></a></td><td>Os fornecedores críticos, que podem ser auditados.</td><td>A mesma técnica, aplicada no fornecedor.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 11 ============================ -->
+<section id="iso">
+  <p class="eyebrow">Módulo 11</p>
+  <h2>Nas normas ISO</h2>
+  <p>A ISO 19011:2018 dá diretrizes para auditar sistemas de gestão. Ela não é requisito: é uma orientação que serve à auditoria interna pedida pela ISO 9001 e à auditoria de fornecedores. A técnica de campo está na condução das atividades de auditoria, no anexo com orientações aos auditores e na seção sobre a competência e a avaliação dos auditores.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 200" role="img" aria-label="O que a ISO 19011 orienta sobre a técnica de auditoria. Princípios: Integridade, apresentação justa, devido cuidado, confidencialidade, independência, evidência e risco. Neste estudo: o tom da entrevista. Coletar e verificar: A informação só vira evidência quando pode ser verificada, por amostra, ligada ao critério. Neste estudo: a amostra e a força. Amostragem: Por julgamento ou estatística; a conclusão sempre carrega a incerteza da amostra. Neste estudo: a tabela e o passo. Competência: Comportamento, conhecimento e habilidade, avaliados e mantidos ao longo do tempo. Neste estudo: a auditoria testemunhada.">
+        <rect class="bx" x="10" y="14" width="214" height="172"/>
+        <rect class="hd-ink" x="10" y="14" width="214" height="34"/>
+        <text class="b t-ground" x="22" y="36" font-size="11.5">Princípios</text>
+        <text x="22" y="70" font-size="11.5">Integridade, apresentação justa,</text>
+        <text x="22" y="86" font-size="11.5">devido cuidado,</text>
+        <text x="22" y="102" font-size="11.5">confidencialidade,</text>
+        <text x="22" y="118" font-size="11.5">independência, evidência e</text>
+        <text x="22" y="134" font-size="11.5">risco.</text>
+        <text class="mu" x="22" y="160" font-size="11">Neste estudo: o tom da entrevista</text>
+        <rect class="bx" x="232" y="14" width="214" height="172"/>
+        <rect class="hd-ink" x="232" y="14" width="214" height="34"/>
+        <text class="b t-ground" x="244" y="36" font-size="11.5">Coletar e verificar</text>
+        <text x="244" y="70" font-size="11.5">A informação só vira evidência</text>
+        <text x="244" y="86" font-size="11.5">quando pode ser verificada, por</text>
+        <text x="244" y="102" font-size="11.5">amostra, ligada ao critério.</text>
+        <text class="mu" x="244" y="160" font-size="11">Neste estudo: a amostra e a força</text>
+        <rect class="bx" x="454" y="14" width="214" height="172"/>
+        <rect class="hd-ink" x="454" y="14" width="214" height="34"/>
+        <text class="b t-ground" x="466" y="36" font-size="11.5">Amostragem</text>
+        <text x="466" y="70" font-size="11.5">Por julgamento ou estatística; a</text>
+        <text x="466" y="86" font-size="11.5">conclusão sempre carrega a</text>
+        <text x="466" y="102" font-size="11.5">incerteza da amostra.</text>
+        <text class="mu" x="466" y="160" font-size="11">Neste estudo: a tabela e o passo</text>
+        <rect class="bx" x="676" y="14" width="214" height="172"/>
+        <rect class="hd-ink" x="676" y="14" width="214" height="34"/>
+        <text class="b t-ground" x="688" y="36" font-size="11.5">Competência</text>
+        <text x="688" y="70" font-size="11.5">Comportamento, conhecimento e</text>
+        <text x="688" y="86" font-size="11.5">habilidade, avaliados e mantidos</text>
+        <text x="688" y="102" font-size="11.5">ao longo do tempo.</text>
+        <text class="mu" x="688" y="160" font-size="11">Neste estudo: a auditoria</text>
+        <text class="mu" x="688" y="175" font-size="11">testemunhada</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 8.</b> O que a ISO 19011 orienta sobre a técnica e onde este estudo responde. O texto da figura é um resumo, com palavras próprias.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:14%">Onde</th><th style="width:32%">O que orienta, em resumo</th><th style="width:27%">O que isso significa</th><th>Neste estudo</th></tr></thead>
+      <tbody>
+        <tr><td class="num">19011, 4</td><td>Princípios de auditoria, da integridade à abordagem baseada em risco</td><td>O tom da entrevista e a imparcialidade da conclusão.</td><td>A entrevista, os erros comuns.</td></tr>
+        <tr><td class="num">19011, 6.4</td><td>Coletar e verificar as informações por amostragem, gerar as constatações e as conclusões</td><td>Só a informação verificável vira evidência.</td><td>A amostragem, a força da evidência.</td></tr>
+        <tr><td class="num">19011, Anexo A</td><td>Orientações sobre amostragem, entrevistas, fontes de informação e auditoria de atividades remotas</td><td>A amostra pode ser por julgamento ou estatística, e a entrevista tem regras.</td><td>A tabela de tamanhos, o funil de perguntas.</td></tr>
+        <tr><td class="num">19011, 7</td><td>Competência dos auditores: determinar, avaliar, manter e melhorar</td><td>O auditor é avaliado, e não só treinado.</td><td>A auditoria testemunhada.</td></tr>
+        <tr><td class="num">9001, 9.2</td><td>Fazer auditorias internas com auditores objetivos e imparciais</td><td>Quem audita não audita o próprio trabalho.</td><td>A escolha da equipe nos exemplos.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pair">
+    <div class="box">
+      <h4>O que a ISO 19011 orienta</h4>
+      <ul>
+        <li>Evidência verificável, obtida por amostragem.</li>
+        <li>Consciência da incerteza da amostra na conclusão.</li>
+        <li>Entrevistas com as pessoas certas, no lugar certo.</li>
+        <li>Competência avaliada e mantida.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h4>O que ela não fixa</h4>
+      <ul>
+        <li>Um tamanho de amostra; a tabela deste material é uma convenção.</li>
+        <li>A regra das duas fontes; ela é uma prática prudente.</li>
+        <li>A escala de 0 a 3 e os níveis do auditor.</li>
+        <li>Um número de horas de curso para ser auditor.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="note">
+    <h4>Pontos de atenção</h4>
+    <p>A auditoria de certificação olha o programa de auditoria interna e costuma perguntar como os auditores internos foram escolhidos e avaliados. Relatórios com constatações sem amostra, ou baseadas só em entrevista, são sinal de auditoria interna fraca, e a direção perde a informação de que precisa.</p>
+    <p>Este módulo cita a ISO 19011:2018 e a ISO 9001:2015 e resume os textos com palavras próprias. Confira sempre a edição vigente das normas antes de citar um item em relatório.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 12 ============================ -->
+<section id="avaliar">
+  <p class="eyebrow">Módulo 12</p>
+  <h2>Avaliar o auditor</h2>
+  <p>A forma mais direta de avaliar um auditor é vê-lo trabalhar. Na auditoria testemunhada, um avaliador acompanha a auditoria sem interferir e marca, para cada critério, o que viu. Depois, conversa com o auditor por 30 minutos.</p>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:18%">Etapa</th><th>Critério</th><th style="width:12%">Crítico</th></tr></thead>
+      <tbody>
+        <tr><td>Preparação</td><td>Leu os documentos e o relatório da auditoria anterior antes de ir a campo.</td><td>—</td></tr>
+        <tr><td>Preparação</td><td>Preparou a lista de verificação e o tamanho das amostras com antecedência.</td><td>—</td></tr>
+        <tr><td>Abertura</td><td>Confirmou o objetivo, o escopo, os critérios e o plano na reunião de abertura.</td><td>—</td></tr>
+        <tr><td>Entrevista</td><td>Fez perguntas abertas e pediu para ver: “mostre-me”.</td><td>—</td></tr>
+        <tr><td>Entrevista</td><td>Ouviu sem interromper e sem sugerir a resposta.</td><td>—</td></tr>
+        <tr><td>Amostra</td><td>Escolheu a amostra, em vez de aceitar a oferecida pelo auditado.</td><td>Sim</td></tr>
+        <tr><td>Amostra</td><td>Anotou o tamanho de cada amostra e o que encontrou nela.</td><td>—</td></tr>
+        <tr><td>Evidência</td><td>Corroborou o que ouviu com observação ou registro.</td><td>Sim</td></tr>
+        <tr><td>Evidência</td><td>Seguiu ao menos uma trilha até o fim, de um registro ao seguinte.</td><td>—</td></tr>
+        <tr><td>Constatação</td><td>Escreveu cada não conformidade com requisito, evidência e desvio.</td><td>Sim</td></tr>
+        <tr><td>Constatação</td><td>Não apontou culpados nem ditou a solução.</td><td>—</td></tr>
+        <tr><td>Encerramento</td><td>Comunicou as constatações durante a auditoria, sem surpresa no encerramento.</td><td>—</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Notas: <b>0</b> não fez. <b>1</b> fez em parte. <b>2</b> fez bem. <b>3</b> referência para os outros. Critério não observado fica em branco. Com pelo menos 8 critérios observados, o percentual é a soma das notas dividida pelo máximo possível. Este material classifica: 80 % ou mais, apto a liderar; de 60 % a 79 %, apto a auditar em equipe; abaixo disso, em formação. Um critério crítico com nota 0 ou 1 deixa o auditor em formação, qualquer que seja o percentual.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 136" role="img" aria-label="Distribuição da conversa de devolutiva de 30 minutos depois da auditoria testemunhada: 5 minutos para o auditor dizer como se saiu, 10 minutos para os pontos fortes com exemplos, 10 minutos para os pontos a melhorar com exemplos, e 5 minutos para combinar o próximo passo.">
+        <g font-size="11.5" text-anchor="middle">
+          <rect class="bx" x="60" y="24" width="130" height="56"/><text x="125" y="49">O auditor</text><text x="125" y="64">se avalia</text>
+          <rect class="hd-ink gap2" x="190" y="24" width="260" height="56"/><text class="t-ground b" x="320" y="49">Pontos fortes,</text><text class="t-ground b" x="320" y="64">com o que foi visto</text>
+          <rect class="hd-d gap2" x="450" y="24" width="260" height="56"/><text class="on b" x="580" y="49">Pontos a melhorar,</text><text class="on b" x="580" y="64">com o que foi visto</text>
+          <rect class="bx" x="710" y="24" width="130" height="56"/><text x="775" y="56">Próximo passo</text>
+        </g>
+        <g class="ln-mu" stroke-width="1">
+          <line x1="60" y1="82" x2="60" y2="94"/><line x1="190" y1="82" x2="190" y2="94"/><line x1="450" y1="82" x2="450" y2="94"/>
+          <line x1="710" y1="82" x2="710" y2="94"/><line x1="840" y1="82" x2="840" y2="94"/>
+        </g>
+        <g class="mono" font-size="10.5" text-anchor="middle">
+          <text class="mu" x="60" y="112">0</text><text class="mu" x="190" y="112">5</text><text class="mu" x="450" y="112">15</text>
+          <text class="mu" x="710" y="112">25</text><text class="mu" x="840" y="112">30</text>
+        </g>
+      </svg>
+    </div>
+    <figcaption><b>Figura 9.</b> A conversa de devolutiva, em escala. O auditor fala primeiro; o avaliador traz exemplos do que viu, e não impressões.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Momento</th><th style="width:42%">O que fazer</th><th>Perguntas que ajudam</th></tr></thead>
+      <tbody>
+        <tr><td><strong>O auditor se avalia</strong></td><td>Ele conta o que foi bem e o que faria diferente.</td><td>"Qual constatação você teve mais dúvida em escrever?"</td></tr>
+        <tr><td><strong>Pontos fortes</strong></td><td>Dois ou três, cada um com o momento em que apareceu.</td><td>"Quando você pediu as leituras de 08 a 14/03, a trilha fechou."</td></tr>
+        <tr><td><strong>Pontos a melhorar</strong></td><td>Dois ou três, começando pelos critérios críticos.</td><td>"Que outra fonte confirmaria o que o garçom disse?"</td></tr>
+        <tr><td><strong>Próximo passo</strong></td><td>O nível, o que treinar e quando será a próxima observação.</td><td>"Na próxima auditoria, você lidera com quem?"</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Checklist da técnica de auditoria</h3>
+  <p>Marque os itens conforme revisa como as suas auditorias são feitas em campo. As marcações ficam salvas neste navegador.</p>
+  <ol class="check" id="checklist">
+    <li><label><input type="checkbox" id="ck-1"><span>Cada item da lista de verificação vira uma pergunta aberta, com o requisito ao lado.</span></label></li>
+    <li><label><input type="checkbox" id="ck-2"><span>O tamanho de cada amostra é decidido antes, pela população e pelo risco.</span></label></li>
+    <li><label><input type="checkbox" id="ck-3"><span>O auditor escolhe a amostra, e o ponto de partida não vem do auditado.</span></label></li>
+    <li><label><input type="checkbox" id="ck-4"><span>O tamanho da amostra e o resultado ficam anotados: quantos se viu e quantos desvios.</span></label></li>
+    <li><label><input type="checkbox" id="ck-5"><span>Um desvio isolado leva a ampliar a amostra antes de concluir.</span></label></li>
+    <li><label><input type="checkbox" id="ck-6"><span>Cada constatação tem ao menos uma evidência objetiva: observação ou registro.</span></label></li>
+    <li><label><input type="checkbox" id="ck-7"><span>Toda não conformidade é corroborada por duas fontes.</span></label></li>
+    <li><label><input type="checkbox" id="ck-8"><span>O auditor segue ao menos uma trilha até o fim em cada processo.</span></label></li>
+    <li><label><input type="checkbox" id="ck-9"><span>As perguntas indutoras são evitadas, e o auditado fala mais que o auditor.</span></label></li>
+    <li><label><input type="checkbox" id="ck-10"><span>As constatações são mostradas ao auditado durante a auditoria.</span></label></li>
+    <li><label><input type="checkbox" id="ck-11"><span>Os auditores são avaliados em campo, por auditoria testemunhada, com critérios escritos.</span></label></li>
+    <li><label><input type="checkbox" id="ck-12"><span>Quem está em formação audita em equipe até alcançar o nível de liderar.</span></label></li>
+  </ol>
+  <div class="bar"><span><b id="ck-count">0</b> de 12 itens marcados</span><button class="btn" id="ck-reset" type="button">Limpar marcações</button></div>
+</section>
+
+<!-- ============================ MÓDULO 13 ============================ -->
+<section id="pratique">
+  <p class="eyebrow">Módulo 13</p>
+  <h2>Pratique</h2>
+  <h3>Exercício 1. O que fazer com esta evidência?</h3>
+  <p>Cada item descreve uma situação em campo. Diga o que fazer: a evidência basta, é preciso corroborar com outra fonte, é preciso escolher ou ampliar a amostra, ou a pergunta precisa ser refeita.</p>
+  <div class="quiz" id="quiz"></div>
+  <div class="bar"><span>Acertos: <b id="qz-score">0</b> de <b id="qz-total">12</b></span><span>Respondidos: <b id="qz-done">0</b></span><button class="btn" id="qz-reset" type="button">Recomeçar</button></div>
+
+  <h3>Exercício 2. Prepare e avalie uma auditoria</h3>
+  <p>Abra a planilha de apoio e siga o roteiro.</p>
+  <ol>
+    <li>Na aba Amostras, liste os registros que vai verificar, com a população e o risco. Leia o tamanho e o passo calculados, e sorteie o início.</li>
+    <li>Na auditoria, preencha quantos foram verificados e quantos desvios. Leia a conclusão de cada amostra.</li>
+    <li>Na aba Evidências, registre cada pergunta, as fontes e a constatação. Leia a força e a conferência.</li>
+    <li>Se houver observador, ele preenche a aba Auditores com as notas de cada critério.</li>
+    <li>Leia a aba Painel e passe o checklist do módulo 12.</li>
+  </ol>
+  <p>Depois, releia as não conformidades do último relatório de auditoria da sua organização. Para cada uma, pergunte: qual foi a amostra, e quais foram as duas fontes?</p>
+</section>
+
+<!-- ============================ MÓDULO 14 ============================ -->
+<section id="planilha">
+  <p class="eyebrow">Módulo 14</p>
+  <h2>A planilha de apoio</h2>
+  <p>Este treinamento acompanha o arquivo <a id="xlsx-ref" href="Tecnica-Auditoria-modelo.xlsx">Tecnica-Auditoria-modelo.xlsx</a>, que fica na mesma pasta. As células em amarelo-claro são para preenchimento. As células cinza são calculadas.</p>
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Aba</th><th>Para que serve</th><th style="width:36%">O que ela calcula</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Instruções</strong></td><td>Legenda de cores, as regras de cálculo, a tabela de tamanhos, ordem de preenchimento e premissas.</td><td>Nada. É só leitura.</td></tr>
+        <tr><td><strong>Amostras</strong></td><td>Os dados da auditoria e até 30 amostras, com população, risco, início, verificados e desvios.</td><td>O tamanho, o passo, a conclusão e a conferência.</td></tr>
+        <tr><td><strong>Evidências</strong></td><td>Até 60 perguntas, com requisito, as três fontes e a constatação.</td><td>O número de fontes, a força e a conferência.</td></tr>
+        <tr><td><strong>Auditores</strong></td><td>Até 4 auditores, com as notas de 0 a 3 nos 12 critérios.</td><td>Os pontos, o percentual, o nível e a conferência de cada um.</td></tr>
+        <tr><td><strong>Painel</strong></td><td>Nada a preencher.</td><td>Os números das três abas, o gráfico e o aviso.</td></tr>
+        <tr><td><strong>Checklist</strong></td><td>Os mesmos 12 itens do módulo 12, com status Sim, Parcial ou Não.</td><td>Percentual atendido e situação da validação.</td></tr>
+        <tr><td><strong>Exemplo 1 e Exemplo 2</strong></td><td>As amostras, as evidências e a avaliação dos auditores da pizzaria e da indústria.</td><td>As mesmas contas das abas de entrada.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ GLOSSÁRIO ============================ -->
+<section id="glossario">
+  <p class="eyebrow">Referência</p>
+  <h2>Glossário</h2>
+  <dl class="gloss">
+    <div><dt>Amostra</dt><dd>Os casos de uma população que o auditor de fato verifica.</dd></div>
+    <div><dt>Amostragem por julgamento</dt><dd>A escolha da amostra pelo conhecimento e pela experiência do auditor, por exemplo concentrando no risco.</dd></div>
+    <div><dt>Amostragem sistemática</dt><dd>A escolha de um caso a cada tantos, a partir de um início sorteado.</dd></div>
+    <div><dt>Auditoria testemunhada</dt><dd>A auditoria acompanhada por um avaliador, que observa o trabalho do auditor.</dd></div>
+    <div><dt>Corroboração</dt><dd>A confirmação de uma evidência por outra fonte, independente.</dd></div>
+    <div><dt>Critério de auditoria</dt><dd>O conjunto de requisitos usados como referência: norma, procedimento, contrato, lei.</dd></div>
+    <div><dt>Evidência de auditoria</dt><dd>Registros, declarações e fatos verificáveis, pertinentes ao critério.</dd></div>
+    <div><dt>Força da evidência</dt><dd>Neste material, o quanto uma evidência sustenta a constatação, pelo número e pelo tipo de fontes.</dd></div>
+    <div><dt>Pergunta indutora</dt><dd>A pergunta que sugere a resposta esperada.</dd></div>
+    <div><dt>População</dt><dd>O conjunto de registros ou de casos de onde a amostra é tirada.</dd></div>
+    <div><dt>Trilha de auditoria</dt><dd>O caminho de um registro ao seguinte, para frente ou para trás no processo.</dd></div>
+    <div><dt>Triangulação</dt><dd>A comparação entre entrevista, observação e registro sobre o mesmo ponto.</dd></div>
+  </dl>
+</section>
+
+</main>
+</div>
+
+<footer>Material de estudo. Os exemplos, documentos e números são ilustrativos e foram criados para fins didáticos. As referências às normas ISO são resumos para estudo e não substituem o texto das normas.</footer>
+</div>
+
+<script>
+(function () {
+  function read(key) { try { return JSON.parse(localStorage.getItem(key) || 'null'); } catch (e) { return null; } }
+  function write(key, val) { try { localStorage.setItem(key, JSON.stringify(val)); } catch (e) {} }
+
+  /* ---------- Checklist ---------- */
+  var boxes = Array.prototype.slice.call(document.querySelectorAll('#checklist input'));
+  var count = document.getElementById('ck-count');
+  var saved = read('tecnica-auditoria-checklist') || {};
+  function refreshChecks() {
+    var n = 0, state = {};
+    boxes.forEach(function (b) { if (b.checked) { n++; } state[b.id] = b.checked; });
+    count.textContent = n;
+    return state;
+  }
+  boxes.forEach(function (b) {
+    if (saved[b.id]) { b.checked = true; }
+    b.addEventListener('change', function () { write('tecnica-auditoria-checklist', refreshChecks()); });
+  });
+  refreshChecks();
+  document.getElementById('ck-reset').addEventListener('click', function () {
+    boxes.forEach(function (b) { b.checked = false; });
+    write('tecnica-auditoria-checklist', refreshChecks());
+  });
+
+  /* ---------- Exercício ---------- */
+  var KEYS = ['B', 'C', 'A', 'R'];
+  var LABEL = { B: 'Basta', C: 'Corroborar', A: 'Escolher ou ampliar a amostra', R: 'Refazer a pergunta' };
+  var NAMES = { B: 'a evidência basta', C: 'corroborar com outra fonte', A: 'escolher ou ampliar a amostra', R: 'refazer a pergunta' };
+  var ITEMS = [
+    { t: '“O líder do turno diz que toda mudança de processo é autorizada pelo gerente.”', a: 'C', w: 'É só entrevista. Peça os registros de mudança.' },
+    { t: '“Dos 8 registros de mudança, 2 não têm autorização, e o líder confirma que foram feitas à noite.”', a: 'B', w: 'Registro e entrevista, com desvio repetido: a não conformidade se sustenta.' },
+    { t: '“Em 10 leituras de temperatura, 1 está sem anotação.”', a: 'A', w: 'Um desvio isolado. Amplie a amostra antes de concluir.' },
+    { t: '“O auditor pergunta: ‘Vocês conferem a temperatura, certo?’”', a: 'R', w: 'Pergunta indutora. Melhor: “Como a temperatura é conferida?”' },
+    { t: '“A gerente separou três pastas ‘para facilitar’.”', a: 'A', w: 'A amostra oferecida não serve. O auditor escolhe.' },
+    { t: '“O operador mede cinco pontos na frente do auditor, e as 30 bobinas da amostra têm os cinco registros.”', a: 'B', w: 'Observação e registro, com amostra completa: conforme na amostra.' },
+    { t: '“O operador novo diz: ‘aprendi com o colega’.”', a: 'C', w: 'Só entrevista. Busque o registro de treinamento ou observe a regulagem.' },
+    { t: '“Instrução no balcão na revisão 1, e a lista mestra mostra a revisão 2.”', a: 'B', w: 'Observação e registro: documento desatualizado no posto.' },
+    { t: '“O auditor pergunta: ‘Isso está ok?’”', a: 'R', w: 'Pergunta fechada e vaga. Peça para ver como é feito.' },
+    { t: '“Amostra planejada de 8 checklists; só 6 estavam na pasta.”', a: 'A', w: 'Amostra incompleta. Complete ou registre a falta.' },
+    { t: '“20 comandas verificadas, 3 sem mesa ou horário, e uma comanda aberta na hora sem horário.”', a: 'B', w: 'Registro e observação, desvio repetido: não conformidade.' },
+    { t: '“O gerente afirma que a reclamação do salão é anotada no caderno, mas o caderno não está na loja.”', a: 'C', w: 'Sem o registro, a afirmação não basta. Peça o caderno ou outra fonte.' }
+  ];
+  var quiz = document.getElementById('quiz');
+  var score = document.getElementById('qz-score');
+  var done = document.getElementById('qz-done');
+  document.getElementById('qz-total').textContent = ITEMS.length;
+  var hits = 0, answered = 0;
+
+  function render() {
+    hits = 0; answered = 0; score.textContent = 0; done.textContent = 0;
+    quiz.textContent = '';
+    ITEMS.forEach(function (item, idx) {
+      var row = document.createElement('div'); row.className = 'q';
+      var p = document.createElement('p'); p.textContent = (idx + 1) + '. ' + item.t;
+      var opts = document.createElement('div'); opts.className = 'opts';
+      opts.setAttribute('role', 'group'); opts.setAttribute('aria-label', 'O que fazer no item ' + (idx + 1));
+      var why = document.createElement('p'); why.className = 'why'; why.hidden = true;
+      KEYS.forEach(function (k) {
+        var b = document.createElement('button');
+        b.type = 'button'; b.textContent = LABEL[k]; b.id = 'qz-' + idx + '-' + k;
+        b.setAttribute('data-k', k);
+        b.addEventListener('click', function () {
+          var ok = k === item.a;
+          Array.prototype.forEach.call(opts.children, function (o) {
+            o.disabled = true;
+            if (o.getAttribute('data-k') === item.a) { o.className = 'right'; }
+          });
+          if (!ok) { b.className = 'wrong'; }
+          var lead = document.createElement('b');
+          lead.textContent = (ok ? 'Certo. ' : 'A resposta é: ' + NAMES[item.a] + '. ');
+          why.textContent = ''; why.appendChild(lead); why.appendChild(document.createTextNode(item.w));
+          why.className = 'why ' + (ok ? 'ok' : 'no'); why.hidden = false;
+          answered++; if (ok) { hits++; }
+          score.textContent = hits; done.textContent = answered;
+        });
+        opts.appendChild(b);
+      });
+      row.appendChild(p); row.appendChild(opts); row.appendChild(why);
+      quiz.appendChild(row);
+    });
+  }
+  render();
+  document.getElementById('qz-reset').addEventListener('click', render);
+
+  /* ---------- Gráfico: leitura dos valores ---------- */
+  var fig = document.getElementById('fig-bars');
+  var tip = document.getElementById('bars-tip');
+  var svg = document.getElementById('bars');
+  var bars = document.querySelectorAll('#bars .bar');
+  function hide() {
+    tip.hidden = true;
+    Array.prototype.forEach.call(bars, function (b) { b.removeAttribute('opacity'); });
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('#bars .hit'), function (r) {
+    function show() {
+      var d = r.dataset;
+      Array.prototype.forEach.call(bars, function (b) {
+        b.setAttribute('opacity', b.getAttribute('data-k') === d.k ? '1' : '.4');
+      });
+      tip.textContent = '';
+      var strong = document.createElement('b'); strong.textContent = d.s + ' · ' + d.d;
+      tip.appendChild(strong);
+      tip.appendChild(document.createTextNode(d.n + ' · ' + d.p));
+      var box = fig.getBoundingClientRect();
+      var pt = svg.createSVGPoint(); pt.x = parseFloat(d.cx); pt.y = parseFloat(d.cy);
+      var scr = pt.matrixTransform(svg.getScreenCTM());
+      tip.style.left = Math.min(Math.max(scr.x - box.left, 180), box.width - 180) + 'px';
+      tip.style.top = (scr.y - box.top + 4) + 'px';
+      tip.hidden = false;
+    }
+    r.addEventListener('pointerenter', show);
+    r.addEventListener('focus', show);
+    r.addEventListener('pointerleave', hide);
+    r.addEventListener('blur', hide);
+  });
+})();
+</script>
+</body>
+</html>

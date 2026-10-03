@@ -52,6 +52,7 @@ ESTUDOS = {
     "rec": ("Recursos, infraestrutura e ambiente", "../Recursos/treinamento-recursos.html"),
     "con": ("Conhecimento organizacional e pós-entrega", "../Conhecimento/treinamento-conhecimento.html"),
     "caso": ("Caso integrado", "../Caso-Integrado/treinamento-caso-integrado.html"),
+    "tec": ("Técnica de auditoria", "../Tecnica-Auditoria/treinamento-tecnica-auditoria.html"),
 }
 
 
@@ -235,7 +236,7 @@ REQ = _req([
     ("9.2", "Auditoria interna",
      "Conduzir auditorias internas a intervalos planejados, com programa, critérios e escopo definidos, auditores imparciais, resultados relatados à gestão e ações sem demora indevida.",
      "O programa cobre todo o sistema, e o que foi feito com as constatações?",
-     "Programa, planos, relatórios de auditoria e ações.", ("auditoria",)),
+     "Programa, planos, relatórios de auditoria e ações.", ("auditoria", "tec")),
     ("9.3", "Análise crítica pela direção",
      "A alta direção deve analisar o sistema a intervalos planejados, considerando as entradas definidas pela norma: ações anteriores, mudanças, desempenho, recursos, riscos e oportunidades de melhoria. As saídas são decisões sobre melhoria, mudanças e recursos.",
      "O que a direção decidiu na última análise crítica?",

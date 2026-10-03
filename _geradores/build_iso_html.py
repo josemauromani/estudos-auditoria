@@ -204,7 +204,7 @@ tb.append(f'            <tr class="tot"><td>Total</td><td class="c">{GERAL[0]}</
 tb += ['          </tbody>', '        </table>']
 
 # ---- figura 9: estudos da série × seções da norma
-ORDEM = ["esc", "pi", "swot", "obj", "ped", "proj", "proc", "sipoc", "raci", "riscos", "prod", "lib", "ind", "gut", "par", "ishikawa", "w5h2", "pdca", "auditoria", "nc", "ac", "doc", "comp", "cal", "rec", "con", "forn", "sat", "caso"]
+ORDEM = ["esc", "pi", "swot", "obj", "ped", "proj", "proc", "sipoc", "raci", "riscos", "prod", "lib", "ind", "gut", "par", "ishikawa", "w5h2", "pdca", "auditoria", "tec", "nc", "ac", "doc", "comp", "cal", "rec", "con", "forn", "sat", "caso"]
 CX = lambda j: 350 + j * 80  # noqa: E731
 HD = {"base": "hd-ink", "p": "hd-p", "d": "hd-d", "c": "hd-c", "a": "hd-a"}
 RY, R0 = 32, 70
@@ -271,7 +271,7 @@ AJUDA = {
     "9.1.1": "O estudo de Indicadores define o que medir, como e quando. O PDCA compara o resultado com a meta. O Caso integrado traz o calendário anual das atividades de monitoramento, com mês e responsável.",
     "9.1.2": "O estudo de Satisfação do cliente traz a pesquisa, o registro de reclamações e a devolutiva. O de Indicadores põe o resultado no painel.",
     "9.1.3": "O painel mostra a situação e a tendência. O Pareto mostra onde o problema se concentra. A GUT prioriza, e o Ishikawa procura as causas.",
-    "9.2": "Entrega o programa, o plano, a lista de verificação e as constatações.",
+    "9.2": "O estudo de Auditoria interna entrega o programa, o plano, a lista de verificação e as constatações. O de Técnica de auditoria traz a entrevista, a amostragem, a força da evidência e a avaliação dos auditores.",
     "9.3": "Traz a pauta das doze entradas, o registro das decisões e o acompanhamento das ações.",
     "10.1": "Conduz a melhoria, do problema até a padronização.",
     "10.2": "Traz o tratamento em sete etapas, com análise de causa, plano e verificação da eficácia.",
