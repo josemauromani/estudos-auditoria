@@ -1,0 +1,1387 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Processo de certificação</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<style>
+:root{
+  --ground:#F3F6F7; --surface:#FFFFFF; --sunk:#E9EEF0; --ink:#16242E; --muted:#566672; --rule:#D3DBE0;
+  --accent:#2B5C8A;
+  --s1:#2A6FB0; --s1-tint:#DCE8F3;
+  --s2:#D19A2E; --s2-tint:#F8EBCB;
+  --s3:#B0413E; --s3-tint:#F5DEDC;
+  --on-s2:#16242E;
+  --p:#2B5C8A; --p-tint:#DCE8F3;
+  --d:#A96A12; --d-tint:#F6E8CF;
+  --c:#1E7B73; --c-tint:#D9EEEB;
+  --a:#B0413E; --a-tint:#F5DEDC;
+  --on-hue:#FFFFFF;
+  --good:#1F7A4D; --good-tint:#DDF1E5;
+  --bad:#B0413E; --bad-tint:#F5DEDC;
+  --display:"Barlow Semi Condensed","Arial Narrow",Arial,sans-serif;
+  --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --ground:#0F171C; --surface:#172229; --sunk:#1E2B33; --ink:#E4EAED; --muted:#9BABB6; --rule:#2B3A44;
+    --accent:#86B7E3;
+  --s1:#4F97DB; --s1-tint:#1B2F42;
+  --s2:#B58E14; --s2-tint:#3A2C12;
+  --s3:#D14B45; --s3-tint:#3D1F1E;
+  --on-s2:#0F171C;
+    --p:#86B7E3; --p-tint:#1B2F42;
+    --d:#E2AC4F; --d-tint:#3A2C12;
+    --c:#5FC6BA; --c-tint:#15332F;
+    --a:#EC8E89; --a-tint:#3D1F1E;
+    --on-hue:#0F171C;
+    --good:#6FCF9B; --good-tint:#163326;
+    --bad:#EC8E89; --bad-tint:#3D1F1E;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --ground:#0F171C; --surface:#172229; --sunk:#1E2B33; --ink:#E4EAED; --muted:#9BABB6; --rule:#2B3A44;
+  --accent:#86B7E3;
+  --s1:#4F97DB; --s1-tint:#1B2F42;
+  --s2:#B58E14; --s2-tint:#3A2C12;
+  --s3:#D14B45; --s3-tint:#3D1F1E;
+  --on-s2:#0F171C;
+  --p:#86B7E3; --p-tint:#1B2F42;
+  --d:#E2AC4F; --d-tint:#3A2C12;
+  --c:#5FC6BA; --c-tint:#15332F;
+  --a:#EC8E89; --a-tint:#3D1F1E;
+  --on-hue:#0F171C;
+  --good:#6FCF9B; --good-tint:#163326;
+  --bad:#EC8E89; --bad-tint:#3D1F1E;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--ground);color:var(--ink);font:400 16px/1.65 var(--body);-webkit-text-size-adjust:100%}
+a{color:var(--accent);text-underline-offset:3px}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.page{max-width:1180px;margin-inline:auto;padding-inline:20px;padding-block:36px 80px}
+
+/* Cabeçalho */
+.mast{display:flex;flex-direction:column;gap:18px;padding-bottom:32px;border-bottom:1px solid var(--rule)}
+.tiles{display:flex;gap:6px}
+.tiles span{width:44px;height:44px;display:grid;place-items:center;font:700 24px/1 var(--display);color:var(--on-hue)}
+.tiles .p{background:var(--p)} .tiles .d{background:var(--d)} .tiles .c{background:var(--c)} .tiles .a{background:var(--a)}
+h1{font:700 clamp(2.3rem,6vw,3.6rem)/1.02 var(--display);letter-spacing:-.01em;margin:0;text-wrap:balance}
+.lead{font-size:1.15rem;line-height:1.55;max-width:62ch;margin:0;color:var(--ink)}
+.meta{display:flex;flex-direction:row;flex-wrap:wrap;gap:6px 22px;font:400 .8rem/1.4 var(--mono);color:var(--muted);margin:0;padding:0;list-style:none}
+
+/* Estrutura */
+.layout{display:grid;grid-template-columns:minmax(0,1fr);gap:32px;padding-top:32px}
+.toc{font-size:.92rem}
+.toc h2{font:500 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+.toc ol{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:2px 20px;counter-reset:toc}
+.toc li{counter-increment:toc}
+.toc a{display:flex;gap:10px;padding:5px 0;color:var(--ink);text-decoration:none;line-height:1.35}
+.toc a::before{content:counter(toc,decimal-leading-zero);font:400 .75rem/1.7 var(--mono);color:var(--muted)}
+.toc a:hover{color:var(--accent);text-decoration:underline}
+@media (min-width:1020px){
+  .layout{grid-template-columns:200px minmax(0,1fr);gap:64px}
+  .toc{position:sticky;top:calc(env(safe-area-inset-top,0px) + 24px);align-self:start}
+  .toc ol{grid-template-columns:1fr}
+}
+main{display:flex;flex-direction:column;gap:72px;min-width:0}
+section{display:flex;flex-direction:column;gap:20px;scroll-margin-top:24px}
+.eyebrow{font:500 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0}
+h2{font:700 clamp(1.7rem,4vw,2.2rem)/1.1 var(--display);margin:0;text-wrap:balance}
+h3{font:600 1.3rem/1.2 var(--display);margin:12px 0 0;text-wrap:balance}
+h4{font:600 .95rem/1.3 var(--body);margin:0}
+p{margin:0}
+section > p, section > ul, section > ol, section > h3{max-width:68ch}
+ul,ol{margin:0;padding-left:1.25em;display:flex;flex-direction:column;gap:6px}
+strong{font-weight:600}
+code{font:400 .88em var(--mono);background:var(--sunk);padding:1px 5px;border-radius:3px}
+
+/* Letras coloridas no texto */
+.k{display:inline-grid;place-items:center;width:1.45em;height:1.45em;font:700 .85em/1 var(--display);color:var(--on-hue);vertical-align:.05em}
+.k.p{background:var(--p)} .k.d{background:var(--d)} .k.c{background:var(--c)} .k.a{background:var(--a)}
+
+/* Figuras */
+figure{margin:0;display:flex;flex-direction:column;gap:10px;position:relative}
+.scroll{overflow-x:auto;background:var(--surface);border:1px solid var(--rule);padding:18px}
+.scroll svg{display:block;width:100%;min-width:820px;height:auto;color:var(--ink)}
+figcaption{font-size:.86rem;line-height:1.5;color:var(--muted);max-width:72ch}
+figcaption b{color:var(--ink);font-weight:600}
+svg text{font-family:var(--body);fill:var(--ink)}
+svg .disp{font-family:var(--display);font-weight:700}
+svg .mono{font-family:var(--mono);letter-spacing:.08em}
+svg .on{fill:var(--on-hue)}
+svg .mu{fill:var(--muted)}
+svg .b{font-weight:600}
+svg .ln{stroke:var(--ink);stroke-width:1.5;fill:none}
+svg .ln-mu{stroke:var(--muted);stroke-width:1.5;fill:none}
+svg .ln-bold{stroke:var(--ink);stroke-width:3;fill:none;stroke-linejoin:round;stroke-linecap:round}
+svg .dash{stroke-dasharray:5 4}
+svg .ah{fill:var(--ink)} svg .ah-mu{fill:var(--muted)}
+svg .bx{fill:var(--surface);stroke:var(--rule);stroke-width:1.5}
+svg .bx-ink{fill:var(--ink);stroke:var(--ink)}
+svg .t-ground{fill:var(--ground)}
+svg .bx-out{fill:none;stroke:var(--muted);stroke-width:1.5;stroke-dasharray:5 4}
+svg .bx-p{fill:var(--p-tint);stroke:var(--p);stroke-width:1.5} svg .hd-p{fill:var(--p)}
+svg .bx-d{fill:var(--d-tint);stroke:var(--d);stroke-width:1.5} svg .hd-d{fill:var(--d)}
+svg .bx-c{fill:var(--c-tint);stroke:var(--c);stroke-width:1.5} svg .hd-c{fill:var(--c)}
+svg .bx-a{fill:var(--a-tint);stroke:var(--a);stroke-width:1.5} svg .hd-a{fill:var(--a)}
+svg .gap{stroke:var(--surface);stroke-width:4}
+svg .gap2{stroke:var(--surface);stroke-width:2}
+svg .hub{fill:var(--surface)}
+
+/* Gráfico */
+svg .grid{stroke:var(--rule);stroke-width:1}
+svg .band{fill:var(--sunk)}
+svg .series{stroke:var(--accent);stroke-width:2;fill:none;stroke-linejoin:round;stroke-linecap:round}
+svg .pt{fill:var(--accent);stroke:var(--surface);stroke-width:2}
+svg .pt.on-hit{stroke:var(--ink)}
+svg .goal{stroke:var(--muted);stroke-width:1.5;stroke-dasharray:6 4;fill:none}
+svg .xh{stroke:var(--muted);stroke-width:1}
+svg .hit{fill:transparent;cursor:crosshair;outline:none}
+svg .root{fill:var(--accent);stroke:var(--surface);stroke-width:2}
+.tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--ground);padding:6px 10px;font-size:.78rem;line-height:1.4;transform:translate(-50%,calc(-100% - 14px));white-space:nowrap;z-index:2}
+.tip b{display:block;font:600 1.05rem/1.2 var(--body)}
+details.data{font-size:.88rem}
+details.data summary{cursor:pointer;font:400 .82rem var(--mono);color:var(--muted);padding:4px 0}
+details.data .tbl{margin-top:8px}
+details.data table{min-width:420px}
+
+/* Tabelas */
+.tbl{overflow-x:auto;border:1px solid var(--rule);background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:780px;font-size:.88rem;line-height:1.4}
+th,td{padding:9px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--rule)}
+tr:last-child > td{border-bottom:0}
+thead th{font:600 .8rem/1.3 var(--body);background:var(--sunk)}
+td.num{font-variant-numeric:tabular-nums;white-space:nowrap;font-family:var(--mono);font-size:.82rem}
+
+/* Situações */
+.chip{display:inline-block;padding:2px 8px;font:600 .76rem/1.45 var(--body);color:var(--on-hue);white-space:nowrap}
+.chip.s1{background:var(--s1)} .chip.s2{background:var(--s2);color:var(--on-s2)} .chip.s3{background:var(--s3)}
+.chip.sl{background:var(--sunk);color:var(--ink);box-shadow:inset 0 0 0 1px var(--rule)}
+svg .hd-ink{fill:var(--ink)}
+svg .f1{fill:var(--s1)} svg .f2{fill:var(--s2)} svg .f3{fill:var(--s3)} svg .f0{fill:var(--muted)}
+svg .bx-s1{fill:var(--s1-tint);stroke:var(--s1);stroke-width:1.5} svg .bx-s2{fill:var(--s2-tint);stroke:var(--s2);stroke-width:1.5} svg .bx-s3{fill:var(--s3-tint);stroke:var(--s3);stroke-width:1.5}
+svg .lane{fill:var(--sunk)}
+svg .now{stroke:var(--ink);stroke-width:1.5;stroke-dasharray:4 3}
+svg .halo{paint-order:stroke;stroke:var(--surface);stroke-width:5px;stroke-linejoin:round}
+svg .hit:focus-visible{stroke:var(--accent);stroke-width:2}
+
+/* Tabelas dos exemplos */
+table.aud{font-size:.8rem;min-width:960px;line-height:1.4}
+table.aud th, table.aud td{padding:8px 9px}
+table.aud td.n{white-space:nowrap;font-weight:600;color:var(--muted)}
+table.aud td.c, table.aud th.c{text-align:center;font-variant-numeric:tabular-nums}
+table.aud td.no{background:var(--s3-tint)}
+table.aud td small, table.aud th small{display:block;color:var(--muted);font-size:.76rem;margin-top:3px;font-weight:400}
+table.aud caption{caption-side:top;text-align:left;padding:10px 12px;font:500 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);background:var(--sunk)}
+
+/* Ficha da organização (acima de cada exemplo) */
+.ficha{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:0;border:1px solid var(--rule);background:var(--surface)}
+.ficha div{padding:12px 14px;border-right:1px solid var(--rule);border-bottom:1px solid var(--rule);margin:0 -1px -1px 0}
+.ficha dt{font:500 .68rem/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.ficha dd{margin:0;font-size:.9rem;line-height:1.4}
+dl{margin:0}
+
+/* Blocos */
+.pair{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.box{background:var(--surface);border:1px solid var(--rule);padding:18px 20px;display:flex;flex-direction:column;gap:10px}
+.box h4{font:600 1.1rem/1.2 var(--display)}
+.box ul{font-size:.93rem}
+.note{background:var(--sunk);padding:16px 20px;max-width:72ch;font-size:.94rem;display:flex;flex-direction:column;gap:6px}
+.note h4{font:500 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+
+/* Passo a passo */
+.steps{list-style:none;padding:0;counter-reset:st;gap:0;max-width:none;border-top:1px solid var(--rule)}
+.steps li{counter-increment:st;display:grid;grid-template-columns:44px minmax(0,1fr);gap:4px 12px;padding:16px 0;border-bottom:1px solid var(--rule)}
+.steps li::before{content:counter(st);font:700 1.7rem/1 var(--display);color:var(--muted);grid-row:span 2}
+.steps h4{font:600 1.1rem/1.25 var(--display)}
+.steps p{font-size:.95rem;max-width:64ch;grid-column:2}
+
+/* Erros comuns */
+.errs{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:0 40px;border-top:1px solid var(--rule)}
+.errs div{padding:16px 16px 16px 0;border-bottom:1px solid var(--rule);display:flex;flex-direction:column;gap:4px}
+.errs h4{font:600 1.05rem/1.25 var(--display)}
+.errs p{font-size:.92rem}
+.errs .fix{color:var(--muted)}
+.errs .fix b{color:var(--ink);font-weight:600}
+
+/* Checklist */
+.check{list-style:none;padding:0;gap:0;max-width:none;border:1px solid var(--rule);background:var(--surface)}
+.check li{border-bottom:1px solid var(--rule)}
+.check li:last-child{border-bottom:0}
+.check label{display:grid;grid-template-columns:22px minmax(0,1fr);gap:12px;padding:11px 16px;cursor:pointer;font-size:.94rem;align-items:start}
+.check input{width:18px;height:18px;margin:3px 0 0;accent-color:var(--c)}
+.check input:checked + span{color:var(--muted);text-decoration:line-through}
+.bar{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;font:400 .82rem var(--mono);color:var(--muted)}
+.bar b{color:var(--ink);font-weight:500}
+
+/* Exercício */
+.quiz{display:flex;flex-direction:column;gap:0;border:1px solid var(--rule);background:var(--surface)}
+.q{display:grid;grid-template-columns:minmax(0,1fr);gap:10px;padding:14px 16px;border-bottom:1px solid var(--rule)}
+.q:last-child{border-bottom:0}
+@media (min-width:720px){.q{grid-template-columns:minmax(0,1fr) auto;align-items:center}}
+.q p{font-size:.95rem}
+.q .why{grid-column:1/-1;font-size:.86rem;color:var(--muted)}
+.q .why b{font-weight:600}
+.q .why.ok b{color:var(--good)} .q .why.no b{color:var(--bad)}
+.opts{display:flex;gap:6px}
+.opts button{width:40px;height:40px;border:1.5px solid var(--rule);background:var(--surface);color:var(--ink);font:700 1.1rem/1 var(--display);cursor:pointer;border-radius:0}
+.opts button:hover:not(:disabled){border-color:var(--ink)}
+.opts button:disabled{cursor:default;opacity:.45}
+.opts button.right{background:var(--good-tint);border-color:var(--good);color:var(--good);opacity:1}
+.opts button.wrong{background:var(--bad-tint);border-color:var(--bad);color:var(--bad);opacity:1}
+.btn{border:1.5px solid var(--ink);background:transparent;color:var(--ink);font:500 .82rem var(--mono);padding:7px 14px;cursor:pointer;border-radius:0}
+.btn:hover{background:var(--ink);color:var(--ground)}
+
+/* Glossário */
+.gloss{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:0 40px;border-top:1px solid var(--rule)}
+.gloss div{padding:12px 0;border-bottom:1px solid var(--rule)}
+.gloss dt{font:600 1.02rem/1.3 var(--display)}
+.gloss dd{margin:2px 0 0;font-size:.9rem;color:var(--muted)}
+footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);font-size:.84rem;color:var(--muted);max-width:72ch}
+
+.quiz .opts{flex-wrap:wrap}
+.quiz .opts button{width:auto;min-width:40px;padding:0 11px;font-size:1rem}
+@media (min-width:720px){.q{grid-template-columns:minmax(0,1fr) auto}}
+</style>
+</head>
+<body>
+<div class="page" lang="pt-BR">
+
+<header class="mast">
+  <div class="tiles" aria-hidden="true"><span class="p">P</span><span class="d">A</span><span class="c">M</span></div>
+  <h1>Processo de certificação na prática</h1>
+  <p class="lead">Um guia de estudo para chegar ao certificado ISO 9001 e mantê-lo: saber quando a organização está pronta, escolher o organismo, passar pelas duas fases, tratar as constatações no prazo e não perder as datas do ciclo, inclusive a transição para a edição de 2026.</p>
+  <ul class="meta">
+    <li>Treinamento autoinstrucional</li>
+    <li>15 módulos</li>
+    <li>Leitura de cerca de 55 minutos</li>
+    <li>3 exemplos resolvidos e 2 exercícios</li>
+  </ul>
+</header>
+
+<div class="layout">
+
+<nav class="toc" aria-label="Sumário">
+  <h2>Sumário</h2>
+  <ol>
+    <li><a href="#o-que-e">O que é</a></li>
+    <li><a href="#quando">Quando certificar</a></li>
+    <li><a href="#como">Como chegar</a></li>
+    <li><a href="#organismo">Organismo e acreditação</a></li>
+    <li><a href="#fases">Fase 1 e fase 2</a></li>
+    <li><a href="#constatacoes">Constatações e prazos</a></li>
+    <li><a href="#exemplos">Exemplos resolvidos</a></li>
+    <li><a href="#leitura">Ler o ciclo</a></li>
+    <li><a href="#transicao">A transição para a edição de 2026</a></li>
+    <li><a href="#erros">Erros comuns</a></li>
+    <li><a href="#ferramentas">A certificação e outras ferramentas</a></li>
+    <li><a href="#iso">Nas normas</a></li>
+    <li><a href="#semana">A semana da auditoria</a></li>
+    <li><a href="#pratique">Pratique</a></li>
+    <li><a href="#planilha">A planilha de apoio</a></li>
+    <li><a href="#glossario">Glossário</a></li>
+  </ol>
+</nav>
+
+<main>
+
+<!-- ============================ MÓDULO 1 ============================ -->
+<section id="o-que-e">
+  <p class="eyebrow">Módulo 1</p>
+  <h2>O que é</h2>
+  <p>A certificação é a confirmação, por um organismo independente, de que o sistema da qualidade atende à norma. É uma auditoria de terceira parte: nem a própria organização, nem o cliente, mas alguém de fora, sem interesse no resultado. Um cliente que confia no organismo pode confiar no fornecedor sem auditá-lo.</p>
+  <p>O certificado não é uma prova que se passa uma vez. Ele vale três anos e é mantido por auditorias anuais. As letras do título são os três momentos: <span class="k p">P</span> estar pronto antes de chamar o organismo, <span class="k d">A</span> passar pelas auditorias e tratar as constatações no prazo, e <span class="k c">M</span> manter o ciclo, sem perder nenhuma data.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 230" role="img" aria-label="O ciclo do certificado em três anos. Antes da decisão, a fase 1 e a fase 2. Depois da decisão, o certificado vale três anos, com uma auditoria de manutenção a cada ano e a auditoria de recertificação antes do vencimento, para que um novo ciclo comece sem interrupção.">
+        <rect class="bx-s1" x="230.0" y="92" width="630.0" height="26"/>
+        <text class="b" x="545.0" y="110" font-size="12" text-anchor="middle">Certificado válido por três anos</text>
+        <line class="grid" x1="230.0" y1="84" x2="230.0" y2="130"/>
+        <text class="mono mu" x="230.0" y="146" font-size="10" text-anchor="middle">0 MESES</text>
+        <line class="grid" x1="440.0" y1="84" x2="440.0" y2="130"/>
+        <text class="mono mu" x="440.0" y="146" font-size="10" text-anchor="middle">12 MESES</text>
+        <line class="grid" x1="650.0" y1="84" x2="650.0" y2="130"/>
+        <text class="mono mu" x="650.0" y="146" font-size="10" text-anchor="middle">24 MESES</text>
+        <line class="grid" x1="860.0" y1="84" x2="860.0" y2="130"/>
+        <text class="mono mu" x="860.0" y="146" font-size="10" text-anchor="middle">36 MESES</text>
+        <line class="ln-mu" x1="110.0" y1="62" x2="110.0" y2="90"/>
+        <circle class="f2" cx="110.0" cy="105" r="7"/>
+        <text class="b" x="110.0" y="46" font-size="12" text-anchor="middle">Fase 1</text>
+        <text class="mu" x="110.0" y="61" font-size="10.5" text-anchor="middle">prontidão</text>
+        <line class="ln-mu" x1="170.0" y1="120" x2="170.0" y2="160"/>
+        <circle class="f2" cx="170.0" cy="105" r="7"/>
+        <text class="b" x="170.0" y="176" font-size="12" text-anchor="middle">Fase 2</text>
+        <text class="mu" x="170.0" y="191" font-size="10.5" text-anchor="middle">no local</text>
+        <line class="ln-mu" x1="230.0" y1="62" x2="230.0" y2="90"/>
+        <circle class="f1" cx="230.0" cy="105" r="7"/>
+        <text class="b" x="230.0" y="46" font-size="12" text-anchor="middle">Decisão</text>
+        <text class="mu" x="230.0" y="61" font-size="10.5" text-anchor="middle">certificado emitido</text>
+        <line class="ln-mu" x1="440.0" y1="120" x2="440.0" y2="160"/>
+        <circle class="f1" cx="440.0" cy="105" r="7"/>
+        <text class="b" x="440.0" y="176" font-size="12" text-anchor="middle">1ª manutenção</text>
+        <text class="mu" x="440.0" y="191" font-size="10.5" text-anchor="middle">até 12 meses</text>
+        <line class="ln-mu" x1="650.0" y1="62" x2="650.0" y2="90"/>
+        <circle class="f1" cx="650.0" cy="105" r="7"/>
+        <text class="b" x="650.0" y="46" font-size="12" text-anchor="middle">2ª manutenção</text>
+        <text class="mu" x="650.0" y="61" font-size="10.5" text-anchor="middle">até 24 meses</text>
+        <line class="ln-mu" x1="807.5" y1="120" x2="807.5" y2="160"/>
+        <circle class="f3" cx="807.5" cy="105" r="7"/>
+        <text class="b" x="807.5" y="176" font-size="12" text-anchor="middle">Recertificação</text>
+        <text class="mu" x="807.5" y="191" font-size="10.5" text-anchor="middle">antes de vencer</text>
+        <text x="450" y="220" font-size="11.5" text-anchor="middle">O certificado não termina na decisão: a cada ano o organismo volta, e a cada três o ciclo recomeça.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 1.</b> O ciclo do certificado, desenhado em meses. As duas fases vêm antes da decisão; as manutenções e a recertificação, depois.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Elemento</th><th style="width:40%">O que é</th><th>Exemplo</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Organismo de certificação</strong></td><td>A empresa que audita e emite o certificado.</td><td>O organismo contratado pela indústria em abril de 2027.</td></tr>
+        <tr><td><strong>Acreditação</strong></td><td>O reconhecimento de que o organismo é competente e imparcial.</td><td>No Brasil, a acreditação pela Cgcre, do Inmetro.</td></tr>
+        <tr><td><strong>Escopo do certificado</strong></td><td>O que o certificado cobre: produtos, serviços, locais.</td><td>Desenvolvimento e produção de filmes técnicos para embalagem de alimentos.</td></tr>
+        <tr><td><strong>Fase 1 e fase 2</strong></td><td>As duas partes da auditoria inicial: prontidão e implementação.</td><td>20/10 e 23/11/2027, na indústria.</td></tr>
+        <tr><td><strong>Manutenção</strong></td><td>A auditoria anual que mantém o certificado válido.</td><td>Até 17/12/2028, para a indústria.</td></tr>
+        <tr><td><strong>Recertificação</strong></td><td>A auditoria que renova o certificado por mais três anos.</td><td>Antes de 16/12/2030, para a indústria.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 2 ============================ -->
+<section id="quando">
+  <p class="eyebrow">Módulo 2</p>
+  <h2>Quando certificar</h2>
+  <p>A ISO 9001 não exige certificação. Muitas organizações usam a norma para organizar o trabalho e nunca se certificam. A certificação vale a pena quando alguém de fora precisa confiar no sistema sem vê-lo de perto.</p>
+
+  <div class="pair">
+    <div class="box">
+      <h4>Razões que costumam justificar</h4>
+      <ul>
+        <li>Clientes ou contratos que exigem o certificado.</li>
+        <li>Licitações e cadastros de fornecedores.</li>
+        <li>Exportação para mercados que pedem a certificação.</li>
+        <li>Uma auditoria externa periódica, que mantém o sistema vivo.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h4>Razões que costumam frustrar</h4>
+      <ul>
+        <li>"Ter o selo" sem o sistema funcionando.</li>
+        <li>Prazo curto, imposto antes de o sistema rodar.</li>
+        <li>Esperar que o auditor resolva os problemas.</li>
+        <li>Certificar só um pedaço, para ficar mais fácil, e anunciar como se fosse tudo.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:28%">Momento</th><th style="width:38%">O que fazer</th><th>Resultado</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Na decisão</strong></td><td>A direção define o motivo, o escopo e o prazo realista.</td><td>A certificação entra nos objetivos.</td></tr>
+        <tr><td><strong>Antes de contratar</strong></td><td>Avaliar a prontidão com os critérios do módulo 3.</td><td>A fase 1 não vira diagnóstico.</td></tr>
+        <tr><td><strong>Depois da fase 1</strong></td><td>Tratar os pontos de atenção antes da fase 2.</td><td>A fase 2 começa sem surpresas.</td></tr>
+        <tr><td><strong>Depois de cada auditoria</strong></td><td>Enviar os planos no prazo e fechar a não conformidade maior.</td><td>O certificado sai, ou continua.</td></tr>
+        <tr><td><strong>Todo ano</strong></td><td>Marcar a manutenção no calendário do sistema.</td><td>Nenhum limite passa.</td></tr>
+        <tr><td><strong>Quando sai uma edição nova</strong></td><td>Planejar a transição dentro do prazo.</td><td>O certificado não cai no fim da janela.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 3 ============================ -->
+<section id="como">
+  <p class="eyebrow">Módulo 3</p>
+  <h2>Como chegar</h2>
+  <p>O caminho até o certificado tem cinco etapas. A primeira, implantar e deixar o sistema rodar, é a mais longa e depende só da organização. As outras quatro seguem o regulamento do organismo.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 236" role="img" aria-label="As cinco etapas até o certificado. Implantar e rodar: O sistema funcionando por alguns meses, com auditoria interna e análise crítica. Escolher o organismo: Acreditado para o escopo, com proposta de dias de auditoria e regulamento. Fase 1: O organismo confere se o sistema está pronto: escopo, documentos, auditoria interna, análise crítica. Fase 2: Auditoria no local: o sistema está implementado e é eficaz? Decisão e manutenção: Constatações tratadas, decisão do organismo, certificado e auditorias anuais. Depois da decisão, as auditorias de manutenção mantêm o ciclo.">
+        <defs><marker id="a2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker><marker id="a2m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah-mu" d="M0 0 L10 5 L0 10 z"/></marker></defs>
+        <rect class="bx" x="12" y="16" width="164" height="152"/>
+        <text class="mono mu" x="24" y="36" font-size="10">ETAPA 1</text>
+        <text class="b" x="24" y="58" font-size="12.5">Implantar e rodar</text>
+        <text x="24" y="81.0" font-size="10.5">O sistema funcionando por</text>
+        <text x="24" y="95.5" font-size="10.5">alguns meses, com</text>
+        <text x="24" y="110.0" font-size="10.5">auditoria interna e</text>
+        <text x="24" y="124.5" font-size="10.5">análise crítica.</text>
+        <line class="ln" x1="177" y1="84" x2="188" y2="84" marker-end="url(#a2)"/>
+        <rect class="bx-p" x="190" y="16" width="164" height="152"/>
+        <text class="mono mu" x="202" y="36" font-size="10">ETAPA 2</text>
+        <text class="b" x="202" y="58" font-size="12.5">Escolher o</text>
+        <text class="b" x="202" y="73" font-size="12.5">organismo</text>
+        <text x="202" y="96.0" font-size="10.5">Acreditado para o escopo,</text>
+        <text x="202" y="110.5" font-size="10.5">com proposta de dias de</text>
+        <text x="202" y="125.0" font-size="10.5">auditoria e regulamento.</text>
+        <line class="ln" x1="355" y1="84" x2="366" y2="84" marker-end="url(#a2)"/>
+        <rect class="bx-d" x="368" y="16" width="164" height="152"/>
+        <text class="mono mu" x="380" y="36" font-size="10">ETAPA 3</text>
+        <text class="b" x="380" y="58" font-size="12.5">Fase 1</text>
+        <text x="380" y="81.0" font-size="10.5">O organismo confere se o</text>
+        <text x="380" y="95.5" font-size="10.5">sistema está pronto:</text>
+        <text x="380" y="110.0" font-size="10.5">escopo, documentos,</text>
+        <text x="380" y="124.5" font-size="10.5">auditoria interna,</text>
+        <text x="380" y="139.0" font-size="10.5">análise crítica.</text>
+        <line class="ln" x1="533" y1="84" x2="544" y2="84" marker-end="url(#a2)"/>
+        <rect class="bx-c" x="546" y="16" width="164" height="152"/>
+        <text class="mono mu" x="558" y="36" font-size="10">ETAPA 4</text>
+        <text class="b" x="558" y="58" font-size="12.5">Fase 2</text>
+        <text x="558" y="81.0" font-size="10.5">Auditoria no local: o</text>
+        <text x="558" y="95.5" font-size="10.5">sistema está implementado</text>
+        <text x="558" y="110.0" font-size="10.5">e é eficaz?</text>
+        <line class="ln" x1="711" y1="84" x2="722" y2="84" marker-end="url(#a2)"/>
+        <rect class="bx-ink" x="724" y="16" width="164" height="152"/>
+        <text class="mono t-ground" x="736" y="36" font-size="10">ETAPA 5</text>
+        <text class="b t-ground" x="736" y="58" font-size="12.5">Decisão e</text>
+        <text class="b t-ground" x="736" y="73" font-size="12.5">manutenção</text>
+        <text class="t-ground" x="736" y="96.0" font-size="10.5">Constatações tratadas,</text>
+        <text class="t-ground" x="736" y="110.5" font-size="10.5">decisão do organismo,</text>
+        <text class="t-ground" x="736" y="125.0" font-size="10.5">certificado e auditorias</text>
+        <text class="t-ground" x="736" y="139.5" font-size="10.5">anuais.</text>
+        <path class="ln-mu dash" d="M806.0 170 V198 H628.0 V174" marker-end="url(#a2m)"/>
+        <text class="mu halo" x="717.0" y="202" font-size="11" text-anchor="middle">manutenção anual</text>
+        <text x="450" y="228" font-size="11.5" text-anchor="middle">A primeira etapa é a mais longa, e é da organização. As outras quatro seguem o regulamento do organismo.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 2.</b> As cinco etapas até o certificado, e a volta anual da manutenção.</figcaption>
+  </figure>
+
+  <h3>Passo a passo</h3>
+  <ol class="steps">
+    <li><h4>Implante e deixe rodar</h4><p>Os estudos da série, na ordem do <a href="../Caso-Integrado/treinamento-caso-integrado.html">Caso integrado</a>. O organismo vai pedir registros de meses, e não de semanas.</p></li>
+    <li><h4>Avalie a prontidão</h4><p>Catorze critérios, alguns impeditivos antes da fase 1, outros antes da fase 2. Um impeditivo aberto é motivo para adiar.</p></li>
+    <li><h4>Escolha o organismo</h4><p>Acreditado para o escopo, com proposta de dias de auditoria, regulamento claro e auditores do setor.</p></li>
+    <li><h4>Defina o escopo do certificado</h4><p>O mesmo do sistema, como no estudo de <a href="../Escopo/treinamento-escopo.html">Escopo e liderança</a>. Escopo menor que o sistema confunde o cliente.</p></li>
+    <li><h4>Passe pela fase 1</h4><p>O organismo confere os documentos, a auditoria interna, a análise crítica e a prontidão. Trate os pontos de atenção antes da fase 2.</p></li>
+    <li><h4>Passe pela fase 2</h4><p>Auditoria nos postos, com entrevistas, observação e amostras, como no estudo de <a href="../Tecnica-Auditoria/treinamento-tecnica-auditoria.html">Técnica de auditoria</a>.</p></li>
+    <li><h4>Trate as constatações no prazo</h4><p>Plano para cada não conformidade; a maior fechada, com evidência, antes da decisão.</p></li>
+    <li><h4>Mantenha o ciclo</h4><p>Manutenções anuais, recertificação antes do vencimento, transição quando a norma muda. Tudo no calendário do sistema.</p></li>
+  </ol>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:26%">Papel</th><th style="width:28%">Quem costuma ser</th><th>O que faz</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Representante da organização</strong></td><td>O coordenador da Qualidade, ou o gerente.</td><td>Contrata, combina as datas, acompanha a auditoria e coordena os planos.</td></tr>
+        <tr><td><strong>Auditor líder do organismo</strong></td><td>Auditor qualificado no setor.</td><td>Conduz as fases, escreve as constatações e recomenda ou não a certificação.</td></tr>
+        <tr><td><strong>Quem decide</strong></td><td>Uma pessoa ou comitê do organismo, que não auditou.</td><td>Analisa o relatório e decide a certificação.</td></tr>
+        <tr><td><strong>Direção</strong></td><td>O dono, o diretor.</td><td>Participa da abertura e do encerramento, e garante os recursos para as ações.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 4 ============================ -->
+<section id="organismo">
+  <p class="eyebrow">Módulo 4</p>
+  <h2>Organismo e acreditação</h2>
+  <p>O valor de um certificado vem da cadeia que está atrás dele. O organismo de certificação é avaliado por um acreditador, e os acreditadores se reconhecem entre si num fórum internacional. Por isso um certificado emitido no Brasil pode ser aceito por um cliente de outro país.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 214" role="img" aria-label="A cadeia de confiança do certificado. Fórum internacional de acreditação: Reúne os acreditadores e garante que um certificado valha em outros países. Organismo de acreditação: No Brasil, a Cgcre do Inmetro. Avalia os organismos de certificação. Organismo de certificação: Audita e certifica, seguindo a ISO/IEC 17021-1. Organização certificada: Mantém o sistema e recebe as auditorias de manutenção. Cliente: Confia no certificado sem precisar auditar o fornecedor.">
+        <defs><marker id="a3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker></defs>
+        <rect class="bx" x="12" y="16" width="164" height="136"/>
+        <text class="b" x="24" y="40" font-size="12.5">Fórum internacional</text>
+        <text class="b" x="24" y="55" font-size="12.5">de acreditação</text>
+        <text x="24" y="78.0" font-size="10.5">Reúne os acreditadores e</text>
+        <text x="24" y="92.5" font-size="10.5">garante que um</text>
+        <text x="24" y="107.0" font-size="10.5">certificado valha em</text>
+        <text x="24" y="121.5" font-size="10.5">outros países.</text>
+        <line class="ln" x1="177" y1="84.0" x2="188" y2="84.0" marker-end="url(#a3)"/>
+        <rect class="bx-p" x="190" y="16" width="164" height="136"/>
+        <text class="b" x="202" y="40" font-size="12.5">Organismo de</text>
+        <text class="b" x="202" y="55" font-size="12.5">acreditação</text>
+        <text x="202" y="78.0" font-size="10.5">No Brasil, a Cgcre do</text>
+        <text x="202" y="92.5" font-size="10.5">Inmetro. Avalia os</text>
+        <text x="202" y="107.0" font-size="10.5">organismos de</text>
+        <text x="202" y="121.5" font-size="10.5">certificação.</text>
+        <line class="ln" x1="355" y1="84.0" x2="366" y2="84.0" marker-end="url(#a3)"/>
+        <rect class="bx-d" x="368" y="16" width="164" height="136"/>
+        <text class="b" x="380" y="40" font-size="12.5">Organismo de</text>
+        <text class="b" x="380" y="55" font-size="12.5">certificação</text>
+        <text x="380" y="78.0" font-size="10.5">Audita e certifica,</text>
+        <text x="380" y="92.5" font-size="10.5">seguindo a ISO/IEC</text>
+        <text x="380" y="107.0" font-size="10.5">17021-1.</text>
+        <line class="ln" x1="533" y1="84.0" x2="544" y2="84.0" marker-end="url(#a3)"/>
+        <rect class="bx-c" x="546" y="16" width="164" height="136"/>
+        <text class="b" x="558" y="40" font-size="12.5">Organização</text>
+        <text class="b" x="558" y="55" font-size="12.5">certificada</text>
+        <text x="558" y="78.0" font-size="10.5">Mantém o sistema e recebe</text>
+        <text x="558" y="92.5" font-size="10.5">as auditorias de</text>
+        <text x="558" y="107.0" font-size="10.5">manutenção.</text>
+        <line class="ln" x1="711" y1="84.0" x2="722" y2="84.0" marker-end="url(#a3)"/>
+        <rect class="bx-ink" x="724" y="16" width="164" height="136"/>
+        <text class="b t-ground" x="736" y="40" font-size="12.5">Cliente</text>
+        <text class="t-ground" x="736" y="63.0" font-size="10.5">Confia no certificado sem</text>
+        <text class="t-ground" x="736" y="77.5" font-size="10.5">precisar auditar o</text>
+        <text class="t-ground" x="736" y="92.0" font-size="10.5">fornecedor.</text>
+        <text x="450" y="182" font-size="11.5" text-anchor="middle">Um certificado vale o que vale o organismo. Organismo sem acreditação emite papel, não confiança.</text>
+        <text class="mu" x="450" y="202" font-size="11" text-anchor="middle">Confira a acreditação no site do acreditador, e se o escopo dela cobre o seu setor.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 3.</b> A cadeia de confiança do certificado, do fórum internacional ao cliente.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Ao escolher</th><th style="width:40%">O que conferir</th><th>Por quê</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Acreditação</strong></td><td>O organismo é acreditado para a ISO 9001, e o escopo da acreditação cobre o seu setor.</td><td>Certificado sem acreditação pode não ser aceito pelo cliente.</td></tr>
+        <tr><td><strong>Dias de auditoria</strong></td><td>A proposta mostra os dias de fase 1, de fase 2 e de cada manutenção.</td><td>Os dias seguem regras da acreditação, pelo número de pessoas e pela complexidade. Proposta com muito menos dias é sinal de alerta.</td></tr>
+        <tr><td><strong>Regulamento</strong></td><td>Prazos das constatações, regras da marca, suspensão e cancelamento.</td><td>São as regras que valem para você, e mudam de organismo para organismo.</td></tr>
+        <tr><td><strong>Auditores</strong></td><td>Experiência no setor e na língua da organização.</td><td>Auditor que conhece o processo faz perguntas melhores.</td></tr>
+        <tr><td><strong>Imparcialidade</strong></td><td>O organismo não oferece consultoria para implantar o sistema que vai certificar.</td><td>Quem ajudou a fazer não pode julgar o que fez.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note">
+    <h4>Consultoria e certificação não se misturam</h4>
+    <p>Uma consultoria pode ajudar a implantar o sistema; o organismo de certificação, não. As regras dos organismos acreditados proíbem que eles prestem consultoria de sistema de gestão aos clientes que certificam. Desconfie de pacotes que oferecem "implantação e certificado" pela mesma empresa.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 5 ============================ -->
+<section id="fases">
+  <p class="eyebrow">Módulo 5</p>
+  <h2>Fase 1 e fase 2</h2>
+  <p>A auditoria inicial tem duas partes. A fase 1 confere se o sistema está pronto para ser auditado; a fase 2 confere se ele funciona. Entre as duas, a organização trata o que a fase 1 apontou.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 236" role="img" aria-label="O que cada fase da auditoria inicial olha. Fase 1: Escopo, locais e processos, Informação documentada, Auditoria interna e análise crítica planejadas e feitas, Requisitos legais conhecidos, Prontidão para a fase 2. Saída: pontos de atenção e o plano da fase 2. Fase 2: O sistema implementado, nos postos, Desempenho contra os objetivos, Controle operacional, Auditoria interna e análise crítica funcionando, Responsabilidade da direção. Saída: constatações e a recomendação de certificar ou não.">
+        <defs><marker id="a4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker></defs>
+        <rect class="bx-d" x="12" y="14" width="426" height="206"/>
+        <rect class="hd-d" x="12" y="14" width="426" height="34"/>
+        <text class="b on" x="26" y="36" font-size="13">Fase 1</text>
+        <text class="on" x="424" y="36" font-size="10.5" text-anchor="end">Está pronto?</text>
+        <rect class="hd-d" x="28" y="66" width="7" height="7"/><text x="44" y="73" font-size="11.5">Escopo, locais e processos</text>
+        <rect class="hd-d" x="28" y="90" width="7" height="7"/><text x="44" y="97" font-size="11.5">Informação documentada</text>
+        <rect class="hd-d" x="28" y="114" width="7" height="7"/><text x="44" y="121" font-size="11.5">Auditoria interna e análise crítica planejadas e feitas</text>
+        <rect class="hd-d" x="28" y="138" width="7" height="7"/><text x="44" y="145" font-size="11.5">Requisitos legais conhecidos</text>
+        <rect class="hd-d" x="28" y="162" width="7" height="7"/><text x="44" y="169" font-size="11.5">Prontidão para a fase 2</text>
+        <text class="mu" x="28" y="206" font-size="11">Saída: pontos de atenção e o plano da fase 2.</text>
+        <rect class="bx-c" x="462" y="14" width="426" height="206"/>
+        <rect class="hd-c" x="462" y="14" width="426" height="34"/>
+        <text class="b on" x="476" y="36" font-size="13">Fase 2</text>
+        <text class="on" x="874" y="36" font-size="10.5" text-anchor="end">Funciona e é eficaz?</text>
+        <rect class="hd-c" x="478" y="66" width="7" height="7"/><text x="494" y="73" font-size="11.5">O sistema implementado, nos postos</text>
+        <rect class="hd-c" x="478" y="90" width="7" height="7"/><text x="494" y="97" font-size="11.5">Desempenho contra os objetivos</text>
+        <rect class="hd-c" x="478" y="114" width="7" height="7"/><text x="494" y="121" font-size="11.5">Controle operacional</text>
+        <rect class="hd-c" x="478" y="138" width="7" height="7"/><text x="494" y="145" font-size="11.5">Auditoria interna e análise crítica funcionando</text>
+        <rect class="hd-c" x="478" y="162" width="7" height="7"/><text x="494" y="169" font-size="11.5">Responsabilidade da direção</text>
+        <text class="mu" x="478" y="206" font-size="11">Saída: constatações e a recomendação de certificar ou não.</text>
+        <line class="ln" x1="440" y1="117" x2="460" y2="117" marker-end="url(#a4)"/>
+      </svg>
+    </div>
+    <figcaption><b>Figura 4.</b> O que cada fase olha, e o que sai de cada uma.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:22%">Pergunta</th><th style="width:39%">Fase 1</th><th>Fase 2</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Onde acontece</strong></td><td>Em parte no local, em parte nos documentos; às vezes a distância.</td><td>No local, nos postos, nos turnos.</td></tr>
+        <tr><td><strong>O que o auditor pede</strong></td><td>Escopo, mapa de processos, política, objetivos, programa e relatórios de auditoria interna, ata da análise crítica.</td><td>Registros por amostra, entrevistas com quem faz, observação do trabalho.</td></tr>
+        <tr><td><strong>O que pode sair</strong></td><td>Pontos de atenção que podem virar não conformidade na fase 2.</td><td>Não conformidades maiores e menores, oportunidades e a recomendação.</td></tr>
+        <tr><td><strong>Intervalo</strong></td><td colspan="2">Neste material, até seis meses entre as fases. O regulamento do organismo define o seu.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note">
+    <h4>A fase 1 não é diagnóstico</h4>
+    <p>Algumas organizações contratam a certificação para descobrir o que falta. A fase 1 aponta o que não está pronto, mas não substitui a implantação: se o sistema não roda, a fase 2 é adiada, e os dias de auditoria são pagos de novo. O diagnóstico é trabalho da organização, com o estudo da <a href="../ISO-9001/treinamento-iso-9001.html">ISO 9001</a> e a prontidão deste estudo.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 6 ============================ -->
+<section id="constatacoes">
+  <p class="eyebrow">Módulo 6</p>
+  <h2>Constatações e prazos</h2>
+  <p>O organismo classifica as não conformidades em maiores e menores. A diferença não é de gravidade de opinião: a maior põe em dúvida a capacidade do sistema de alcançar os resultados, ou mostra uma falha que se repete; a menor é um desvio pontual, que não compromete o sistema.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 236" role="img" aria-label="Os prazos das constatações, na convenção deste material. Não conformidade maior: plano em até 30 dias e fechamento com evidência aceita em até 90 dias, antes da decisão. Se o organismo não conseguir verificar em até seis meses, a fase 2 é refeita. Não conformidade menor: plano em até 30 dias, e a eficácia é verificada na auditoria seguinte.">
+        <line class="grid" x1="160.0" y1="40" x2="160.0" y2="170"/>
+        <text class="mu" x="160.0" y="186" font-size="10.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">0</text>
+        <line class="grid" x1="276.7" y1="40" x2="276.7" y2="170"/>
+        <text class="mu" x="276.7" y="186" font-size="10.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">30</text>
+        <line class="grid" x1="393.3" y1="40" x2="393.3" y2="170"/>
+        <text class="mu" x="393.3" y="186" font-size="10.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">60</text>
+        <line class="grid" x1="510.0" y1="40" x2="510.0" y2="170"/>
+        <text class="mu" x="510.0" y="186" font-size="10.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">90</text>
+        <line class="grid" x1="626.7" y1="40" x2="626.7" y2="170"/>
+        <text class="mu" x="626.7" y="186" font-size="10.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">120</text>
+        <line class="grid" x1="743.3" y1="40" x2="743.3" y2="170"/>
+        <text class="mu" x="743.3" y="186" font-size="10.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">150</text>
+        <line class="grid" x1="860.0" y1="40" x2="860.0" y2="170"/>
+        <text class="mu" x="860.0" y="186" font-size="10.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">180</text>
+        <text class="mono mu" x="510.0" y="204" font-size="10" text-anchor="middle">DIAS DEPOIS DA AUDITORIA</text>
+        <text class="b" x="20" y="72" font-size="12.5">NC maior</text>
+        <rect class="f3" x="160.0" y="56" width="114.7" height="26"/>
+        <text class="b on" x="168.0" y="73" font-size="10.5">plano</text>
+        <rect class="f3" x="276.7" y="56" width="231.3" height="26" fill-opacity=".55"/>
+        <text class="b " x="284.7" y="73" font-size="10.5">ação e evidência aceita</text>
+        <text class="b" x="20" y="134" font-size="12.5">NC menor</text>
+        <rect class="f2" x="160.0" y="118" width="114.7" height="26"/>
+        <text class="b on" x="168.0" y="135" font-size="10.5">plano</text>
+        <rect class="f2" x="276.7" y="118" width="581.3" height="26" fill-opacity=".55"/>
+        <text class="b " x="284.7" y="135" font-size="10.5">verificação na auditoria seguinte</text>
+        <line class="now" x1="860.0" y1="40" x2="860.0" y2="170"/>
+        <text class="mu halo" x="854.0" y="52" font-size="10.5" text-anchor="end">6 meses: maior sem verificar, refaz-se a fase 2</text>
+        <text x="450" y="228" font-size="11.5" text-anchor="middle">Os prazos de 30 e 90 dias são uma convenção deste material, comum entre organismos. Vale o regulamento do seu.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 5.</b> Os prazos de uma não conformidade maior e de uma menor, depois da auditoria.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:22%">Tipo</th><th style="width:40%">Quando</th><th>O que acontece</th></tr></thead>
+      <tbody>
+        <tr><td><strong>NC maior</strong></td><td>Requisito não atendido de forma sistêmica; desvio que se repete; várias menores no mesmo requisito; produto não conforme chegando ao cliente sem controle.</td><td>Plano, ação e evidência aceita antes da decisão. Sem isso, não há certificado, ou ele é suspenso.</td></tr>
+        <tr><td><strong>NC menor</strong></td><td>Desvio pontual, que não compromete o sistema.</td><td>Plano aceito no prazo; a eficácia é verificada na auditoria seguinte.</td></tr>
+        <tr><td><strong>Oportunidade de melhoria</strong></td><td>Algo que funciona, mas poderia ser melhor.</td><td>A organização decide se adota. Não tem prazo.</td></tr>
+        <tr><td><strong>Ponto de atenção da fase 1</strong></td><td>O que não está pronto para a fase 2.</td><td>Tratar antes da fase 2, ou ele vira não conformidade.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note">
+    <h4>O plano de ação para o organismo</h4>
+    <p>O plano enviado ao organismo tem a mesma estrutura do estudo de <a href="../Nao-Conformidade/treinamento-nao-conformidade.html">Não conformidade</a>: a correção do que foi encontrado, a causa e a ação corretiva, com prazo e responsável. O organismo não aceita "treinar a equipe" como resposta a tudo; ele quer ver a causa. Para a maior, ele quer também a evidência de que a ação foi feita, como registros do mês seguinte.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 7 ============================ -->
+<section id="exemplos">
+  <p class="eyebrow">Módulo 7</p>
+  <h2>Exemplos resolvidos</h2>
+  <p>A prontidão, o ciclo e as constatações de duas certificações: a da indústria, que se certificou em dezembro de 2027 pela edição de 2015, e a da pizzaria, que avaliou a prontidão no fim de 2027 e se certificou em 2028 pela edição de 2026. As organizações são as dos outros estudos da série. Os dois primeiros exemplos também estão preenchidos na planilha de apoio. Os dados e os organismos são ilustrativos e foram criados para este treinamento; os requisitos são citados pela numeração de 2015, como em toda a série.</p>
+
+  <h3>Exemplo 1. A pizzaria, da prontidão ao certificado</h3>
+  <dl class="ficha">
+    <div><dt>Organização</dt><dd>Pizzaria (loja com salão e delivery)</dd></div>
+    <div><dt>Escopo</dt><dd>Produção e venda de pizzas no salão, para retirada e por entrega, na loja do bairro.</dd></div>
+    <div><dt>Organismo</dt><dd>Organismo acreditado pela Cgcre, escolhido em dezembro de 2027</dd></div>
+    <div><dt>Por que certificar</dt><dd>Decisão da análise crítica de 14/06/2027: certificar para atender contratos de refeições de empresas.</dd></div>
+    <div><dt>Certificado</dt><dd>ISO 9001:2026, decisão em 25/04/2028, válido até 24/04/2031.</dd></div>
+  </dl>
+  <div class="tbl">
+    <table class="aud">
+      <caption>Prontidão em 30/11/2027 · 79 % atendido, 1 impeditivo antes da fase 1 e 1 antes da fase 2 · <span class="chip s3">Ainda não está pronta</span></caption>
+      <thead><tr><th>#</th><th style="width:34%">Critério<small>Quando · impeditivo</small></th><th>Status</th><th style="width:22%">Evidência</th><th style="width:26%">Ação<small>Responsável · prazo</small></th><th>Conferência</th></tr></thead>
+      <tbody>
+        <tr><td class="n">1</td><td>O escopo está definido, com a justificativa do que não se aplica.<small>Antes da fase 1 · impeditivo</small></td><td class=""><span class="chip s1">Sim</span></td><td>Escopo de fevereiro de 2027, revisado em novembro</td><td>—</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">2</td><td>A política e os objetivos da qualidade estão aprovados e comunicados.<small>Antes da fase 1 · impeditivo</small></td><td class=""><span class="chip s1">Sim</span></td><td>Política no salão; objetivos de 2027 no quadro da cozinha</td><td>—</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">3</td><td>Os processos estão determinados, com a sequência e a interação entre eles.<small>Antes da fase 1 · impeditivo</small></td><td class=""><span class="chip s1">Sim</span></td><td>Mapa de processos e SIPOC dos quatro processos</td><td>—</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">4</td><td>A informação documentada exigida existe e está sob controle.<small>Antes da fase 1 · impeditivo</small></td><td class="no"><span class="chip s2">Parcial</span></td><td>Lista mestra em dia</td><td>Recolher a instrução do salão na revisão 1, ainda em uso no balcão.<small>Gerente da loja · até 10/12/2027</small></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">5</td><td>O organismo de certificação está escolhido, acreditado para o escopo.<small>Antes da fase 1</small></td><td class=""><span class="chip s3">Não</span></td><td>—</td><td>Escolher entre as três propostas pedidas em outubro.<small>Dono da loja · até 15/12/2027</small></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">6</td><td>O sistema funciona há pelo menos três meses, com registros.<small>Antes da fase 2 · impeditivo</small></td><td class=""><span class="chip s1">Sim</span></td><td>Registros desde janeiro de 2027</td><td>—</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">7</td><td>Há um ciclo completo de auditoria interna, cobrindo todos os processos.<small>Antes da fase 2 · impeditivo</small></td><td class="no"><span class="chip s2">Parcial</span></td><td>Delivery, salão e recebimento auditados</td><td>Auditar a produção e as compras em janeiro.<small>Atendente do turno do almoço · até 31/01/2028</small></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">8</td><td>Houve ao menos uma análise crítica pela direção, com todas as entradas.<small>Antes da fase 2 · impeditivo</small></td><td class=""><span class="chip s1">Sim</span></td><td>Atas de 14/12/2026 e de 14/06/2027</td><td>—</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">9</td><td>As não conformidades da auditoria interna têm ação definida.<small>Antes da fase 2 · impeditivo</small></td><td class=""><span class="chip s1">Sim</span></td><td>Ações das auditorias de 2026 e de março de 2027</td><td>—</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">10</td><td>Os indicadores têm série de pelo menos três meses.<small>Antes da fase 2</small></td><td class=""><span class="chip s1">Sim</span></td><td>Painel com 12 meses de entregas no prazo e de reclamações</td><td>—</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">11</td><td>As pessoas sabem explicar a política e o próprio papel no sistema.<small>Antes da fase 2</small></td><td class=""><span class="chip s2">Parcial</span></td><td>Perguntas de conscientização feitas a 6 pessoas</td><td>Repetir a conversa da política com a equipe nova do salão.<small>Gerente da loja · até 15/01/2028</small></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">12</td><td>Os requisitos legais do produto estão identificados e atendidos.<small>Antes da fase 2</small></td><td class=""><span class="chip s1">Sim</span></td><td>Licença sanitária renovada; rotulagem de alergênicos</td><td>—</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">13</td><td>A calibração e a manutenção dos itens críticos estão em dia.<small>Antes da fase 2</small></td><td class=""><span class="chip s2">Parcial</span></td><td>Balança e termômetros em dia</td><td>Fazer a revisão da câmara fria, atrasada desde outubro.<small>Pizzaiolo líder · até 10/12/2027</small></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">14</td><td>As reclamações e a satisfação do cliente são registradas e analisadas.<small>Antes da fase 2</small></td><td class=""><span class="chip s1">Sim</span></td><td>Registro de reclamações e pesquisa trimestral</td><td>—</td><td><span class="chip s1">OK</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="tbl">
+    <table class="aud">
+      <caption>O ciclo do certificado · ISO 9001:2026, lido em 31/05/2028</caption>
+      <thead><tr><th style="width:34%">Evento</th><th class="c">Limite</th><th class="c">Realizado em</th><th>Situação</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Fase 1</strong></td><td class="c">—</td><td class="c">15/02/2028</td><td><span class="chip s1">Realizada</span></td></tr>
+        <tr><td><strong>Fase 2</strong></td><td class="c">15/08/2028</td><td class="c">21/03/2028</td><td><span class="chip s1">No prazo</span></td></tr>
+        <tr><td><strong>Decisão de certificação</strong></td><td class="c">—</td><td class="c">25/04/2028</td><td><span class="chip s1">Realizada</span></td></tr>
+        <tr><td><strong>1ª manutenção</strong></td><td class="c">25/04/2029</td><td class="c">—</td><td><span class="chip sl">Prevista</span></td></tr>
+        <tr><td><strong>2ª manutenção</strong></td><td class="c">25/04/2030</td><td class="c">—</td><td><span class="chip sl">Prevista</span></td></tr>
+        <tr><td><strong>Auditoria de recertificação</strong></td><td class="c">25/01/2031</td><td class="c">—</td><td><span class="chip sl">Prevista</span></td></tr>
+        <tr><td><strong>Transição para a edição de 2026</strong></td><td class="c">—</td><td class="c">—</td><td><span class="chip sl">Não se aplica</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="tbl">
+    <table class="aud">
+      <caption>Constatações do organismo · 0 maior, 2 menores, 1 oportunidade, 1 ponto de atenção</caption>
+      <thead><tr><th>Nº</th><th>Auditoria</th><th>Tipo</th><th class="c">Requisito</th><th style="width:30%">Constatação</th><th style="width:18%">Datas<small>Prazos</small></th><th>Situação</th><th>Conferência</th></tr></thead>
+      <tbody>
+        <tr><td class="n">P-1</td><td>Fase 1<small>15/02/2028</small></td><td><span class="chip sl">Ponto de atenção da fase 1</span></td><td class="c">9.2</td><td>A auditoria interna da produção ficou para depois da fase 1. Fazer antes da fase 2.</td><td>plano 20/02 · ação 01/03 · evidência 02/03<small>sem prazo</small></td><td><span class="chip s1">Fechada</span></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">P-2</td><td>Fase 2<small>21/03/2028</small></td><td><span class="chip s2">NC menor</span></td><td class="c">7.1.4</td><td>O checklist de limpeza da bancada ficou abaixo do mínimo de 95% em fevereiro, e nenhuma ação foi registrada.</td><td>plano 10/04<small>plano até 20/04</small></td><td><span class="chip s2">Aguarda verificação</span></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">P-3</td><td>Fase 2<small>21/03/2028</small></td><td><span class="chip s2">NC menor</span></td><td class="c">8.2.1</td><td>O cliente do salão não é avisado do tempo de espera nas noites de pico, como prevê a instrução.</td><td>plano 12/04<small>plano até 20/04</small></td><td><span class="chip s2">Aguarda verificação</span></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">P-4</td><td>Fase 2<small>21/03/2028</small></td><td><span class="chip sl">Oportunidade de melhoria</span></td><td class="c">9.1.2</td><td>As reclamações do salão poderiam entrar no mesmo registro do delivery.</td><td>—<small>sem prazo</small></td><td><span class="chip sl">Para considerar</span></td><td><span class="chip s1">OK</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p><strong>O que observar.</strong> Em novembro de 2027, a pizzaria ainda não estava pronta: a instrução do salão desatualizada no balcão é um impeditivo antes da fase 1, e o ciclo de auditoria interna sem a produção e as compras, antes da fase 2. A loja tratou os dois, escolheu o organismo e fez a fase 1 em fevereiro de 2028. O ponto de atenção da fase 1, a auditoria da produção, foi resolvido antes da fase 2. As duas não conformidades menores vieram de coisas que os estudos anteriores já mostravam: a limpeza da bancada abaixo do mínimo, do estudo de recursos, e o aviso do tempo de espera, que a auditoria interna de março de 2027 não conseguiu corroborar e o organismo confirmou. Como a pizzaria se certificou pela edição de 2026, não tem transição a fazer.</p>
+
+  <h3>Exemplo 2. A indústria, com uma não conformidade maior</h3>
+  <dl class="ficha">
+    <div><dt>Organização</dt><dd>Indústria de embalagens plásticas</dd></div>
+    <div><dt>Escopo</dt><dd>Desenvolvimento e produção de filmes técnicos lisos e impressos para embalagem de alimentos.</dd></div>
+    <div><dt>Organismo</dt><dd>Organismo acreditado pela Cgcre, contratado em 23/04/2027 por R$ 38.000</dd></div>
+    <div><dt>Por que certificar</dt><dd>Objetivo O4: certificação até dezembro de 2027. Dois grandes clientes passam a exigir o certificado.</dd></div>
+    <div><dt>Certificado</dt><dd>ISO 9001:2015, decisão em 17/12/2027, válido até 16/12/2030.</dd></div>
+  </dl>
+  <div class="tbl">
+    <table class="aud">
+      <caption>Prontidão em 30/09/2027 · 93 % atendido, 0 impeditivos antes da fase 1 e 1 antes da fase 2 · <span class="chip s2">Pronta para a fase 1</span></caption>
+      <thead><tr><th>#</th><th style="width:34%">Critério<small>Quando · impeditivo</small></th><th>Status</th><th style="width:22%">Evidência</th><th style="width:26%">Ação<small>Responsável · prazo</small></th><th>Conferência</th></tr></thead>
+      <tbody>
+        <tr><td class="n">1</td><td>O escopo está definido, com a justificativa do que não se aplica.<small>Antes da fase 1 · impeditivo</small></td><td class=""><span class="chip s1">Sim</span></td><td>Escopo revisado em maio de 2027</td><td>—</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">2</td><td>A política e os objetivos da qualidade estão aprovados e comunicados.<small>Antes da fase 1 · impeditivo</small></td><td class=""><span class="chip s1">Sim</span></td><td>Política e objetivos de 2027, com o O4</td><td>—</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">3</td><td>Os processos estão determinados, com a sequência e a interação entre eles.<small>Antes da fase 1 · impeditivo</small></td><td class=""><span class="chip s1">Sim</span></td><td>Mapa dos nove processos, com tartarugas</td><td>—</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">4</td><td>A informação documentada exigida existe e está sob controle.<small>Antes da fase 1 · impeditivo</small></td><td class=""><span class="chip s1">Sim</span></td><td>Lista mestra e tabela de retenção de março de 2027</td><td>—</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">5</td><td>O organismo de certificação está escolhido, acreditado para o escopo.<small>Antes da fase 1</small></td><td class=""><span class="chip s1">Sim</span></td><td>Contrato de 23/04/2027</td><td>—</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">6</td><td>O sistema funciona há pelo menos três meses, com registros.<small>Antes da fase 2 · impeditivo</small></td><td class=""><span class="chip s1">Sim</span></td><td>Indicadores desde 2025</td><td>—</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">7</td><td>Há um ciclo completo de auditoria interna, cobrindo todos os processos.<small>Antes da fase 2 · impeditivo</small></td><td class="no"><span class="chip s2">Parcial</span></td><td>Sete dos nove processos auditados</td><td>Auditar a manutenção e a gestão de pessoas em outubro.<small>Coordenador da Qualidade · até 31/10/2027</small></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">8</td><td>Houve ao menos uma análise crítica pela direção, com todas as entradas.<small>Antes da fase 2 · impeditivo</small></td><td class=""><span class="chip s1">Sim</span></td><td>Ata de 19/08/2027</td><td>—</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">9</td><td>As não conformidades da auditoria interna têm ação definida.<small>Antes da fase 2 · impeditivo</small></td><td class=""><span class="chip s1">Sim</span></td><td>Ações das auditorias de 2027 definidas</td><td>—</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">10</td><td>Os indicadores têm série de pelo menos três meses.<small>Antes da fase 2</small></td><td class=""><span class="chip s1">Sim</span></td><td>Painel de indicadores por processo</td><td>—</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">11</td><td>As pessoas sabem explicar a política e o próprio papel no sistema.<small>Antes da fase 2</small></td><td class=""><span class="chip s1">Sim</span></td><td>Entrevistas de conscientização em julho</td><td>—</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">12</td><td>Os requisitos legais do produto estão identificados e atendidos.<small>Antes da fase 2</small></td><td class=""><span class="chip s1">Sim</span></td><td>Laudos de migração do filme para alimentos</td><td>—</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">13</td><td>A calibração e a manutenção dos itens críticos estão em dia.<small>Antes da fase 2</small></td><td class=""><span class="chip s2">Parcial</span></td><td>Instrumentos em dia</td><td>Concluir a preventiva atrasada da extrusora 3.<small>Supervisor de manutenção · até 15/10/2027</small></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">14</td><td>As reclamações e a satisfação do cliente são registradas e analisadas.<small>Antes da fase 2</small></td><td class=""><span class="chip s1">Sim</span></td><td>Pesquisa anual e registro de reclamações</td><td>—</td><td><span class="chip s1">OK</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="tbl">
+    <table class="aud">
+      <caption>O ciclo do certificado · ISO 9001:2015, lido em 15/01/2028</caption>
+      <thead><tr><th style="width:34%">Evento</th><th class="c">Limite</th><th class="c">Realizado em</th><th>Situação</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Fase 1</strong></td><td class="c">—</td><td class="c">20/10/2027</td><td><span class="chip s1">Realizada</span></td></tr>
+        <tr><td><strong>Fase 2</strong></td><td class="c">20/04/2028</td><td class="c">23/11/2027</td><td><span class="chip s1">No prazo</span></td></tr>
+        <tr><td><strong>Decisão de certificação</strong></td><td class="c">—</td><td class="c">17/12/2027</td><td><span class="chip s1">Realizada</span></td></tr>
+        <tr><td><strong>1ª manutenção</strong></td><td class="c">17/12/2028</td><td class="c">—</td><td><span class="chip sl">Prevista</span></td></tr>
+        <tr><td><strong>2ª manutenção</strong></td><td class="c">17/12/2029</td><td class="c">—</td><td><span class="chip sl">Prevista</span></td></tr>
+        <tr><td><strong>Auditoria de recertificação</strong></td><td class="c">17/09/2030</td><td class="c">—</td><td><span class="chip sl">Prevista</span></td></tr>
+        <tr><td><strong>Transição para a edição de 2026</strong></td><td class="c">16/09/2029</td><td class="c">—</td><td><span class="chip sl">Prevista</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="tbl">
+    <table class="aud">
+      <caption>Constatações do organismo · 1 maior, 2 menores, 1 oportunidade, 2 pontos de atenção</caption>
+      <thead><tr><th>Nº</th><th>Auditoria</th><th>Tipo</th><th class="c">Requisito</th><th style="width:30%">Constatação</th><th style="width:18%">Datas<small>Prazos</small></th><th>Situação</th><th>Conferência</th></tr></thead>
+      <tbody>
+        <tr><td class="n">I-1</td><td>Fase 1<small>20/10/2027</small></td><td><span class="chip sl">Ponto de atenção da fase 1</span></td><td class="c">9.2</td><td>O ciclo de auditoria interna não incluiu a manutenção e a gestão de pessoas.</td><td>plano 25/10 · ação 31/10 · evidência 05/11<small>sem prazo</small></td><td><span class="chip s1">Fechada</span></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">I-2</td><td>Fase 1<small>20/10/2027</small></td><td><span class="chip sl">Ponto de atenção da fase 1</span></td><td class="c">9.3</td><td>A análise crítica de 19/08 não tratou a satisfação do cliente como entrada.</td><td>plano 25/10 · ação 12/11 · evidência 15/11<small>sem prazo</small></td><td><span class="chip s1">Fechada</span></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">I-3</td><td>Fase 2<small>23/11/2027</small></td><td><span class="chip s3">NC maior</span></td><td class="c">8.5.6</td><td>Das 9 mudanças de processo de 2027, 4 sem autorização, 2 delas depois da constatação da auditoria interna de outubro: a ação corretiva não funcionou.</td><td>plano 30/11 · ação 08/12 · evidência 10/12<small>plano até 23/12 · fechar até 21/02</small></td><td><span class="chip s1">Fechada</span></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">I-4</td><td>Fase 2<small>23/11/2027</small></td><td><span class="chip s2">NC menor</span></td><td class="c">7.2</td><td>O operador novo do turno C regula a extrusora 3 sem registro de treinamento.</td><td>plano 05/12<small>plano até 23/12</small></td><td><span class="chip s2">Aguarda verificação</span></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">I-5</td><td>Fase 2<small>23/11/2027</small></td><td><span class="chip s2">NC menor</span></td><td class="c">8.5.5</td><td>A política do filme impresso aceita reclamação em 30 dias, e o contrato do cliente A exige 60.</td><td>—<small>plano até 23/12</small></td><td><span class="chip s3">Plano atrasado</span></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">I-6</td><td>Fase 2<small>23/11/2027</small></td><td><span class="chip sl">Oportunidade de melhoria</span></td><td class="c">7.1.3</td><td>O destino do produto afetado por quebra poderia constar em todas as ordens de manutenção.</td><td>—<small>sem prazo</small></td><td><span class="chip sl">Para considerar</span></td><td><span class="chip s1">OK</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p><strong>O que observar.</strong> A indústria chegou pronta para a fase 1 e quase pronta para a fase 2: faltavam a manutenção e a gestão de pessoas no ciclo de auditoria interna, o que a fase 1 apontou e a fábrica resolveu em duas semanas. A fase 2 encontrou uma não conformidade maior: as mudanças de processo sem autorização continuaram depois da auditoria interna de outubro, o que mostra uma ação corretiva que não funcionou. Na leitura de janeiro de 2028, uma das menores ainda está sem plano, passados 53 dias da auditoria: é o tipo de atraso que leva o organismo a reclassificar a constatação ou a suspender o certificado. Por fim, a fábrica se certificou pela edição de 2015 e terá de migrar para a de 2026 antes de 16/09/2029, provavelmente na 1ª manutenção.</p>
+
+  <h3>Exemplo 3. Da não conformidade maior à decisão</h3>
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 214" role="img" aria-label="Da não conformidade maior à decisão de certificação, na indústria. 23/11, Fase 2: NC maior no 8.5.6: 4 de 9 mudanças sem autorização. A ação da auditoria interna não funcionou. 30/11, Plano enviado: Causa: o formulário de mudança não chega ao turno C. Correção e ação com prazo. 08/12, Ação concluída: Mudança só no sistema, com aprovação do gerente; treinamento dos três turnos. 10/12, Evidência aceita: O organismo confere os registros de mudança de dezembro, todos autorizados. 17/12, Decisão: Certificado concedido, com as duas NC menores a verificar na 1ª manutenção.">
+        <defs><marker id="a6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker></defs>
+        <rect class="bx-s3" x="12" y="14" width="164" height="164"/>
+        <text class="mono mu" x="24" y="34" font-size="9.5">23/11/2027</text>
+        <text class="b" x="24" y="54" font-size="12">Fase 2</text>
+        <text x="24" y="76" font-size="10.5">NC maior no 8.5.6: 4 de 9</text>
+        <text x="24" y="90" font-size="10.5">mudanças sem autorização.</text>
+        <text x="24" y="104" font-size="10.5">A ação da auditoria</text>
+        <text x="24" y="118" font-size="10.5">interna não funcionou.</text>
+        <line class="ln" x1="177" y1="96" x2="188" y2="96" marker-end="url(#a6)"/>
+        <rect class="bx" x="190" y="14" width="164" height="164"/>
+        <text class="mono mu" x="202" y="34" font-size="9.5">30/11/2027</text>
+        <text class="b" x="202" y="54" font-size="12">Plano enviado</text>
+        <text x="202" y="76" font-size="10.5">Causa: o formulário de</text>
+        <text x="202" y="90" font-size="10.5">mudança não chega ao</text>
+        <text x="202" y="104" font-size="10.5">turno C. Correção e ação</text>
+        <text x="202" y="118" font-size="10.5">com prazo.</text>
+        <line class="ln" x1="355" y1="96" x2="366" y2="96" marker-end="url(#a6)"/>
+        <rect class="bx-d" x="368" y="14" width="164" height="164"/>
+        <text class="mono mu" x="380" y="34" font-size="9.5">08/12/2027</text>
+        <text class="b" x="380" y="54" font-size="12">Ação concluída</text>
+        <text x="380" y="76" font-size="10.5">Mudança só no sistema,</text>
+        <text x="380" y="90" font-size="10.5">com aprovação do gerente;</text>
+        <text x="380" y="104" font-size="10.5">treinamento dos três</text>
+        <text x="380" y="118" font-size="10.5">turnos.</text>
+        <line class="ln" x1="533" y1="96" x2="544" y2="96" marker-end="url(#a6)"/>
+        <rect class="bx-s1" x="546" y="14" width="164" height="164"/>
+        <text class="mono mu" x="558" y="34" font-size="9.5">10/12/2027</text>
+        <text class="b" x="558" y="54" font-size="12">Evidência aceita</text>
+        <text x="558" y="76" font-size="10.5">O organismo confere os</text>
+        <text x="558" y="90" font-size="10.5">registros de mudança de</text>
+        <text x="558" y="104" font-size="10.5">dezembro, todos</text>
+        <text x="558" y="118" font-size="10.5">autorizados.</text>
+        <line class="ln" x1="711" y1="96" x2="722" y2="96" marker-end="url(#a6)"/>
+        <rect class="bx-ink" x="724" y="14" width="164" height="164"/>
+        <text class="mono t-ground" x="736" y="34" font-size="9.5">17/12/2027</text>
+        <text class="b t-ground" x="736" y="54" font-size="12">Decisão</text>
+        <text class="t-ground" x="736" y="76" font-size="10.5">Certificado concedido,</text>
+        <text class="t-ground" x="736" y="90" font-size="10.5">com as duas NC menores a</text>
+        <text class="t-ground" x="736" y="104" font-size="10.5">verificar na 1ª</text>
+        <text class="t-ground" x="736" y="118" font-size="10.5">manutenção.</text>
+        <text x="450" y="204" font-size="11.5" text-anchor="middle">24 dias da constatação à decisão. A maior só não adiou o certificado porque a ação foi feita, e comprovada, a tempo.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 6.</b> A não conformidade maior da indústria, da fase 2 à decisão de certificação, em 24 dias.</figcaption>
+  </figure>
+  <p><strong>O que observar.</strong> A fábrica não respondeu com "treinar os operadores". Ela achou a causa: o formulário de mudança não chegava ao turno C, e a mudança dependia de papel. A ação mudou o processo: mudança só no sistema, com aprovação do gerente antes de valer. O organismo não aceitou a palavra; aceitou os registros de dezembro, todos autorizados. Foi isso que permitiu manter o objetivo O4, de se certificar até dezembro. Se a ação tivesse demorado mais de seis meses, a fase 2 teria de ser refeita.</p>
+</section>
+
+<!-- ============================ MÓDULO 8 ============================ -->
+<section id="leitura">
+  <p class="eyebrow">Módulo 8</p>
+  <h2>Ler o ciclo</h2>
+  <p>Depois da decisão, o certificado vira um calendário. Cada evento tem um limite, e o que importa é saber, a qualquer momento, qual é o próximo e quanto falta.</p>
+
+  <figure id="fig-bars">
+    <div class="scroll">
+      <svg id="bars" viewBox="0 0 900 250" role="img" aria-label="Os dois certificados no tempo. Indústria: decisão em 17/12/2027, válido até 16/12/2030, ISO 9001:2015. Pizzaria: decisão em 25/04/2028, válido até 24/04/2031, ISO 9001:2026. A transição dos certificados de 2015 termina em 16/09/2029.">
+        <line class="grid" x1="283.1" y1="30" x2="283.1" y2="190"/>
+        <text class="mu" x="283.1" y="206" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">2028</text>
+        <line class="grid" x1="448.5" y1="30" x2="448.5" y2="190"/>
+        <text class="mu" x="448.5" y="206" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">2029</text>
+        <line class="grid" x1="613.3" y1="30" x2="613.3" y2="190"/>
+        <text class="mu" x="613.3" y="206" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">2030</text>
+        <line class="grid" x1="778.2" y1="30" x2="778.2" y2="190"/>
+        <text class="mu" x="778.2" y="206" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">2031</text>
+        <line class="now" x1="565.0" y1="24" x2="565.0" y2="190"/>
+        <text class="b halo" x="571.0" y="30" font-size="10.5">fim da transição, 16/09/2029</text>
+        <text class="b" x="20" y="74" font-size="12.5">Indústria</text>
+        <text class="mu" x="20" y="90" font-size="10.5">ISO 9001:2015</text>
+        <rect class="bar f2" data-k="0" x="276.3" y="60" width="494.7" height="24" fill-opacity=".35"/>
+        <circle class="f1" cx="276.3" cy="72" r="6"/>
+        <text class="mu" x="276.3" y="102" font-size="9.5" text-anchor="middle">decisão</text>
+        <circle class="f0" cx="441.7" cy="72" r="6"/>
+        <text class="mu" x="441.7" y="102" font-size="9.5" text-anchor="middle">1ª man.</text>
+        <circle class="f0" cx="606.6" cy="72" r="6"/>
+        <text class="mu" x="606.6" y="102" font-size="9.5" text-anchor="middle">2ª man.</text>
+        <circle class="f0" cx="730.3" cy="72" r="6"/>
+        <text class="mu" x="730.3" y="102" font-size="9.5" text-anchor="middle">recert.</text>
+        <circle class="f0" cx="565.0" cy="72" r="6"/>
+        <text class="mu" x="565.0" y="102" font-size="9.5" text-anchor="middle">transição</text>
+        <text class="b" x="20" y="144" font-size="12.5">Pizzaria</text>
+        <text class="mu" x="20" y="160" font-size="10.5">ISO 9001:2026</text>
+        <rect class="bar f1" data-k="1" x="335.1" y="130" width="494.2" height="24" fill-opacity=".35"/>
+        <circle class="f1" cx="335.1" cy="142" r="6"/>
+        <text class="mu" x="335.1" y="172" font-size="9.5" text-anchor="middle">decisão</text>
+        <circle class="f0" cx="500.0" cy="142" r="6"/>
+        <text class="mu" x="500.0" y="172" font-size="9.5" text-anchor="middle">1ª man.</text>
+        <circle class="f0" cx="664.8" cy="142" r="6"/>
+        <text class="mu" x="664.8" y="172" font-size="9.5" text-anchor="middle">2ª man.</text>
+        <circle class="f0" cx="789.1" cy="142" r="6"/>
+        <text class="mu" x="789.1" y="172" font-size="9.5" text-anchor="middle">recert.</text>
+        <text x="450" y="232" font-size="11.5" text-anchor="middle">Círculo cheio: realizado. Círculo cinza: o limite do evento. A barra é a validade do certificado.</text>
+        <circle class="hit" cx="276.3" cy="72" r="11" tabindex="0" role="img" aria-label="Indústria, Decisão de certificação: 17/12/2027" data-k="0" data-n="Indústria" data-s="Decisão de certificação" data-d="17/12/2027" data-p="realizado" data-cx="276.3" data-cy="56"/>
+        <circle class="hit" cx="441.7" cy="72" r="11" tabindex="0" role="img" aria-label="Indústria, 1ª manutenção: 17/12/2028" data-k="0" data-n="Indústria" data-s="1ª manutenção" data-d="17/12/2028" data-p="limite" data-cx="441.7" data-cy="56"/>
+        <circle class="hit" cx="606.6" cy="72" r="11" tabindex="0" role="img" aria-label="Indústria, 2ª manutenção: 17/12/2029" data-k="0" data-n="Indústria" data-s="2ª manutenção" data-d="17/12/2029" data-p="limite" data-cx="606.6" data-cy="56"/>
+        <circle class="hit" cx="730.3" cy="72" r="11" tabindex="0" role="img" aria-label="Indústria, Auditoria de recertificação: 17/09/2030" data-k="0" data-n="Indústria" data-s="Auditoria de recertificação" data-d="17/09/2030" data-p="limite" data-cx="730.3" data-cy="56"/>
+        <circle class="hit" cx="565.0" cy="72" r="11" tabindex="0" role="img" aria-label="Indústria, Transição para a edição de 2026: 16/09/2029" data-k="0" data-n="Indústria" data-s="Transição para a edição de 2026" data-d="16/09/2029" data-p="limite" data-cx="565.0" data-cy="56"/>
+        <circle class="hit" cx="335.1" cy="142" r="11" tabindex="0" role="img" aria-label="Pizzaria, Decisão de certificação: 25/04/2028" data-k="1" data-n="Pizzaria" data-s="Decisão de certificação" data-d="25/04/2028" data-p="realizado" data-cx="335.1" data-cy="126"/>
+        <circle class="hit" cx="500.0" cy="142" r="11" tabindex="0" role="img" aria-label="Pizzaria, 1ª manutenção: 25/04/2029" data-k="1" data-n="Pizzaria" data-s="1ª manutenção" data-d="25/04/2029" data-p="limite" data-cx="500.0" data-cy="126"/>
+        <circle class="hit" cx="664.8" cy="142" r="11" tabindex="0" role="img" aria-label="Pizzaria, 2ª manutenção: 25/04/2030" data-k="1" data-n="Pizzaria" data-s="2ª manutenção" data-d="25/04/2030" data-p="limite" data-cx="664.8" data-cy="126"/>
+        <circle class="hit" cx="789.1" cy="142" r="11" tabindex="0" role="img" aria-label="Pizzaria, Auditoria de recertificação: 25/01/2031" data-k="1" data-n="Pizzaria" data-s="Auditoria de recertificação" data-d="25/01/2031" data-p="limite" data-cx="789.1" data-cy="126"/>
+      </svg>
+    </div>
+    <div class="tip" id="bars-tip" hidden></div>
+    <figcaption><b>Figura 7.</b> Os dois certificados no tempo, com a validade, as datas realizadas e os limites. Passe o mouse sobre os círculos para ver os valores.</figcaption>
+    <details class="data">
+      <summary>Ver os dados em tabela</summary>
+      <div class="tbl">
+        <table class="aud">
+          <thead><tr><th>Organização</th><th>Evento</th><th class="c">Limite</th><th class="c">Realizado</th><th>Situação</th></tr></thead>
+          <tbody>
+            <tr><td>Indústria</td><td>Fase 1</td><td class="c">—</td><td class="c">20/10/2027</td><td>Realizada</td></tr>
+            <tr><td>Indústria</td><td>Fase 2</td><td class="c">20/04/2028</td><td class="c">23/11/2027</td><td>No prazo</td></tr>
+            <tr><td>Indústria</td><td>Decisão de certificação</td><td class="c">—</td><td class="c">17/12/2027</td><td>Realizada</td></tr>
+            <tr><td>Indústria</td><td>1ª manutenção</td><td class="c">17/12/2028</td><td class="c">—</td><td>Prevista</td></tr>
+            <tr><td>Indústria</td><td>2ª manutenção</td><td class="c">17/12/2029</td><td class="c">—</td><td>Prevista</td></tr>
+            <tr><td>Indústria</td><td>Auditoria de recertificação</td><td class="c">17/09/2030</td><td class="c">—</td><td>Prevista</td></tr>
+            <tr><td>Indústria</td><td>Transição para a edição de 2026</td><td class="c">16/09/2029</td><td class="c">—</td><td>Prevista</td></tr>
+            <tr><td>Pizzaria</td><td>Fase 1</td><td class="c">—</td><td class="c">15/02/2028</td><td>Realizada</td></tr>
+            <tr><td>Pizzaria</td><td>Fase 2</td><td class="c">15/08/2028</td><td class="c">21/03/2028</td><td>No prazo</td></tr>
+            <tr><td>Pizzaria</td><td>Decisão de certificação</td><td class="c">—</td><td class="c">25/04/2028</td><td>Realizada</td></tr>
+            <tr><td>Pizzaria</td><td>1ª manutenção</td><td class="c">25/04/2029</td><td class="c">—</td><td>Prevista</td></tr>
+            <tr><td>Pizzaria</td><td>2ª manutenção</td><td class="c">25/04/2030</td><td class="c">—</td><td>Prevista</td></tr>
+            <tr><td>Pizzaria</td><td>Auditoria de recertificação</td><td class="c">25/01/2031</td><td class="c">—</td><td>Prevista</td></tr>
+            <tr><td>Pizzaria</td><td>Transição para a edição de 2026</td><td class="c">—</td><td class="c">—</td><td>Não se aplica</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </details>
+  </figure>
+
+  <p>Os dois certificados têm a mesma forma e situações diferentes. A pizzaria, certificada pela edição de 2026, só precisa das manutenções e da recertificação. A indústria tem um evento a mais: a transição, cujo limite, 16/09/2029, chega antes da 2ª manutenção. Na prática, a 1ª manutenção, em 2028, é a melhor ocasião para migrar, porque deixa tempo para tratar alguma constatação nova.</p>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Evento</th><th style="width:40%">Limite neste material</th><th>De onde vem</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Fase 2</strong></td><td>Até seis meses depois da fase 1.</td><td>Convenção comum entre organismos.</td></tr>
+        <tr><td><strong>1ª manutenção</strong></td><td>Até 12 meses depois da decisão.</td><td>Regra dos organismos acreditados.</td></tr>
+        <tr><td><strong>2ª manutenção</strong></td><td>Até 24 meses depois da decisão.</td><td>Ao menos uma auditoria por ano.</td></tr>
+        <tr><td><strong>Recertificação</strong></td><td>Auditoria até três meses antes do vencimento.</td><td>Convenção, para ter tempo de tratar as constatações antes de o certificado vencer.</td></tr>
+        <tr><td><strong>Transição</strong></td><td>O fim da janela, ou a validade, o que vier antes.</td><td>Prazo anunciado para a edição de 2026.</td></tr>
+        <tr><td><strong>Aviso</strong></td><td>A 60 dias do limite.</td><td>Convenção deste material.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 9 ============================ -->
+<section id="transicao">
+  <p class="eyebrow">Módulo 9</p>
+  <h2>A transição para a edição de 2026</h2>
+  <p>A ISO 9001:2026 foi publicada em 16/09/2026 e substitui a edição de 2015. Quando uma norma certificável muda, os certificados pela edição anterior ganham um prazo para migrar. Para a edição de 2026, os organismos anunciam três anos, até setembro de 2029. Depois disso, o certificado pela edição de 2015 deixa de valer.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 236" role="img" aria-label="A janela de transição para a ISO 9001:2026. 16/09/2026: Publicação da ISO 9001:2026. 17/12/2027: Indústria certificada pela edição de 2015. 25/04/2028: Pizzaria certificada pela edição de 2026. 17/12/2028: 1ª manutenção da indústria: boa data para a transição. 16/09/2029: Fim da transição: certificados de 2015 deixam de valer.">
+        <rect class="bx-s2" x="89.4" y="86" width="702.7" height="28"/>
+        <line class="grid" x1="158.0" y1="80" x2="158.0" y2="120"/>
+        <text class="mu" x="158.0" y="134" font-size="10.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">2027</text>
+        <line class="grid" x1="392.0" y1="80" x2="392.0" y2="120"/>
+        <text class="mu" x="392.0" y="134" font-size="10.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">2028</text>
+        <line class="grid" x1="626.6" y1="80" x2="626.6" y2="120"/>
+        <text class="mu" x="626.6" y="134" font-size="10.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">2029</text>
+        <line class="ln-mu" x1="89.4" y1="56" x2="89.4" y2="84"/>
+        <circle class="f1" cx="89.4" cy="100" r="6"/>
+        <text class="b" x="83.4" y="42" font-size="11">16/09/2026</text>
+        <text class="mu" x="83.36669272869429" y="56" font-size="10.5">Publicação da ISO 9001:2026</text>
+        <line class="ln-mu" x1="382.4" y1="118" x2="382.4" y2="164"/>
+        <circle class="f1" cx="382.4" cy="100" r="6"/>
+        <text class="b" x="382.4" y="176" font-size="11" text-anchor="middle">17/12/2027</text>
+        <text class="mu" text-anchor="middle" x="382.36121970289287" y="190" font-size="10.5">Indústria certificada pela edição</text>
+        <text class="mu" text-anchor="middle" x="382.36121970289287" y="203" font-size="10.5">de 2015</text>
+        <line class="ln-mu" x1="465.7" y1="56" x2="465.7" y2="84"/>
+        <circle class="f1" cx="465.7" cy="100" r="6"/>
+        <text class="b" x="465.7" y="42" font-size="11" text-anchor="middle">25/04/2028</text>
+        <text class="mu" text-anchor="middle" x="465.7075840500391" y="56" font-size="10.5">Pizzaria certificada pela edição</text>
+        <text class="mu" text-anchor="middle" x="465.7075840500391" y="69" font-size="10.5">de 2026</text>
+        <line class="ln-mu" x1="617.0" y1="118" x2="617.0" y2="164"/>
+        <circle class="f1" cx="617.0" cy="100" r="6"/>
+        <text class="b" x="617.0" y="176" font-size="11" text-anchor="middle">17/12/2028</text>
+        <text class="mu" text-anchor="middle" x="617.0132916340891" y="190" font-size="10.5">1ª manutenção da indústria: boa</text>
+        <text class="mu" text-anchor="middle" x="617.0132916340891" y="203" font-size="10.5">data para a transição</text>
+        <line class="ln-mu" x1="792.0" y1="56" x2="792.0" y2="84"/>
+        <circle class="f3" cx="792.0" cy="100" r="6"/>
+        <text class="b" x="798.0" y="42" font-size="11" text-anchor="end">16/09/2029</text>
+        <text class="mu" text-anchor="end" x="798.0406567630962" y="56" font-size="10.5">Fim da transição: certificados de</text>
+        <text class="mu" text-anchor="end" x="798.0406567630962" y="69" font-size="10.5">2015 deixam de valer</text>
+        <text x="450" y="228" font-size="11.5" text-anchor="middle">Três anos de transição, da publicação ao fim da janela anunciado pelos organismos.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 8.</b> A janela de transição, com as datas dos dois exemplos.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Etapa</th><th>O que fazer</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Ler a edição nova</strong></td><td>Comparar com o sistema atual. Os organismos destacam a cultura da qualidade e o comportamento ético, riscos e oportunidades tratados separadamente, a gestão de mudanças reforçada e um anexo com mais orientação.</td></tr>
+        <tr><td><strong>Ajustar o sistema</strong></td><td>Atualizar o que muda, treinar quem precisa e registrar.</td></tr>
+        <tr><td><strong>Auditar por dentro</strong></td><td>Uma auditoria interna e uma análise crítica já pela edição nova.</td></tr>
+        <tr><td><strong>Combinar com o organismo</strong></td><td>Na manutenção ou na recertificação, ou numa auditoria especial, com os dias extras que ele indicar.</td></tr>
+        <tr><td><strong>Receber o certificado novo</strong></td><td>Com a mesma validade do ciclo, ou uma nova, conforme a regra do organismo.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note">
+    <h4>Confira as regras oficiais</h4>
+    <p>As regras formais da transição, como até quando se pode certificar pela edição antiga e quantos dias a auditoria de transição acrescenta, são publicadas pelo fórum internacional de acreditação e pelos acreditadores, e cada organismo as aplica no seu regulamento. As datas deste módulo são a publicação anunciada pela ISO e o prazo de três anos divulgado pelos organismos; confirme com o seu antes de planejar. O próximo estudo da série trata das diferenças entre as edições.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 10 ============================ -->
+<section id="erros">
+  <p class="eyebrow">Módulo 10</p>
+  <h2>Erros comuns</h2>
+  <div class="errs">
+    <div><h4>Certificar antes de rodar</h4><p>O sistema foi escrito em um mês, e a fase 2 veio no seguinte.</p><p class="fix"><b>Correção:</b> meses de registros, auditoria interna completa e análise crítica antes.</p></div>
+    <div><h4>Organismo sem acreditação</h4><p>A proposta mais barata vinha de um organismo não acreditado.</p><p class="fix"><b>Correção:</b> conferir a acreditação e o escopo dela.</p></div>
+    <div><h4>Escopo que engana</h4><p>O certificado cobre só a expedição, e o site diz "empresa certificada".</p><p class="fix"><b>Correção:</b> escopo do certificado igual ao do sistema, e comunicação fiel.</p></div>
+    <div><h4>Fase 1 como diagnóstico</h4><p>A fase 1 encontrou tudo que faltava, e a fase 2 foi adiada.</p><p class="fix"><b>Correção:</b> a prontidão avaliada antes de contratar.</p></div>
+    <div><h4>Plano fora do prazo</h4><p>O plano da não conformidade menor ficou esquecido no e-mail.</p><p class="fix"><b>Correção:</b> cada constatação com prazo no calendário e um responsável.</p></div>
+    <div><h4>"Treinar a equipe"</h4><p>A mesma ação para todas as não conformidades.</p><p class="fix"><b>Correção:</b> a causa de cada uma, como no estudo de não conformidade.</p></div>
+    <div><h4>Sistema que só vive na auditoria</h4><p>Os registros aparecem na semana anterior à manutenção.</p><p class="fix"><b>Correção:</b> o calendário do sistema, lido todo mês.</p></div>
+    <div><h4>Mudança sem aviso</h4><p>A fábrica mudou de endereço e o organismo soube na manutenção.</p><p class="fix"><b>Correção:</b> comunicar ao organismo as mudanças de escopo, local e porte.</p></div>
+    <div><h4>Marca mal usada</h4><p>O selo de certificação impresso na embalagem do produto.</p><p class="fix"><b>Correção:</b> seguir as regras de uso da marca do organismo.</p></div>
+    <div><h4>Transição no último mês</h4><p>A migração ficou para agosto de 2029.</p><p class="fix"><b>Correção:</b> planejar a transição na primeira auditoria possível.</p></div>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 11 ============================ -->
+<section id="ferramentas">
+  <p class="eyebrow">Módulo 11</p>
+  <h2>A certificação e outras ferramentas</h2>
+  <p>A certificação não cria nada novo no sistema: confere o que os outros estudos construíram. Cada critério de prontidão aponta para um deles.</p>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:26%">Ferramenta</th><th style="width:37%">O que ela entrega à certificação</th><th>O que recebe da certificação</th></tr></thead>
+      <tbody>
+        <tr><td><a href="../ISO-9001/treinamento-iso-9001.html"><strong>ISO 9001 requisito a requisito</strong></a></td><td>O diagnóstico e o plano de implantação de doze meses.</td><td>A confirmação externa do atendimento.</td></tr>
+        <tr><td><a href="../Escopo/treinamento-escopo.html"><strong>Escopo e liderança</strong></a></td><td>O escopo que o certificado repete.</td><td>A conferência do escopo pelo organismo.</td></tr>
+        <tr><td><a href="../Auditoria/treinamento-auditoria.html"><strong>Auditoria interna</strong></a></td><td>O ciclo completo, exigido antes da fase 2.</td><td>Uma referência de como o organismo audita.</td></tr>
+        <tr><td><a href="../Tecnica-Auditoria/treinamento-tecnica-auditoria.html"><strong>Técnica de auditoria</strong></a></td><td>Auditores internos que encontram o que o organismo encontraria.</td><td>Constatações externas para comparar.</td></tr>
+        <tr><td><a href="../Analise-Critica/treinamento-analise-critica.html"><strong>Análise crítica pela direção</strong></a></td><td>A reunião com todas as entradas, exigida antes da fase 2.</td><td>O resultado da auditoria, como entrada.</td></tr>
+        <tr><td><a href="../Nao-Conformidade/treinamento-nao-conformidade.html"><strong>Não conformidade e ação corretiva</strong></a></td><td>O método do plano de ação que o organismo pede.</td><td>As constatações externas, para tratar.</td></tr>
+        <tr><td><a href="../Objetivos/treinamento-objetivos.html"><strong>Objetivos da qualidade</strong></a></td><td>A certificação como objetivo, com etapas e prazo.</td><td>A data da decisão, que fecha o objetivo.</td></tr>
+        <tr><td><a href="../Caso-Integrado/treinamento-caso-integrado.html"><strong>Caso integrado</strong></a></td><td>O calendário do sistema e a ordem de implantação.</td><td>As datas do ciclo, para o calendário.</td></tr>
+        <tr><td><a href="../Fornecedores/treinamento-fornecedores.html"><strong>Avaliação de fornecedores</strong></a></td><td>O uso do certificado dos fornecedores como evidência.</td><td>O cuidado de conferir validade e escopo do certificado.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 12 ============================ -->
+<section id="iso">
+  <p class="eyebrow">Módulo 12</p>
+  <h2>Nas normas</h2>
+  <p>Quem certifica segue uma norma própria, a ISO/IEC 17021-1, que define como o organismo audita, decide e mantém o certificado. A ISO 9001 é o critério auditado. Entre os dois estão as regras da acreditação, como as que definem os dias de auditoria e a transição entre edições.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 200" role="img" aria-label="As referências da certificação. ISO/IEC 17021-1: Requisitos para os organismos que auditam e certificam sistemas de gestão. Neste estudo: o ciclo e as fases. Acreditação: O acreditador avalia o organismo, e o fórum internacional dá valor ao certificado lá fora. Neste estudo: a cadeia de confiança. ISO 9001 · 4.3: O escopo do sistema, que o certificado repete, com a justificativa do que não se aplica. Neste estudo: a prontidão. Transição: Cada nova edição abre um prazo para os certificados migrarem. Neste estudo: o ciclo e a transição.">
+        <rect class="bx" x="10" y="14" width="214" height="172"/>
+        <rect class="hd-ink" x="10" y="14" width="214" height="34"/>
+        <text class="b t-ground" x="22" y="36" font-size="11.5">ISO/IEC 17021-1</text>
+        <text x="22" y="70" font-size="11.5">Requisitos para os organismos</text>
+        <text x="22" y="86" font-size="11.5">que auditam e certificam</text>
+        <text x="22" y="102" font-size="11.5">sistemas de gestão.</text>
+        <text class="mu" x="22" y="160" font-size="11">Neste estudo: o ciclo e as fases</text>
+        <rect class="bx" x="232" y="14" width="214" height="172"/>
+        <rect class="hd-ink" x="232" y="14" width="214" height="34"/>
+        <text class="b t-ground" x="244" y="36" font-size="11.5">Acreditação</text>
+        <text x="244" y="70" font-size="11.5">O acreditador avalia o</text>
+        <text x="244" y="86" font-size="11.5">organismo, e o fórum</text>
+        <text x="244" y="102" font-size="11.5">internacional dá valor ao</text>
+        <text x="244" y="118" font-size="11.5">certificado lá fora.</text>
+        <text class="mu" x="244" y="160" font-size="11">Neste estudo: a cadeia de</text>
+        <text class="mu" x="244" y="175" font-size="11">confiança</text>
+        <rect class="bx" x="454" y="14" width="214" height="172"/>
+        <rect class="hd-ink" x="454" y="14" width="214" height="34"/>
+        <text class="b t-ground" x="466" y="36" font-size="11.5">ISO 9001 · 4.3</text>
+        <text x="466" y="70" font-size="11.5">O escopo do sistema, que o</text>
+        <text x="466" y="86" font-size="11.5">certificado repete, com a</text>
+        <text x="466" y="102" font-size="11.5">justificativa do que não se</text>
+        <text x="466" y="118" font-size="11.5">aplica.</text>
+        <text class="mu" x="466" y="160" font-size="11">Neste estudo: a prontidão</text>
+        <rect class="bx" x="676" y="14" width="214" height="172"/>
+        <rect class="hd-ink" x="676" y="14" width="214" height="34"/>
+        <text class="b t-ground" x="688" y="36" font-size="11.5">Transição</text>
+        <text x="688" y="70" font-size="11.5">Cada nova edição abre um prazo</text>
+        <text x="688" y="86" font-size="11.5">para os certificados migrarem.</text>
+        <text class="mu" x="688" y="160" font-size="11">Neste estudo: o ciclo e a</text>
+        <text class="mu" x="688" y="175" font-size="11">transição</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 9.</b> As referências da certificação e onde este estudo responde. O texto da figura é um resumo, com palavras próprias.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:18%">Referência</th><th style="width:36%">O que trata, em resumo</th><th>Para a organização certificada</th></tr></thead>
+      <tbody>
+        <tr><td class="num">ISO/IEC 17021-1</td><td>Imparcialidade, competência, auditoria inicial em duas fases, decisão, manutenção, recertificação, suspensão.</td><td>Explica por que o organismo trabalha como trabalha.</td></tr>
+        <tr><td class="num">Regras da acreditação</td><td>Dias de auditoria, auditorias de vários locais, transições entre edições.</td><td>Explica o tamanho da proposta e os prazos da transição.</td></tr>
+        <tr><td class="num">ISO 9001, 4.3</td><td>O escopo do sistema, com a justificativa do que não se aplica.</td><td>É a base do escopo do certificado.</td></tr>
+        <tr><td class="num">ISO 9001, 9.2 e 9.3</td><td>Auditoria interna e análise crítica.</td><td>O organismo quer vê-las funcionando antes da fase 2.</td></tr>
+        <tr><td class="num">ISO 9001, 10.2</td><td>Não conformidade e ação corretiva.</td><td>É o método esperado nos planos enviados ao organismo.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pair">
+    <div class="box">
+      <h4>O que é regra para o organismo</h4>
+      <ul>
+        <li>Duas fases na auditoria inicial.</li>
+        <li>Decisão por quem não auditou.</li>
+        <li>Certificado de três anos, com manutenção ao menos anual.</li>
+        <li>Nenhuma consultoria de implantação ao cliente.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h4>O que varia de organismo para organismo</h4>
+      <ul>
+        <li>Os prazos para enviar o plano e fechar a maior.</li>
+        <li>A forma de pontuar e de relatar.</li>
+        <li>As regras de uso da marca.</li>
+        <li>O preço, dentro dos dias mínimos.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="note">
+    <h4>Pontos de atenção</h4>
+    <p>A certificação é voluntária. Nenhum requisito da ISO 9001 obriga a organização a se certificar, e o sistema pode trazer resultado sem o certificado. Quando o certificado é pedido por clientes, ele passa a ser um requisito de parte interessada, e entra no estudo de <a href="../Partes-Interessadas/treinamento-partes-interessadas.html">Partes interessadas</a>.</p>
+    <p>Este módulo resume as normas e as regras com palavras próprias. Confira sempre as edições vigentes e o regulamento do seu organismo.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 13 ============================ -->
+<section id="semana">
+  <p class="eyebrow">Módulo 13</p>
+  <h2>A semana da auditoria</h2>
+  <p>Na semana anterior a cada auditoria externa, o representante reúne os líderes por 30 minutos. Não é para "arrumar" o sistema: é para confirmar a logística e lembrar como receber o auditor.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 136" role="img" aria-label="Distribuição da reunião de 30 minutos antes da auditoria externa: 5 minutos para o plano do organismo, 10 minutos para as constatações anteriores, 10 minutos para como receber o auditor e 5 minutos para a logística.">
+        <g font-size="11.5" text-anchor="middle">
+          <rect class="bx" x="60" y="24" width="130" height="56"/><text x="125" y="49">Plano do</text><text x="125" y="64">organismo</text>
+          <rect class="hd-ink gap2" x="190" y="24" width="260" height="56"/><text class="t-ground b" x="320" y="49">Constatações anteriores:</text><text class="t-ground b" x="320" y="64">o que foi feito, e a evidência</text>
+          <rect class="hd-d gap2" x="450" y="24" width="260" height="56"/><text class="on b" x="580" y="49">Como receber o auditor:</text><text class="on b" x="580" y="64">mostrar, não decorar</text>
+          <rect class="bx" x="710" y="24" width="130" height="56"/><text x="775" y="56">Logística</text>
+        </g>
+        <g class="ln-mu" stroke-width="1">
+          <line x1="60" y1="82" x2="60" y2="94"/><line x1="190" y1="82" x2="190" y2="94"/><line x1="450" y1="82" x2="450" y2="94"/>
+          <line x1="710" y1="82" x2="710" y2="94"/><line x1="840" y1="82" x2="840" y2="94"/>
+        </g>
+        <g class="mono" font-size="10.5" text-anchor="middle">
+          <text class="mu" x="60" y="112">0</text><text class="mu" x="190" y="112">5</text><text class="mu" x="450" y="112">15</text>
+          <text class="mu" x="710" y="112">25</text><text class="mu" x="840" y="112">30</text>
+        </g>
+      </svg>
+    </div>
+    <figcaption><b>Figura 10.</b> A reunião de 30 minutos antes da auditoria, em escala. As constatações anteriores e o jeito de receber o auditor ocupam dois terços.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Momento</th><th style="width:42%">O que fazer</th><th>Perguntas que ajudam</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Plano do organismo</strong></td><td>Horários, processos, turnos e quem acompanha cada parte.</td><td>"Quem está de folga no dia?"</td></tr>
+        <tr><td><strong>Constatações anteriores</strong></td><td>Cada uma com a ação feita e o registro que prova.</td><td>"O que mostramos se ele pedir a evidência?"</td></tr>
+        <tr><td><strong>Como receber o auditor</strong></td><td>Responder o que foi perguntado, mostrar o registro, dizer "não sei, vou verificar" quando for o caso.</td><td>"Quem procura o registro enquanto o auditor espera?"</td></tr>
+        <tr><td><strong>Logística</strong></td><td>Sala, acesso aos sistemas, equipamentos de proteção, almoço.</td><td>"O auditor consegue entrar na área de produção?"</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Na véspera, peça a três pessoas que expliquem o próprio trabalho e a política, como fariam ao auditor. Se alguém precisar decorar, o problema não está na véspera.</p>
+
+  <h3>Checklist da certificação</h3>
+  <p>Marque os itens conforme prepara e mantém a certificação. As marcações ficam salvas neste navegador.</p>
+  <ol class="check" id="checklist">
+    <li><label><input type="checkbox" id="ck-1"><span>O escopo da certificação está definido e é o mesmo do sistema.</span></label></li>
+    <li><label><input type="checkbox" id="ck-2"><span>O organismo escolhido é acreditado para o escopo, e o regulamento foi lido.</span></label></li>
+    <li><label><input type="checkbox" id="ck-3"><span>O sistema funciona há meses, com indicadores, auditoria interna completa e análise crítica.</span></label></li>
+    <li><label><input type="checkbox" id="ck-4"><span>As constatações da fase 1 foram tratadas antes da fase 2.</span></label></li>
+    <li><label><input type="checkbox" id="ck-5"><span>Quem será entrevistado sabe explicar o próprio trabalho e a política.</span></label></li>
+    <li><label><input type="checkbox" id="ck-6"><span>Os registros pedidos pela norma estão acessíveis no dia da auditoria.</span></label></li>
+    <li><label><input type="checkbox" id="ck-7"><span>Os planos de ação são enviados dentro do prazo do organismo.</span></label></li>
+    <li><label><input type="checkbox" id="ck-8"><span>As não conformidades maiores são fechadas, com evidência, antes da decisão.</span></label></li>
+    <li><label><input type="checkbox" id="ck-9"><span>As datas das manutenções e da recertificação estão no calendário do sistema.</span></label></li>
+    <li><label><input type="checkbox" id="ck-10"><span>O uso da marca de certificação segue as regras do organismo.</span></label></li>
+    <li><label><input type="checkbox" id="ck-11"><span>Mudanças importantes, como escopo, endereço ou porte, são comunicadas ao organismo.</span></label></li>
+    <li><label><input type="checkbox" id="ck-12"><span>A transição para a nova edição da norma está planejada antes do fim do prazo.</span></label></li>
+  </ol>
+  <div class="bar"><span><b id="ck-count">0</b> de 12 itens marcados</span><button class="btn" id="ck-reset" type="button">Limpar marcações</button></div>
+</section>
+
+<!-- ============================ MÓDULO 14 ============================ -->
+<section id="pratique">
+  <p class="eyebrow">Módulo 14</p>
+  <h2>Pratique</h2>
+  <h3>Exercício 1. Que constatação é esta?</h3>
+  <p>Cada item descreve algo que o auditor do organismo encontrou. Diga como ele tende a ser classificado: não conformidade maior, não conformidade menor, oportunidade de melhoria, ou não é constatação de auditoria.</p>
+  <div class="quiz" id="quiz"></div>
+  <div class="bar"><span>Acertos: <b id="qz-score">0</b> de <b id="qz-total">12</b></span><span>Respondidos: <b id="qz-done">0</b></span><button class="btn" id="qz-reset" type="button">Recomeçar</button></div>
+
+  <h3>Exercício 2. Avalie a prontidão e monte o ciclo</h3>
+  <p>Abra a planilha de apoio e siga o roteiro.</p>
+  <ol>
+    <li>Na aba Prontidão, informe a data e responda os 14 critérios, com a evidência, ou a ação, o responsável e o prazo.</li>
+    <li>Leia o resultado: pronta para a fase 2, para a fase 1, ou ainda não. Os impeditivos aparecem destacados.</li>
+    <li>Na aba Ciclo, informe a edição, a data da decisão (real ou prevista), a data da leitura e as datas realizadas.</li>
+    <li>Depois de cada auditoria, registre as constatações na aba Constatações, com as datas do plano, da ação e da evidência aceita.</li>
+    <li>Leia a aba Painel e passe o checklist do módulo 13.</li>
+  </ol>
+  <p>Depois, coloque as datas do ciclo no calendário do sistema, do estudo do Caso integrado. O certificado se perde mais por data esquecida do que por auditoria ruim.</p>
+</section>
+
+<!-- ============================ MÓDULO 15 ============================ -->
+<section id="planilha">
+  <p class="eyebrow">Módulo 15</p>
+  <h2>A planilha de apoio</h2>
+  <p>Este treinamento acompanha o arquivo <a id="xlsx-ref" href="Certificacao-modelo.xlsx">Certificacao-modelo.xlsx</a>, que fica na mesma pasta. As células em amarelo-claro são para preenchimento. As células cinza são calculadas.</p>
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Aba</th><th>Para que serve</th><th style="width:36%">O que ela calcula</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Instruções</strong></td><td>Legenda de cores, as regras de cálculo, ordem de preenchimento e premissas do modelo.</td><td>Nada. É só leitura.</td></tr>
+        <tr><td><strong>Prontidão</strong></td><td>A data e os 14 critérios, com status, evidência, ação, responsável e prazo.</td><td>O percentual, os impeditivos pendentes, o resultado e a conferência.</td></tr>
+        <tr><td><strong>Ciclo</strong></td><td>A edição, a data da decisão, a leitura, o fim da transição e as datas realizadas.</td><td>A validade, o limite e a situação de cada evento.</td></tr>
+        <tr><td><strong>Constatações</strong></td><td>Até 40 constatações do organismo, com o tipo, o requisito e as datas.</td><td>Os prazos do plano e do fechamento, a situação e a conferência.</td></tr>
+        <tr><td><strong>Painel</strong></td><td>Nada a preencher.</td><td>Os números das três abas, o gráfico e o aviso.</td></tr>
+        <tr><td><strong>Checklist</strong></td><td>Os mesmos 12 itens do módulo 13, com status Sim, Parcial ou Não.</td><td>Percentual atendido e situação da validação.</td></tr>
+        <tr><td><strong>Exemplo 1 e Exemplo 2</strong></td><td>A prontidão, o ciclo e as constatações da pizzaria e da indústria.</td><td>As mesmas contas das abas de entrada.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ GLOSSÁRIO ============================ -->
+<section id="glossario">
+  <p class="eyebrow">Referência</p>
+  <h2>Glossário</h2>
+  <dl class="gloss">
+    <div><dt>Acreditação</dt><dd>O reconhecimento formal de que um organismo de certificação é competente e imparcial.</dd></div>
+    <div><dt>Auditoria de terceira parte</dt><dd>A auditoria feita por um organismo independente da organização e do cliente.</dd></div>
+    <div><dt>Certificado</dt><dd>O documento que declara que o sistema atende à norma, para um escopo, por um prazo.</dd></div>
+    <div><dt>Decisão de certificação</dt><dd>A decisão do organismo, tomada por quem não auditou, com base no relatório.</dd></div>
+    <div><dt>Escopo do certificado</dt><dd>Os produtos, os serviços e os locais cobertos pelo certificado.</dd></div>
+    <div><dt>Fase 1</dt><dd>A parte da auditoria inicial que confere se o sistema está pronto para a fase 2.</dd></div>
+    <div><dt>Fase 2</dt><dd>A parte da auditoria inicial que confere se o sistema está implementado e é eficaz.</dd></div>
+    <div><dt>Manutenção</dt><dd>A auditoria periódica, ao menos anual, que mantém o certificado válido.</dd></div>
+    <div><dt>NC maior</dt><dd>A não conformidade que põe em dúvida a capacidade do sistema, ou mostra falha que se repete.</dd></div>
+    <div><dt>NC menor</dt><dd>O desvio pontual, que não compromete o sistema.</dd></div>
+    <div><dt>Recertificação</dt><dd>A auditoria que renova o certificado por um novo ciclo de três anos.</dd></div>
+    <div><dt>Transição</dt><dd>O prazo para os certificados migrarem para uma nova edição da norma.</dd></div>
+  </dl>
+</section>
+
+</main>
+</div>
+
+<footer>Material de estudo. Os exemplos, documentos, organismos e números são ilustrativos e foram criados para fins didáticos. As referências às normas e às regras de certificação são resumos para estudo e não substituem os textos originais nem o regulamento do organismo.</footer>
+</div>
+
+<script>
+(function () {
+  function read(key) { try { return JSON.parse(localStorage.getItem(key) || 'null'); } catch (e) { return null; } }
+  function write(key, val) { try { localStorage.setItem(key, JSON.stringify(val)); } catch (e) {} }
+
+  /* ---------- Checklist ---------- */
+  var boxes = Array.prototype.slice.call(document.querySelectorAll('#checklist input'));
+  var count = document.getElementById('ck-count');
+  var saved = read('certificacao-checklist') || {};
+  function refreshChecks() {
+    var n = 0, state = {};
+    boxes.forEach(function (b) { if (b.checked) { n++; } state[b.id] = b.checked; });
+    count.textContent = n;
+    return state;
+  }
+  boxes.forEach(function (b) {
+    if (saved[b.id]) { b.checked = true; }
+    b.addEventListener('change', function () { write('certificacao-checklist', refreshChecks()); });
+  });
+  refreshChecks();
+  document.getElementById('ck-reset').addEventListener('click', function () {
+    boxes.forEach(function (b) { b.checked = false; });
+    write('certificacao-checklist', refreshChecks());
+  });
+
+  /* ---------- Exercício ---------- */
+  var KEYS = ['M', 'm', 'O', 'N'];
+  var LABEL = { M: 'NC maior', m: 'NC menor', O: 'Oportunidade', N: 'Não é constatação' };
+  var NAMES = { M: 'não conformidade maior', m: 'não conformidade menor', O: 'oportunidade de melhoria', N: 'não é constatação de auditoria' };
+  var ITEMS = [
+    { t: '“Nenhuma auditoria interna foi feita no último ano.”', a: 'M', w: 'Requisito inteiro não atendido: falha do sistema.' },
+    { t: '“Um registro de treinamento, de 30 verificados, está sem assinatura.”', a: 'm', w: 'Desvio pontual, que não compromete o sistema.' },
+    { t: '“O formulário de reclamação poderia ter um campo para a causa.”', a: 'O', w: 'Funciona, e poderia ser melhor.' },
+    { t: '“O certificado do concorrente tem um escopo maior.”', a: 'N', w: 'Não há critério auditado nisso.' },
+    { t: '“Das 9 mudanças de processo, 4 sem autorização, mesmo depois de uma ação corretiva.”', a: 'M', w: 'A falha se repete e a ação corretiva não funcionou: falha sistêmica.' },
+    { t: '“Um instrumento com etiqueta vencida há 5 dias, sem uso registrado depois do vencimento.”', a: 'm', w: 'Desvio pontual, sem efeito no produto.' },
+    { t: '“Produto fora da especificação chega ao cliente porque não há inspeção final em nenhum turno.”', a: 'M', w: 'Controle ausente, com efeito no cliente.' },
+    { t: '“O auditor prefere outro programa para controlar documentos.”', a: 'N', w: 'Preferência do auditor não é critério.' },
+    { t: '“A equipe do turno da noite não conhece a política da qualidade.”', a: 'm', w: 'Desvio de conscientização num turno, com o sistema funcionando.' },
+    { t: '“Seria útil cruzar os dados de reclamações com os de refugo.”', a: 'O', w: 'Sugestão de melhoria, sem requisito descumprido.' },
+    { t: '“A análise crítica pela direção nunca foi feita.”', a: 'M', w: 'Requisito inteiro não atendido.' },
+    { t: '“Num dos quatro postos, a instrução está na revisão anterior.”', a: 'm', w: 'Desvio pontual de controle de documentos.' }
+  ];
+  var quiz = document.getElementById('quiz');
+  var score = document.getElementById('qz-score');
+  var done = document.getElementById('qz-done');
+  document.getElementById('qz-total').textContent = ITEMS.length;
+  var hits = 0, answered = 0;
+
+  function render() {
+    hits = 0; answered = 0; score.textContent = 0; done.textContent = 0;
+    quiz.textContent = '';
+    ITEMS.forEach(function (item, idx) {
+      var row = document.createElement('div'); row.className = 'q';
+      var p = document.createElement('p'); p.textContent = (idx + 1) + '. ' + item.t;
+      var opts = document.createElement('div'); opts.className = 'opts';
+      opts.setAttribute('role', 'group'); opts.setAttribute('aria-label', 'Classificação do item ' + (idx + 1));
+      var why = document.createElement('p'); why.className = 'why'; why.hidden = true;
+      KEYS.forEach(function (k) {
+        var b = document.createElement('button');
+        b.type = 'button'; b.textContent = LABEL[k]; b.id = 'qz-' + idx + '-' + k;
+        b.setAttribute('data-k', k);
+        b.addEventListener('click', function () {
+          var ok = k === item.a;
+          Array.prototype.forEach.call(opts.children, function (o) {
+            o.disabled = true;
+            if (o.getAttribute('data-k') === item.a) { o.className = 'right'; }
+          });
+          if (!ok) { b.className = 'wrong'; }
+          var lead = document.createElement('b');
+          lead.textContent = (ok ? 'Certo. ' : 'A resposta é: ' + NAMES[item.a] + '. ');
+          why.textContent = ''; why.appendChild(lead); why.appendChild(document.createTextNode(item.w));
+          why.className = 'why ' + (ok ? 'ok' : 'no'); why.hidden = false;
+          answered++; if (ok) { hits++; }
+          score.textContent = hits; done.textContent = answered;
+        });
+        opts.appendChild(b);
+      });
+      row.appendChild(p); row.appendChild(opts); row.appendChild(why);
+      quiz.appendChild(row);
+    });
+  }
+  render();
+  document.getElementById('qz-reset').addEventListener('click', render);
+
+  /* ---------- Gráfico: leitura dos valores ---------- */
+  var fig = document.getElementById('fig-bars');
+  var tip = document.getElementById('bars-tip');
+  var svg = document.getElementById('bars');
+  var bars = document.querySelectorAll('#bars .bar');
+  function hide() {
+    tip.hidden = true;
+    Array.prototype.forEach.call(bars, function (b) { b.removeAttribute('opacity'); });
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('#bars .hit'), function (r) {
+    function show() {
+      var d = r.dataset;
+      Array.prototype.forEach.call(bars, function (b) {
+        b.setAttribute('opacity', b.getAttribute('data-k') === d.k ? '1' : '.4');
+      });
+      tip.textContent = '';
+      var strong = document.createElement('b'); strong.textContent = d.s + ' · ' + d.d;
+      tip.appendChild(strong);
+      tip.appendChild(document.createTextNode(d.n + ' · ' + d.p));
+      var box = fig.getBoundingClientRect();
+      var pt = svg.createSVGPoint(); pt.x = parseFloat(d.cx); pt.y = parseFloat(d.cy);
+      var scr = pt.matrixTransform(svg.getScreenCTM());
+      tip.style.left = Math.min(Math.max(scr.x - box.left, 180), box.width - 180) + 'px';
+      tip.style.top = (scr.y - box.top + 4) + 'px';
+      tip.hidden = false;
+    }
+    r.addEventListener('pointerenter', show);
+    r.addEventListener('focus', show);
+    r.addEventListener('pointerleave', hide);
+    r.addEventListener('blur', hide);
+  });
+})();
+</script>
+</body>
+</html>

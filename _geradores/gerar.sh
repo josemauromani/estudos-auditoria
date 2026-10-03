@@ -4,7 +4,7 @@
 #   _geradores/gerar.sh <estudo> [pasta de saída]
 #   _geradores/gerar.sh todos   [pasta de saída]
 #
-# Estudos: pdca swot gut w5 ish raci aud nc iso risk ind proc ac doc comp forn sat par pi obj prod lib ped proj esc cal rec con caso tec
+# Estudos: pdca swot gut w5 ish raci aud nc iso risk ind proc ac doc comp forn sat par pi obj prod lib ped proj esc cal rec con caso tec cert
 # Sem a pasta de saída, os arquivos são gravados na pasta do próprio estudo.
 set -euo pipefail
 
@@ -46,6 +46,7 @@ rec|Recursos|treinamento-recursos.html|Recursos-modelo.xlsx
 con|Conhecimento|treinamento-conhecimento.html|Conhecimento-modelo.xlsx
 caso|Caso-Integrado|treinamento-caso-integrado.html|Caso-Integrado-modelo.xlsx
 tec|Tecnica-Auditoria|treinamento-tecnica-auditoria.html|Tecnica-Auditoria-modelo.xlsx
+cert|Certificacao|treinamento-certificacao.html|Certificacao-modelo.xlsx
 "
 
 gerar() {
@@ -74,7 +75,7 @@ gerar() {
 
 if [ $# -lt 1 ]; then sed -n '2,9p' "$0" | sed 's/^# \{0,1\}//'; exit 1; fi
 if [ "$1" = "todos" ]; then
-  for n in pdca swot gut w5 ish raci aud nc iso risk ind proc ac doc comp forn sat par pi obj prod lib ped proj esc cal rec con caso tec; do gerar "$n" "${2:-}"; done
+  for n in pdca swot gut w5 ish raci aud nc iso risk ind proc ac doc comp forn sat par pi obj prod lib ped proj esc cal rec con caso tec cert; do gerar "$n" "${2:-}"; done
 else
   gerar "$1" "${2:-}"
 fi

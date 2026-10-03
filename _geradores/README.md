@@ -47,6 +47,7 @@ Os nomes curtos dos estudos são:
 | `con` | Conhecimento organizacional e pós-entrega | `Conhecimento/` |
 | `caso` | Caso integrado | `Caso-Integrado/` |
 | `tec` | Técnica de auditoria | `Tecnica-Auditoria/` |
+| `cert` | Processo de certificação | `Certificacao/` |
 
 ## Preparação
 
@@ -87,7 +88,7 @@ O estudo de SWOT não tem arquivo de dados: os exemplos estão dentro de `build_
 
 ## Testes
 
-A pasta `testes/` tem os roteiros usados para conferir as fórmulas de vinte e três planilhas. Cada par preenche uma cópia do modelo com dados de teste, inclusive erros propositais, e lê os resultados depois do recálculo.
+A pasta `testes/` tem os roteiros usados para conferir as fórmulas de vinte e quatro planilhas. Cada par preenche uma cópia do modelo com dados de teste, inclusive erros propositais, e lê os resultados depois do recálculo.
 
 ```bash
 PY=_geradores/.venv/bin/python

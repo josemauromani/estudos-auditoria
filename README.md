@@ -37,6 +37,7 @@ Para começar, abra o arquivo `index.html` no navegador.
 | Conhecimento organizacional e pós-entrega | `Conhecimento/` | `Conhecimento-modelo.xlsx` |
 | Caso integrado | `Caso-Integrado/` | `Caso-Integrado-modelo.xlsx` |
 | Técnica de auditoria | `Tecnica-Auditoria/` | `Tecnica-Auditoria-modelo.xlsx` |
+| Processo de certificação | `Certificacao/` | `Certificacao-modelo.xlsx` |
 | Avaliação de fornecedores | `Fornecedores/` | `Fornecedores-modelo.xlsx` |
 | Satisfação do cliente | `Satisfacao/` | `Satisfacao-modelo.xlsx` |
 

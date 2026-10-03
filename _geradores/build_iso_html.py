@@ -204,7 +204,7 @@ tb.append(f'            <tr class="tot"><td>Total</td><td class="c">{GERAL[0]}</
 tb += ['          </tbody>', '        </table>']
 
 # ---- figura 9: estudos da série × seções da norma
-ORDEM = ["esc", "pi", "swot", "obj", "ped", "proj", "proc", "sipoc", "raci", "riscos", "prod", "lib", "ind", "gut", "par", "ishikawa", "w5h2", "pdca", "auditoria", "tec", "nc", "ac", "doc", "comp", "cal", "rec", "con", "forn", "sat", "caso"]
+ORDEM = ["esc", "pi", "swot", "obj", "ped", "proj", "proc", "sipoc", "raci", "riscos", "prod", "lib", "ind", "gut", "par", "ishikawa", "w5h2", "pdca", "auditoria", "tec", "nc", "ac", "doc", "comp", "cal", "rec", "con", "forn", "sat", "caso", "cert"]
 CX = lambda j: 350 + j * 80  # noqa: E731
 HD = {"base": "hd-ink", "p": "hd-p", "d": "hd-d", "c": "hd-c", "a": "hd-a"}
 RY, R0 = 32, 70
@@ -233,7 +233,7 @@ mz.append("      </svg>")
 AJUDA = {
     "4.1": "Organiza as questões internas e externas em forças, fraquezas, oportunidades e ameaças.",
     "4.2": "O estudo de Partes interessadas lista as partes pertinentes e os requisitos de cada uma. A SWOT leva as expectativas para as oportunidades e as ameaças.",
-    "4.3": "Traz a declaração de escopo, a fronteira, os processos terceirizados e a aplicabilidade de cada requisito, com as duas perguntas da não aplicabilidade.",
+    "4.3": "Traz a declaração de escopo, a fronteira, os processos terceirizados e a aplicabilidade de cada requisito, com as duas perguntas da não aplicabilidade. O Processo de certificação mostra o escopo que o certificado repete.",
     "5.1.1": "Traz os dez compromissos da direção, com o que ela faz, o registro e a ação para o que é parcial.",
     "4.4": "O Mapa de processos mostra os processos e as ligações entre eles. O SIPOC e a tartaruga descrevem cada processo. O Caso integrado segue um problema de um processo a outro, pelos registros.",
     "5.3": "Mostra quem executa, quem responde, quem é consultado e quem é informado.",

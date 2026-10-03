@@ -53,6 +53,7 @@ ESTUDOS = {
     "con": ("Conhecimento organizacional e pós-entrega", "../Conhecimento/treinamento-conhecimento.html"),
     "caso": ("Caso integrado", "../Caso-Integrado/treinamento-caso-integrado.html"),
     "tec": ("Técnica de auditoria", "../Tecnica-Auditoria/treinamento-tecnica-auditoria.html"),
+    "cert": ("Processo de certificação", "../Certificacao/treinamento-certificacao.html"),
 }
 
 
@@ -79,7 +80,7 @@ REQ = _req([
     ("4.3", "Determinando o escopo do sistema de gestão da qualidade",
      "Definir os limites e a aplicabilidade do sistema, considerando o contexto, as partes interessadas e os produtos e serviços. Justificar todo requisito considerado não aplicável.",
      "O que está dentro do sistema, e por que algum requisito não se aplica?",
-     "Declaração de escopo, com produtos, serviços, locais e justificativas.", ("esc",)),
+     "Declaração de escopo, com produtos, serviços, locais e justificativas.", ("esc", "cert")),
     ("4.4", "Sistema de gestão da qualidade e seus processos",
      "Determinar os processos necessários, com entradas, saídas, sequência, interação, critérios, recursos, responsáveis, riscos e oportunidades. Avaliar os processos e melhorá-los.",
      "Quais são os processos, como se ligam e como se sabe que funcionam?",
