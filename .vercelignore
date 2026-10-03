@@ -1,3 +1,6 @@
 # só os estudos e o painel vão para a Vercel; os geradores ficam no repositório
 _geradores
 README.md
+.claude
+# o desenho e os planos das levas ficam no repositório, fora do site
+docs
