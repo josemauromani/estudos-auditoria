@@ -243,7 +243,7 @@ r += 1
 section("Premissas do modelo")
 for k, text in [
     ("Convenções", "Os prazos de 30 e 90 dias, os 6 meses entre as fases, os 3 meses da recertificação e os critérios de prontidão são uma convenção deste material. Vale o regulamento do seu organismo."),
-    ("Transição", f"A ISO 9001:2026 foi publicada em 16/09/2026. O fim da transição vem preenchido com {FIM_TRANSICAO.strftime('%d/%m/%Y')}, o prazo de três anos anunciado; confirme no comunicado da acreditação."),
+    ("Transição", f"A ISO 9001:2026 foi publicada em 16/09/2026. O fim da transição vem preenchido com {FIM_TRANSICAO.strftime('%d/%m/%Y')}, fixado pela Global ACI; desde 31/03/2028, certificados novos só pela edição de 2026. Confirme com o seu organismo."),
     ("Exemplos", "Os dados das abas de exemplo são ilustrativos, criados para este material."),
 ]:
     line(k, text)

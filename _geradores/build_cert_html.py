@@ -325,12 +325,12 @@ for k, (d, t) in enumerate(TRANSICAO):
     xt = x if anc == MID else (x - 6 if k == 0 else x + 6)
     tr.append(f'        <text class="b" x="{xt:.1f}" y="{y}" font-size="11"{anc}>{dt(d)}</text>')
     lines(tr, t, xt, y + 14, 34, fs=10.5, cls="mu", step=13, maxl=2, anchor=None if anc == "" else anc.split('"')[1])
-tr.append(f'        <text x="450" y="228" font-size="11.5"{MID}>Três anos de transição, da publicação ao fim da janela anunciado pelos organismos.</text>')
+tr.append(f'        <text x="450" y="228" font-size="11.5"{MID}>Três anos de transição, da publicação ao fim da janela, fixado pela Global ACI.</text>')
 tr.append("      </svg>")
 
 # ------------------------------------------------------------------ módulo 12: figura das normas
 ISOP = [("ISO/IEC 17021-1", "Requisitos para os organismos que auditam e certificam sistemas de gestão.", "o ciclo e as fases"),
-        ("Acreditação", "O acreditador avalia o organismo, e o fórum internacional dá valor ao certificado lá fora.", "a cadeia de confiança"),
+        ("Acreditação", "O acreditador avalia o organismo, e a Global ACI dá valor ao certificado lá fora.", "a cadeia de confiança"),
         ("ISO 9001 · 4.3", "O escopo do sistema, que o certificado repete, com a justificativa do que não se aplica.", "a prontidão"),
         ("Transição", "Cada nova edição abre um prazo para os certificados migrarem.", "o ciclo e a transição")]
 iso = ['      <svg viewBox="0 0 900 200" role="img" aria-label="As referências da certificação. ' + " ".join(f"{a}: {b} Neste estudo: {c}." for a, b, c in ISOP) + '">']

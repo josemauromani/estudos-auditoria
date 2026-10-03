@@ -5,16 +5,18 @@ A validade de três anos, a primeira manutenção em até 12 meses da decisão e
 prática dos organismos acreditados (ISO/IEC 17021-1). Os prazos de 30 dias para o plano e de 90 dias para fechar a não
 conformidade maior, os 6 meses entre as fases, os 3 meses de antecedência da recertificação, os 60 dias de aviso e os
 critérios de prontidão são uma convenção deste material: cada organismo define os seus no regulamento. A ISO 9001:2026
-foi publicada em 16/09/2026; o fim da transição (16/09/2029, três anos) é o anunciado pelos organismos e deve ser
-confirmado no comunicado da acreditação. Os exemplos continuam os dos outros estudos: a indústria, com o objetivo O4 de se
-certificar até dezembro de 2027, e a pizzaria, que avalia a prontidão no fim de 2027 e se certifica em 2028.
+foi publicada em 16/09/2026. As regras de transição são as do documento Global ACI-TECH-3-TR, publicado no mesmo dia
+pela Global ACI, que em 1º/01/2026 substituiu o IAF e o ILAC: fim da transição em 30/09/2029, e certificação inicial só
+pela edição de 2026 a partir de 31/03/2028. Os exemplos continuam os dos outros estudos: a indústria, com o objetivo O4
+de se certificar até dezembro de 2027, e a pizzaria, que avalia a prontidão no fim de 2027 e se certifica em 2028.
 """
 import calendar
 from datetime import date, timedelta
 
 D = date
 PUBLICACAO = D(2026, 9, 16)
-FIM_TRANSICAO = D(2029, 9, 16)
+FIM_TRANSICAO = D(2029, 9, 30)
+SO_2026 = D(2028, 3, 31)  # a partir desta data, certificação inicial só pela edição de 2026
 E2015, E2026 = "ISO 9001:2015", "ISO 9001:2026"
 EDICOES = [E2015, E2026]
 SIM, PARCIAL, NAO = "Sim", "Parcial", "Não"
@@ -61,7 +63,7 @@ ETAPAS = [
     ("Decisão e manutenção", "Constatações tratadas, decisão do organismo, certificado e auditorias anuais."),
 ]
 CADEIA = [
-    ("Fórum internacional de acreditação", "Reúne os acreditadores e garante que um certificado valha em outros países."),
+    ("Cooperação internacional", "A Global ACI, que em 2026 substituiu o IAF e o ILAC. Faz o certificado valer em outros países."),
     ("Organismo de acreditação", "No Brasil, a Cgcre do Inmetro. Avalia os organismos de certificação."),
     ("Organismo de certificação", "Audita e certifica, seguindo a ISO/IEC 17021-1."),
     ("Organização certificada", "Mantém o sistema e recebe as auditorias de manutenção."),
@@ -287,7 +289,7 @@ MAIOR_FIO = [
 TRANSICAO = [
     (PUBLICACAO, "Publicação da ISO 9001:2026"),
     (D(2027, 12, 17), "Indústria certificada pela edição de 2015"),
-    (D(2028, 4, 25), "Pizzaria certificada pela edição de 2026"),
+    (SO_2026, "Certificados novos só pela edição de 2026"),
     (D(2028, 12, 17), "1ª manutenção da indústria: boa data para a transição"),
     (FIM_TRANSICAO, "Fim da transição: certificados de 2015 deixam de valer"),
 ]
