@@ -49,6 +49,7 @@ Os nomes curtos dos estudos são:
 | `tec` | Técnica de auditoria | `Tecnica-Auditoria/` |
 | `cert` | Processo de certificação | `Certificacao/` |
 | `ed26` | ISO 9001:2026: o que muda | `ISO-9001-2026/` |
+| `cep` | Histograma e CEP | `Histograma-CEP/` |
 
 ## Preparação
 
@@ -89,7 +90,7 @@ O estudo de SWOT não tem arquivo de dados: os exemplos estão dentro de `build_
 
 ## Testes
 
-A pasta `testes/` tem os roteiros usados para conferir as fórmulas de vinte e cinco planilhas. Cada par preenche uma cópia do modelo com dados de teste, inclusive erros propositais, e lê os resultados depois do recálculo.
+A pasta `testes/` tem os roteiros usados para conferir as fórmulas de vinte e seis planilhas. Cada par preenche uma cópia do modelo com dados de teste, inclusive erros propositais, e lê os resultados depois do recálculo.
 
 ```bash
 PY=_geradores/.venv/bin/python

@@ -204,7 +204,7 @@ tb.append(f'            <tr class="tot"><td>Total</td><td class="c">{GERAL[0]}</
 tb += ['          </tbody>', '        </table>']
 
 # ---- figura 9: estudos da série × seções da norma
-ORDEM = ["esc", "pi", "swot", "obj", "ped", "proj", "proc", "sipoc", "raci", "riscos", "prod", "lib", "ind", "gut", "par", "ishikawa", "w5h2", "pdca", "auditoria", "tec", "nc", "ac", "doc", "comp", "cal", "rec", "con", "forn", "sat", "caso", "cert", "ed26"]
+ORDEM = ["esc", "pi", "swot", "obj", "ped", "proj", "proc", "sipoc", "raci", "riscos", "prod", "lib", "ind", "gut", "par", "cep", "ishikawa", "w5h2", "pdca", "auditoria", "tec", "nc", "ac", "doc", "comp", "cal", "rec", "con", "forn", "sat", "caso", "cert", "ed26"]
 CX = lambda j: 350 + j * 80  # noqa: E731
 HD = {"base": "hd-ink", "p": "hd-p", "d": "hd-d", "c": "hd-c", "a": "hd-a"}
 RY, R0 = 32, 70
@@ -261,16 +261,16 @@ AJUDA = {
     "8.2.2": "Traz a oferta: a especificação, os requisitos legais, o que não se garante e a capacidade confirmada.",
     "8.2.3": "Traz as sete perguntas da análise antes do aceite, a decisão com o cliente e o registro.",
     "8.2.4": "Traz o registro das mudanças nos pedidos aceitos, com a análise, os documentos e quem foi informado.",
-    "8.5.1": "Traz o plano de controle: o que conferir em cada etapa, com critério, medição, registro e reação.",
+    "8.5.1": "Traz o plano de controle: o que conferir em cada etapa, com critério, medição, registro e reação. O CEP diz quando o resultado medido pede reação.",
     "8.5.2": "Mostra a identificação e a situação do produto em cada etapa, e uma busca de rastreabilidade.",
     "8.5.3": "Lista o que pertence a clientes e a fornecedores, com o cuidado e a comunicação das ocorrências.",
     "8.5.4": "Registra como o produto é protegido em cada etapa, até a entrega.",
     "8.5.6": "Traz o registro de mudanças, com a análise, a autorização e as ações decorrentes.",
     "8.6": "Traz o registro de liberação, com as verificações, a decisão e quem liberou, e a liberação com verificação pendente.",
     "8.7": "O estudo de Liberação traz a segregação, as seis disposições, a concessão e o registro. O de Não conformidade separa a correção da ação sobre a causa.",
-    "9.1.1": "O estudo de Indicadores define o que medir, como e quando. O PDCA compara o resultado com a meta. O Caso integrado traz o calendário anual das atividades de monitoramento, com mês e responsável.",
+    "9.1.1": "O estudo de Indicadores define o que medir, como e quando. O PDCA compara o resultado com a meta. O Caso integrado traz o calendário anual das atividades de monitoramento, com mês e responsável. O CEP define o subgrupo, a frequência e os limites do monitoramento de uma característica.",
     "9.1.2": "O estudo de Satisfação do cliente traz a pesquisa, o registro de reclamações e a devolutiva. O de Indicadores põe o resultado no painel.",
-    "9.1.3": "O painel mostra a situação e a tendência. O Pareto mostra onde o problema se concentra. A GUT prioriza, e o Ishikawa procura as causas.",
+    "9.1.3": "O painel mostra a situação e a tendência. O Pareto mostra onde o problema se concentra. A GUT prioriza, e o Ishikawa procura as causas. O CEP separa a variação comum da causa especial e mede a capacidade.",
     "9.2": "O estudo de Auditoria interna entrega o programa, o plano, a lista de verificação e as constatações. O de Técnica de auditoria traz a entrevista, a amostragem, a força da evidência e a avaliação dos auditores.",
     "9.3": "Traz a pauta das doze entradas, o registro das decisões e o acompanhamento das ações.",
     "10.1": "Conduz a melhoria, do problema até a padronização.",

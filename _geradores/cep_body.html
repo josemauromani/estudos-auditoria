@@ -1,0 +1,631 @@
+<body>
+<div class="page" lang="pt-BR">
+
+<header class="mast">
+  <div class="tiles" aria-hidden="true"><span class="p">H</span><span class="d">C</span><span class="c">E</span></div>
+  <h1>Histograma e CEP na prática</h1>
+  <p class="lead">Um guia de estudo para ler a variação de um processo: o histograma mostra se ele cabe na especificação, e o gráfico de controle mostra se ele está estável ao longo do tempo. Com os dois, a equipe separa o que é variação comum do que pede ação, e sabe quando o processo precisa mudar.</p>
+  <ul class="meta">
+    <li>Treinamento autoinstrucional</li>
+    <li>15 módulos</li>
+    <li>Leitura de cerca de 55 minutos</li>
+    <li>3 exemplos resolvidos e 2 exercícios</li>
+  </ul>
+</header>
+
+<div class="layout">
+
+<nav class="toc" aria-label="Sumário">
+  <h2>Sumário</h2>
+  <ol>
+    <li><a href="#o-que-e">O que é</a></li>
+    <li><a href="#quando">Quando usar</a></li>
+    <li><a href="#como">Como fazer</a></li>
+    <li><a href="#histograma">O histograma</a></li>
+    <li><a href="#grafico">O gráfico de controle</a></li>
+    <li><a href="#sinais">Os sinais</a></li>
+    <li><a href="#capacidade">Capacidade: Cp e Cpk</a></li>
+    <li><a href="#exemplos">Exemplos resolvidos</a></li>
+    <li><a href="#leitura">Ler o gráfico</a></li>
+    <li><a href="#erros">Erros comuns</a></li>
+    <li><a href="#serie">O CEP e os estudos da série</a></li>
+    <li><a href="#iso">Nas normas</a></li>
+    <li><a href="#reuniao">A leitura no turno</a></li>
+    <li><a href="#pratique">Pratique</a></li>
+    <li><a href="#planilha">A planilha de apoio</a></li>
+    <li><a href="#glossario">Glossário</a></li>
+  </ol>
+</nav>
+
+<main>
+
+<!-- ============================ MÓDULO 1 ============================ -->
+<section id="o-que-e">
+  <p class="eyebrow">Módulo 1</p>
+  <h2>O que é</h2>
+  <p>Todo processo varia: duas bolas de massa nunca pesam igual, dois pontos de um filme nunca têm a mesma espessura. O controle estatístico de processo, o CEP, é o jeito de ler essa variação para decidir quando agir e quando deixar o processo em paz. Ele usa duas ferramentas, que respondem a duas perguntas diferentes.</p>
+  <p>As letras do título resumem o estudo: <span class="k p">H</span> o histograma, que mostra a forma e a largura da variação, <span class="k d">C</span> o gráfico de controle, que mostra a variação no tempo e separa a causa comum da especial, e <span class="k c">E</span> a especificação, que é do cliente e diz se o processo é capaz.</p>
+
+  <figure>
+    <div class="scroll">
+<!--DUAS-->
+    </div>
+    <figcaption><b>Figura 1.</b> As duas ferramentas com os mesmos dados: o peso das bolas de massa da pizzaria.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Ferramenta</th><th style="width:38%">Pergunta</th><th>O que olhar</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Histograma</strong></td><td>O processo cabe na especificação?</td><td>O centro, a largura e a forma, comparados com os limites do cliente.</td></tr>
+        <tr><td><strong>Gráfico de controle</strong></td><td>O processo está estável, ou algo mudou?</td><td>Os pontos ao longo do tempo, comparados com os limites calculados dos próprios dados.</td></tr>
+        <tr><td><strong>Capacidade</strong></td><td>Estável, ele vai atender o cliente?</td><td>Cp e Cpk: quantas vezes a variação cabe na tolerância.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note">
+    <h4>Causa comum e causa especial</h4>
+    <p>A <strong>causa comum</strong> é a variação de sempre, feita de muitas pequenas diferenças: a mão do pizzaiolo, a umidade da farinha, a folga da balança. Ela só diminui quando o processo muda. A <strong>causa especial</strong> é uma mudança com nome: uma resistência que queimou, uma rosca que se desgastou, um lote de resina diferente. Ela aparece como sinal no gráfico e pede que alguém vá ao posto descobrir o que houve. Tratar uma como se fosse a outra é o erro mais caro do CEP.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 2 ============================ -->
+<section id="quando">
+  <p class="eyebrow">Módulo 2</p>
+  <h2>Quando usar</h2>
+  <div class="pair">
+    <div class="box">
+      <h4>Use quando</h4>
+      <ul>
+        <li>A característica é medida em números, com instrumento adequado.</li>
+        <li>O processo repete a mesma coisa muitas vezes: lotes, bobinas, pedidos.</li>
+        <li>A característica pesa para o cliente e já gerou reclamação ou refugo.</li>
+        <li>Você precisa decidir se ajusta o processo ou se o deixa como está.</li>
+        <li>O cliente pede capacidade comprovada.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h4>Não use quando</h4>
+      <ul>
+        <li>O instrumento não tem resolução para ver a variação.</li>
+        <li>Cada produto é único, sem repetição.</li>
+        <li>O resultado é só "conforme ou não": aí cabem outros gráficos, como o de proporção.</li>
+        <li>Ninguém vai ler o gráfico a tempo de agir.</li>
+        <li>O processo está mudando de propósito toda semana.</li>
+      </ul>
+    </div>
+  </div>
+  <p>O CEP começa pelo plano de controle do estudo de <a href="../Producao/treinamento-producao.html">Controle de produção</a>: das características que ele lista, escolha as medidas em número e com mais reclamação. E começa pelo instrumento: um gráfico feito com um micrômetro descalibrado mostra o micrômetro, não o processo, como o estudo de <a href="../Calibracao/treinamento-calibracao.html">Calibração</a> mostrou.</p>
+</section>
+
+<!-- ============================ MÓDULO 3 ============================ -->
+<section id="como">
+  <p class="eyebrow">Módulo 3</p>
+  <h2>Como fazer</h2>
+
+  <figure>
+    <div class="scroll">
+<!--FLUXO-->
+    </div>
+    <figcaption><b>Figura 2.</b> As cinco etapas do CEP. Uma mudança de propósito no processo pede uma base nova.</figcaption>
+  </figure>
+
+  <h3>Passo a passo</h3>
+  <ol class="steps">
+    <li><h4>Escolha a característica</h4><p>Uma de cada vez, com critério escrito e instrumento de resolução de no máximo um décimo da tolerância.</p></li>
+    <li><h4>Defina o subgrupo</h4><p>Cinco medições feitas juntas, nas mesmas condições: cinco bolas do mesmo lote, cinco pontos da mesma bobina. A variação de dentro do subgrupo é a referência.</p></li>
+    <li><h4>Defina a frequência</h4><p>Um subgrupo por lote, por turno ou por hora: o bastante para ver uma mudança antes que ela vire refugo.</p></li>
+    <li><h4>Colete a base</h4><p>De 20 a 25 subgrupos, anotando tudo o que acontecer no processo. Exclua da base os subgrupos com causa conhecida, com o motivo escrito.</p></li>
+    <li><h4>Calcule os limites</h4><p>A linha central e os limites vêm dos dados da base, com as constantes da tabela do módulo 5.</p></li>
+    <li><h4>Verifique a capacidade</h4><p>Com a base em controle, compare a variação com a especificação: Cp e Cpk.</p></li>
+    <li><h4>Acompanhe</h4><p>Cada subgrupo novo entra no gráfico, contra os limites fixos, e é lido na hora com as regras do módulo 6.</p></li>
+    <li><h4>Reaja e registre</h4><p>Sinal pede causa e ação, anotadas no próprio gráfico. Mudança de propósito no processo pede uma base nova.</p></li>
+  </ol>
+</section>
+
+<!-- ============================ MÓDULO 4 ============================ -->
+<section id="histograma">
+  <p class="eyebrow">Módulo 4</p>
+  <h2>O histograma</h2>
+  <p>O histograma conta quantas medições caem em cada faixa de valores, as classes. Com uns cem valores e de 8 a 12 classes de mesma largura, ele mostra três coisas que uma média esconde: onde está o centro, quanto o processo se espalha e que forma a variação tem.</p>
+
+  <figure>
+    <div class="scroll">
+<!--FORMAS-->
+    </div>
+    <figcaption><b>Figura 3.</b> Seis formas de histograma, com os limites da especificação, e o que cada uma sugere investigar.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:26%">Passo</th><th>Como fazer</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Juntar os dados</strong></td><td>Pelo menos 50 valores individuais, de preferência uns cem, do mesmo processo e período.</td></tr>
+        <tr><td><strong>Definir as classes</strong></td><td>Neste material: largura de um oitavo da tolerância, começando dois oitavos abaixo do limite inferior. São 12 classes que cobrem a especificação com folga dos dois lados.</td></tr>
+        <tr><td><strong>Contar</strong></td><td>Cada valor entra na classe em que é maior ou igual ao início e menor que o fim.</td></tr>
+        <tr><td><strong>Desenhar os limites</strong></td><td>As linhas do limite inferior e do superior da especificação, no mesmo eixo.</td></tr>
+        <tr><td><strong>Ler</strong></td><td>O centro está no alvo? A largura cabe com folga? A forma lembra alguma da figura 3?</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>O histograma não tem tempo: ele junta o começo e o fim do período. Se o processo mudou no meio, o histograma mostra uma forma estranha, mas não diz quando. Para isso serve o gráfico de controle.</p>
+</section>
+
+<!-- ============================ MÓDULO 5 ============================ -->
+<section id="grafico">
+  <p class="eyebrow">Módulo 5</p>
+  <h2>O gráfico de controle</h2>
+  <p>O gráfico mais usado para medições é o de média e amplitude, o X̄-R. Para cada subgrupo, dois pontos: a média das cinco medições, num gráfico, e a amplitude, a maior menos a menor, no outro. A média mostra se o processo saiu do lugar; a amplitude mostra se ele passou a variar mais.</p>
+
+  <figure>
+    <div class="scroll">
+<!--ANATOMIA-->
+    </div>
+    <figcaption><b>Figura 4.</b> As partes do gráfico de média e amplitude, com a base da espessura do filme na indústria. O ponto vazio é a bobina excluída da base.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Grandeza</th><th style="width:34%">Como calcular, com subgrupos de cinco</th><th>Pizzaria</th><th>Indústria</th></tr></thead>
+      <tbody>
+<!--CONST-->
+      </tbody>
+    </table>
+  </div>
+  <p>As constantes 0,577, 2,114 e 2,326 são as de Shewhart para subgrupos de cinco, tabeladas nas normas e nos livros de estatística. Com outro tamanho de subgrupo, as constantes mudam. Os limites ficam a três desvios da média das médias: com o processo estável, quase nenhum ponto passa deles por acaso.</p>
+  <div class="note">
+    <h4>Os limites ficam fixos</h4>
+    <p>Depois de calculados com a base, os limites não se movem a cada ponto novo. Recalcular com os pontos de acompanhamento esconde exatamente a mudança que o gráfico deveria mostrar. Só se refaz a base depois de uma mudança de propósito no processo, como uma máquina reformada ou um método novo.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 6 ============================ -->
+<section id="sinais">
+  <p class="eyebrow">Módulo 6</p>
+  <h2>Os sinais</h2>
+  <p>Um ponto dentro dos limites não garante que nada mudou. Algumas sequências são improváveis demais para serem acaso, e também contam como sinal. Este material usa quatro regras, próximas das que as normas de gráfico de controle trazem.</p>
+
+  <figure>
+    <div class="scroll">
+<!--REGRAS-->
+    </div>
+    <figcaption><b>Figura 5.</b> As quatro regras de sinal. Os pontos vermelhos são os que fecham ou formam o sinal.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Sinal</th><th style="width:38%">Causas típicas</th><th>Primeira pergunta no posto</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Média fora dos limites</strong></td><td>Ajuste errado, matéria-prima diferente, falha de equipamento.</td><td>"O que mudou neste subgrupo?"</td></tr>
+        <tr><td><strong>Amplitude fora do limite</strong></td><td>Um ponto estranho no subgrupo, um instrumento com folga, mistura de origens.</td><td>"As cinco medições vieram do mesmo lugar?"</td></tr>
+        <tr><td><strong>7 do mesmo lado</strong></td><td>Troca de lote, de operador ou de turno; ajuste que mudou o centro.</td><td>"O que começou no primeiro ponto da sequência?"</td></tr>
+        <tr><td><strong>6 subindo ou descendo</strong></td><td>Desgaste: ferramenta, rosca, filtro; aquecimento ao longo do turno.</td><td>"O que está se gastando ou esquentando?"</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Sinal não é defeito: é aviso. O produto pode estar dentro da especificação e o processo ter mudado. Por isso o CEP chega antes do refugo, como mostra o exemplo 2.</p>
+</section>
+
+<!-- ============================ MÓDULO 7 ============================ -->
+<section id="capacidade">
+  <p class="eyebrow">Módulo 7</p>
+  <h2>Capacidade: Cp e Cpk</h2>
+  <p>Estável não quer dizer bom. Um processo em controle pode variar mais do que o cliente aceita. A capacidade compara a variação do processo, seis desvios, com a tolerância. O Cp olha só a largura; o Cpk olha também o centro, pelo lado mais perto do limite.</p>
+
+  <figure>
+    <div class="scroll">
+<!--CAPAC-->
+    </div>
+    <figcaption><b>Figura 6.</b> Três processos diante da mesma especificação.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:22%">Índice</th><th style="width:38%">Conta</th><th>Leitura neste material</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Cp</strong></td><td>(LSE − LIE) ÷ (6 × σ)</td><td>Quantas vezes a variação cabe na tolerância, se estivesse centrada.</td></tr>
+        <tr><td><strong>Cpk</strong></td><td>O menor entre (LSE − média) e (média − LIE), ÷ (3 × σ)</td><td>1,33 ou mais: capaz. De 1,00 a 1,33: no limite. Abaixo de 1,00: não capaz.</td></tr>
+        <tr><td><strong>Cp maior que Cpk</strong></td><td>A diferença entre os dois</td><td>O processo está fora do centro: centralizar é a ação mais barata.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <figure>
+    <div class="scroll">
+<!--LIMESP-->
+    </div>
+    <figcaption><b>Figura 7.</b> Limite de controle e limite da especificação, na pizzaria. A curva estreita é a das médias; a larga, a das bolas.</figcaption>
+  </figure>
+  <div class="note">
+    <h4>Só calcule a capacidade com o processo em controle</h4>
+    <p>Com causa especial na base, o desvio estimado mistura duas coisas, e o Cpk não prevê nada. Primeiro, trate os sinais; depois, calcule. E nunca desenhe os limites da especificação no gráfico das médias: eles valem para cada peça, e as médias variam menos que as peças. Um gráfico de médias dentro da especificação pode esconder peças fora, como no exemplo 3.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 8 ============================ -->
+<section id="exemplos">
+  <p class="eyebrow">Módulo 8</p>
+  <h2>Exemplos resolvidos</h2>
+  <p>Dois processos da série: o peso da bola de massa da pizzaria e a espessura do filme da extrusora 3 da indústria. Os dados são ilustrativos e foram criados para este treinamento; os dois exemplos também estão preenchidos na planilha de apoio.</p>
+
+  <h3>Exemplo 1. O peso da bola de massa, na pizzaria</h3>
+<!--EX1HEAD-->
+  <p>Depois do registro de produto não conforme 2027-17, de 18/03, com bolas de 365 g em média, o pizzaiolo líder passou a pesar e anotar as cinco bolas de cada lote, e não só a média, por 25 dias.</p>
+  <figure>
+    <div class="scroll">
+<!--EX1FIG-->
+    </div>
+    <figcaption><b>Figura 8.</b> Média e amplitude dos 25 lotes de massa, de 22/03 a 15/04/2027.</figcaption>
+  </figure>
+<!--EX1TAB-->
+  <p><strong>O que observar.</strong> O processo está em controle: nenhuma média passa dos limites de {{LIC1}} a {{LSC1}} g, nenhuma amplitude passa do limite e não há sequência. Não há causa especial a procurar. Mas o desvio estimado é de {{SIG1}} g, e a tolerância de 40 g não comporta seis desvios: Cp {{CP1}} e Cpk {{CPK1}}, processo {{STAT1}}. Ajustar a massa a cada lote não resolve, porque a variação é comum: vem do jeito de porcionar, a olho, com a balança só para conferir. A ação é no processo: pesar cada bola ao porcionar, com a sobra voltando à masseira, e escrever o critério por bola no plano de controle.</p>
+
+  <h3>Exemplo 2. A espessura do filme, na indústria</h3>
+<!--EX2HEAD-->
+  <p>Depois do micrômetro reprovado em junho, a Qualidade começou o gráfico em 04/07, com a primeira bobina de cada turno. A base são as 14 primeiras bobinas, menos a de 06/07, em que a resistência da zona 3 queimou.</p>
+<!--EX2TAB-->
+  <figure>
+    <div class="scroll">
+<!--EX2FIG-->
+    </div>
+    <figcaption><b>Figura 9.</b> Histogramas da espessura na base e no acompanhamento. A largura dobra, e o centro desce.</figcaption>
+  </figure>
+  <p><strong>O que observar.</strong> Com a máquina sã, a extrusora 3 é muito capaz: Cp {{CP2}} e Cpk {{CPK2}} na base, com a espessura entre {{LIC2}} e {{LSC2}} µm em média. A base tem só 13 subgrupos, menos que os 20 recomendados: os limites são provisórios. No acompanhamento, a média começa a cair, e a amplitude a crescer, e o primeiro sinal aparece em {{PRIM}}: média abaixo do limite inferior. Seguem mais sinais em todas as bobinas até 16/07. Era a rosca se desgastando. A extrusora parou em 18/07 com 6 bobinas fora (RNC 2027-30), no estudo de <a href="../Recursos/treinamento-recursos.html">Recursos</a>. O gráfico tinha avisado cinco dias antes, mas foi lido só na reunião semanal. A lição não é sobre estatística: o gráfico precisa ser lido no turno, por quem pode parar a máquina.</p>
+
+  <h3>Exemplo 3. A média que aprovava bolas fora</h3>
+  <figure>
+    <div class="scroll">
+<!--EX1HIST-->
+    </div>
+    <figcaption><b>Figura 10.</b> Histograma das 125 bolas da pizzaria, com a especificação. As barras vermelhas estão fora.</figcaption>
+  </figure>
+  <p><strong>O que observar.</strong> O plano de controle da pizzaria aprovava o lote pela média de cinco bolas, entre 380 e 420 g. Todos os 25 lotes passariam. Mas {{FORA1}} bolas, uma a uma, ficaram fora, e cada bola vira uma pizza. O histograma mostra o que a média escondia: a largura do processo encosta nos dois limites. Por isso o critério passou a ser por bola, e a capacidade virou um objetivo da loja: Cpk de 1,33 até o fim de junho.</p>
+</section>
+
+<!-- ============================ MÓDULO 9 ============================ -->
+<section id="leitura">
+  <p class="eyebrow">Módulo 9</p>
+  <h2>Ler o gráfico</h2>
+  <p>Ler o gráfico é olhar, a cada ponto novo, para três coisas: o ponto passou do limite? A sequência forma algum padrão? A amplitude mudou? O gráfico abaixo é o da indústria. Percorra os pontos e veja onde a história muda.</p>
+
+  <figure id="fig-bars">
+    <div class="scroll">
+<!--CHART-->
+    </div>
+    <div class="tip" id="bars-tip" hidden></div>
+    <figcaption><b>Figura 11.</b> Médias de espessura das 25 bobinas. Passe o mouse sobre os pontos para ver os valores. Pontos vermelhos têm sinal; o vazio foi excluído da base.</figcaption>
+    <details class="data">
+      <summary>Ver os dados em tabela</summary>
+      <div class="tbl">
+<!--CHARTTABLE-->
+      </div>
+    </details>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:26%">O que você vê</th><th style="width:36%">O que significa</th><th>O que fazer</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Pontos dentro, sem padrão</strong></td><td>Variação comum. O processo está fazendo o que sabe fazer.</td><td>Nada no processo. Se a capacidade for baixa, mudar o processo, com a direção.</td></tr>
+        <tr><td><strong>Um sinal</strong></td><td>Causa especial provável.</td><td>Ir ao posto, achar a causa, agir, e anotar no gráfico.</td></tr>
+        <tr><td><strong>Sinais seguidos</strong></td><td>A causa continua lá.</td><td>Parar e corrigir antes de produzir mais.</td></tr>
+        <tr><td><strong>Ponto excluído</strong></td><td>Causa conhecida, tratada.</td><td>Manter no gráfico, fora do cálculo, com o motivo.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Na indústria, a base fica em torno de {{LC2}} µm, perto do alvo de 40. A bobina de 06/07, com a resistência queimada, sobe e é excluída. Depois de 11/07, os pontos descem: em {{PRIM}}, o primeiro passa do limite inferior, e {{NSIN2}} bobinas do acompanhamento têm sinal. A especificação, de 38 µm, ainda não tinha sido atingida pela média, mas dois pontos de uma bobina já estavam abaixo dela.</p>
+</section>
+
+<!-- ============================ MÓDULO 10 ============================ -->
+<section id="erros">
+  <p class="eyebrow">Módulo 10</p>
+  <h2>Erros comuns</h2>
+  <div class="errs">
+    <div><h4>Especificação no lugar do limite</h4><p>As linhas do gráfico são 38 e 42 µm, digitadas à mão.</p><p class="fix"><b>Correção:</b> limites calculados dos dados; a especificação fica no histograma.</p></div>
+    <div><h4>Ajustar a cada ponto</h4><p>O operador mexe na máquina sempre que a média sai do alvo, mesmo dentro dos limites.</p><p class="fix"><b>Correção:</b> sem sinal, não se ajusta. Ajustar a variação comum aumenta a variação.</p></div>
+    <div><h4>Recalcular sempre</h4><p>Os limites são refeitos toda semana, com os pontos novos.</p><p class="fix"><b>Correção:</b> limites fixos; base nova só depois de mudança de propósito.</p></div>
+    <div><h4>Gráfico na parede, sem leitura</h4><p>Os pontos são lançados, e ninguém olha até a reunião.</p><p class="fix"><b>Correção:</b> leitura no turno, por quem pode agir.</p></div>
+    <div><h4>Subgrupo misturado</h4><p>As cinco medições vêm de duas máquinas ou de dois turnos.</p><p class="fix"><b>Correção:</b> subgrupo nas mesmas condições; uma origem por gráfico.</p></div>
+    <div><h4>Instrumento sem resolução</h4><p>A balança de 10 g mede bolas com tolerância de 40 g.</p><p class="fix"><b>Correção:</b> resolução de no máximo um décimo da tolerância.</p></div>
+    <div><h4>Capacidade com sinal</h4><p>O Cpk é calculado com a base cheia de pontos fora.</p><p class="fix"><b>Correção:</b> tratar os sinais primeiro, depois calcular.</p></div>
+    <div><h4>Medir de novo até passar</h4><p>Valores fora são medidos de novo, e só o segundo é anotado.</p><p class="fix"><b>Correção:</b> anotar o que foi medido. O histograma cortado denuncia o hábito.</p></div>
+    <div><h4>Aprovar pela média</h4><p>O lote passa porque a média de cinco está dentro.</p><p class="fix"><b>Correção:</b> critério para cada unidade que chega ao cliente.</p></div>
+    <div><h4>Sinal sem anotação</h4><p>O ponto fora fica no gráfico sem causa nem ação.</p><p class="fix"><b>Correção:</b> anotar a causa e a ação ao lado do ponto.</p></div>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 11 ============================ -->
+<section id="serie">
+  <p class="eyebrow">Módulo 11</p>
+  <h2>O CEP e os estudos da série</h2>
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:30%">Estudo</th><th>Como se liga ao CEP</th></tr></thead>
+      <tbody>
+        <tr><td><a href="../Producao/treinamento-producao.html"><strong>Controle de produção</strong></a></td><td>O plano de controle diz o que medir; o CEP diz quando o resultado pede reação.</td></tr>
+        <tr><td><a href="../Calibracao/treinamento-calibracao.html"><strong>Calibração</strong></a></td><td>Sem instrumento adequado e confiável, o gráfico mostra o instrumento.</td></tr>
+        <tr><td><a href="../Liberacao/treinamento-liberacao.html"><strong>Liberação e produto não conforme</strong></a></td><td>O CEP previne; a liberação ainda decide sobre cada lote.</td></tr>
+        <tr><td><a href="../Indicadores/treinamento-indicadores.html"><strong>Indicadores</strong></a></td><td>O indicador mensal mostra o resultado; o gráfico de controle mostra o processo a cada subgrupo.</td></tr>
+        <tr><td><a href="../Pareto/treinamento-pareto.html"><strong>Pareto</strong></a> e <a href="../Ishikawa/treinamento-ishikawa.html"><strong>Ishikawa</strong></a></td><td>O Pareto escolhe a característica; o Ishikawa procura a causa de um sinal.</td></tr>
+        <tr><td><a href="../Nao-Conformidade/treinamento-nao-conformidade.html"><strong>Não conformidade e ação corretiva</strong></a></td><td>Sinal que se repete, ou capacidade baixa, vira ação corretiva.</td></tr>
+        <tr><td><a href="../Recursos/treinamento-recursos.html"><strong>Recursos</strong></a></td><td>A tendência no gráfico costuma ser desgaste: o CEP avisa a manutenção.</td></tr>
+        <tr><td><a href="../PDCA/treinamento-pdca.html"><strong>PDCA</strong></a></td><td>O gráfico é o "verificar" do processo: compara o antes e o depois de uma melhoria.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 12 ============================ -->
+<section id="iso">
+  <p class="eyebrow">Módulo 12</p>
+  <h2>Nas normas</h2>
+  <p>A ISO 9001 não exige o CEP: exige que a organização decida o que medir, como analisar e como saber se os processos funcionam. As técnicas estatísticas são um dos jeitos de cumprir isso, e as normas próprias delas trazem os detalhes.</p>
+
+  <figure>
+    <div class="scroll">
+<!--ISOFIG-->
+    </div>
+    <figcaption><b>Figura 12.</b> As normas ligadas ao controle estatístico. O texto da figura é um resumo, com palavras próprias.</figcaption>
+  </figure>
+
+  <div class="pair">
+    <div class="box">
+      <h4>Na ISO 9001</h4>
+      <ul>
+        <li>9.1.1: o que monitorar e medir, com que métodos, e quando analisar.</li>
+        <li>9.1.3: analisar os dados, inclusive o desempenho dos processos.</li>
+        <li>8.5.1: monitorar nas etapas certas, com critérios de aceitação.</li>
+        <li>7.1.5: recursos de medição adequados e confiáveis.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h4>Nas normas de apoio</h4>
+      <ul>
+        <li>ISO 7870-2: gráficos de controle de Shewhart.</li>
+        <li>ISO 22514: capacidade e desempenho de processos.</li>
+        <li>ISO 10017: orientação sobre técnicas estatísticas para a ISO 9001.</li>
+        <li>Clientes de setores como o automotivo pedem capacidade nos seus próprios manuais.</li>
+      </ul>
+    </div>
+  </div>
+  <p>Na edição de 2026 da ISO 9001, o monitoramento e a análise continuam como em 2015, como mostra o estudo da <a href="../ISO-9001-2026/treinamento-iso-9001-2026.html">ISO 9001:2026</a>.</p>
+</section>
+
+<!-- ============================ MÓDULO 13 ============================ -->
+<section id="reuniao">
+  <p class="eyebrow">Módulo 13</p>
+  <h2>A leitura no turno</h2>
+  <p>O gráfico só serve se for lido a tempo. Uma vez por semana, a reunião do processo reserva 30 minutos para os gráficos de controle; no dia a dia, cada ponto é lido no turno por quem mede.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 136" role="img" aria-label="Distribuição da leitura semanal de 30 minutos: 5 minutos para os pontos novos, 10 minutos para os sinais e as causas, 10 minutos para a capacidade e as ações no processo, e 5 minutos para as decisões.">
+        <g font-size="11.5" text-anchor="middle">
+          <rect class="bx" x="60" y="24" width="130" height="56"/><text x="125" y="49">Pontos novos:</text><text x="125" y="64">lançados?</text>
+          <rect class="hd-ink gap2" x="190" y="24" width="260" height="56"/><text class="t-ground b" x="320" y="49">Sinais da semana:</text><text class="t-ground b" x="320" y="64">causa achada e ação anotada</text>
+          <rect class="hd-d gap2" x="450" y="24" width="260" height="56"/><text class="on b" x="580" y="49">Capacidade:</text><text class="on b" x="580" y="64">o que muda no processo</text>
+          <rect class="bx" x="710" y="24" width="130" height="56"/><text x="775" y="56">Decisões</text>
+        </g>
+        <g class="ln-mu" stroke-width="1">
+          <line x1="60" y1="82" x2="60" y2="94"/><line x1="190" y1="82" x2="190" y2="94"/><line x1="450" y1="82" x2="450" y2="94"/>
+          <line x1="710" y1="82" x2="710" y2="94"/><line x1="840" y1="82" x2="840" y2="94"/>
+        </g>
+        <g class="mono" font-size="10.5" text-anchor="middle">
+          <text class="mu" x="60" y="112">0</text><text class="mu" x="190" y="112">5</text><text class="mu" x="450" y="112">15</text>
+          <text class="mu" x="710" y="112">25</text><text class="mu" x="840" y="112">30</text>
+        </g>
+      </svg>
+    </div>
+    <figcaption><b>Figura 13.</b> A leitura semanal de 30 minutos, em escala. Os sinais e a capacidade ocupam dois terços.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Momento</th><th style="width:42%">O que fazer</th><th>Perguntas que ajudam</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Pontos novos</strong></td><td>Conferir se todos os subgrupos foram medidos e lançados.</td><td>"Faltou algum turno? Por quê?"</td></tr>
+        <tr><td><strong>Sinais da semana</strong></td><td>Para cada sinal, a causa e a ação, anotadas.</td><td>"Quem viu o sinal, e quando? Deu tempo de agir?"</td></tr>
+        <tr><td><strong>Capacidade</strong></td><td>O Cpk de cada característica e o que se faz para subir os baixos.</td><td>"Esta variação é comum? Então o que muda no processo?"</td></tr>
+        <tr><td><strong>Decisões</strong></td><td>Base nova, característica nova, ação levada à direção.</td><td>"O processo mudou de propósito? Precisa de base nova?"</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Na reunião, pergunte a quem mede o que faria se o próximo ponto caísse fora do limite. Se a resposta for "anotar e esperar a reunião", o gráfico ainda não está funcionando.</p>
+
+  <h3>Checklist do CEP</h3>
+  <p>Marque os itens conforme valida o seu gráfico. As marcações ficam salvas neste navegador.</p>
+  <ol class="check" id="checklist">
+<!--CHECK-->
+  </ol>
+  <div class="bar"><span><b id="ck-count">0</b> de 12 itens marcados</span><button class="btn" id="ck-reset" type="button">Limpar marcações</button></div>
+</section>
+
+<!-- ============================ MÓDULO 14 ============================ -->
+<section id="pratique">
+  <p class="eyebrow">Módulo 14</p>
+  <h2>Pratique</h2>
+  <h3>Exercício 1. O que o gráfico está dizendo?</h3>
+  <p>Cada item descreve uma situação. Diga se é variação comum, causa especial, falta de capacidade ou erro de método.</p>
+  <div class="quiz" id="quiz"></div>
+  <div class="bar"><span>Acertos: <b id="qz-score">0</b> de <b id="qz-total">12</b></span><span>Respondidos: <b id="qz-done">0</b></span><button class="btn" id="qz-reset" type="button">Recomeçar</button></div>
+
+  <h3>Exercício 2. Monte o gráfico de uma característica sua</h3>
+  <p>Abra a planilha de apoio e siga o roteiro.</p>
+  <ol>
+    <li>Na aba Dados, informe a característica, a unidade, os limites da especificação e quantos subgrupos formam a base.</li>
+    <li>Lance pelo menos 20 subgrupos de cinco medições, com a data e a identificação.</li>
+    <li>Marque como excluídos os subgrupos com causa conhecida, com o motivo.</li>
+    <li>Leia os limites, os sinais e a conferência de cada linha. Veja os gráficos na aba Gráficos.</li>
+    <li>Leia o histograma e a capacidade, e o aviso na aba Painel. Depois, passe o checklist do módulo 13.</li>
+  </ol>
+  <p>Se o processo estiver em controle e o Cpk for baixo, leve a decisão ao dono do processo: a ação é mudar o processo, e não ajustar a máquina.</p>
+</section>
+
+<!-- ============================ MÓDULO 15 ============================ -->
+<section id="planilha">
+  <p class="eyebrow">Módulo 15</p>
+  <h2>A planilha de apoio</h2>
+  <p>Este treinamento acompanha o arquivo <a id="xlsx-ref" href="Histograma-CEP-modelo.xlsx">Histograma-CEP-modelo.xlsx</a>, que fica na mesma pasta. As células em amarelo-claro são para preenchimento. As células cinza são calculadas.</p>
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Aba</th><th>Para que serve</th><th style="width:36%">O que ela calcula</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Instruções</strong></td><td>Legenda de cores, as regras de cálculo, ordem de preenchimento e premissas do modelo.</td><td>Nada. É só leitura.</td></tr>
+        <tr><td><strong>Dados</strong></td><td>A característica, a especificação, a base e até 30 subgrupos de cinco medições, com exclusão e motivo.</td><td>Média, amplitude, fase, medições fora da especificação, sinal e conferência; os limites.</td></tr>
+        <tr><td><strong>Gráficos</strong></td><td>Nada a preencher.</td><td>Os gráficos de média e de amplitude, com a linha central e os limites.</td></tr>
+        <tr><td><strong>Histograma</strong></td><td>Nada a preencher.</td><td>As 12 classes, as contagens, o gráfico e o resumo das medições.</td></tr>
+        <tr><td><strong>Painel</strong></td><td>Nada a preencher.</td><td>Cp, Cpk, a situação da capacidade, os sinais por regra e o aviso.</td></tr>
+        <tr><td><strong>Checklist</strong></td><td>Os mesmos 12 itens do módulo 13, com status Sim, Parcial ou Não.</td><td>Percentual atendido e situação da validação.</td></tr>
+        <tr><td><strong>Exemplo 1 e Exemplo 2</strong></td><td>Os dados da pizzaria e da indústria.</td><td>As mesmas contas, com os gráficos.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ GLOSSÁRIO ============================ -->
+<section id="glossario">
+  <p class="eyebrow">Referência</p>
+  <h2>Glossário</h2>
+  <dl class="gloss">
+    <div><dt>Amplitude (R)</dt><dd>A maior menos a menor medição de um subgrupo.</dd></div>
+    <div><dt>Base</dt><dd>Os subgrupos usados para calcular a linha central e os limites.</dd></div>
+    <div><dt>Capacidade</dt><dd>O quanto a variação de um processo estável cabe na especificação.</dd></div>
+    <div><dt>Causa comum</dt><dd>A variação de sempre, de muitas causas pequenas. Só diminui mudando o processo.</dd></div>
+    <div><dt>Causa especial</dt><dd>Uma mudança identificável no processo, que aparece como sinal no gráfico.</dd></div>
+    <div><dt>CEP</dt><dd>Controle estatístico de processo: o uso de gráficos de controle para decidir quando agir.</dd></div>
+    <div><dt>Classe</dt><dd>Cada faixa de valores de um histograma.</dd></div>
+    <div><dt>Cp e Cpk</dt><dd>Índices de capacidade: a tolerância dividida pela variação, sem e com o centro.</dd></div>
+    <div><dt>Desvio-padrão (σ)</dt><dd>A medida da variação típica em torno da média. No gráfico X̄-R, estimado pela amplitude média.</dd></div>
+    <div><dt>Especificação</dt><dd>Os limites que o cliente ou o projeto aceita: LIE e LSE.</dd></div>
+    <div><dt>Limites de controle</dt><dd>LSC e LIC: a três desvios da linha central, calculados dos dados.</dd></div>
+    <div><dt>Subgrupo</dt><dd>Um conjunto de medições feitas juntas, nas mesmas condições.</dd></div>
+  </dl>
+</section>
+
+</main>
+</div>
+
+<footer>Material de estudo. Os exemplos, documentos e números são ilustrativos e foram criados para fins didáticos. As referências às normas são resumos para estudo e não substituem a consulta aos textos oficiais.</footer>
+</div>
+
+<script>
+(function () {
+  function read(key) { try { return JSON.parse(localStorage.getItem(key) || 'null'); } catch (e) { return null; } }
+  function write(key, val) { try { localStorage.setItem(key, JSON.stringify(val)); } catch (e) {} }
+
+  /* ---------- Checklist ---------- */
+  var boxes = Array.prototype.slice.call(document.querySelectorAll('#checklist input'));
+  var count = document.getElementById('ck-count');
+  var saved = read('histograma-cep-checklist') || {};
+  function refreshChecks() {
+    var n = 0, state = {};
+    boxes.forEach(function (b) { if (b.checked) { n++; } state[b.id] = b.checked; });
+    count.textContent = n;
+    return state;
+  }
+  boxes.forEach(function (b) {
+    if (saved[b.id]) { b.checked = true; }
+    b.addEventListener('change', function () { write('histograma-cep-checklist', refreshChecks()); });
+  });
+  refreshChecks();
+  document.getElementById('ck-reset').addEventListener('click', function () {
+    boxes.forEach(function (b) { b.checked = false; });
+    write('histograma-cep-checklist', refreshChecks());
+  });
+
+  /* ---------- Exercício ---------- */
+  var KEYS = ['C', 'E', 'P', 'M'];
+  var LABEL = { C: 'Variação comum', E: 'Causa especial', P: 'Falta capacidade', M: 'Erro de método' };
+  var NAMES = { C: 'variação comum', E: 'causa especial', P: 'falta de capacidade', M: 'erro de método' };
+  var ITEMS = [
+    { t: '“Sete médias seguidas abaixo da linha central, desde a troca do lote de resina.”', a: 'E', w: 'Sequência do mesmo lado, com uma mudança de nome no começo.' },
+    { t: '“Todos os pontos dentro dos limites, sem padrão, e o Cpk é 1,6.”', a: 'C', w: 'Processo estável e capaz: deixe-o em paz.' },
+    { t: '“Todos os pontos dentro dos limites, sem padrão, e o Cpk é 0,8.”', a: 'P', w: 'Estável, mas largo: a ação é mudar o processo.' },
+    { t: '“As linhas do gráfico das médias são os limites da especificação.”', a: 'M', w: 'Limite de controle vem dos dados; a especificação vale para cada peça.' },
+    { t: '“Uma amplitude acima do limite na bobina em que a resistência queimou.”', a: 'E', w: 'Um subgrupo com variação demais, e uma causa com nome.' },
+    { t: '“A média está no alvo, mas o histograma passa dos dois limites, sem nenhum sinal no gráfico.”', a: 'P', w: 'Centrado e estável, mas largo demais para a tolerância.' },
+    { t: '“O operador mede de novo toda bobina fora e anota só a segunda medição.”', a: 'M', w: 'O histograma sai cortado, e o gráfico deixa de mostrar o processo.' },
+    { t: '“Pontos sobem e descem em volta da linha central, sem sequência, durante um mês.”', a: 'C', w: 'É assim que um processo estável se parece.' },
+    { t: '“Seis médias seguidas, cada uma menor que a anterior, enquanto a rosca se gasta.”', a: 'E', w: 'Tendência: desgaste é a causa típica.' },
+    { t: '“Os limites são recalculados toda semana, com os pontos novos e os com sinal.”', a: 'M', w: 'Os limites andam junto com a mudança e escondem o sinal.' },
+    { t: '“Cp de 1,5 e Cpk de 0,6, com o processo em controle.”', a: 'P', w: 'A largura cabe, mas o centro está longe do alvo: centralizar.' },
+    { t: '“Uma bola de 405 g e outra de 395 g no mesmo lote, com todos os pontos em controle.”', a: 'C', w: 'Diferença pequena e esperada entre unidades.' }
+  ];
+  var quiz = document.getElementById('quiz');
+  var score = document.getElementById('qz-score');
+  var done = document.getElementById('qz-done');
+  document.getElementById('qz-total').textContent = ITEMS.length;
+  var hits = 0, answered = 0;
+
+  function render() {
+    hits = 0; answered = 0; score.textContent = 0; done.textContent = 0;
+    quiz.textContent = '';
+    ITEMS.forEach(function (item, idx) {
+      var row = document.createElement('div'); row.className = 'q';
+      var p = document.createElement('p'); p.textContent = (idx + 1) + '. ' + item.t;
+      var opts = document.createElement('div'); opts.className = 'opts';
+      opts.setAttribute('role', 'group'); opts.setAttribute('aria-label', 'Classificação do item ' + (idx + 1));
+      var why = document.createElement('p'); why.className = 'why'; why.hidden = true;
+      KEYS.forEach(function (k) {
+        var b = document.createElement('button');
+        b.type = 'button'; b.textContent = LABEL[k]; b.id = 'qz-' + idx + '-' + k;
+        b.setAttribute('data-k', k);
+        b.addEventListener('click', function () {
+          var ok = k === item.a;
+          Array.prototype.forEach.call(opts.children, function (o) {
+            o.disabled = true;
+            if (o.getAttribute('data-k') === item.a) { o.className = 'right'; }
+          });
+          if (!ok) { b.className = 'wrong'; }
+          var lead = document.createElement('b');
+          lead.textContent = (ok ? 'Certo. ' : 'A resposta é: ' + NAMES[item.a] + '. ');
+          why.textContent = ''; why.appendChild(lead); why.appendChild(document.createTextNode(item.w));
+          why.className = 'why ' + (ok ? 'ok' : 'no'); why.hidden = false;
+          answered++; if (ok) { hits++; }
+          score.textContent = hits; done.textContent = answered;
+        });
+        opts.appendChild(b);
+      });
+      row.appendChild(p); row.appendChild(opts); row.appendChild(why);
+      quiz.appendChild(row);
+    });
+  }
+  render();
+  document.getElementById('qz-reset').addEventListener('click', render);
+
+  /* ---------- Gráfico: leitura dos valores ---------- */
+  var fig = document.getElementById('fig-bars');
+  var tip = document.getElementById('bars-tip');
+  var svg = document.getElementById('bars');
+  var pts = document.querySelectorAll('#bars .pt-c');
+  function hide() {
+    tip.hidden = true;
+    Array.prototype.forEach.call(pts, function (b) { b.removeAttribute('opacity'); });
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('#bars .hit'), function (r) {
+    function show() {
+      var d = r.dataset;
+      Array.prototype.forEach.call(pts, function (b) {
+        b.setAttribute('opacity', b.getAttribute('data-k') === d.k ? '1' : '.4');
+      });
+      tip.textContent = '';
+      var strong = document.createElement('b'); strong.textContent = d.s + ' · ' + d.p;
+      tip.appendChild(strong);
+      tip.appendChild(document.createTextNode(d.n + ' · ' + d.d));
+      var box = fig.getBoundingClientRect();
+      var pt = svg.createSVGPoint(); pt.x = parseFloat(d.cx); pt.y = parseFloat(d.cy);
+      var scr = pt.matrixTransform(svg.getScreenCTM());
+      tip.style.left = Math.min(Math.max(scr.x - box.left, 180), box.width - 180) + 'px';
+      tip.style.top = (scr.y - box.top - 4) + 'px';
+      tip.hidden = false;
+    }
+    r.addEventListener('pointerenter', show);
+    r.addEventListener('focus', show);
+    r.addEventListener('pointerleave', hide);
+    r.addEventListener('blur', hide);
+  });
+})();
+</script>
+</body>
+</html>

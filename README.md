@@ -39,6 +39,7 @@ Para começar, abra o arquivo `index.html` no navegador.
 | Técnica de auditoria | `Tecnica-Auditoria/` | `Tecnica-Auditoria-modelo.xlsx` |
 | Processo de certificação | `Certificacao/` | `Certificacao-modelo.xlsx` |
 | ISO 9001:2026: o que muda | `ISO-9001-2026/` | `ISO-9001-2026-modelo.xlsx` |
+| Histograma e CEP | `Histograma-CEP/` | `Histograma-CEP-modelo.xlsx` |
 | Avaliação de fornecedores | `Fornecedores/` | `Fornecedores-modelo.xlsx` |
 | Satisfação do cliente | `Satisfacao/` | `Satisfacao-modelo.xlsx` |
 

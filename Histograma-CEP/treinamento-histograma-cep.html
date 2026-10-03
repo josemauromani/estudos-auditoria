@@ -1,0 +1,1686 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Histograma e CEP</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<style>
+:root{
+  --ground:#F3F6F7; --surface:#FFFFFF; --sunk:#E9EEF0; --ink:#16242E; --muted:#566672; --rule:#D3DBE0;
+  --accent:#2B5C8A;
+  --s1:#2A6FB0; --s1-tint:#DCE8F3;
+  --s2:#D19A2E; --s2-tint:#F8EBCB;
+  --s3:#B0413E; --s3-tint:#F5DEDC;
+  --on-s2:#16242E;
+  --p:#2B5C8A; --p-tint:#DCE8F3;
+  --d:#A96A12; --d-tint:#F6E8CF;
+  --c:#1E7B73; --c-tint:#D9EEEB;
+  --a:#B0413E; --a-tint:#F5DEDC;
+  --on-hue:#FFFFFF;
+  --good:#1F7A4D; --good-tint:#DDF1E5;
+  --bad:#B0413E; --bad-tint:#F5DEDC;
+  --display:"Barlow Semi Condensed","Arial Narrow",Arial,sans-serif;
+  --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --ground:#0F171C; --surface:#172229; --sunk:#1E2B33; --ink:#E4EAED; --muted:#9BABB6; --rule:#2B3A44;
+    --accent:#86B7E3;
+  --s1:#4F97DB; --s1-tint:#1B2F42;
+  --s2:#B58E14; --s2-tint:#3A2C12;
+  --s3:#D14B45; --s3-tint:#3D1F1E;
+  --on-s2:#0F171C;
+    --p:#86B7E3; --p-tint:#1B2F42;
+    --d:#E2AC4F; --d-tint:#3A2C12;
+    --c:#5FC6BA; --c-tint:#15332F;
+    --a:#EC8E89; --a-tint:#3D1F1E;
+    --on-hue:#0F171C;
+    --good:#6FCF9B; --good-tint:#163326;
+    --bad:#EC8E89; --bad-tint:#3D1F1E;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --ground:#0F171C; --surface:#172229; --sunk:#1E2B33; --ink:#E4EAED; --muted:#9BABB6; --rule:#2B3A44;
+  --accent:#86B7E3;
+  --s1:#4F97DB; --s1-tint:#1B2F42;
+  --s2:#B58E14; --s2-tint:#3A2C12;
+  --s3:#D14B45; --s3-tint:#3D1F1E;
+  --on-s2:#0F171C;
+  --p:#86B7E3; --p-tint:#1B2F42;
+  --d:#E2AC4F; --d-tint:#3A2C12;
+  --c:#5FC6BA; --c-tint:#15332F;
+  --a:#EC8E89; --a-tint:#3D1F1E;
+  --on-hue:#0F171C;
+  --good:#6FCF9B; --good-tint:#163326;
+  --bad:#EC8E89; --bad-tint:#3D1F1E;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--ground);color:var(--ink);font:400 16px/1.65 var(--body);-webkit-text-size-adjust:100%}
+a{color:var(--accent);text-underline-offset:3px}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.page{max-width:1180px;margin-inline:auto;padding-inline:20px;padding-block:36px 80px}
+
+/* Cabeçalho */
+.mast{display:flex;flex-direction:column;gap:18px;padding-bottom:32px;border-bottom:1px solid var(--rule)}
+.tiles{display:flex;gap:6px}
+.tiles span{width:44px;height:44px;display:grid;place-items:center;font:700 24px/1 var(--display);color:var(--on-hue)}
+.tiles .p{background:var(--p)} .tiles .d{background:var(--d)} .tiles .c{background:var(--c)} .tiles .a{background:var(--a)}
+h1{font:700 clamp(2.3rem,6vw,3.6rem)/1.02 var(--display);letter-spacing:-.01em;margin:0;text-wrap:balance}
+.lead{font-size:1.15rem;line-height:1.55;max-width:62ch;margin:0;color:var(--ink)}
+.meta{display:flex;flex-direction:row;flex-wrap:wrap;gap:6px 22px;font:400 .8rem/1.4 var(--mono);color:var(--muted);margin:0;padding:0;list-style:none}
+
+/* Estrutura */
+.layout{display:grid;grid-template-columns:minmax(0,1fr);gap:32px;padding-top:32px}
+.toc{font-size:.92rem}
+.toc h2{font:500 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+.toc ol{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:2px 20px;counter-reset:toc}
+.toc li{counter-increment:toc}
+.toc a{display:flex;gap:10px;padding:5px 0;color:var(--ink);text-decoration:none;line-height:1.35}
+.toc a::before{content:counter(toc,decimal-leading-zero);font:400 .75rem/1.7 var(--mono);color:var(--muted)}
+.toc a:hover{color:var(--accent);text-decoration:underline}
+@media (min-width:1020px){
+  .layout{grid-template-columns:200px minmax(0,1fr);gap:64px}
+  .toc{position:sticky;top:calc(env(safe-area-inset-top,0px) + 24px);align-self:start}
+  .toc ol{grid-template-columns:1fr}
+}
+main{display:flex;flex-direction:column;gap:72px;min-width:0}
+section{display:flex;flex-direction:column;gap:20px;scroll-margin-top:24px}
+.eyebrow{font:500 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0}
+h2{font:700 clamp(1.7rem,4vw,2.2rem)/1.1 var(--display);margin:0;text-wrap:balance}
+h3{font:600 1.3rem/1.2 var(--display);margin:12px 0 0;text-wrap:balance}
+h4{font:600 .95rem/1.3 var(--body);margin:0}
+p{margin:0}
+section > p, section > ul, section > ol, section > h3{max-width:68ch}
+ul,ol{margin:0;padding-left:1.25em;display:flex;flex-direction:column;gap:6px}
+strong{font-weight:600}
+code{font:400 .88em var(--mono);background:var(--sunk);padding:1px 5px;border-radius:3px}
+
+/* Letras coloridas no texto */
+.k{display:inline-grid;place-items:center;width:1.45em;height:1.45em;font:700 .85em/1 var(--display);color:var(--on-hue);vertical-align:.05em}
+.k.p{background:var(--p)} .k.d{background:var(--d)} .k.c{background:var(--c)} .k.a{background:var(--a)}
+
+/* Figuras */
+figure{margin:0;display:flex;flex-direction:column;gap:10px;position:relative}
+.scroll{overflow-x:auto;background:var(--surface);border:1px solid var(--rule);padding:18px}
+.scroll svg{display:block;width:100%;min-width:820px;height:auto;color:var(--ink)}
+figcaption{font-size:.86rem;line-height:1.5;color:var(--muted);max-width:72ch}
+figcaption b{color:var(--ink);font-weight:600}
+svg text{font-family:var(--body);fill:var(--ink)}
+svg .disp{font-family:var(--display);font-weight:700}
+svg .mono{font-family:var(--mono);letter-spacing:.08em}
+svg .on{fill:var(--on-hue)}
+svg .mu{fill:var(--muted)}
+svg .b{font-weight:600}
+svg .ln{stroke:var(--ink);stroke-width:1.5;fill:none}
+svg .ln-mu{stroke:var(--muted);stroke-width:1.5;fill:none}
+svg .ln-bold{stroke:var(--ink);stroke-width:3;fill:none;stroke-linejoin:round;stroke-linecap:round}
+svg .dash{stroke-dasharray:5 4}
+svg .ah{fill:var(--ink)} svg .ah-mu{fill:var(--muted)}
+svg .bx{fill:var(--surface);stroke:var(--rule);stroke-width:1.5}
+svg .bx-ink{fill:var(--ink);stroke:var(--ink)}
+svg .t-ground{fill:var(--ground)}
+svg .bx-out{fill:none;stroke:var(--muted);stroke-width:1.5;stroke-dasharray:5 4}
+svg .bx-p{fill:var(--p-tint);stroke:var(--p);stroke-width:1.5} svg .hd-p{fill:var(--p)}
+svg .bx-d{fill:var(--d-tint);stroke:var(--d);stroke-width:1.5} svg .hd-d{fill:var(--d)}
+svg .bx-c{fill:var(--c-tint);stroke:var(--c);stroke-width:1.5} svg .hd-c{fill:var(--c)}
+svg .bx-a{fill:var(--a-tint);stroke:var(--a);stroke-width:1.5} svg .hd-a{fill:var(--a)}
+svg .gap{stroke:var(--surface);stroke-width:4}
+svg .gap2{stroke:var(--surface);stroke-width:2}
+svg .hub{fill:var(--surface)}
+
+/* Gráfico */
+svg .grid{stroke:var(--rule);stroke-width:1}
+svg .band{fill:var(--sunk)}
+svg .series{stroke:var(--accent);stroke-width:2;fill:none;stroke-linejoin:round;stroke-linecap:round}
+svg .pt{fill:var(--accent);stroke:var(--surface);stroke-width:2}
+svg .pt.on-hit{stroke:var(--ink)}
+svg .goal{stroke:var(--muted);stroke-width:1.5;stroke-dasharray:6 4;fill:none}
+svg .xh{stroke:var(--muted);stroke-width:1}
+svg .hit{fill:transparent;cursor:crosshair;outline:none}
+svg .root{fill:var(--accent);stroke:var(--surface);stroke-width:2}
+.tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--ground);padding:6px 10px;font-size:.78rem;line-height:1.4;transform:translate(-50%,calc(-100% - 14px));white-space:nowrap;z-index:2}
+.tip b{display:block;font:600 1.05rem/1.2 var(--body)}
+details.data{font-size:.88rem}
+details.data summary{cursor:pointer;font:400 .82rem var(--mono);color:var(--muted);padding:4px 0}
+details.data .tbl{margin-top:8px}
+details.data table{min-width:420px}
+
+/* Tabelas */
+.tbl{overflow-x:auto;border:1px solid var(--rule);background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:780px;font-size:.88rem;line-height:1.4}
+th,td{padding:9px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--rule)}
+tr:last-child > td{border-bottom:0}
+thead th{font:600 .8rem/1.3 var(--body);background:var(--sunk)}
+td.num{font-variant-numeric:tabular-nums;white-space:nowrap;font-family:var(--mono);font-size:.82rem}
+
+/* Situações */
+.chip{display:inline-block;padding:2px 8px;font:600 .76rem/1.45 var(--body);color:var(--on-hue);white-space:nowrap}
+.chip.s1{background:var(--s1)} .chip.s2{background:var(--s2);color:var(--on-s2)} .chip.s3{background:var(--s3)}
+.chip.sl{background:var(--sunk);color:var(--ink);box-shadow:inset 0 0 0 1px var(--rule)}
+svg .hd-ink{fill:var(--ink)}
+svg .f1{fill:var(--s1)} svg .f2{fill:var(--s2)} svg .f3{fill:var(--s3)} svg .f0{fill:var(--muted)}
+svg .t1{fill:var(--s1-tint)} svg .t2{fill:var(--s2-tint)} svg .t3{fill:var(--s3-tint)}
+svg .bx-s1{fill:var(--s1-tint);stroke:var(--s1);stroke-width:1.5} svg .bx-s2{fill:var(--s2-tint);stroke:var(--s2);stroke-width:1.5} svg .bx-s3{fill:var(--s3-tint);stroke:var(--s3);stroke-width:1.5}
+svg .lane{fill:var(--sunk)}
+svg .lim{stroke:var(--s3);stroke-width:1.5;stroke-dasharray:6 4;fill:none}
+svg .esp{stroke:var(--ink);stroke-width:2;fill:none}
+svg .ctr{stroke:var(--muted);stroke-width:1.2;fill:none}
+svg .ser{stroke:var(--s1);stroke-width:1.8;fill:none;stroke-linejoin:round}
+svg .p-ok{fill:var(--s1);stroke:var(--surface);stroke-width:1.5}
+svg .p-sig{fill:var(--s3);stroke:var(--surface);stroke-width:1.5}
+svg .p-exc{fill:var(--surface);stroke:var(--muted);stroke-width:1.8}
+svg .curve{stroke:var(--s1);stroke-width:2;fill:var(--s1-tint);fill-opacity:.7}
+svg .halo{paint-order:stroke;stroke:var(--surface);stroke-width:5px;stroke-linejoin:round}
+svg .hit:focus-visible{stroke:var(--accent);stroke-width:2}
+
+/* Tabelas dos exemplos */
+table.aud{font-size:.8rem;min-width:900px;line-height:1.4}
+table.aud th, table.aud td{padding:7px 8px}
+table.aud td.n{white-space:nowrap;font-weight:600;color:var(--muted)}
+table.aud td.c, table.aud th.c{text-align:center;font-variant-numeric:tabular-nums}
+table.aud td.no{background:var(--s3-tint);font-weight:600}
+table.aud td small, table.aud th small{display:block;color:var(--muted);font-size:.76rem;margin-top:3px;font-weight:400}
+table.aud caption{caption-side:top;text-align:left;padding:10px 12px;font:500 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);background:var(--sunk)}
+
+/* Ficha da organização (acima de cada exemplo) */
+.ficha{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:0;border:1px solid var(--rule);background:var(--surface)}
+.ficha div{padding:12px 14px;border-right:1px solid var(--rule);border-bottom:1px solid var(--rule);margin:0 -1px -1px 0}
+.ficha dt{font:500 .68rem/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.ficha dd{margin:0;font-size:.9rem;line-height:1.4}
+dl{margin:0}
+
+/* Blocos */
+.pair{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.box{background:var(--surface);border:1px solid var(--rule);padding:18px 20px;display:flex;flex-direction:column;gap:10px}
+.box h4{font:600 1.1rem/1.2 var(--display)}
+.box ul{font-size:.93rem}
+.note{background:var(--sunk);padding:16px 20px;max-width:72ch;font-size:.94rem;display:flex;flex-direction:column;gap:6px}
+.note h4{font:500 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+
+/* Passo a passo */
+.steps{list-style:none;padding:0;counter-reset:st;gap:0;max-width:none;border-top:1px solid var(--rule)}
+.steps li{counter-increment:st;display:grid;grid-template-columns:44px minmax(0,1fr);gap:4px 12px;padding:16px 0;border-bottom:1px solid var(--rule)}
+.steps li::before{content:counter(st);font:700 1.7rem/1 var(--display);color:var(--muted);grid-row:span 2}
+.steps h4{font:600 1.1rem/1.25 var(--display)}
+.steps p{font-size:.95rem;max-width:64ch;grid-column:2}
+
+/* Erros comuns */
+.errs{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:0 40px;border-top:1px solid var(--rule)}
+.errs div{padding:16px 16px 16px 0;border-bottom:1px solid var(--rule);display:flex;flex-direction:column;gap:4px}
+.errs h4{font:600 1.05rem/1.25 var(--display)}
+.errs p{font-size:.92rem}
+.errs .fix{color:var(--muted)}
+.errs .fix b{color:var(--ink);font-weight:600}
+
+/* Checklist */
+.check{list-style:none;padding:0;gap:0;max-width:none;border:1px solid var(--rule);background:var(--surface)}
+.check li{border-bottom:1px solid var(--rule)}
+.check li:last-child{border-bottom:0}
+.check label{display:grid;grid-template-columns:22px minmax(0,1fr);gap:12px;padding:11px 16px;cursor:pointer;font-size:.94rem;align-items:start}
+.check input{width:18px;height:18px;margin:3px 0 0;accent-color:var(--c)}
+.check input:checked + span{color:var(--muted);text-decoration:line-through}
+.bar{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;font:400 .82rem var(--mono);color:var(--muted)}
+.bar b{color:var(--ink);font-weight:500}
+
+/* Exercício */
+.quiz{display:flex;flex-direction:column;gap:0;border:1px solid var(--rule);background:var(--surface)}
+.q{display:grid;grid-template-columns:minmax(0,1fr);gap:10px;padding:14px 16px;border-bottom:1px solid var(--rule)}
+.q:last-child{border-bottom:0}
+@media (min-width:720px){.q{grid-template-columns:minmax(0,1fr) auto;align-items:center}}
+.q p{font-size:.95rem}
+.q .why{grid-column:1/-1;font-size:.86rem;color:var(--muted)}
+.q .why b{font-weight:600}
+.q .why.ok b{color:var(--good)} .q .why.no b{color:var(--bad)}
+.opts{display:flex;gap:6px}
+.opts button{width:40px;height:40px;border:1.5px solid var(--rule);background:var(--surface);color:var(--ink);font:700 1.1rem/1 var(--display);cursor:pointer;border-radius:0}
+.opts button:hover:not(:disabled){border-color:var(--ink)}
+.opts button:disabled{cursor:default;opacity:.45}
+.opts button.right{background:var(--good-tint);border-color:var(--good);color:var(--good);opacity:1}
+.opts button.wrong{background:var(--bad-tint);border-color:var(--bad);color:var(--bad);opacity:1}
+.btn{border:1.5px solid var(--ink);background:transparent;color:var(--ink);font:500 .82rem var(--mono);padding:7px 14px;cursor:pointer;border-radius:0}
+.btn:hover{background:var(--ink);color:var(--ground)}
+
+/* Glossário */
+.gloss{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:0 40px;border-top:1px solid var(--rule)}
+.gloss div{padding:12px 0;border-bottom:1px solid var(--rule)}
+.gloss dt{font:600 1.02rem/1.3 var(--display)}
+.gloss dd{margin:2px 0 0;font-size:.9rem;color:var(--muted)}
+footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);font-size:.84rem;color:var(--muted);max-width:72ch}
+
+.quiz .opts{flex-wrap:wrap}
+.quiz .opts button{width:auto;min-width:40px;padding:0 11px;font-size:1rem}
+@media (min-width:720px){.q{grid-template-columns:minmax(0,1fr) auto}}
+</style>
+</head>
+<body>
+<div class="page" lang="pt-BR">
+
+<header class="mast">
+  <div class="tiles" aria-hidden="true"><span class="p">H</span><span class="d">C</span><span class="c">E</span></div>
+  <h1>Histograma e CEP na prática</h1>
+  <p class="lead">Um guia de estudo para ler a variação de um processo: o histograma mostra se ele cabe na especificação, e o gráfico de controle mostra se ele está estável ao longo do tempo. Com os dois, a equipe separa o que é variação comum do que pede ação, e sabe quando o processo precisa mudar.</p>
+  <ul class="meta">
+    <li>Treinamento autoinstrucional</li>
+    <li>15 módulos</li>
+    <li>Leitura de cerca de 55 minutos</li>
+    <li>3 exemplos resolvidos e 2 exercícios</li>
+  </ul>
+</header>
+
+<div class="layout">
+
+<nav class="toc" aria-label="Sumário">
+  <h2>Sumário</h2>
+  <ol>
+    <li><a href="#o-que-e">O que é</a></li>
+    <li><a href="#quando">Quando usar</a></li>
+    <li><a href="#como">Como fazer</a></li>
+    <li><a href="#histograma">O histograma</a></li>
+    <li><a href="#grafico">O gráfico de controle</a></li>
+    <li><a href="#sinais">Os sinais</a></li>
+    <li><a href="#capacidade">Capacidade: Cp e Cpk</a></li>
+    <li><a href="#exemplos">Exemplos resolvidos</a></li>
+    <li><a href="#leitura">Ler o gráfico</a></li>
+    <li><a href="#erros">Erros comuns</a></li>
+    <li><a href="#serie">O CEP e os estudos da série</a></li>
+    <li><a href="#iso">Nas normas</a></li>
+    <li><a href="#reuniao">A leitura no turno</a></li>
+    <li><a href="#pratique">Pratique</a></li>
+    <li><a href="#planilha">A planilha de apoio</a></li>
+    <li><a href="#glossario">Glossário</a></li>
+  </ol>
+</nav>
+
+<main>
+
+<!-- ============================ MÓDULO 1 ============================ -->
+<section id="o-que-e">
+  <p class="eyebrow">Módulo 1</p>
+  <h2>O que é</h2>
+  <p>Todo processo varia: duas bolas de massa nunca pesam igual, dois pontos de um filme nunca têm a mesma espessura. O controle estatístico de processo, o CEP, é o jeito de ler essa variação para decidir quando agir e quando deixar o processo em paz. Ele usa duas ferramentas, que respondem a duas perguntas diferentes.</p>
+  <p>As letras do título resumem o estudo: <span class="k p">H</span> o histograma, que mostra a forma e a largura da variação, <span class="k d">C</span> o gráfico de controle, que mostra a variação no tempo e separa a causa comum da especial, e <span class="k c">E</span> a especificação, que é do cliente e diz se o processo é capaz.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 290" role="img" aria-label="As duas ferramentas com os pesos da massa da pizzaria. À esquerda, o histograma das 125 bolas, com a especificação de 380 a 420 g: o centro está no alvo, mas a largura ocupa quase toda a tolerância. À direita, o gráfico das médias dos 25 lotes, todas dentro dos limites de controle de 389,5 a 411,1 g.">
+        <text class="b" x="20" y="24" font-size="13">Histograma: cabe na especificação?</text>
+        <text class="b" x="470" y="24" font-size="13">Gráfico de controle: está estável no tempo?</text>
+        <line class="ln-mu" x1="30" y1="230" x2="410" y2="230"/>
+        <rect class="f1" x="62.7" y="220.6" width="29.7" height="9.4"/>
+        <text class="mu" x="77.5" y="216.6" font-size="9.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">2</text>
+        <rect class="f1" x="94.3" y="225.3" width="29.7" height="4.7"/>
+        <text class="mu" x="109.2" y="221.3" font-size="9.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">1</text>
+        <rect class="f1" x="126.0" y="192.4" width="29.7" height="37.6"/>
+        <text class="mu" x="140.8" y="188.4" font-size="9.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">8</text>
+        <rect class="f1" x="157.7" y="154.7" width="29.7" height="75.3"/>
+        <text class="mu" x="172.5" y="150.7" font-size="9.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">16</text>
+        <rect class="f1" x="189.3" y="84.1" width="29.7" height="145.9"/>
+        <text class="mu" x="204.2" y="80.1" font-size="9.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">31</text>
+        <rect class="f1" x="221.0" y="98.2" width="29.7" height="131.8"/>
+        <text class="mu" x="235.8" y="94.2" font-size="9.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">28</text>
+        <rect class="f1" x="252.7" y="112.4" width="29.7" height="117.6"/>
+        <text class="mu" x="267.5" y="108.4" font-size="9.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">25</text>
+        <rect class="f1" x="284.3" y="192.4" width="29.7" height="37.6"/>
+        <text class="mu" x="299.2" y="188.4" font-size="9.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">8</text>
+        <rect class="f1" x="316.0" y="206.5" width="29.7" height="23.5"/>
+        <text class="mu" x="330.8" y="202.5" font-size="9.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">5</text>
+        <rect class="f1" x="347.7" y="225.3" width="29.7" height="4.7"/>
+        <text class="mu" x="362.5" y="221.3" font-size="9.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">1</text>
+        <text class="mu" x="30.0" y="244" font-size="9.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">370</text>
+        <text class="mu" x="93.3" y="244" font-size="9.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">380</text>
+        <text class="mu" x="156.7" y="244" font-size="9.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">390</text>
+        <text class="mu" x="220.0" y="244" font-size="9.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">400</text>
+        <text class="mu" x="283.3" y="244" font-size="9.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">410</text>
+        <text class="mu" x="346.7" y="244" font-size="9.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">420</text>
+        <line class="esp" x1="93.3" y1="64" x2="93.3" y2="230"/>
+        <text class="b" x="93.3" y="60" font-size="10.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">LIE 380</text>
+        <line class="esp" x1="346.7" y1="64" x2="346.7" y2="230"/>
+        <text class="b" x="346.7" y="60" font-size="10.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">LSE 420</text>
+        <text class="mu" x="220" y="270" font-size="11" text-anchor="middle">125 bolas de massa, em gramas</text>
+        <text class="mono mu" x="470" y="60" font-size="10">MÉDIA DE CADA LOTE</text>
+        <line class="ln-mu" x1="470" y1="70" x2="470" y2="230"/><line class="ln-mu" x1="470" y1="230" x2="800" y2="230"/>
+        <line class="lim" x1="470" y1="95.4" x2="800" y2="95.4"/>
+        <text class="mu halo" x="806" y="99.4" font-size="10.5" style="font-variant-numeric:tabular-nums">LSC 411,1</text>
+        <line class="ctr" x1="470" y1="151.0" x2="800" y2="151.0"/>
+        <text class="mu halo" x="806" y="155.0" font-size="10.5" style="font-variant-numeric:tabular-nums">LC 400,3</text>
+        <line class="lim" x1="470" y1="206.6" x2="800" y2="206.6"/>
+        <text class="mu halo" x="806" y="210.6" font-size="10.5" style="font-variant-numeric:tabular-nums">LIC 389,5</text>
+        <path class="ser" d="M484.0 159.8 L496.6 146.4 L509.2 142.3 L521.8 149.5 L534.3 152.6 L546.9 163.9 L559.5 158.8 L572.1 170.1 L584.7 138.1 L597.2 182.5 L609.8 141.2 L622.4 116.5 L635.0 163.9 L647.6 198.0 L660.2 126.8 L672.8 146.4 L685.3 161.9 L697.9 142.3 L710.5 106.1 L723.1 153.6 L735.7 160.8 L748.2 166.0 L760.8 171.2 L773.4 133.0 L786.0 123.7"/>
+        <circle class="p-ok" cx="484.0" cy="159.8" r="3.8"/>
+        <circle class="p-ok" cx="496.6" cy="146.4" r="3.8"/>
+        <circle class="p-ok" cx="509.2" cy="142.3" r="3.8"/>
+        <circle class="p-ok" cx="521.8" cy="149.5" r="3.8"/>
+        <circle class="p-ok" cx="534.3" cy="152.6" r="3.8"/>
+        <circle class="p-ok" cx="546.9" cy="163.9" r="3.8"/>
+        <circle class="p-ok" cx="559.5" cy="158.8" r="3.8"/>
+        <circle class="p-ok" cx="572.1" cy="170.1" r="3.8"/>
+        <circle class="p-ok" cx="584.7" cy="138.1" r="3.8"/>
+        <circle class="p-ok" cx="597.2" cy="182.5" r="3.8"/>
+        <circle class="p-ok" cx="609.8" cy="141.2" r="3.8"/>
+        <circle class="p-ok" cx="622.4" cy="116.5" r="3.8"/>
+        <circle class="p-ok" cx="635.0" cy="163.9" r="3.8"/>
+        <circle class="p-ok" cx="647.6" cy="198.0" r="3.8"/>
+        <circle class="p-ok" cx="660.2" cy="126.8" r="3.8"/>
+        <circle class="p-ok" cx="672.8" cy="146.4" r="3.8"/>
+        <circle class="p-ok" cx="685.3" cy="161.9" r="3.8"/>
+        <circle class="p-ok" cx="697.9" cy="142.3" r="3.8"/>
+        <circle class="p-ok" cx="710.5" cy="106.1" r="3.8"/>
+        <circle class="p-ok" cx="723.1" cy="153.6" r="3.8"/>
+        <circle class="p-ok" cx="735.7" cy="160.8" r="3.8"/>
+        <circle class="p-ok" cx="748.2" cy="166.0" r="3.8"/>
+        <circle class="p-ok" cx="760.8" cy="171.2" r="3.8"/>
+        <circle class="p-ok" cx="773.4" cy="133.0" r="3.8"/>
+        <circle class="p-ok" cx="786.0" cy="123.7" r="3.8"/>
+        <text class="mu" x="484.0" y="245" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">1</text>
+        <text class="mu" x="534.3" y="245" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">5</text>
+        <text class="mu" x="584.7" y="245" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">9</text>
+        <text class="mu" x="635.0" y="245" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">13</text>
+        <text class="mu" x="685.3" y="245" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">17</text>
+        <text class="mu" x="735.7" y="245" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">21</text>
+        <text class="mu" x="786.0" y="245" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">25</text>
+        <text class="mu" x="635" y="270" font-size="11" text-anchor="middle">Lotes de 22/03 a 15/04/2027</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 1.</b> As duas ferramentas com os mesmos dados: o peso das bolas de massa da pizzaria.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Ferramenta</th><th style="width:38%">Pergunta</th><th>O que olhar</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Histograma</strong></td><td>O processo cabe na especificação?</td><td>O centro, a largura e a forma, comparados com os limites do cliente.</td></tr>
+        <tr><td><strong>Gráfico de controle</strong></td><td>O processo está estável, ou algo mudou?</td><td>Os pontos ao longo do tempo, comparados com os limites calculados dos próprios dados.</td></tr>
+        <tr><td><strong>Capacidade</strong></td><td>Estável, ele vai atender o cliente?</td><td>Cp e Cpk: quantas vezes a variação cabe na tolerância.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note">
+    <h4>Causa comum e causa especial</h4>
+    <p>A <strong>causa comum</strong> é a variação de sempre, feita de muitas pequenas diferenças: a mão do pizzaiolo, a umidade da farinha, a folga da balança. Ela só diminui quando o processo muda. A <strong>causa especial</strong> é uma mudança com nome: uma resistência que queimou, uma rosca que se desgastou, um lote de resina diferente. Ela aparece como sinal no gráfico e pede que alguém vá ao posto descobrir o que houve. Tratar uma como se fosse a outra é o erro mais caro do CEP.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 2 ============================ -->
+<section id="quando">
+  <p class="eyebrow">Módulo 2</p>
+  <h2>Quando usar</h2>
+  <div class="pair">
+    <div class="box">
+      <h4>Use quando</h4>
+      <ul>
+        <li>A característica é medida em números, com instrumento adequado.</li>
+        <li>O processo repete a mesma coisa muitas vezes: lotes, bobinas, pedidos.</li>
+        <li>A característica pesa para o cliente e já gerou reclamação ou refugo.</li>
+        <li>Você precisa decidir se ajusta o processo ou se o deixa como está.</li>
+        <li>O cliente pede capacidade comprovada.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h4>Não use quando</h4>
+      <ul>
+        <li>O instrumento não tem resolução para ver a variação.</li>
+        <li>Cada produto é único, sem repetição.</li>
+        <li>O resultado é só "conforme ou não": aí cabem outros gráficos, como o de proporção.</li>
+        <li>Ninguém vai ler o gráfico a tempo de agir.</li>
+        <li>O processo está mudando de propósito toda semana.</li>
+      </ul>
+    </div>
+  </div>
+  <p>O CEP começa pelo plano de controle do estudo de <a href="../Producao/treinamento-producao.html">Controle de produção</a>: das características que ele lista, escolha as medidas em número e com mais reclamação. E começa pelo instrumento: um gráfico feito com um micrômetro descalibrado mostra o micrômetro, não o processo, como o estudo de <a href="../Calibracao/treinamento-calibracao.html">Calibração</a> mostrou.</p>
+</section>
+
+<!-- ============================ MÓDULO 3 ============================ -->
+<section id="como">
+  <p class="eyebrow">Módulo 3</p>
+  <h2>Como fazer</h2>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 214" role="img" aria-label="As cinco etapas do controle estatístico de processo. Escolher o que medir: Uma característica que pesa para o cliente, com critério e instrumento adequado. Montar os subgrupos: Cinco medições nas mesmas condições, em intervalos que deixem a mudança aparecer. Calcular a base: 20 a 25 subgrupos sem causa conhecida: linha central e limites. Acompanhar: Cada subgrupo novo no gráfico, lido na hora, com as quatro regras. Reagir e melhorar: Sinal pede causa e ação. Sem sinal e sem capacidade, quem muda é o processo. Quando o processo muda de propósito, a base é refeita.">
+        <defs><marker id="a2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker><marker id="a2m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah-mu" d="M0 0 L10 5 L0 10 z"/></marker></defs>
+        <rect class="bx" x="12" y="16" width="164" height="138"/>
+        <text class="mono mu" x="24" y="36" font-size="10">ETAPA 1</text>
+        <text class="b" x="24" y="58" font-size="12.5">Escolher o que</text>
+        <text class="b" x="24" y="73" font-size="12.5">medir</text>
+        <text x="24" y="96.0" font-size="10.5">Uma característica que</text>
+        <text x="24" y="110.5" font-size="10.5">pesa para o cliente, com</text>
+        <text x="24" y="125.0" font-size="10.5">critério e instrumento</text>
+        <text x="24" y="139.5" font-size="10.5">adequado.</text>
+        <line class="ln" x1="177" y1="80" x2="188" y2="80" marker-end="url(#a2)"/>
+        <rect class="bx-p" x="190" y="16" width="164" height="138"/>
+        <text class="mono mu" x="202" y="36" font-size="10">ETAPA 2</text>
+        <text class="b" x="202" y="58" font-size="12.5">Montar os subgrupos</text>
+        <text x="202" y="81.0" font-size="10.5">Cinco medições nas mesmas</text>
+        <text x="202" y="95.5" font-size="10.5">condições, em intervalos</text>
+        <text x="202" y="110.0" font-size="10.5">que deixem a mudança</text>
+        <text x="202" y="124.5" font-size="10.5">aparecer.</text>
+        <line class="ln" x1="355" y1="80" x2="366" y2="80" marker-end="url(#a2)"/>
+        <rect class="bx-d" x="368" y="16" width="164" height="138"/>
+        <text class="mono mu" x="380" y="36" font-size="10">ETAPA 3</text>
+        <text class="b" x="380" y="58" font-size="12.5">Calcular a base</text>
+        <text x="380" y="81.0" font-size="10.5">20 a 25 subgrupos sem</text>
+        <text x="380" y="95.5" font-size="10.5">causa conhecida: linha</text>
+        <text x="380" y="110.0" font-size="10.5">central e limites.</text>
+        <line class="ln" x1="533" y1="80" x2="544" y2="80" marker-end="url(#a2)"/>
+        <rect class="bx-c" x="546" y="16" width="164" height="138"/>
+        <text class="mono mu" x="558" y="36" font-size="10">ETAPA 4</text>
+        <text class="b" x="558" y="58" font-size="12.5">Acompanhar</text>
+        <text x="558" y="81.0" font-size="10.5">Cada subgrupo novo no</text>
+        <text x="558" y="95.5" font-size="10.5">gráfico, lido na hora,</text>
+        <text x="558" y="110.0" font-size="10.5">com as quatro regras.</text>
+        <line class="ln" x1="711" y1="80" x2="722" y2="80" marker-end="url(#a2)"/>
+        <rect class="bx-ink" x="724" y="16" width="164" height="138"/>
+        <text class="mono t-ground" x="736" y="36" font-size="10">ETAPA 5</text>
+        <text class="b t-ground" x="736" y="58" font-size="12.5">Reagir e melhorar</text>
+        <text class="t-ground" x="736" y="81.0" font-size="10.5">Sinal pede causa e ação.</text>
+        <text class="t-ground" x="736" y="95.5" font-size="10.5">Sem sinal e sem</text>
+        <text class="t-ground" x="736" y="110.0" font-size="10.5">capacidade, quem muda é o</text>
+        <text class="t-ground" x="736" y="124.5" font-size="10.5">processo.</text>
+        <path class="ln-mu dash" d="M806.0 156 V184 H450.0 V160" marker-end="url(#a2m)"/>
+        <text class="mu halo" x="628.0" y="188" font-size="11" text-anchor="middle">processo mudado de propósito: nova base</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 2.</b> As cinco etapas do CEP. Uma mudança de propósito no processo pede uma base nova.</figcaption>
+  </figure>
+
+  <h3>Passo a passo</h3>
+  <ol class="steps">
+    <li><h4>Escolha a característica</h4><p>Uma de cada vez, com critério escrito e instrumento de resolução de no máximo um décimo da tolerância.</p></li>
+    <li><h4>Defina o subgrupo</h4><p>Cinco medições feitas juntas, nas mesmas condições: cinco bolas do mesmo lote, cinco pontos da mesma bobina. A variação de dentro do subgrupo é a referência.</p></li>
+    <li><h4>Defina a frequência</h4><p>Um subgrupo por lote, por turno ou por hora: o bastante para ver uma mudança antes que ela vire refugo.</p></li>
+    <li><h4>Colete a base</h4><p>De 20 a 25 subgrupos, anotando tudo o que acontecer no processo. Exclua da base os subgrupos com causa conhecida, com o motivo escrito.</p></li>
+    <li><h4>Calcule os limites</h4><p>A linha central e os limites vêm dos dados da base, com as constantes da tabela do módulo 5.</p></li>
+    <li><h4>Verifique a capacidade</h4><p>Com a base em controle, compare a variação com a especificação: Cp e Cpk.</p></li>
+    <li><h4>Acompanhe</h4><p>Cada subgrupo novo entra no gráfico, contra os limites fixos, e é lido na hora com as regras do módulo 6.</p></li>
+    <li><h4>Reaja e registre</h4><p>Sinal pede causa e ação, anotadas no próprio gráfico. Mudança de propósito no processo pede uma base nova.</p></li>
+  </ol>
+</section>
+
+<!-- ============================ MÓDULO 4 ============================ -->
+<section id="histograma">
+  <p class="eyebrow">Módulo 4</p>
+  <h2>O histograma</h2>
+  <p>O histograma conta quantas medições caem em cada faixa de valores, as classes. Com uns cem valores e de 8 a 12 classes de mesma largura, ele mostra três coisas que uma média esconde: onde está o centro, quanto o processo se espalha e que forma a variação tem.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 210" role="img" aria-label="Seis formas de histograma e o que cada uma sugere. Sino: Variação comum, de muitas causas pequenas. Deslocado: O centro saiu do alvo: ajuste ou desgaste. Largo: Muita variação: o processo não cabe na tolerância. Dois picos: Duas origens misturadas: turnos, máquinas, lotes. Cortado: Valores fora foram retirados ou medidos de novo. Ilha: Um grupo à parte: um lote, um dia ou um erro de registro.">
+        <rect class="bx" x="12" y="10" width="138" height="190"/>
+        <text class="b" x="24" y="32" font-size="12.5">Sino</text>
+        <rect class="f1" x="26.0" y="111.5" width="10.5" height="8.5"/>
+        <rect class="f1" x="38.2" y="103.0" width="10.5" height="17.0"/>
+        <rect class="f1" x="50.4" y="86.0" width="10.5" height="34.0"/>
+        <rect class="f1" x="62.6" y="60.5" width="10.5" height="59.5"/>
+        <rect class="f1" x="74.8" y="43.5" width="10.5" height="76.5"/>
+        <rect class="f1" x="87.0" y="60.5" width="10.5" height="59.5"/>
+        <rect class="f1" x="99.2" y="86.0" width="10.5" height="34.0"/>
+        <rect class="f1" x="111.4" y="103.0" width="10.5" height="17.0"/>
+        <rect class="f1" x="123.6" y="111.5" width="10.5" height="8.5"/>
+        <line class="esp" x1="34" y1="38" x2="34" y2="120"/><line class="esp" x1="130" y1="38" x2="130" y2="120"/>
+        <line class="ln-mu" x1="22" y1="120" x2="140" y2="120"/>
+        <text x="24" y="142" font-size="10.5">Variação comum, de</text>
+        <text x="24" y="156" font-size="10.5">muitas causas</text>
+        <text x="24" y="170" font-size="10.5">pequenas.</text>
+        <rect class="bx" x="160" y="10" width="138" height="190"/>
+        <text class="b" x="172" y="32" font-size="12.5">Deslocado</text>
+        <rect class="f1" x="198.4" y="111.5" width="10.5" height="8.5"/>
+        <rect class="f1" x="210.6" y="103.0" width="10.5" height="17.0"/>
+        <rect class="f1" x="222.8" y="86.0" width="10.5" height="34.0"/>
+        <rect class="f1" x="235.0" y="60.5" width="10.5" height="59.5"/>
+        <rect class="f1" x="247.2" y="43.5" width="10.5" height="76.5"/>
+        <rect class="f1" x="259.4" y="69.0" width="10.5" height="51.0"/>
+        <rect class="f1" x="271.6" y="94.5" width="10.5" height="25.5"/>
+        <line class="esp" x1="182" y1="38" x2="182" y2="120"/><line class="esp" x1="278" y1="38" x2="278" y2="120"/>
+        <line class="ln-mu" x1="170" y1="120" x2="288" y2="120"/>
+        <text x="172" y="142" font-size="10.5">O centro saiu do alvo:</text>
+        <text x="172" y="156" font-size="10.5">ajuste ou desgaste.</text>
+        <rect class="bx" x="308" y="10" width="138" height="190"/>
+        <text class="b" x="320" y="32" font-size="12.5">Largo</text>
+        <rect class="f1" x="322.0" y="94.5" width="10.5" height="25.5"/>
+        <rect class="f1" x="334.2" y="86.0" width="10.5" height="34.0"/>
+        <rect class="f1" x="346.4" y="77.5" width="10.5" height="42.5"/>
+        <rect class="f1" x="358.6" y="69.0" width="10.5" height="51.0"/>
+        <rect class="f1" x="370.8" y="69.0" width="10.5" height="51.0"/>
+        <rect class="f1" x="383.0" y="69.0" width="10.5" height="51.0"/>
+        <rect class="f1" x="395.2" y="77.5" width="10.5" height="42.5"/>
+        <rect class="f1" x="407.4" y="86.0" width="10.5" height="34.0"/>
+        <rect class="f1" x="419.6" y="94.5" width="10.5" height="25.5"/>
+        <line class="esp" x1="330" y1="38" x2="330" y2="120"/><line class="esp" x1="426" y1="38" x2="426" y2="120"/>
+        <line class="ln-mu" x1="318" y1="120" x2="436" y2="120"/>
+        <text x="320" y="142" font-size="10.5">Muita variação: o</text>
+        <text x="320" y="156" font-size="10.5">processo não cabe na</text>
+        <text x="320" y="170" font-size="10.5">tolerância.</text>
+        <rect class="bx" x="456" y="10" width="138" height="190"/>
+        <text class="b" x="468" y="32" font-size="12.5">Dois picos</text>
+        <rect class="f1" x="470.0" y="111.5" width="10.5" height="8.5"/>
+        <rect class="f1" x="482.2" y="86.0" width="10.5" height="34.0"/>
+        <rect class="f1" x="494.4" y="60.5" width="10.5" height="59.5"/>
+        <rect class="f1" x="506.6" y="86.0" width="10.5" height="34.0"/>
+        <rect class="f1" x="518.8" y="103.0" width="10.5" height="17.0"/>
+        <rect class="f1" x="531.0" y="86.0" width="10.5" height="34.0"/>
+        <rect class="f1" x="543.2" y="60.5" width="10.5" height="59.5"/>
+        <rect class="f1" x="555.4" y="86.0" width="10.5" height="34.0"/>
+        <rect class="f1" x="567.6" y="111.5" width="10.5" height="8.5"/>
+        <line class="esp" x1="478" y1="38" x2="478" y2="120"/><line class="esp" x1="574" y1="38" x2="574" y2="120"/>
+        <line class="ln-mu" x1="466" y1="120" x2="584" y2="120"/>
+        <text x="468" y="142" font-size="10.5">Duas origens</text>
+        <text x="468" y="156" font-size="10.5">misturadas: turnos,</text>
+        <text x="468" y="170" font-size="10.5">máquinas, lotes.</text>
+        <rect class="bx" x="604" y="10" width="138" height="190"/>
+        <text class="b" x="616" y="32" font-size="12.5">Cortado</text>
+        <rect class="f1" x="642.4" y="103.0" width="10.5" height="17.0"/>
+        <rect class="f1" x="654.6" y="43.5" width="10.5" height="76.5"/>
+        <rect class="f1" x="666.8" y="52.0" width="10.5" height="68.0"/>
+        <rect class="f1" x="679.0" y="69.0" width="10.5" height="51.0"/>
+        <rect class="f1" x="691.2" y="86.0" width="10.5" height="34.0"/>
+        <rect class="f1" x="703.4" y="103.0" width="10.5" height="17.0"/>
+        <rect class="f1" x="715.6" y="111.5" width="10.5" height="8.5"/>
+        <line class="esp" x1="626" y1="38" x2="626" y2="120"/><line class="esp" x1="722" y1="38" x2="722" y2="120"/>
+        <line class="ln-mu" x1="614" y1="120" x2="732" y2="120"/>
+        <text x="616" y="142" font-size="10.5">Valores fora foram</text>
+        <text x="616" y="156" font-size="10.5">retirados ou medidos</text>
+        <text x="616" y="170" font-size="10.5">de novo.</text>
+        <rect class="bx" x="752" y="10" width="138" height="190"/>
+        <text class="b" x="764" y="32" font-size="12.5">Ilha</text>
+        <rect class="f1" x="766.0" y="111.5" width="10.5" height="8.5"/>
+        <rect class="f1" x="778.2" y="94.5" width="10.5" height="25.5"/>
+        <rect class="f1" x="790.4" y="69.0" width="10.5" height="51.0"/>
+        <rect class="f1" x="802.6" y="52.0" width="10.5" height="68.0"/>
+        <rect class="f1" x="814.8" y="69.0" width="10.5" height="51.0"/>
+        <rect class="f1" x="827.0" y="94.5" width="10.5" height="25.5"/>
+        <rect class="f3" x="863.6" y="103.0" width="10.5" height="17.0"/>
+        <line class="esp" x1="774" y1="38" x2="774" y2="120"/><line class="esp" x1="870" y1="38" x2="870" y2="120"/>
+        <line class="ln-mu" x1="762" y1="120" x2="880" y2="120"/>
+        <text x="764" y="142" font-size="10.5">Um grupo à parte: um</text>
+        <text x="764" y="156" font-size="10.5">lote, um dia ou um</text>
+        <text x="764" y="170" font-size="10.5">erro de registro.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 3.</b> Seis formas de histograma, com os limites da especificação, e o que cada uma sugere investigar.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:26%">Passo</th><th>Como fazer</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Juntar os dados</strong></td><td>Pelo menos 50 valores individuais, de preferência uns cem, do mesmo processo e período.</td></tr>
+        <tr><td><strong>Definir as classes</strong></td><td>Neste material: largura de um oitavo da tolerância, começando dois oitavos abaixo do limite inferior. São 12 classes que cobrem a especificação com folga dos dois lados.</td></tr>
+        <tr><td><strong>Contar</strong></td><td>Cada valor entra na classe em que é maior ou igual ao início e menor que o fim.</td></tr>
+        <tr><td><strong>Desenhar os limites</strong></td><td>As linhas do limite inferior e do superior da especificação, no mesmo eixo.</td></tr>
+        <tr><td><strong>Ler</strong></td><td>O centro está no alvo? A largura cabe com folga? A forma lembra alguma da figura 3?</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>O histograma não tem tempo: ele junta o começo e o fim do período. Se o processo mudou no meio, o histograma mostra uma forma estranha, mas não diz quando. Para isso serve o gráfico de controle.</p>
+</section>
+
+<!-- ============================ MÓDULO 5 ============================ -->
+<section id="grafico">
+  <p class="eyebrow">Módulo 5</p>
+  <h2>O gráfico de controle</h2>
+  <p>O gráfico mais usado para medições é o de média e amplitude, o X̄-R. Para cada subgrupo, dois pontos: a média das cinco medições, num gráfico, e a amplitude, a maior menos a menor, no outro. A média mostra se o processo saiu do lugar; a amplitude mostra se ele passou a variar mais.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 330" role="img" aria-label="As partes do gráfico de média e amplitude, com a base da indústria. Linha central: A média das médias dos subgrupos da base. É onde o processo costuma ficar. Limites de controle: A média mais e menos três desvios das médias. Vêm dos dados, não do cliente. Subgrupo: Cinco medições feitas juntas, nas mesmas condições: as cinco bolas de um lote, os cinco pontos de uma bobina. Amplitude: A maior menos a menor medição do subgrupo. Mostra a variação de dentro do subgrupo. Linha central da média 39,97 µm, limites 39,60 e 40,34 µm; amplitude média 0,64 µm, limite superior 1,35 µm.">
+        <defs><marker id="a4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker></defs>
+        <text class="mono mu" x="40" y="30" font-size="10">MÉDIA DE CADA BOBINA (µm)</text>
+        <line class="ln-mu" x1="40" y1="40" x2="40" y2="170"/><line class="ln-mu" x1="40" y1="170" x2="520" y2="170"/>
+        <line class="lim" x1="40" y1="111.9" x2="520" y2="111.9"/>
+        <text class="mu halo" x="526" y="115.9" font-size="10.5" style="font-variant-numeric:tabular-nums">LSC 40,34</text>
+        <line class="ctr" x1="40" y1="134.7" x2="520" y2="134.7"/>
+        <text class="mu halo" x="526" y="138.7" font-size="10.5" style="font-variant-numeric:tabular-nums">LC 39,97</text>
+        <line class="lim" x1="40" y1="157.5" x2="520" y2="157.5"/>
+        <text class="mu halo" x="526" y="161.5" font-size="10.5" style="font-variant-numeric:tabular-nums">LIC 39,60</text>
+        <path class="ser" d="M54.0 139.0 L88.8 145.2 L123.5 119.2 L158.3 142.8 L193.1 121.7 L227.8 79.6 L262.6 131.6 L297.4 140.3 L332.2 137.8 L366.9 139.0 L401.7 140.3 L436.5 121.7 L471.2 129.1 L506.0 142.8"/>
+        <circle class="p-ok" cx="54.0" cy="139.0" r="3.8"/>
+        <circle class="p-ok" cx="88.8" cy="145.2" r="3.8"/>
+        <circle class="p-ok" cx="123.5" cy="119.2" r="3.8"/>
+        <circle class="p-ok" cx="158.3" cy="142.8" r="3.8"/>
+        <circle class="p-ok" cx="193.1" cy="121.7" r="3.8"/>
+        <circle class="p-exc" cx="227.8" cy="79.6" r="4.5"/>
+        <circle class="p-ok" cx="262.6" cy="131.6" r="3.8"/>
+        <circle class="p-ok" cx="297.4" cy="140.3" r="3.8"/>
+        <circle class="p-ok" cx="332.2" cy="137.8" r="3.8"/>
+        <circle class="p-ok" cx="366.9" cy="139.0" r="3.8"/>
+        <circle class="p-ok" cx="401.7" cy="140.3" r="3.8"/>
+        <circle class="p-ok" cx="436.5" cy="121.7" r="3.8"/>
+        <circle class="p-ok" cx="471.2" cy="129.1" r="3.8"/>
+        <circle class="p-ok" cx="506.0" cy="142.8" r="3.8"/>
+        <text class="mu" x="54.0" y="185" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">1</text>
+        <text class="mu" x="123.5" y="185" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">3</text>
+        <text class="mu" x="193.1" y="185" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">5</text>
+        <text class="mu" x="262.6" y="185" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">7</text>
+        <text class="mu" x="332.2" y="185" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">9</text>
+        <text class="mu" x="401.7" y="185" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">11</text>
+        <text class="mu" x="471.2" y="185" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">13</text>
+        <text class="mono mu" x="40" y="210" font-size="10">AMPLITUDE DE CADA BOBINA (µm)</text>
+        <line class="ln-mu" x1="40" y1="220" x2="40" y2="300"/><line class="ln-mu" x1="40" y1="300" x2="520" y2="300"/>
+        <line class="lim" x1="40" y1="232.5" x2="520" y2="232.5"/>
+        <text class="mu halo" x="526" y="236.5" font-size="10.5" style="font-variant-numeric:tabular-nums">LSC 1,35</text>
+        <line class="ctr" x1="40" y1="268.1" x2="520" y2="268.1"/>
+        <text class="mu halo" x="526" y="272.1" font-size="10.5" style="font-variant-numeric:tabular-nums">LC 0,64</text>
+        <path class="ser" d="M54.0 275.0 L88.8 275.0 L123.5 265.0 L158.3 275.0 L193.1 240.0 L227.8 230.0 L262.6 255.0 L297.4 260.0 L332.2 260.0 L366.9 280.0 L401.7 285.0 L436.5 270.0 L471.2 270.0 L506.0 275.0"/>
+        <circle class="p-ok" cx="54.0" cy="275.0" r="3.8"/>
+        <circle class="p-ok" cx="88.8" cy="275.0" r="3.8"/>
+        <circle class="p-ok" cx="123.5" cy="265.0" r="3.8"/>
+        <circle class="p-ok" cx="158.3" cy="275.0" r="3.8"/>
+        <circle class="p-ok" cx="193.1" cy="240.0" r="3.8"/>
+        <circle class="p-exc" cx="227.8" cy="230.0" r="4.5"/>
+        <circle class="p-ok" cx="262.6" cy="255.0" r="3.8"/>
+        <circle class="p-ok" cx="297.4" cy="260.0" r="3.8"/>
+        <circle class="p-ok" cx="332.2" cy="260.0" r="3.8"/>
+        <circle class="p-ok" cx="366.9" cy="280.0" r="3.8"/>
+        <circle class="p-ok" cx="401.7" cy="285.0" r="3.8"/>
+        <circle class="p-ok" cx="436.5" cy="270.0" r="3.8"/>
+        <circle class="p-ok" cx="471.2" cy="270.0" r="3.8"/>
+        <circle class="p-ok" cx="506.0" cy="275.0" r="3.8"/>
+        <text class="mu" x="54.0" y="315" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">1</text>
+        <text class="mu" x="123.5" y="315" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">3</text>
+        <text class="mu" x="193.1" y="315" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">5</text>
+        <text class="mu" x="262.6" y="315" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">7</text>
+        <text class="mu" x="332.2" y="315" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">9</text>
+        <text class="mu" x="401.7" y="315" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">11</text>
+        <text class="mu" x="471.2" y="315" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">13</text>
+        <line class="ln-mu" x1="233.8" y1="77.6" x2="267.8" y2="65.6"/>
+        <text class="mu halo" x="271.8" y="69.6" font-size="10.5">bobina excluída da base</text>
+        <rect class="bx" x="636" y="30" width="252" height="282"/>
+        <text class="b" x="650" y="54" font-size="12">Linha central</text>
+        <text x="650" y="70.0" font-size="10.5">A média das médias dos subgrupos da</text>
+        <text x="650" y="83.5" font-size="10.5">base. É onde o processo costuma ficar.</text>
+        <text class="b" x="650" y="109.0" font-size="12">Limites de controle</text>
+        <text x="650" y="125.0" font-size="10.5">A média mais e menos três desvios das</text>
+        <text x="650" y="138.5" font-size="10.5">médias. Vêm dos dados, não do cliente.</text>
+        <text class="b" x="650" y="164.0" font-size="12">Subgrupo</text>
+        <text x="650" y="180.0" font-size="10.5">Cinco medições feitas juntas, nas</text>
+        <text x="650" y="193.5" font-size="10.5">mesmas condições: as cinco bolas de um</text>
+        <text x="650" y="207.0" font-size="10.5">lote, os cinco pontos de uma bobina.</text>
+        <text class="b" x="650" y="232.5" font-size="12">Amplitude</text>
+        <text x="650" y="248.5" font-size="10.5">A maior menos a menor medição do</text>
+        <text x="650" y="262.0" font-size="10.5">subgrupo. Mostra a variação de dentro</text>
+        <text x="650" y="275.5" font-size="10.5">do subgrupo.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 4.</b> As partes do gráfico de média e amplitude, com a base da espessura do filme na indústria. O ponto vazio é a bobina excluída da base.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Grandeza</th><th style="width:34%">Como calcular, com subgrupos de cinco</th><th>Pizzaria</th><th>Indústria</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Linha central da média</strong></td><td>Média das médias dos subgrupos da base</td><td class="num">400,3 g</td><td class="num">39,97 µm</td></tr>
+        <tr><td><strong>Amplitude média (R̄)</strong></td><td>Média das amplitudes da base</td><td class="num">18,7 g</td><td class="num">0,64 µm</td></tr>
+        <tr><td><strong>Limites da média</strong></td><td>Linha central ± 0,577 × R̄</td><td class="num">389,5 a 411,1 g</td><td class="num">39,60 a 40,34 µm</td></tr>
+        <tr><td><strong>Limite da amplitude</strong></td><td>2,114 × R̄ (o inferior é zero)</td><td class="num">39,5 g</td><td class="num">1,35 µm</td></tr>
+        <tr><td><strong>Desvio estimado (σ)</strong></td><td>R̄ ÷ 2,326</td><td class="num">8,03 g</td><td class="num">0,274 µm</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>As constantes 0,577, 2,114 e 2,326 são as de Shewhart para subgrupos de cinco, tabeladas nas normas e nos livros de estatística. Com outro tamanho de subgrupo, as constantes mudam. Os limites ficam a três desvios da média das médias: com o processo estável, quase nenhum ponto passa deles por acaso.</p>
+  <div class="note">
+    <h4>Os limites ficam fixos</h4>
+    <p>Depois de calculados com a base, os limites não se movem a cada ponto novo. Recalcular com os pontos de acompanhamento esconde exatamente a mudança que o gráfico deveria mostrar. Só se refaz a base depois de uma mudança de propósito no processo, como uma máquina reformada ou um método novo.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 6 ============================ -->
+<section id="sinais">
+  <p class="eyebrow">Módulo 6</p>
+  <h2>Os sinais</h2>
+  <p>Um ponto dentro dos limites não garante que nada mudou. Algumas sequências são improváveis demais para serem acaso, e também contam como sinal. Este material usa quatro regras, próximas das que as normas de gráfico de controle trazem.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 220" role="img" aria-label="As quatro regras de sinal deste material. Média fora dos limites: Uma média acima do limite superior ou abaixo do inferior. Amplitude fora do limite: Uma amplitude acima do limite: um subgrupo com variação demais por dentro. 7 do mesmo lado: Sete médias seguidas acima da linha central, ou sete abaixo. 6 subindo ou descendo: Seis médias seguidas, cada uma maior que a anterior, ou cada uma menor.">
+        <rect class="bx" x="12" y="10" width="212" height="200"/>
+        <text class="b" x="24" y="32" font-size="12.5">Média fora dos limites</text>
+        <line class="lim" x1="26" y1="60.0" x2="210" y2="60.0"/>
+        <line class="ctr" x1="26" y1="100.0" x2="210" y2="100.0"/>
+        <line class="lim" x1="26" y1="140.0" x2="210" y2="140.0"/>
+        <path class="ser" d="M34.0 96.0 L55.0 112.0 L76.0 84.0 L97.0 100.0 L118.0 108.0 L139.0 46.0 L160.0 96.0 L181.0 104.0 L202.0 92.0"/>
+        <circle class="p-ok" cx="34.0" cy="96.0" r="4"/>
+        <circle class="p-ok" cx="55.0" cy="112.0" r="4"/>
+        <circle class="p-ok" cx="76.0" cy="84.0" r="4"/>
+        <circle class="p-ok" cx="97.0" cy="100.0" r="4"/>
+        <circle class="p-ok" cx="118.0" cy="108.0" r="4"/>
+        <circle class="p-sig" cx="139.0" cy="46.0" r="4"/>
+        <circle class="p-ok" cx="160.0" cy="96.0" r="4"/>
+        <circle class="p-ok" cx="181.0" cy="104.0" r="4"/>
+        <circle class="p-ok" cx="202.0" cy="92.0" r="4"/>
+        <text x="24" y="168" font-size="10.5">Uma média acima do limite superior</text>
+        <text x="24" y="182" font-size="10.5">ou abaixo do inferior.</text>
+        <rect class="bx" x="234" y="10" width="212" height="200"/>
+        <text class="b" x="246" y="32" font-size="12.5">Amplitude fora do limite</text>
+        <line class="lim" x1="248" y1="78.0" x2="432" y2="78.0"/>
+        <line class="ctr" x1="248" y1="100.0" x2="432" y2="100.0"/>
+        <path class="ser" d="M256.0 102.0 L277.0 98.0 L298.0 106.0 L319.0 94.0 L340.0 100.0 L361.0 64.0 L382.0 98.0 L403.0 102.0 L424.0 98.0"/>
+        <circle class="p-ok" cx="256.0" cy="102.0" r="4"/>
+        <circle class="p-ok" cx="277.0" cy="98.0" r="4"/>
+        <circle class="p-ok" cx="298.0" cy="106.0" r="4"/>
+        <circle class="p-ok" cx="319.0" cy="94.0" r="4"/>
+        <circle class="p-ok" cx="340.0" cy="100.0" r="4"/>
+        <circle class="p-sig" cx="361.0" cy="64.0" r="4"/>
+        <circle class="p-ok" cx="382.0" cy="98.0" r="4"/>
+        <circle class="p-ok" cx="403.0" cy="102.0" r="4"/>
+        <circle class="p-ok" cx="424.0" cy="98.0" r="4"/>
+        <text x="246" y="168" font-size="10.5">Uma amplitude acima do limite: um</text>
+        <text x="246" y="182" font-size="10.5">subgrupo com variação demais por</text>
+        <text x="246" y="196" font-size="10.5">dentro.</text>
+        <rect class="bx" x="456" y="10" width="212" height="200"/>
+        <text class="b" x="468" y="32" font-size="12.5">7 do mesmo lado</text>
+        <line class="lim" x1="470" y1="60.0" x2="654" y2="60.0"/>
+        <line class="ctr" x1="470" y1="100.0" x2="654" y2="100.0"/>
+        <line class="lim" x1="470" y1="140.0" x2="654" y2="140.0"/>
+        <path class="ser" d="M478.0 88.0 L499.0 82.0 L520.0 104.0 L541.0 108.0 L562.0 112.0 L583.0 120.0 L604.0 108.0 L625.0 116.0 L646.0 114.0"/>
+        <circle class="p-ok" cx="478.0" cy="88.0" r="4"/>
+        <circle class="p-ok" cx="499.0" cy="82.0" r="4"/>
+        <circle class="p-sig" cx="520.0" cy="104.0" r="4"/>
+        <circle class="p-sig" cx="541.0" cy="108.0" r="4"/>
+        <circle class="p-sig" cx="562.0" cy="112.0" r="4"/>
+        <circle class="p-sig" cx="583.0" cy="120.0" r="4"/>
+        <circle class="p-sig" cx="604.0" cy="108.0" r="4"/>
+        <circle class="p-sig" cx="625.0" cy="116.0" r="4"/>
+        <circle class="p-sig" cx="646.0" cy="114.0" r="4"/>
+        <text x="468" y="168" font-size="10.5">Sete médias seguidas acima da</text>
+        <text x="468" y="182" font-size="10.5">linha central, ou sete abaixo.</text>
+        <rect class="bx" x="678" y="10" width="212" height="200"/>
+        <text class="b" x="690" y="32" font-size="12.5">6 subindo ou descendo</text>
+        <line class="lim" x1="692" y1="60.0" x2="876" y2="60.0"/>
+        <line class="ctr" x1="692" y1="100.0" x2="876" y2="100.0"/>
+        <line class="lim" x1="692" y1="140.0" x2="876" y2="140.0"/>
+        <path class="ser" d="M700.0 92.0 L721.0 112.0 L742.0 96.0 L763.0 104.0 L784.0 98.0 L805.0 90.0 L826.0 82.0 L847.0 72.0 L868.0 64.0"/>
+        <circle class="p-ok" cx="700.0" cy="92.0" r="4"/>
+        <circle class="p-ok" cx="721.0" cy="112.0" r="4"/>
+        <circle class="p-ok" cx="742.0" cy="96.0" r="4"/>
+        <circle class="p-sig" cx="763.0" cy="104.0" r="4"/>
+        <circle class="p-sig" cx="784.0" cy="98.0" r="4"/>
+        <circle class="p-sig" cx="805.0" cy="90.0" r="4"/>
+        <circle class="p-sig" cx="826.0" cy="82.0" r="4"/>
+        <circle class="p-sig" cx="847.0" cy="72.0" r="4"/>
+        <circle class="p-sig" cx="868.0" cy="64.0" r="4"/>
+        <text x="690" y="168" font-size="10.5">Seis médias seguidas, cada uma</text>
+        <text x="690" y="182" font-size="10.5">maior que a anterior, ou cada uma</text>
+        <text x="690" y="196" font-size="10.5">menor.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 5.</b> As quatro regras de sinal. Os pontos vermelhos são os que fecham ou formam o sinal.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Sinal</th><th style="width:38%">Causas típicas</th><th>Primeira pergunta no posto</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Média fora dos limites</strong></td><td>Ajuste errado, matéria-prima diferente, falha de equipamento.</td><td>"O que mudou neste subgrupo?"</td></tr>
+        <tr><td><strong>Amplitude fora do limite</strong></td><td>Um ponto estranho no subgrupo, um instrumento com folga, mistura de origens.</td><td>"As cinco medições vieram do mesmo lugar?"</td></tr>
+        <tr><td><strong>7 do mesmo lado</strong></td><td>Troca de lote, de operador ou de turno; ajuste que mudou o centro.</td><td>"O que começou no primeiro ponto da sequência?"</td></tr>
+        <tr><td><strong>6 subindo ou descendo</strong></td><td>Desgaste: ferramenta, rosca, filtro; aquecimento ao longo do turno.</td><td>"O que está se gastando ou esquentando?"</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Sinal não é defeito: é aviso. O produto pode estar dentro da especificação e o processo ter mudado. Por isso o CEP chega antes do refugo, como mostra o exemplo 2.</p>
+</section>
+
+<!-- ============================ MÓDULO 7 ============================ -->
+<section id="capacidade">
+  <p class="eyebrow">Módulo 7</p>
+  <h2>Capacidade: Cp e Cpk</h2>
+  <p>Estável não quer dizer bom. Um processo em controle pode variar mais do que o cliente aceita. A capacidade compara a variação do processo, seis desvios, com a tolerância. O Cp olha só a largura; o Cpk olha também o centro, pelo lado mais perto do limite.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 250" role="img" aria-label="Três processos diante da mesma especificação. Estreito e centrado: Cp e Cpk de 1,67, capaz. Estreito e deslocado: Cp de 1,67 e Cpk de 0,67, não capaz por estar fora do centro. Largo e centrado: Cp e Cpk de 0,8, não capaz pela largura.">
+        <path class="curve" d="M83.0 170 L83.0 170.0 L84.2 170.0 L85.4 169.9 L86.6 169.9 L87.8 169.9 L89.0 169.9 L90.2 169.8 L91.4 169.8 L92.6 169.7 L93.8 169.7 L95.0 169.6 L96.2 169.5 L97.4 169.3 L98.6 169.2 L99.8 169.0 L101.0 168.8 L102.2 168.5 L103.4 168.2 L104.6 167.8 L105.8 167.4 L107.0 166.9 L108.2 166.3 L109.4 165.6 L110.6 164.7 L111.8 163.8 L113.0 162.8 L114.2 161.6 L115.4 160.2 L116.6 158.7 L117.8 157.0 L119.0 155.1 L120.2 153.0 L121.4 150.7 L122.6 148.2 L123.8 145.5 L125.0 142.6 L126.2 139.4 L127.4 136.0 L128.6 132.5 L129.8 128.7 L131.0 124.8 L132.2 120.7 L133.4 116.5 L134.6 112.1 L135.8 107.7 L137.0 103.3 L138.2 98.8 L139.4 94.4 L140.6 90.1 L141.8 85.9 L143.0 81.9 L144.2 78.1 L145.4 74.6 L146.6 71.3 L147.8 68.5 L149.0 65.9 L150.2 63.8 L151.4 62.2 L152.6 61.0 L153.8 60.2 L155.0 60.0 L156.2 60.2 L157.4 61.0 L158.6 62.2 L159.8 63.8 L161.0 65.9 L162.2 68.5 L163.4 71.3 L164.6 74.6 L165.8 78.1 L167.0 81.9 L168.2 85.9 L169.4 90.1 L170.6 94.4 L171.8 98.8 L173.0 103.3 L174.2 107.7 L175.4 112.1 L176.6 116.5 L177.8 120.7 L179.0 124.8 L180.2 128.7 L181.4 132.5 L182.6 136.0 L183.8 139.4 L185.0 142.6 L186.2 145.5 L187.4 148.2 L188.6 150.7 L189.8 153.0 L191.0 155.1 L192.2 157.0 L193.4 158.7 L194.6 160.2 L195.8 161.6 L197.0 162.8 L198.2 163.8 L199.4 164.7 L200.6 165.6 L201.8 166.3 L203.0 166.9 L204.2 167.4 L205.4 167.8 L206.6 168.2 L207.8 168.5 L209.0 168.8 L210.2 169.0 L211.4 169.2 L212.6 169.3 L213.8 169.5 L215.0 169.6 L216.2 169.7 L217.4 169.7 L218.6 169.8 L219.8 169.8 L221.0 169.9 L222.2 169.9 L223.4 169.9 L224.6 169.9 L225.8 170.0 L227.0 170.0 L227.0 170 Z"/>
+        <line class="ln-mu" x1="20" y1="170" x2="290" y2="170"/>
+        <line class="esp" x1="65" y1="46" x2="65" y2="170"/><text class="b" x="65" y="42" font-size="10.5" text-anchor="middle">LIE</text>
+        <line class="esp" x1="245" y1="46" x2="245" y2="170"/><text class="b" x="245" y="42" font-size="10.5" text-anchor="middle">LSE</text>
+        <text class="b" x="155.0" y="192" font-size="12" text-anchor="middle">Cp 1,67 · Cpk 1,67</text>
+        <text class="mu" text-anchor="middle" x="155.0" y="210" font-size="10.5">Estreito e centrado: capaz.</text>
+        <path class="curve" d="M433.0 170 L433.0 170.0 L434.2 170.0 L435.4 169.9 L436.6 169.9 L437.8 169.9 L439.0 169.9 L440.2 169.8 L441.4 169.8 L442.6 169.7 L443.8 169.7 L445.0 169.6 L446.2 169.5 L447.4 169.3 L448.6 169.2 L449.8 169.0 L451.0 168.8 L452.2 168.5 L453.4 168.2 L454.6 167.8 L455.8 167.4 L457.0 166.9 L458.2 166.3 L459.4 165.6 L460.6 164.7 L461.8 163.8 L463.0 162.8 L464.2 161.6 L465.4 160.2 L466.6 158.7 L467.8 157.0 L469.0 155.1 L470.2 153.0 L471.4 150.7 L472.6 148.2 L473.8 145.5 L475.0 142.6 L476.2 139.4 L477.4 136.0 L478.6 132.5 L479.8 128.7 L481.0 124.8 L482.2 120.7 L483.4 116.5 L484.6 112.1 L485.8 107.7 L487.0 103.3 L488.2 98.8 L489.4 94.4 L490.6 90.1 L491.8 85.9 L493.0 81.9 L494.2 78.1 L495.4 74.6 L496.6 71.3 L497.8 68.5 L499.0 65.9 L500.2 63.8 L501.4 62.2 L502.6 61.0 L503.8 60.2 L505.0 60.0 L506.2 60.2 L507.4 61.0 L508.6 62.2 L509.8 63.8 L511.0 65.9 L512.2 68.5 L513.4 71.3 L514.6 74.6 L515.8 78.1 L517.0 81.9 L518.2 85.9 L519.4 90.1 L520.6 94.4 L521.8 98.8 L523.0 103.3 L524.2 107.7 L525.4 112.1 L526.6 116.5 L527.8 120.7 L529.0 124.8 L530.2 128.7 L531.4 132.5 L532.6 136.0 L533.8 139.4 L535.0 142.6 L536.2 145.5 L537.4 148.2 L538.6 150.7 L539.8 153.0 L541.0 155.1 L542.2 157.0 L543.4 158.7 L544.6 160.2 L545.8 161.6 L547.0 162.8 L548.2 163.8 L549.4 164.7 L550.6 165.6 L551.8 166.3 L553.0 166.9 L554.2 167.4 L555.4 167.8 L556.6 168.2 L557.8 168.5 L559.0 168.8 L560.2 169.0 L561.4 169.2 L562.6 169.3 L563.8 169.5 L565.0 169.6 L566.2 169.7 L567.4 169.7 L568.6 169.8 L569.8 169.8 L571.0 169.9 L572.2 169.9 L573.4 169.9 L574.6 169.9 L575.8 170.0 L577.0 170.0 L577.0 170 Z"/>
+        <line class="ln-mu" x1="316" y1="170" x2="586" y2="170"/>
+        <line class="esp" x1="361" y1="46" x2="361" y2="170"/><text class="b" x="361" y="42" font-size="10.5" text-anchor="middle">LIE</text>
+        <line class="esp" x1="541" y1="46" x2="541" y2="170"/><text class="b" x="541" y="42" font-size="10.5" text-anchor="middle">LSE</text>
+        <text class="b" x="451.0" y="192" font-size="12" text-anchor="middle">Cp 1,67 · Cpk 0,67</text>
+        <text class="mu" text-anchor="middle" x="451.0" y="210" font-size="10.5">Estreito, mas fora do centro:</text>
+        <text class="mu" text-anchor="middle" x="451.0" y="224" font-size="10.5">centralizar.</text>
+        <path class="curve" d="M612.0 170 L612.0 169.8 L614.5 169.8 L617.0 169.7 L619.5 169.7 L622.0 169.6 L624.5 169.5 L627.0 169.3 L629.5 169.2 L632.0 169.0 L634.5 168.8 L637.0 168.5 L639.5 168.2 L642.0 167.8 L644.5 167.4 L647.0 166.9 L649.5 166.3 L652.0 165.6 L654.5 164.7 L657.0 163.8 L659.5 162.8 L662.0 161.6 L664.5 160.2 L667.0 158.7 L669.5 157.0 L672.0 155.1 L674.5 153.0 L677.0 150.7 L679.5 148.2 L682.0 145.5 L684.5 142.6 L687.0 139.4 L689.5 136.0 L692.0 132.5 L694.5 128.7 L697.0 124.8 L699.5 120.7 L702.0 116.5 L704.5 112.1 L707.0 107.7 L709.5 103.3 L712.0 98.8 L714.5 94.4 L717.0 90.1 L719.5 85.9 L722.0 81.9 L724.5 78.1 L727.0 74.6 L729.5 71.3 L732.0 68.5 L734.5 65.9 L737.0 63.8 L739.5 62.2 L742.0 61.0 L744.5 60.2 L747.0 60.0 L749.5 60.2 L752.0 61.0 L754.5 62.2 L757.0 63.8 L759.5 65.9 L762.0 68.5 L764.5 71.3 L767.0 74.6 L769.5 78.1 L772.0 81.9 L774.5 85.9 L777.0 90.1 L779.5 94.4 L782.0 98.8 L784.5 103.3 L787.0 107.7 L789.5 112.1 L792.0 116.5 L794.5 120.7 L797.0 124.8 L799.5 128.7 L802.0 132.5 L804.5 136.0 L807.0 139.4 L809.5 142.6 L812.0 145.5 L814.5 148.2 L817.0 150.7 L819.5 153.0 L822.0 155.1 L824.5 157.0 L827.0 158.7 L829.5 160.2 L832.0 161.6 L834.5 162.8 L837.0 163.8 L839.5 164.7 L842.0 165.6 L844.5 166.3 L847.0 166.9 L849.5 167.4 L852.0 167.8 L854.5 168.2 L857.0 168.5 L859.5 168.8 L862.0 169.0 L864.5 169.2 L867.0 169.3 L869.5 169.5 L872.0 169.6 L874.5 169.7 L877.0 169.7 L879.5 169.8 L882.0 169.8 L882.0 170 Z"/>
+        <line class="ln-mu" x1="612" y1="170" x2="882" y2="170"/>
+        <line class="esp" x1="657" y1="46" x2="657" y2="170"/><text class="b" x="657" y="42" font-size="10.5" text-anchor="middle">LIE</text>
+        <line class="esp" x1="837" y1="46" x2="837" y2="170"/><text class="b" x="837" y="42" font-size="10.5" text-anchor="middle">LSE</text>
+        <text class="b" x="747.0" y="192" font-size="12" text-anchor="middle">Cp 0,80 · Cpk 0,80</text>
+        <text class="mu" text-anchor="middle" x="747.0" y="210" font-size="10.5">Centrado, mas largo: reduzir a variação.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 6.</b> Três processos diante da mesma especificação.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:22%">Índice</th><th style="width:38%">Conta</th><th>Leitura neste material</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Cp</strong></td><td>(LSE − LIE) ÷ (6 × σ)</td><td>Quantas vezes a variação cabe na tolerância, se estivesse centrada.</td></tr>
+        <tr><td><strong>Cpk</strong></td><td>O menor entre (LSE − média) e (média − LIE), ÷ (3 × σ)</td><td>1,33 ou mais: capaz. De 1,00 a 1,33: no limite. Abaixo de 1,00: não capaz.</td></tr>
+        <tr><td><strong>Cp maior que Cpk</strong></td><td>A diferença entre os dois</td><td>O processo está fora do centro: centralizar é a ação mais barata.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 230" role="img" aria-label="Na pizzaria, as bolas variam com desvio de cerca de 8 g, e as médias de cinco bolas variam menos, cerca de 3,6 g. Os limites de controle da média, de 389,5 a 411,1 g, ficam dentro da especificação de 380 a 420 g, mas isso não diz que cada bola está dentro dela.">
+        <path class="curve" style="fill-opacity:.35" d="M113.6 170 L113.6 170.0 L119.3 170.0 L124.9 170.0 L130.6 170.0 L136.3 169.9 L141.9 169.9 L147.6 169.9 L153.2 169.9 L158.9 169.9 L164.6 169.8 L170.2 169.8 L175.9 169.7 L181.5 169.7 L187.2 169.6 L192.9 169.5 L198.5 169.4 L204.2 169.3 L209.8 169.1 L215.5 168.9 L221.2 168.7 L226.8 168.4 L232.5 168.1 L238.1 167.8 L243.8 167.4 L249.5 166.9 L255.1 166.4 L260.8 165.8 L266.4 165.1 L272.1 164.3 L277.8 163.5 L283.4 162.6 L289.1 161.5 L294.7 160.4 L300.4 159.1 L306.1 157.8 L311.7 156.3 L317.4 154.7 L323.0 153.0 L328.7 151.2 L334.4 149.4 L340.0 147.4 L345.7 145.3 L351.3 143.2 L357.0 141.1 L362.7 138.9 L368.3 136.6 L374.0 134.4 L379.6 132.2 L385.3 130.1 L391.0 128.0 L396.6 126.0 L402.3 124.1 L407.9 122.3 L413.6 120.7 L419.3 119.2 L424.9 118.0 L430.6 116.9 L436.2 116.1 L441.9 115.5 L447.6 115.1 L453.2 115.0 L458.9 115.1 L464.5 115.5 L470.2 116.1 L475.9 116.9 L481.5 118.0 L487.2 119.2 L492.8 120.7 L498.5 122.3 L504.2 124.1 L509.8 126.0 L515.5 128.0 L521.1 130.1 L526.8 132.2 L532.5 134.4 L538.1 136.6 L543.8 138.9 L549.4 141.1 L555.1 143.2 L560.8 145.3 L566.4 147.4 L572.1 149.4 L577.7 151.2 L583.4 153.0 L589.1 154.7 L594.7 156.3 L600.4 157.8 L606.0 159.1 L611.7 160.4 L617.4 161.5 L623.0 162.6 L628.7 163.5 L634.3 164.3 L640.0 165.1 L645.7 165.8 L651.3 166.4 L657.0 166.9 L662.6 167.4 L668.3 167.8 L674.0 168.1 L679.6 168.4 L685.3 168.7 L690.9 168.9 L696.6 169.1 L702.2 169.3 L707.9 169.4 L713.6 169.5 L719.2 169.6 L724.9 169.7 L730.5 169.7 L736.2 169.8 L741.9 169.8 L747.5 169.9 L753.2 169.9 L758.8 169.9 L764.5 169.9 L770.2 169.9 L775.8 170.0 L781.5 170.0 L787.1 170.0 L792.8 170.0 L792.8 170 Z"/>
+        <path class="curve" d="M301.3 170 L301.3 170.0 L303.9 169.9 L306.4 169.9 L308.9 169.9 L311.5 169.9 L314.0 169.8 L316.5 169.8 L319.1 169.8 L321.6 169.7 L324.1 169.6 L326.7 169.5 L329.2 169.4 L331.7 169.3 L334.2 169.1 L336.8 168.9 L339.3 168.6 L341.8 168.3 L344.4 167.9 L346.9 167.5 L349.4 167.0 L352.0 166.4 L354.5 165.7 L357.0 164.9 L359.6 164.0 L362.1 163.0 L364.6 161.8 L367.2 160.4 L369.7 158.9 L372.2 157.2 L374.7 155.2 L377.3 153.1 L379.8 150.7 L382.3 148.1 L384.9 145.3 L387.4 142.2 L389.9 138.8 L392.5 135.2 L395.0 131.4 L397.5 127.4 L400.1 123.1 L402.6 118.6 L405.1 114.0 L407.7 109.2 L410.2 104.2 L412.7 99.2 L415.2 94.2 L417.8 89.1 L420.3 84.1 L422.8 79.2 L425.4 74.5 L427.9 69.9 L430.4 65.6 L433.0 61.6 L435.5 57.9 L438.0 54.6 L440.6 51.8 L443.1 49.4 L445.6 47.5 L448.2 46.1 L450.7 45.3 L453.2 45.0 L455.7 45.3 L458.3 46.1 L460.8 47.5 L463.3 49.4 L465.9 51.8 L468.4 54.6 L470.9 57.9 L473.5 61.6 L476.0 65.6 L478.5 69.9 L481.1 74.5 L483.6 79.2 L486.1 84.1 L488.7 89.1 L491.2 94.2 L493.7 99.2 L496.2 104.2 L498.8 109.2 L501.3 114.0 L503.8 118.6 L506.4 123.1 L508.9 127.4 L511.4 131.4 L514.0 135.2 L516.5 138.8 L519.0 142.2 L521.6 145.3 L524.1 148.1 L526.6 150.7 L529.1 153.1 L531.7 155.2 L534.2 157.2 L536.7 158.9 L539.3 160.4 L541.8 161.8 L544.3 163.0 L546.9 164.0 L549.4 164.9 L551.9 165.7 L554.5 166.4 L557.0 167.0 L559.5 167.5 L562.1 167.9 L564.6 168.3 L567.1 168.6 L569.6 168.9 L572.2 169.1 L574.7 169.3 L577.2 169.4 L579.8 169.5 L582.3 169.6 L584.8 169.7 L587.4 169.8 L589.9 169.8 L592.4 169.8 L595.0 169.9 L597.5 169.9 L600.0 169.9 L602.6 169.9 L605.1 170.0 L605.1 170 Z"/>
+        <line class="ln-mu" x1="80" y1="170" x2="820" y2="170"/>
+        <line class="esp" x1="238.6" y1="36" x2="238.6" y2="170"/>
+        <text class="b halo" x="238.6" y="30" font-size="10.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">LIE 380</text>
+        <line class="esp" x1="661.4" y1="36" x2="661.4" y2="170"/>
+        <text class="b halo" x="661.4" y="30" font-size="10.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">LSE 420</text>
+        <line class="lim" x1="339.3" y1="24" x2="339.3" y2="170"/>
+        <text class="mu halo" x="339.3" y="18" font-size="10.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">LIC 389,5</text>
+        <line class="lim" x1="567.2" y1="24" x2="567.2" y2="170"/>
+        <text class="mu halo" x="567.2" y="18" font-size="10.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">LSC 411,1</text>
+        <text class="mu" x="132.9" y="186" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">370</text>
+        <text class="mu" x="238.6" y="186" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">380</text>
+        <text class="mu" x="344.3" y="186" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">390</text>
+        <text class="mu" x="450.0" y="186" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">400</text>
+        <text class="mu" x="555.7" y="186" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">410</text>
+        <text class="mu" x="661.4" y="186" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">420</text>
+        <text class="mu" x="767.1" y="186" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">430</text>
+        <text class="b halo" x="453.2" y="36" font-size="11" text-anchor="middle">médias de cinco bolas</text>
+        <text class="mu halo" x="693.1" y="150" font-size="11">bolas, uma a uma</text>
+        <text x="450" y="218" font-size="11.5" text-anchor="middle">Os limites de controle valem para médias. A especificação vale para cada bola que vai ao forno.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 7.</b> Limite de controle e limite da especificação, na pizzaria. A curva estreita é a das médias; a larga, a das bolas.</figcaption>
+  </figure>
+  <div class="note">
+    <h4>Só calcule a capacidade com o processo em controle</h4>
+    <p>Com causa especial na base, o desvio estimado mistura duas coisas, e o Cpk não prevê nada. Primeiro, trate os sinais; depois, calcule. E nunca desenhe os limites da especificação no gráfico das médias: eles valem para cada peça, e as médias variam menos que as peças. Um gráfico de médias dentro da especificação pode esconder peças fora, como no exemplo 3.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 8 ============================ -->
+<section id="exemplos">
+  <p class="eyebrow">Módulo 8</p>
+  <h2>Exemplos resolvidos</h2>
+  <p>Dois processos da série: o peso da bola de massa da pizzaria e a espessura do filme da extrusora 3 da indústria. Os dados são ilustrativos e foram criados para este treinamento; os dois exemplos também estão preenchidos na planilha de apoio.</p>
+
+  <h3>Exemplo 1. O peso da bola de massa, na pizzaria</h3>
+  <dl class="ficha">
+    <div><dt>Característica</dt><dd>Peso da bola de massa da pizza grande, de 380 a 420 g.</dd></div>
+    <div><dt>Subgrupo</dt><dd>As cinco bolas de cada lote de massa, pesadas uma a uma.</dd></div>
+    <div><dt>Medição</dt><dd>Balança da bancada BAL-01, de 1 g, verificada em 01/03/2027.</dd></div>
+    <div><dt>Período</dt><dd>Um lote por dia, de 22/03 a 15/04/2027. Base: todos os subgrupos.</dd></div>
+    <div><dt>Responsável</dt><dd>Pizzaiolo líder, com o gerente da loja.</dd></div>
+  </dl>
+  <p>Depois do registro de produto não conforme 2027-17, de 18/03, com bolas de 365 g em média, o pizzaiolo líder passou a pesar e anotar as cinco bolas de cada lote, e não só a média, por 25 dias.</p>
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 360" role="img" aria-label="Gráfico de média e amplitude dos 25 lotes de massa da pizzaria. Todas as médias ficam entre 389,5 e 411,1 g, e todas as amplitudes abaixo de 39,5 g, sem nenhuma das regras de sinal: o processo está em controle.">
+        <text class="mono mu" x="50" y="30" font-size="10">MÉDIA DO LOTE (g)</text>
+        <line class="ln-mu" x1="50" y1="40" x2="50" y2="180"/><line class="ln-mu" x1="50" y1="180" x2="790" y2="180"/>
+        <line class="lim" x1="50" y1="58.9" x2="790" y2="58.9"/>
+        <text class="mu halo" x="796" y="62.9" font-size="10.5" style="font-variant-numeric:tabular-nums">LSC 411,1</text>
+        <line class="ctr" x1="50" y1="110.9" x2="790" y2="110.9"/>
+        <text class="mu halo" x="796" y="114.9" font-size="10.5" style="font-variant-numeric:tabular-nums">LC 400,3</text>
+        <line class="lim" x1="50" y1="163.0" x2="790" y2="163.0"/>
+        <text class="mu halo" x="796" y="167.0" font-size="10.5" style="font-variant-numeric:tabular-nums">LIC 389,5</text>
+        <path class="ser" d="M64.0 119.2 L93.7 106.6 L123.3 102.8 L153.0 109.5 L182.7 112.4 L212.3 123.0 L242.0 118.2 L271.7 128.8 L301.3 98.9 L331.0 140.4 L360.7 101.8 L390.3 78.6 L420.0 123.0 L449.7 154.9 L479.3 88.3 L509.0 106.6 L538.7 121.1 L568.3 102.8 L598.0 69.0 L627.7 113.4 L657.3 120.1 L687.0 125.0 L716.7 129.8 L746.3 94.1 L776.0 85.4"/>
+        <circle class="p-ok" cx="64.0" cy="119.2" r="3.8"/>
+        <circle class="p-ok" cx="93.7" cy="106.6" r="3.8"/>
+        <circle class="p-ok" cx="123.3" cy="102.8" r="3.8"/>
+        <circle class="p-ok" cx="153.0" cy="109.5" r="3.8"/>
+        <circle class="p-ok" cx="182.7" cy="112.4" r="3.8"/>
+        <circle class="p-ok" cx="212.3" cy="123.0" r="3.8"/>
+        <circle class="p-ok" cx="242.0" cy="118.2" r="3.8"/>
+        <circle class="p-ok" cx="271.7" cy="128.8" r="3.8"/>
+        <circle class="p-ok" cx="301.3" cy="98.9" r="3.8"/>
+        <circle class="p-ok" cx="331.0" cy="140.4" r="3.8"/>
+        <circle class="p-ok" cx="360.7" cy="101.8" r="3.8"/>
+        <circle class="p-ok" cx="390.3" cy="78.6" r="3.8"/>
+        <circle class="p-ok" cx="420.0" cy="123.0" r="3.8"/>
+        <circle class="p-ok" cx="449.7" cy="154.9" r="3.8"/>
+        <circle class="p-ok" cx="479.3" cy="88.3" r="3.8"/>
+        <circle class="p-ok" cx="509.0" cy="106.6" r="3.8"/>
+        <circle class="p-ok" cx="538.7" cy="121.1" r="3.8"/>
+        <circle class="p-ok" cx="568.3" cy="102.8" r="3.8"/>
+        <circle class="p-ok" cx="598.0" cy="69.0" r="3.8"/>
+        <circle class="p-ok" cx="627.7" cy="113.4" r="3.8"/>
+        <circle class="p-ok" cx="657.3" cy="120.1" r="3.8"/>
+        <circle class="p-ok" cx="687.0" cy="125.0" r="3.8"/>
+        <circle class="p-ok" cx="716.7" cy="129.8" r="3.8"/>
+        <circle class="p-ok" cx="746.3" cy="94.1" r="3.8"/>
+        <circle class="p-ok" cx="776.0" cy="85.4" r="3.8"/>
+        <text class="mu" x="64.0" y="195" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">1</text>
+        <text class="mu" x="182.7" y="195" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">5</text>
+        <text class="mu" x="301.3" y="195" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">9</text>
+        <text class="mu" x="420.0" y="195" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">13</text>
+        <text class="mu" x="538.7" y="195" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">17</text>
+        <text class="mu" x="657.3" y="195" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">21</text>
+        <text class="mu" x="776.0" y="195" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">25</text>
+        <text class="mono mu" x="50" y="220" font-size="10">AMPLITUDE DO LOTE (g)</text>
+        <line class="ln-mu" x1="50" y1="230" x2="50" y2="330"/><line class="ln-mu" x1="50" y1="330" x2="790" y2="330"/>
+        <line class="lim" x1="50" y1="236.0" x2="790" y2="236.0"/>
+        <text class="mu halo" x="796" y="240.0" font-size="10.5" style="font-variant-numeric:tabular-nums">LSC 39,5</text>
+        <line class="ctr" x1="50" y1="285.5" x2="790" y2="285.5"/>
+        <text class="mu halo" x="796" y="289.5" font-size="10.5" style="font-variant-numeric:tabular-nums">LC 18,7</text>
+        <path class="ser" d="M64.0 270.5 L93.7 296.7 L123.3 291.9 L153.0 272.9 L182.7 275.2 L212.3 291.9 L242.0 301.4 L271.7 284.8 L301.3 268.1 L331.0 270.5 L360.7 299.0 L390.3 318.1 L420.0 275.2 L449.7 275.2 L479.3 291.9 L509.0 253.8 L538.7 320.5 L568.3 258.6 L598.0 277.6 L627.7 280.0 L657.3 299.0 L687.0 280.0 L716.7 296.7 L746.3 308.6 L776.0 280.0"/>
+        <circle class="p-ok" cx="64.0" cy="270.5" r="3.8"/>
+        <circle class="p-ok" cx="93.7" cy="296.7" r="3.8"/>
+        <circle class="p-ok" cx="123.3" cy="291.9" r="3.8"/>
+        <circle class="p-ok" cx="153.0" cy="272.9" r="3.8"/>
+        <circle class="p-ok" cx="182.7" cy="275.2" r="3.8"/>
+        <circle class="p-ok" cx="212.3" cy="291.9" r="3.8"/>
+        <circle class="p-ok" cx="242.0" cy="301.4" r="3.8"/>
+        <circle class="p-ok" cx="271.7" cy="284.8" r="3.8"/>
+        <circle class="p-ok" cx="301.3" cy="268.1" r="3.8"/>
+        <circle class="p-ok" cx="331.0" cy="270.5" r="3.8"/>
+        <circle class="p-ok" cx="360.7" cy="299.0" r="3.8"/>
+        <circle class="p-ok" cx="390.3" cy="318.1" r="3.8"/>
+        <circle class="p-ok" cx="420.0" cy="275.2" r="3.8"/>
+        <circle class="p-ok" cx="449.7" cy="275.2" r="3.8"/>
+        <circle class="p-ok" cx="479.3" cy="291.9" r="3.8"/>
+        <circle class="p-ok" cx="509.0" cy="253.8" r="3.8"/>
+        <circle class="p-ok" cx="538.7" cy="320.5" r="3.8"/>
+        <circle class="p-ok" cx="568.3" cy="258.6" r="3.8"/>
+        <circle class="p-ok" cx="598.0" cy="277.6" r="3.8"/>
+        <circle class="p-ok" cx="627.7" cy="280.0" r="3.8"/>
+        <circle class="p-ok" cx="657.3" cy="299.0" r="3.8"/>
+        <circle class="p-ok" cx="687.0" cy="280.0" r="3.8"/>
+        <circle class="p-ok" cx="716.7" cy="296.7" r="3.8"/>
+        <circle class="p-ok" cx="746.3" cy="308.6" r="3.8"/>
+        <circle class="p-ok" cx="776.0" cy="280.0" r="3.8"/>
+        <text class="mu" x="64.0" y="345" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">1</text>
+        <text class="mu" x="182.7" y="345" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">5</text>
+        <text class="mu" x="301.3" y="345" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">9</text>
+        <text class="mu" x="420.0" y="345" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">13</text>
+        <text class="mu" x="538.7" y="345" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">17</text>
+        <text class="mu" x="657.3" y="345" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">21</text>
+        <text class="mu" x="776.0" y="345" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">25</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 8.</b> Média e amplitude dos 25 lotes de massa, de 22/03 a 15/04/2027.</figcaption>
+  </figure>
+  <div class="tbl">
+    <table class="aud">
+      <caption>25 subgrupos · LC 400,3 · LSC 411,1 · LIC 389,5 · R̄ 18,7 · Cp 0,83 · Cpk 0,82</caption>
+      <thead><tr><th>#</th><th>Data</th><th class="c" colspan="5">Cinco medições (em g)</th><th class="c">Média</th><th class="c">Amplitude</th><th style="width:22%">Fase</th><th>Sinal</th></tr></thead>
+      <tbody>
+        <tr><td class="n">1</td><td>22/03<small>Massa 22/03</small></td><td class="c">390</td><td class="c">399</td><td class="c">411</td><td class="c">386</td><td class="c">407</td><td class="c">398,6</td><td class="c">25</td><td>Base</td><td>—</td></tr>
+        <tr><td class="n">2</td><td>23/03<small>Massa 23/03</small></td><td class="c">395</td><td class="c">409</td><td class="c">398</td><td class="c">400</td><td class="c">404</td><td class="c">401,2</td><td class="c">14</td><td>Base</td><td>—</td></tr>
+        <tr><td class="n">3</td><td>24/03<small>Massa 24/03</small></td><td class="c">396</td><td class="c">400</td><td class="c">399</td><td class="c">412</td><td class="c">403</td><td class="c">402,0</td><td class="c">16</td><td>Base</td><td>—</td></tr>
+        <tr><td class="n">4</td><td>25/03<small>Massa 25/03</small></td><td class="c">387</td><td class="c">403</td><td class="c">402</td><td class="c">400</td><td class="c">411</td><td class="c">400,6</td><td class="c">24</td><td>Base</td><td>—</td></tr>
+        <tr><td class="n">5</td><td>26/03<small>Massa 26/03</small></td><td class="c">409</td><td class="c">388</td><td class="c">411</td><td class="c">396</td><td class="c">396</td><td class="c">400,0</td><td class="c">23</td><td>Base</td><td>—</td></tr>
+        <tr><td class="n">6</td><td>27/03<small>Massa 27/03</small></td><td class="c">396</td><td class="c">399</td><td class="c">406</td><td class="c">390</td><td class="c">398</td><td class="c">397,8</td><td class="c">16</td><td>Base</td><td>—</td></tr>
+        <tr><td class="n">7</td><td>28/03<small>Massa 28/03</small></td><td class="c">393</td><td class="c">397</td><td class="c">395</td><td class="c">404</td><td class="c">405</td><td class="c">398,8</td><td class="c">12</td><td>Base</td><td>—</td></tr>
+        <tr><td class="n">8</td><td>29/03<small>Massa 29/03</small></td><td class="c">391</td><td class="c">401</td><td class="c">386</td><td class="c">400</td><td class="c">405</td><td class="c">396,6</td><td class="c">19</td><td>Base</td><td>—</td></tr>
+        <tr><td class="n">9</td><td>30/03<small>Massa 30/03</small></td><td class="c">397</td><td class="c">419</td><td class="c">403</td><td class="c">393</td><td class="c">402</td><td class="c">402,8</td><td class="c">26</td><td>Base</td><td>—</td></tr>
+        <tr><td class="n">10</td><td>31/03<small>Massa 31/03</small></td><td class="c">393</td><td class="c">403</td><td class="c">398</td><td class="c">399</td><td class="c no">378</td><td class="c">394,2</td><td class="c">25</td><td>Base</td><td>—</td></tr>
+        <tr><td class="n">11</td><td>01/04<small>Massa 01/04</small></td><td class="c">393</td><td class="c">405</td><td class="c">405</td><td class="c">406</td><td class="c">402</td><td class="c">402,2</td><td class="c">13</td><td>Base</td><td>—</td></tr>
+        <tr><td class="n">12</td><td>02/04<small>Massa 02/04</small></td><td class="c">408</td><td class="c">407</td><td class="c">404</td><td class="c">409</td><td class="c">407</td><td class="c">407,0</td><td class="c">5</td><td>Base</td><td>—</td></tr>
+        <tr><td class="n">13</td><td>03/04<small>Massa 03/04</small></td><td class="c">396</td><td class="c">404</td><td class="c">407</td><td class="c">398</td><td class="c">384</td><td class="c">397,8</td><td class="c">23</td><td>Base</td><td>—</td></tr>
+        <tr><td class="n">14</td><td>04/04<small>Massa 04/04</small></td><td class="c">397</td><td class="c">402</td><td class="c no">379</td><td class="c">388</td><td class="c">390</td><td class="c">391,2</td><td class="c">23</td><td>Base</td><td>—</td></tr>
+        <tr><td class="n">15</td><td>05/04<small>Massa 05/04</small></td><td class="c">413</td><td class="c">406</td><td class="c">397</td><td class="c">407</td><td class="c">402</td><td class="c">405,0</td><td class="c">16</td><td>Base</td><td>—</td></tr>
+        <tr><td class="n">16</td><td>06/04<small>Massa 06/04</small></td><td class="c">387</td><td class="c">396</td><td class="c">407</td><td class="c">397</td><td class="c">419</td><td class="c">401,2</td><td class="c">32</td><td>Base</td><td>—</td></tr>
+        <tr><td class="n">17</td><td>07/04<small>Massa 07/04</small></td><td class="c">396</td><td class="c">397</td><td class="c">398</td><td class="c">400</td><td class="c">400</td><td class="c">398,2</td><td class="c">4</td><td>Base</td><td>—</td></tr>
+        <tr><td class="n">18</td><td>08/04<small>Massa 08/04</small></td><td class="c">411</td><td class="c">417</td><td class="c">398</td><td class="c">387</td><td class="c">397</td><td class="c">402,0</td><td class="c">30</td><td>Base</td><td>—</td></tr>
+        <tr><td class="n">19</td><td>09/04<small>Massa 09/04</small></td><td class="c">401</td><td class="c">414</td><td class="c">406</td><td class="c">401</td><td class="c no">423</td><td class="c">409,0</td><td class="c">22</td><td>Base</td><td>—</td></tr>
+        <tr><td class="n">20</td><td>10/04<small>Massa 10/04</small></td><td class="c">391</td><td class="c">391</td><td class="c">412</td><td class="c">405</td><td class="c">400</td><td class="c">399,8</td><td class="c">21</td><td>Base</td><td>—</td></tr>
+        <tr><td class="n">21</td><td>11/04<small>Massa 11/04</small></td><td class="c">390</td><td class="c">403</td><td class="c">403</td><td class="c">395</td><td class="c">401</td><td class="c">398,4</td><td class="c">13</td><td>Base</td><td>—</td></tr>
+        <tr><td class="n">22</td><td>12/04<small>Massa 12/04</small></td><td class="c">388</td><td class="c">409</td><td class="c">390</td><td class="c">408</td><td class="c">392</td><td class="c">397,4</td><td class="c">21</td><td>Base</td><td>—</td></tr>
+        <tr><td class="n">23</td><td>13/04<small>Massa 13/04</small></td><td class="c">392</td><td class="c">398</td><td class="c">393</td><td class="c">406</td><td class="c">393</td><td class="c">396,4</td><td class="c">14</td><td>Base</td><td>—</td></tr>
+        <tr><td class="n">24</td><td>14/04<small>Massa 14/04</small></td><td class="c">401</td><td class="c">406</td><td class="c">407</td><td class="c">407</td><td class="c">398</td><td class="c">403,8</td><td class="c">9</td><td>Base</td><td>—</td></tr>
+        <tr><td class="n">25</td><td>15/04<small>Massa 15/04</small></td><td class="c">416</td><td class="c">399</td><td class="c">395</td><td class="c">402</td><td class="c">416</td><td class="c">405,6</td><td class="c">21</td><td>Base</td><td>—</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p><strong>O que observar.</strong> O processo está em controle: nenhuma média passa dos limites de 389,5 a 411,1 g, nenhuma amplitude passa do limite e não há sequência. Não há causa especial a procurar. Mas o desvio estimado é de 8,0 g, e a tolerância de 40 g não comporta seis desvios: Cp 0,83 e Cpk 0,82, processo não capaz. Ajustar a massa a cada lote não resolve, porque a variação é comum: vem do jeito de porcionar, a olho, com a balança só para conferir. A ação é no processo: pesar cada bola ao porcionar, com a sobra voltando à masseira, e escrever o critério por bola no plano de controle.</p>
+
+  <h3>Exemplo 2. A espessura do filme, na indústria</h3>
+  <dl class="ficha">
+    <div><dt>Característica</dt><dd>Espessura do filme de 40 µm do cliente A, de 38 a 42 µm.</dd></div>
+    <div><dt>Subgrupo</dt><dd>Os cinco pontos na largura da primeira bobina de cada turno.</dd></div>
+    <div><dt>Medição</dt><dd>Micrômetro digital MIC-08, de 0,1 µm, no lugar do MIC-07 retirado em 12/06.</dd></div>
+    <div><dt>Período</dt><dd>Turnos A e C, de 04 a 16/07/2027. Base: os 14 primeiros.</dd></div>
+    <div><dt>Responsável</dt><dd>Coordenador da Qualidade, com o operador do posto.</dd></div>
+  </dl>
+  <p>Depois do micrômetro reprovado em junho, a Qualidade começou o gráfico em 04/07, com a primeira bobina de cada turno. A base são as 14 primeiras bobinas, menos a de 06/07, em que a resistência da zona 3 queimou.</p>
+  <div class="tbl">
+    <table class="aud">
+      <caption>25 subgrupos · LC 39,97 · LSC 40,34 · LIC 39,60 · R̄ 0,64 · Cp 2,43 · Cpk 2,39</caption>
+      <thead><tr><th>#</th><th>Data</th><th class="c" colspan="5">Cinco medições (em µm)</th><th class="c">Média</th><th class="c">Amplitude</th><th style="width:22%">Fase</th><th>Sinal</th></tr></thead>
+      <tbody>
+        <tr><td class="n">1</td><td>04/07<small>Turno A</small></td><td class="c">39,7</td><td class="c">39,9</td><td class="c">39,8</td><td class="c">39,9</td><td class="c">40,2</td><td class="c">39,90</td><td class="c">0,5</td><td>Base</td><td>—</td></tr>
+        <tr><td class="n">2</td><td>04/07<small>Turno C</small></td><td class="c">39,5</td><td class="c">39,9</td><td class="c">39,9</td><td class="c">39,7</td><td class="c">40,0</td><td class="c">39,80</td><td class="c">0,5</td><td>Base</td><td>—</td></tr>
+        <tr><td class="n">3</td><td>05/07<small>Turno A</small></td><td class="c">40,0</td><td class="c">40,7</td><td class="c">40,1</td><td class="c">40,0</td><td class="c">40,3</td><td class="c">40,22</td><td class="c">0,7</td><td>Base</td><td>—</td></tr>
+        <tr><td class="n">4</td><td>05/07<small>Turno C</small></td><td class="c">39,7</td><td class="c">39,8</td><td class="c">40,2</td><td class="c">39,8</td><td class="c">39,7</td><td class="c">39,84</td><td class="c">0,5</td><td>Base</td><td>—</td></tr>
+        <tr><td class="n">5</td><td>06/07<small>Turno A</small></td><td class="c">39,8</td><td class="c">39,6</td><td class="c">40,3</td><td class="c">40,4</td><td class="c">40,8</td><td class="c">40,18</td><td class="c">1,2</td><td>Base</td><td>—</td></tr>
+        <tr><td class="n">6</td><td>06/07<small>Turno C</small></td><td class="c">40,7</td><td class="c">41,3</td><td class="c">40,7</td><td class="c">41,5</td><td class="c">40,1</td><td class="c">40,86</td><td class="c">1,4</td><td><span class="chip sl">Excluído</span><small>Resistência da zona 3 queimada; bobina segregada e moída (RNC 2027-29).</small></td><td><span class="chip s3">Média fora dos limites</span></td></tr>
+        <tr><td class="n">7</td><td>07/07<small>Turno A</small></td><td class="c">40,2</td><td class="c">39,9</td><td class="c">39,6</td><td class="c">40,5</td><td class="c">39,9</td><td class="c">40,02</td><td class="c">0,9</td><td>Base</td><td>—</td></tr>
+        <tr><td class="n">8</td><td>07/07<small>Turno C</small></td><td class="c">40,3</td><td class="c">39,9</td><td class="c">40,0</td><td class="c">39,5</td><td class="c">39,7</td><td class="c">39,88</td><td class="c">0,8</td><td>Base</td><td>—</td></tr>
+        <tr><td class="n">9</td><td>08/07<small>Turno A</small></td><td class="c">40,1</td><td class="c">40,2</td><td class="c">39,9</td><td class="c">40,0</td><td class="c">39,4</td><td class="c">39,92</td><td class="c">0,8</td><td>Base</td><td>—</td></tr>
+        <tr><td class="n">10</td><td>08/07<small>Turno C</small></td><td class="c">40,0</td><td class="c">39,8</td><td class="c">39,7</td><td class="c">40,1</td><td class="c">39,9</td><td class="c">39,90</td><td class="c">0,4</td><td>Base</td><td>—</td></tr>
+        <tr><td class="n">11</td><td>09/07<small>Turno A</small></td><td class="c">39,7</td><td class="c">39,9</td><td class="c">39,9</td><td class="c">39,9</td><td class="c">40,0</td><td class="c">39,88</td><td class="c">0,3</td><td>Base</td><td>—</td></tr>
+        <tr><td class="n">12</td><td>09/07<small>Turno C</small></td><td class="c">39,9</td><td class="c">40,3</td><td class="c">40,5</td><td class="c">40,3</td><td class="c">39,9</td><td class="c">40,18</td><td class="c">0,6</td><td>Base</td><td>—</td></tr>
+        <tr><td class="n">13</td><td>10/07<small>Turno A</small></td><td class="c">39,8</td><td class="c">40,1</td><td class="c">39,9</td><td class="c">40,4</td><td class="c">40,1</td><td class="c">40,06</td><td class="c">0,6</td><td>Base</td><td>—</td></tr>
+        <tr><td class="n">14</td><td>10/07<small>Turno C</small></td><td class="c">40,1</td><td class="c">39,8</td><td class="c">40,0</td><td class="c">39,7</td><td class="c">39,6</td><td class="c">39,84</td><td class="c">0,5</td><td>Base</td><td>—</td></tr>
+        <tr><td class="n">15</td><td>11/07<small>Turno A</small></td><td class="c">40,0</td><td class="c">39,5</td><td class="c">39,7</td><td class="c">40,2</td><td class="c">40,5</td><td class="c">39,98</td><td class="c">1,0</td><td>Acompanhamento</td><td>—</td></tr>
+        <tr><td class="n">16</td><td>11/07<small>Turno C</small></td><td class="c">39,9</td><td class="c">39,7</td><td class="c">40,2</td><td class="c">40,2</td><td class="c">40,1</td><td class="c">40,02</td><td class="c">0,5</td><td>Acompanhamento</td><td>—</td></tr>
+        <tr><td class="n">17</td><td>12/07<small>Turno A</small></td><td class="c">39,4</td><td class="c">39,5</td><td class="c">40,2</td><td class="c">39,3</td><td class="c">39,8</td><td class="c">39,64</td><td class="c">0,9</td><td>Acompanhamento</td><td>—</td></tr>
+        <tr><td class="n">18</td><td>12/07<small>Turno C</small></td><td class="c">40,3</td><td class="c">40,2</td><td class="c">39,3</td><td class="c">39,5</td><td class="c">39,5</td><td class="c">39,76</td><td class="c">1,0</td><td>Acompanhamento</td><td>—</td></tr>
+        <tr><td class="n">19</td><td>13/07<small>Turno A</small></td><td class="c">38,9</td><td class="c">39,6</td><td class="c">39,1</td><td class="c">39,9</td><td class="c">39,0</td><td class="c">39,30</td><td class="c">1,0</td><td>Acompanhamento</td><td><span class="chip s3">Média fora dos limites</span></td></tr>
+        <tr><td class="n">20</td><td>13/07<small>Turno C</small></td><td class="c">39,1</td><td class="c">39,1</td><td class="c">39,5</td><td class="c">38,0</td><td class="c">40,0</td><td class="c">39,14</td><td class="c">2,0</td><td>Acompanhamento</td><td><span class="chip s3">Média fora dos limites</span></td></tr>
+        <tr><td class="n">21</td><td>14/07<small>Turno A</small></td><td class="c">39,2</td><td class="c">39,4</td><td class="c">40,1</td><td class="c">39,4</td><td class="c">39,6</td><td class="c">39,54</td><td class="c">0,9</td><td>Acompanhamento</td><td><span class="chip s3">Média fora dos limites</span></td></tr>
+        <tr><td class="n">22</td><td>14/07<small>Turno C</small></td><td class="c">39,3</td><td class="c">39,8</td><td class="c">39,7</td><td class="c">40,0</td><td class="c">39,2</td><td class="c">39,60</td><td class="c">0,8</td><td>Acompanhamento</td><td><span class="chip s3">Média fora dos limites</span></td></tr>
+        <tr><td class="n">23</td><td>15/07<small>Turno A</small></td><td class="c">38,5</td><td class="c">39,3</td><td class="c">38,4</td><td class="c">39,1</td><td class="c">38,9</td><td class="c">38,84</td><td class="c">0,9</td><td>Acompanhamento</td><td><span class="chip s3">Média fora dos limites</span></td></tr>
+        <tr><td class="n">24</td><td>15/07<small>Turno C</small></td><td class="c no">37,6</td><td class="c">38,8</td><td class="c">38,4</td><td class="c">38,1</td><td class="c no">37,8</td><td class="c">38,14</td><td class="c">1,2</td><td>Acompanhamento</td><td><span class="chip s3">Média fora dos limites</span></td></tr>
+        <tr><td class="n">25</td><td>16/07<small>Turno A</small></td><td class="c">39,2</td><td class="c">39,4</td><td class="c">38,2</td><td class="c">38,2</td><td class="c">38,4</td><td class="c">38,68</td><td class="c">1,2</td><td>Acompanhamento</td><td><span class="chip s3">Média fora dos limites</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 270" role="img" aria-label="Histogramas da espessura na indústria. Na base, de 04 a 10/07, os valores ficam entre 39,4 e 40,8 µm, estreitos e no centro. No acompanhamento, de 11 a 16/07, se espalham de 37,6 a 40,5 µm e descem: dois pontos abaixo de 38 µm.">
+        <line class="ln-mu" x1="50" y1="210" x2="430" y2="210"/>
+        <rect class="f1" x="177.7" y="206.7" width="29.7" height="3.3"/>
+        <text class="mu" x="192.5" y="202.7" font-size="9.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">1</text>
+        <rect class="f1" x="209.3" y="93.3" width="29.7" height="116.7"/>
+        <text class="mu" x="224.2" y="89.3" font-size="9.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">35</text>
+        <rect class="f1" x="241.0" y="126.7" width="29.7" height="83.3"/>
+        <text class="mu" x="255.8" y="122.7" font-size="9.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">25</text>
+        <rect class="f1" x="272.7" y="196.7" width="29.7" height="13.3"/>
+        <text class="mu" x="287.5" y="192.7" font-size="9.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">4</text>
+        <text class="mu" x="50.0" y="224" font-size="9.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">37</text>
+        <text class="mu" x="113.3" y="224" font-size="9.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">38</text>
+        <text class="mu" x="176.7" y="224" font-size="9.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">39</text>
+        <text class="mu" x="240.0" y="224" font-size="9.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">40</text>
+        <text class="mu" x="303.3" y="224" font-size="9.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">41</text>
+        <text class="mu" x="366.7" y="224" font-size="9.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">42</text>
+        <line class="esp" x1="113.3" y1="54" x2="113.3" y2="210"/>
+        <text class="b" x="113.3" y="50" font-size="10.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">LIE 38</text>
+        <line class="esp" x1="366.7" y1="54" x2="366.7" y2="210"/>
+        <text class="b" x="366.7" y="50" font-size="10.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">LSE 42</text>
+        <text class="b" x="240" y="250" font-size="12" text-anchor="middle">Base: 65 medições, 04 a 10/07</text>
+        <line class="ln-mu" x1="490" y1="210" x2="870" y2="210"/>
+        <rect class="f3" x="522.7" y="203.3" width="29.7" height="6.7"/>
+        <text class="mu" x="537.5" y="199.3" font-size="9.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">2</text>
+        <rect class="f2" x="554.3" y="186.7" width="29.7" height="23.3"/>
+        <text class="mu" x="569.2" y="182.7" font-size="9.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">7</text>
+        <rect class="f2" x="586.0" y="196.7" width="29.7" height="13.3"/>
+        <text class="mu" x="600.8" y="192.7" font-size="9.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">4</text>
+        <rect class="f2" x="617.7" y="156.7" width="29.7" height="53.3"/>
+        <text class="mu" x="632.5" y="152.7" font-size="9.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">16</text>
+        <rect class="f2" x="649.3" y="163.3" width="29.7" height="46.7"/>
+        <text class="mu" x="664.2" y="159.3" font-size="9.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">14</text>
+        <rect class="f2" x="681.0" y="173.3" width="29.7" height="36.7"/>
+        <text class="mu" x="695.8" y="169.3" font-size="9.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">11</text>
+        <rect class="f2" x="712.7" y="206.7" width="29.7" height="3.3"/>
+        <text class="mu" x="727.5" y="202.7" font-size="9.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">1</text>
+        <text class="mu" x="490.0" y="224" font-size="9.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">37</text>
+        <text class="mu" x="553.3" y="224" font-size="9.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">38</text>
+        <text class="mu" x="616.7" y="224" font-size="9.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">39</text>
+        <text class="mu" x="680.0" y="224" font-size="9.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">40</text>
+        <text class="mu" x="743.3" y="224" font-size="9.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">41</text>
+        <text class="mu" x="806.7" y="224" font-size="9.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">42</text>
+        <line class="esp" x1="553.3" y1="54" x2="553.3" y2="210"/>
+        <text class="b" x="553.3" y="50" font-size="10.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">LIE 38</text>
+        <line class="esp" x1="806.7" y1="54" x2="806.7" y2="210"/>
+        <text class="b" x="806.7" y="50" font-size="10.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">LSE 42</text>
+        <text class="b" x="680" y="250" font-size="12" text-anchor="middle">Acompanhamento: 55 medições, 11 a 16/07</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 9.</b> Histogramas da espessura na base e no acompanhamento. A largura dobra, e o centro desce.</figcaption>
+  </figure>
+  <p><strong>O que observar.</strong> Com a máquina sã, a extrusora 3 é muito capaz: Cp 2,43 e Cpk 2,39 na base, com a espessura entre 39,60 e 40,34 µm em média. A base tem só 13 subgrupos, menos que os 20 recomendados: os limites são provisórios. No acompanhamento, a média começa a cair, e a amplitude a crescer, e o primeiro sinal aparece em 13/07: média abaixo do limite inferior. Seguem mais sinais em todas as bobinas até 16/07. Era a rosca se desgastando. A extrusora parou em 18/07 com 6 bobinas fora (RNC 2027-30), no estudo de <a href="../Recursos/treinamento-recursos.html">Recursos</a>. O gráfico tinha avisado cinco dias antes, mas foi lido só na reunião semanal. A lição não é sobre estatística: o gráfico precisa ser lido no turno, por quem pode parar a máquina.</p>
+
+  <h3>Exemplo 3. A média que aprovava bolas fora</h3>
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 270" role="img" aria-label="Histograma das 125 bolas da pizzaria. De 370 a 375 g: 0. De 375 a 380 g: 2. De 380 a 385 g: 1. De 385 a 390 g: 8. De 390 a 395 g: 16. De 395 a 400 g: 31. De 400 a 405 g: 28. De 405 a 410 g: 25. De 410 a 415 g: 8. De 415 a 420 g: 5. De 420 a 425 g: 1. De 425 a 430 g: 0. Três bolas ficam fora da especificação: 378, 379, 423 g, todas em lotes com média dentro do critério.">
+        <line class="ln-mu" x1="40" y1="220" x2="560" y2="220"/>
+        <rect class="f3" x="84.3" y="210.0" width="41.3" height="10.0"/>
+        <text class="mu" x="105.0" y="206.0" font-size="9.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">2</text>
+        <rect class="f1" x="127.7" y="215.0" width="41.3" height="5.0"/>
+        <text class="mu" x="148.3" y="211.0" font-size="9.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">1</text>
+        <rect class="f1" x="171.0" y="180.0" width="41.3" height="40.0"/>
+        <text class="mu" x="191.7" y="176.0" font-size="9.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">8</text>
+        <rect class="f1" x="214.3" y="140.0" width="41.3" height="80.0"/>
+        <text class="mu" x="235.0" y="136.0" font-size="9.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">16</text>
+        <rect class="f1" x="257.7" y="65.0" width="41.3" height="155.0"/>
+        <text class="mu" x="278.3" y="61.0" font-size="9.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">31</text>
+        <rect class="f1" x="301.0" y="80.0" width="41.3" height="140.0"/>
+        <text class="mu" x="321.7" y="76.0" font-size="9.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">28</text>
+        <rect class="f1" x="344.3" y="95.0" width="41.3" height="125.0"/>
+        <text class="mu" x="365.0" y="91.0" font-size="9.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">25</text>
+        <rect class="f1" x="387.7" y="180.0" width="41.3" height="40.0"/>
+        <text class="mu" x="408.3" y="176.0" font-size="9.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">8</text>
+        <rect class="f1" x="431.0" y="195.0" width="41.3" height="25.0"/>
+        <text class="mu" x="451.7" y="191.0" font-size="9.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">5</text>
+        <rect class="f3" x="474.3" y="215.0" width="41.3" height="5.0"/>
+        <text class="mu" x="495.0" y="211.0" font-size="9.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">1</text>
+        <text class="mu" x="40.0" y="234" font-size="9.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">370</text>
+        <text class="mu" x="126.7" y="234" font-size="9.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">380</text>
+        <text class="mu" x="213.3" y="234" font-size="9.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">390</text>
+        <text class="mu" x="300.0" y="234" font-size="9.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">400</text>
+        <text class="mu" x="386.7" y="234" font-size="9.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">410</text>
+        <text class="mu" x="473.3" y="234" font-size="9.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">420</text>
+        <line class="esp" x1="126.7" y1="44" x2="126.7" y2="220"/>
+        <text class="b" x="126.7" y="40" font-size="10.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">LIE 380</text>
+        <line class="esp" x1="473.3" y1="44" x2="473.3" y2="220"/>
+        <text class="b" x="473.3" y="40" font-size="10.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">LSE 420</text>
+        <text class="mu" x="300" y="256" font-size="11" text-anchor="middle">Peso de cada bola, em gramas</text>
+        <rect class="bx" x="600" y="40" width="288" height="190"/>
+        <text class="b" x="616" y="68" font-size="13">3 de 125 bolas fora</text>
+        <text x="616" y="94" font-size="11">As três vieram de lotes com média dentro</text>
+        <text x="616" y="109" font-size="11">de 380 a 420 g. O plano de controle</text>
+        <text x="616" y="124" font-size="11">registrava só a média, e o forno recebe</text>
+        <text x="616" y="139" font-size="11">cada bola: a média aprovava bolas fora.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 10.</b> Histograma das 125 bolas da pizzaria, com a especificação. As barras vermelhas estão fora.</figcaption>
+  </figure>
+  <p><strong>O que observar.</strong> O plano de controle da pizzaria aprovava o lote pela média de cinco bolas, entre 380 e 420 g. Todos os 25 lotes passariam. Mas 3 bolas, uma a uma, ficaram fora, e cada bola vira uma pizza. O histograma mostra o que a média escondia: a largura do processo encosta nos dois limites. Por isso o critério passou a ser por bola, e a capacidade virou um objetivo da loja: Cpk de 1,33 até o fim de junho.</p>
+</section>
+
+<!-- ============================ MÓDULO 9 ============================ -->
+<section id="leitura">
+  <p class="eyebrow">Módulo 9</p>
+  <h2>Ler o gráfico</h2>
+  <p>Ler o gráfico é olhar, a cada ponto novo, para três coisas: o ponto passou do limite? A sequência forma algum padrão? A amplitude mudou? O gráfico abaixo é o da indústria. Percorra os pontos e veja onde a história muda.</p>
+
+  <figure id="fig-bars">
+    <div class="scroll">
+      <svg id="bars" viewBox="0 0 900 320" role="img" aria-label="Médias de espessura das 25 bobinas da indústria, com a linha central de 39,97 µm e os limites de 39,60 e 40,34 µm. 1: 39,90. 2: 39,80. 3: 40,22. 4: 39,84. 5: 40,18. 6: 40,86 (média fora dos limites). 7: 40,02. 8: 39,88. 9: 39,92. 10: 39,90. 11: 39,88. 12: 40,18. 13: 40,06. 14: 39,84. 15: 39,98. 16: 40,02. 17: 39,64. 18: 39,76. 19: 39,30 (média fora dos limites). 20: 39,14 (média fora dos limites). 21: 39,54 (média fora dos limites). 22: 39,60 (média fora dos limites). 23: 38,84 (média fora dos limites). 24: 38,14 (média fora dos limites). 25: 38,68 (média fora dos limites).">
+        <rect class="lane" x="468.6" y="30" width="321.4" height="220"/>
+        <text class="mono mu" x="68" y="44" font-size="10">BASE</text><text class="mono mu" x="476.6" y="44" font-size="10">ACOMPANHAMENTO</text>
+        <line class="grid" x1="60" y1="243.5" x2="790" y2="243.5"/><text class="mu" x="52" y="247.5" font-size="10.5" text-anchor="end" style="font-variant-numeric:tabular-nums">38</text>
+        <line class="grid" x1="60" y1="178.8" x2="790" y2="178.8"/><text class="mu" x="52" y="182.8" font-size="10.5" text-anchor="end" style="font-variant-numeric:tabular-nums">39</text>
+        <line class="grid" x1="60" y1="114.1" x2="790" y2="114.1"/><text class="mu" x="52" y="118.1" font-size="10.5" text-anchor="end" style="font-variant-numeric:tabular-nums">40</text>
+        <line class="grid" x1="60" y1="49.4" x2="790" y2="49.4"/><text class="mu" x="52" y="53.4" font-size="10.5" text-anchor="end" style="font-variant-numeric:tabular-nums">41</text>
+        <line class="esp" x1="60" y1="243.5" x2="790" y2="243.5"/><text class="b halo" x="796" y="247.5" font-size="10.5">LIE 38</text>
+        <line class="lim" x1="60" y1="92.2" x2="790" y2="92.2"/>
+        <text class="mu halo" x="796" y="96.2" font-size="10.5" style="font-variant-numeric:tabular-nums">LSC 40,34</text>
+        <line class="ctr" x1="60" y1="116.0" x2="790" y2="116.0"/>
+        <text class="mu halo" x="796" y="120.0" font-size="10.5" style="font-variant-numeric:tabular-nums">LC 39,97</text>
+        <line class="lim" x1="60" y1="139.8" x2="790" y2="139.8"/>
+        <text class="mu halo" x="796" y="143.8" font-size="10.5" style="font-variant-numeric:tabular-nums">LIC 39,60</text>
+        <path class="ser" d="M76.0 120.6 L105.1 127.1 L134.2 99.9 L163.2 124.5 L192.3 102.5 L221.4 58.5 L250.5 112.8 L279.6 121.9 L308.7 119.3 L337.8 120.6 L366.8 121.9 L395.9 102.5 L425.0 110.2 L454.1 124.5 L483.2 115.4 L512.2 112.8 L541.3 137.4 L570.4 129.6 L599.5 159.4 L628.6 169.8 L657.7 143.9 L686.8 140.0 L715.8 189.2 L744.9 234.5 L774.0 199.5"/>
+        <circle class="pt-c p-ok" data-k="0" cx="76.0" cy="120.6" r="4.2"/>
+        <text class="mu" x="76.0" y="266" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">04/07</text>
+        <circle class="pt-c p-ok" data-k="1" cx="105.1" cy="127.1" r="4.2"/>
+        <circle class="pt-c p-ok" data-k="2" cx="134.2" cy="99.9" r="4.2"/>
+        <text class="mu" x="134.2" y="266" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">05/07</text>
+        <circle class="pt-c p-ok" data-k="3" cx="163.2" cy="124.5" r="4.2"/>
+        <circle class="pt-c p-ok" data-k="4" cx="192.3" cy="102.5" r="4.2"/>
+        <text class="mu" x="192.3" y="266" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">06/07</text>
+        <circle class="pt-c p-exc" data-k="5" cx="221.4" cy="58.5" r="5"/>
+        <circle class="pt-c p-ok" data-k="6" cx="250.5" cy="112.8" r="4.2"/>
+        <text class="mu" x="250.5" y="266" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">07/07</text>
+        <circle class="pt-c p-ok" data-k="7" cx="279.6" cy="121.9" r="4.2"/>
+        <circle class="pt-c p-ok" data-k="8" cx="308.7" cy="119.3" r="4.2"/>
+        <text class="mu" x="308.7" y="266" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">08/07</text>
+        <circle class="pt-c p-ok" data-k="9" cx="337.8" cy="120.6" r="4.2"/>
+        <circle class="pt-c p-ok" data-k="10" cx="366.8" cy="121.9" r="4.2"/>
+        <text class="mu" x="366.8" y="266" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">09/07</text>
+        <circle class="pt-c p-ok" data-k="11" cx="395.9" cy="102.5" r="4.2"/>
+        <circle class="pt-c p-ok" data-k="12" cx="425.0" cy="110.2" r="4.2"/>
+        <text class="mu" x="425.0" y="266" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">10/07</text>
+        <circle class="pt-c p-ok" data-k="13" cx="454.1" cy="124.5" r="4.2"/>
+        <circle class="pt-c p-ok" data-k="14" cx="483.2" cy="115.4" r="4.2"/>
+        <text class="mu" x="483.2" y="266" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">11/07</text>
+        <circle class="pt-c p-ok" data-k="15" cx="512.2" cy="112.8" r="4.2"/>
+        <circle class="pt-c p-ok" data-k="16" cx="541.3" cy="137.4" r="4.2"/>
+        <text class="mu" x="541.3" y="266" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">12/07</text>
+        <circle class="pt-c p-ok" data-k="17" cx="570.4" cy="129.6" r="4.2"/>
+        <circle class="pt-c p-sig" data-k="18" cx="599.5" cy="159.4" r="5"/>
+        <text class="mu" x="599.5" y="266" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">13/07</text>
+        <circle class="pt-c p-sig" data-k="19" cx="628.6" cy="169.8" r="5"/>
+        <circle class="pt-c p-sig" data-k="20" cx="657.7" cy="143.9" r="5"/>
+        <text class="mu" x="657.7" y="266" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">14/07</text>
+        <circle class="pt-c p-sig" data-k="21" cx="686.8" cy="140.0" r="5"/>
+        <circle class="pt-c p-sig" data-k="22" cx="715.8" cy="189.2" r="5"/>
+        <text class="mu" x="715.8" y="266" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">15/07</text>
+        <circle class="pt-c p-sig" data-k="23" cx="744.9" cy="234.5" r="5"/>
+        <circle class="pt-c p-sig" data-k="24" cx="774.0" cy="199.5" r="5"/>
+        <text class="mu" x="774.0" y="266" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">16/07</text>
+        <line class="ln-mu" x1="599.5" y1="167.4" x2="599.5" y2="204.7"/>
+        <text class="b halo" x="593.5" y="208.7" font-size="10.5" text-anchor="end">primeiro sinal: 13/07</text>
+        <text class="mu" x="425.0" y="290" font-size="11" text-anchor="middle">A parada da extrusora 3 foi em 18/07, cinco dias depois do primeiro sinal.</text>
+        <rect class="hit" x="64.0" y="30" width="24" height="220" tabindex="0" role="img" aria-label="Bobina 1, 04/07, Turno A: média 39,90 µm, amplitude 0,5 µm. Sem sinal." data-k="0" data-n="Bobina 1 · 04/07 · Turno A" data-s="39,90 µm" data-d="amplitude 0,5 µm" data-p="sem sinal" data-cx="76.0" data-cy="120.6"/>
+        <rect class="hit" x="93.1" y="30" width="24" height="220" tabindex="0" role="img" aria-label="Bobina 2, 04/07, Turno C: média 39,80 µm, amplitude 0,5 µm. Sem sinal." data-k="1" data-n="Bobina 2 · 04/07 · Turno C" data-s="39,80 µm" data-d="amplitude 0,5 µm" data-p="sem sinal" data-cx="105.1" data-cy="127.1"/>
+        <rect class="hit" x="122.2" y="30" width="24" height="220" tabindex="0" role="img" aria-label="Bobina 3, 05/07, Turno A: média 40,22 µm, amplitude 0,7 µm. Sem sinal." data-k="2" data-n="Bobina 3 · 05/07 · Turno A" data-s="40,22 µm" data-d="amplitude 0,7 µm" data-p="sem sinal" data-cx="134.2" data-cy="99.9"/>
+        <rect class="hit" x="151.2" y="30" width="24" height="220" tabindex="0" role="img" aria-label="Bobina 4, 05/07, Turno C: média 39,84 µm, amplitude 0,5 µm. Sem sinal." data-k="3" data-n="Bobina 4 · 05/07 · Turno C" data-s="39,84 µm" data-d="amplitude 0,5 µm" data-p="sem sinal" data-cx="163.2" data-cy="124.5"/>
+        <rect class="hit" x="180.3" y="30" width="24" height="220" tabindex="0" role="img" aria-label="Bobina 5, 06/07, Turno A: média 40,18 µm, amplitude 1,2 µm. Sem sinal." data-k="4" data-n="Bobina 5 · 06/07 · Turno A" data-s="40,18 µm" data-d="amplitude 1,2 µm" data-p="sem sinal" data-cx="192.3" data-cy="102.5"/>
+        <rect class="hit" x="209.4" y="30" width="24" height="220" tabindex="0" role="img" aria-label="Bobina 6, 06/07, Turno C: média 40,86 µm, amplitude 1,4 µm. Média fora dos limites." data-k="5" data-n="Bobina 6 · 06/07 · Turno C" data-s="40,86 µm" data-d="amplitude 1,4 µm" data-p="média fora dos limites" data-cx="221.4" data-cy="58.5"/>
+        <rect class="hit" x="238.5" y="30" width="24" height="220" tabindex="0" role="img" aria-label="Bobina 7, 07/07, Turno A: média 40,02 µm, amplitude 0,9 µm. Sem sinal." data-k="6" data-n="Bobina 7 · 07/07 · Turno A" data-s="40,02 µm" data-d="amplitude 0,9 µm" data-p="sem sinal" data-cx="250.5" data-cy="112.8"/>
+        <rect class="hit" x="267.6" y="30" width="24" height="220" tabindex="0" role="img" aria-label="Bobina 8, 07/07, Turno C: média 39,88 µm, amplitude 0,8 µm. Sem sinal." data-k="7" data-n="Bobina 8 · 07/07 · Turno C" data-s="39,88 µm" data-d="amplitude 0,8 µm" data-p="sem sinal" data-cx="279.6" data-cy="121.9"/>
+        <rect class="hit" x="296.7" y="30" width="24" height="220" tabindex="0" role="img" aria-label="Bobina 9, 08/07, Turno A: média 39,92 µm, amplitude 0,8 µm. Sem sinal." data-k="8" data-n="Bobina 9 · 08/07 · Turno A" data-s="39,92 µm" data-d="amplitude 0,8 µm" data-p="sem sinal" data-cx="308.7" data-cy="119.3"/>
+        <rect class="hit" x="325.8" y="30" width="24" height="220" tabindex="0" role="img" aria-label="Bobina 10, 08/07, Turno C: média 39,90 µm, amplitude 0,4 µm. Sem sinal." data-k="9" data-n="Bobina 10 · 08/07 · Turno C" data-s="39,90 µm" data-d="amplitude 0,4 µm" data-p="sem sinal" data-cx="337.8" data-cy="120.6"/>
+        <rect class="hit" x="354.8" y="30" width="24" height="220" tabindex="0" role="img" aria-label="Bobina 11, 09/07, Turno A: média 39,88 µm, amplitude 0,3 µm. Sem sinal." data-k="10" data-n="Bobina 11 · 09/07 · Turno A" data-s="39,88 µm" data-d="amplitude 0,3 µm" data-p="sem sinal" data-cx="366.8" data-cy="121.9"/>
+        <rect class="hit" x="383.9" y="30" width="24" height="220" tabindex="0" role="img" aria-label="Bobina 12, 09/07, Turno C: média 40,18 µm, amplitude 0,6 µm. Sem sinal." data-k="11" data-n="Bobina 12 · 09/07 · Turno C" data-s="40,18 µm" data-d="amplitude 0,6 µm" data-p="sem sinal" data-cx="395.9" data-cy="102.5"/>
+        <rect class="hit" x="413.0" y="30" width="24" height="220" tabindex="0" role="img" aria-label="Bobina 13, 10/07, Turno A: média 40,06 µm, amplitude 0,6 µm. Sem sinal." data-k="12" data-n="Bobina 13 · 10/07 · Turno A" data-s="40,06 µm" data-d="amplitude 0,6 µm" data-p="sem sinal" data-cx="425.0" data-cy="110.2"/>
+        <rect class="hit" x="442.1" y="30" width="24" height="220" tabindex="0" role="img" aria-label="Bobina 14, 10/07, Turno C: média 39,84 µm, amplitude 0,5 µm. Sem sinal." data-k="13" data-n="Bobina 14 · 10/07 · Turno C" data-s="39,84 µm" data-d="amplitude 0,5 µm" data-p="sem sinal" data-cx="454.1" data-cy="124.5"/>
+        <rect class="hit" x="471.2" y="30" width="24" height="220" tabindex="0" role="img" aria-label="Bobina 15, 11/07, Turno A: média 39,98 µm, amplitude 1,0 µm. Sem sinal." data-k="14" data-n="Bobina 15 · 11/07 · Turno A" data-s="39,98 µm" data-d="amplitude 1,0 µm" data-p="sem sinal" data-cx="483.2" data-cy="115.4"/>
+        <rect class="hit" x="500.2" y="30" width="24" height="220" tabindex="0" role="img" aria-label="Bobina 16, 11/07, Turno C: média 40,02 µm, amplitude 0,5 µm. Sem sinal." data-k="15" data-n="Bobina 16 · 11/07 · Turno C" data-s="40,02 µm" data-d="amplitude 0,5 µm" data-p="sem sinal" data-cx="512.2" data-cy="112.8"/>
+        <rect class="hit" x="529.3" y="30" width="24" height="220" tabindex="0" role="img" aria-label="Bobina 17, 12/07, Turno A: média 39,64 µm, amplitude 0,9 µm. Sem sinal." data-k="16" data-n="Bobina 17 · 12/07 · Turno A" data-s="39,64 µm" data-d="amplitude 0,9 µm" data-p="sem sinal" data-cx="541.3" data-cy="137.4"/>
+        <rect class="hit" x="558.4" y="30" width="24" height="220" tabindex="0" role="img" aria-label="Bobina 18, 12/07, Turno C: média 39,76 µm, amplitude 1,0 µm. Sem sinal." data-k="17" data-n="Bobina 18 · 12/07 · Turno C" data-s="39,76 µm" data-d="amplitude 1,0 µm" data-p="sem sinal" data-cx="570.4" data-cy="129.6"/>
+        <rect class="hit" x="587.5" y="30" width="24" height="220" tabindex="0" role="img" aria-label="Bobina 19, 13/07, Turno A: média 39,30 µm, amplitude 1,0 µm. Média fora dos limites." data-k="18" data-n="Bobina 19 · 13/07 · Turno A" data-s="39,30 µm" data-d="amplitude 1,0 µm" data-p="média fora dos limites" data-cx="599.5" data-cy="159.4"/>
+        <rect class="hit" x="616.6" y="30" width="24" height="220" tabindex="0" role="img" aria-label="Bobina 20, 13/07, Turno C: média 39,14 µm, amplitude 2,0 µm. Média fora dos limites." data-k="19" data-n="Bobina 20 · 13/07 · Turno C" data-s="39,14 µm" data-d="amplitude 2,0 µm" data-p="média fora dos limites" data-cx="628.6" data-cy="169.8"/>
+        <rect class="hit" x="645.7" y="30" width="24" height="220" tabindex="0" role="img" aria-label="Bobina 21, 14/07, Turno A: média 39,54 µm, amplitude 0,9 µm. Média fora dos limites." data-k="20" data-n="Bobina 21 · 14/07 · Turno A" data-s="39,54 µm" data-d="amplitude 0,9 µm" data-p="média fora dos limites" data-cx="657.7" data-cy="143.9"/>
+        <rect class="hit" x="674.8" y="30" width="24" height="220" tabindex="0" role="img" aria-label="Bobina 22, 14/07, Turno C: média 39,60 µm, amplitude 0,8 µm. Média fora dos limites." data-k="21" data-n="Bobina 22 · 14/07 · Turno C" data-s="39,60 µm" data-d="amplitude 0,8 µm" data-p="média fora dos limites" data-cx="686.8" data-cy="140.0"/>
+        <rect class="hit" x="703.8" y="30" width="24" height="220" tabindex="0" role="img" aria-label="Bobina 23, 15/07, Turno A: média 38,84 µm, amplitude 0,9 µm. Média fora dos limites." data-k="22" data-n="Bobina 23 · 15/07 · Turno A" data-s="38,84 µm" data-d="amplitude 0,9 µm" data-p="média fora dos limites" data-cx="715.8" data-cy="189.2"/>
+        <rect class="hit" x="732.9" y="30" width="24" height="220" tabindex="0" role="img" aria-label="Bobina 24, 15/07, Turno C: média 38,14 µm, amplitude 1,2 µm. Média fora dos limites." data-k="23" data-n="Bobina 24 · 15/07 · Turno C" data-s="38,14 µm" data-d="amplitude 1,2 µm" data-p="média fora dos limites" data-cx="744.9" data-cy="234.5"/>
+        <rect class="hit" x="762.0" y="30" width="24" height="220" tabindex="0" role="img" aria-label="Bobina 25, 16/07, Turno A: média 38,68 µm, amplitude 1,2 µm. Média fora dos limites." data-k="24" data-n="Bobina 25 · 16/07 · Turno A" data-s="38,68 µm" data-d="amplitude 1,2 µm" data-p="média fora dos limites" data-cx="774.0" data-cy="199.5"/>
+      </svg>
+    </div>
+    <div class="tip" id="bars-tip" hidden></div>
+    <figcaption><b>Figura 11.</b> Médias de espessura das 25 bobinas. Passe o mouse sobre os pontos para ver os valores. Pontos vermelhos têm sinal; o vazio foi excluído da base.</figcaption>
+    <details class="data">
+      <summary>Ver os dados em tabela</summary>
+      <div class="tbl">
+        <table class="aud">
+          <thead><tr><th>Bobina</th><th>Data</th><th class="c">Média</th><th class="c">Amplitude</th><th>Fase</th><th>Sinal</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td>04/07 · Turno A</td><td class="c">39,90</td><td class="c">0,5</td><td>Base</td><td>—</td></tr>
+            <tr><td>2</td><td>04/07 · Turno C</td><td class="c">39,80</td><td class="c">0,5</td><td>Base</td><td>—</td></tr>
+            <tr><td>3</td><td>05/07 · Turno A</td><td class="c">40,22</td><td class="c">0,7</td><td>Base</td><td>—</td></tr>
+            <tr><td>4</td><td>05/07 · Turno C</td><td class="c">39,84</td><td class="c">0,5</td><td>Base</td><td>—</td></tr>
+            <tr><td>5</td><td>06/07 · Turno A</td><td class="c">40,18</td><td class="c">1,2</td><td>Base</td><td>—</td></tr>
+            <tr><td>6</td><td>06/07 · Turno C</td><td class="c">40,86</td><td class="c">1,4</td><td>Excluído</td><td>Média fora dos limites</td></tr>
+            <tr><td>7</td><td>07/07 · Turno A</td><td class="c">40,02</td><td class="c">0,9</td><td>Base</td><td>—</td></tr>
+            <tr><td>8</td><td>07/07 · Turno C</td><td class="c">39,88</td><td class="c">0,8</td><td>Base</td><td>—</td></tr>
+            <tr><td>9</td><td>08/07 · Turno A</td><td class="c">39,92</td><td class="c">0,8</td><td>Base</td><td>—</td></tr>
+            <tr><td>10</td><td>08/07 · Turno C</td><td class="c">39,90</td><td class="c">0,4</td><td>Base</td><td>—</td></tr>
+            <tr><td>11</td><td>09/07 · Turno A</td><td class="c">39,88</td><td class="c">0,3</td><td>Base</td><td>—</td></tr>
+            <tr><td>12</td><td>09/07 · Turno C</td><td class="c">40,18</td><td class="c">0,6</td><td>Base</td><td>—</td></tr>
+            <tr><td>13</td><td>10/07 · Turno A</td><td class="c">40,06</td><td class="c">0,6</td><td>Base</td><td>—</td></tr>
+            <tr><td>14</td><td>10/07 · Turno C</td><td class="c">39,84</td><td class="c">0,5</td><td>Base</td><td>—</td></tr>
+            <tr><td>15</td><td>11/07 · Turno A</td><td class="c">39,98</td><td class="c">1,0</td><td>Acompanhamento</td><td>—</td></tr>
+            <tr><td>16</td><td>11/07 · Turno C</td><td class="c">40,02</td><td class="c">0,5</td><td>Acompanhamento</td><td>—</td></tr>
+            <tr><td>17</td><td>12/07 · Turno A</td><td class="c">39,64</td><td class="c">0,9</td><td>Acompanhamento</td><td>—</td></tr>
+            <tr><td>18</td><td>12/07 · Turno C</td><td class="c">39,76</td><td class="c">1,0</td><td>Acompanhamento</td><td>—</td></tr>
+            <tr><td>19</td><td>13/07 · Turno A</td><td class="c">39,30</td><td class="c">1,0</td><td>Acompanhamento</td><td>Média fora dos limites</td></tr>
+            <tr><td>20</td><td>13/07 · Turno C</td><td class="c">39,14</td><td class="c">2,0</td><td>Acompanhamento</td><td>Média fora dos limites</td></tr>
+            <tr><td>21</td><td>14/07 · Turno A</td><td class="c">39,54</td><td class="c">0,9</td><td>Acompanhamento</td><td>Média fora dos limites</td></tr>
+            <tr><td>22</td><td>14/07 · Turno C</td><td class="c">39,60</td><td class="c">0,8</td><td>Acompanhamento</td><td>Média fora dos limites</td></tr>
+            <tr><td>23</td><td>15/07 · Turno A</td><td class="c">38,84</td><td class="c">0,9</td><td>Acompanhamento</td><td>Média fora dos limites</td></tr>
+            <tr><td>24</td><td>15/07 · Turno C</td><td class="c">38,14</td><td class="c">1,2</td><td>Acompanhamento</td><td>Média fora dos limites</td></tr>
+            <tr><td>25</td><td>16/07 · Turno A</td><td class="c">38,68</td><td class="c">1,2</td><td>Acompanhamento</td><td>Média fora dos limites</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </details>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:26%">O que você vê</th><th style="width:36%">O que significa</th><th>O que fazer</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Pontos dentro, sem padrão</strong></td><td>Variação comum. O processo está fazendo o que sabe fazer.</td><td>Nada no processo. Se a capacidade for baixa, mudar o processo, com a direção.</td></tr>
+        <tr><td><strong>Um sinal</strong></td><td>Causa especial provável.</td><td>Ir ao posto, achar a causa, agir, e anotar no gráfico.</td></tr>
+        <tr><td><strong>Sinais seguidos</strong></td><td>A causa continua lá.</td><td>Parar e corrigir antes de produzir mais.</td></tr>
+        <tr><td><strong>Ponto excluído</strong></td><td>Causa conhecida, tratada.</td><td>Manter no gráfico, fora do cálculo, com o motivo.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Na indústria, a base fica em torno de 39,97 µm, perto do alvo de 40. A bobina de 06/07, com a resistência queimada, sobe e é excluída. Depois de 11/07, os pontos descem: em 13/07, o primeiro passa do limite inferior, e 7 bobinas do acompanhamento têm sinal. A especificação, de 38 µm, ainda não tinha sido atingida pela média, mas dois pontos de uma bobina já estavam abaixo dela.</p>
+</section>
+
+<!-- ============================ MÓDULO 10 ============================ -->
+<section id="erros">
+  <p class="eyebrow">Módulo 10</p>
+  <h2>Erros comuns</h2>
+  <div class="errs">
+    <div><h4>Especificação no lugar do limite</h4><p>As linhas do gráfico são 38 e 42 µm, digitadas à mão.</p><p class="fix"><b>Correção:</b> limites calculados dos dados; a especificação fica no histograma.</p></div>
+    <div><h4>Ajustar a cada ponto</h4><p>O operador mexe na máquina sempre que a média sai do alvo, mesmo dentro dos limites.</p><p class="fix"><b>Correção:</b> sem sinal, não se ajusta. Ajustar a variação comum aumenta a variação.</p></div>
+    <div><h4>Recalcular sempre</h4><p>Os limites são refeitos toda semana, com os pontos novos.</p><p class="fix"><b>Correção:</b> limites fixos; base nova só depois de mudança de propósito.</p></div>
+    <div><h4>Gráfico na parede, sem leitura</h4><p>Os pontos são lançados, e ninguém olha até a reunião.</p><p class="fix"><b>Correção:</b> leitura no turno, por quem pode agir.</p></div>
+    <div><h4>Subgrupo misturado</h4><p>As cinco medições vêm de duas máquinas ou de dois turnos.</p><p class="fix"><b>Correção:</b> subgrupo nas mesmas condições; uma origem por gráfico.</p></div>
+    <div><h4>Instrumento sem resolução</h4><p>A balança de 10 g mede bolas com tolerância de 40 g.</p><p class="fix"><b>Correção:</b> resolução de no máximo um décimo da tolerância.</p></div>
+    <div><h4>Capacidade com sinal</h4><p>O Cpk é calculado com a base cheia de pontos fora.</p><p class="fix"><b>Correção:</b> tratar os sinais primeiro, depois calcular.</p></div>
+    <div><h4>Medir de novo até passar</h4><p>Valores fora são medidos de novo, e só o segundo é anotado.</p><p class="fix"><b>Correção:</b> anotar o que foi medido. O histograma cortado denuncia o hábito.</p></div>
+    <div><h4>Aprovar pela média</h4><p>O lote passa porque a média de cinco está dentro.</p><p class="fix"><b>Correção:</b> critério para cada unidade que chega ao cliente.</p></div>
+    <div><h4>Sinal sem anotação</h4><p>O ponto fora fica no gráfico sem causa nem ação.</p><p class="fix"><b>Correção:</b> anotar a causa e a ação ao lado do ponto.</p></div>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 11 ============================ -->
+<section id="serie">
+  <p class="eyebrow">Módulo 11</p>
+  <h2>O CEP e os estudos da série</h2>
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:30%">Estudo</th><th>Como se liga ao CEP</th></tr></thead>
+      <tbody>
+        <tr><td><a href="../Producao/treinamento-producao.html"><strong>Controle de produção</strong></a></td><td>O plano de controle diz o que medir; o CEP diz quando o resultado pede reação.</td></tr>
+        <tr><td><a href="../Calibracao/treinamento-calibracao.html"><strong>Calibração</strong></a></td><td>Sem instrumento adequado e confiável, o gráfico mostra o instrumento.</td></tr>
+        <tr><td><a href="../Liberacao/treinamento-liberacao.html"><strong>Liberação e produto não conforme</strong></a></td><td>O CEP previne; a liberação ainda decide sobre cada lote.</td></tr>
+        <tr><td><a href="../Indicadores/treinamento-indicadores.html"><strong>Indicadores</strong></a></td><td>O indicador mensal mostra o resultado; o gráfico de controle mostra o processo a cada subgrupo.</td></tr>
+        <tr><td><a href="../Pareto/treinamento-pareto.html"><strong>Pareto</strong></a> e <a href="../Ishikawa/treinamento-ishikawa.html"><strong>Ishikawa</strong></a></td><td>O Pareto escolhe a característica; o Ishikawa procura a causa de um sinal.</td></tr>
+        <tr><td><a href="../Nao-Conformidade/treinamento-nao-conformidade.html"><strong>Não conformidade e ação corretiva</strong></a></td><td>Sinal que se repete, ou capacidade baixa, vira ação corretiva.</td></tr>
+        <tr><td><a href="../Recursos/treinamento-recursos.html"><strong>Recursos</strong></a></td><td>A tendência no gráfico costuma ser desgaste: o CEP avisa a manutenção.</td></tr>
+        <tr><td><a href="../PDCA/treinamento-pdca.html"><strong>PDCA</strong></a></td><td>O gráfico é o "verificar" do processo: compara o antes e o depois de uma melhoria.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 12 ============================ -->
+<section id="iso">
+  <p class="eyebrow">Módulo 12</p>
+  <h2>Nas normas</h2>
+  <p>A ISO 9001 não exige o CEP: exige que a organização decida o que medir, como analisar e como saber se os processos funcionam. As técnicas estatísticas são um dos jeitos de cumprir isso, e as normas próprias delas trazem os detalhes.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 190" role="img" aria-label="As normas ligadas ao controle estatístico. ISO 9001, 9.1: Determinar o que medir, os métodos de análise, quando medir e quando analisar. Neste estudo: análise dos dados. ISO 9001, 8.5.1: Monitorar nas etapas certas, com recursos de medição adequados. Neste estudo: o subgrupo e a reação. ISO 7870-2: A norma dos gráficos de controle de Shewhart: tipos, limites e regras. Neste estudo: os limites e os sinais. ISO 22514: A série sobre capacidade e desempenho de processos. Neste estudo: Cp e Cpk.">
+        <rect class="bx" x="10" y="14" width="214" height="164"/>
+        <rect class="hd-ink" x="10" y="14" width="214" height="34"/>
+        <text class="b t-ground" x="22" y="36" font-size="11.5">ISO 9001, 9.1</text>
+        <text x="22" y="70" font-size="11.5">Determinar o que medir, os</text>
+        <text x="22" y="86" font-size="11.5">métodos de análise, quando medir</text>
+        <text x="22" y="102" font-size="11.5">e quando analisar.</text>
+        <text class="mu" x="22" y="146" font-size="11">Neste estudo: análise dos dados</text>
+        <rect class="bx" x="232" y="14" width="214" height="164"/>
+        <rect class="hd-ink" x="232" y="14" width="214" height="34"/>
+        <text class="b t-ground" x="244" y="36" font-size="11.5">ISO 9001, 8.5.1</text>
+        <text x="244" y="70" font-size="11.5">Monitorar nas etapas certas, com</text>
+        <text x="244" y="86" font-size="11.5">recursos de medição adequados.</text>
+        <text class="mu" x="244" y="146" font-size="11">Neste estudo: o subgrupo e a</text>
+        <text class="mu" x="244" y="161" font-size="11">reação</text>
+        <rect class="bx" x="454" y="14" width="214" height="164"/>
+        <rect class="hd-ink" x="454" y="14" width="214" height="34"/>
+        <text class="b t-ground" x="466" y="36" font-size="11.5">ISO 7870-2</text>
+        <text x="466" y="70" font-size="11.5">A norma dos gráficos de controle</text>
+        <text x="466" y="86" font-size="11.5">de Shewhart: tipos, limites e</text>
+        <text x="466" y="102" font-size="11.5">regras.</text>
+        <text class="mu" x="466" y="146" font-size="11">Neste estudo: os limites e os</text>
+        <text class="mu" x="466" y="161" font-size="11">sinais</text>
+        <rect class="bx" x="676" y="14" width="214" height="164"/>
+        <rect class="hd-ink" x="676" y="14" width="214" height="34"/>
+        <text class="b t-ground" x="688" y="36" font-size="11.5">ISO 22514</text>
+        <text x="688" y="70" font-size="11.5">A série sobre capacidade e</text>
+        <text x="688" y="86" font-size="11.5">desempenho de processos.</text>
+        <text class="mu" x="688" y="146" font-size="11">Neste estudo: Cp e Cpk</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 12.</b> As normas ligadas ao controle estatístico. O texto da figura é um resumo, com palavras próprias.</figcaption>
+  </figure>
+
+  <div class="pair">
+    <div class="box">
+      <h4>Na ISO 9001</h4>
+      <ul>
+        <li>9.1.1: o que monitorar e medir, com que métodos, e quando analisar.</li>
+        <li>9.1.3: analisar os dados, inclusive o desempenho dos processos.</li>
+        <li>8.5.1: monitorar nas etapas certas, com critérios de aceitação.</li>
+        <li>7.1.5: recursos de medição adequados e confiáveis.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h4>Nas normas de apoio</h4>
+      <ul>
+        <li>ISO 7870-2: gráficos de controle de Shewhart.</li>
+        <li>ISO 22514: capacidade e desempenho de processos.</li>
+        <li>ISO 10017: orientação sobre técnicas estatísticas para a ISO 9001.</li>
+        <li>Clientes de setores como o automotivo pedem capacidade nos seus próprios manuais.</li>
+      </ul>
+    </div>
+  </div>
+  <p>Na edição de 2026 da ISO 9001, o monitoramento e a análise continuam como em 2015, como mostra o estudo da <a href="../ISO-9001-2026/treinamento-iso-9001-2026.html">ISO 9001:2026</a>.</p>
+</section>
+
+<!-- ============================ MÓDULO 13 ============================ -->
+<section id="reuniao">
+  <p class="eyebrow">Módulo 13</p>
+  <h2>A leitura no turno</h2>
+  <p>O gráfico só serve se for lido a tempo. Uma vez por semana, a reunião do processo reserva 30 minutos para os gráficos de controle; no dia a dia, cada ponto é lido no turno por quem mede.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 136" role="img" aria-label="Distribuição da leitura semanal de 30 minutos: 5 minutos para os pontos novos, 10 minutos para os sinais e as causas, 10 minutos para a capacidade e as ações no processo, e 5 minutos para as decisões.">
+        <g font-size="11.5" text-anchor="middle">
+          <rect class="bx" x="60" y="24" width="130" height="56"/><text x="125" y="49">Pontos novos:</text><text x="125" y="64">lançados?</text>
+          <rect class="hd-ink gap2" x="190" y="24" width="260" height="56"/><text class="t-ground b" x="320" y="49">Sinais da semana:</text><text class="t-ground b" x="320" y="64">causa achada e ação anotada</text>
+          <rect class="hd-d gap2" x="450" y="24" width="260" height="56"/><text class="on b" x="580" y="49">Capacidade:</text><text class="on b" x="580" y="64">o que muda no processo</text>
+          <rect class="bx" x="710" y="24" width="130" height="56"/><text x="775" y="56">Decisões</text>
+        </g>
+        <g class="ln-mu" stroke-width="1">
+          <line x1="60" y1="82" x2="60" y2="94"/><line x1="190" y1="82" x2="190" y2="94"/><line x1="450" y1="82" x2="450" y2="94"/>
+          <line x1="710" y1="82" x2="710" y2="94"/><line x1="840" y1="82" x2="840" y2="94"/>
+        </g>
+        <g class="mono" font-size="10.5" text-anchor="middle">
+          <text class="mu" x="60" y="112">0</text><text class="mu" x="190" y="112">5</text><text class="mu" x="450" y="112">15</text>
+          <text class="mu" x="710" y="112">25</text><text class="mu" x="840" y="112">30</text>
+        </g>
+      </svg>
+    </div>
+    <figcaption><b>Figura 13.</b> A leitura semanal de 30 minutos, em escala. Os sinais e a capacidade ocupam dois terços.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Momento</th><th style="width:42%">O que fazer</th><th>Perguntas que ajudam</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Pontos novos</strong></td><td>Conferir se todos os subgrupos foram medidos e lançados.</td><td>"Faltou algum turno? Por quê?"</td></tr>
+        <tr><td><strong>Sinais da semana</strong></td><td>Para cada sinal, a causa e a ação, anotadas.</td><td>"Quem viu o sinal, e quando? Deu tempo de agir?"</td></tr>
+        <tr><td><strong>Capacidade</strong></td><td>O Cpk de cada característica e o que se faz para subir os baixos.</td><td>"Esta variação é comum? Então o que muda no processo?"</td></tr>
+        <tr><td><strong>Decisões</strong></td><td>Base nova, característica nova, ação levada à direção.</td><td>"O processo mudou de propósito? Precisa de base nova?"</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Na reunião, pergunte a quem mede o que faria se o próximo ponto caísse fora do limite. Se a resposta for "anotar e esperar a reunião", o gráfico ainda não está funcionando.</p>
+
+  <h3>Checklist do CEP</h3>
+  <p>Marque os itens conforme valida o seu gráfico. As marcações ficam salvas neste navegador.</p>
+  <ol class="check" id="checklist">
+    <li><label><input type="checkbox" id="ck-1"><span>A característica medida pesa para o cliente e tem critério escrito.</span></label></li>
+    <li><label><input type="checkbox" id="ck-2"><span>O instrumento tem resolução de no máximo um décimo da tolerância e está calibrado ou verificado.</span></label></li>
+    <li><label><input type="checkbox" id="ck-3"><span>Cada subgrupo tem cinco medições feitas nas mesmas condições.</span></label></li>
+    <li><label><input type="checkbox" id="ck-4"><span>A base tem pelo menos 20 subgrupos.</span></label></li>
+    <li><label><input type="checkbox" id="ck-5"><span>Os subgrupos com causa conhecida foram excluídos da base, com o motivo escrito.</span></label></li>
+    <li><label><input type="checkbox" id="ck-6"><span>Os limites de controle vêm dos dados, e não da especificação.</span></label></li>
+    <li><label><input type="checkbox" id="ck-7"><span>Os limites ficam fixos durante o acompanhamento, e só são recalculados depois de uma mudança no processo.</span></label></li>
+    <li><label><input type="checkbox" id="ck-8"><span>Cada subgrupo novo é lançado e lido no mesmo turno.</span></label></li>
+    <li><label><input type="checkbox" id="ck-9"><span>Todo sinal tem causa procurada e ação registrada.</span></label></li>
+    <li><label><input type="checkbox" id="ck-10"><span>A capacidade só é calculada com a base em controle.</span></label></li>
+    <li><label><input type="checkbox" id="ck-11"><span>O histograma é lido junto com a especificação: centro, largura e forma.</span></label></li>
+    <li><label><input type="checkbox" id="ck-12"><span>A decisão sobre capacidade baixa foi levada à direção ou ao dono do processo.</span></label></li>
+  </ol>
+  <div class="bar"><span><b id="ck-count">0</b> de 12 itens marcados</span><button class="btn" id="ck-reset" type="button">Limpar marcações</button></div>
+</section>
+
+<!-- ============================ MÓDULO 14 ============================ -->
+<section id="pratique">
+  <p class="eyebrow">Módulo 14</p>
+  <h2>Pratique</h2>
+  <h3>Exercício 1. O que o gráfico está dizendo?</h3>
+  <p>Cada item descreve uma situação. Diga se é variação comum, causa especial, falta de capacidade ou erro de método.</p>
+  <div class="quiz" id="quiz"></div>
+  <div class="bar"><span>Acertos: <b id="qz-score">0</b> de <b id="qz-total">12</b></span><span>Respondidos: <b id="qz-done">0</b></span><button class="btn" id="qz-reset" type="button">Recomeçar</button></div>
+
+  <h3>Exercício 2. Monte o gráfico de uma característica sua</h3>
+  <p>Abra a planilha de apoio e siga o roteiro.</p>
+  <ol>
+    <li>Na aba Dados, informe a característica, a unidade, os limites da especificação e quantos subgrupos formam a base.</li>
+    <li>Lance pelo menos 20 subgrupos de cinco medições, com a data e a identificação.</li>
+    <li>Marque como excluídos os subgrupos com causa conhecida, com o motivo.</li>
+    <li>Leia os limites, os sinais e a conferência de cada linha. Veja os gráficos na aba Gráficos.</li>
+    <li>Leia o histograma e a capacidade, e o aviso na aba Painel. Depois, passe o checklist do módulo 13.</li>
+  </ol>
+  <p>Se o processo estiver em controle e o Cpk for baixo, leve a decisão ao dono do processo: a ação é mudar o processo, e não ajustar a máquina.</p>
+</section>
+
+<!-- ============================ MÓDULO 15 ============================ -->
+<section id="planilha">
+  <p class="eyebrow">Módulo 15</p>
+  <h2>A planilha de apoio</h2>
+  <p>Este treinamento acompanha o arquivo <a id="xlsx-ref" href="Histograma-CEP-modelo.xlsx">Histograma-CEP-modelo.xlsx</a>, que fica na mesma pasta. As células em amarelo-claro são para preenchimento. As células cinza são calculadas.</p>
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Aba</th><th>Para que serve</th><th style="width:36%">O que ela calcula</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Instruções</strong></td><td>Legenda de cores, as regras de cálculo, ordem de preenchimento e premissas do modelo.</td><td>Nada. É só leitura.</td></tr>
+        <tr><td><strong>Dados</strong></td><td>A característica, a especificação, a base e até 30 subgrupos de cinco medições, com exclusão e motivo.</td><td>Média, amplitude, fase, medições fora da especificação, sinal e conferência; os limites.</td></tr>
+        <tr><td><strong>Gráficos</strong></td><td>Nada a preencher.</td><td>Os gráficos de média e de amplitude, com a linha central e os limites.</td></tr>
+        <tr><td><strong>Histograma</strong></td><td>Nada a preencher.</td><td>As 12 classes, as contagens, o gráfico e o resumo das medições.</td></tr>
+        <tr><td><strong>Painel</strong></td><td>Nada a preencher.</td><td>Cp, Cpk, a situação da capacidade, os sinais por regra e o aviso.</td></tr>
+        <tr><td><strong>Checklist</strong></td><td>Os mesmos 12 itens do módulo 13, com status Sim, Parcial ou Não.</td><td>Percentual atendido e situação da validação.</td></tr>
+        <tr><td><strong>Exemplo 1 e Exemplo 2</strong></td><td>Os dados da pizzaria e da indústria.</td><td>As mesmas contas, com os gráficos.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ GLOSSÁRIO ============================ -->
+<section id="glossario">
+  <p class="eyebrow">Referência</p>
+  <h2>Glossário</h2>
+  <dl class="gloss">
+    <div><dt>Amplitude (R)</dt><dd>A maior menos a menor medição de um subgrupo.</dd></div>
+    <div><dt>Base</dt><dd>Os subgrupos usados para calcular a linha central e os limites.</dd></div>
+    <div><dt>Capacidade</dt><dd>O quanto a variação de um processo estável cabe na especificação.</dd></div>
+    <div><dt>Causa comum</dt><dd>A variação de sempre, de muitas causas pequenas. Só diminui mudando o processo.</dd></div>
+    <div><dt>Causa especial</dt><dd>Uma mudança identificável no processo, que aparece como sinal no gráfico.</dd></div>
+    <div><dt>CEP</dt><dd>Controle estatístico de processo: o uso de gráficos de controle para decidir quando agir.</dd></div>
+    <div><dt>Classe</dt><dd>Cada faixa de valores de um histograma.</dd></div>
+    <div><dt>Cp e Cpk</dt><dd>Índices de capacidade: a tolerância dividida pela variação, sem e com o centro.</dd></div>
+    <div><dt>Desvio-padrão (σ)</dt><dd>A medida da variação típica em torno da média. No gráfico X̄-R, estimado pela amplitude média.</dd></div>
+    <div><dt>Especificação</dt><dd>Os limites que o cliente ou o projeto aceita: LIE e LSE.</dd></div>
+    <div><dt>Limites de controle</dt><dd>LSC e LIC: a três desvios da linha central, calculados dos dados.</dd></div>
+    <div><dt>Subgrupo</dt><dd>Um conjunto de medições feitas juntas, nas mesmas condições.</dd></div>
+  </dl>
+</section>
+
+</main>
+</div>
+
+<footer>Material de estudo. Os exemplos, documentos e números são ilustrativos e foram criados para fins didáticos. As referências às normas são resumos para estudo e não substituem a consulta aos textos oficiais.</footer>
+</div>
+
+<script>
+(function () {
+  function read(key) { try { return JSON.parse(localStorage.getItem(key) || 'null'); } catch (e) { return null; } }
+  function write(key, val) { try { localStorage.setItem(key, JSON.stringify(val)); } catch (e) {} }
+
+  /* ---------- Checklist ---------- */
+  var boxes = Array.prototype.slice.call(document.querySelectorAll('#checklist input'));
+  var count = document.getElementById('ck-count');
+  var saved = read('histograma-cep-checklist') || {};
+  function refreshChecks() {
+    var n = 0, state = {};
+    boxes.forEach(function (b) { if (b.checked) { n++; } state[b.id] = b.checked; });
+    count.textContent = n;
+    return state;
+  }
+  boxes.forEach(function (b) {
+    if (saved[b.id]) { b.checked = true; }
+    b.addEventListener('change', function () { write('histograma-cep-checklist', refreshChecks()); });
+  });
+  refreshChecks();
+  document.getElementById('ck-reset').addEventListener('click', function () {
+    boxes.forEach(function (b) { b.checked = false; });
+    write('histograma-cep-checklist', refreshChecks());
+  });
+
+  /* ---------- Exercício ---------- */
+  var KEYS = ['C', 'E', 'P', 'M'];
+  var LABEL = { C: 'Variação comum', E: 'Causa especial', P: 'Falta capacidade', M: 'Erro de método' };
+  var NAMES = { C: 'variação comum', E: 'causa especial', P: 'falta de capacidade', M: 'erro de método' };
+  var ITEMS = [
+    { t: '“Sete médias seguidas abaixo da linha central, desde a troca do lote de resina.”', a: 'E', w: 'Sequência do mesmo lado, com uma mudança de nome no começo.' },
+    { t: '“Todos os pontos dentro dos limites, sem padrão, e o Cpk é 1,6.”', a: 'C', w: 'Processo estável e capaz: deixe-o em paz.' },
+    { t: '“Todos os pontos dentro dos limites, sem padrão, e o Cpk é 0,8.”', a: 'P', w: 'Estável, mas largo: a ação é mudar o processo.' },
+    { t: '“As linhas do gráfico das médias são os limites da especificação.”', a: 'M', w: 'Limite de controle vem dos dados; a especificação vale para cada peça.' },
+    { t: '“Uma amplitude acima do limite na bobina em que a resistência queimou.”', a: 'E', w: 'Um subgrupo com variação demais, e uma causa com nome.' },
+    { t: '“A média está no alvo, mas o histograma passa dos dois limites, sem nenhum sinal no gráfico.”', a: 'P', w: 'Centrado e estável, mas largo demais para a tolerância.' },
+    { t: '“O operador mede de novo toda bobina fora e anota só a segunda medição.”', a: 'M', w: 'O histograma sai cortado, e o gráfico deixa de mostrar o processo.' },
+    { t: '“Pontos sobem e descem em volta da linha central, sem sequência, durante um mês.”', a: 'C', w: 'É assim que um processo estável se parece.' },
+    { t: '“Seis médias seguidas, cada uma menor que a anterior, enquanto a rosca se gasta.”', a: 'E', w: 'Tendência: desgaste é a causa típica.' },
+    { t: '“Os limites são recalculados toda semana, com os pontos novos e os com sinal.”', a: 'M', w: 'Os limites andam junto com a mudança e escondem o sinal.' },
+    { t: '“Cp de 1,5 e Cpk de 0,6, com o processo em controle.”', a: 'P', w: 'A largura cabe, mas o centro está longe do alvo: centralizar.' },
+    { t: '“Uma bola de 405 g e outra de 395 g no mesmo lote, com todos os pontos em controle.”', a: 'C', w: 'Diferença pequena e esperada entre unidades.' }
+  ];
+  var quiz = document.getElementById('quiz');
+  var score = document.getElementById('qz-score');
+  var done = document.getElementById('qz-done');
+  document.getElementById('qz-total').textContent = ITEMS.length;
+  var hits = 0, answered = 0;
+
+  function render() {
+    hits = 0; answered = 0; score.textContent = 0; done.textContent = 0;
+    quiz.textContent = '';
+    ITEMS.forEach(function (item, idx) {
+      var row = document.createElement('div'); row.className = 'q';
+      var p = document.createElement('p'); p.textContent = (idx + 1) + '. ' + item.t;
+      var opts = document.createElement('div'); opts.className = 'opts';
+      opts.setAttribute('role', 'group'); opts.setAttribute('aria-label', 'Classificação do item ' + (idx + 1));
+      var why = document.createElement('p'); why.className = 'why'; why.hidden = true;
+      KEYS.forEach(function (k) {
+        var b = document.createElement('button');
+        b.type = 'button'; b.textContent = LABEL[k]; b.id = 'qz-' + idx + '-' + k;
+        b.setAttribute('data-k', k);
+        b.addEventListener('click', function () {
+          var ok = k === item.a;
+          Array.prototype.forEach.call(opts.children, function (o) {
+            o.disabled = true;
+            if (o.getAttribute('data-k') === item.a) { o.className = 'right'; }
+          });
+          if (!ok) { b.className = 'wrong'; }
+          var lead = document.createElement('b');
+          lead.textContent = (ok ? 'Certo. ' : 'A resposta é: ' + NAMES[item.a] + '. ');
+          why.textContent = ''; why.appendChild(lead); why.appendChild(document.createTextNode(item.w));
+          why.className = 'why ' + (ok ? 'ok' : 'no'); why.hidden = false;
+          answered++; if (ok) { hits++; }
+          score.textContent = hits; done.textContent = answered;
+        });
+        opts.appendChild(b);
+      });
+      row.appendChild(p); row.appendChild(opts); row.appendChild(why);
+      quiz.appendChild(row);
+    });
+  }
+  render();
+  document.getElementById('qz-reset').addEventListener('click', render);
+
+  /* ---------- Gráfico: leitura dos valores ---------- */
+  var fig = document.getElementById('fig-bars');
+  var tip = document.getElementById('bars-tip');
+  var svg = document.getElementById('bars');
+  var pts = document.querySelectorAll('#bars .pt-c');
+  function hide() {
+    tip.hidden = true;
+    Array.prototype.forEach.call(pts, function (b) { b.removeAttribute('opacity'); });
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('#bars .hit'), function (r) {
+    function show() {
+      var d = r.dataset;
+      Array.prototype.forEach.call(pts, function (b) {
+        b.setAttribute('opacity', b.getAttribute('data-k') === d.k ? '1' : '.4');
+      });
+      tip.textContent = '';
+      var strong = document.createElement('b'); strong.textContent = d.s + ' · ' + d.p;
+      tip.appendChild(strong);
+      tip.appendChild(document.createTextNode(d.n + ' · ' + d.d));
+      var box = fig.getBoundingClientRect();
+      var pt = svg.createSVGPoint(); pt.x = parseFloat(d.cx); pt.y = parseFloat(d.cy);
+      var scr = pt.matrixTransform(svg.getScreenCTM());
+      tip.style.left = Math.min(Math.max(scr.x - box.left, 180), box.width - 180) + 'px';
+      tip.style.top = (scr.y - box.top - 4) + 'px';
+      tip.hidden = false;
+    }
+    r.addEventListener('pointerenter', show);
+    r.addEventListener('focus', show);
+    r.addEventListener('pointerleave', hide);
+    r.addEventListener('blur', hide);
+  });
+})();
+</script>
+</body>
+</html>
