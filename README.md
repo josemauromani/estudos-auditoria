@@ -38,6 +38,7 @@ Para começar, abra o arquivo `index.html` no navegador.
 | Caso integrado | `Caso-Integrado/` | `Caso-Integrado-modelo.xlsx` |
 | Técnica de auditoria | `Tecnica-Auditoria/` | `Tecnica-Auditoria-modelo.xlsx` |
 | Processo de certificação | `Certificacao/` | `Certificacao-modelo.xlsx` |
+| ISO 9001:2026: o que muda | `ISO-9001-2026/` | `ISO-9001-2026-modelo.xlsx` |
 | Avaliação de fornecedores | `Fornecedores/` | `Fornecedores-modelo.xlsx` |
 | Satisfação do cliente | `Satisfacao/` | `Satisfacao-modelo.xlsx` |
 

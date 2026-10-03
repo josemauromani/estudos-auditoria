@@ -1,0 +1,1380 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ISO 9001:2026: o que muda</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<style>
+:root{
+  --ground:#F3F6F7; --surface:#FFFFFF; --sunk:#E9EEF0; --ink:#16242E; --muted:#566672; --rule:#D3DBE0;
+  --accent:#2B5C8A;
+  --s1:#2A6FB0; --s1-tint:#DCE8F3;
+  --s2:#D19A2E; --s2-tint:#F8EBCB;
+  --s3:#B0413E; --s3-tint:#F5DEDC;
+  --on-s2:#16242E;
+  --p:#2B5C8A; --p-tint:#DCE8F3;
+  --d:#A96A12; --d-tint:#F6E8CF;
+  --c:#1E7B73; --c-tint:#D9EEEB;
+  --a:#B0413E; --a-tint:#F5DEDC;
+  --on-hue:#FFFFFF;
+  --good:#1F7A4D; --good-tint:#DDF1E5;
+  --bad:#B0413E; --bad-tint:#F5DEDC;
+  --display:"Barlow Semi Condensed","Arial Narrow",Arial,sans-serif;
+  --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --ground:#0F171C; --surface:#172229; --sunk:#1E2B33; --ink:#E4EAED; --muted:#9BABB6; --rule:#2B3A44;
+    --accent:#86B7E3;
+  --s1:#4F97DB; --s1-tint:#1B2F42;
+  --s2:#B58E14; --s2-tint:#3A2C12;
+  --s3:#D14B45; --s3-tint:#3D1F1E;
+  --on-s2:#0F171C;
+    --p:#86B7E3; --p-tint:#1B2F42;
+    --d:#E2AC4F; --d-tint:#3A2C12;
+    --c:#5FC6BA; --c-tint:#15332F;
+    --a:#EC8E89; --a-tint:#3D1F1E;
+    --on-hue:#0F171C;
+    --good:#6FCF9B; --good-tint:#163326;
+    --bad:#EC8E89; --bad-tint:#3D1F1E;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --ground:#0F171C; --surface:#172229; --sunk:#1E2B33; --ink:#E4EAED; --muted:#9BABB6; --rule:#2B3A44;
+  --accent:#86B7E3;
+  --s1:#4F97DB; --s1-tint:#1B2F42;
+  --s2:#B58E14; --s2-tint:#3A2C12;
+  --s3:#D14B45; --s3-tint:#3D1F1E;
+  --on-s2:#0F171C;
+  --p:#86B7E3; --p-tint:#1B2F42;
+  --d:#E2AC4F; --d-tint:#3A2C12;
+  --c:#5FC6BA; --c-tint:#15332F;
+  --a:#EC8E89; --a-tint:#3D1F1E;
+  --on-hue:#0F171C;
+  --good:#6FCF9B; --good-tint:#163326;
+  --bad:#EC8E89; --bad-tint:#3D1F1E;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--ground);color:var(--ink);font:400 16px/1.65 var(--body);-webkit-text-size-adjust:100%}
+a{color:var(--accent);text-underline-offset:3px}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.page{max-width:1180px;margin-inline:auto;padding-inline:20px;padding-block:36px 80px}
+
+/* Cabeçalho */
+.mast{display:flex;flex-direction:column;gap:18px;padding-bottom:32px;border-bottom:1px solid var(--rule)}
+.tiles{display:flex;gap:6px}
+.tiles span{width:44px;height:44px;display:grid;place-items:center;font:700 24px/1 var(--display);color:var(--on-hue)}
+.tiles .p{background:var(--p)} .tiles .d{background:var(--d)} .tiles .c{background:var(--c)} .tiles .a{background:var(--a)}
+h1{font:700 clamp(2.3rem,6vw,3.6rem)/1.02 var(--display);letter-spacing:-.01em;margin:0;text-wrap:balance}
+.lead{font-size:1.15rem;line-height:1.55;max-width:62ch;margin:0;color:var(--ink)}
+.meta{display:flex;flex-direction:row;flex-wrap:wrap;gap:6px 22px;font:400 .8rem/1.4 var(--mono);color:var(--muted);margin:0;padding:0;list-style:none}
+
+/* Estrutura */
+.layout{display:grid;grid-template-columns:minmax(0,1fr);gap:32px;padding-top:32px}
+.toc{font-size:.92rem}
+.toc h2{font:500 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+.toc ol{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:2px 20px;counter-reset:toc}
+.toc li{counter-increment:toc}
+.toc a{display:flex;gap:10px;padding:5px 0;color:var(--ink);text-decoration:none;line-height:1.35}
+.toc a::before{content:counter(toc,decimal-leading-zero);font:400 .75rem/1.7 var(--mono);color:var(--muted)}
+.toc a:hover{color:var(--accent);text-decoration:underline}
+@media (min-width:1020px){
+  .layout{grid-template-columns:200px minmax(0,1fr);gap:64px}
+  .toc{position:sticky;top:calc(env(safe-area-inset-top,0px) + 24px);align-self:start}
+  .toc ol{grid-template-columns:1fr}
+}
+main{display:flex;flex-direction:column;gap:72px;min-width:0}
+section{display:flex;flex-direction:column;gap:20px;scroll-margin-top:24px}
+.eyebrow{font:500 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0}
+h2{font:700 clamp(1.7rem,4vw,2.2rem)/1.1 var(--display);margin:0;text-wrap:balance}
+h3{font:600 1.3rem/1.2 var(--display);margin:12px 0 0;text-wrap:balance}
+h4{font:600 .95rem/1.3 var(--body);margin:0}
+p{margin:0}
+section > p, section > ul, section > ol, section > h3{max-width:68ch}
+ul,ol{margin:0;padding-left:1.25em;display:flex;flex-direction:column;gap:6px}
+strong{font-weight:600}
+code{font:400 .88em var(--mono);background:var(--sunk);padding:1px 5px;border-radius:3px}
+
+/* Letras coloridas no texto */
+.k{display:inline-grid;place-items:center;width:1.45em;height:1.45em;font:700 .85em/1 var(--display);color:var(--on-hue);vertical-align:.05em}
+.k.p{background:var(--p)} .k.d{background:var(--d)} .k.c{background:var(--c)} .k.a{background:var(--a)}
+
+/* Figuras */
+figure{margin:0;display:flex;flex-direction:column;gap:10px;position:relative}
+.scroll{overflow-x:auto;background:var(--surface);border:1px solid var(--rule);padding:18px}
+.scroll svg{display:block;width:100%;min-width:820px;height:auto;color:var(--ink)}
+figcaption{font-size:.86rem;line-height:1.5;color:var(--muted);max-width:72ch}
+figcaption b{color:var(--ink);font-weight:600}
+svg text{font-family:var(--body);fill:var(--ink)}
+svg .disp{font-family:var(--display);font-weight:700}
+svg .mono{font-family:var(--mono);letter-spacing:.08em}
+svg .on{fill:var(--on-hue)}
+svg .mu{fill:var(--muted)}
+svg .b{font-weight:600}
+svg .ln{stroke:var(--ink);stroke-width:1.5;fill:none}
+svg .ln-mu{stroke:var(--muted);stroke-width:1.5;fill:none}
+svg .ln-bold{stroke:var(--ink);stroke-width:3;fill:none;stroke-linejoin:round;stroke-linecap:round}
+svg .dash{stroke-dasharray:5 4}
+svg .ah{fill:var(--ink)} svg .ah-mu{fill:var(--muted)}
+svg .bx{fill:var(--surface);stroke:var(--rule);stroke-width:1.5}
+svg .bx-ink{fill:var(--ink);stroke:var(--ink)}
+svg .t-ground{fill:var(--ground)}
+svg .bx-out{fill:none;stroke:var(--muted);stroke-width:1.5;stroke-dasharray:5 4}
+svg .bx-p{fill:var(--p-tint);stroke:var(--p);stroke-width:1.5} svg .hd-p{fill:var(--p)}
+svg .bx-d{fill:var(--d-tint);stroke:var(--d);stroke-width:1.5} svg .hd-d{fill:var(--d)}
+svg .bx-c{fill:var(--c-tint);stroke:var(--c);stroke-width:1.5} svg .hd-c{fill:var(--c)}
+svg .bx-a{fill:var(--a-tint);stroke:var(--a);stroke-width:1.5} svg .hd-a{fill:var(--a)}
+svg .gap{stroke:var(--surface);stroke-width:4}
+svg .gap2{stroke:var(--surface);stroke-width:2}
+svg .hub{fill:var(--surface)}
+
+/* Gráfico */
+svg .grid{stroke:var(--rule);stroke-width:1}
+svg .band{fill:var(--sunk)}
+svg .series{stroke:var(--accent);stroke-width:2;fill:none;stroke-linejoin:round;stroke-linecap:round}
+svg .pt{fill:var(--accent);stroke:var(--surface);stroke-width:2}
+svg .pt.on-hit{stroke:var(--ink)}
+svg .goal{stroke:var(--muted);stroke-width:1.5;stroke-dasharray:6 4;fill:none}
+svg .xh{stroke:var(--muted);stroke-width:1}
+svg .hit{fill:transparent;cursor:crosshair;outline:none}
+svg .root{fill:var(--accent);stroke:var(--surface);stroke-width:2}
+.tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--ground);padding:6px 10px;font-size:.78rem;line-height:1.4;transform:translate(-50%,calc(-100% - 14px));white-space:nowrap;z-index:2}
+.tip b{display:block;font:600 1.05rem/1.2 var(--body)}
+details.data{font-size:.88rem}
+details.data summary{cursor:pointer;font:400 .82rem var(--mono);color:var(--muted);padding:4px 0}
+details.data .tbl{margin-top:8px}
+details.data table{min-width:420px}
+
+/* Tabelas */
+.tbl{overflow-x:auto;border:1px solid var(--rule);background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:780px;font-size:.88rem;line-height:1.4}
+th,td{padding:9px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--rule)}
+tr:last-child > td{border-bottom:0}
+thead th{font:600 .8rem/1.3 var(--body);background:var(--sunk)}
+td.num{font-variant-numeric:tabular-nums;white-space:nowrap;font-family:var(--mono);font-size:.82rem}
+
+/* Situações */
+.chip{display:inline-block;padding:2px 8px;font:600 .76rem/1.45 var(--body);color:var(--on-hue);white-space:nowrap}
+.chip.s1{background:var(--s1)} .chip.s2{background:var(--s2);color:var(--on-s2)} .chip.s3{background:var(--s3)}
+.chip.sl{background:var(--sunk);color:var(--ink);box-shadow:inset 0 0 0 1px var(--rule)}
+svg .hd-ink{fill:var(--ink)}
+svg .f1{fill:var(--s1)} svg .f2{fill:var(--s2)} svg .f3{fill:var(--s3)} svg .f0{fill:var(--muted)}
+svg .bx-s1{fill:var(--s1-tint);stroke:var(--s1);stroke-width:1.5} svg .bx-s2{fill:var(--s2-tint);stroke:var(--s2);stroke-width:1.5} svg .bx-s3{fill:var(--s3-tint);stroke:var(--s3);stroke-width:1.5}
+svg .lane{fill:var(--sunk)}
+svg .now{stroke:var(--ink);stroke-width:1.5;stroke-dasharray:4 3}
+svg .halo{paint-order:stroke;stroke:var(--surface);stroke-width:5px;stroke-linejoin:round}
+svg .hit:focus-visible{stroke:var(--accent);stroke-width:2}
+
+/* Tabelas dos exemplos */
+table.aud{font-size:.8rem;min-width:960px;line-height:1.4}
+table.aud th, table.aud td{padding:8px 9px}
+table.aud td.n{white-space:nowrap;font-weight:600;color:var(--muted)}
+table.aud td.c, table.aud th.c{text-align:center;font-variant-numeric:tabular-nums}
+table.aud td.no{background:var(--s3-tint)}
+table.aud td small, table.aud th small{display:block;color:var(--muted);font-size:.76rem;margin-top:3px;font-weight:400}
+table.aud caption{caption-side:top;text-align:left;padding:10px 12px;font:500 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);background:var(--sunk)}
+
+/* Ficha da organização (acima de cada exemplo) */
+.ficha{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:0;border:1px solid var(--rule);background:var(--surface)}
+.ficha div{padding:12px 14px;border-right:1px solid var(--rule);border-bottom:1px solid var(--rule);margin:0 -1px -1px 0}
+.ficha dt{font:500 .68rem/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.ficha dd{margin:0;font-size:.9rem;line-height:1.4}
+dl{margin:0}
+
+/* Blocos */
+.pair{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.box{background:var(--surface);border:1px solid var(--rule);padding:18px 20px;display:flex;flex-direction:column;gap:10px}
+.box h4{font:600 1.1rem/1.2 var(--display)}
+.box ul{font-size:.93rem}
+.note{background:var(--sunk);padding:16px 20px;max-width:72ch;font-size:.94rem;display:flex;flex-direction:column;gap:6px}
+.note h4{font:500 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+
+/* Passo a passo */
+.steps{list-style:none;padding:0;counter-reset:st;gap:0;max-width:none;border-top:1px solid var(--rule)}
+.steps li{counter-increment:st;display:grid;grid-template-columns:44px minmax(0,1fr);gap:4px 12px;padding:16px 0;border-bottom:1px solid var(--rule)}
+.steps li::before{content:counter(st);font:700 1.7rem/1 var(--display);color:var(--muted);grid-row:span 2}
+.steps h4{font:600 1.1rem/1.25 var(--display)}
+.steps p{font-size:.95rem;max-width:64ch;grid-column:2}
+
+/* Erros comuns */
+.errs{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:0 40px;border-top:1px solid var(--rule)}
+.errs div{padding:16px 16px 16px 0;border-bottom:1px solid var(--rule);display:flex;flex-direction:column;gap:4px}
+.errs h4{font:600 1.05rem/1.25 var(--display)}
+.errs p{font-size:.92rem}
+.errs .fix{color:var(--muted)}
+.errs .fix b{color:var(--ink);font-weight:600}
+
+/* Checklist */
+.check{list-style:none;padding:0;gap:0;max-width:none;border:1px solid var(--rule);background:var(--surface)}
+.check li{border-bottom:1px solid var(--rule)}
+.check li:last-child{border-bottom:0}
+.check label{display:grid;grid-template-columns:22px minmax(0,1fr);gap:12px;padding:11px 16px;cursor:pointer;font-size:.94rem;align-items:start}
+.check input{width:18px;height:18px;margin:3px 0 0;accent-color:var(--c)}
+.check input:checked + span{color:var(--muted);text-decoration:line-through}
+.bar{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;font:400 .82rem var(--mono);color:var(--muted)}
+.bar b{color:var(--ink);font-weight:500}
+
+/* Exercício */
+.quiz{display:flex;flex-direction:column;gap:0;border:1px solid var(--rule);background:var(--surface)}
+.q{display:grid;grid-template-columns:minmax(0,1fr);gap:10px;padding:14px 16px;border-bottom:1px solid var(--rule)}
+.q:last-child{border-bottom:0}
+@media (min-width:720px){.q{grid-template-columns:minmax(0,1fr) auto;align-items:center}}
+.q p{font-size:.95rem}
+.q .why{grid-column:1/-1;font-size:.86rem;color:var(--muted)}
+.q .why b{font-weight:600}
+.q .why.ok b{color:var(--good)} .q .why.no b{color:var(--bad)}
+.opts{display:flex;gap:6px}
+.opts button{width:40px;height:40px;border:1.5px solid var(--rule);background:var(--surface);color:var(--ink);font:700 1.1rem/1 var(--display);cursor:pointer;border-radius:0}
+.opts button:hover:not(:disabled){border-color:var(--ink)}
+.opts button:disabled{cursor:default;opacity:.45}
+.opts button.right{background:var(--good-tint);border-color:var(--good);color:var(--good);opacity:1}
+.opts button.wrong{background:var(--bad-tint);border-color:var(--bad);color:var(--bad);opacity:1}
+.btn{border:1.5px solid var(--ink);background:transparent;color:var(--ink);font:500 .82rem var(--mono);padding:7px 14px;cursor:pointer;border-radius:0}
+.btn:hover{background:var(--ink);color:var(--ground)}
+
+/* Glossário */
+.gloss{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:0 40px;border-top:1px solid var(--rule)}
+.gloss div{padding:12px 0;border-bottom:1px solid var(--rule)}
+.gloss dt{font:600 1.02rem/1.3 var(--display)}
+.gloss dd{margin:2px 0 0;font-size:.9rem;color:var(--muted)}
+footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);font-size:.84rem;color:var(--muted);max-width:72ch}
+
+.quiz .opts{flex-wrap:wrap}
+.quiz .opts button{width:auto;min-width:40px;padding:0 11px;font-size:1rem}
+@media (min-width:720px){.q{grid-template-columns:minmax(0,1fr) auto}}
+</style>
+</head>
+<body>
+<div class="page" lang="pt-BR">
+
+<header class="mast">
+  <div class="tiles" aria-hidden="true"><span class="p">L</span><span class="d">D</span><span class="c">T</span></div>
+  <h1>ISO 9001:2026: o que muda</h1>
+  <p class="lead">Um guia de estudo para entender a edição de 2026 da ISO 9001, publicada em 16/09/2026: o que mudou, o que continua igual, como diagnosticar o sistema atual e como planejar a transição dentro do prazo.</p>
+  <ul class="meta">
+    <li>Treinamento autoinstrucional</li>
+    <li>15 módulos</li>
+    <li>Leitura de cerca de 50 minutos</li>
+    <li>3 exemplos resolvidos e 2 exercícios</li>
+  </ul>
+</header>
+
+<div class="layout">
+
+<nav class="toc" aria-label="Sumário">
+  <h2>Sumário</h2>
+  <ol>
+    <li><a href="#o-que-e">O que é</a></li>
+    <li><a href="#quem">Quem precisa agir, e até quando</a></li>
+    <li><a href="#como">Como fazer a transição</a></li>
+    <li><a href="#cultura">Cultura da qualidade e ética</a></li>
+    <li><a href="#riscos">Riscos e oportunidades separados</a></li>
+    <li><a href="#outras">As outras mudanças</a></li>
+    <li><a href="#igual">O que não mudou</a></li>
+    <li><a href="#exemplos">Exemplos resolvidos</a></li>
+    <li><a href="#leitura">Ler o diagnóstico</a></li>
+    <li><a href="#erros">Erros comuns</a></li>
+    <li><a href="#serie">A edição nova e os estudos da série</a></li>
+    <li><a href="#iso">Nas normas</a></li>
+    <li><a href="#reuniao">A reunião de transição</a></li>
+    <li><a href="#pratique">Pratique</a></li>
+    <li><a href="#planilha">A planilha de apoio</a></li>
+    <li><a href="#glossario">Glossário</a></li>
+  </ol>
+</nav>
+
+<main>
+
+<!-- ============================ MÓDULO 1 ============================ -->
+<section id="o-que-e">
+  <p class="eyebrow">Módulo 1</p>
+  <h2>O que é</h2>
+  <p>A ISO 9001:2026 é a edição nova da norma de sistema de gestão da qualidade. Ela não reescreve o sistema: mantém a estrutura, a numeração e a maior parte dos requisitos de 2015, e muda poucos pontos, quase todos na liderança e no planejamento. Quem tem um sistema funcionando pela edição de 2015 precisa de ajustes, e não de um sistema novo.</p>
+  <p>As letras do título resumem as mudanças: <span class="k p">L</span> a liderança, que passa a promover uma cultura da qualidade e o comportamento ético, <span class="k d">D</span> a distinção entre riscos e oportunidades, agora com requisitos próprios, e <span class="k c">T</span> a transição, com prazo até 30/09/2029.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 330" role="img" aria-label="Onde a ISO 9001:2026 muda, seção por seção. 4.1 e 4.2, Mudança climática no contexto: incorporado. 5.1.1, Cultura da qualidade e comportamento ético: novo. 5.2, Política ligada à direção estratégica: reforçado. 6.1, Riscos e oportunidades separados: reestruturado. 6.3, Planejamento de mudanças: reforçado. 7.3, Conscientização sobre cultura e ética: novo. 3, Termos essenciais dentro da norma: esclarecimento. Estrutura, Estrutura harmonizada atualizada: esclarecimento. Anexo A, Anexo A ampliado: esclarecimento. As seções 8, 9 e 10 não têm mudança de requisito.">
+        <rect class="hd-ink" x="12" y="14" width="96" height="40"/>
+        <text class="disp t-ground" x="60.0" y="36" font-size="16" text-anchor="middle">3</text>
+        <text class="mono t-ground" x="60.0" y="49" font-size="8.5" text-anchor="middle">TERMOS</text>
+        <rect class="f1" x="18" y="62" width="84" height="22"/>
+        <text class="b on" x="60.0" y="77" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">Termos</text>
+        <rect class="hd-ink" x="110" y="14" width="96" height="40"/>
+        <text class="disp t-ground" x="158.0" y="36" font-size="16" text-anchor="middle">4</text>
+        <text class="mono t-ground" x="158.0" y="49" font-size="8.5" text-anchor="middle">CONTEXTO</text>
+        <rect class="f1" x="116" y="62" width="84" height="22"/>
+        <text class="b on" x="158.0" y="77" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">4.1</text>
+        <rect class="f1" x="116" y="90" width="84" height="22"/>
+        <text class="b on" x="158.0" y="105" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">4.2</text>
+        <rect class="lane" x="116" y="118" width="84" height="22"/>
+        <text class="mu" x="158.0" y="133" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">4.3</text>
+        <rect class="lane" x="116" y="146" width="84" height="22"/>
+        <text class="mu" x="158.0" y="161" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">4.4</text>
+        <rect class="hd-ink" x="208" y="14" width="96" height="40"/>
+        <text class="disp t-ground" x="256.0" y="36" font-size="16" text-anchor="middle">5</text>
+        <text class="mono t-ground" x="256.0" y="49" font-size="8.5" text-anchor="middle">LIDERANÇA</text>
+        <rect class="f3" x="214" y="62" width="84" height="22"/>
+        <text class="b on" x="256.0" y="77" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">5.1.1</text>
+        <rect class="lane" x="214" y="90" width="84" height="22"/>
+        <text class="mu" x="256.0" y="105" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">5.1.2</text>
+        <rect class="f2" x="214" y="118" width="84" height="22"/>
+        <text class="b" x="256.0" y="133" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">5.2</text>
+        <rect class="lane" x="214" y="146" width="84" height="22"/>
+        <text class="mu" x="256.0" y="161" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">5.3</text>
+        <rect class="hd-ink" x="306" y="14" width="96" height="40"/>
+        <text class="disp t-ground" x="354.0" y="36" font-size="16" text-anchor="middle">6</text>
+        <text class="mono t-ground" x="354.0" y="49" font-size="8.5" text-anchor="middle">PLANEJAMENTO</text>
+        <rect class="f2" x="312" y="62" width="84" height="22"/>
+        <text class="b" x="354.0" y="77" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">6.1</text>
+        <rect class="lane" x="312" y="90" width="84" height="22"/>
+        <text class="mu" x="354.0" y="105" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">6.2</text>
+        <rect class="f2" x="312" y="118" width="84" height="22"/>
+        <text class="b" x="354.0" y="133" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">6.3</text>
+        <rect class="hd-ink" x="404" y="14" width="96" height="40"/>
+        <text class="disp t-ground" x="452.0" y="36" font-size="16" text-anchor="middle">7</text>
+        <text class="mono t-ground" x="452.0" y="49" font-size="8.5" text-anchor="middle">APOIO</text>
+        <rect class="lane" x="410" y="62" width="84" height="22"/>
+        <text class="mu" x="452.0" y="77" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">7.1</text>
+        <rect class="lane" x="410" y="90" width="84" height="22"/>
+        <text class="mu" x="452.0" y="105" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">7.2</text>
+        <rect class="f3" x="410" y="118" width="84" height="22"/>
+        <text class="b on" x="452.0" y="133" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">7.3</text>
+        <rect class="lane" x="410" y="146" width="84" height="22"/>
+        <text class="mu" x="452.0" y="161" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">7.4</text>
+        <rect class="lane" x="410" y="174" width="84" height="22"/>
+        <text class="mu" x="452.0" y="189" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">7.5</text>
+        <rect class="hd-ink" x="502" y="14" width="96" height="40"/>
+        <text class="disp t-ground" x="550.0" y="36" font-size="16" text-anchor="middle">8</text>
+        <text class="mono t-ground" x="550.0" y="49" font-size="8.5" text-anchor="middle">OPERAÇÃO</text>
+        <rect class="lane" x="508" y="62" width="84" height="22"/>
+        <text class="mu" x="550.0" y="77" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">8.1</text>
+        <rect class="lane" x="508" y="90" width="84" height="22"/>
+        <text class="mu" x="550.0" y="105" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">8.2</text>
+        <rect class="lane" x="508" y="118" width="84" height="22"/>
+        <text class="mu" x="550.0" y="133" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">8.3</text>
+        <rect class="lane" x="508" y="146" width="84" height="22"/>
+        <text class="mu" x="550.0" y="161" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">8.4</text>
+        <rect class="lane" x="508" y="174" width="84" height="22"/>
+        <text class="mu" x="550.0" y="189" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">8.5</text>
+        <rect class="lane" x="508" y="202" width="84" height="22"/>
+        <text class="mu" x="550.0" y="217" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">8.6</text>
+        <rect class="lane" x="508" y="230" width="84" height="22"/>
+        <text class="mu" x="550.0" y="245" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">8.7</text>
+        <rect class="hd-ink" x="600" y="14" width="96" height="40"/>
+        <text class="disp t-ground" x="648.0" y="36" font-size="16" text-anchor="middle">9</text>
+        <text class="mono t-ground" x="648.0" y="49" font-size="8.5" text-anchor="middle">AVALIAÇÃO</text>
+        <rect class="lane" x="606" y="62" width="84" height="22"/>
+        <text class="mu" x="648.0" y="77" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">9.1</text>
+        <rect class="lane" x="606" y="90" width="84" height="22"/>
+        <text class="mu" x="648.0" y="105" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">9.2</text>
+        <rect class="lane" x="606" y="118" width="84" height="22"/>
+        <text class="mu" x="648.0" y="133" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">9.3</text>
+        <rect class="hd-ink" x="698" y="14" width="96" height="40"/>
+        <text class="disp t-ground" x="746.0" y="36" font-size="16" text-anchor="middle">10</text>
+        <text class="mono t-ground" x="746.0" y="49" font-size="8.5" text-anchor="middle">MELHORIA</text>
+        <rect class="lane" x="704" y="62" width="84" height="22"/>
+        <text class="mu" x="746.0" y="77" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">10.1</text>
+        <rect class="lane" x="704" y="90" width="84" height="22"/>
+        <text class="mu" x="746.0" y="105" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">10.2</text>
+        <rect class="lane" x="704" y="118" width="84" height="22"/>
+        <text class="mu" x="746.0" y="133" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">10.3</text>
+        <rect class="hd-ink" x="796" y="14" width="96" height="40"/>
+        <text class="disp t-ground" x="844.0" y="36" font-size="16" text-anchor="middle">A</text>
+        <text class="mono t-ground" x="844.0" y="49" font-size="8.5" text-anchor="middle">ANEXO</text>
+        <rect class="f1" x="802" y="62" width="84" height="22"/>
+        <text class="b on" x="844.0" y="77" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">Anexo A</text>
+        <rect class="bx-s1" x="12" y="268" width="876" height="24"/>
+        <text class="b" x="450" y="285" font-size="11.5" text-anchor="middle">Estrutura harmonizada atualizada, comum às normas de sistema de gestão</text>
+        <rect class="f3" x="60" y="306" width="14" height="14"/><text x="80" y="318" font-size="11">Novo</text>
+        <rect class="f2" x="270" y="306" width="14" height="14"/><text x="290" y="318" font-size="11">Reforçado ou reestruturado</text>
+        <rect class="f1" x="480" y="306" width="14" height="14"/><text x="500" y="318" font-size="11">Incorporado ou esclarecimento</text>
+        <rect class="lane" x="690" y="306" width="14" height="14"/><text x="710" y="318" font-size="11">Sem mudança de requisito</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 1.</b> Onde a edição de 2026 muda, seção por seção. As seções 8, 9 e 10, de operação, avaliação e melhoria, não têm mudança de requisito.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:7%">Código</th><th style="width:22%">Mudança<small>Onde</small></th><th style="width:14%">Tipo · impacto</th><th>O que mudou, em resumo</th><th style="width:16%">Estudo da série</th></tr></thead>
+      <tbody>
+        <tr><td class="num">M1</td><td><strong>Mudança climática no contexto</strong><br><small>4.1 e 4.2</small></td><td>Incorporado<br><small>impacto baixo</small></td><td>A emenda de 2024, que pedia para avaliar se a mudança climática é uma questão pertinente e se as partes interessadas têm requisitos ligados a ela, passa para o texto da norma.</td><td><a href="../SWOT/treinamento-swot.html">Matriz SWOT</a></td></tr>
+        <tr><td class="num">M2</td><td><strong>Cultura da qualidade e comportamento ético</strong><br><small>5.1.1</small></td><td>Novo<br><small>impacto alto</small></td><td>A alta direção passa a ter de promover e demonstrar uma cultura da qualidade e o comportamento ético.</td><td><a href="../Escopo/treinamento-escopo.html">Escopo e liderança</a></td></tr>
+        <tr><td class="num">M3</td><td><strong>Política ligada à direção estratégica</strong><br><small>5.2</small></td><td>Reforçado<br><small>impacto médio</small></td><td>A ligação da política e dos objetivos com o contexto e a direção estratégica da organização fica mais explícita.</td><td><a href="../Objetivos/treinamento-objetivos.html">Objetivos da qualidade</a></td></tr>
+        <tr><td class="num">M4</td><td><strong>Riscos e oportunidades separados</strong><br><small>6.1</small></td><td>Reestruturado<br><small>impacto alto</small></td><td>Os riscos e as oportunidades passam a ter requisitos próprios, cada um com determinação, ações e avaliação.</td><td><a href="../Riscos/treinamento-riscos.html">Matriz de riscos</a></td></tr>
+        <tr><td class="num">M5</td><td><strong>Planejamento de mudanças</strong><br><small>6.3</small></td><td>Reforçado<br><small>impacto médio</small></td><td>O planejamento das mudanças no sistema é reforçado: planejar, comunicar, acompanhar e analisar o efeito.</td><td><a href="../Caso-Integrado/treinamento-caso-integrado.html">Caso integrado</a></td></tr>
+        <tr><td class="num">M6</td><td><strong>Conscientização sobre cultura e ética</strong><br><small>7.3</small></td><td>Novo<br><small>impacto médio</small></td><td>As pessoas precisam estar conscientes da cultura da qualidade e do comportamento ético esperados, além da política e dos objetivos.</td><td><a href="../Competencias/treinamento-competencias.html">Matriz de competências</a></td></tr>
+        <tr><td class="num">M7</td><td><strong>Termos essenciais dentro da norma</strong><br><small>3</small></td><td>Esclarecimento<br><small>impacto baixo</small></td><td>Um conjunto pequeno de termos essenciais, vindos da ISO 9000, passa a aparecer na própria norma, e a redação sobre informação documentada é ajustada.</td><td><a href="../Informacao-Documentada/treinamento-informacao-documentada.html">Informação documentada</a></td></tr>
+        <tr><td class="num">M8</td><td><strong>Estrutura harmonizada atualizada</strong><br><small>Estrutura</small></td><td>Esclarecimento<br><small>impacto baixo</small></td><td>A norma acompanha a versão atual da estrutura comum às normas de sistema de gestão, sem mudar a numeração principal.</td><td><a href="../ISO-9001/treinamento-iso-9001.html">ISO 9001 requisito a requisito</a></td></tr>
+        <tr><td class="num">M9</td><td><strong>Anexo A ampliado</strong><br><small>Anexo A</small></td><td>Esclarecimento<br><small>impacto baixo</small></td><td>O anexo informativo explica a intenção dos requisitos e as relações entre eles, sem criar obrigações.</td><td><a href="../ISO-9001/treinamento-iso-9001.html">ISO 9001 requisito a requisito</a></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Os resumos são deste material, com palavras próprias, a partir do anúncio da ISO e do que os organismos de certificação publicaram. Só entraram as mudanças citadas por mais de uma fonte. Confira sempre o texto da norma: ele é a referência para qualquer decisão.</p>
+</section>
+
+<!-- ============================ MÓDULO 2 ============================ -->
+<section id="quem">
+  <p class="eyebrow">Módulo 2</p>
+  <h2>Quem precisa agir, e até quando</h2>
+  <p>A edição nova afeta de jeito diferente quem já tem certificado, quem ainda vai se certificar e quem usa a norma sem certificação.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 236" role="img" aria-label="As datas da transição. 16/09/2026: Publicação da ISO 9001:2026. 15/02/2028: Fase 1 da pizzaria, já pela edição de 2026. 31/03/2028: Certificados novos só pela edição de 2026. 22/11/2028: Transição da indústria, na 1ª manutenção. 30/09/2029: Fim da transição: certificados de 2015 deixam de valer.">
+        <rect class="bx-s2" x="89.4" y="86" width="711.6" height="28"/>
+        <line class="grid" x1="158.0" y1="80" x2="158.0" y2="120"/>
+        <text class="mu" x="158.0" y="134" font-size="10.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">2027</text>
+        <line class="grid" x1="392.0" y1="80" x2="392.0" y2="120"/>
+        <text class="mu" x="392.0" y="134" font-size="10.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">2028</text>
+        <line class="grid" x1="626.6" y1="80" x2="626.6" y2="120"/>
+        <text class="mu" x="626.6" y="134" font-size="10.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">2029</text>
+        <line class="ln-mu" x1="89.4" y1="56" x2="89.4" y2="84"/>
+        <circle class="f1" cx="89.4" cy="100" r="6"/>
+        <text class="b" x="83.4" y="42" font-size="11">16/09/2026</text>
+        <text class="mu" x="83.36669272869429" y="56" font-size="10.5">Publicação da ISO 9001:2026</text>
+        <line class="ln-mu" x1="420.8" y1="118" x2="420.8" y2="164"/>
+        <circle class="f1" cx="420.8" cy="100" r="6"/>
+        <text class="b" x="420.8" y="176" font-size="11" text-anchor="middle">15/02/2028</text>
+        <text class="mu" text-anchor="middle" x="420.8287724784988" y="190" font-size="10.5">Fase 1 da pizzaria, já pela</text>
+        <text class="mu" text-anchor="middle" x="420.8287724784988" y="203" font-size="10.5">edição de 2026</text>
+        <line class="ln-mu" x1="449.7" y1="56" x2="449.7" y2="84"/>
+        <circle class="f3" cx="449.7" cy="100" r="6"/>
+        <text class="b" x="449.7" y="42" font-size="11" text-anchor="middle">31/03/2028</text>
+        <text class="mu" text-anchor="middle" x="449.67943706020327" y="56" font-size="10.5">Certificados novos só pela</text>
+        <text class="mu" text-anchor="middle" x="449.67943706020327" y="69" font-size="10.5">edição de 2026</text>
+        <line class="ln-mu" x1="601.0" y1="118" x2="601.0" y2="164"/>
+        <circle class="f1" cx="601.0" cy="100" r="6"/>
+        <text class="b" x="601.0" y="176" font-size="11" text-anchor="middle">22/11/2028</text>
+        <text class="mu" text-anchor="middle" x="600.9851446442533" y="190" font-size="10.5">Transição da indústria, na 1ª</text>
+        <text class="mu" text-anchor="middle" x="600.9851446442533" y="203" font-size="10.5">manutenção</text>
+        <line class="ln-mu" x1="801.0" y1="56" x2="801.0" y2="84"/>
+        <circle class="f3" cx="801.0" cy="100" r="6"/>
+        <text class="b" x="807.0" y="42" font-size="11" text-anchor="end">30/09/2029</text>
+        <text class="mu" text-anchor="end" x="807.0164190774042" y="56" font-size="10.5">Fim da transição: certificados</text>
+        <text class="mu" text-anchor="end" x="807.0164190774042" y="69" font-size="10.5">de 2015 deixam de valer</text>
+        <text x="450" y="228" font-size="11.5" text-anchor="middle">Datas do documento de transição da Global ACI, publicado junto com a norma.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 2.</b> As datas da transição, com as auditorias dos dois exemplos.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:28%">Situação</th><th style="width:40%">O que fazer</th><th>Até quando</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Certificada pela edição de 2015</strong></td><td>Diagnosticar, ajustar e passar pela auditoria de transição, numa manutenção, numa recertificação ou numa auditoria separada.</td><td>30/09/2029. Depois, o certificado de 2015 deixa de valer.</td></tr>
+        <tr><td><strong>Ainda sem certificado</strong></td><td>Implantar já pela edição de 2026.</td><td>Desde 31/03/2028, certificados novos só saem pela edição de 2026.</td></tr>
+        <tr><td><strong>Usa a norma sem certificar</strong></td><td>Adotar as mudanças no ritmo da organização.</td><td>Não há prazo externo.</td></tr>
+        <tr><td><strong>Auditor interno ou consultor</strong></td><td>Atualizar as listas de verificação e os materiais.</td><td>Antes da primeira auditoria pela edição nova.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note">
+    <h4>De onde vêm as datas</h4>
+    <p>As regras de transição para os organismos de certificação são da Global ACI, a cooperação internacional de acreditação que em 1º/01/2026 substituiu o IAF e o ILAC. O documento de transição foi publicado no mesmo dia da norma. Os organismos aplicam essas regras nos seus regulamentos, inclusive o tempo extra da auditoria de transição. Confirme as datas com o seu organismo antes de planejar.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 3 ============================ -->
+<section id="como">
+  <p class="eyebrow">Módulo 3</p>
+  <h2>Como fazer a transição</h2>
+  <p>A transição tem cinco etapas, e as duas primeiras cabem em poucas semanas. O erro mais comum é deixar tudo para o ano do prazo final.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 236" role="img" aria-label="As cinco etapas da transição. Ler a edição nova: Com o anexo A, comparando com o sistema atual. Diagnosticar: Para cada mudança: atende, atende em parte ou não atende. Ajustar o sistema: Ações com dono e prazo, aprovadas pela direção. Auditar por dentro: Auditoria interna e análise crítica já pela edição nova. Auditar com o organismo: Numa manutenção, numa recertificação ou numa auditoria separada. O que a auditoria encontrar volta ao ajuste do sistema.">
+        <defs><marker id="a3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker><marker id="a3m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah-mu" d="M0 0 L10 5 L0 10 z"/></marker></defs>
+        <rect class="bx" x="12" y="16" width="164" height="152"/>
+        <text class="mono mu" x="24" y="36" font-size="10">ETAPA 1</text>
+        <text class="b" x="24" y="58" font-size="12.5">Ler a edição nova</text>
+        <text x="24" y="81.0" font-size="10.5">Com o anexo A, comparando</text>
+        <text x="24" y="95.5" font-size="10.5">com o sistema atual.</text>
+        <line class="ln" x1="177" y1="84" x2="188" y2="84" marker-end="url(#a3)"/>
+        <rect class="bx-p" x="190" y="16" width="164" height="152"/>
+        <text class="mono mu" x="202" y="36" font-size="10">ETAPA 2</text>
+        <text class="b" x="202" y="58" font-size="12.5">Diagnosticar</text>
+        <text x="202" y="81.0" font-size="10.5">Para cada mudança:</text>
+        <text x="202" y="95.5" font-size="10.5">atende, atende em parte</text>
+        <text x="202" y="110.0" font-size="10.5">ou não atende.</text>
+        <line class="ln" x1="355" y1="84" x2="366" y2="84" marker-end="url(#a3)"/>
+        <rect class="bx-d" x="368" y="16" width="164" height="152"/>
+        <text class="mono mu" x="380" y="36" font-size="10">ETAPA 3</text>
+        <text class="b" x="380" y="58" font-size="12.5">Ajustar o sistema</text>
+        <text x="380" y="81.0" font-size="10.5">Ações com dono e prazo,</text>
+        <text x="380" y="95.5" font-size="10.5">aprovadas pela direção.</text>
+        <line class="ln" x1="533" y1="84" x2="544" y2="84" marker-end="url(#a3)"/>
+        <rect class="bx-c" x="546" y="16" width="164" height="152"/>
+        <text class="mono mu" x="558" y="36" font-size="10">ETAPA 4</text>
+        <text class="b" x="558" y="58" font-size="12.5">Auditar por dentro</text>
+        <text x="558" y="81.0" font-size="10.5">Auditoria interna e</text>
+        <text x="558" y="95.5" font-size="10.5">análise crítica já pela</text>
+        <text x="558" y="110.0" font-size="10.5">edição nova.</text>
+        <line class="ln" x1="711" y1="84" x2="722" y2="84" marker-end="url(#a3)"/>
+        <rect class="bx-ink" x="724" y="16" width="164" height="152"/>
+        <text class="mono t-ground" x="736" y="36" font-size="10">ETAPA 5</text>
+        <text class="b t-ground" x="736" y="58" font-size="12.5">Auditar com o</text>
+        <text class="b t-ground" x="736" y="73" font-size="12.5">organismo</text>
+        <text class="t-ground" x="736" y="96.0" font-size="10.5">Numa manutenção, numa</text>
+        <text class="t-ground" x="736" y="110.5" font-size="10.5">recertificação ou numa</text>
+        <text class="t-ground" x="736" y="125.0" font-size="10.5">auditoria separada.</text>
+        <path class="ln-mu dash" d="M806.0 170 V198 H450.0 V174" marker-end="url(#a3m)"/>
+        <text class="mu halo" x="628.0" y="202" font-size="11" text-anchor="middle">constatações da auditoria de transição</text>
+        <text x="450" y="228" font-size="11.5" text-anchor="middle">A transição não pede um sistema novo: pede ajustes em poucos pontos, feitos e auditados antes da data.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 3.</b> As cinco etapas da transição. O que a auditoria encontrar volta ao ajuste do sistema.</figcaption>
+  </figure>
+
+  <h3>Passo a passo</h3>
+  <ol class="steps">
+    <li><h4>Compre e leia a norma</h4><p>Com o anexo A, que explica a intenção dos requisitos. Resumos ajudam, mas não substituem o texto.</p></li>
+    <li><h4>Faça o diagnóstico</h4><p>Para cada mudança: atende, atende em parte ou não atende, com a evidência. A planilha traz as nove mudanças com a pergunta de cada uma.</p></li>
+    <li><h4>Priorize pelo impacto</h4><p>Cultura e ética e a separação de riscos e oportunidades pesam mais; termos e estrutura, menos.</p></li>
+    <li><h4>Aprove o plano com a direção</h4><p>Ações com responsável e prazo. A mudança mais importante é da própria direção.</p></li>
+    <li><h4>Ajuste os documentos e treine</h4><p>Compromissos da direção, política, matriz de riscos, rotina de mudanças, conscientização, glossário.</p></li>
+    <li><h4>Audite por dentro</h4><p>Uma auditoria interna e uma análise crítica já pela edição nova, antes da auditoria externa.</p></li>
+    <li><h4>Combine com o organismo</h4><p>A data, o tipo de auditoria e o tempo extra. Quanto antes do prazo, mais folga para tratar constatações.</p></li>
+    <li><h4>Atualize o calendário</h4><p>As datas do plano entram no calendário do sistema, como no estudo do <a href="../Caso-Integrado/treinamento-caso-integrado.html">Caso integrado</a>.</p></li>
+  </ol>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:26%">Papel</th><th style="width:28%">Quem costuma ser</th><th>O que faz</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Coordenação</strong></td><td>A Qualidade, ou o gerente.</td><td>Lê a norma, faz o diagnóstico e acompanha o plano.</td></tr>
+        <tr><td><strong>Direção</strong></td><td>O dono, o diretor.</td><td>Aprova o plano e assume as ações de cultura e ética.</td></tr>
+        <tr><td><strong>Donos dos processos</strong></td><td>Os gerentes e líderes.</td><td>Ajustam riscos, oportunidades e mudanças nas suas áreas.</td></tr>
+        <tr><td><strong>Auditores internos</strong></td><td>A equipe de auditoria.</td><td>Atualizam as listas de verificação e auditam pela edição nova.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 4 ============================ -->
+<section id="cultura">
+  <p class="eyebrow">Módulo 4</p>
+  <h2>Cultura da qualidade e ética</h2>
+  <p>A mudança de maior impacto está na liderança. A alta direção passa a ter de promover uma cultura da qualidade e o comportamento ético, e as pessoas passam a ter de estar conscientes deles. A ideia aparece em três lugares da norma, que se reforçam.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 236" role="img" aria-label="A cultura da qualidade na edição de 2026, em três camadas. Direção, requisito 5.1.1: Promove e demonstra a cultura da qualidade e a ética, nas decisões do dia a dia. Política e objetivos, requisito 5.2: Ligados ao contexto e à direção estratégica, e conhecidos por todos. Pessoas, requisito 7.3: Sabem que comportamento se espera delas, e por quê.">
+        <defs><marker id="a4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker></defs>
+        <rect class="bx-s3" x="12" y="14" width="560" height="60"/>
+        <rect class="f3" x="12" y="14" width="8" height="60"/>
+        <text class="b" x="34" y="39" font-size="13">Direção</text>
+        <text class="mono mu" x="560" y="39" font-size="10.5" text-anchor="end">5.1.1</text>
+        <text x="34" y="58" font-size="11">Promove e demonstra a cultura da qualidade e a ética, nas decisões do dia a dia.</text>
+        <line class="ln" x1="292" y1="75" x2="292" y2="85" marker-end="url(#a4)"/>
+        <rect class="bx-s2" x="12" y="86" width="560" height="60"/>
+        <rect class="f2" x="12" y="86" width="8" height="60"/>
+        <text class="b" x="34" y="111" font-size="13">Política e objetivos</text>
+        <text class="mono mu" x="560" y="111" font-size="10.5" text-anchor="end">5.2</text>
+        <text x="34" y="130" font-size="11">Ligados ao contexto e à direção estratégica, e conhecidos por todos.</text>
+        <line class="ln" x1="292" y1="147" x2="292" y2="157" marker-end="url(#a4)"/>
+        <rect class="bx-s1" x="12" y="158" width="560" height="60"/>
+        <rect class="f1" x="12" y="158" width="8" height="60"/>
+        <text class="b" x="34" y="183" font-size="13">Pessoas</text>
+        <text class="mono mu" x="560" y="183" font-size="10.5" text-anchor="end">7.3</text>
+        <text x="34" y="202" font-size="11">Sabem que comportamento se espera delas, e por quê.</text>
+        <rect class="bx-ink" x="596" y="14" width="292" height="204"/>
+        <text class="b t-ground" x="612" y="42" font-size="13">Cultura não é cartaz</text>
+        <text class="t-ground" x="612" y="66" font-size="11">O auditor vai procurar a cultura nas</text>
+        <text class="t-ground" x="612" y="81" font-size="11">decisões: o que a direção fez quando o</text>
+        <text class="t-ground" x="612" y="96" font-size="11">prazo apertou e a qualidade estava em</text>
+        <text class="t-ground" x="612" y="111" font-size="11">jogo, e o que as pessoas dizem que se</text>
+        <text class="t-ground" x="612" y="126" font-size="11">espera delas.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 4.</b> A cultura da qualidade em três camadas, da direção às pessoas, com os requisitos de cada uma.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:22%">Onde</th><th style="width:40%">O que mostrar</th><th>Evidências possíveis</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Direção</strong></td><td>Que comportamentos ela espera, e como os demonstra nas decisões.</td><td>Código de conduta, decisões em que a qualidade prevaleceu sobre o prazo, reuniões em que a direção cobra o combinado.</td></tr>
+        <tr><td><strong>Política e objetivos</strong></td><td>A ligação com o contexto e com a estratégia.</td><td>Política revisada junto com a SWOT e os objetivos do ano.</td></tr>
+        <tr><td><strong>Pessoas</strong></td><td>Que sabem o que se espera delas e por quê.</td><td>Entrevistas de conscientização, integração dos novos, canal para relatar desvios sem punição.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note">
+    <h4>Ética, aqui, é sobre o produto</h4>
+    <p>A norma não vira um código de conduta empresarial completo. O comportamento ético que interessa à qualidade é o que afeta o produto e o cliente: não liberar o lote duvidoso para cumprir o prazo, não esconder a reclamação, não "ajustar" o registro. A cultura da qualidade aparece quando alguém para a linha porque viu um problema, e é apoiado por isso. Os estudos de <a href="../Escopo/treinamento-escopo.html">Escopo e liderança</a> e de <a href="../Liberacao/treinamento-liberacao.html">Liberação</a> trazem situações desse tipo.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 5 ============================ -->
+<section id="riscos">
+  <p class="eyebrow">Módulo 5</p>
+  <h2>Riscos e oportunidades separados</h2>
+  <p>Na edição de 2015, um único requisito tratava de riscos e de oportunidades. Na prática, muitas organizações faziam uma lista de riscos e mencionavam as oportunidades de passagem. A edição de 2026 separa os dois, com requisitos próprios para determinar, agir e avaliar cada um.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 206" role="img" aria-label="Riscos e oportunidades na edição de 2015 e na de 2026. Em 2015, um requisito tratava dos dois juntos. Em 2026, os riscos e as oportunidades têm requisitos próprios, cada um com determinação, ações e avaliação da eficácia.">
+        <defs><marker id="a5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker></defs>
+        <rect class="bx" x="12" y="40" width="300" height="120"/>
+        <text class="mono mu" x="24" y="30" font-size="10">EDIÇÃO DE 2015</text>
+        <text class="b" x="28" y="72" font-size="13">6.1 Riscos e oportunidades</text>
+        <text class="mu" x="28" y="98" font-size="11">Um requisito para os dois. Muitas</text>
+        <text class="mu" x="28" y="113" font-size="11">organizações listavam tudo junto, e as</text>
+        <text class="mu" x="28" y="128" font-size="11">oportunidades ficavam sem ação.</text>
+        <line class="ln" x1="316" y1="100" x2="380" y2="100" marker-end="url(#a5)"/>
+        <text class="mono mu" x="396" y="30" font-size="10">EDIÇÃO DE 2026</text>
+        <rect class="bx-s3" x="396" y="40" width="492" height="56"/>
+        <text class="b" x="412" y="62" font-size="12.5">Riscos</text>
+        <text x="412" y="80" font-size="11">Determinar o que pode dar errado, agir conforme o efeito e avaliar a ação.</text>
+        <rect class="bx-s1" x="396" y="104" width="492" height="56"/>
+        <text class="b" x="412" y="126" font-size="12.5">Oportunidades</text>
+        <text x="412" y="144" font-size="11">Determinar o que aproveitar, decidir o que fazer e avaliar o resultado.</text>
+        <text x="450" y="194" font-size="11.5" text-anchor="middle">A ideia não é nova; a separação é. A oportunidade passa a ter a mesma disciplina do risco.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 5.</b> Riscos e oportunidades na edição de 2015 e na de 2026.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:22%">Pergunta</th><th style="width:39%">Para os riscos</th><th>Para as oportunidades</th></tr></thead>
+      <tbody>
+        <tr><td><strong>De onde vêm</strong></td><td>Do contexto, das partes interessadas, dos processos, dos problemas já vividos.</td><td>Das mesmas fontes, e das ideias de clientes, fornecedores e equipe.</td></tr>
+        <tr><td><strong>Como avaliar</strong></td><td>Probabilidade e efeito, como na matriz de riscos.</td><td>Chance de se concretizar e benefício.</td></tr>
+        <tr><td><strong>Que decisão</strong></td><td>Evitar, reduzir, compartilhar ou aceitar.</td><td>Aproveitar, testar ou não agir agora.</td></tr>
+        <tr><td><strong>Como saber se deu certo</strong></td><td>O risco caiu depois da ação?</td><td>O benefício apareceu?</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note">
+    <h4>A série já fazia assim</h4>
+    <p>O estudo da <a href="../Riscos/treinamento-riscos.html">Matriz de riscos</a> avalia as oportunidades à parte, com chance e benefício, no exemplo da indústria. Quem seguiu a série tem pouco a mudar aqui: dar à lista de oportunidades o mesmo acompanhamento da lista de riscos, e citar o requisito novo.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 6 ============================ -->
+<section id="outras">
+  <p class="eyebrow">Módulo 6</p>
+  <h2>As outras mudanças</h2>
+  <p>As demais mudanças pedem menos trabalho. Para cada uma, uma pergunta resolve o diagnóstico.</p>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:8%">Código</th><th style="width:22%">Mudança</th><th style="width:38%">Pergunta do diagnóstico</th><th>Evidência típica</th></tr></thead>
+      <tbody>
+        <tr><td class="num">M1</td><td><strong>Mudança climática no contexto</strong></td><td>A análise de contexto e a lista de partes interessadas dizem se o clima afeta a organização?</td><td>SWOT e lista de partes interessadas com o clima avaliado.</td></tr>
+        <tr><td class="num">M2</td><td><strong>Cultura da qualidade e comportamento ético</strong></td><td>Como a direção mostra, na prática, a cultura da qualidade e o comportamento ético que espera?</td><td>Compromissos da direção, código de conduta, decisões registradas.</td></tr>
+        <tr><td class="num">M3</td><td><strong>Política ligada à direção estratégica</strong></td><td>A política conversa com a estratégia e com o contexto, e os objetivos saem dela?</td><td>Política revisada junto com a SWOT e os objetivos.</td></tr>
+        <tr><td class="num">M4</td><td><strong>Riscos e oportunidades separados</strong></td><td>Os riscos e as oportunidades estão em listas separadas, cada uma com análise, ação e eficácia?</td><td>Matriz de riscos e lista de oportunidades, com ações próprias.</td></tr>
+        <tr><td class="num">M5</td><td><strong>Planejamento de mudanças</strong></td><td>A última mudança importante no sistema teve plano, comunicação e análise do resultado?</td><td>Registro de mudanças do sistema, com o acompanhamento.</td></tr>
+        <tr><td class="num">M6</td><td><strong>Conscientização sobre cultura e ética</strong></td><td>As pessoas sabem dizer que comportamento a organização espera delas, e por quê?</td><td>Entrevistas de conscientização, integração dos novos.</td></tr>
+        <tr><td class="num">M7</td><td><strong>Termos essenciais dentro da norma</strong></td><td>Os documentos internos usam os termos como a norma nova os define?</td><td>Glossário interno e lista mestra revisados.</td></tr>
+        <tr><td class="num">M8</td><td><strong>Estrutura harmonizada atualizada</strong></td><td>Os documentos que citam números de requisitos continuam certos?</td><td>Matriz de requisitos e procedimentos conferidos.</td></tr>
+        <tr><td class="num">M9</td><td><strong>Anexo A ampliado</strong></td><td>Quem interpreta a norma na organização leu o anexo novo?</td><td>Registro de leitura, dúvidas resolvidas.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note">
+    <h4>O clima já estava lá desde 2024</h4>
+    <p>Em 2024, uma emenda às normas de sistema de gestão pediu que as organizações avaliassem se a mudança climática é uma questão pertinente para elas, e se as partes interessadas têm requisitos ligados a ela. A edição de 2026 traz isso para o texto. Para uma pizzaria, pode ser o calor na cozinha ou as chuvas que atrasam a entrega; para uma fábrica, o calor no salão de impressão ou um cliente que pede a pegada de carbono. Se o clima não for pertinente, basta registrar por quê.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 7 ============================ -->
+<section id="igual">
+  <p class="eyebrow">Módulo 7</p>
+  <h2>O que não mudou</h2>
+  <p>Saber o que ficou igual é tão útil quanto saber o que mudou: evita refazer o que funciona.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 184" role="img" aria-label="O que não mudou na ISO 9001:2026. Numeração e estrutura: As seções de 4 a 10 e a maior parte dos requisitos seguem com os mesmos números. Abordagem de processo e PDCA: Continuam a base do sistema. Requisitos de operação: Pedidos, projeto, fornecedores, produção, liberação e produto não conforme seguem como em 2015. Avaliação e melhoria: Indicadores, satisfação, auditoria interna, análise crítica e ação corretiva não ganham requisitos novos. Temas que ficaram de fora: Inteligência artificial, digitalização e cibersegurança não viraram requisitos, e a sustentabilidade só entra pelo clima.">
+        <rect class="bx-s1" x="12" y="16" width="164" height="156"/>
+        <text class="b" x="24" y="40" font-size="12.5">Numeração e</text>
+        <text class="b" x="24" y="55" font-size="12.5">estrutura</text>
+        <text x="24" y="78.0" font-size="10.5">As seções de 4 a 10 e a</text>
+        <text x="24" y="92.5" font-size="10.5">maior parte dos</text>
+        <text x="24" y="107.0" font-size="10.5">requisitos seguem com os</text>
+        <text x="24" y="121.5" font-size="10.5">mesmos números.</text>
+        <rect class="bx-s1" x="190" y="16" width="164" height="156"/>
+        <text class="b" x="202" y="40" font-size="12.5">Abordagem de</text>
+        <text class="b" x="202" y="55" font-size="12.5">processo e PDCA</text>
+        <text x="202" y="78.0" font-size="10.5">Continuam a base do</text>
+        <text x="202" y="92.5" font-size="10.5">sistema.</text>
+        <rect class="bx-s1" x="368" y="16" width="164" height="156"/>
+        <text class="b" x="380" y="40" font-size="12.5">Requisitos de</text>
+        <text class="b" x="380" y="55" font-size="12.5">operação</text>
+        <text x="380" y="78.0" font-size="10.5">Pedidos, projeto,</text>
+        <text x="380" y="92.5" font-size="10.5">fornecedores, produção,</text>
+        <text x="380" y="107.0" font-size="10.5">liberação e produto não</text>
+        <text x="380" y="121.5" font-size="10.5">conforme seguem como em</text>
+        <text x="380" y="136.0" font-size="10.5">2015.</text>
+        <rect class="bx-s1" x="546" y="16" width="164" height="156"/>
+        <text class="b" x="558" y="40" font-size="12.5">Avaliação e</text>
+        <text class="b" x="558" y="55" font-size="12.5">melhoria</text>
+        <text x="558" y="78.0" font-size="10.5">Indicadores, satisfação,</text>
+        <text x="558" y="92.5" font-size="10.5">auditoria interna,</text>
+        <text x="558" y="107.0" font-size="10.5">análise crítica e ação</text>
+        <text x="558" y="121.5" font-size="10.5">corretiva não ganham</text>
+        <text x="558" y="136.0" font-size="10.5">requisitos novos.</text>
+        <rect class="bx" x="724" y="16" width="164" height="156"/>
+        <text class="b" x="736" y="40" font-size="12.5">Temas que ficaram</text>
+        <text class="b" x="736" y="55" font-size="12.5">de fora</text>
+        <text x="736" y="78.0" font-size="10.5">Inteligência artificial,</text>
+        <text x="736" y="92.5" font-size="10.5">digitalização e</text>
+        <text x="736" y="107.0" font-size="10.5">cibersegurança não</text>
+        <text x="736" y="121.5" font-size="10.5">viraram requisitos, e a</text>
+        <text x="736" y="136.0" font-size="10.5">sustentabilidade só entra</text>
+        <text x="736" y="150.5" font-size="10.5">pelo clima.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 6.</b> O que a edição de 2026 manteve, segundo os organismos que analisaram o texto.</figcaption>
+  </figure>
+
+  <div class="note">
+    <h4>Inteligência artificial não virou requisito</h4>
+    <p>Durante a revisão, discutiu-se incluir inteligência artificial, digitalização e cibersegurança. Nenhum desses temas virou requisito. Eles continuam entrando pelo caminho de sempre: se afetam a qualidade, aparecem no contexto, nos riscos, nos recursos e no conhecimento da organização. Um material que prometa "os novos requisitos de IA da ISO 9001" está errado.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 8 ============================ -->
+<section id="exemplos">
+  <p class="eyebrow">Módulo 8</p>
+  <h2>Exemplos resolvidos</h2>
+  <p>O diagnóstico e o plano de duas organizações: a pizzaria, que se prepara para a certificação inicial já pela edição de 2026, e a indústria, certificada pela edição de 2015, que fará a transição na 1ª manutenção. Os dados são ilustrativos e foram criados para este treinamento; os dois exemplos também estão preenchidos na planilha de apoio.</p>
+
+  <h3>Exemplo 1. A pizzaria, a caminho da certificação</h3>
+  <dl class="ficha">
+    <div><dt>Organização</dt><dd>Pizzaria (loja com salão e delivery)</dd></div>
+    <div><dt>Situação</dt><dd>Sem certificado. Certificação inicial marcada, já pela edição de 2026.</dd></div>
+    <div><dt>Auditoria</dt><dd>Fase 1 da certificação inicial, em 15/02/2028.</dd></div>
+    <div><dt>Responsável</dt><dd>Gerente da loja</dd></div>
+    <div><dt>Leitura</dt><dd>05/01/2028.</dd></div>
+  </dl>
+  <div class="tbl">
+    <table class="aud">
+      <caption>Diagnóstico das mudanças · 4 atende, 3 em parte, 2 não atende · 16 pontos de lacuna</caption>
+      <thead><tr><th>Código</th><th style="width:20%">Mudança<small>Onde · tipo · impacto</small></th><th style="width:20%">Situação<small>Evidência</small></th><th class="c">Pontos</th><th>Prioridade</th><th style="width:26%">Ação<small>Responsável · prazo</small></th><th>Ação</th><th>Conferência</th></tr></thead>
+      <tbody>
+        <tr><td class="n">M1</td><td><strong>Mudança climática no contexto</strong><small>4.1 e 4.2 · incorporado · impacto baixo</small></td><td><span class="chip s2">Atende em parte</span><small>Calor da cozinha medido todo dia; o clima não está na SWOT</small></td><td class="c">1</td><td><span class="chip sl">Baixa</span></td><td>Incluir o calor na cozinha e as chuvas fortes na SWOT e nas partes interessadas.<small>Gerente da loja · até 15/12/2027 · concluída em 12/12/2027</small></td><td><span class="chip s1">Concluída</span></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">M2</td><td><strong>Cultura da qualidade e comportamento ético</strong><small>5.1.1 · novo · impacto alto</small></td><td><span class="chip s3">Não atende</span><small>sem evidência</small></td><td class="c">6</td><td><span class="chip s3">Alta</span></td><td>O dono escreve três comportamentos esperados e os cobra na reunião mensal.<small>Dono da loja · até 31/12/2027</small></td><td><span class="chip s3">Atrasada</span></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">M3</td><td><strong>Política ligada à direção estratégica</strong><small>5.2 · reforçado · impacto médio</small></td><td><span class="chip s1">Atende</span><small>Política de 2027 ligada ao crescimento do delivery</small></td><td class="c">0</td><td><span class="chip s1">Sem lacuna</span></td><td>—</td><td>—</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">M4</td><td><strong>Riscos e oportunidades separados</strong><small>6.1 · reestruturado · impacto alto</small></td><td><span class="chip s2">Atende em parte</span><small>Matriz de riscos do delivery</small></td><td class="c">3</td><td><span class="chip s2">Média</span></td><td>Separar as oportunidades da SWOT numa lista própria, com ação e prazo.<small>Gerente da loja · até 20/12/2027 · concluída em 18/12/2027</small></td><td><span class="chip s1">Concluída</span></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">M5</td><td><strong>Planejamento de mudanças</strong><small>6.3 · reforçado · impacto médio</small></td><td><span class="chip s2">Atende em parte</span><small>Troca do sistema de pedidos sem plano, em abril de 2027</small></td><td class="c">2</td><td><span class="chip s2">Média</span></td><td>Criar uma rotina simples de planejar mudanças no sistema.<small>Gerente da loja · até 15/01/2028</small></td><td><span class="chip s2">No prazo</span></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">M6</td><td><strong>Conscientização sobre cultura e ética</strong><small>7.3 · novo · impacto médio</small></td><td><span class="chip s3">Não atende</span><small>sem evidência</small></td><td class="c">4</td><td><span class="chip s3">Alta</span></td><td>Conversa com toda a equipe sobre a política e os comportamentos esperados.<small>Gerente da loja · até 15/01/2028</small></td><td><span class="chip s2">No prazo</span></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">M7</td><td><strong>Termos essenciais dentro da norma</strong><small>3 · esclarecimento · impacto baixo</small></td><td><span class="chip s1">Atende</span><small>Termos lidos; a loja não tem glossário próprio</small></td><td class="c">0</td><td><span class="chip s1">Sem lacuna</span></td><td>—</td><td>—</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">M8</td><td><strong>Estrutura harmonizada atualizada</strong><small>Estrutura · esclarecimento · impacto baixo</small></td><td><span class="chip s1">Atende</span><small>Matriz de requisitos conferida</small></td><td class="c">0</td><td><span class="chip s1">Sem lacuna</span></td><td>—</td><td>—</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">M9</td><td><strong>Anexo A ampliado</strong><small>Anexo A · esclarecimento · impacto baixo</small></td><td><span class="chip s1">Atende</span><small>Anexo A lido na preparação</small></td><td class="c">0</td><td><span class="chip s1">Sem lacuna</span></td><td>—</td><td>—</td><td><span class="chip s1">OK</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="tbl">
+    <table class="aud">
+      <caption>Plano de transição · auditoria em 15/02/2028, lido em 05/01/2028</caption>
+      <thead><tr><th>#</th><th style="width:40%">Etapa</th><th class="c">Dias antes da auditoria</th><th class="c">Limite</th><th class="c">Feito em</th><th>Situação</th></tr></thead>
+      <tbody>
+        <tr><td class="n">1</td><td><strong>Comprar e ler a norma nova</strong></td><td class="c">180</td><td class="c">19/08/2027</td><td class="c">10/10/2027</td><td><span class="chip s3">Feito fora do prazo</span></td></tr>
+        <tr><td class="n">2</td><td><strong>Diagnóstico das mudanças</strong></td><td class="c">150</td><td class="c">18/09/2027</td><td class="c">30/11/2027</td><td><span class="chip s3">Feito fora do prazo</span></td></tr>
+        <tr><td class="n">3</td><td><strong>Plano de ação aprovado pela direção</strong></td><td class="c">120</td><td class="c">18/10/2027</td><td class="c">05/12/2027</td><td><span class="chip s3">Feito fora do prazo</span></td></tr>
+        <tr><td class="n">4</td><td><strong>Ações concluídas</strong></td><td class="c">60</td><td class="c">17/12/2027</td><td class="c">—</td><td><span class="chip s3">Atrasado</span></td></tr>
+        <tr><td class="n">5</td><td><strong>Conscientização da equipe</strong></td><td class="c">45</td><td class="c">01/01/2028</td><td class="c">—</td><td><span class="chip s3">Atrasado</span></td></tr>
+        <tr><td class="n">6</td><td><strong>Auditoria interna pela edição de 2026</strong></td><td class="c">30</td><td class="c">16/01/2028</td><td class="c">—</td><td><span class="chip s2">Vence em 30 dias</span></td></tr>
+        <tr><td class="n">7</td><td><strong>Análise crítica com a transição</strong></td><td class="c">15</td><td class="c">31/01/2028</td><td class="c">—</td><td><span class="chip s2">Vence em 30 dias</span></td></tr>
+        <tr><td class="n">8</td><td><strong>Auditoria do organismo</strong></td><td class="c">0</td><td class="c">15/02/2028</td><td class="c">—</td><td><span class="chip sl">Previsto</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p><strong>O que observar.</strong> A pizzaria começou tarde: as três primeiras etapas do plano foram feitas depois do limite, e as ações e a conscientização já estão atrasadas a seis semanas da fase 1. As maiores lacunas são as de cultura e ética: o dono ainda não escreveu os comportamentos que espera, e a ação passou do prazo. É a ação que mais pesa, porque o auditor vai perguntar à direção, e não ao gerente. A troca do sistema de pedidos sem plano, em abril de 2027, que deixou uma lição parada no estudo de <a href="../Conhecimento/treinamento-conhecimento.html">Conhecimento</a>, reaparece como lacuna da gestão de mudanças.</p>
+
+  <h3>Exemplo 2. A indústria, na transição</h3>
+  <dl class="ficha">
+    <div><dt>Organização</dt><dd>Indústria de embalagens plásticas</dd></div>
+    <div><dt>Situação</dt><dd>Certificada pela edição de 2015 em 17/12/2027. Transição combinada para a 1ª manutenção.</dd></div>
+    <div><dt>Auditoria</dt><dd>1ª manutenção, com a transição, em 22/11/2028.</dd></div>
+    <div><dt>Responsável</dt><dd>Coordenador da Qualidade</dd></div>
+    <div><dt>Leitura</dt><dd>30/06/2028.</dd></div>
+  </dl>
+  <div class="tbl">
+    <table class="aud">
+      <caption>Diagnóstico das mudanças · 5 atende, 2 em parte, 2 não atende · 12 pontos de lacuna</caption>
+      <thead><tr><th>Código</th><th style="width:20%">Mudança<small>Onde · tipo · impacto</small></th><th style="width:20%">Situação<small>Evidência</small></th><th class="c">Pontos</th><th>Prioridade</th><th style="width:26%">Ação<small>Responsável · prazo</small></th><th>Ação</th><th>Conferência</th></tr></thead>
+      <tbody>
+        <tr><td class="n">M1</td><td><strong>Mudança climática no contexto</strong><small>4.1 e 4.2 · incorporado · impacto baixo</small></td><td><span class="chip s1">Atende</span><small>Calor no salão de impressão medido e avaliado como questão pertinente</small></td><td class="c">0</td><td><span class="chip s1">Sem lacuna</span></td><td>—</td><td>—</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">M2</td><td><strong>Cultura da qualidade e comportamento ético</strong><small>5.1.1 · novo · impacto alto</small></td><td><span class="chip s2">Atende em parte</span><small>Compromissos da direção de 2027, sem cultura e ética</small></td><td class="c">3</td><td><span class="chip s2">Média</span></td><td>Código de conduta e comportamentos esperados, apresentados pela direção.<small>Diretor geral · até 31/08/2028</small></td><td><span class="chip s2">No prazo</span></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">M3</td><td><strong>Política ligada à direção estratégica</strong><small>5.2 · reforçado · impacto médio</small></td><td><span class="chip s1">Atende</span><small>Política revisada com a SWOT e o objetivo O4</small></td><td class="c">0</td><td><span class="chip s1">Sem lacuna</span></td><td>—</td><td>—</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">M4</td><td><strong>Riscos e oportunidades separados</strong><small>6.1 · reestruturado · impacto alto</small></td><td><span class="chip s1">Atende</span><small>Riscos C1 a C8 e oportunidades O1 a O4 em listas separadas, desde 2026</small></td><td class="c">0</td><td><span class="chip s1">Sem lacuna</span></td><td>—</td><td>—</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">M5</td><td><strong>Planejamento de mudanças</strong><small>6.3 · reforçado · impacto médio</small></td><td><span class="chip s3">Não atende</span><small>sem evidência</small></td><td class="c">4</td><td><span class="chip s3">Alta</span></td><td>Procedimento de mudanças do sistema, com plano, comunicação e análise do efeito.<small>Coordenador da Qualidade · até 31/08/2028</small></td><td><span class="chip s2">No prazo</span></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">M6</td><td><strong>Conscientização sobre cultura e ética</strong><small>7.3 · novo · impacto médio</small></td><td><span class="chip s3">Não atende</span><small>sem evidência</small></td><td class="c">4</td><td><span class="chip s3">Alta</span></td><td>Incluir cultura e ética nas entrevistas de conscientização e na integração.<small>Gerente de RH · até 30/09/2028</small></td><td><span class="chip s2">No prazo</span></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">M7</td><td><strong>Termos essenciais dentro da norma</strong><small>3 · esclarecimento · impacto baixo</small></td><td><span class="chip s2">Atende em parte</span><small>Glossário da lista mestra com os termos de 2015</small></td><td class="c">1</td><td><span class="chip sl">Baixa</span></td><td>Atualizar o glossário com os termos da norma nova.<small>Coordenador da Qualidade · até 31/05/2028</small></td><td><span class="chip s3">Atrasada</span></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">M8</td><td><strong>Estrutura harmonizada atualizada</strong><small>Estrutura · esclarecimento · impacto baixo</small></td><td><span class="chip s1">Atende</span><small>Matriz de requisitos e procedimentos conferidos</small></td><td class="c">0</td><td><span class="chip s1">Sem lacuna</span></td><td>—</td><td>—</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">M9</td><td><strong>Anexo A ampliado</strong><small>Anexo A · esclarecimento · impacto baixo</small></td><td><span class="chip s1">Atende</span><small>Anexo A lido pelos auditores internos</small></td><td class="c">0</td><td><span class="chip s1">Sem lacuna</span></td><td>—</td><td>—</td><td><span class="chip s1">OK</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="tbl">
+    <table class="aud">
+      <caption>Plano de transição · auditoria em 22/11/2028, lido em 30/06/2028</caption>
+      <thead><tr><th>#</th><th style="width:40%">Etapa</th><th class="c">Dias antes da auditoria</th><th class="c">Limite</th><th class="c">Feito em</th><th>Situação</th></tr></thead>
+      <tbody>
+        <tr><td class="n">1</td><td><strong>Comprar e ler a norma nova</strong></td><td class="c">180</td><td class="c">26/05/2028</td><td class="c">10/02/2027</td><td><span class="chip s1">Feito no prazo</span></td></tr>
+        <tr><td class="n">2</td><td><strong>Diagnóstico das mudanças</strong></td><td class="c">150</td><td class="c">25/06/2028</td><td class="c">20/03/2028</td><td><span class="chip s1">Feito no prazo</span></td></tr>
+        <tr><td class="n">3</td><td><strong>Plano de ação aprovado pela direção</strong></td><td class="c">120</td><td class="c">25/07/2028</td><td class="c">10/04/2028</td><td><span class="chip s1">Feito no prazo</span></td></tr>
+        <tr><td class="n">4</td><td><strong>Ações concluídas</strong></td><td class="c">60</td><td class="c">23/09/2028</td><td class="c">—</td><td><span class="chip sl">Previsto</span></td></tr>
+        <tr><td class="n">5</td><td><strong>Conscientização da equipe</strong></td><td class="c">45</td><td class="c">08/10/2028</td><td class="c">—</td><td><span class="chip sl">Previsto</span></td></tr>
+        <tr><td class="n">6</td><td><strong>Auditoria interna pela edição de 2026</strong></td><td class="c">30</td><td class="c">23/10/2028</td><td class="c">—</td><td><span class="chip sl">Previsto</span></td></tr>
+        <tr><td class="n">7</td><td><strong>Análise crítica com a transição</strong></td><td class="c">15</td><td class="c">07/11/2028</td><td class="c">—</td><td><span class="chip sl">Previsto</span></td></tr>
+        <tr><td class="n">8</td><td><strong>Auditoria do organismo</strong></td><td class="c">0</td><td class="c">22/11/2028</td><td class="c">—</td><td><span class="chip sl">Previsto</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p><strong>O que observar.</strong> A indústria está em dia com o plano e tem menos lacunas: a separação de riscos e oportunidades e a política ligada à estratégia já estavam feitas. As duas lacunas de maior prioridade conversam com a história da fábrica. A gestão de mudanças no sistema é a mesma fraqueza que gerou a não conformidade maior da certificação, nas mudanças de processo. E a conscientização sobre cultura e ética precisa chegar ao turno C, onde o operador novo aprendeu "com o colega". O glossário, de baixa prioridade, está atrasado.</p>
+
+  <h3>Exemplo 3. Riscos e oportunidades da indústria em duas listas</h3>
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 290" role="img" aria-label="A matriz de riscos de Suprimentos da indústria, com os riscos e as oportunidades em listas separadas. Riscos: C1, Um só fornecedor de resina, C2, Requisição sem especificação, C3, Fornecedor crítico sem avaliação, C4, Resina com preço em dólar, C5, Compra de fornecedor não homologado, C6, Compra acima da alçada, C7, Transportadora com frota reduzida, C8, Fornecedor sem licença ambiental. Oportunidades: O1, Embalagem com material reciclado, O2, Clientes exigindo a ISO 9001, O3, Resina reciclada de menor custo, O4, Feira do setor em outro estado.">
+        <rect class="bx-s3" x="12" y="14" width="470" height="240"/>
+        <rect class="f3" x="12" y="14" width="470" height="32"/>
+        <text class="b on" x="26" y="35" font-size="13">Riscos</text>
+        <text class="mono on" x="468" y="35" font-size="10.5" text-anchor="end">6.1.2</text>
+        <text x="26" y="70" font-size="11.5"><tspan class="b" style="font-variant-numeric:tabular-nums">C1</tspan><tspan dx="10">Um só fornecedor de resina</tspan></text>
+        <text x="26" y="93" font-size="11.5"><tspan class="b" style="font-variant-numeric:tabular-nums">C2</tspan><tspan dx="10">Requisição sem especificação</tspan></text>
+        <text x="26" y="116" font-size="11.5"><tspan class="b" style="font-variant-numeric:tabular-nums">C3</tspan><tspan dx="10">Fornecedor crítico sem avaliação</tspan></text>
+        <text x="26" y="139" font-size="11.5"><tspan class="b" style="font-variant-numeric:tabular-nums">C4</tspan><tspan dx="10">Resina com preço em dólar</tspan></text>
+        <text x="26" y="162" font-size="11.5"><tspan class="b" style="font-variant-numeric:tabular-nums">C5</tspan><tspan dx="10">Compra de fornecedor não homologado</tspan></text>
+        <text x="26" y="185" font-size="11.5"><tspan class="b" style="font-variant-numeric:tabular-nums">C6</tspan><tspan dx="10">Compra acima da alçada</tspan></text>
+        <text x="26" y="208" font-size="11.5"><tspan class="b" style="font-variant-numeric:tabular-nums">C7</tspan><tspan dx="10">Transportadora com frota reduzida</tspan></text>
+        <text x="26" y="231" font-size="11.5"><tspan class="b" style="font-variant-numeric:tabular-nums">C8</tspan><tspan dx="10">Fornecedor sem licença ambiental</tspan></text>
+        <rect class="bx-s1" x="498" y="14" width="390" height="240"/>
+        <rect class="f1" x="498" y="14" width="390" height="32"/>
+        <text class="b on" x="512" y="35" font-size="13">Oportunidades</text>
+        <text class="mono on" x="874" y="35" font-size="10.5" text-anchor="end">6.1.3</text>
+        <text x="512" y="70" font-size="11.5"><tspan class="b" style="font-variant-numeric:tabular-nums">O1</tspan><tspan dx="10">Embalagem com material reciclado</tspan></text>
+        <text x="512" y="93" font-size="11.5"><tspan class="b" style="font-variant-numeric:tabular-nums">O2</tspan><tspan dx="10">Clientes exigindo a ISO 9001</tspan></text>
+        <text x="512" y="116" font-size="11.5"><tspan class="b" style="font-variant-numeric:tabular-nums">O3</tspan><tspan dx="10">Resina reciclada de menor custo</tspan></text>
+        <text x="512" y="139" font-size="11.5"><tspan class="b" style="font-variant-numeric:tabular-nums">O4</tspan><tspan dx="10">Feira do setor em outro estado</tspan></text>
+        <text x="450" y="280" font-size="11.5" text-anchor="middle">A matriz de outubro de 2026, feita pela edição de 2015, já separava as listas. A edição nova confirma o trabalho.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 7.</b> A matriz de riscos de Suprimentos da indústria, do estudo da série, com os riscos e as oportunidades em listas separadas.</figcaption>
+  </figure>
+  <p><strong>O que observar.</strong> Desde 2026, a matriz da indústria tinha duas listas: oito riscos, com probabilidade e efeito, e quatro oportunidades, com chance e benefício. A oportunidade O2, clientes exigindo a ISO 9001, virou o objetivo O4 e a certificação de dezembro de 2027. Para a edição nova, a fábrica só precisa mostrar que avalia o resultado das oportunidades como avalia o dos riscos, e citar os requisitos novos.</p>
+</section>
+
+<!-- ============================ MÓDULO 9 ============================ -->
+<section id="leitura">
+  <p class="eyebrow">Módulo 9</p>
+  <h2>Ler o diagnóstico</h2>
+  <p>O diagnóstico é lido pela prioridade: o impacto da mudança vezes o tamanho da lacuna. Uma lacuna grande numa mudança de baixo impacto pesa menos do que uma lacuna parcial numa de alto impacto.</p>
+
+  <figure id="fig-bars">
+    <div class="scroll">
+      <svg id="bars" viewBox="0 0 900 570" role="img" aria-label="Pontos de lacuna por mudança, nos dois exemplos: impacto vezes lacuna, de 0 a 6. M1: 1 pontos. M2: 6 pontos. M3: 0 pontos. M4: 3 pontos. M5: 2 pontos. M6: 4 pontos. M7: 0 pontos. M8: 0 pontos. M9: 0 pontos. M1: 0 pontos. M2: 3 pontos. M3: 0 pontos. M4: 0 pontos. M5: 4 pontos. M6: 4 pontos. M7: 1 pontos. M8: 0 pontos. M9: 0 pontos.">
+        <g font-size="11.5">
+          <rect class="f3" x="380" y="12" width="14" height="14"/><text x="402" y="24">Alta</text>
+          <rect class="f2" x="490" y="12" width="14" height="14"/><text x="512" y="24">Média</text>
+          <rect class="f0" x="600" y="12" width="14" height="14"/><text x="622" y="24">Baixa</text>
+        </g>
+        <line class="ln" x1="380.0" y1="40" x2="380.0" y2="526"/>
+        <text class="mu" x="380.0" y="542" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">0</text>
+        <line class="grid" x1="460.0" y1="40" x2="460.0" y2="526"/>
+        <text class="mu" x="460.0" y="542" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">1</text>
+        <line class="grid" x1="540.0" y1="40" x2="540.0" y2="526"/>
+        <text class="mu" x="540.0" y="542" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">2</text>
+        <line class="grid" x1="620.0" y1="40" x2="620.0" y2="526"/>
+        <text class="mu" x="620.0" y="542" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">3</text>
+        <line class="grid" x1="700.0" y1="40" x2="700.0" y2="526"/>
+        <text class="mu" x="700.0" y="542" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">4</text>
+        <line class="grid" x1="780.0" y1="40" x2="780.0" y2="526"/>
+        <text class="mu" x="780.0" y="542" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">5</text>
+        <line class="grid" x1="860.0" y1="40" x2="860.0" y2="526"/>
+        <text class="mu" x="860.0" y="542" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">6</text>
+        <text class="mono mu" x="620.0" y="562" font-size="10" text-anchor="middle">PONTOS DE LACUNA · IMPACTO × LACUNA</text>
+        <text class="mono mu" x="20" y="62" font-size="10">PIZZARIA</text>
+        <text x="36" y="86" font-size="11"><tspan class="b">M1</tspan><tspan dx="8">Mudança climática no contexto</tspan></text>
+        <rect class="bar f0" data-k="1" x="380" y="75" width="80.0" height="14"/>
+        <text class="mu halo" x="468.0" y="86" font-size="10.5" style="font-variant-numeric:tabular-nums">1</text>
+        <text x="36" y="110" font-size="11"><tspan class="b">M2</tspan><tspan dx="8">Cultura da qualidade e comportamento ético</tspan></text>
+        <rect class="bar f3" data-k="2" x="380" y="99" width="480.0" height="14"/>
+        <text class="mu halo" x="868.0" y="110" font-size="10.5" style="font-variant-numeric:tabular-nums">6</text>
+        <text x="36" y="134" font-size="11"><tspan class="b">M3</tspan><tspan dx="8">Política ligada à direção estratégica</tspan></text>
+        <text class="mu halo" x="388.0" y="134" font-size="10.5" style="font-variant-numeric:tabular-nums">sem lacuna</text>
+        <text x="36" y="158" font-size="11"><tspan class="b">M4</tspan><tspan dx="8">Riscos e oportunidades separados</tspan></text>
+        <rect class="bar f2" data-k="4" x="380" y="147" width="240.0" height="14"/>
+        <text class="mu halo" x="628.0" y="158" font-size="10.5" style="font-variant-numeric:tabular-nums">3</text>
+        <text x="36" y="182" font-size="11"><tspan class="b">M5</tspan><tspan dx="8">Planejamento de mudanças</tspan></text>
+        <rect class="bar f2" data-k="5" x="380" y="171" width="160.0" height="14"/>
+        <text class="mu halo" x="548.0" y="182" font-size="10.5" style="font-variant-numeric:tabular-nums">2</text>
+        <text x="36" y="206" font-size="11"><tspan class="b">M6</tspan><tspan dx="8">Conscientização sobre cultura e ética</tspan></text>
+        <rect class="bar f3" data-k="6" x="380" y="195" width="320.0" height="14"/>
+        <text class="mu halo" x="708.0" y="206" font-size="10.5" style="font-variant-numeric:tabular-nums">4</text>
+        <text x="36" y="230" font-size="11"><tspan class="b">M7</tspan><tspan dx="8">Termos essenciais dentro da norma</tspan></text>
+        <text class="mu halo" x="388.0" y="230" font-size="10.5" style="font-variant-numeric:tabular-nums">sem lacuna</text>
+        <text x="36" y="254" font-size="11"><tspan class="b">M8</tspan><tspan dx="8">Estrutura harmonizada atualizada</tspan></text>
+        <text class="mu halo" x="388.0" y="254" font-size="10.5" style="font-variant-numeric:tabular-nums">sem lacuna</text>
+        <text x="36" y="278" font-size="11"><tspan class="b">M9</tspan><tspan dx="8">Anexo A ampliado</tspan></text>
+        <text class="mu halo" x="388.0" y="278" font-size="10.5" style="font-variant-numeric:tabular-nums">sem lacuna</text>
+        <text class="mono mu" x="20" y="302" font-size="10">INDÚSTRIA</text>
+        <text x="36" y="326" font-size="11"><tspan class="b">M1</tspan><tspan dx="8">Mudança climática no contexto</tspan></text>
+        <text class="mu halo" x="388.0" y="326" font-size="10.5" style="font-variant-numeric:tabular-nums">sem lacuna</text>
+        <text x="36" y="350" font-size="11"><tspan class="b">M2</tspan><tspan dx="8">Cultura da qualidade e comportamento ético</tspan></text>
+        <rect class="bar f2" data-k="12" x="380" y="339" width="240.0" height="14"/>
+        <text class="mu halo" x="628.0" y="350" font-size="10.5" style="font-variant-numeric:tabular-nums">3</text>
+        <text x="36" y="374" font-size="11"><tspan class="b">M3</tspan><tspan dx="8">Política ligada à direção estratégica</tspan></text>
+        <text class="mu halo" x="388.0" y="374" font-size="10.5" style="font-variant-numeric:tabular-nums">sem lacuna</text>
+        <text x="36" y="398" font-size="11"><tspan class="b">M4</tspan><tspan dx="8">Riscos e oportunidades separados</tspan></text>
+        <text class="mu halo" x="388.0" y="398" font-size="10.5" style="font-variant-numeric:tabular-nums">sem lacuna</text>
+        <text x="36" y="422" font-size="11"><tspan class="b">M5</tspan><tspan dx="8">Planejamento de mudanças</tspan></text>
+        <rect class="bar f3" data-k="15" x="380" y="411" width="320.0" height="14"/>
+        <text class="mu halo" x="708.0" y="422" font-size="10.5" style="font-variant-numeric:tabular-nums">4</text>
+        <text x="36" y="446" font-size="11"><tspan class="b">M6</tspan><tspan dx="8">Conscientização sobre cultura e ética</tspan></text>
+        <rect class="bar f3" data-k="16" x="380" y="435" width="320.0" height="14"/>
+        <text class="mu halo" x="708.0" y="446" font-size="10.5" style="font-variant-numeric:tabular-nums">4</text>
+        <text x="36" y="470" font-size="11"><tspan class="b">M7</tspan><tspan dx="8">Termos essenciais dentro da norma</tspan></text>
+        <rect class="bar f0" data-k="17" x="380" y="459" width="80.0" height="14"/>
+        <text class="mu halo" x="468.0" y="470" font-size="10.5" style="font-variant-numeric:tabular-nums">1</text>
+        <text x="36" y="494" font-size="11"><tspan class="b">M8</tspan><tspan dx="8">Estrutura harmonizada atualizada</tspan></text>
+        <text class="mu halo" x="388.0" y="494" font-size="10.5" style="font-variant-numeric:tabular-nums">sem lacuna</text>
+        <text x="36" y="518" font-size="11"><tspan class="b">M9</tspan><tspan dx="8">Anexo A ampliado</tspan></text>
+        <text class="mu halo" x="388.0" y="518" font-size="10.5" style="font-variant-numeric:tabular-nums">sem lacuna</text>
+        <rect class="hit" x="14" y="70" width="872" height="24" tabindex="0" role="img" aria-label="M1, Mudança climática no contexto: atende em parte, 1 pontos" data-k="1" data-n="M1 · Mudança climática no contexto" data-s="Baixa" data-d="1 pontos" data-p="atende em parte" data-cx="460.0" data-cy="70"/>
+        <rect class="hit" x="14" y="94" width="872" height="24" tabindex="0" role="img" aria-label="M2, Cultura da qualidade e comportamento ético: não atende, 6 pontos" data-k="2" data-n="M2 · Cultura da qualidade e comportamento ético" data-s="Alta" data-d="6 pontos" data-p="não atende" data-cx="860.0" data-cy="94"/>
+        <rect class="hit" x="14" y="118" width="872" height="24" tabindex="0" role="img" aria-label="M3, Política ligada à direção estratégica: atende, 0 pontos" data-k="3" data-n="M3 · Política ligada à direção estratégica" data-s="Sem lacuna" data-d="0 pontos" data-p="atende" data-cx="380.0" data-cy="118"/>
+        <rect class="hit" x="14" y="142" width="872" height="24" tabindex="0" role="img" aria-label="M4, Riscos e oportunidades separados: atende em parte, 3 pontos" data-k="4" data-n="M4 · Riscos e oportunidades separados" data-s="Média" data-d="3 pontos" data-p="atende em parte" data-cx="620.0" data-cy="142"/>
+        <rect class="hit" x="14" y="166" width="872" height="24" tabindex="0" role="img" aria-label="M5, Planejamento de mudanças: atende em parte, 2 pontos" data-k="5" data-n="M5 · Planejamento de mudanças" data-s="Média" data-d="2 pontos" data-p="atende em parte" data-cx="540.0" data-cy="166"/>
+        <rect class="hit" x="14" y="190" width="872" height="24" tabindex="0" role="img" aria-label="M6, Conscientização sobre cultura e ética: não atende, 4 pontos" data-k="6" data-n="M6 · Conscientização sobre cultura e ética" data-s="Alta" data-d="4 pontos" data-p="não atende" data-cx="700.0" data-cy="190"/>
+        <rect class="hit" x="14" y="214" width="872" height="24" tabindex="0" role="img" aria-label="M7, Termos essenciais dentro da norma: atende, 0 pontos" data-k="7" data-n="M7 · Termos essenciais dentro da norma" data-s="Sem lacuna" data-d="0 pontos" data-p="atende" data-cx="380.0" data-cy="214"/>
+        <rect class="hit" x="14" y="238" width="872" height="24" tabindex="0" role="img" aria-label="M8, Estrutura harmonizada atualizada: atende, 0 pontos" data-k="8" data-n="M8 · Estrutura harmonizada atualizada" data-s="Sem lacuna" data-d="0 pontos" data-p="atende" data-cx="380.0" data-cy="238"/>
+        <rect class="hit" x="14" y="262" width="872" height="24" tabindex="0" role="img" aria-label="M9, Anexo A ampliado: atende, 0 pontos" data-k="9" data-n="M9 · Anexo A ampliado" data-s="Sem lacuna" data-d="0 pontos" data-p="atende" data-cx="380.0" data-cy="262"/>
+        <rect class="hit" x="14" y="310" width="872" height="24" tabindex="0" role="img" aria-label="M1, Mudança climática no contexto: atende, 0 pontos" data-k="11" data-n="M1 · Mudança climática no contexto" data-s="Sem lacuna" data-d="0 pontos" data-p="atende" data-cx="380.0" data-cy="310"/>
+        <rect class="hit" x="14" y="334" width="872" height="24" tabindex="0" role="img" aria-label="M2, Cultura da qualidade e comportamento ético: atende em parte, 3 pontos" data-k="12" data-n="M2 · Cultura da qualidade e comportamento ético" data-s="Média" data-d="3 pontos" data-p="atende em parte" data-cx="620.0" data-cy="334"/>
+        <rect class="hit" x="14" y="358" width="872" height="24" tabindex="0" role="img" aria-label="M3, Política ligada à direção estratégica: atende, 0 pontos" data-k="13" data-n="M3 · Política ligada à direção estratégica" data-s="Sem lacuna" data-d="0 pontos" data-p="atende" data-cx="380.0" data-cy="358"/>
+        <rect class="hit" x="14" y="382" width="872" height="24" tabindex="0" role="img" aria-label="M4, Riscos e oportunidades separados: atende, 0 pontos" data-k="14" data-n="M4 · Riscos e oportunidades separados" data-s="Sem lacuna" data-d="0 pontos" data-p="atende" data-cx="380.0" data-cy="382"/>
+        <rect class="hit" x="14" y="406" width="872" height="24" tabindex="0" role="img" aria-label="M5, Planejamento de mudanças: não atende, 4 pontos" data-k="15" data-n="M5 · Planejamento de mudanças" data-s="Alta" data-d="4 pontos" data-p="não atende" data-cx="700.0" data-cy="406"/>
+        <rect class="hit" x="14" y="430" width="872" height="24" tabindex="0" role="img" aria-label="M6, Conscientização sobre cultura e ética: não atende, 4 pontos" data-k="16" data-n="M6 · Conscientização sobre cultura e ética" data-s="Alta" data-d="4 pontos" data-p="não atende" data-cx="700.0" data-cy="430"/>
+        <rect class="hit" x="14" y="454" width="872" height="24" tabindex="0" role="img" aria-label="M7, Termos essenciais dentro da norma: atende em parte, 1 pontos" data-k="17" data-n="M7 · Termos essenciais dentro da norma" data-s="Baixa" data-d="1 pontos" data-p="atende em parte" data-cx="460.0" data-cy="454"/>
+        <rect class="hit" x="14" y="478" width="872" height="24" tabindex="0" role="img" aria-label="M8, Estrutura harmonizada atualizada: atende, 0 pontos" data-k="18" data-n="M8 · Estrutura harmonizada atualizada" data-s="Sem lacuna" data-d="0 pontos" data-p="atende" data-cx="380.0" data-cy="478"/>
+        <rect class="hit" x="14" y="502" width="872" height="24" tabindex="0" role="img" aria-label="M9, Anexo A ampliado: atende, 0 pontos" data-k="19" data-n="M9 · Anexo A ampliado" data-s="Sem lacuna" data-d="0 pontos" data-p="atende" data-cx="380.0" data-cy="502"/>
+      </svg>
+    </div>
+    <div class="tip" id="bars-tip" hidden></div>
+    <figcaption><b>Figura 8.</b> Pontos de lacuna por mudança, nos dois exemplos. Passe o mouse sobre as linhas para ver os valores.</figcaption>
+    <details class="data">
+      <summary>Ver os dados em tabela</summary>
+      <div class="tbl">
+        <table class="aud">
+          <thead><tr><th>Organização</th><th>Mudança</th><th>Situação</th><th class="c">Pontos</th><th>Prioridade</th></tr></thead>
+          <tbody>
+            <tr><td>Pizzaria</td><td>M1 · Mudança climática no contexto</td><td>Atende em parte</td><td class="c">1</td><td>Baixa</td></tr>
+            <tr><td>Pizzaria</td><td>M2 · Cultura da qualidade e comportamento ético</td><td>Não atende</td><td class="c">6</td><td>Alta</td></tr>
+            <tr><td>Pizzaria</td><td>M3 · Política ligada à direção estratégica</td><td>Atende</td><td class="c">0</td><td>Sem lacuna</td></tr>
+            <tr><td>Pizzaria</td><td>M4 · Riscos e oportunidades separados</td><td>Atende em parte</td><td class="c">3</td><td>Média</td></tr>
+            <tr><td>Pizzaria</td><td>M5 · Planejamento de mudanças</td><td>Atende em parte</td><td class="c">2</td><td>Média</td></tr>
+            <tr><td>Pizzaria</td><td>M6 · Conscientização sobre cultura e ética</td><td>Não atende</td><td class="c">4</td><td>Alta</td></tr>
+            <tr><td>Pizzaria</td><td>M7 · Termos essenciais dentro da norma</td><td>Atende</td><td class="c">0</td><td>Sem lacuna</td></tr>
+            <tr><td>Pizzaria</td><td>M8 · Estrutura harmonizada atualizada</td><td>Atende</td><td class="c">0</td><td>Sem lacuna</td></tr>
+            <tr><td>Pizzaria</td><td>M9 · Anexo A ampliado</td><td>Atende</td><td class="c">0</td><td>Sem lacuna</td></tr>
+            <tr><td>Indústria</td><td>M1 · Mudança climática no contexto</td><td>Atende</td><td class="c">0</td><td>Sem lacuna</td></tr>
+            <tr><td>Indústria</td><td>M2 · Cultura da qualidade e comportamento ético</td><td>Atende em parte</td><td class="c">3</td><td>Média</td></tr>
+            <tr><td>Indústria</td><td>M3 · Política ligada à direção estratégica</td><td>Atende</td><td class="c">0</td><td>Sem lacuna</td></tr>
+            <tr><td>Indústria</td><td>M4 · Riscos e oportunidades separados</td><td>Atende</td><td class="c">0</td><td>Sem lacuna</td></tr>
+            <tr><td>Indústria</td><td>M5 · Planejamento de mudanças</td><td>Não atende</td><td class="c">4</td><td>Alta</td></tr>
+            <tr><td>Indústria</td><td>M6 · Conscientização sobre cultura e ética</td><td>Não atende</td><td class="c">4</td><td>Alta</td></tr>
+            <tr><td>Indústria</td><td>M7 · Termos essenciais dentro da norma</td><td>Atende em parte</td><td class="c">1</td><td>Baixa</td></tr>
+            <tr><td>Indústria</td><td>M8 · Estrutura harmonizada atualizada</td><td>Atende</td><td class="c">0</td><td>Sem lacuna</td></tr>
+            <tr><td>Indústria</td><td>M9 · Anexo A ampliado</td><td>Atende</td><td class="c">0</td><td>Sem lacuna</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </details>
+  </figure>
+
+  <p>A pizzaria soma 16 pontos de lacuna, e a indústria, 12. Mas a distribuição é o que importa: na pizzaria, a cultura e a ética da direção lideram; na indústria, a gestão de mudanças e a conscientização. As mudanças de termos, estrutura e anexo quase não pontuam, e não devem tomar o tempo das outras.</p>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Prioridade</th><th style="width:40%">Regra deste material</th><th>O que fazer</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Alta</strong></td><td>4 pontos ou mais: impacto alto com lacuna, ou impacto médio sem atender.</td><td>Ação com a direção, no começo do plano.</td></tr>
+        <tr><td><strong>Média</strong></td><td>2 ou 3 pontos.</td><td>Ação com prazo antes da auditoria interna.</td></tr>
+        <tr><td><strong>Baixa</strong></td><td>1 ponto.</td><td>Ajuste simples, junto com outras revisões.</td></tr>
+        <tr><td><strong>Sem lacuna</strong></td><td>Atende, ou não se aplica.</td><td>Guardar a evidência para a auditoria.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Impacto: alto vale 3, médio 2, baixo 1. Lacuna: não atende vale 2, atende em parte 1, atende ou não se aplica 0. O plano de transição usa, como convenção, os limites de 180 a 15 dias antes da auditoria da tabela de cada exemplo.</p>
+</section>
+
+<!-- ============================ MÓDULO 10 ============================ -->
+<section id="erros">
+  <p class="eyebrow">Módulo 10</p>
+  <h2>Erros comuns</h2>
+  <div class="errs">
+    <div><h4>Refazer o sistema inteiro</h4><p>A edição nova vira motivo para reescrever todos os procedimentos.</p><p class="fix"><b>Correção:</b> ajustar só o que mudou, pelo diagnóstico.</p></div>
+    <div><h4>Cultura em cartaz</h4><p>"Qualidade é compromisso de todos" na parede, e nenhuma decisão diferente.</p><p class="fix"><b>Correção:</b> comportamentos esperados, cobrados e visíveis nas decisões.</p></div>
+    <div><h4>Ética delegada</h4><p>A direção pede ao gerente que escreva "algo sobre ética".</p><p class="fix"><b>Correção:</b> o requisito é da alta direção, e o auditor pergunta a ela.</p></div>
+    <div><h4>Oportunidade sem ação</h4><p>A lista existe, e ninguém acompanha o resultado.</p><p class="fix"><b>Correção:</b> a mesma disciplina dos riscos: ação, prazo e avaliação.</p></div>
+    <div><h4>Trocar só os números</h4><p>Os procedimentos citam 6.1.2 e 6.1.3, e a prática continua igual.</p><p class="fix"><b>Correção:</b> mudar a prática primeiro; a citação vem depois.</p></div>
+    <div><h4>Deixar para 2029</h4><p>A transição ficou para o último semestre do prazo.</p><p class="fix"><b>Correção:</b> transição na primeira manutenção ou recertificação possível.</p></div>
+    <div><h4>Estudar por resumo</h4><p>A equipe leu apresentações e nunca abriu a norma.</p><p class="fix"><b>Correção:</b> o texto da norma e o anexo A como referência.</p></div>
+    <div><h4>Requisitos que não existem</h4><p>O consultor apresenta "os requisitos de IA da edição nova".</p><p class="fix"><b>Correção:</b> conferir no texto; IA não virou requisito.</p></div>
+    <div><h4>Esquecer o auditor interno</h4><p>A auditoria interna da transição usa a lista de verificação de 2015.</p><p class="fix"><b>Correção:</b> perguntas novas para cultura, ética, riscos, oportunidades e mudanças.</p></div>
+    <div><h4>Clima sem conclusão</h4><p>O clima não aparece em lugar nenhum, nem para dizer que não é pertinente.</p><p class="fix"><b>Correção:</b> registrar a avaliação, qualquer que seja a conclusão.</p></div>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 11 ============================ -->
+<section id="serie">
+  <p class="eyebrow">Módulo 11</p>
+  <h2>A edição nova e os estudos da série</h2>
+  <p>Os estudos desta série foram escritos com a numeração da ISO 9001:2015. Como a estrutura e a numeração principal se mantêm, quase tudo continua valendo. A tabela mostra o que adaptar em cada estudo afetado; os outros seguem como estão.</p>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:28%">Estudo</th><th style="width:16%">Mudança</th><th>O que adaptar</th></tr></thead>
+      <tbody>
+        <tr><td><a href="../ISO-9001/treinamento-iso-9001.html"><strong>ISO 9001 requisito a requisito</strong></a></td><td>Todas</td><td>Acrescentar ao diagnóstico as perguntas de cultura e ética, e dividir o 6.1 em riscos e oportunidades.</td></tr>
+        <tr><td><a href="../Escopo/treinamento-escopo.html"><strong>Escopo e liderança</strong></a></td><td>M2</td><td>Incluir a cultura da qualidade e o comportamento ético entre os compromissos da direção, com evidência.</td></tr>
+        <tr><td><a href="../Partes-Interessadas/treinamento-partes-interessadas.html"><strong>Partes interessadas</strong></a> e <a href="../SWOT/treinamento-swot.html"><strong>Matriz SWOT</strong></a></td><td>M1</td><td>Avaliar e registrar se o clima é pertinente.</td></tr>
+        <tr><td><a href="../Objetivos/treinamento-objetivos.html"><strong>Objetivos da qualidade</strong></a></td><td>M3</td><td>Mostrar a ligação da política com a direção estratégica, que o estudo já faz pela SWOT.</td></tr>
+        <tr><td><a href="../Riscos/treinamento-riscos.html"><strong>Matriz de riscos</strong></a></td><td>M4</td><td>Dar às oportunidades ação e avaliação próprias, como no exemplo da indústria.</td></tr>
+        <tr><td><a href="../Caso-Integrado/treinamento-caso-integrado.html"><strong>Caso integrado</strong></a></td><td>M5</td><td>Usar o fio e o calendário para planejar, comunicar e acompanhar as mudanças do sistema.</td></tr>
+        <tr><td><a href="../Competencias/treinamento-competencias.html"><strong>Matriz de competências</strong></a></td><td>M6</td><td>Incluir cultura e ética nas perguntas de conscientização e na integração.</td></tr>
+        <tr><td><a href="../Informacao-Documentada/treinamento-informacao-documentada.html"><strong>Informação documentada</strong></a></td><td>M7</td><td>Atualizar o glossário e a forma de citar a informação documentada.</td></tr>
+        <tr><td><a href="../Auditoria/treinamento-auditoria.html"><strong>Auditoria interna</strong></a> e <a href="../Tecnica-Auditoria/treinamento-tecnica-auditoria.html"><strong>Técnica de auditoria</strong></a></td><td>M2 a M6</td><td>Acrescentar as perguntas novas às listas de verificação.</td></tr>
+        <tr><td><a href="../Certificacao/treinamento-certificacao.html"><strong>Processo de certificação</strong></a></td><td>Transição</td><td>Planejar a auditoria de transição no ciclo do certificado.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 12 ============================ -->
+<section id="iso">
+  <p class="eyebrow">Módulo 12</p>
+  <h2>Nas normas</h2>
+  <p>A edição de 2026 vem acompanhada de uma ISO 9000 revisada, de onde saem os termos, e das regras de transição da acreditação.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 200" role="img" aria-label="As referências da edição nova. Publicação: A ISO 9001:2026 foi publicada em 16/09/2026 e substitui a edição de 2015. Neste estudo: o mapa das mudanças. Transição: Certificados de 2015 valem até 30/09/2029; certificados novos, só pela de 2026 desde 31/03/2028. Neste estudo: o plano de transição. Global ACI: Desde 2026, a cooperação de acreditação que fixa as regras de transição para os organismos. Neste estudo: as datas. ISO 9000:2026: A norma de vocabulário revisada, de onde vêm os termos que entraram na ISO 9001. Neste estudo: os termos.">
+        <rect class="bx" x="10" y="14" width="214" height="172"/>
+        <rect class="hd-ink" x="10" y="14" width="214" height="34"/>
+        <text class="b t-ground" x="22" y="36" font-size="11.5">Publicação</text>
+        <text x="22" y="70" font-size="11.5">A ISO 9001:2026 foi publicada em</text>
+        <text x="22" y="86" font-size="11.5">16/09/2026 e substitui a edição</text>
+        <text x="22" y="102" font-size="11.5">de 2015.</text>
+        <text class="mu" x="22" y="160" font-size="11">Neste estudo: o mapa das mudanças</text>
+        <rect class="bx" x="232" y="14" width="214" height="172"/>
+        <rect class="hd-ink" x="232" y="14" width="214" height="34"/>
+        <text class="b t-ground" x="244" y="36" font-size="11.5">Transição</text>
+        <text x="244" y="70" font-size="11.5">Certificados de 2015 valem até</text>
+        <text x="244" y="86" font-size="11.5">30/09/2029; certificados novos,</text>
+        <text x="244" y="102" font-size="11.5">só pela de 2026 desde</text>
+        <text x="244" y="118" font-size="11.5">31/03/2028.</text>
+        <text class="mu" x="244" y="160" font-size="11">Neste estudo: o plano de transição</text>
+        <rect class="bx" x="454" y="14" width="214" height="172"/>
+        <rect class="hd-ink" x="454" y="14" width="214" height="34"/>
+        <text class="b t-ground" x="466" y="36" font-size="11.5">Global ACI</text>
+        <text x="466" y="70" font-size="11.5">Desde 2026, a cooperação de</text>
+        <text x="466" y="86" font-size="11.5">acreditação que fixa as regras</text>
+        <text x="466" y="102" font-size="11.5">de transição para os organismos.</text>
+        <text class="mu" x="466" y="160" font-size="11">Neste estudo: as datas</text>
+        <rect class="bx" x="676" y="14" width="214" height="172"/>
+        <rect class="hd-ink" x="676" y="14" width="214" height="34"/>
+        <text class="b t-ground" x="688" y="36" font-size="11.5">ISO 9000:2026</text>
+        <text x="688" y="70" font-size="11.5">A norma de vocabulário revisada,</text>
+        <text x="688" y="86" font-size="11.5">de onde vêm os termos que</text>
+        <text x="688" y="102" font-size="11.5">entraram na ISO 9001.</text>
+        <text class="mu" x="688" y="160" font-size="11">Neste estudo: os termos</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 9.</b> As referências da edição nova. O texto da figura é um resumo, com palavras próprias.</figcaption>
+  </figure>
+
+  <div class="pair">
+    <div class="box">
+      <h4>O que a edição de 2026 traz</h4>
+      <ul>
+        <li>Cultura da qualidade e comportamento ético na liderança e na conscientização.</li>
+        <li>Riscos e oportunidades com requisitos separados.</li>
+        <li>Gestão de mudanças reforçada.</li>
+        <li>Clima no contexto, termos na norma e anexo A ampliado.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h4>O que ela não traz</h4>
+      <ul>
+        <li>Requisitos de inteligência artificial ou de cibersegurança.</li>
+        <li>Requisitos de sustentabilidade além do clima.</li>
+        <li>Mudanças na operação, na avaliação e na melhoria.</li>
+        <li>Uma numeração nova.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="note">
+    <h4>Fontes deste estudo</h4>
+    <p>A data de publicação e as mudanças vêm do anúncio da ISO de 16/09/2026 e das análises publicadas pelos organismos de certificação; as datas de transição, do documento de transição da Global ACI. Este estudo resume com palavras próprias e não reproduz o texto da norma. Os títulos e a numeração exata das subseções novas devem ser conferidos no texto oficial, que é o único válido para auditoria.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 13 ============================ -->
+<section id="reuniao">
+  <p class="eyebrow">Módulo 13</p>
+  <h2>A reunião de transição</h2>
+  <p>Enquanto durar a transição, a reunião mensal do sistema reserva 30 minutos para ela: o plano, as ações de maior prioridade, a direção e as datas com o organismo.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 136" role="img" aria-label="Distribuição da reunião de transição de 30 minutos: 5 minutos para o plano, 10 minutos para as ações de prioridade alta, 10 minutos para o que depende da direção, e 5 minutos para as datas com o organismo.">
+        <g font-size="11.5" text-anchor="middle">
+          <rect class="bx" x="60" y="24" width="130" height="56"/><text x="125" y="49">O plano:</text><text x="125" y="64">o que atrasou</text>
+          <rect class="hd-ink gap2" x="190" y="24" width="260" height="56"/><text class="t-ground b" x="320" y="49">Ações de prioridade alta:</text><text class="t-ground b" x="320" y="64">o que já mudou na prática</text>
+          <rect class="hd-d gap2" x="450" y="24" width="260" height="56"/><text class="on b" x="580" y="49">O que depende da direção:</text><text class="on b" x="580" y="64">cultura e ética</text>
+          <rect class="bx" x="710" y="24" width="130" height="56"/><text x="775" y="56">Datas</text>
+        </g>
+        <g class="ln-mu" stroke-width="1">
+          <line x1="60" y1="82" x2="60" y2="94"/><line x1="190" y1="82" x2="190" y2="94"/><line x1="450" y1="82" x2="450" y2="94"/>
+          <line x1="710" y1="82" x2="710" y2="94"/><line x1="840" y1="82" x2="840" y2="94"/>
+        </g>
+        <g class="mono" font-size="10.5" text-anchor="middle">
+          <text class="mu" x="60" y="112">0</text><text class="mu" x="190" y="112">5</text><text class="mu" x="450" y="112">15</text>
+          <text class="mu" x="710" y="112">25</text><text class="mu" x="840" y="112">30</text>
+        </g>
+      </svg>
+    </div>
+    <figcaption><b>Figura 10.</b> A reunião de transição de 30 minutos, em escala. As ações de prioridade alta e a direção ocupam dois terços.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Momento</th><th style="width:42%">O que fazer</th><th>Perguntas que ajudam</th></tr></thead>
+      <tbody>
+        <tr><td><strong>O plano</strong></td><td>As etapas atrasadas e as que vencem no mês.</td><td>"O que precisa mudar de data?"</td></tr>
+        <tr><td><strong>Ações de prioridade alta</strong></td><td>Não o documento escrito, mas o que mudou na prática.</td><td>"Que evidência mostraríamos ao auditor hoje?"</td></tr>
+        <tr><td><strong>O que depende da direção</strong></td><td>Os comportamentos esperados, as decisões que os mostraram, a comunicação à equipe.</td><td>"Que decisão do mês mostrou a cultura que queremos?"</td></tr>
+        <tr><td><strong>Datas</strong></td><td>A auditoria de transição combinada com o organismo.</td><td>"Há folga até 30/09/2029, se surgir uma não conformidade?"</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Na reunião, peça a alguém de fora da Qualidade que explique, em uma frase, que comportamento a organização espera dele. A resposta mostra se a mudança de maior impacto já chegou ao posto.</p>
+
+  <h3>Checklist da transição para a ISO 9001:2026</h3>
+  <p>Marque os itens conforme avança na transição. As marcações ficam salvas neste navegador.</p>
+  <ol class="check" id="checklist">
+    <li><label><input type="checkbox" id="ck-1"><span>A norma nova foi comprada e lida, com o anexo A, por quem cuida do sistema.</span></label></li>
+    <li><label><input type="checkbox" id="ck-2"><span>Cada mudança foi avaliada: atende, atende em parte ou não atende, com evidência.</span></label></li>
+    <li><label><input type="checkbox" id="ck-3"><span>As lacunas têm ação, responsável e prazo, aprovados pela direção.</span></label></li>
+    <li><label><input type="checkbox" id="ck-4"><span>A direção sabe dizer como promove a cultura da qualidade e o comportamento ético.</span></label></li>
+    <li><label><input type="checkbox" id="ck-5"><span>A política está ligada ao contexto e à direção estratégica.</span></label></li>
+    <li><label><input type="checkbox" id="ck-6"><span>Riscos e oportunidades estão em listas separadas, cada uma com ação e avaliação.</span></label></li>
+    <li><label><input type="checkbox" id="ck-7"><span>As mudanças no sistema têm plano, comunicação e análise do efeito.</span></label></li>
+    <li><label><input type="checkbox" id="ck-8"><span>As pessoas sabem que comportamento se espera delas, e por quê.</span></label></li>
+    <li><label><input type="checkbox" id="ck-9"><span>A análise de contexto diz se o clima afeta a organização.</span></label></li>
+    <li><label><input type="checkbox" id="ck-10"><span>Os documentos usam os termos da edição nova.</span></label></li>
+    <li><label><input type="checkbox" id="ck-11"><span>Houve auditoria interna e análise crítica pela edição nova antes da auditoria externa.</span></label></li>
+    <li><label><input type="checkbox" id="ck-12"><span>A data da auditoria de transição foi combinada com o organismo, antes de 30/09/2029.</span></label></li>
+  </ol>
+  <div class="bar"><span><b id="ck-count">0</b> de 12 itens marcados</span><button class="btn" id="ck-reset" type="button">Limpar marcações</button></div>
+</section>
+
+<!-- ============================ MÓDULO 14 ============================ -->
+<section id="pratique">
+  <p class="eyebrow">Módulo 14</p>
+  <h2>Pratique</h2>
+  <h3>Exercício 1. Mudou ou não mudou?</h3>
+  <p>Cada item descreve um ponto da ISO 9001:2026. Diga se é novo ou reforçado, se mudou só a redação ou a estrutura, se está igual a 2015, ou se não está na norma.</p>
+  <div class="quiz" id="quiz"></div>
+  <div class="bar"><span>Acertos: <b id="qz-score">0</b> de <b id="qz-total">12</b></span><span>Respondidos: <b id="qz-done">0</b></span><button class="btn" id="qz-reset" type="button">Recomeçar</button></div>
+
+  <h3>Exercício 2. Diagnostique e planeje a sua transição</h3>
+  <p>Abra a planilha de apoio e siga o roteiro.</p>
+  <ol>
+    <li>Na aba Mudanças, informe a data da leitura e, para cada mudança, a situação e a evidência.</li>
+    <li>Para cada lacuna, escreva a ação, o responsável e o prazo. Leia a prioridade calculada.</li>
+    <li>Se encontrar outra mudança no texto, acrescente nas linhas livres, com o tipo e o impacto.</li>
+    <li>Na aba Plano, informe a auditoria, a data dela, a leitura e a situação do certificado. Leia os limites de cada etapa.</li>
+    <li>Leia a aba Painel e passe o checklist do módulo 13.</li>
+  </ol>
+  <p>Depois, leve a lista das prioridades altas à direção. As duas mudanças que mais pesam dependem dela.</p>
+</section>
+
+<!-- ============================ MÓDULO 15 ============================ -->
+<section id="planilha">
+  <p class="eyebrow">Módulo 15</p>
+  <h2>A planilha de apoio</h2>
+  <p>Este treinamento acompanha o arquivo <a id="xlsx-ref" href="ISO-9001-2026-modelo.xlsx">ISO-9001-2026-modelo.xlsx</a>, que fica na mesma pasta. As células em amarelo-claro são para preenchimento. As células cinza são calculadas.</p>
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Aba</th><th>Para que serve</th><th style="width:36%">O que ela calcula</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Instruções</strong></td><td>Legenda de cores, as regras de cálculo, ordem de preenchimento e premissas do modelo.</td><td>Nada. É só leitura.</td></tr>
+        <tr><td><strong>Mudanças</strong></td><td>A data da leitura, as nove mudanças com a pergunta de cada uma, e seis linhas livres. Situação, evidência, ação, responsável, prazo e conclusão.</td><td>Os pontos, a prioridade, a situação da ação e a conferência.</td></tr>
+        <tr><td><strong>Plano</strong></td><td>A auditoria, a data, a leitura, o fim da transição e as datas em que cada etapa foi feita.</td><td>O limite e a situação de cada etapa, o próximo passo e o alerta de prazo.</td></tr>
+        <tr><td><strong>Painel</strong></td><td>Nada a preencher.</td><td>Os números das duas abas, o gráfico das prioridades e o aviso.</td></tr>
+        <tr><td><strong>Checklist</strong></td><td>Os mesmos 12 itens do módulo 13, com status Sim, Parcial ou Não.</td><td>Percentual atendido e situação da validação.</td></tr>
+        <tr><td><strong>Exemplo 1 e Exemplo 2</strong></td><td>O diagnóstico e o plano da pizzaria e da indústria.</td><td>As mesmas contas das abas de entrada.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ GLOSSÁRIO ============================ -->
+<section id="glossario">
+  <p class="eyebrow">Referência</p>
+  <h2>Glossário</h2>
+  <dl class="gloss">
+    <div><dt>Auditoria de transição</dt><dd>A auditoria do organismo que confirma o atendimento à edição nova e troca o certificado.</dd></div>
+    <div><dt>Comportamento ético</dt><dd>Neste contexto, agir com honestidade nas decisões que afetam o produto e o cliente.</dd></div>
+    <div><dt>Cultura da qualidade</dt><dd>O conjunto de valores e comportamentos que fazem a qualidade prevalecer no dia a dia.</dd></div>
+    <div><dt>Diagnóstico de lacunas</dt><dd>A comparação entre o que a norma pede e o que a organização faz.</dd></div>
+    <div><dt>Emenda</dt><dd>Uma alteração publicada sobre uma norma em vigor, sem nova edição.</dd></div>
+    <div><dt>Estrutura harmonizada</dt><dd>A estrutura comum às normas ISO de sistema de gestão, com as mesmas seções e termos básicos.</dd></div>
+    <div><dt>Global ACI</dt><dd>A cooperação internacional de acreditação que, desde 2026, substituiu o IAF e o ILAC.</dd></div>
+    <div><dt>Lacuna</dt><dd>A diferença entre o requisito e a prática atual.</dd></div>
+    <div><dt>Oportunidade</dt><dd>Uma situação que pode ser aproveitada para melhorar o resultado.</dd></div>
+    <div><dt>Prioridade</dt><dd>Neste material, o impacto da mudança vezes o tamanho da lacuna.</dd></div>
+    <div><dt>Risco</dt><dd>O efeito da incerteza, em geral tratado como algo que pode dar errado.</dd></div>
+    <div><dt>Transição</dt><dd>O prazo para os certificados migrarem para a edição nova.</dd></div>
+  </dl>
+</section>
+
+</main>
+</div>
+
+<footer>Material de estudo. Os exemplos, documentos e números são ilustrativos e foram criados para fins didáticos. As referências às normas e às regras de transição são resumos para estudo e não substituem o texto da norma nem o regulamento do organismo.</footer>
+</div>
+
+<script>
+(function () {
+  function read(key) { try { return JSON.parse(localStorage.getItem(key) || 'null'); } catch (e) { return null; } }
+  function write(key, val) { try { localStorage.setItem(key, JSON.stringify(val)); } catch (e) {} }
+
+  /* ---------- Checklist ---------- */
+  var boxes = Array.prototype.slice.call(document.querySelectorAll('#checklist input'));
+  var count = document.getElementById('ck-count');
+  var saved = read('iso-9001-2026-checklist') || {};
+  function refreshChecks() {
+    var n = 0, state = {};
+    boxes.forEach(function (b) { if (b.checked) { n++; } state[b.id] = b.checked; });
+    count.textContent = n;
+    return state;
+  }
+  boxes.forEach(function (b) {
+    if (saved[b.id]) { b.checked = true; }
+    b.addEventListener('change', function () { write('iso-9001-2026-checklist', refreshChecks()); });
+  });
+  refreshChecks();
+  document.getElementById('ck-reset').addEventListener('click', function () {
+    boxes.forEach(function (b) { b.checked = false; });
+    write('iso-9001-2026-checklist', refreshChecks());
+  });
+
+  /* ---------- Exercício ---------- */
+  var KEYS = ['N', 'E', 'I', 'F'];
+  var LABEL = { N: 'Novo ou reforçado', E: 'Redação ou estrutura', I: 'Igual a 2015', F: 'Não está na norma' };
+  var NAMES = { N: 'novo ou reforçado', E: 'mudou a redação ou a estrutura', I: 'igual a 2015', F: 'não está na norma' };
+  var ITEMS = [
+    { t: '“A alta direção promove uma cultura da qualidade e o comportamento ético.”', a: 'N', w: 'É a principal novidade da liderança.' },
+    { t: '“Riscos e oportunidades têm requisitos separados.”', a: 'N', w: 'O 6.1 foi reestruturado em dois.' },
+    { t: '“Requisitos específicos para inteligência artificial.”', a: 'F', w: 'IA foi discutida, mas não virou requisito.' },
+    { t: '“Auditorias internas a intervalos planejados.”', a: 'I', w: 'A auditoria interna segue como em 2015.' },
+    { t: '“Os termos essenciais aparecem dentro da própria norma.”', a: 'E', w: 'Mudança de redação, vinda da ISO 9000.' },
+    { t: '“Requisitos de cibersegurança para o sistema de informação.”', a: 'F', w: 'Não está na norma; entra pelo contexto e pelos riscos, se for pertinente.' },
+    { t: '“Controle do produto não conforme.”', a: 'I', w: 'A operação não teve mudança de requisito.' },
+    { t: '“Um anexo que explica a intenção dos requisitos.”', a: 'E', w: 'O anexo A foi ampliado, sem criar obrigações.' },
+    { t: '“As pessoas conhecem a cultura da qualidade e o comportamento ético esperados.”', a: 'N', w: 'A conscientização ganhou esse tema.' },
+    { t: '“Mudanças no sistema planejadas, comunicadas, acompanhadas e analisadas.”', a: 'N', w: 'A gestão de mudanças foi reforçada.' },
+    { t: '“Calibração ou verificação dos instrumentos de medição.”', a: 'I', w: 'Os recursos de medição seguem como em 2015.' },
+    { t: '“A estrutura comum às normas de sistema de gestão, na versão atual.”', a: 'E', w: 'Mudança de estrutura, sem mudar a numeração principal.' }
+  ];
+  var quiz = document.getElementById('quiz');
+  var score = document.getElementById('qz-score');
+  var done = document.getElementById('qz-done');
+  document.getElementById('qz-total').textContent = ITEMS.length;
+  var hits = 0, answered = 0;
+
+  function render() {
+    hits = 0; answered = 0; score.textContent = 0; done.textContent = 0;
+    quiz.textContent = '';
+    ITEMS.forEach(function (item, idx) {
+      var row = document.createElement('div'); row.className = 'q';
+      var p = document.createElement('p'); p.textContent = (idx + 1) + '. ' + item.t;
+      var opts = document.createElement('div'); opts.className = 'opts';
+      opts.setAttribute('role', 'group'); opts.setAttribute('aria-label', 'Classificação do item ' + (idx + 1));
+      var why = document.createElement('p'); why.className = 'why'; why.hidden = true;
+      KEYS.forEach(function (k) {
+        var b = document.createElement('button');
+        b.type = 'button'; b.textContent = LABEL[k]; b.id = 'qz-' + idx + '-' + k;
+        b.setAttribute('data-k', k);
+        b.addEventListener('click', function () {
+          var ok = k === item.a;
+          Array.prototype.forEach.call(opts.children, function (o) {
+            o.disabled = true;
+            if (o.getAttribute('data-k') === item.a) { o.className = 'right'; }
+          });
+          if (!ok) { b.className = 'wrong'; }
+          var lead = document.createElement('b');
+          lead.textContent = (ok ? 'Certo. ' : 'A resposta é: ' + NAMES[item.a] + '. ');
+          why.textContent = ''; why.appendChild(lead); why.appendChild(document.createTextNode(item.w));
+          why.className = 'why ' + (ok ? 'ok' : 'no'); why.hidden = false;
+          answered++; if (ok) { hits++; }
+          score.textContent = hits; done.textContent = answered;
+        });
+        opts.appendChild(b);
+      });
+      row.appendChild(p); row.appendChild(opts); row.appendChild(why);
+      quiz.appendChild(row);
+    });
+  }
+  render();
+  document.getElementById('qz-reset').addEventListener('click', render);
+
+  /* ---------- Gráfico: leitura dos valores ---------- */
+  var fig = document.getElementById('fig-bars');
+  var tip = document.getElementById('bars-tip');
+  var svg = document.getElementById('bars');
+  var bars = document.querySelectorAll('#bars .bar');
+  function hide() {
+    tip.hidden = true;
+    Array.prototype.forEach.call(bars, function (b) { b.removeAttribute('opacity'); });
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('#bars .hit'), function (r) {
+    function show() {
+      var d = r.dataset;
+      Array.prototype.forEach.call(bars, function (b) {
+        b.setAttribute('opacity', b.getAttribute('data-k') === d.k ? '1' : '.4');
+      });
+      tip.textContent = '';
+      var strong = document.createElement('b'); strong.textContent = d.s + ' · ' + d.d;
+      tip.appendChild(strong);
+      tip.appendChild(document.createTextNode(d.n + ' · ' + d.p));
+      var box = fig.getBoundingClientRect();
+      var pt = svg.createSVGPoint(); pt.x = parseFloat(d.cx); pt.y = parseFloat(d.cy);
+      var scr = pt.matrixTransform(svg.getScreenCTM());
+      tip.style.left = Math.min(Math.max(scr.x - box.left, 180), box.width - 180) + 'px';
+      tip.style.top = (scr.y - box.top + 4) + 'px';
+      tip.hidden = false;
+    }
+    r.addEventListener('pointerenter', show);
+    r.addEventListener('focus', show);
+    r.addEventListener('pointerleave', hide);
+    r.addEventListener('blur', hide);
+  });
+})();
+</script>
+</body>
+</html>

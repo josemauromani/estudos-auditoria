@@ -204,7 +204,7 @@ tb.append(f'            <tr class="tot"><td>Total</td><td class="c">{GERAL[0]}</
 tb += ['          </tbody>', '        </table>']
 
 # ---- figura 9: estudos da série × seções da norma
-ORDEM = ["esc", "pi", "swot", "obj", "ped", "proj", "proc", "sipoc", "raci", "riscos", "prod", "lib", "ind", "gut", "par", "ishikawa", "w5h2", "pdca", "auditoria", "tec", "nc", "ac", "doc", "comp", "cal", "rec", "con", "forn", "sat", "caso", "cert"]
+ORDEM = ["esc", "pi", "swot", "obj", "ped", "proj", "proc", "sipoc", "raci", "riscos", "prod", "lib", "ind", "gut", "par", "ishikawa", "w5h2", "pdca", "auditoria", "tec", "nc", "ac", "doc", "comp", "cal", "rec", "con", "forn", "sat", "caso", "cert", "ed26"]
 CX = lambda j: 350 + j * 80  # noqa: E731
 HD = {"base": "hd-ink", "p": "hd-p", "d": "hd-d", "c": "hd-c", "a": "hd-a"}
 RY, R0 = 32, 70
@@ -231,16 +231,16 @@ mz.append(f'        <line class="grid" x1="20" y1="{R0 + RY * len(ORDEM)}" x2="8
 mz.append("      </svg>")
 
 AJUDA = {
-    "4.1": "Organiza as questões internas e externas em forças, fraquezas, oportunidades e ameaças.",
+    "4.1": "Organiza as questões internas e externas em forças, fraquezas, oportunidades e ameaças. A ISO 9001:2026 traz para o texto a avaliação do clima.",
     "4.2": "O estudo de Partes interessadas lista as partes pertinentes e os requisitos de cada uma. A SWOT leva as expectativas para as oportunidades e as ameaças.",
     "4.3": "Traz a declaração de escopo, a fronteira, os processos terceirizados e a aplicabilidade de cada requisito, com as duas perguntas da não aplicabilidade. O Processo de certificação mostra o escopo que o certificado repete.",
-    "5.1.1": "Traz os dez compromissos da direção, com o que ela faz, o registro e a ação para o que é parcial.",
+    "5.1.1": "Traz os dez compromissos da direção, com o que ela faz, o registro e a ação para o que é parcial. A ISO 9001:2026 acrescenta a cultura da qualidade e o comportamento ético.",
     "4.4": "O Mapa de processos mostra os processos e as ligações entre eles. O SIPOC e a tartaruga descrevem cada processo. O Caso integrado segue um problema de um processo a outro, pelos registros.",
     "5.3": "Mostra quem executa, quem responde, quem é consultado e quem é informado.",
-    "6.1": "A SWOT levanta os riscos e as oportunidades. A Matriz de riscos avalia o nível e define a resposta.",
-    "5.2": "Traz os compromissos da política e a ligação de cada objetivo a um deles.",
+    "6.1": "A SWOT levanta os riscos e as oportunidades. A Matriz de riscos avalia o nível e define a resposta. A ISO 9001:2026 separa riscos e oportunidades.",
+    "5.2": "Traz os compromissos da política e a ligação de cada objetivo a um deles. A ISO 9001:2026 reforça a ligação da política com a estratégia.",
     "6.2": "O estudo de Objetivos da qualidade liga a política ao objetivo, com base, meta, prazo e plano. Os Indicadores medem; o 5W2H detalha o plano.",
-    "6.3": "A Matriz de riscos avalia o que a mudança pode causar. O 5W2H planeja a execução.",
+    "6.3": "A Matriz de riscos avalia o que a mudança pode causar. O 5W2H planeja a execução. A ISO 9001:2026 reforça a gestão de mudanças.",
     "7.1.1": "Traz a conta das pessoas pela demanda do pico, com as escaladas, as qualificadas e a falta de gente.",
     "7.1.3": "Traz a criticidade de cada item, a preventiva no prazo, a contingência escrita e a disponibilidade calculada das paradas.",
     "7.1.4": "Traz os fatores físicos, sociais e psicológicos que afetam o produto, com limite, controle, medição e ação.",
@@ -249,7 +249,7 @@ AJUDA = {
     "7.1.5": "Traz a lista de instrumentos, a adequação, a leitura do certificado, a situação de cada um e a avaliação dos resultados anteriores.",
     "7.5": "Traz a lista mestra, a tabela de retenção dos registros e a lista de documentos externos.",
     "7.2": "Traz a matriz por função, a escala de níveis, o plano de treinamento e a avaliação da eficácia.",
-    "7.3": "Traz as perguntas de conscientização e o que se espera ouvir.",
+    "7.3": "Traz as perguntas de conscientização e o que se espera ouvir. A ISO 9001:2026 inclui a cultura e a ética na conscientização.",
     "5.1.2": "Traz os indicadores de satisfação e de reclamações que a direção acompanha.",
     "7.4": "As letras C e I da matriz mostram quem precisa ser consultado e informado.",
     "8.1": "Mostra as entradas e as saídas que a operação precisa controlar.",
