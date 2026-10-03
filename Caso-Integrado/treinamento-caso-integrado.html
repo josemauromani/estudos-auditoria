@@ -1,0 +1,1738 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Caso integrado</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<style>
+:root{
+  --ground:#F3F6F7; --surface:#FFFFFF; --sunk:#E9EEF0; --ink:#16242E; --muted:#566672; --rule:#D3DBE0;
+  --accent:#2B5C8A;
+  --s1:#2A6FB0; --s1-tint:#DCE8F3;
+  --s2:#D19A2E; --s2-tint:#F8EBCB;
+  --s3:#B0413E; --s3-tint:#F5DEDC;
+  --on-s2:#16242E;
+  --p:#2B5C8A; --p-tint:#DCE8F3;
+  --d:#A96A12; --d-tint:#F6E8CF;
+  --c:#1E7B73; --c-tint:#D9EEEB;
+  --a:#B0413E; --a-tint:#F5DEDC;
+  --on-hue:#FFFFFF;
+  --good:#1F7A4D; --good-tint:#DDF1E5;
+  --bad:#B0413E; --bad-tint:#F5DEDC;
+  --display:"Barlow Semi Condensed","Arial Narrow",Arial,sans-serif;
+  --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --ground:#0F171C; --surface:#172229; --sunk:#1E2B33; --ink:#E4EAED; --muted:#9BABB6; --rule:#2B3A44;
+    --accent:#86B7E3;
+  --s1:#4F97DB; --s1-tint:#1B2F42;
+  --s2:#B58E14; --s2-tint:#3A2C12;
+  --s3:#D14B45; --s3-tint:#3D1F1E;
+  --on-s2:#0F171C;
+    --p:#86B7E3; --p-tint:#1B2F42;
+    --d:#E2AC4F; --d-tint:#3A2C12;
+    --c:#5FC6BA; --c-tint:#15332F;
+    --a:#EC8E89; --a-tint:#3D1F1E;
+    --on-hue:#0F171C;
+    --good:#6FCF9B; --good-tint:#163326;
+    --bad:#EC8E89; --bad-tint:#3D1F1E;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --ground:#0F171C; --surface:#172229; --sunk:#1E2B33; --ink:#E4EAED; --muted:#9BABB6; --rule:#2B3A44;
+  --accent:#86B7E3;
+  --s1:#4F97DB; --s1-tint:#1B2F42;
+  --s2:#B58E14; --s2-tint:#3A2C12;
+  --s3:#D14B45; --s3-tint:#3D1F1E;
+  --on-s2:#0F171C;
+  --p:#86B7E3; --p-tint:#1B2F42;
+  --d:#E2AC4F; --d-tint:#3A2C12;
+  --c:#5FC6BA; --c-tint:#15332F;
+  --a:#EC8E89; --a-tint:#3D1F1E;
+  --on-hue:#0F171C;
+  --good:#6FCF9B; --good-tint:#163326;
+  --bad:#EC8E89; --bad-tint:#3D1F1E;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--ground);color:var(--ink);font:400 16px/1.65 var(--body);-webkit-text-size-adjust:100%}
+a{color:var(--accent);text-underline-offset:3px}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.page{max-width:1180px;margin-inline:auto;padding-inline:20px;padding-block:36px 80px}
+
+/* Cabeçalho */
+.mast{display:flex;flex-direction:column;gap:18px;padding-bottom:32px;border-bottom:1px solid var(--rule)}
+.tiles{display:flex;gap:6px}
+.tiles span{width:44px;height:44px;display:grid;place-items:center;font:700 24px/1 var(--display);color:var(--on-hue)}
+.tiles .p{background:var(--p)} .tiles .d{background:var(--d)} .tiles .c{background:var(--c)} .tiles .a{background:var(--a)}
+h1{font:700 clamp(2.3rem,6vw,3.6rem)/1.02 var(--display);letter-spacing:-.01em;margin:0;text-wrap:balance}
+.lead{font-size:1.15rem;line-height:1.55;max-width:62ch;margin:0;color:var(--ink)}
+.meta{display:flex;flex-direction:row;flex-wrap:wrap;gap:6px 22px;font:400 .8rem/1.4 var(--mono);color:var(--muted);margin:0;padding:0;list-style:none}
+
+/* Estrutura */
+.layout{display:grid;grid-template-columns:minmax(0,1fr);gap:32px;padding-top:32px}
+.toc{font-size:.92rem}
+.toc h2{font:500 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+.toc ol{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:2px 20px;counter-reset:toc}
+.toc li{counter-increment:toc}
+.toc a{display:flex;gap:10px;padding:5px 0;color:var(--ink);text-decoration:none;line-height:1.35}
+.toc a::before{content:counter(toc,decimal-leading-zero);font:400 .75rem/1.7 var(--mono);color:var(--muted)}
+.toc a:hover{color:var(--accent);text-decoration:underline}
+@media (min-width:1020px){
+  .layout{grid-template-columns:200px minmax(0,1fr);gap:64px}
+  .toc{position:sticky;top:calc(env(safe-area-inset-top,0px) + 24px);align-self:start}
+  .toc ol{grid-template-columns:1fr}
+}
+main{display:flex;flex-direction:column;gap:72px;min-width:0}
+section{display:flex;flex-direction:column;gap:20px;scroll-margin-top:24px}
+.eyebrow{font:500 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0}
+h2{font:700 clamp(1.7rem,4vw,2.2rem)/1.1 var(--display);margin:0;text-wrap:balance}
+h3{font:600 1.3rem/1.2 var(--display);margin:12px 0 0;text-wrap:balance}
+h4{font:600 .95rem/1.3 var(--body);margin:0}
+p{margin:0}
+section > p, section > ul, section > ol, section > h3{max-width:68ch}
+ul,ol{margin:0;padding-left:1.25em;display:flex;flex-direction:column;gap:6px}
+strong{font-weight:600}
+code{font:400 .88em var(--mono);background:var(--sunk);padding:1px 5px;border-radius:3px}
+
+/* Letras coloridas no texto */
+.k{display:inline-grid;place-items:center;width:1.45em;height:1.45em;font:700 .85em/1 var(--display);color:var(--on-hue);vertical-align:.05em}
+.k.p{background:var(--p)} .k.d{background:var(--d)} .k.c{background:var(--c)} .k.a{background:var(--a)}
+
+/* Figuras */
+figure{margin:0;display:flex;flex-direction:column;gap:10px;position:relative}
+.scroll{overflow-x:auto;background:var(--surface);border:1px solid var(--rule);padding:18px}
+.scroll svg{display:block;width:100%;min-width:820px;height:auto;color:var(--ink)}
+figcaption{font-size:.86rem;line-height:1.5;color:var(--muted);max-width:72ch}
+figcaption b{color:var(--ink);font-weight:600}
+svg text{font-family:var(--body);fill:var(--ink)}
+svg .disp{font-family:var(--display);font-weight:700}
+svg .mono{font-family:var(--mono);letter-spacing:.08em}
+svg .on{fill:var(--on-hue)}
+svg .mu{fill:var(--muted)}
+svg .b{font-weight:600}
+svg .ln{stroke:var(--ink);stroke-width:1.5;fill:none}
+svg .ln-mu{stroke:var(--muted);stroke-width:1.5;fill:none}
+svg .ln-bold{stroke:var(--ink);stroke-width:3;fill:none;stroke-linejoin:round;stroke-linecap:round}
+svg .dash{stroke-dasharray:5 4}
+svg .ah{fill:var(--ink)} svg .ah-mu{fill:var(--muted)}
+svg .bx{fill:var(--surface);stroke:var(--rule);stroke-width:1.5}
+svg .bx-ink{fill:var(--ink);stroke:var(--ink)}
+svg .t-ground{fill:var(--ground)}
+svg .bx-out{fill:none;stroke:var(--muted);stroke-width:1.5;stroke-dasharray:5 4}
+svg .bx-p{fill:var(--p-tint);stroke:var(--p);stroke-width:1.5} svg .hd-p{fill:var(--p)}
+svg .bx-d{fill:var(--d-tint);stroke:var(--d);stroke-width:1.5} svg .hd-d{fill:var(--d)}
+svg .bx-c{fill:var(--c-tint);stroke:var(--c);stroke-width:1.5} svg .hd-c{fill:var(--c)}
+svg .bx-a{fill:var(--a-tint);stroke:var(--a);stroke-width:1.5} svg .hd-a{fill:var(--a)}
+svg .gap{stroke:var(--surface);stroke-width:4}
+svg .gap2{stroke:var(--surface);stroke-width:2}
+svg .hub{fill:var(--surface)}
+
+/* Gráfico */
+svg .grid{stroke:var(--rule);stroke-width:1}
+svg .band{fill:var(--sunk)}
+svg .series{stroke:var(--accent);stroke-width:2;fill:none;stroke-linejoin:round;stroke-linecap:round}
+svg .pt{fill:var(--accent);stroke:var(--surface);stroke-width:2}
+svg .pt.on-hit{stroke:var(--ink)}
+svg .goal{stroke:var(--muted);stroke-width:1.5;stroke-dasharray:6 4;fill:none}
+svg .xh{stroke:var(--muted);stroke-width:1}
+svg .hit{fill:transparent;cursor:crosshair;outline:none}
+svg .root{fill:var(--accent);stroke:var(--surface);stroke-width:2}
+.tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--ground);padding:6px 10px;font-size:.78rem;line-height:1.4;transform:translate(-50%,calc(-100% - 14px));white-space:nowrap;z-index:2}
+.tip b{display:block;font:600 1.05rem/1.2 var(--body)}
+details.data{font-size:.88rem}
+details.data summary{cursor:pointer;font:400 .82rem var(--mono);color:var(--muted);padding:4px 0}
+details.data .tbl{margin-top:8px}
+details.data table{min-width:420px}
+
+/* Tabelas */
+.tbl{overflow-x:auto;border:1px solid var(--rule);background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:780px;font-size:.88rem;line-height:1.4}
+th,td{padding:9px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--rule)}
+tr:last-child > td{border-bottom:0}
+thead th{font:600 .8rem/1.3 var(--body);background:var(--sunk)}
+td.num{font-variant-numeric:tabular-nums;white-space:nowrap;font-family:var(--mono);font-size:.82rem}
+
+/* Situações */
+.chip{display:inline-block;padding:2px 8px;font:600 .76rem/1.45 var(--body);color:var(--on-hue);white-space:nowrap}
+.chip.s1{background:var(--s1)} .chip.s2{background:var(--s2);color:var(--on-s2)} .chip.s3{background:var(--s3)}
+.chip.sl{background:var(--sunk);color:var(--ink);box-shadow:inset 0 0 0 1px var(--rule)}
+svg .hd-ink{fill:var(--ink)}
+svg .f1{fill:var(--s1)} svg .f2{fill:var(--s2)} svg .f3{fill:var(--s3)} svg .f0{fill:var(--muted)}
+svg .bx-s1{fill:var(--s1-tint);stroke:var(--s1);stroke-width:1.5} svg .bx-s2{fill:var(--s2-tint);stroke:var(--s2);stroke-width:1.5} svg .bx-s3{fill:var(--s3-tint);stroke:var(--s3);stroke-width:1.5}
+svg .lane{fill:var(--sunk)}
+svg .fio{stroke:var(--accent);stroke-width:2;fill:none;stroke-linejoin:round}
+svg .now{stroke:var(--ink);stroke-width:1.5;stroke-dasharray:4 3}
+svg .halo{paint-order:stroke;stroke:var(--surface);stroke-width:5px;stroke-linejoin:round}
+svg .hit:focus-visible{stroke:var(--accent);stroke-width:2}
+
+/* Tabelas dos exemplos */
+table.aud{font-size:.8rem;min-width:960px;line-height:1.4}
+table.aud th, table.aud td{padding:8px 9px}
+table.aud td.n{white-space:nowrap;font-weight:600;color:var(--muted)}
+table.aud td.c, table.aud th.c{text-align:center;font-variant-numeric:tabular-nums}
+table.aud td.no{background:var(--s3-tint)}
+table.aud td small, table.aud th small{display:block;color:var(--muted);font-size:.76rem;margin-top:3px;font-weight:400}
+table.aud caption{caption-side:top;text-align:left;padding:10px 12px;font:500 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);background:var(--sunk)}
+
+/* Ficha da organização (acima de cada exemplo) */
+.ficha{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:0;border:1px solid var(--rule);background:var(--surface)}
+.ficha div{padding:12px 14px;border-right:1px solid var(--rule);border-bottom:1px solid var(--rule);margin:0 -1px -1px 0}
+.ficha dt{font:500 .68rem/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.ficha dd{margin:0;font-size:.9rem;line-height:1.4}
+dl{margin:0}
+
+/* Blocos */
+.pair{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.box{background:var(--surface);border:1px solid var(--rule);padding:18px 20px;display:flex;flex-direction:column;gap:10px}
+.box h4{font:600 1.1rem/1.2 var(--display)}
+.box ul{font-size:.93rem}
+.note{background:var(--sunk);padding:16px 20px;max-width:72ch;font-size:.94rem;display:flex;flex-direction:column;gap:6px}
+.note h4{font:500 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+
+/* Passo a passo */
+.steps{list-style:none;padding:0;counter-reset:st;gap:0;max-width:none;border-top:1px solid var(--rule)}
+.steps li{counter-increment:st;display:grid;grid-template-columns:44px minmax(0,1fr);gap:4px 12px;padding:16px 0;border-bottom:1px solid var(--rule)}
+.steps li::before{content:counter(st);font:700 1.7rem/1 var(--display);color:var(--muted);grid-row:span 2}
+.steps h4{font:600 1.1rem/1.25 var(--display)}
+.steps p{font-size:.95rem;max-width:64ch;grid-column:2}
+
+/* Erros comuns */
+.errs{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:0 40px;border-top:1px solid var(--rule)}
+.errs div{padding:16px 16px 16px 0;border-bottom:1px solid var(--rule);display:flex;flex-direction:column;gap:4px}
+.errs h4{font:600 1.05rem/1.25 var(--display)}
+.errs p{font-size:.92rem}
+.errs .fix{color:var(--muted)}
+.errs .fix b{color:var(--ink);font-weight:600}
+
+/* Checklist */
+.check{list-style:none;padding:0;gap:0;max-width:none;border:1px solid var(--rule);background:var(--surface)}
+.check li{border-bottom:1px solid var(--rule)}
+.check li:last-child{border-bottom:0}
+.check label{display:grid;grid-template-columns:22px minmax(0,1fr);gap:12px;padding:11px 16px;cursor:pointer;font-size:.94rem;align-items:start}
+.check input{width:18px;height:18px;margin:3px 0 0;accent-color:var(--c)}
+.check input:checked + span{color:var(--muted);text-decoration:line-through}
+.bar{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;font:400 .82rem var(--mono);color:var(--muted)}
+.bar b{color:var(--ink);font-weight:500}
+
+/* Exercício */
+.quiz{display:flex;flex-direction:column;gap:0;border:1px solid var(--rule);background:var(--surface)}
+.q{display:grid;grid-template-columns:minmax(0,1fr);gap:10px;padding:14px 16px;border-bottom:1px solid var(--rule)}
+.q:last-child{border-bottom:0}
+@media (min-width:720px){.q{grid-template-columns:minmax(0,1fr) auto;align-items:center}}
+.q p{font-size:.95rem}
+.q .why{grid-column:1/-1;font-size:.86rem;color:var(--muted)}
+.q .why b{font-weight:600}
+.q .why.ok b{color:var(--good)} .q .why.no b{color:var(--bad)}
+.opts{display:flex;gap:6px}
+.opts button{width:40px;height:40px;border:1.5px solid var(--rule);background:var(--surface);color:var(--ink);font:700 1.1rem/1 var(--display);cursor:pointer;border-radius:0}
+.opts button:hover:not(:disabled){border-color:var(--ink)}
+.opts button:disabled{cursor:default;opacity:.45}
+.opts button.right{background:var(--good-tint);border-color:var(--good);color:var(--good);opacity:1}
+.opts button.wrong{background:var(--bad-tint);border-color:var(--bad);color:var(--bad);opacity:1}
+.btn{border:1.5px solid var(--ink);background:transparent;color:var(--ink);font:500 .82rem var(--mono);padding:7px 14px;cursor:pointer;border-radius:0}
+.btn:hover{background:var(--ink);color:var(--ground)}
+
+/* Glossário */
+.gloss{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:0 40px;border-top:1px solid var(--rule)}
+.gloss div{padding:12px 0;border-bottom:1px solid var(--rule)}
+.gloss dt{font:600 1.02rem/1.3 var(--display)}
+.gloss dd{margin:2px 0 0;font-size:.9rem;color:var(--muted)}
+footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);font-size:.84rem;color:var(--muted);max-width:72ch}
+
+.quiz .opts{flex-wrap:wrap}
+.quiz .opts button{width:auto;min-width:40px;padding:0 11px;font-size:1rem}
+@media (min-width:720px){.q{grid-template-columns:minmax(0,1fr) auto}}
+</style>
+</head>
+<body>
+<div class="page" lang="pt-BR">
+
+<header class="mast">
+  <div class="tiles" aria-hidden="true"><span class="p">F</span><span class="d">C</span><span class="c">L</span></div>
+  <h1>Caso integrado: o sistema inteiro na prática</h1>
+  <p class="lead">Um guia de estudo para ver os estudos da série funcionando juntos: seguir um problema real de registro em registro, de um estudo a outro, e manter o sistema rodando o ano todo com um calendário de atividades.</p>
+  <ul class="meta">
+    <li>Treinamento autoinstrucional</li>
+    <li>13 módulos</li>
+    <li>Leitura de cerca de 50 minutos</li>
+    <li>3 exemplos resolvidos e 2 exercícios</li>
+  </ul>
+</header>
+
+<div class="layout">
+
+<nav class="toc" aria-label="Sumário">
+  <h2>Sumário</h2>
+  <ol>
+    <li><a href="#o-que-e">O que é</a></li>
+    <li><a href="#quando">Quando usar</a></li>
+    <li><a href="#como">Como construir</a></li>
+    <li><a href="#fio">Seguir o fio</a></li>
+    <li><a href="#calendario">O calendário do sistema</a></li>
+    <li><a href="#exemplos">Exemplos resolvidos</a></li>
+    <li><a href="#leitura">Ler o calendário</a></li>
+    <li><a href="#erros">Erros comuns</a></li>
+    <li><a href="#comecar">Por onde começar</a></li>
+    <li><a href="#iso">Nas normas ISO</a></li>
+    <li><a href="#ronda">A reunião mensal do sistema</a></li>
+    <li><a href="#pratique">Pratique</a></li>
+    <li><a href="#planilha">A planilha de apoio</a></li>
+    <li><a href="#glossario">Glossário</a></li>
+  </ol>
+</nav>
+
+<main>
+
+<!-- ============================ MÓDULO 1 ============================ -->
+<section id="o-que-e">
+  <p class="eyebrow">Módulo 1</p>
+  <h2>O que é</h2>
+  <p>Cada estudo da série ensina uma ferramenta. Um sistema da qualidade, porém, não é uma coleção de ferramentas: é o caminho que um problema percorre de uma para outra. A reclamação vira registro de não conformidade, o registro vira proposta, a proposta vira decisão da direção, a decisão vira mudança no processo, e a mudança precisa ser medida. Se um desses passos não acontece, o sistema existe no papel e o problema volta.</p>
+  <p>Este caso junta o que os outros estudos contaram sobre a pizzaria e a indústria. As letras do título são os três movimentos: <span class="k p">F</span> seguir o fio de um problema pelos registros, <span class="k d">C</span> manter o calendário das atividades que fazem o sistema rodar, e <span class="k c">L</span> ler os dois todo mês e ajustar.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 356" role="img" aria-label="O fio o filme fino da extrusora 3, passo a passo, nas quatro faixas de estudos da série. Passo 1: 14/09/2026, Satisfação do cliente, faixa verificar e corrigir o sistema. Passo 2: 23/09/2026, Não conformidade, faixa verificar e corrigir o sistema. Passo 3: 18/02/2027, Análise crítica, faixa verificar e corrigir o sistema. Passo 4: 29/03/2027, Avaliação de fornecedores, faixa verificar e corrigir o sistema. Passo 5: 14/05/2027, Controle de produção, faixa conhecer a organização e planejar. Passo 6: 14/05/2027, Liberação e produto não conforme, faixa conhecer a organização e planejar. Passo 7: 24/05/2027, Satisfação do cliente, faixa verificar e corrigir o sistema. Passo 8: 12/06/2027, Calibração, faixa conhecer a norma e montar o sistema. Passo 9: 20/06/2027, Conhecimento e pós-entrega, faixa conhecer a norma e montar o sistema. Passo 10: 31/07/2027, Recursos e infraestrutura, faixa conhecer a norma e montar o sistema. Passo 11: 19/08/2027, Análise crítica, faixa verificar e corrigir o sistema. Passo 12: 30/09/2027, Conhecimento e pós-entrega, faixa conhecer a norma e montar o sistema.">
+        <rect class="lane" x="220" y="23" width="670" height="46"/>
+        <text class="b" x="14" y="44.0" font-size="11">Conhecer a norma e montar o</text>
+        <text class="b" x="14" y="57.0" font-size="11">sistema</text>
+        <rect class="lane" x="220" y="75" width="670" height="46"/>
+        <text class="b" x="14" y="96.0" font-size="11">Conhecer a organização e</text>
+        <text class="b" x="14" y="109.0" font-size="11">planejar</text>
+        <rect class="lane" x="220" y="127" width="670" height="46"/>
+        <text class="b" x="14" y="148.0" font-size="11">Resolver problemas e melhorar</text>
+        <rect class="lane" x="220" y="179" width="670" height="46"/>
+        <text class="b" x="14" y="200.0" font-size="11">Verificar e corrigir o sistema</text>
+        <line class="grid" x1="259.0" y1="20" x2="259.0" y2="228"/>
+        <text class="mu" x="259.0" y="243" font-size="10.5" text-anchor="middle">out/26</text>
+        <line class="grid" x1="311.9" y1="20" x2="311.9" y2="228"/>
+        <line class="grid" x1="363.1" y1="20" x2="363.1" y2="228"/>
+        <line class="grid" x1="416.0" y1="20" x2="416.0" y2="228"/>
+        <text class="mu" x="416.0" y="243" font-size="10.5" text-anchor="middle">jan/27</text>
+        <line class="grid" x1="468.8" y1="20" x2="468.8" y2="228"/>
+        <line class="grid" x1="516.6" y1="20" x2="516.6" y2="228"/>
+        <line class="grid" x1="569.5" y1="20" x2="569.5" y2="228"/>
+        <text class="mu" x="569.5" y="243" font-size="10.5" text-anchor="middle">abr/27</text>
+        <line class="grid" x1="620.7" y1="20" x2="620.7" y2="228"/>
+        <line class="grid" x1="673.6" y1="20" x2="673.6" y2="228"/>
+        <line class="grid" x1="724.8" y1="20" x2="724.8" y2="228"/>
+        <text class="mu" x="724.8" y="243" font-size="10.5" text-anchor="middle">jul/27</text>
+        <line class="grid" x1="777.6" y1="20" x2="777.6" y2="228"/>
+        <line class="grid" x1="830.5" y1="20" x2="830.5" y2="228"/>
+        <path class="fio" d="M230.0 202.0 L250.0 202.0 L497.8 202.0 L564.4 202.0 L642.9 98.0 L662.9 98.0 L659.9 202.0 L692.3 46.0 L712.3 46.0 L775.9 46.0 L808.3 202.0 L880.0 46.0"/>
+        <circle class="pt" cx="230.0" cy="202.0" r="9"/><text class="b on" x="230.0" y="205.5" font-size="9.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">1</text>
+        <circle class="pt" cx="250.0" cy="202.0" r="9"/><text class="b on" x="250.0" y="205.5" font-size="9.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">2</text>
+        <circle class="pt" cx="497.8" cy="202.0" r="9"/><text class="b on" x="497.8" y="205.5" font-size="9.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">3</text>
+        <circle class="pt" cx="564.4" cy="202.0" r="9"/><text class="b on" x="564.4" y="205.5" font-size="9.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">4</text>
+        <circle class="pt" cx="642.9" cy="98.0" r="9"/><text class="b on" x="642.9" y="101.5" font-size="9.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">5</text>
+        <circle class="pt" cx="662.9" cy="98.0" r="9"/><text class="b on" x="662.9" y="101.5" font-size="9.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">6</text>
+        <circle class="pt" cx="659.9" cy="202.0" r="9"/><text class="b on" x="659.9" y="205.5" font-size="9.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">7</text>
+        <circle class="pt" cx="692.3" cy="46.0" r="9"/><text class="b on" x="692.3" y="49.5" font-size="9.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">8</text>
+        <circle class="pt" cx="712.3" cy="46.0" r="9"/><text class="b on" x="712.3" y="49.5" font-size="9.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">9</text>
+        <circle class="pt" cx="775.9" cy="46.0" r="9"/><text class="b on" x="775.9" y="49.5" font-size="9.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">10</text>
+        <circle class="pt" cx="808.3" cy="202.0" r="9"/><text class="b on" x="808.3" y="205.5" font-size="9.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">11</text>
+        <circle class="pt" cx="880.0" cy="46.0" r="9"/><text class="b on" x="880.0" y="49.5" font-size="9.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">12</text>
+        <text x="14" y="272" font-size="10.5"><tspan class="b" style="font-variant-numeric:tabular-nums">1</tspan><tspan dx="6">Satisfação do cliente</tspan><tspan class="mu" dx="6" style="font-variant-numeric:tabular-nums">14/09/26</tspan></text>
+        <text x="14" y="292" font-size="10.5"><tspan class="b" style="font-variant-numeric:tabular-nums">2</tspan><tspan dx="6">Não conformidade</tspan><tspan class="mu" dx="6" style="font-variant-numeric:tabular-nums">23/09/26</tspan></text>
+        <text x="14" y="312" font-size="10.5"><tspan class="b" style="font-variant-numeric:tabular-nums">3</tspan><tspan dx="6">Análise crítica</tspan><tspan class="mu" dx="6" style="font-variant-numeric:tabular-nums">18/02/27</tspan></text>
+        <text x="14" y="332" font-size="10.5"><tspan class="b" style="font-variant-numeric:tabular-nums">4</tspan><tspan dx="6">Avaliação de fornecedores</tspan><tspan class="mu" dx="6" style="font-variant-numeric:tabular-nums">29/03/27</tspan></text>
+        <text x="310" y="272" font-size="10.5"><tspan class="b" style="font-variant-numeric:tabular-nums">5</tspan><tspan dx="6">Controle de produção</tspan><tspan class="mu" dx="6" style="font-variant-numeric:tabular-nums">14/05/27</tspan></text>
+        <text x="310" y="292" font-size="10.5"><tspan class="b" style="font-variant-numeric:tabular-nums">6</tspan><tspan dx="6">Liberação e produto não conforme</tspan><tspan class="mu" dx="6" style="font-variant-numeric:tabular-nums">14/05/27</tspan></text>
+        <text x="310" y="312" font-size="10.5"><tspan class="b" style="font-variant-numeric:tabular-nums">7</tspan><tspan dx="6">Satisfação do cliente</tspan><tspan class="mu" dx="6" style="font-variant-numeric:tabular-nums">24/05/27</tspan></text>
+        <text x="310" y="332" font-size="10.5"><tspan class="b" style="font-variant-numeric:tabular-nums">8</tspan><tspan dx="6">Calibração</tspan><tspan class="mu" dx="6" style="font-variant-numeric:tabular-nums">12/06/27</tspan></text>
+        <text x="606" y="272" font-size="10.5"><tspan class="b" style="font-variant-numeric:tabular-nums">9</tspan><tspan dx="6">Conhecimento e pós-entrega</tspan><tspan class="mu" dx="6" style="font-variant-numeric:tabular-nums">20/06/27</tspan></text>
+        <text x="606" y="292" font-size="10.5"><tspan class="b" style="font-variant-numeric:tabular-nums">10</tspan><tspan dx="6">Recursos e infraestrutura</tspan><tspan class="mu" dx="6" style="font-variant-numeric:tabular-nums">31/07/27</tspan></text>
+        <text x="606" y="312" font-size="10.5"><tspan class="b" style="font-variant-numeric:tabular-nums">11</tspan><tspan dx="6">Análise crítica</tspan><tspan class="mu" dx="6" style="font-variant-numeric:tabular-nums">19/08/27</tspan></text>
+        <text x="606" y="332" font-size="10.5"><tspan class="b" style="font-variant-numeric:tabular-nums">12</tspan><tspan dx="6">Conhecimento e pós-entrega</tspan><tspan class="mu" dx="6" style="font-variant-numeric:tabular-nums">30/09/27</tspan></text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 1.</b> O fio do filme fino da indústria, de setembro de 2026 a setembro de 2027, nas quatro faixas de estudos da série. O problema passou por nove estudos.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Elemento</th><th style="width:40%">O que é</th><th>Exemplo</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Fio</strong></td><td>O caminho de um problema pelos registros do sistema, do primeiro sinal à decisão final.</td><td>Da reclamação de 14/09/2026 ao mapa do conhecimento de 30/09/2027.</td></tr>
+        <tr><td><strong>Passo</strong></td><td>Um momento do fio: uma data, um estudo, o que se fez e o registro que ficou.</td><td>12/06/2027, Calibração, micrômetro reprovado, registro FV-12.</td></tr>
+        <tr><td><strong>Saída e entrada</strong></td><td>O que um passo entrega e quem recebe no passo seguinte.</td><td>A proposta do medidor, recebida pela análise crítica.</td></tr>
+        <tr><td><strong>Intervalo</strong></td><td>Os dias entre um passo e o seguinte. Intervalo longo é onde o fio esfria.</td><td>148 dias do registro de não conformidade à decisão da direção.</td></tr>
+        <tr><td><strong>Calendário do sistema</strong></td><td>As atividades periódicas do ano, com frequência, mês e responsável.</td><td>Análise crítica em fevereiro e agosto.</td></tr>
+        <tr><td><strong>Cumprimento</strong></td><td>As atividades feitas divididas pelas previstas até o mês da leitura.</td><td>35 de 40 até setembro: 88 %.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 2 ============================ -->
+<section id="quando">
+  <p class="eyebrow">Módulo 2</p>
+  <h2>Quando usar</h2>
+  <p>O calendário é usado o ano inteiro. Seguir um fio é um exercício que vale fazer algumas vezes por ano, com problemas diferentes, e sempre antes de uma auditoria importante.</p>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:28%">Momento</th><th style="width:38%">O que fazer</th><th>Resultado</th></tr></thead>
+      <tbody>
+        <tr><td><strong>No começo do ano</strong></td><td>Montar o calendário com as atividades, os meses e os responsáveis.</td><td>Todos sabem o que acontece e quando.</td></tr>
+        <tr><td><strong>Todo mês</strong></td><td>Ler o calendário e os fios abertos.</td><td>Nada fica atrasado sem dono.</td></tr>
+        <tr><td><strong>Depois de um problema grave</strong></td><td>Seguir o fio, do primeiro sinal até a última ação.</td><td>Ver onde o sistema funcionou e onde demorou.</td></tr>
+        <tr><td><strong>Antes da análise crítica</strong></td><td>Escolher dois ou três fios do semestre e levá-los como entrada.</td><td>A direção decide sobre casos, e não só sobre números.</td></tr>
+        <tr><td><strong>Antes de uma auditoria externa</strong></td><td>Seguir os fios que o auditor provavelmente vai seguir.</td><td>Os registros contam a mesma história.</td></tr>
+        <tr><td><strong>Para treinar a equipe</strong></td><td>Contar um fio real, com os registros na mão.</td><td>Cada um vê onde o seu trabalho entra.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pair">
+    <div class="box">
+      <h4>Sinais de sistema em pedaços</h4>
+      <ul>
+        <li>Cada ferramenta tem dono, e ninguém sabe o que acontece entre elas.</li>
+        <li>O registro de não conformidade não cita a reclamação que o abriu.</li>
+        <li>A análise crítica só olha indicadores.</li>
+        <li>As atividades periódicas acontecem quando alguém lembra.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h4>Sinais de sistema inteiro</h4>
+      <ul>
+        <li>Dá para ir da reclamação à decisão da direção pelos registros.</li>
+        <li>Cada saída tem destino conhecido.</li>
+        <li>O calendário é lido todo mês, e o atraso ganha data nova.</li>
+        <li>A mesma reclamação não volta.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 3 ============================ -->
+<section id="como">
+  <p class="eyebrow">Módulo 3</p>
+  <h2>Como construir</h2>
+  <p>O caso integrado cabe em duas listas: o rastro de um fio e o calendário do ano. A primeira olha para trás, pelos registros; a segunda organiza o que vem.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 236" role="img" aria-label="As cinco etapas do trabalho. Escolher um fio: Um problema real e importante: uma reclamação grave, um indicador fora, uma quebra. Seguir os registros: De registro em registro, com a data e o estudo de cada passo. Ligar saída e entrada: O que cada passo entregou, e quem recebeu. Onde o fio se partiu? Montar o calendário: As atividades que mantêm o sistema rodando, com frequência, mês e dono. Ler e ajustar: Todo mês: o que está atrasado no calendário, e onde os fios estão demorando. O que a leitura mostra volta à escolha do próximo fio.">
+        <defs><marker id="a2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker><marker id="a2m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah-mu" d="M0 0 L10 5 L0 10 z"/></marker></defs>
+        <rect class="bx" x="12" y="16" width="164" height="152"/>
+        <text class="mono mu" x="24" y="36" font-size="10">ETAPA 1</text>
+        <text class="b" x="24" y="58" font-size="12.5">Escolher um fio</text>
+        <text x="24" y="85.0" font-size="10.5">Um problema real e</text>
+        <text x="24" y="99.5" font-size="10.5">importante: uma</text>
+        <text x="24" y="114.0" font-size="10.5">reclamação grave, um</text>
+        <text x="24" y="128.5" font-size="10.5">indicador fora, uma</text>
+        <text x="24" y="143.0" font-size="10.5">quebra.</text>
+        <line class="ln" x1="177" y1="84" x2="188" y2="84" marker-end="url(#a2)"/>
+        <rect class="bx-p" x="190" y="16" width="164" height="152"/>
+        <text class="mono mu" x="202" y="36" font-size="10">ETAPA 2</text>
+        <text class="b" x="202" y="58" font-size="12.5">Seguir os registros</text>
+        <text x="202" y="85.0" font-size="10.5">De registro em registro,</text>
+        <text x="202" y="99.5" font-size="10.5">com a data e o estudo de</text>
+        <text x="202" y="114.0" font-size="10.5">cada passo.</text>
+        <line class="ln" x1="355" y1="84" x2="366" y2="84" marker-end="url(#a2)"/>
+        <rect class="bx-d" x="368" y="16" width="164" height="152"/>
+        <text class="mono mu" x="380" y="36" font-size="10">ETAPA 3</text>
+        <text class="b" x="380" y="58" font-size="12.5">Ligar saída e</text>
+        <text class="b" x="380" y="73" font-size="12.5">entrada</text>
+        <text x="380" y="100.0" font-size="10.5">O que cada passo</text>
+        <text x="380" y="114.5" font-size="10.5">entregou, e quem recebeu.</text>
+        <text x="380" y="129.0" font-size="10.5">Onde o fio se partiu?</text>
+        <line class="ln" x1="533" y1="84" x2="544" y2="84" marker-end="url(#a2)"/>
+        <rect class="bx-c" x="546" y="16" width="164" height="152"/>
+        <text class="mono mu" x="558" y="36" font-size="10">ETAPA 4</text>
+        <text class="b" x="558" y="58" font-size="12.5">Montar o calendário</text>
+        <text x="558" y="85.0" font-size="10.5">As atividades que mantêm</text>
+        <text x="558" y="99.5" font-size="10.5">o sistema rodando, com</text>
+        <text x="558" y="114.0" font-size="10.5">frequência, mês e dono.</text>
+        <line class="ln" x1="711" y1="84" x2="722" y2="84" marker-end="url(#a2)"/>
+        <rect class="bx-ink" x="724" y="16" width="164" height="152"/>
+        <text class="mono t-ground" x="736" y="36" font-size="10">ETAPA 5</text>
+        <text class="b t-ground" x="736" y="58" font-size="12.5">Ler e ajustar</text>
+        <text class="t-ground" x="736" y="85.0" font-size="10.5">Todo mês: o que está</text>
+        <text class="t-ground" x="736" y="99.5" font-size="10.5">atrasado no calendário, e</text>
+        <text class="t-ground" x="736" y="114.0" font-size="10.5">onde os fios estão</text>
+        <text class="t-ground" x="736" y="128.5" font-size="10.5">demorando.</text>
+        <path class="ln-mu dash" d="M806.0 170 V198 H94.0 V174" marker-end="url(#a2m)"/>
+        <text class="mu halo" x="450.0" y="202" font-size="11" text-anchor="middle">o que a leitura mostra aponta o próximo fio a seguir</text>
+        <text x="450" y="228" font-size="11.5" text-anchor="middle">As três primeiras etapas olham para trás, pelos registros; as duas últimas, para o ano que vem.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 2.</b> As cinco etapas. A leitura mensal fecha o ciclo e aponta o próximo fio.</figcaption>
+  </figure>
+
+  <h3>Passo a passo</h3>
+  <ol class="steps">
+    <li><h4>Escolha um fio que importa</h4><p>Uma reclamação grave, um indicador que saiu da meta, uma quebra que parou a produção. Um problema pequeno não atravessa o sistema.</p></li>
+    <li><h4>Comece pelo registro mais antigo</h4><p>A primeira reclamação, o primeiro valor fora. Anote a data, o estudo e o registro.</p></li>
+    <li><h4>Siga a citação</h4><p>Cada registro deveria dizer de onde veio e para onde foi. Siga essas citações, e não a memória das pessoas.</p></li>
+    <li><h4>Anote o que saiu e quem recebeu</h4><p>Para cada passo, a saída e o estudo seguinte. Se não há passo seguinte, o fio parou ali.</p></li>
+    <li><h4>Conte os dias</h4><p>O intervalo entre os passos mostra onde o sistema é rápido e onde espera.</p></li>
+    <li><h4>Monte o calendário do ano</h4><p>As atividades periódicas de cada estudo, com frequência, mês de início e responsável.</p></li>
+    <li><h4>Marque o que foi feito</h4><p>Todo mês, marque as atividades realizadas. O que estava previsto e não foi feito aparece atrasado.</p></li>
+    <li><h4>Leve à reunião mensal e à análise crítica</h4><p>Os atrasos do calendário e os intervalos longos dos fios viram decisões.</p></li>
+  </ol>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:26%">Papel</th><th style="width:28%">Quem costuma ser</th><th>O que faz</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Quem coordena o sistema</strong></td><td>A Qualidade, ou o gerente na organização pequena.</td><td>Mantém o calendário, segue os fios e prepara a análise crítica.</td></tr>
+        <tr><td><strong>Donos das atividades</strong></td><td>Os líderes e gerentes das áreas.</td><td>Fazem a atividade no mês previsto e deixam o registro.</td></tr>
+        <tr><td><strong>Direção</strong></td><td>O dono, o diretor.</td><td>Recebe os fios e os atrasos na análise crítica e decide.</td></tr>
+        <tr><td><strong>Equipe</strong></td><td>Todos.</td><td>Cita o registro anterior em cada registro novo.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 4 ============================ -->
+<section id="fio">
+  <p class="eyebrow">Módulo 4</p>
+  <h2>Seguir o fio</h2>
+  <p>Seguir o fio é ir de registro em registro. É também o que o auditor faz quando escolhe uma reclamação e pergunta: "e depois?". O fio só pode ser seguido se cada registro citar o anterior.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 190" role="img" aria-label="Uma cadeia típica de registros. Satisfação do cliente: Reclamação registrada. Não conformidade: Causa e ação corretiva. Indicadores: Efeito medido no mês. Auditoria interna: Ação conferida no processo. Análise crítica: Decisão da direção. Conhecimento e pós-entrega: Lição incorporada. Cada registro cita o anterior, e é isso que permite seguir o fio.">
+        <defs><marker id="a3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker></defs>
+        <rect class="bx-s2" x="12" y="16" width="134" height="96"/>
+        <text class="mono mu" x="22" y="34" font-size="9.5">PASSO 1</text>
+        <text class="b" x="22" y="54.0" font-size="12">Satisfação do</text>
+        <text class="b" x="22" y="68.5" font-size="12">cliente</text>
+        <text class="mu" x="22" y="87.0" font-size="10.5">Reclamação</text>
+        <text class="mu" x="22" y="100.5" font-size="10.5">registrada</text>
+        <line class="ln" x1="147" y1="64" x2="158" y2="64" marker-end="url(#a3)"/>
+        <rect class="bx-p" x="160" y="16" width="134" height="96"/>
+        <text class="mono mu" x="170" y="34" font-size="9.5">PASSO 2</text>
+        <text class="b" x="170" y="54.0" font-size="12">Não conformidade</text>
+        <text class="mu" x="170" y="72.5" font-size="10.5">Causa e ação</text>
+        <text class="mu" x="170" y="86.0" font-size="10.5">corretiva</text>
+        <line class="ln" x1="295" y1="64" x2="306" y2="64" marker-end="url(#a3)"/>
+        <rect class="bx-c" x="308" y="16" width="134" height="96"/>
+        <text class="mono mu" x="318" y="34" font-size="9.5">PASSO 3</text>
+        <text class="b" x="318" y="54.0" font-size="12">Indicadores</text>
+        <text class="mu" x="318" y="72.5" font-size="10.5">Efeito medido no mês</text>
+        <line class="ln" x1="443" y1="64" x2="454" y2="64" marker-end="url(#a3)"/>
+        <rect class="bx-d" x="456" y="16" width="134" height="96"/>
+        <text class="mono mu" x="466" y="34" font-size="9.5">PASSO 4</text>
+        <text class="b" x="466" y="54.0" font-size="12">Auditoria interna</text>
+        <text class="mu" x="466" y="72.5" font-size="10.5">Ação conferida no</text>
+        <text class="mu" x="466" y="86.0" font-size="10.5">processo</text>
+        <line class="ln" x1="591" y1="64" x2="602" y2="64" marker-end="url(#a3)"/>
+        <rect class="bx-ink" x="604" y="16" width="134" height="96"/>
+        <text class="mono t-ground" x="614" y="34" font-size="9.5">PASSO 5</text>
+        <text class="b t-ground" x="614" y="54.0" font-size="12">Análise crítica</text>
+        <text class="t-ground" x="614" y="72.5" font-size="10.5">Decisão da direção</text>
+        <line class="ln" x1="739" y1="64" x2="750" y2="64" marker-end="url(#a3)"/>
+        <rect class="bx-s1" x="752" y="16" width="134" height="96"/>
+        <text class="mono mu" x="762" y="34" font-size="9.5">PASSO 6</text>
+        <text class="b" x="762" y="54.0" font-size="12">Conhecimento e</text>
+        <text class="b" x="762" y="68.5" font-size="12">pós-entrega</text>
+        <text class="mu" x="762" y="87.0" font-size="10.5">Lição incorporada</text>
+        <text x="450" y="146" font-size="11.5" text-anchor="middle">Cada registro cita o anterior: o RNC cita a reclamação, a ata cita o RNC, a lição cita a ata.</text>
+        <text class="mu" x="450" y="166" font-size="11" text-anchor="middle">Quando um registro não cita o anterior, o fio se parte, e o auditor não consegue segui-lo.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 3.</b> Uma cadeia típica. A saída de um estudo é a entrada do seguinte, e o registro de cada passo é a ponte.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:20%">Pergunta</th><th style="width:40%">O que procurar</th><th>No fio da indústria</th></tr></thead>
+      <tbody>
+        <tr><td><strong>De onde veio?</strong></td><td>Qual registro deu origem a este passo?</td><td>A reclamação de 14/09, o RNC 2026-29.</td></tr>
+        <tr><td><strong>O que foi feito?</strong></td><td>Qual foi a decisão ou a ação, e por quem?</td><td>A inspeção de 100% das bobinas do cliente A.</td></tr>
+        <tr><td><strong>O que saiu?</strong></td><td>Que registro este passo deixou?</td><td>A ata da análise crítica, com a aprovação.</td></tr>
+        <tr><td><strong>Para onde foi?</strong></td><td>Quem recebeu a saída, e o que fez com ela?</td><td>Suprimentos, com a homologação do segundo fornecedor.</td></tr>
+        <tr><td><strong>Quanto demorou?</strong></td><td>Quantos dias entre um passo e o seguinte?</td><td>148 dias do RNC à decisão da direção.</td></tr>
+        <tr><td><strong>O fio fechou?</strong></td><td>O problema parou de voltar, e o que se aprendeu ficou?</td><td>A lição I-01 entrou no procedimento PQ-08.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note">
+    <h4>O fio não é uma linha reta</h4>
+    <p>Um problema real raramente vai direto da causa à solução. No fio da indústria, a reclamação de 2026 levou a um investimento; a resina nova, homologada por outro motivo, produziu o lote 135; e o lote 135 revelou um micrômetro errado que ninguém procurava. Seguir o fio não é desenhar o caminho ideal, mas o que aconteceu de verdade. As voltas mostram como os estudos dependem uns dos outros.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 5 ============================ -->
+<section id="calendario">
+  <p class="eyebrow">Módulo 5</p>
+  <h2>O calendário do sistema</h2>
+  <p>Cada estudo da série tem um ritmo. Alguns trabalham todo dia, como o controle de produção e o tratamento de não conformidades. Outros têm uma data no ano, como a análise crítica e a auditoria. O calendário junta as atividades periódicas num lugar só, com o mês e o responsável.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 340" role="img" aria-label="Os quatro ritmos do sistema ao longo do ano. Mensal: Calibração, Recursos e infraestrutura, Conhecimento e pós-entrega, Indicadores. Trimestral: Objetivos da qualidade, Matriz GUT, Satisfação do cliente. Semestral: Matriz de competências, Matriz de riscos, Auditoria interna, Análise crítica, Avaliação de fornecedores. Anual: ISO 9001, Escopo e liderança, Informação documentada, Partes interessadas, Matriz SWOT, Mapa de processos, SIPOC, Matriz RACI. Contínuo ou quando necessário: Requisitos do cliente, Projeto e desenvolvimento, Controle de produção, Liberação e produto não conforme, Pareto, Ishikawa, 5W2H, PDCA, Não conformidade.">
+        <text class="mono mu" x="165.0" y="22" font-size="9" text-anchor="middle">JAN</text>
+        <text class="mono mu" x="195.0" y="22" font-size="9" text-anchor="middle">FEV</text>
+        <text class="mono mu" x="225.0" y="22" font-size="9" text-anchor="middle">MAR</text>
+        <text class="mono mu" x="255.0" y="22" font-size="9" text-anchor="middle">ABR</text>
+        <text class="mono mu" x="285.0" y="22" font-size="9" text-anchor="middle">MAI</text>
+        <text class="mono mu" x="315.0" y="22" font-size="9" text-anchor="middle">JUN</text>
+        <text class="mono mu" x="345.0" y="22" font-size="9" text-anchor="middle">JUL</text>
+        <text class="mono mu" x="375.0" y="22" font-size="9" text-anchor="middle">AGO</text>
+        <text class="mono mu" x="405.0" y="22" font-size="9" text-anchor="middle">SET</text>
+        <text class="mono mu" x="435.0" y="22" font-size="9" text-anchor="middle">OUT</text>
+        <text class="mono mu" x="465.0" y="22" font-size="9" text-anchor="middle">NOV</text>
+        <text class="mono mu" x="495.0" y="22" font-size="9" text-anchor="middle">DEZ</text>
+        <rect class="lane" x="10" y="32" width="880" height="52"/>
+        <text class="b" x="20" y="62" font-size="12">Mensal</text>
+        <rect class="f1" x="156.0" y="49" width="18" height="18"/>
+        <rect class="f1" x="186.0" y="49" width="18" height="18"/>
+        <rect class="f1" x="216.0" y="49" width="18" height="18"/>
+        <rect class="f1" x="246.0" y="49" width="18" height="18"/>
+        <rect class="f1" x="276.0" y="49" width="18" height="18"/>
+        <rect class="f1" x="306.0" y="49" width="18" height="18"/>
+        <rect class="f1" x="336.0" y="49" width="18" height="18"/>
+        <rect class="f1" x="366.0" y="49" width="18" height="18"/>
+        <rect class="f1" x="396.0" y="49" width="18" height="18"/>
+        <rect class="f1" x="426.0" y="49" width="18" height="18"/>
+        <rect class="f1" x="456.0" y="49" width="18" height="18"/>
+        <rect class="f1" x="486.0" y="49" width="18" height="18"/>
+        <text x="530" y="52.0" font-size="10.5">Calibração, Recursos e infraestrutura, Conhecimento e</text>
+        <text x="530" y="65.5" font-size="10.5">pós-entrega, Indicadores.</text>
+        <rect class="lane" x="10" y="90" width="880" height="52"/>
+        <text class="b" x="20" y="120" font-size="12">Trimestral</text>
+        <rect class="f1" x="156.0" y="107" width="18" height="18"/>
+        <rect class="bx" x="191.0" y="112" width="8" height="8"/>
+        <rect class="bx" x="221.0" y="112" width="8" height="8"/>
+        <rect class="f1" x="246.0" y="107" width="18" height="18"/>
+        <rect class="bx" x="281.0" y="112" width="8" height="8"/>
+        <rect class="bx" x="311.0" y="112" width="8" height="8"/>
+        <rect class="f1" x="336.0" y="107" width="18" height="18"/>
+        <rect class="bx" x="371.0" y="112" width="8" height="8"/>
+        <rect class="bx" x="401.0" y="112" width="8" height="8"/>
+        <rect class="f1" x="426.0" y="107" width="18" height="18"/>
+        <rect class="bx" x="461.0" y="112" width="8" height="8"/>
+        <rect class="bx" x="491.0" y="112" width="8" height="8"/>
+        <text x="530" y="110.0" font-size="10.5">Objetivos da qualidade, Matriz GUT, Satisfação do cliente.</text>
+        <rect class="lane" x="10" y="148" width="880" height="52"/>
+        <text class="b" x="20" y="178" font-size="12">Semestral</text>
+        <rect class="f1" x="156.0" y="165" width="18" height="18"/>
+        <rect class="bx" x="191.0" y="170" width="8" height="8"/>
+        <rect class="bx" x="221.0" y="170" width="8" height="8"/>
+        <rect class="bx" x="251.0" y="170" width="8" height="8"/>
+        <rect class="bx" x="281.0" y="170" width="8" height="8"/>
+        <rect class="bx" x="311.0" y="170" width="8" height="8"/>
+        <rect class="f1" x="336.0" y="165" width="18" height="18"/>
+        <rect class="bx" x="371.0" y="170" width="8" height="8"/>
+        <rect class="bx" x="401.0" y="170" width="8" height="8"/>
+        <rect class="bx" x="431.0" y="170" width="8" height="8"/>
+        <rect class="bx" x="461.0" y="170" width="8" height="8"/>
+        <rect class="bx" x="491.0" y="170" width="8" height="8"/>
+        <text x="530" y="168.0" font-size="10.5">Matriz de competências, Matriz de riscos, Auditoria interna,</text>
+        <text x="530" y="181.5" font-size="10.5">Análise crítica, Avaliação de fornecedores.</text>
+        <rect class="lane" x="10" y="206" width="880" height="52"/>
+        <text class="b" x="20" y="236" font-size="12">Anual</text>
+        <rect class="f1" x="156.0" y="223" width="18" height="18"/>
+        <rect class="bx" x="191.0" y="228" width="8" height="8"/>
+        <rect class="bx" x="221.0" y="228" width="8" height="8"/>
+        <rect class="bx" x="251.0" y="228" width="8" height="8"/>
+        <rect class="bx" x="281.0" y="228" width="8" height="8"/>
+        <rect class="bx" x="311.0" y="228" width="8" height="8"/>
+        <rect class="bx" x="341.0" y="228" width="8" height="8"/>
+        <rect class="bx" x="371.0" y="228" width="8" height="8"/>
+        <rect class="bx" x="401.0" y="228" width="8" height="8"/>
+        <rect class="bx" x="431.0" y="228" width="8" height="8"/>
+        <rect class="bx" x="461.0" y="228" width="8" height="8"/>
+        <rect class="bx" x="491.0" y="228" width="8" height="8"/>
+        <text x="530" y="226.0" font-size="10.5">ISO 9001, Escopo e liderança, Informação documentada, Partes</text>
+        <text x="530" y="239.5" font-size="10.5">interessadas, Matriz SWOT, Mapa de processos, SIPOC, Matriz</text>
+        <text x="530" y="253.0" font-size="10.5">RACI.</text>
+        <text class="b" x="20" y="284" font-size="12">Contínuo ou quando necessário</text>
+        <text class="mu" x="20" y="302.0" font-size="10.5">Requisitos do cliente, Projeto e desenvolvimento, Controle de produção, Liberação e produto não conforme, Pareto, Ishikawa, 5W2H, PDCA, Não</text>
+        <text class="mu" x="20" y="315.5" font-size="10.5">conformidade.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 4.</b> Os quatro ritmos do ano, com os estudos de cada um, na recomendação deste material. Os quadrados cheios são os meses com a atividade, começando em janeiro.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:30%">Estudo</th><th style="width:16%">Ritmo</th><th>O que se faz</th></tr></thead>
+      <tbody>
+        <tr><td colspan="3"><span class="eyebrow" style="margin:0">Conhecer a norma e montar o sistema</span></td></tr>
+        <tr><td><a href="../ISO-9001/treinamento-iso-9001.html"><strong>ISO 9001 requisito a requisito</strong></a></td><td>Anual</td><td>Diagnóstico requisito a requisito, uma vez por ano.</td></tr>
+        <tr><td><a href="../Escopo/treinamento-escopo.html"><strong>Escopo e liderança</strong></a></td><td>Anual</td><td>Revisão do escopo e dos compromissos da direção.</td></tr>
+        <tr><td><a href="../Informacao-Documentada/treinamento-informacao-documentada.html"><strong>Informação documentada</strong></a></td><td>Anual</td><td>Revisão da lista mestra e da retenção.</td></tr>
+        <tr><td><a href="../Competencias/treinamento-competencias.html"><strong>Matriz de competências e treinamento</strong></a></td><td>Semestral</td><td>Matriz atualizada e plano de treinamento.</td></tr>
+        <tr><td><a href="../Calibracao/treinamento-calibracao.html"><strong>Calibração e recursos de medição</strong></a></td><td>Mensal</td><td>Leitura dos vencimentos e ronda metrológica.</td></tr>
+        <tr><td><a href="../Recursos/treinamento-recursos.html"><strong>Recursos, infraestrutura e ambiente</strong></a></td><td>Mensal</td><td>Ronda dos recursos: escala, preventivas, ambiente.</td></tr>
+        <tr><td><a href="../Conhecimento/treinamento-conhecimento.html"><strong>Conhecimento organizacional e pós-entrega</strong></a></td><td>Mensal</td><td>Ronda do aprendizado: lições e atendimentos.</td></tr>
+        <tr><td colspan="3"><span class="eyebrow" style="margin:0">Conhecer a organização e planejar</span></td></tr>
+        <tr><td><a href="../Partes-Interessadas/treinamento-partes-interessadas.html"><strong>Partes interessadas</strong></a></td><td>Anual</td><td>Revisão das partes e dos requisitos.</td></tr>
+        <tr><td><a href="../SWOT/treinamento-swot.html"><strong>Matriz SWOT</strong></a></td><td>Anual</td><td>Diagnóstico estratégico, antes do planejamento do ano.</td></tr>
+        <tr><td><a href="../Objetivos/treinamento-objetivos.html"><strong>Objetivos da qualidade</strong></a></td><td>Trimestral</td><td>Acompanhamento dos objetivos e dos planos.</td></tr>
+        <tr><td><a href="../Pedidos/treinamento-pedidos.html"><strong>Requisitos do cliente e análise de pedidos</strong></a></td><td>Contínuo</td><td>A cada pedido, com leitura mensal dos registros.</td></tr>
+        <tr><td><a href="../Projeto/treinamento-projeto.html"><strong>Projeto e desenvolvimento</strong></a></td><td>Quando necessário</td><td>A cada produto ou serviço novo.</td></tr>
+        <tr><td><a href="../Processos/treinamento-processos.html"><strong>Mapa de processos e diagrama de tartaruga</strong></a></td><td>Anual</td><td>Revisão anual, ou quando um processo muda.</td></tr>
+        <tr><td><a href="../SIPOC/treinamento-sipoc.html"><strong>SIPOC</strong></a></td><td>Anual</td><td>Revisão anual, ou quando o processo muda.</td></tr>
+        <tr><td><a href="../RACI/treinamento-raci.html"><strong>Matriz RACI</strong></a></td><td>Anual</td><td>Revisão anual, ou quando a equipe muda.</td></tr>
+        <tr><td><a href="../Riscos/treinamento-riscos.html"><strong>Matriz de riscos</strong></a></td><td>Semestral</td><td>Revisão dos riscos e das ações.</td></tr>
+        <tr><td><a href="../Producao/treinamento-producao.html"><strong>Controle de produção e de serviço</strong></a></td><td>Contínuo</td><td>Plano de controle todo dia, com leitura mensal.</td></tr>
+        <tr><td><a href="../Liberacao/treinamento-liberacao.html"><strong>Liberação e produto não conforme</strong></a></td><td>Contínuo</td><td>A cada lote, com leitura mensal dos registros.</td></tr>
+        <tr><td colspan="3"><span class="eyebrow" style="margin:0">Resolver problemas e melhorar</span></td></tr>
+        <tr><td><a href="../GUT/treinamento-gut.html"><strong>Matriz GUT</strong></a></td><td>Trimestral</td><td>Escolha dos problemas do trimestre.</td></tr>
+        <tr><td><a href="../Pareto/treinamento-pareto.html"><strong>Pareto e folha de verificação</strong></a></td><td>Quando necessário</td><td>A cada problema escolhido.</td></tr>
+        <tr><td><a href="../Ishikawa/treinamento-ishikawa.html"><strong>Diagrama de Ishikawa</strong></a></td><td>Quando necessário</td><td>A cada problema escolhido.</td></tr>
+        <tr><td><a href="../5W2H/treinamento-5w2h.html"><strong>5W2H</strong></a></td><td>Quando necessário</td><td>A cada plano de ação.</td></tr>
+        <tr><td><a href="../PDCA/treinamento-pdca.html"><strong>PDCA</strong></a></td><td>Quando necessário</td><td>A cada problema escolhido, do começo ao fim.</td></tr>
+        <tr><td colspan="3"><span class="eyebrow" style="margin:0">Verificar e corrigir o sistema</span></td></tr>
+        <tr><td><a href="../Indicadores/treinamento-indicadores.html"><strong>Indicadores de desempenho</strong></a></td><td>Mensal</td><td>Reunião mensal de indicadores.</td></tr>
+        <tr><td><a href="../Auditoria/treinamento-auditoria.html"><strong>Auditoria interna</strong></a></td><td>Semestral</td><td>Programa com auditorias a cada semestre.</td></tr>
+        <tr><td><a href="../Nao-Conformidade/treinamento-nao-conformidade.html"><strong>Não conformidade e ação corretiva</strong></a></td><td>Contínuo</td><td>A cada desvio, com leitura mensal dos registros.</td></tr>
+        <tr><td><a href="../Analise-Critica/treinamento-analise-critica.html"><strong>Análise crítica pela direção</strong></a></td><td>Semestral</td><td>Reunião da direção a cada semestre.</td></tr>
+        <tr><td><a href="../Fornecedores/treinamento-fornecedores.html"><strong>Avaliação de fornecedores</strong></a></td><td>Semestral</td><td>Avaliação dos fornecedores críticos.</td></tr>
+        <tr><td><a href="../Satisfacao/treinamento-satisfacao.html"><strong>Satisfação do cliente</strong></a></td><td>Trimestral</td><td>Reclamações todo dia, pesquisa a cada trimestre.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note">
+    <h4>Ritmo é decisão de cada organização</h4>
+    <p>As frequências da tabela são uma sugestão para uma organização pequena ou média. Uma fábrica com muitos instrumentos pode precisar de leitura semanal; uma loja estável pode revisar o mapa de processos a cada dois anos. A norma não fixa frequências: pede que a organização decida o que monitorar e quando, e que cumpra o que decidiu.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 6 ============================ -->
+<section id="exemplos">
+  <p class="eyebrow">Módulo 6</p>
+  <h2>Exemplos resolvidos</h2>
+  <p>Os fios e os calendários da pizzaria e da indústria, e uma leitura dos intervalos do fio da indústria. Cada passo repete o que o estudo de origem conta, com o mesmo registro; os links levam a ele. As análises críticas de junho e de agosto de 2027 e os calendários são novos. Os dois primeiros exemplos também estão preenchidos na planilha de apoio. Os dados são ilustrativos e foram criados para este treinamento.</p>
+
+  <h3>Exemplo 1. A pizzaria: os atrasos das noites de sexta e de sábado</h3>
+  <dl class="ficha">
+    <div><dt>Organização</dt><dd>Pizzaria (loja com salão e delivery)</dd></div>
+    <div><dt>O fio</dt><dd>Os atrasos das noites de sexta e de sábado.</dd></div>
+    <div><dt>Origem</dt><dd>18% das entregas chegavam depois de 40 minutos em junho de 2026.</dd></div>
+    <div><dt>Duração do fio</dt><dd>364 dias, 12 passos, 10 estudos.</dd></div>
+    <div><dt>Calendário</dt><dd>2027, lido no fim de junho. Responsável: Gerente da loja.</dd></div>
+  </dl>
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 356" role="img" aria-label="O fio os atrasos das noites de sexta e de sábado, passo a passo, nas quatro faixas de estudos da série. Passo 1: 15/06/2026, PDCA, faixa resolver problemas e melhorar. Passo 2: 10/07/2026, Pareto, faixa resolver problemas e melhorar. Passo 3: 17/07/2026, Ishikawa, faixa resolver problemas e melhorar. Passo 4: 24/07/2026, 5W2H, faixa resolver problemas e melhorar. Passo 5: 06/09/2026, PDCA, faixa resolver problemas e melhorar. Passo 6: 29/09/2026, Matriz GUT, faixa resolver problemas e melhorar. Passo 7: 06/10/2026, Indicadores, faixa verificar e corrigir o sistema. Passo 8: 14/12/2026, Análise crítica, faixa verificar e corrigir o sistema. Passo 9: 19/02/2027, Objetivos da qualidade, faixa conhecer a organização e planejar. Passo 10: 16/04/2027, Recursos e infraestrutura, faixa conhecer a norma e montar o sistema. Passo 11: 31/05/2027, Conhecimento e pós-entrega, faixa conhecer a norma e montar o sistema. Passo 12: 14/06/2027, Análise crítica, faixa verificar e corrigir o sistema.">
+        <rect class="lane" x="220" y="23" width="670" height="46"/>
+        <text class="b" x="14" y="44.0" font-size="11">Conhecer a norma e montar o</text>
+        <text class="b" x="14" y="57.0" font-size="11">sistema</text>
+        <rect class="lane" x="220" y="75" width="670" height="46"/>
+        <text class="b" x="14" y="96.0" font-size="11">Conhecer a organização e</text>
+        <text class="b" x="14" y="109.0" font-size="11">planejar</text>
+        <rect class="lane" x="220" y="127" width="670" height="46"/>
+        <text class="b" x="14" y="148.0" font-size="11">Resolver problemas e melhorar</text>
+        <rect class="lane" x="220" y="179" width="670" height="46"/>
+        <text class="b" x="14" y="200.0" font-size="11">Verificar e corrigir o sistema</text>
+        <line class="grid" x1="258.6" y1="20" x2="258.6" y2="228"/>
+        <text class="mu" x="258.6" y="243" font-size="10.5" text-anchor="middle">jul/26</text>
+        <line class="grid" x1="313.9" y1="20" x2="313.9" y2="228"/>
+        <line class="grid" x1="369.3" y1="20" x2="369.3" y2="228"/>
+        <line class="grid" x1="422.9" y1="20" x2="422.9" y2="228"/>
+        <text class="mu" x="422.9" y="243" font-size="10.5" text-anchor="middle">out/26</text>
+        <line class="grid" x1="478.2" y1="20" x2="478.2" y2="228"/>
+        <line class="grid" x1="531.8" y1="20" x2="531.8" y2="228"/>
+        <line class="grid" x1="587.1" y1="20" x2="587.1" y2="228"/>
+        <text class="mu" x="587.1" y="243" font-size="10.5" text-anchor="middle">jan/27</text>
+        <line class="grid" x1="642.5" y1="20" x2="642.5" y2="228"/>
+        <line class="grid" x1="692.5" y1="20" x2="692.5" y2="228"/>
+        <line class="grid" x1="747.9" y1="20" x2="747.9" y2="228"/>
+        <text class="mu" x="747.9" y="243" font-size="10.5" text-anchor="middle">abr/27</text>
+        <line class="grid" x1="801.4" y1="20" x2="801.4" y2="228"/>
+        <line class="grid" x1="856.8" y1="20" x2="856.8" y2="228"/>
+        <path class="fio" d="M230.0 150.0 L274.6 150.0 L294.6 150.0 L314.6 150.0 L378.2 150.0 L419.3 150.0 L431.8 202.0 L555.0 202.0 L674.6 98.0 L774.6 46.0 L855.0 46.0 L880.0 202.0"/>
+        <circle class="pt" cx="230.0" cy="150.0" r="9"/><text class="b on" x="230.0" y="153.5" font-size="9.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">1</text>
+        <circle class="pt" cx="274.6" cy="150.0" r="9"/><text class="b on" x="274.6" y="153.5" font-size="9.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">2</text>
+        <circle class="pt" cx="294.6" cy="150.0" r="9"/><text class="b on" x="294.6" y="153.5" font-size="9.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">3</text>
+        <circle class="pt" cx="314.6" cy="150.0" r="9"/><text class="b on" x="314.6" y="153.5" font-size="9.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">4</text>
+        <circle class="pt" cx="378.2" cy="150.0" r="9"/><text class="b on" x="378.2" y="153.5" font-size="9.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">5</text>
+        <circle class="pt" cx="419.3" cy="150.0" r="9"/><text class="b on" x="419.3" y="153.5" font-size="9.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">6</text>
+        <circle class="pt" cx="431.8" cy="202.0" r="9"/><text class="b on" x="431.8" y="205.5" font-size="9.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">7</text>
+        <circle class="pt" cx="555.0" cy="202.0" r="9"/><text class="b on" x="555.0" y="205.5" font-size="9.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">8</text>
+        <circle class="pt" cx="674.6" cy="98.0" r="9"/><text class="b on" x="674.6" y="101.5" font-size="9.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">9</text>
+        <circle class="pt" cx="774.6" cy="46.0" r="9"/><text class="b on" x="774.6" y="49.5" font-size="9.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">10</text>
+        <circle class="pt" cx="855.0" cy="46.0" r="9"/><text class="b on" x="855.0" y="49.5" font-size="9.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">11</text>
+        <circle class="pt" cx="880.0" cy="202.0" r="9"/><text class="b on" x="880.0" y="205.5" font-size="9.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">12</text>
+        <text x="14" y="272" font-size="10.5"><tspan class="b" style="font-variant-numeric:tabular-nums">1</tspan><tspan dx="6">PDCA</tspan><tspan class="mu" dx="6" style="font-variant-numeric:tabular-nums">15/06/26</tspan></text>
+        <text x="14" y="292" font-size="10.5"><tspan class="b" style="font-variant-numeric:tabular-nums">2</tspan><tspan dx="6">Pareto</tspan><tspan class="mu" dx="6" style="font-variant-numeric:tabular-nums">10/07/26</tspan></text>
+        <text x="14" y="312" font-size="10.5"><tspan class="b" style="font-variant-numeric:tabular-nums">3</tspan><tspan dx="6">Ishikawa</tspan><tspan class="mu" dx="6" style="font-variant-numeric:tabular-nums">17/07/26</tspan></text>
+        <text x="14" y="332" font-size="10.5"><tspan class="b" style="font-variant-numeric:tabular-nums">4</tspan><tspan dx="6">5W2H</tspan><tspan class="mu" dx="6" style="font-variant-numeric:tabular-nums">24/07/26</tspan></text>
+        <text x="310" y="272" font-size="10.5"><tspan class="b" style="font-variant-numeric:tabular-nums">5</tspan><tspan dx="6">PDCA</tspan><tspan class="mu" dx="6" style="font-variant-numeric:tabular-nums">06/09/26</tspan></text>
+        <text x="310" y="292" font-size="10.5"><tspan class="b" style="font-variant-numeric:tabular-nums">6</tspan><tspan dx="6">Matriz GUT</tspan><tspan class="mu" dx="6" style="font-variant-numeric:tabular-nums">29/09/26</tspan></text>
+        <text x="310" y="312" font-size="10.5"><tspan class="b" style="font-variant-numeric:tabular-nums">7</tspan><tspan dx="6">Indicadores</tspan><tspan class="mu" dx="6" style="font-variant-numeric:tabular-nums">06/10/26</tspan></text>
+        <text x="310" y="332" font-size="10.5"><tspan class="b" style="font-variant-numeric:tabular-nums">8</tspan><tspan dx="6">Análise crítica</tspan><tspan class="mu" dx="6" style="font-variant-numeric:tabular-nums">14/12/26</tspan></text>
+        <text x="606" y="272" font-size="10.5"><tspan class="b" style="font-variant-numeric:tabular-nums">9</tspan><tspan dx="6">Objetivos da qualidade</tspan><tspan class="mu" dx="6" style="font-variant-numeric:tabular-nums">19/02/27</tspan></text>
+        <text x="606" y="292" font-size="10.5"><tspan class="b" style="font-variant-numeric:tabular-nums">10</tspan><tspan dx="6">Recursos e infraestrutura</tspan><tspan class="mu" dx="6" style="font-variant-numeric:tabular-nums">16/04/27</tspan></text>
+        <text x="606" y="312" font-size="10.5"><tspan class="b" style="font-variant-numeric:tabular-nums">11</tspan><tspan dx="6">Conhecimento e pós-entrega</tspan><tspan class="mu" dx="6" style="font-variant-numeric:tabular-nums">31/05/27</tspan></text>
+        <text x="606" y="332" font-size="10.5"><tspan class="b" style="font-variant-numeric:tabular-nums">12</tspan><tspan dx="6">Análise crítica</tspan><tspan class="mu" dx="6" style="font-variant-numeric:tabular-nums">14/06/27</tspan></text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 5.</b> O fio dos atrasos, de junho de 2026 a junho de 2027. O problema começa na faixa de resolver problemas e termina na de verificar e corrigir.</figcaption>
+  </figure>
+  <div class="tbl">
+    <table class="aud">
+      <caption>O fio · 12 passos em 364 dias, por 10 estudos. Maior intervalo: 69 dias</caption>
+      <thead><tr><th>Passo</th><th class="c">Data</th><th style="width:13%">Estudo</th><th style="width:32%">O que aconteceu</th><th style="width:14%">Registro</th><th style="width:18%">O que seguiu<small>Para qual estudo</small></th><th class="c">Dias</th><th>Conferência</th></tr></thead>
+      <tbody>
+        <tr><td class="n">1</td><td class="c">15/06/2026</td><td><a href="../PDCA/treinamento-pdca.html"><strong>PDCA</strong></a></td><td>Ciclo aberto: 18% das entregas depois de 40 minutos. Meta de 95% em 12 semanas.</td><td>Ciclo PDCA dos atrasos</td><td>O problema medido, para estratificar<small>→ Pareto</small></td><td class="c">—</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">2</td><td class="c">10/07/2026</td><td><a href="../Pareto/treinamento-pareto.html"><strong>Pareto</strong></a></td><td>Folha de verificação: em 46% dos atrasos, a pizza pronta esperou entregador, nas sextas e nos sábados.</td><td>Folha de verificação de 15/06 a 09/07</td><td>Os dois motivos principais<small>→ Ishikawa</small></td><td class="c">25</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">3</td><td class="c">17/07/2026</td><td><a href="../Ishikawa/treinamento-ishikawa.html"><strong>Ishikawa</strong></a></td><td>Causas confirmadas: escala igual todos os dias, pedidos sem agrupamento por bairro, endereço sem complemento.</td><td>Diagrama de 17/07/2026</td><td>Três causas confirmadas<small>→ 5W2H</small></td><td class="c">7</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">4</td><td class="c">24/07/2026</td><td><a href="../5W2H/treinamento-5w2h.html"><strong>5W2H</strong></a></td><td>Três ações: reforçar a escala no pico, agrupar os pedidos por bairro, tornar o complemento obrigatório.</td><td>Plano de ação de 24/07/2026</td><td>Ações com dono e prazo<small>→ PDCA</small></td><td class="c">7</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">5</td><td class="c">06/09/2026</td><td><a href="../PDCA/treinamento-pdca.html"><strong>PDCA</strong></a></td><td>Média de 95,5% nas semanas 9 a 12. Meta atingida, e a escala do pico vira padrão.</td><td>Ciclo PDCA, etapa de padronização</td><td>O segundo motivo, a fila do forno, fica para depois<small>→ Matriz GUT</small></td><td class="c">44</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">6</td><td class="c">29/09/2026</td><td><a href="../GUT/treinamento-gut.html"><strong>Matriz GUT</strong></a></td><td>O forno único no limite do pico entra na lista dos problemas do trimestre.</td><td>Matriz GUT de 29/09/2026</td><td>Os problemas do trimestre, para acompanhar<small>→ Indicadores</small></td><td class="c">23</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">7</td><td class="c">06/10/2026</td><td><a href="../Indicadores/treinamento-indicadores.html"><strong>Indicadores</strong></a></td><td>Entregas em até 40 minutos: 95% em setembro, com o padrão mantido.</td><td>Painel de indicadores, P1</td><td>O indicador estável e o forno no limite<small>→ Análise crítica</small></td><td class="c">7</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">8</td><td class="c">14/12/2026</td><td><a href="../Analise-Critica/treinamento-analise-critica.html"><strong>Análise crítica</strong></a></td><td>Decisões: atendente de salão nas noites de pico, e um segundo pizzaiolo treinado no forno.</td><td>Ata da análise crítica de 14/12/2026</td><td>Objetivos e metas para 2027<small>→ Objetivos da qualidade</small></td><td class="c no">69</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">9</td><td class="c">19/02/2027</td><td><a href="../Objetivos/treinamento-objetivos.html"><strong>Objetivos da qualidade</strong></a></td><td>Objetivo O1: 96% das entregas em até 40 minutos. Ações: rever a escala com os condomínios novos e estudar o segundo forno.</td><td>Objetivos de 2027, O1</td><td>A escala revista em março<small>→ Recursos e infraestrutura</small></td><td class="c">67</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">10</td><td class="c">16/04/2027</td><td><a href="../Recursos/treinamento-recursos.html"><strong>Recursos e infraestrutura</strong></a></td><td>Na sexta, pico de 29 entregas por hora para 8 entregadores: faltam 2, mesmo com os extras de março. Falta também um forneiro.</td><td>Dimensionamento das pessoas no pico</td><td>O forno e a escala como gargalos da sexta<small>→ Conhecimento e pós-entrega</small></td><td class="c">56</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">11</td><td class="c">31/05/2027</td><td><a href="../Conhecimento/treinamento-conhecimento.html"><strong>Conhecimento e pós-entrega</strong></a></td><td>A regulagem do forno está só na cabeça do pizzaiolo líder, que sai em agosto. Transferência planejada até 30/06.</td><td>Mapa do conhecimento, K-01</td><td>O risco do forno, com prazo<small>→ Análise crítica</small></td><td class="c">45</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">12</td><td class="c">14/06/2027</td><td><a href="../Analise-Critica/treinamento-analise-critica.html"><strong>Análise crítica</strong></a></td><td>Entradas: o objetivo O1, a falta de gente no pico e a saída do pizzaiolo líder. Decisões: segundo forno e escala nova da sexta.</td><td>Ata da análise crítica de 14/06/2027</td><td>—<small>fim do fio, por enquanto</small></td><td class="c">14</td><td><span class="chip s1">OK</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 450" role="img" aria-label="Calendário de 2027 de pizzaria (loja com salão e delivery), lido no fim de junho. Reunião de indicadores: com atraso, 5 de 6 feitas até junho. Verificação dos termômetros e da balança: em dia, 6 de 6 feitas até junho. Revisão do forno e das motos: em dia, 6 de 6 feitas até junho. Revisão da câmara fria: com atraso, 1 de 2 feitas até junho. Ronda do aprendizado: em dia, 2 de 2 feitas até junho. Pesquisa de satisfação: em dia, 2 de 2 feitas até junho. Acompanhamento dos objetivos: em dia, 2 de 2 feitas até junho. Escolha dos problemas do trimestre: em dia, 2 de 2 feitas até junho. Avaliação dos fornecedores: em dia, 1 de 1 feitas até junho. Revisão da matriz de riscos: em dia, 1 de 1 feitas até junho. Auditoria interna: em dia, 1 de 1 feitas até junho. Matriz de competências e treinamento: em dia, 1 de 1 feitas até junho. Análise crítica pela direção: em dia, 1 de 1 feitas até junho. Revisão da lista mestra de documentos: com atraso, 0 de 1 feitas até junho. SWOT e partes interessadas: ainda não começou, 0 de 0 feitas até junho.">
+        <text class="mono mu" x="350.0" y="30" font-size="9.5" text-anchor="middle">JAN</text>
+        <text class="mono mu" x="390.0" y="30" font-size="9.5" text-anchor="middle">FEV</text>
+        <text class="mono mu" x="430.0" y="30" font-size="9.5" text-anchor="middle">MAR</text>
+        <text class="mono mu" x="470.0" y="30" font-size="9.5" text-anchor="middle">ABR</text>
+        <text class="mono mu" x="510.0" y="30" font-size="9.5" text-anchor="middle">MAI</text>
+        <text class="mono mu" x="550.0" y="30" font-size="9.5" text-anchor="middle">JUN</text>
+        <text class="mono mu" x="590.0" y="30" font-size="9.5" text-anchor="middle">JUL</text>
+        <text class="mono mu" x="630.0" y="30" font-size="9.5" text-anchor="middle">AGO</text>
+        <text class="mono mu" x="670.0" y="30" font-size="9.5" text-anchor="middle">SET</text>
+        <text class="mono mu" x="710.0" y="30" font-size="9.5" text-anchor="middle">OUT</text>
+        <text class="mono mu" x="750.0" y="30" font-size="9.5" text-anchor="middle">NOV</text>
+        <text class="mono mu" x="790.0" y="30" font-size="9.5" text-anchor="middle">DEZ</text>
+        <text x="14" y="56" font-size="11"><tspan>Reunião de indicadores</tspan></text>
+        <rect class="f1" x="336.0" y="44" width="28" height="16"/>
+        <rect class="f1" x="376.0" y="44" width="28" height="16"/>
+        <rect class="f1" x="416.0" y="44" width="28" height="16"/>
+        <rect class="f3" x="456.0" y="44" width="28" height="16"/>
+        <rect class="f1" x="496.0" y="44" width="28" height="16"/>
+        <rect class="f1" x="536.0" y="44" width="28" height="16"/>
+        <rect class="bx" x="576.0" y="44" width="28" height="16"/>
+        <rect class="bx" x="616.0" y="44" width="28" height="16"/>
+        <rect class="bx" x="656.0" y="44" width="28" height="16"/>
+        <rect class="bx" x="696.0" y="44" width="28" height="16"/>
+        <rect class="bx" x="736.0" y="44" width="28" height="16"/>
+        <rect class="bx" x="776.0" y="44" width="28" height="16"/>
+        <line class="grid" x1="14" y1="64" x2="810" y2="64"/>
+        <text x="14" y="80" font-size="11"><tspan>Verificação dos termômetros e da balança</tspan></text>
+        <rect class="f1" x="336.0" y="68" width="28" height="16"/>
+        <rect class="f1" x="376.0" y="68" width="28" height="16"/>
+        <rect class="f1" x="416.0" y="68" width="28" height="16"/>
+        <rect class="f1" x="456.0" y="68" width="28" height="16"/>
+        <rect class="f1" x="496.0" y="68" width="28" height="16"/>
+        <rect class="f1" x="536.0" y="68" width="28" height="16"/>
+        <rect class="bx" x="576.0" y="68" width="28" height="16"/>
+        <rect class="bx" x="616.0" y="68" width="28" height="16"/>
+        <rect class="bx" x="656.0" y="68" width="28" height="16"/>
+        <rect class="bx" x="696.0" y="68" width="28" height="16"/>
+        <rect class="bx" x="736.0" y="68" width="28" height="16"/>
+        <rect class="bx" x="776.0" y="68" width="28" height="16"/>
+        <line class="grid" x1="14" y1="88" x2="810" y2="88"/>
+        <text x="14" y="104" font-size="11"><tspan>Revisão do forno e das motos</tspan></text>
+        <rect class="f1" x="336.0" y="92" width="28" height="16"/>
+        <rect class="f1" x="376.0" y="92" width="28" height="16"/>
+        <rect class="f1" x="416.0" y="92" width="28" height="16"/>
+        <rect class="f1" x="456.0" y="92" width="28" height="16"/>
+        <rect class="f1" x="496.0" y="92" width="28" height="16"/>
+        <rect class="f1" x="536.0" y="92" width="28" height="16"/>
+        <rect class="bx" x="576.0" y="92" width="28" height="16"/>
+        <rect class="bx" x="616.0" y="92" width="28" height="16"/>
+        <rect class="bx" x="656.0" y="92" width="28" height="16"/>
+        <rect class="bx" x="696.0" y="92" width="28" height="16"/>
+        <rect class="bx" x="736.0" y="92" width="28" height="16"/>
+        <rect class="bx" x="776.0" y="92" width="28" height="16"/>
+        <line class="grid" x1="14" y1="112" x2="810" y2="112"/>
+        <text x="14" y="128" font-size="11"><tspan>Revisão da câmara fria</tspan></text>
+        <rect class="f1" x="336.0" y="116" width="28" height="16"/>
+        <rect class="f3" x="456.0" y="116" width="28" height="16"/>
+        <rect class="bx" x="576.0" y="116" width="28" height="16"/>
+        <rect class="bx" x="696.0" y="116" width="28" height="16"/>
+        <line class="grid" x1="14" y1="136" x2="810" y2="136"/>
+        <text x="14" y="152" font-size="11"><tspan>Ronda do aprendizado</tspan></text>
+        <rect class="f1" x="496.0" y="140" width="28" height="16"/>
+        <rect class="f1" x="536.0" y="140" width="28" height="16"/>
+        <rect class="bx" x="576.0" y="140" width="28" height="16"/>
+        <rect class="bx" x="616.0" y="140" width="28" height="16"/>
+        <rect class="bx" x="656.0" y="140" width="28" height="16"/>
+        <rect class="bx" x="696.0" y="140" width="28" height="16"/>
+        <rect class="bx" x="736.0" y="140" width="28" height="16"/>
+        <rect class="bx" x="776.0" y="140" width="28" height="16"/>
+        <line class="grid" x1="14" y1="160" x2="810" y2="160"/>
+        <text x="14" y="176" font-size="11"><tspan>Pesquisa de satisfação</tspan></text>
+        <rect class="f1" x="376.0" y="164" width="28" height="16"/>
+        <rect class="f1" x="496.0" y="164" width="28" height="16"/>
+        <rect class="bx" x="616.0" y="164" width="28" height="16"/>
+        <rect class="bx" x="736.0" y="164" width="28" height="16"/>
+        <line class="grid" x1="14" y1="184" x2="810" y2="184"/>
+        <text x="14" y="200" font-size="11"><tspan>Acompanhamento dos objetivos</tspan></text>
+        <rect class="f1" x="376.0" y="188" width="28" height="16"/>
+        <rect class="f1" x="496.0" y="188" width="28" height="16"/>
+        <rect class="bx" x="616.0" y="188" width="28" height="16"/>
+        <rect class="bx" x="736.0" y="188" width="28" height="16"/>
+        <line class="grid" x1="14" y1="208" x2="810" y2="208"/>
+        <text x="14" y="224" font-size="11"><tspan>Escolha dos problemas do trimestre</tspan></text>
+        <rect class="f1" x="336.0" y="212" width="28" height="16"/>
+        <rect class="f1" x="456.0" y="212" width="28" height="16"/>
+        <rect class="bx" x="576.0" y="212" width="28" height="16"/>
+        <rect class="bx" x="696.0" y="212" width="28" height="16"/>
+        <line class="grid" x1="14" y1="232" x2="810" y2="232"/>
+        <text x="14" y="248" font-size="11"><tspan>Avaliação dos fornecedores</tspan></text>
+        <rect class="f1" x="376.0" y="236" width="28" height="16"/>
+        <rect class="bx" x="616.0" y="236" width="28" height="16"/>
+        <line class="grid" x1="14" y1="256" x2="810" y2="256"/>
+        <text x="14" y="272" font-size="11"><tspan>Revisão da matriz de riscos</tspan></text>
+        <rect class="f1" x="456.0" y="260" width="28" height="16"/>
+        <rect class="bx" x="696.0" y="260" width="28" height="16"/>
+        <line class="grid" x1="14" y1="280" x2="810" y2="280"/>
+        <text x="14" y="296" font-size="11"><tspan>Auditoria interna</tspan></text>
+        <rect class="f1" x="416.0" y="284" width="28" height="16"/>
+        <rect class="bx" x="656.0" y="284" width="28" height="16"/>
+        <line class="grid" x1="14" y1="304" x2="810" y2="304"/>
+        <text x="14" y="320" font-size="11"><tspan>Matriz de competências e treinamento</tspan></text>
+        <rect class="f1" x="336.0" y="308" width="28" height="16"/>
+        <rect class="bx" x="576.0" y="308" width="28" height="16"/>
+        <line class="grid" x1="14" y1="328" x2="810" y2="328"/>
+        <text x="14" y="344" font-size="11"><tspan>Análise crítica pela direção</tspan></text>
+        <rect class="f1" x="536.0" y="332" width="28" height="16"/>
+        <rect class="bx" x="776.0" y="332" width="28" height="16"/>
+        <line class="grid" x1="14" y1="352" x2="810" y2="352"/>
+        <text x="14" y="368" font-size="11"><tspan>Revisão da lista mestra de documentos</tspan></text>
+        <rect class="f3" x="416.0" y="356" width="28" height="16"/>
+        <line class="grid" x1="14" y1="376" x2="810" y2="376"/>
+        <text x="14" y="392" font-size="11"><tspan>SWOT e partes interessadas</tspan></text>
+        <rect class="bx" x="656.0" y="380" width="28" height="16"/>
+        <line class="grid" x1="14" y1="400" x2="810" y2="400"/>
+        <line class="now" x1="570" y1="36" x2="570" y2="404"/>
+        <text class="mono mu halo" x="574" y="416" font-size="9.5">LEITURA</text>
+        <rect class="f1" x="14" y="427" width="14" height="14"/><text x="34" y="438" font-size="11">Feita</text>
+        <rect class="f3" x="164" y="427" width="14" height="14"/><text x="184" y="438" font-size="11">Atrasada</text>
+        <rect class="bx" x="314" y="427" width="14" height="14"/><text x="334" y="438" font-size="11">Prevista</text>
+        <circle class="f1" cx="471" cy="434" r="5"/><text x="484" y="438" font-size="11">Feita fora do plano</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 6.</b> O calendário da pizzaria em 2027, lido no fim de junho. Três atividades atrasadas, uma delas a revisão da câmara fria de abril.</figcaption>
+  </figure>
+  <div class="tbl">
+    <table class="aud">
+      <caption>Calendário de 2027 · 15 atividades. Até junho: 31 de 34 feitas (91 %), 3 atrasadas</caption>
+      <thead><tr><th style="width:30%">Atividade<small>Estudo · requisito</small></th><th>Responsável</th><th style="width:20%">Frequência<small>Meses previstos</small></th><th class="c">Feitas</th><th class="c">Atrasadas</th><th>Situação</th><th>Conferência</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Reunião de indicadores</strong><small>Indicadores · 9.1.3</small></td><td>Gerente da loja</td><td>Mensal<small>jan, fev, mar, abr, mai, jun, jul, ago, set, out, nov, dez</small></td><td class="c">5 de 6</td><td class="c no">1</td><td><span class="chip s3">Com atraso</span></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td><strong>Verificação dos termômetros e da balança</strong><small>Calibração · 7.1.5</small></td><td>Pizzaiolo líder</td><td>Mensal<small>jan, fev, mar, abr, mai, jun, jul, ago, set, out, nov, dez</small></td><td class="c">6 de 6</td><td class="c">0</td><td><span class="chip s1">Em dia</span></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td><strong>Revisão do forno e das motos</strong><small>Recursos e infraestrutura · 7.1.3</small></td><td>Gerente da loja</td><td>Mensal<small>jan, fev, mar, abr, mai, jun, jul, ago, set, out, nov, dez</small></td><td class="c">6 de 6</td><td class="c">0</td><td><span class="chip s1">Em dia</span></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td><strong>Revisão da câmara fria</strong><small>Recursos e infraestrutura · 7.1.3</small></td><td>Pizzaiolo líder</td><td>Trimestral<small>jan, abr, jul, out</small></td><td class="c">1 de 2</td><td class="c no">1</td><td><span class="chip s3">Com atraso</span></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td><strong>Ronda do aprendizado</strong><small>Conhecimento e pós-entrega · 7.1.6 · 8.5.5</small></td><td>Gerente da loja</td><td>Mensal<small>mai, jun, jul, ago, set, out, nov, dez</small></td><td class="c">2 de 2</td><td class="c">0</td><td><span class="chip s1">Em dia</span></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td><strong>Pesquisa de satisfação</strong><small>Satisfação do cliente · 9.1.2</small></td><td>Atendente líder</td><td>Trimestral<small>fev, mai, ago, nov</small></td><td class="c">2 de 2</td><td class="c">0</td><td><span class="chip s1">Em dia</span></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td><strong>Acompanhamento dos objetivos</strong><small>Objetivos da qualidade · 6.2</small></td><td>Gerente da loja</td><td>Trimestral<small>fev, mai, ago, nov</small></td><td class="c">2 de 2</td><td class="c">0</td><td><span class="chip s1">Em dia</span></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td><strong>Escolha dos problemas do trimestre</strong><small>Matriz GUT · 10.1</small></td><td>Gerente da loja</td><td>Trimestral<small>jan, abr, jul, out</small></td><td class="c">2 de 2</td><td class="c">0</td><td><span class="chip s1">Em dia</span></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td><strong>Avaliação dos fornecedores</strong><small>Avaliação de fornecedores · 8.4</small></td><td>Gerente da loja</td><td>Semestral<small>fev, ago</small></td><td class="c">1 de 1</td><td class="c">0</td><td><span class="chip s1">Em dia</span></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td><strong>Revisão da matriz de riscos</strong><small>Matriz de riscos · 6.1</small></td><td>Gerente da loja</td><td>Semestral<small>abr, out</small></td><td class="c">1 de 1</td><td class="c">0</td><td><span class="chip s1">Em dia</span></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td><strong>Auditoria interna</strong><small>Auditoria interna · 9.2</small></td><td>Atendente líder</td><td>Semestral<small>mar, set</small></td><td class="c">1 de 1</td><td class="c">0</td><td><span class="chip s1">Em dia</span></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td><strong>Matriz de competências e treinamento</strong><small>Matriz de competências · 7.2</small></td><td>Gerente da loja</td><td>Semestral<small>jan, jul</small></td><td class="c">1 de 1</td><td class="c">0</td><td><span class="chip s1">Em dia</span></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td><strong>Análise crítica pela direção</strong><small>Análise crítica · 9.3</small></td><td>Dono da loja</td><td>Semestral<small>jun, dez</small></td><td class="c">1 de 1</td><td class="c">0</td><td><span class="chip s1">Em dia</span></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td><strong>Revisão da lista mestra de documentos</strong><small>Informação documentada · 7.5</small></td><td>Gerente da loja</td><td>Anual<small>mar</small></td><td class="c">0 de 1</td><td class="c no">1</td><td><span class="chip s3">Com atraso</span></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td><strong>SWOT e partes interessadas</strong><small>Matriz SWOT · 4.1 · 4.2</small></td><td>Dono da loja</td><td>Anual<small>set</small></td><td class="c">0 de 0</td><td class="c">0</td><td><span class="chip sl">Ainda não começou</span></td><td><span class="chip s1">OK</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p><strong>O que observar.</strong> O fio começou bem: em menos de três meses, o ciclo PDCA passou pelo Pareto, pelo Ishikawa e pelo 5W2H e levou as entregas no prazo de 82 % para 95 %. Depois, o problema mudou de forma. O segundo motivo dos atrasos, o forno, foi para a matriz GUT e para a análise crítica, virou objetivo, reapareceu no dimensionamento das pessoas e, por fim, no mapa do conhecimento, porque só uma pessoa sabe regular o forno. Os intervalos mais longos, de 69 e de 67 dias, estão em volta da análise crítica de dezembro: é o tempo do ciclo semestral. No calendário, a revisão da câmara fria que não aconteceu em abril é a mesma que antecedeu a quebra do dia 12.</p>
+
+  <h3>Exemplo 2. A indústria: o filme fino da extrusora 3</h3>
+  <dl class="ficha">
+    <div><dt>Organização</dt><dd>Indústria de embalagens plásticas</dd></div>
+    <div><dt>O fio</dt><dd>O filme fino da extrusora 3.</dd></div>
+    <div><dt>Origem</dt><dd>Sétima reclamação do cliente A em 2026, a quinta por espessura.</dd></div>
+    <div><dt>Duração do fio</dt><dd>381 dias, 12 passos, 9 estudos.</dd></div>
+    <div><dt>Calendário</dt><dd>2027, lido no fim de setembro. Responsável: Coordenador da Qualidade.</dd></div>
+  </dl>
+  <div class="tbl">
+    <table class="aud">
+      <caption>O fio · 12 passos em 381 dias, por 9 estudos. Maior intervalo: 148 dias</caption>
+      <thead><tr><th>Passo</th><th class="c">Data</th><th style="width:13%">Estudo</th><th style="width:32%">O que aconteceu</th><th style="width:14%">Registro</th><th style="width:18%">O que seguiu<small>Para qual estudo</small></th><th class="c">Dias</th><th>Conferência</th></tr></thead>
+      <tbody>
+        <tr><td class="n">1</td><td class="c">14/09/2026</td><td><a href="../Satisfacao/treinamento-satisfacao.html"><strong>Satisfação do cliente</strong></a></td><td>Cliente A reclama de espessura fora: a sétima reclamação do ano, a quinta pelo mesmo motivo.</td><td>Registro de reclamação de 14/09/2026</td><td>A reclamação, para análise de causa<small>→ Não conformidade</small></td><td class="c">—</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">2</td><td class="c">23/09/2026</td><td><a href="../Nao-Conformidade/treinamento-nao-conformidade.html"><strong>Não conformidade</strong></a></td><td>Causa: variação de espessura na extrusora 3, sem medidor em linha. Inspeção de 100% das bobinas do cliente A.</td><td>RNC 2026-29</td><td>A proposta do medidor de espessura em linha<small>→ Análise crítica</small></td><td class="c">9</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">3</td><td class="c">18/02/2027</td><td><a href="../Analise-Critica/treinamento-analise-critica.html"><strong>Análise crítica</strong></a></td><td>Aprova o medidor em linha e cobra a homologação do segundo fornecedor de resina, ação da matriz de riscos.</td><td>Ata da análise crítica de 18/02/2027</td><td>A homologação, com prazo<small>→ Avaliação de fornecedores</small></td><td class="c no">148</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">4</td><td class="c">29/03/2027</td><td><a href="../Fornecedores/treinamento-fornecedores.html"><strong>Avaliação de fornecedores</strong></a></td><td>Segundo fornecedor de resina homologado.</td><td>Registro de homologação de 29/03/2027</td><td>A resina nova liberada para uso<small>→ Controle de produção</small></td><td class="c">39</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">5</td><td class="c">14/05/2027</td><td><a href="../Producao/treinamento-producao.html"><strong>Controle de produção</strong></a></td><td>Mudança registrada: resina do segundo fornecedor na extrusora 3, com lote piloto de duas bobinas, o lote 135.</td><td>Registro de mudança de 14/05/2027</td><td>O lote piloto, para liberar<small>→ Liberação e produto não conforme</small></td><td class="c">46</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">6</td><td class="c">14/05/2027</td><td><a href="../Liberacao/treinamento-liberacao.html"><strong>Liberação e produto não conforme</strong></a></td><td>Bobina 1 com 37,4 µm, segregada. Bobina 2 com 39,1 µm, liberada e embarcada em 17/05.</td><td>RNC 2027-19</td><td>A bobina 2, no cliente A<small>→ Satisfação do cliente</small></td><td class="c">0</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">7</td><td class="c">24/05/2027</td><td><a href="../Satisfacao/treinamento-satisfacao.html"><strong>Satisfação do cliente</strong></a></td><td>Cliente A reclama de filme fino no lote 135. Bobina recolhida e reposta em 26/05.</td><td>RNC 2027-22</td><td>A dúvida sobre a medição<small>→ Calibração</small></td><td class="c">10</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">8</td><td class="c">12/06/2027</td><td><a href="../Calibracao/treinamento-calibracao.html"><strong>Calibração</strong></a></td><td>O micrômetro marca 1,6 µm a mais. Medições corrigidas desde 10/01: 6 bobinas abaixo de 38 µm, 2 entregues. Clientes informados em 14/06.</td><td>Registro de verificação FV-12</td><td>A lição sobre reclamação de espessura<small>→ Conhecimento e pós-entrega</small></td><td class="c">19</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">9</td><td class="c">20/06/2027</td><td><a href="../Conhecimento/treinamento-conhecimento.html"><strong>Conhecimento e pós-entrega</strong></a></td><td>Lição incorporada: reclamação de espessura dispara a verificação do micrômetro do posto.</td><td>Lição I-01, procedimento PQ-08</td><td>A extrusora 3 sob atenção<small>→ Recursos e infraestrutura</small></td><td class="c">8</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">10</td><td class="c">31/07/2027</td><td><a href="../Recursos/treinamento-recursos.html"><strong>Recursos e infraestrutura</strong></a></td><td>Três quebras da extrusora 3 em julho, 40 horas paradas, com a preventiva adiada desde junho.</td><td>Registro de manutenções de julho</td><td>A disponibilidade abaixo da meta<small>→ Análise crítica</small></td><td class="c">41</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">11</td><td class="c">19/08/2027</td><td><a href="../Analise-Critica/treinamento-analise-critica.html"><strong>Análise crítica</strong></a></td><td>Entradas: o lote 135, o micrômetro reprovado e as quebras de julho. Decisões: antecipar o medidor em linha e planejar a passagem do conhecimento do operador sênior.</td><td>Ata da análise crítica de 19/08/2027</td><td>A passagem do conhecimento, com prazo<small>→ Conhecimento e pós-entrega</small></td><td class="c">19</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">12</td><td class="c">30/09/2027</td><td><a href="../Conhecimento/treinamento-conhecimento.html"><strong>Conhecimento e pós-entrega</strong></a></td><td>Mapa do conhecimento: a regulagem da extrusora 3 e a medição da rosca estão críticas, com transferência planejada.</td><td>Mapa do conhecimento, C-01 e C-03</td><td>—<small>fim do fio, por enquanto</small></td><td class="c">42</td><td><span class="chip s1">OK</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 402" role="img" aria-label="Calendário de 2027 de indústria de embalagens plásticas, lido no fim de setembro. Reunião de indicadores: com atraso, 8 de 9 feitas até setembro. Programa de calibração: com atraso, 8 de 9 feitas até setembro. Preventiva das extrusoras: com atraso, 2 de 3 feitas até setembro. Ronda do aprendizado: com atraso, 3 de 4 feitas até setembro. Mapa do conhecimento: em dia, 1 de 1 feitas até setembro. Matriz de competências e treinamento: em dia, 3 de 3 feitas até setembro. Acompanhamento dos objetivos: em dia, 3 de 3 feitas até setembro. Avaliação dos fornecedores críticos: em dia, 1 de 1 feitas até setembro. Revisão da matriz de riscos: em dia, 1 de 1 feitas até setembro. Auditoria interna: em dia, 2 de 2 feitas até setembro. Análise crítica pela direção: em dia, 2 de 2 feitas até setembro. Revisão dos documentos: com atraso, 1 de 2 feitas até setembro. Pesquisa de satisfação: ainda não começou, 0 de 0 feitas até setembro.">
+        <text class="mono mu" x="350.0" y="30" font-size="9.5" text-anchor="middle">JAN</text>
+        <text class="mono mu" x="390.0" y="30" font-size="9.5" text-anchor="middle">FEV</text>
+        <text class="mono mu" x="430.0" y="30" font-size="9.5" text-anchor="middle">MAR</text>
+        <text class="mono mu" x="470.0" y="30" font-size="9.5" text-anchor="middle">ABR</text>
+        <text class="mono mu" x="510.0" y="30" font-size="9.5" text-anchor="middle">MAI</text>
+        <text class="mono mu" x="550.0" y="30" font-size="9.5" text-anchor="middle">JUN</text>
+        <text class="mono mu" x="590.0" y="30" font-size="9.5" text-anchor="middle">JUL</text>
+        <text class="mono mu" x="630.0" y="30" font-size="9.5" text-anchor="middle">AGO</text>
+        <text class="mono mu" x="670.0" y="30" font-size="9.5" text-anchor="middle">SET</text>
+        <text class="mono mu" x="710.0" y="30" font-size="9.5" text-anchor="middle">OUT</text>
+        <text class="mono mu" x="750.0" y="30" font-size="9.5" text-anchor="middle">NOV</text>
+        <text class="mono mu" x="790.0" y="30" font-size="9.5" text-anchor="middle">DEZ</text>
+        <text x="14" y="56" font-size="11"><tspan>Reunião de indicadores</tspan></text>
+        <rect class="f1" x="336.0" y="44" width="28" height="16"/>
+        <rect class="f1" x="376.0" y="44" width="28" height="16"/>
+        <rect class="f1" x="416.0" y="44" width="28" height="16"/>
+        <rect class="f1" x="456.0" y="44" width="28" height="16"/>
+        <rect class="f1" x="496.0" y="44" width="28" height="16"/>
+        <rect class="f1" x="536.0" y="44" width="28" height="16"/>
+        <rect class="f3" x="576.0" y="44" width="28" height="16"/>
+        <rect class="f1" x="616.0" y="44" width="28" height="16"/>
+        <rect class="f1" x="656.0" y="44" width="28" height="16"/>
+        <rect class="bx" x="696.0" y="44" width="28" height="16"/>
+        <rect class="bx" x="736.0" y="44" width="28" height="16"/>
+        <rect class="bx" x="776.0" y="44" width="28" height="16"/>
+        <line class="grid" x1="14" y1="64" x2="810" y2="64"/>
+        <text x="14" y="80" font-size="11"><tspan>Programa de calibração</tspan></text>
+        <rect class="f1" x="336.0" y="68" width="28" height="16"/>
+        <rect class="f1" x="376.0" y="68" width="28" height="16"/>
+        <rect class="f1" x="416.0" y="68" width="28" height="16"/>
+        <rect class="f3" x="456.0" y="68" width="28" height="16"/>
+        <rect class="f1" x="496.0" y="68" width="28" height="16"/>
+        <rect class="f1" x="536.0" y="68" width="28" height="16"/>
+        <rect class="f1" x="576.0" y="68" width="28" height="16"/>
+        <rect class="f1" x="616.0" y="68" width="28" height="16"/>
+        <rect class="f1" x="656.0" y="68" width="28" height="16"/>
+        <rect class="bx" x="696.0" y="68" width="28" height="16"/>
+        <rect class="bx" x="736.0" y="68" width="28" height="16"/>
+        <rect class="bx" x="776.0" y="68" width="28" height="16"/>
+        <line class="grid" x1="14" y1="88" x2="810" y2="88"/>
+        <text x="14" y="104" font-size="11"><tspan>Preventiva das extrusoras</tspan></text>
+        <rect class="f1" x="416.0" y="92" width="28" height="16"/>
+        <rect class="f3" x="536.0" y="92" width="28" height="16"/>
+        <circle class="f1" cx="630.0" cy="100.0" r="5"/>
+        <rect class="f1" x="656.0" y="92" width="28" height="16"/>
+        <rect class="bx" x="776.0" y="92" width="28" height="16"/>
+        <line class="grid" x1="14" y1="112" x2="810" y2="112"/>
+        <text x="14" y="128" font-size="11"><tspan>Ronda do aprendizado</tspan></text>
+        <rect class="f1" x="536.0" y="116" width="28" height="16"/>
+        <rect class="f1" x="576.0" y="116" width="28" height="16"/>
+        <rect class="f3" x="616.0" y="116" width="28" height="16"/>
+        <rect class="f1" x="656.0" y="116" width="28" height="16"/>
+        <rect class="bx" x="696.0" y="116" width="28" height="16"/>
+        <rect class="bx" x="736.0" y="116" width="28" height="16"/>
+        <rect class="bx" x="776.0" y="116" width="28" height="16"/>
+        <line class="grid" x1="14" y1="136" x2="810" y2="136"/>
+        <text x="14" y="152" font-size="11"><tspan>Mapa do conhecimento</tspan></text>
+        <rect class="f1" x="656.0" y="140" width="28" height="16"/>
+        <line class="grid" x1="14" y1="160" x2="810" y2="160"/>
+        <text x="14" y="176" font-size="11"><tspan>Matriz de competências e treinamento</tspan></text>
+        <rect class="f1" x="336.0" y="164" width="28" height="16"/>
+        <rect class="f1" x="456.0" y="164" width="28" height="16"/>
+        <rect class="f1" x="576.0" y="164" width="28" height="16"/>
+        <rect class="bx" x="696.0" y="164" width="28" height="16"/>
+        <line class="grid" x1="14" y1="184" x2="810" y2="184"/>
+        <text x="14" y="200" font-size="11"><tspan>Acompanhamento dos objetivos</tspan></text>
+        <rect class="f1" x="336.0" y="188" width="28" height="16"/>
+        <rect class="f1" x="456.0" y="188" width="28" height="16"/>
+        <rect class="f1" x="576.0" y="188" width="28" height="16"/>
+        <rect class="bx" x="696.0" y="188" width="28" height="16"/>
+        <line class="grid" x1="14" y1="208" x2="810" y2="208"/>
+        <text x="14" y="224" font-size="11"><tspan>Avaliação dos fornecedores críticos</tspan></text>
+        <rect class="f1" x="536.0" y="212" width="28" height="16"/>
+        <rect class="bx" x="776.0" y="212" width="28" height="16"/>
+        <line class="grid" x1="14" y1="232" x2="810" y2="232"/>
+        <text x="14" y="248" font-size="11"><tspan>Revisão da matriz de riscos</tspan></text>
+        <rect class="f1" x="456.0" y="236" width="28" height="16"/>
+        <rect class="bx" x="696.0" y="236" width="28" height="16"/>
+        <line class="grid" x1="14" y1="256" x2="810" y2="256"/>
+        <text x="14" y="272" font-size="11"><tspan>Auditoria interna</tspan></text>
+        <rect class="f1" x="416.0" y="260" width="28" height="16"/>
+        <rect class="f1" x="656.0" y="260" width="28" height="16"/>
+        <line class="grid" x1="14" y1="280" x2="810" y2="280"/>
+        <text x="14" y="296" font-size="11"><tspan>Análise crítica pela direção</tspan></text>
+        <rect class="f1" x="376.0" y="284" width="28" height="16"/>
+        <rect class="f1" x="616.0" y="284" width="28" height="16"/>
+        <line class="grid" x1="14" y1="304" x2="810" y2="304"/>
+        <text x="14" y="320" font-size="11"><tspan>Revisão dos documentos</tspan></text>
+        <rect class="f1" x="336.0" y="308" width="28" height="16"/>
+        <rect class="f3" x="576.0" y="308" width="28" height="16"/>
+        <line class="grid" x1="14" y1="328" x2="810" y2="328"/>
+        <text x="14" y="344" font-size="11"><tspan>Pesquisa de satisfação</tspan></text>
+        <rect class="bx" x="736.0" y="332" width="28" height="16"/>
+        <line class="grid" x1="14" y1="352" x2="810" y2="352"/>
+        <line class="now" x1="690" y1="36" x2="690" y2="356"/>
+        <text class="mono mu halo" x="694" y="368" font-size="9.5">LEITURA</text>
+        <rect class="f1" x="14" y="379" width="14" height="14"/><text x="34" y="390" font-size="11">Feita</text>
+        <rect class="f3" x="164" y="379" width="14" height="14"/><text x="184" y="390" font-size="11">Atrasada</text>
+        <rect class="bx" x="314" y="379" width="14" height="14"/><text x="334" y="390" font-size="11">Prevista</text>
+        <circle class="f1" cx="471" cy="386" r="5"/><text x="484" y="390" font-size="11">Feita fora do plano</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 7.</b> O calendário da indústria em 2027, lido no fim de setembro. A preventiva das extrusoras de junho não aconteceu; a de agosto foi feita fora do plano.</figcaption>
+  </figure>
+  <div class="tbl">
+    <table class="aud">
+      <caption>Calendário de 2027 · 13 atividades. Até setembro: 35 de 40 feitas (88 %), 5 atrasadas</caption>
+      <thead><tr><th style="width:30%">Atividade<small>Estudo · requisito</small></th><th>Responsável</th><th style="width:20%">Frequência<small>Meses previstos</small></th><th class="c">Feitas</th><th class="c">Atrasadas</th><th>Situação</th><th>Conferência</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Reunião de indicadores</strong><small>Indicadores · 9.1.3</small></td><td>Coordenador da Qualidade</td><td>Mensal<small>jan, fev, mar, abr, mai, jun, jul, ago, set, out, nov, dez</small></td><td class="c">8 de 9</td><td class="c no">1</td><td><span class="chip s3">Com atraso</span></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td><strong>Programa de calibração</strong><small>Calibração · 7.1.5</small></td><td>Analista da Qualidade</td><td>Mensal<small>jan, fev, mar, abr, mai, jun, jul, ago, set, out, nov, dez</small></td><td class="c">8 de 9</td><td class="c no">1</td><td><span class="chip s3">Com atraso</span></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td><strong>Preventiva das extrusoras</strong><small>Recursos e infraestrutura · 7.1.3</small></td><td>Supervisor de manutenção</td><td>Trimestral<small>mar, jun, set, dez</small></td><td class="c">2 de 3<small>e 1 fora do plano</small></td><td class="c no">1</td><td><span class="chip s3">Com atraso</span></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td><strong>Ronda do aprendizado</strong><small>Conhecimento e pós-entrega · 7.1.6 · 8.5.5</small></td><td>Analista da Qualidade</td><td>Mensal<small>jun, jul, ago, set, out, nov, dez</small></td><td class="c">3 de 4</td><td class="c no">1</td><td><span class="chip s3">Com atraso</span></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td><strong>Mapa do conhecimento</strong><small>Conhecimento e pós-entrega · 7.1.6</small></td><td>Gerente de produção</td><td>Anual<small>set</small></td><td class="c">1 de 1</td><td class="c">0</td><td><span class="chip s1">Em dia</span></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td><strong>Matriz de competências e treinamento</strong><small>Matriz de competências · 7.2</small></td><td>Gerente de RH</td><td>Trimestral<small>jan, abr, jul, out</small></td><td class="c">3 de 3</td><td class="c">0</td><td><span class="chip s1">Em dia</span></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td><strong>Acompanhamento dos objetivos</strong><small>Objetivos da qualidade · 6.2</small></td><td>Diretor geral</td><td>Trimestral<small>jan, abr, jul, out</small></td><td class="c">3 de 3</td><td class="c">0</td><td><span class="chip s1">Em dia</span></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td><strong>Avaliação dos fornecedores críticos</strong><small>Avaliação de fornecedores · 8.4</small></td><td>Comprador sênior</td><td>Semestral<small>jun, dez</small></td><td class="c">1 de 1</td><td class="c">0</td><td><span class="chip s1">Em dia</span></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td><strong>Revisão da matriz de riscos</strong><small>Matriz de riscos · 6.1</small></td><td>Gerente de Suprimentos</td><td>Semestral<small>abr, out</small></td><td class="c">1 de 1</td><td class="c">0</td><td><span class="chip s1">Em dia</span></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td><strong>Auditoria interna</strong><small>Auditoria interna · 9.2</small></td><td>Coordenador da Qualidade</td><td>Semestral<small>mar, set</small></td><td class="c">2 de 2</td><td class="c">0</td><td><span class="chip s1">Em dia</span></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td><strong>Análise crítica pela direção</strong><small>Análise crítica · 9.3</small></td><td>Diretor geral</td><td>Semestral<small>fev, ago</small></td><td class="c">2 de 2</td><td class="c">0</td><td><span class="chip s1">Em dia</span></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td><strong>Revisão dos documentos</strong><small>Informação documentada · 7.5</small></td><td>Coordenador da Qualidade</td><td>Semestral<small>jan, jul</small></td><td class="c">1 de 2</td><td class="c no">1</td><td><span class="chip s3">Com atraso</span></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td><strong>Pesquisa de satisfação</strong><small>Satisfação do cliente · 9.1.2</small></td><td>Gerente comercial</td><td>Anual<small>nov</small></td><td class="c">0 de 0</td><td class="c">0</td><td><span class="chip sl">Ainda não começou</span></td><td><span class="chip s1">OK</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p><strong>O que observar.</strong> O fio da indústria cruza nove estudos e mostra o sistema funcionando, com uma falha. Funcionou quando a reclamação virou registro em nove dias, quando a mudança de resina foi registrada com lote piloto, quando a bobina fora foi segregada e quando o micrômetro foi verificado e o passado revisto. Falhou no meio: o micrômetro do posto, que media errado desde janeiro, deixou passar a bobina 2. Nenhum estudo isolado teria encontrado isso; foi a reclamação de maio que levou à calibração de junho. No calendário, a preventiva das extrusoras de junho, adiada, é a mesma que o estudo de recursos ligou às três quebras de julho.</p>
+
+  <h3>Exemplo 3. Onde o fio da indústria demorou</h3>
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 368" role="img" aria-label="Dias entre cada passo do fio da indústria e o seguinte. Do passo 1 ao 2, Satisfação do cliente para Não conformidade: 9 dias. Do passo 2 ao 3, Não conformidade para Análise crítica: 148 dias. Do passo 3 ao 4, Análise crítica para Avaliação de fornecedores: 39 dias. Do passo 4 ao 5, Avaliação de fornecedores para Controle de produção: 46 dias. Do passo 5 ao 6, Controle de produção para Liberação e produto não conforme: 0 dias. Do passo 6 ao 7, Liberação e produto não conforme para Satisfação do cliente: 10 dias. Do passo 7 ao 8, Satisfação do cliente para Calibração: 19 dias. Do passo 8 ao 9, Calibração para Conhecimento e pós-entrega: 8 dias. Do passo 9 ao 10, Conhecimento e pós-entrega para Recursos e infraestrutura: 41 dias. Do passo 10 ao 11, Recursos e infraestrutura para Análise crítica: 19 dias. Do passo 11 ao 12, Análise crítica para Conhecimento e pós-entrega: 42 dias.">
+        <line class="ln" x1="330.0" y1="34" x2="330.0" y2="304"/>
+        <text class="mu" x="330.0" y="320" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">0</text>
+        <line class="grid" x1="457.5" y1="34" x2="457.5" y2="304"/>
+        <text class="mu" x="457.5" y="320" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">40</text>
+        <line class="grid" x1="585.0" y1="34" x2="585.0" y2="304"/>
+        <text class="mu" x="585.0" y="320" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">80</text>
+        <line class="grid" x1="712.5" y1="34" x2="712.5" y2="304"/>
+        <text class="mu" x="712.5" y="320" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">120</text>
+        <line class="grid" x1="840.0" y1="34" x2="840.0" y2="304"/>
+        <text class="mu" x="840.0" y="320" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">160</text>
+        <text class="mono mu" x="585.0" y="340" font-size="10" text-anchor="middle">DIAS ATÉ O PASSO SEGUINTE</text>
+        <text class="mono mu" x="14" y="24" font-size="10">DE UM PASSO AO SEGUINTE</text>
+        <text x="14" y="56" font-size="11"><tspan class="b" style="font-variant-numeric:tabular-nums">1→2</tspan><tspan class="mu" dx="6">Satisfação do cliente → Não conformidade</tspan></text>
+        <rect class="f1" x="330" y="45" width="28.7" height="14"/>
+        <text class="mu halo" x="364.7" y="56" font-size="10.5" style="font-variant-numeric:tabular-nums">9</text>
+        <text x="14" y="80" font-size="11"><tspan class="b" style="font-variant-numeric:tabular-nums">2→3</tspan><tspan class="mu" dx="6">Não conformidade → Análise crítica</tspan></text>
+        <rect class="f3" x="330" y="69" width="471.8" height="14"/>
+        <text class="mu halo" x="807.8" y="80" font-size="10.5" style="font-variant-numeric:tabular-nums">148</text>
+        <text x="14" y="104" font-size="11"><tspan class="b" style="font-variant-numeric:tabular-nums">3→4</tspan><tspan class="mu" dx="6">Análise crítica → Avaliação de fornecedores</tspan></text>
+        <rect class="f1" x="330" y="93" width="124.3" height="14"/>
+        <text class="mu halo" x="460.3" y="104" font-size="10.5" style="font-variant-numeric:tabular-nums">39</text>
+        <text x="14" y="128" font-size="11"><tspan class="b" style="font-variant-numeric:tabular-nums">4→5</tspan><tspan class="mu" dx="6">Avaliação de fornecedores → Controle de…</tspan></text>
+        <rect class="f1" x="330" y="117" width="146.6" height="14"/>
+        <text class="mu halo" x="482.6" y="128" font-size="10.5" style="font-variant-numeric:tabular-nums">46</text>
+        <text x="14" y="152" font-size="11"><tspan class="b" style="font-variant-numeric:tabular-nums">5→6</tspan><tspan class="mu" dx="6">Controle de produção → Liberação e produto…</tspan></text>
+        <rect class="f1" x="330" y="141" width="2.0" height="14"/>
+        <text class="mu halo" x="336.0" y="152" font-size="10.5" style="font-variant-numeric:tabular-nums">0</text>
+        <text x="14" y="176" font-size="11"><tspan class="b" style="font-variant-numeric:tabular-nums">6→7</tspan><tspan class="mu" dx="6">Liberação e produto não conforme →…</tspan></text>
+        <rect class="f1" x="330" y="165" width="31.9" height="14"/>
+        <text class="mu halo" x="367.9" y="176" font-size="10.5" style="font-variant-numeric:tabular-nums">10</text>
+        <text x="14" y="200" font-size="11"><tspan class="b" style="font-variant-numeric:tabular-nums">7→8</tspan><tspan class="mu" dx="6">Satisfação do cliente → Calibração</tspan></text>
+        <rect class="f1" x="330" y="189" width="60.6" height="14"/>
+        <text class="mu halo" x="396.6" y="200" font-size="10.5" style="font-variant-numeric:tabular-nums">19</text>
+        <text x="14" y="224" font-size="11"><tspan class="b" style="font-variant-numeric:tabular-nums">8→9</tspan><tspan class="mu" dx="6">Calibração → Conhecimento e pós-entrega</tspan></text>
+        <rect class="f1" x="330" y="213" width="25.5" height="14"/>
+        <text class="mu halo" x="361.5" y="224" font-size="10.5" style="font-variant-numeric:tabular-nums">8</text>
+        <text x="14" y="248" font-size="11"><tspan class="b" style="font-variant-numeric:tabular-nums">9→10</tspan><tspan class="mu" dx="6">Conhecimento e pós-entrega → Recursos e…</tspan></text>
+        <rect class="f1" x="330" y="237" width="130.7" height="14"/>
+        <text class="mu halo" x="466.7" y="248" font-size="10.5" style="font-variant-numeric:tabular-nums">41</text>
+        <text x="14" y="272" font-size="11"><tspan class="b" style="font-variant-numeric:tabular-nums">10→11</tspan><tspan class="mu" dx="6">Recursos e infraestrutura → Análise crítica</tspan></text>
+        <rect class="f1" x="330" y="261" width="60.6" height="14"/>
+        <text class="mu halo" x="396.6" y="272" font-size="10.5" style="font-variant-numeric:tabular-nums">19</text>
+        <text x="14" y="296" font-size="11"><tspan class="b" style="font-variant-numeric:tabular-nums">11→12</tspan><tspan class="mu" dx="6">Análise crítica → Conhecimento e pós-entrega</tspan></text>
+        <rect class="f1" x="330" y="285" width="133.9" height="14"/>
+        <text class="mu halo" x="469.9" y="296" font-size="10.5" style="font-variant-numeric:tabular-nums">42</text>
+        <text x="450" y="362" font-size="11.5" text-anchor="middle">A proposta do medidor esperou 148 dias pela análise crítica semestral, com a inspeção de 100% contendo o problema.</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 8.</b> Os dias entre cada passo do fio da indústria e o seguinte. Uma barra se destaca.</figcaption>
+  </figure>
+  <p><strong>O que observar.</strong> A maior parte do fio andou em dias ou semanas. O intervalo de 148 dias, entre o registro de não conformidade e a análise crítica, foi o tempo de esperar a reunião semestral para aprovar um investimento. O problema estava contido, com a inspeção de 100 % das bobinas do cliente A, e nenhuma reclamação veio de outubro a fevereiro. Mesmo assim, a pergunta vale para a direção: decisões de investimento ligadas a reclamação de cliente podem esperar o semestre? Uma regra simples, como uma reunião extraordinária para propostas acima de um valor, encurtaria esse trecho.</p>
+</section>
+
+<!-- ============================ MÓDULO 7 ============================ -->
+<section id="leitura">
+  <p class="eyebrow">Módulo 7</p>
+  <h2>Ler o calendário</h2>
+  <p>O calendário é lido pelo cumprimento: quantas das atividades previstas até o mês foram feitas. O número total importa menos do que quais atividades atrasaram, porque cada uma protege uma parte diferente do sistema.</p>
+
+  <figure id="fig-bars">
+    <div class="scroll">
+      <svg id="bars" viewBox="0 0 900 762" role="img" aria-label="Cumprimento do calendário por atividade, até o mês da leitura de cada exemplo. Reunião de indicadores: 5 de 6. Verificação dos termômetros e da balança: 6 de 6. Revisão do forno e das motos: 6 de 6. Revisão da câmara fria: 1 de 2. Ronda do aprendizado: 2 de 2. Pesquisa de satisfação: 2 de 2. Acompanhamento dos objetivos: 2 de 2. Escolha dos problemas do trimestre: 2 de 2. Avaliação dos fornecedores: 1 de 1. Revisão da matriz de riscos: 1 de 1. Auditoria interna: 1 de 1. Matriz de competências e treinamento: 1 de 1. Análise crítica pela direção: 1 de 1. Revisão da lista mestra de documentos: 0 de 1. Reunião de indicadores: 8 de 9. Programa de calibração: 8 de 9. Preventiva das extrusoras: 2 de 3. Ronda do aprendizado: 3 de 4. Mapa do conhecimento: 1 de 1. Matriz de competências e treinamento: 3 de 3. Acompanhamento dos objetivos: 3 de 3. Avaliação dos fornecedores críticos: 1 de 1. Revisão da matriz de riscos: 1 de 1. Auditoria interna: 2 de 2. Análise crítica pela direção: 2 de 2. Revisão dos documentos: 1 de 2.">
+        <g font-size="11.5">
+          <rect class="f1" x="330" y="12" width="14" height="14"/><text x="352" y="24">Todas as previstas feitas</text>
+          <rect class="f3" x="550" y="12" width="14" height="14"/><text x="572" y="24">Com atividade atrasada</text>
+        </g>
+        <line class="ln" x1="330.0" y1="40" x2="330.0" y2="718"/>
+        <text class="mu" x="330.0" y="734" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">0 %</text>
+        <line class="grid" x1="462.5" y1="40" x2="462.5" y2="718"/>
+        <text class="mu" x="462.5" y="734" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">25 %</text>
+        <line class="grid" x1="595.0" y1="40" x2="595.0" y2="718"/>
+        <text class="mu" x="595.0" y="734" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">50 %</text>
+        <line class="grid" x1="727.5" y1="40" x2="727.5" y2="718"/>
+        <text class="mu" x="727.5" y="734" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">75 %</text>
+        <line class="grid" x1="860.0" y1="40" x2="860.0" y2="718"/>
+        <text class="mu" x="860.0" y="734" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">100 %</text>
+        <text class="mono mu" x="595.0" y="754" font-size="10" text-anchor="middle">FEITAS ÷ PREVISTAS ATÉ O MÊS DA LEITURA</text>
+        <text class="mono mu" x="20" y="62" font-size="10">PIZZARIA</text>
+        <text x="36" y="86" font-size="11"><tspan>Reunião de indicadores</tspan></text>
+        <rect class="bar f3" data-k="1" x="330" y="75" width="441.7" height="14"/>
+        <text class="b on" x="765.7" y="86" font-size="10" text-anchor="end" style="font-variant-numeric:tabular-nums">5 de 6</text>
+        <text x="36" y="110" font-size="11"><tspan>Verificação dos termômetros e da balança</tspan></text>
+        <rect class="bar f1" data-k="2" x="330" y="99" width="530.0" height="14"/>
+        <text class="b on" x="854.0" y="110" font-size="10" text-anchor="end" style="font-variant-numeric:tabular-nums">6 de 6</text>
+        <text x="36" y="134" font-size="11"><tspan>Revisão do forno e das motos</tspan></text>
+        <rect class="bar f1" data-k="3" x="330" y="123" width="530.0" height="14"/>
+        <text class="b on" x="854.0" y="134" font-size="10" text-anchor="end" style="font-variant-numeric:tabular-nums">6 de 6</text>
+        <text x="36" y="158" font-size="11"><tspan>Revisão da câmara fria</tspan></text>
+        <rect class="bar f3" data-k="4" x="330" y="147" width="265.0" height="14"/>
+        <text class="b on" x="589.0" y="158" font-size="10" text-anchor="end" style="font-variant-numeric:tabular-nums">1 de 2</text>
+        <text x="36" y="182" font-size="11"><tspan>Ronda do aprendizado</tspan></text>
+        <rect class="bar f1" data-k="5" x="330" y="171" width="530.0" height="14"/>
+        <text class="b on" x="854.0" y="182" font-size="10" text-anchor="end" style="font-variant-numeric:tabular-nums">2 de 2</text>
+        <text x="36" y="206" font-size="11"><tspan>Pesquisa de satisfação</tspan></text>
+        <rect class="bar f1" data-k="6" x="330" y="195" width="530.0" height="14"/>
+        <text class="b on" x="854.0" y="206" font-size="10" text-anchor="end" style="font-variant-numeric:tabular-nums">2 de 2</text>
+        <text x="36" y="230" font-size="11"><tspan>Acompanhamento dos objetivos</tspan></text>
+        <rect class="bar f1" data-k="7" x="330" y="219" width="530.0" height="14"/>
+        <text class="b on" x="854.0" y="230" font-size="10" text-anchor="end" style="font-variant-numeric:tabular-nums">2 de 2</text>
+        <text x="36" y="254" font-size="11"><tspan>Escolha dos problemas do trimestre</tspan></text>
+        <rect class="bar f1" data-k="8" x="330" y="243" width="530.0" height="14"/>
+        <text class="b on" x="854.0" y="254" font-size="10" text-anchor="end" style="font-variant-numeric:tabular-nums">2 de 2</text>
+        <text x="36" y="278" font-size="11"><tspan>Avaliação dos fornecedores</tspan></text>
+        <rect class="bar f1" data-k="9" x="330" y="267" width="530.0" height="14"/>
+        <text class="b on" x="854.0" y="278" font-size="10" text-anchor="end" style="font-variant-numeric:tabular-nums">1 de 1</text>
+        <text x="36" y="302" font-size="11"><tspan>Revisão da matriz de riscos</tspan></text>
+        <rect class="bar f1" data-k="10" x="330" y="291" width="530.0" height="14"/>
+        <text class="b on" x="854.0" y="302" font-size="10" text-anchor="end" style="font-variant-numeric:tabular-nums">1 de 1</text>
+        <text x="36" y="326" font-size="11"><tspan>Auditoria interna</tspan></text>
+        <rect class="bar f1" data-k="11" x="330" y="315" width="530.0" height="14"/>
+        <text class="b on" x="854.0" y="326" font-size="10" text-anchor="end" style="font-variant-numeric:tabular-nums">1 de 1</text>
+        <text x="36" y="350" font-size="11"><tspan>Matriz de competências e treinamento</tspan></text>
+        <rect class="bar f1" data-k="12" x="330" y="339" width="530.0" height="14"/>
+        <text class="b on" x="854.0" y="350" font-size="10" text-anchor="end" style="font-variant-numeric:tabular-nums">1 de 1</text>
+        <text x="36" y="374" font-size="11"><tspan>Análise crítica pela direção</tspan></text>
+        <rect class="bar f1" data-k="13" x="330" y="363" width="530.0" height="14"/>
+        <text class="b on" x="854.0" y="374" font-size="10" text-anchor="end" style="font-variant-numeric:tabular-nums">1 de 1</text>
+        <text x="36" y="398" font-size="11"><tspan>Revisão da lista mestra de documentos</tspan></text>
+        <rect class="bar f3" data-k="14" x="330" y="387" width="2.0" height="14"/>
+        <text class="b on" x="324.0" y="398" font-size="10" text-anchor="end" style="font-variant-numeric:tabular-nums">0 de 1</text>
+        <text class="mono mu" x="20" y="422" font-size="10">INDÚSTRIA</text>
+        <text x="36" y="446" font-size="11"><tspan>Reunião de indicadores</tspan></text>
+        <rect class="bar f3" data-k="16" x="330" y="435" width="471.1" height="14"/>
+        <text class="b on" x="795.1" y="446" font-size="10" text-anchor="end" style="font-variant-numeric:tabular-nums">8 de 9</text>
+        <text x="36" y="470" font-size="11"><tspan>Programa de calibração</tspan></text>
+        <rect class="bar f3" data-k="17" x="330" y="459" width="471.1" height="14"/>
+        <text class="b on" x="795.1" y="470" font-size="10" text-anchor="end" style="font-variant-numeric:tabular-nums">8 de 9</text>
+        <text x="36" y="494" font-size="11"><tspan>Preventiva das extrusoras</tspan></text>
+        <rect class="bar f3" data-k="18" x="330" y="483" width="353.3" height="14"/>
+        <text class="b on" x="677.3" y="494" font-size="10" text-anchor="end" style="font-variant-numeric:tabular-nums">2 de 3</text>
+        <text x="36" y="518" font-size="11"><tspan>Ronda do aprendizado</tspan></text>
+        <rect class="bar f3" data-k="19" x="330" y="507" width="397.5" height="14"/>
+        <text class="b on" x="721.5" y="518" font-size="10" text-anchor="end" style="font-variant-numeric:tabular-nums">3 de 4</text>
+        <text x="36" y="542" font-size="11"><tspan>Mapa do conhecimento</tspan></text>
+        <rect class="bar f1" data-k="20" x="330" y="531" width="530.0" height="14"/>
+        <text class="b on" x="854.0" y="542" font-size="10" text-anchor="end" style="font-variant-numeric:tabular-nums">1 de 1</text>
+        <text x="36" y="566" font-size="11"><tspan>Matriz de competências e treinamento</tspan></text>
+        <rect class="bar f1" data-k="21" x="330" y="555" width="530.0" height="14"/>
+        <text class="b on" x="854.0" y="566" font-size="10" text-anchor="end" style="font-variant-numeric:tabular-nums">3 de 3</text>
+        <text x="36" y="590" font-size="11"><tspan>Acompanhamento dos objetivos</tspan></text>
+        <rect class="bar f1" data-k="22" x="330" y="579" width="530.0" height="14"/>
+        <text class="b on" x="854.0" y="590" font-size="10" text-anchor="end" style="font-variant-numeric:tabular-nums">3 de 3</text>
+        <text x="36" y="614" font-size="11"><tspan>Avaliação dos fornecedores críticos</tspan></text>
+        <rect class="bar f1" data-k="23" x="330" y="603" width="530.0" height="14"/>
+        <text class="b on" x="854.0" y="614" font-size="10" text-anchor="end" style="font-variant-numeric:tabular-nums">1 de 1</text>
+        <text x="36" y="638" font-size="11"><tspan>Revisão da matriz de riscos</tspan></text>
+        <rect class="bar f1" data-k="24" x="330" y="627" width="530.0" height="14"/>
+        <text class="b on" x="854.0" y="638" font-size="10" text-anchor="end" style="font-variant-numeric:tabular-nums">1 de 1</text>
+        <text x="36" y="662" font-size="11"><tspan>Auditoria interna</tspan></text>
+        <rect class="bar f1" data-k="25" x="330" y="651" width="530.0" height="14"/>
+        <text class="b on" x="854.0" y="662" font-size="10" text-anchor="end" style="font-variant-numeric:tabular-nums">2 de 2</text>
+        <text x="36" y="686" font-size="11"><tspan>Análise crítica pela direção</tspan></text>
+        <rect class="bar f1" data-k="26" x="330" y="675" width="530.0" height="14"/>
+        <text class="b on" x="854.0" y="686" font-size="10" text-anchor="end" style="font-variant-numeric:tabular-nums">2 de 2</text>
+        <text x="36" y="710" font-size="11"><tspan>Revisão dos documentos</tspan></text>
+        <rect class="bar f3" data-k="27" x="330" y="699" width="265.0" height="14"/>
+        <text class="b on" x="589.0" y="710" font-size="10" text-anchor="end" style="font-variant-numeric:tabular-nums">1 de 2</text>
+        <rect class="hit" x="14" y="70" width="872" height="24" tabindex="0" role="img" aria-label="Reunião de indicadores: 5 de 6 feitas" data-k="1" data-n="Reunião de indicadores" data-s="83 %" data-d="5 de 6 feitas" data-p="Gerente da loja" data-cx="771.7" data-cy="70"/>
+        <rect class="hit" x="14" y="94" width="872" height="24" tabindex="0" role="img" aria-label="Verificação dos termômetros e da balança: 6 de 6 feitas" data-k="2" data-n="Verificação dos termômetros e da balança" data-s="100 %" data-d="6 de 6 feitas" data-p="Pizzaiolo líder" data-cx="860.0" data-cy="94"/>
+        <rect class="hit" x="14" y="118" width="872" height="24" tabindex="0" role="img" aria-label="Revisão do forno e das motos: 6 de 6 feitas" data-k="3" data-n="Revisão do forno e das motos" data-s="100 %" data-d="6 de 6 feitas" data-p="Gerente da loja" data-cx="860.0" data-cy="118"/>
+        <rect class="hit" x="14" y="142" width="872" height="24" tabindex="0" role="img" aria-label="Revisão da câmara fria: 1 de 2 feitas" data-k="4" data-n="Revisão da câmara fria" data-s="50 %" data-d="1 de 2 feitas" data-p="Pizzaiolo líder" data-cx="595.0" data-cy="142"/>
+        <rect class="hit" x="14" y="166" width="872" height="24" tabindex="0" role="img" aria-label="Ronda do aprendizado: 2 de 2 feitas" data-k="5" data-n="Ronda do aprendizado" data-s="100 %" data-d="2 de 2 feitas" data-p="Gerente da loja" data-cx="860.0" data-cy="166"/>
+        <rect class="hit" x="14" y="190" width="872" height="24" tabindex="0" role="img" aria-label="Pesquisa de satisfação: 2 de 2 feitas" data-k="6" data-n="Pesquisa de satisfação" data-s="100 %" data-d="2 de 2 feitas" data-p="Atendente líder" data-cx="860.0" data-cy="190"/>
+        <rect class="hit" x="14" y="214" width="872" height="24" tabindex="0" role="img" aria-label="Acompanhamento dos objetivos: 2 de 2 feitas" data-k="7" data-n="Acompanhamento dos objetivos" data-s="100 %" data-d="2 de 2 feitas" data-p="Gerente da loja" data-cx="860.0" data-cy="214"/>
+        <rect class="hit" x="14" y="238" width="872" height="24" tabindex="0" role="img" aria-label="Escolha dos problemas do trimestre: 2 de 2 feitas" data-k="8" data-n="Escolha dos problemas do trimestre" data-s="100 %" data-d="2 de 2 feitas" data-p="Gerente da loja" data-cx="860.0" data-cy="238"/>
+        <rect class="hit" x="14" y="262" width="872" height="24" tabindex="0" role="img" aria-label="Avaliação dos fornecedores: 1 de 1 feitas" data-k="9" data-n="Avaliação dos fornecedores" data-s="100 %" data-d="1 de 1 feitas" data-p="Gerente da loja" data-cx="860.0" data-cy="262"/>
+        <rect class="hit" x="14" y="286" width="872" height="24" tabindex="0" role="img" aria-label="Revisão da matriz de riscos: 1 de 1 feitas" data-k="10" data-n="Revisão da matriz de riscos" data-s="100 %" data-d="1 de 1 feitas" data-p="Gerente da loja" data-cx="860.0" data-cy="286"/>
+        <rect class="hit" x="14" y="310" width="872" height="24" tabindex="0" role="img" aria-label="Auditoria interna: 1 de 1 feitas" data-k="11" data-n="Auditoria interna" data-s="100 %" data-d="1 de 1 feitas" data-p="Atendente líder" data-cx="860.0" data-cy="310"/>
+        <rect class="hit" x="14" y="334" width="872" height="24" tabindex="0" role="img" aria-label="Matriz de competências e treinamento: 1 de 1 feitas" data-k="12" data-n="Matriz de competências e treinamento" data-s="100 %" data-d="1 de 1 feitas" data-p="Gerente da loja" data-cx="860.0" data-cy="334"/>
+        <rect class="hit" x="14" y="358" width="872" height="24" tabindex="0" role="img" aria-label="Análise crítica pela direção: 1 de 1 feitas" data-k="13" data-n="Análise crítica pela direção" data-s="100 %" data-d="1 de 1 feitas" data-p="Dono da loja" data-cx="860.0" data-cy="358"/>
+        <rect class="hit" x="14" y="382" width="872" height="24" tabindex="0" role="img" aria-label="Revisão da lista mestra de documentos: 0 de 1 feitas" data-k="14" data-n="Revisão da lista mestra de documentos" data-s="0 %" data-d="0 de 1 feitas" data-p="Gerente da loja" data-cx="330.0" data-cy="382"/>
+        <rect class="hit" x="14" y="430" width="872" height="24" tabindex="0" role="img" aria-label="Reunião de indicadores: 8 de 9 feitas" data-k="16" data-n="Reunião de indicadores" data-s="89 %" data-d="8 de 9 feitas" data-p="Coordenador da Qualidade" data-cx="801.1" data-cy="430"/>
+        <rect class="hit" x="14" y="454" width="872" height="24" tabindex="0" role="img" aria-label="Programa de calibração: 8 de 9 feitas" data-k="17" data-n="Programa de calibração" data-s="89 %" data-d="8 de 9 feitas" data-p="Analista da Qualidade" data-cx="801.1" data-cy="454"/>
+        <rect class="hit" x="14" y="478" width="872" height="24" tabindex="0" role="img" aria-label="Preventiva das extrusoras: 2 de 3 feitas" data-k="18" data-n="Preventiva das extrusoras" data-s="67 %" data-d="2 de 3 feitas" data-p="Supervisor de manutenção" data-cx="683.3" data-cy="478"/>
+        <rect class="hit" x="14" y="502" width="872" height="24" tabindex="0" role="img" aria-label="Ronda do aprendizado: 3 de 4 feitas" data-k="19" data-n="Ronda do aprendizado" data-s="75 %" data-d="3 de 4 feitas" data-p="Analista da Qualidade" data-cx="727.5" data-cy="502"/>
+        <rect class="hit" x="14" y="526" width="872" height="24" tabindex="0" role="img" aria-label="Mapa do conhecimento: 1 de 1 feitas" data-k="20" data-n="Mapa do conhecimento" data-s="100 %" data-d="1 de 1 feitas" data-p="Gerente de produção" data-cx="860.0" data-cy="526"/>
+        <rect class="hit" x="14" y="550" width="872" height="24" tabindex="0" role="img" aria-label="Matriz de competências e treinamento: 3 de 3 feitas" data-k="21" data-n="Matriz de competências e treinamento" data-s="100 %" data-d="3 de 3 feitas" data-p="Gerente de RH" data-cx="860.0" data-cy="550"/>
+        <rect class="hit" x="14" y="574" width="872" height="24" tabindex="0" role="img" aria-label="Acompanhamento dos objetivos: 3 de 3 feitas" data-k="22" data-n="Acompanhamento dos objetivos" data-s="100 %" data-d="3 de 3 feitas" data-p="Diretor geral" data-cx="860.0" data-cy="574"/>
+        <rect class="hit" x="14" y="598" width="872" height="24" tabindex="0" role="img" aria-label="Avaliação dos fornecedores críticos: 1 de 1 feitas" data-k="23" data-n="Avaliação dos fornecedores críticos" data-s="100 %" data-d="1 de 1 feitas" data-p="Comprador sênior" data-cx="860.0" data-cy="598"/>
+        <rect class="hit" x="14" y="622" width="872" height="24" tabindex="0" role="img" aria-label="Revisão da matriz de riscos: 1 de 1 feitas" data-k="24" data-n="Revisão da matriz de riscos" data-s="100 %" data-d="1 de 1 feitas" data-p="Gerente de Suprimentos" data-cx="860.0" data-cy="622"/>
+        <rect class="hit" x="14" y="646" width="872" height="24" tabindex="0" role="img" aria-label="Auditoria interna: 2 de 2 feitas" data-k="25" data-n="Auditoria interna" data-s="100 %" data-d="2 de 2 feitas" data-p="Coordenador da Qualidade" data-cx="860.0" data-cy="646"/>
+        <rect class="hit" x="14" y="670" width="872" height="24" tabindex="0" role="img" aria-label="Análise crítica pela direção: 2 de 2 feitas" data-k="26" data-n="Análise crítica pela direção" data-s="100 %" data-d="2 de 2 feitas" data-p="Diretor geral" data-cx="860.0" data-cy="670"/>
+        <rect class="hit" x="14" y="694" width="872" height="24" tabindex="0" role="img" aria-label="Revisão dos documentos: 1 de 2 feitas" data-k="27" data-n="Revisão dos documentos" data-s="50 %" data-d="1 de 2 feitas" data-p="Coordenador da Qualidade" data-cx="595.0" data-cy="694"/>
+      </svg>
+    </div>
+    <div class="tip" id="bars-tip" hidden></div>
+    <figcaption><b>Figura 9.</b> Atividades feitas sobre as previstas até o mês da leitura, nos dois exemplos. Ficam de fora as que ainda não tinham mês previsto. Passe o mouse sobre as linhas para ver os valores.</figcaption>
+    <details class="data">
+      <summary>Ver os dados em tabela</summary>
+      <div class="tbl">
+        <table class="aud">
+          <thead><tr><th>Atividade</th><th>Responsável</th><th class="c">Previstas</th><th class="c">Feitas</th><th class="c">Atrasadas</th></tr></thead>
+          <tbody>
+            <tr><td>Reunião de indicadores</td><td>Gerente da loja</td><td class="c">6</td><td class="c">5</td><td class="c">1</td></tr>
+            <tr><td>Verificação dos termômetros e da balança</td><td>Pizzaiolo líder</td><td class="c">6</td><td class="c">6</td><td class="c">0</td></tr>
+            <tr><td>Revisão do forno e das motos</td><td>Gerente da loja</td><td class="c">6</td><td class="c">6</td><td class="c">0</td></tr>
+            <tr><td>Revisão da câmara fria</td><td>Pizzaiolo líder</td><td class="c">2</td><td class="c">1</td><td class="c">1</td></tr>
+            <tr><td>Ronda do aprendizado</td><td>Gerente da loja</td><td class="c">2</td><td class="c">2</td><td class="c">0</td></tr>
+            <tr><td>Pesquisa de satisfação</td><td>Atendente líder</td><td class="c">2</td><td class="c">2</td><td class="c">0</td></tr>
+            <tr><td>Acompanhamento dos objetivos</td><td>Gerente da loja</td><td class="c">2</td><td class="c">2</td><td class="c">0</td></tr>
+            <tr><td>Escolha dos problemas do trimestre</td><td>Gerente da loja</td><td class="c">2</td><td class="c">2</td><td class="c">0</td></tr>
+            <tr><td>Avaliação dos fornecedores</td><td>Gerente da loja</td><td class="c">1</td><td class="c">1</td><td class="c">0</td></tr>
+            <tr><td>Revisão da matriz de riscos</td><td>Gerente da loja</td><td class="c">1</td><td class="c">1</td><td class="c">0</td></tr>
+            <tr><td>Auditoria interna</td><td>Atendente líder</td><td class="c">1</td><td class="c">1</td><td class="c">0</td></tr>
+            <tr><td>Matriz de competências e treinamento</td><td>Gerente da loja</td><td class="c">1</td><td class="c">1</td><td class="c">0</td></tr>
+            <tr><td>Análise crítica pela direção</td><td>Dono da loja</td><td class="c">1</td><td class="c">1</td><td class="c">0</td></tr>
+            <tr><td>Revisão da lista mestra de documentos</td><td>Gerente da loja</td><td class="c">1</td><td class="c">0</td><td class="c">1</td></tr>
+            <tr><td>Reunião de indicadores</td><td>Coordenador da Qualidade</td><td class="c">9</td><td class="c">8</td><td class="c">1</td></tr>
+            <tr><td>Programa de calibração</td><td>Analista da Qualidade</td><td class="c">9</td><td class="c">8</td><td class="c">1</td></tr>
+            <tr><td>Preventiva das extrusoras</td><td>Supervisor de manutenção</td><td class="c">3</td><td class="c">2</td><td class="c">1</td></tr>
+            <tr><td>Ronda do aprendizado</td><td>Analista da Qualidade</td><td class="c">4</td><td class="c">3</td><td class="c">1</td></tr>
+            <tr><td>Mapa do conhecimento</td><td>Gerente de produção</td><td class="c">1</td><td class="c">1</td><td class="c">0</td></tr>
+            <tr><td>Matriz de competências e treinamento</td><td>Gerente de RH</td><td class="c">3</td><td class="c">3</td><td class="c">0</td></tr>
+            <tr><td>Acompanhamento dos objetivos</td><td>Diretor geral</td><td class="c">3</td><td class="c">3</td><td class="c">0</td></tr>
+            <tr><td>Avaliação dos fornecedores críticos</td><td>Comprador sênior</td><td class="c">1</td><td class="c">1</td><td class="c">0</td></tr>
+            <tr><td>Revisão da matriz de riscos</td><td>Gerente de Suprimentos</td><td class="c">1</td><td class="c">1</td><td class="c">0</td></tr>
+            <tr><td>Auditoria interna</td><td>Coordenador da Qualidade</td><td class="c">2</td><td class="c">2</td><td class="c">0</td></tr>
+            <tr><td>Análise crítica pela direção</td><td>Diretor geral</td><td class="c">2</td><td class="c">2</td><td class="c">0</td></tr>
+            <tr><td>Revisão dos documentos</td><td>Coordenador da Qualidade</td><td class="c">2</td><td class="c">1</td><td class="c">1</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </details>
+  </figure>
+
+  <p>A pizzaria cumpriu 31 de 34 atividades até junho, 91 %; a indústria, 35 de 40 até setembro, 88 %. Os dois números parecem bons, e escondem o principal: nas duas organizações, uma das atividades atrasadas é uma manutenção que antecedeu uma quebra. O cumprimento geral é útil para ver a tendência; a lista dos atrasos é o que vai para a reunião.</p>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Situação</th><th style="width:40%">Regra deste material</th><th>O que fazer</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Em dia</strong></td><td>Todas as vezes previstas até o mês da leitura foram feitas.</td><td>Seguir o plano.</td></tr>
+        <tr><td><strong>Com atraso</strong></td><td>Ao menos uma vez prevista até o mês não foi feita.</td><td>Marcar data nova, com o responsável, e ver o que a falta pode ter causado.</td></tr>
+        <tr><td><strong>Ainda não começou</strong></td><td>O primeiro mês previsto ainda não chegou.</td><td>Confirmar a data e o responsável.</td></tr>
+        <tr><td><strong>Feita fora do plano</strong></td><td>Feita num mês em que não estava prevista.</td><td>Ver se o plano precisa mudar, ou se foi a recuperação de um atraso.</td></tr>
+        <tr><td><strong>Intervalo longo no fio</strong></td><td>O maior intervalo entre dois passos.</td><td>Perguntar por que esperou, e se poderia ter sido mais rápido.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note">
+    <h4>Atividade feita não é atividade eficaz</h4>
+    <p>O calendário mostra se a reunião aconteceu, e não se ela decidiu alguma coisa. Por isso o calendário anda junto com os fios: uma análise crítica marcada como feita, e que não aparece em nenhum fio como decisão, é um sinal de reunião que não muda nada.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 8 ============================ -->
+<section id="erros">
+  <p class="eyebrow">Módulo 8</p>
+  <h2>Erros comuns</h2>
+  <div class="errs">
+    <div><h4>Ferramentas soltas</h4><p>Cada estudo foi aplicado uma vez, por uma pessoa, e nenhum registro cita outro.</p><p class="fix"><b>Correção:</b> todo registro novo cita o anterior.</p></div>
+    <div><h4>Fio escolhido para dar certo</h4><p>O caso apresentado ao auditor é o único que fechou.</p><p class="fix"><b>Correção:</b> seguir também os fios que demoraram, que ensinam mais.</p></div>
+    <div><h4>Calendário na gaveta</h4><p>O calendário foi feito em janeiro e só aberto na auditoria.</p><p class="fix"><b>Correção:</b> leitura mensal, na reunião do sistema.</p></div>
+    <div><h4>Calendário sem dono</h4><p>A atividade está no mês, e ninguém é responsável por ela.</p><p class="fix"><b>Correção:</b> um nome por atividade.</p></div>
+    <div><h4>Atraso que some</h4><p>A atividade de abril não aconteceu e foi simplesmente esquecida.</p><p class="fix"><b>Correção:</b> o atraso fica visível até ser feito, com data nova.</p></div>
+    <div><h4>Análise crítica só com números</h4><p>A direção vê os indicadores e não vê os casos.</p><p class="fix"><b>Correção:</b> levar dois ou três fios do semestre.</p></div>
+    <div><h4>Decisão que não volta</h4><p>A ata aprova o investimento, e nenhum registro mostra o que aconteceu depois.</p><p class="fix"><b>Correção:</b> a decisão vira ação com dono, e entra no próximo fio.</p></div>
+    <div><h4>Frequência copiada</h4><p>Tudo é anual porque o modelo era anual.</p><p class="fix"><b>Correção:</b> o ritmo de cada atividade pelo risco que ela controla.</p></div>
+    <div><h4>Implantar tudo de uma vez</h4><p>Os 29 estudos começam no mesmo mês, e nenhum se firma.</p><p class="fix"><b>Correção:</b> uma ordem de implantação, como a do módulo 9.</p></div>
+    <div><h4>O sistema é da Qualidade</h4><p>Só uma pessoa sabe como as peças se ligam.</p><p class="fix"><b>Correção:</b> contar os fios à equipe, com os registros na mão.</p></div>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 9 ============================ -->
+<section id="comecar">
+  <p class="eyebrow">Módulo 9</p>
+  <h2>Por onde começar</h2>
+  <p>Uma organização que começa do zero não precisa aplicar os 29 estudos ao mesmo tempo. A ordem abaixo é uma sugestão para o primeiro ano, do diagnóstico à primeira análise crítica. Cada etapa usa o que a anterior produziu.</p>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:14%">Meses</th><th style="width:30%">Etapa</th><th>Estudos</th></tr></thead>
+      <tbody>
+        <tr><td class="num">1</td><td><strong>Entender a norma e a organização</strong></td><td><a href="../ISO-9001/treinamento-iso-9001.html">ISO 9001</a>, <a href="../Partes-Interessadas/treinamento-partes-interessadas.html">Partes interessadas</a>, <a href="../SWOT/treinamento-swot.html">Matriz SWOT</a> e <a href="../Escopo/treinamento-escopo.html">Escopo e liderança</a>.</td></tr>
+        <tr><td class="num">2 e 3</td><td><strong>Descrever os processos</strong></td><td><a href="../Processos/treinamento-processos.html">Mapa de processos</a>, <a href="../SIPOC/treinamento-sipoc.html">SIPOC</a>, <a href="../RACI/treinamento-raci.html">Matriz RACI</a> e <a href="../Informacao-Documentada/treinamento-informacao-documentada.html">Informação documentada</a>.</td></tr>
+        <tr><td class="num">3 e 4</td><td><strong>Planejar</strong></td><td><a href="../Riscos/treinamento-riscos.html">Matriz de riscos</a>, <a href="../Objetivos/treinamento-objetivos.html">Objetivos da qualidade</a> e <a href="../Indicadores/treinamento-indicadores.html">Indicadores</a>.</td></tr>
+        <tr><td class="num">4 a 6</td><td><strong>Controlar a operação</strong></td><td><a href="../Pedidos/treinamento-pedidos.html">Requisitos do cliente</a>, <a href="../Producao/treinamento-producao.html">Controle de produção</a>, <a href="../Liberacao/treinamento-liberacao.html">Liberação</a> e, se houver, <a href="../Projeto/treinamento-projeto.html">Projeto</a>.</td></tr>
+        <tr><td class="num">5 a 7</td><td><strong>Garantir o apoio</strong></td><td><a href="../Competencias/treinamento-competencias.html">Competências</a>, <a href="../Calibracao/treinamento-calibracao.html">Calibração</a>, <a href="../Recursos/treinamento-recursos.html">Recursos</a>, <a href="../Fornecedores/treinamento-fornecedores.html">Fornecedores</a> e <a href="../Conhecimento/treinamento-conhecimento.html">Conhecimento</a>.</td></tr>
+        <tr><td class="num">6 em diante</td><td><strong>Ouvir e corrigir</strong></td><td><a href="../Satisfacao/treinamento-satisfacao.html">Satisfação do cliente</a> e <a href="../Nao-Conformidade/treinamento-nao-conformidade.html">Não conformidade</a>, com <a href="../GUT/treinamento-gut.html">GUT</a>, <a href="../Pareto/treinamento-pareto.html">Pareto</a>, <a href="../Ishikawa/treinamento-ishikawa.html">Ishikawa</a>, <a href="../5W2H/treinamento-5w2h.html">5W2H</a> e <a href="../PDCA/treinamento-pdca.html">PDCA</a> para os problemas maiores.</td></tr>
+        <tr><td class="num">9 e 10</td><td><strong>Verificar</strong></td><td>Primeiro ciclo de <a href="../Auditoria/treinamento-auditoria.html">Auditoria interna</a>, cobrindo todos os processos.</td></tr>
+        <tr><td class="num">11 e 12</td><td><strong>Decidir</strong></td><td>Primeira <a href="../Analise-Critica/treinamento-analise-critica.html">Análise crítica pela direção</a>, com os primeiros fios, e o calendário do ano seguinte.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note">
+    <h4>Registros precisam de tempo</h4>
+    <p>Um sistema novo não tem história. A auditoria de certificação costuma pedir evidência de que o sistema rodou por alguns meses: indicadores com série, auditorias internas feitas, ao menos uma análise crítica. Por isso a ordem acima termina com a análise crítica, e não começa com ela. O estudo da ISO 9001 traz uma linha do tempo de implantação de doze meses com o mesmo raciocínio.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 10 ============================ -->
+<section id="iso">
+  <p class="eyebrow">Módulo 10</p>
+  <h2>Nas normas ISO</h2>
+  <p>A ISO 9001:2015 não tem um requisito chamado "caso integrado". Ela pede, em vários lugares, que o sistema funcione como um todo: processos que interagem, monitoramento planejado, uma direção que recebe as entradas de todo o sistema e uma melhoria que se apoia nelas.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 200" role="img" aria-label="O que a norma pede sobre o sistema como um todo. 4.4 · Processos: Determinar os processos do sistema, a sequência e as interações entre eles. Neste estudo: o fio entre os estudos. 9.1.1 · Monitorar: Decidir o que monitorar e medir, como, quando, e quando analisar os resultados. Neste estudo: o calendário do ano. 9.3 · Análise crítica: A direção recebe as entradas de todo o sistema e decide melhorias, mudanças e recursos. Neste estudo: o fim de cada fio. 10.3 · Melhorar: Melhorar continuamente o sistema, usando as análises e as decisões da direção. Neste estudo: o próximo fio.">
+        <rect class="bx" x="10" y="14" width="214" height="172"/>
+        <rect class="hd-ink" x="10" y="14" width="214" height="34"/>
+        <text class="b t-ground" x="22" y="36" font-size="11.5">4.4 · Processos</text>
+        <text x="22" y="70" font-size="11.5">Determinar os processos do</text>
+        <text x="22" y="86" font-size="11.5">sistema, a sequência e as</text>
+        <text x="22" y="102" font-size="11.5">interações entre eles.</text>
+        <text class="mu" x="22" y="160" font-size="11">Neste estudo: o fio entre os</text>
+        <text class="mu" x="22" y="175" font-size="11">estudos</text>
+        <rect class="bx" x="232" y="14" width="214" height="172"/>
+        <rect class="hd-ink" x="232" y="14" width="214" height="34"/>
+        <text class="b t-ground" x="244" y="36" font-size="11.5">9.1.1 · Monitorar</text>
+        <text x="244" y="70" font-size="11.5">Decidir o que monitorar e medir,</text>
+        <text x="244" y="86" font-size="11.5">como, quando, e quando analisar</text>
+        <text x="244" y="102" font-size="11.5">os resultados.</text>
+        <text class="mu" x="244" y="160" font-size="11">Neste estudo: o calendário do ano</text>
+        <rect class="bx" x="454" y="14" width="214" height="172"/>
+        <rect class="hd-ink" x="454" y="14" width="214" height="34"/>
+        <text class="b t-ground" x="466" y="36" font-size="11.5">9.3 · Análise crítica</text>
+        <text x="466" y="70" font-size="11.5">A direção recebe as entradas de</text>
+        <text x="466" y="86" font-size="11.5">todo o sistema e decide</text>
+        <text x="466" y="102" font-size="11.5">melhorias, mudanças e recursos.</text>
+        <text class="mu" x="466" y="160" font-size="11">Neste estudo: o fim de cada fio</text>
+        <rect class="bx" x="676" y="14" width="214" height="172"/>
+        <rect class="hd-ink" x="676" y="14" width="214" height="34"/>
+        <text class="b t-ground" x="688" y="36" font-size="11.5">10.3 · Melhorar</text>
+        <text x="688" y="70" font-size="11.5">Melhorar continuamente o</text>
+        <text x="688" y="86" font-size="11.5">sistema, usando as análises e as</text>
+        <text x="688" y="102" font-size="11.5">decisões da direção.</text>
+        <text class="mu" x="688" y="160" font-size="11">Neste estudo: o próximo fio</text>
+      </svg>
+    </div>
+    <figcaption><b>Figura 10.</b> O que a norma pede sobre o sistema como um todo, e onde este estudo responde. O texto da figura é um resumo, com palavras próprias.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:10%">Item</th><th style="width:32%">O que pede, em resumo</th><th style="width:27%">O que isso significa</th><th>Evidências que o auditor procura</th></tr></thead>
+      <tbody>
+        <tr><td class="num">4.4</td><td>Determinar os processos do sistema, as entradas e as saídas, a sequência e as interações</td><td>Os estudos se ligam: a saída de um é a entrada de outro.</td><td>Mapa de processos, registros que citam uns aos outros.</td></tr>
+        <tr><td class="num">9.1.1</td><td>Determinar o que monitorar e medir, os métodos, quando fazer e quando analisar</td><td>As atividades de verificação têm data e dono.</td><td>Calendário, programa de auditoria, frequência dos indicadores.</td></tr>
+        <tr><td class="num">9.3.2</td><td>Considerar na análise crítica as ações anteriores, as mudanças, o desempenho, os recursos, os riscos e as oportunidades</td><td>A direção vê os fios, e não só os números.</td><td>Ata com as entradas e as decisões.</td></tr>
+        <tr><td class="num">9.3.3</td><td>Incluir nas saídas as oportunidades de melhoria, as mudanças e os recursos</td><td>A decisão da direção volta ao sistema.</td><td>Ações com dono, que aparecem nos passos seguintes.</td></tr>
+        <tr><td class="num">10.3</td><td>Melhorar continuamente a adequação e a eficácia do sistema</td><td>Cada fio fechado deixa o sistema melhor.</td><td>Lições incorporadas, problemas que não voltaram.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pair">
+    <div class="box">
+      <h4>O que a ISO 9001 exige</h4>
+      <ul>
+        <li>Processos determinados, com as interações.</li>
+        <li>Monitoramento planejado: o que, como e quando.</li>
+        <li>Análise crítica com entradas de todo o sistema.</li>
+        <li>Saídas da análise crítica que voltem ao sistema.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h4>O que a ISO 9001 não exige</h4>
+      <ul>
+        <li>Um calendário com esse formato.</li>
+        <li>As frequências sugeridas neste material.</li>
+        <li>O exercício de seguir o fio, embora seja o que o auditor faz.</li>
+        <li>Usar todas as ferramentas da série.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="note">
+    <h4>Pontos de atenção</h4>
+    <p>O auditor externo raramente avalia uma ferramenta isolada. Ele escolhe um fio, como uma reclamação, uma não conformidade ou um indicador fora da meta, e o segue pelos registros até a análise crítica. As constatações mais comuns aparecem nos intervalos: a reclamação sem registro de não conformidade, a ação sem verificação de eficácia, a decisão da direção que ninguém executou.</p>
+    <p>Este módulo usa a numeração da ISO 9001:2015 e resume os textos com palavras próprias. Confira sempre a edição vigente da norma antes de citar um requisito em relatório.</p>
+  </div>
+</section>
+
+<!-- ============================ MÓDULO 11 ============================ -->
+<section id="ronda">
+  <p class="eyebrow">Módulo 11</p>
+  <h2>A reunião mensal do sistema</h2>
+  <p>Uma vez por mês, quem coordena o sistema reúne os donos das atividades por 30 minutos. A pauta é sempre a mesma: o calendário, os fios abertos, os avisos dos estudos e as decisões.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 900 136" role="img" aria-label="Distribuição de uma reunião mensal do sistema de 30 minutos: 5 minutos para o calendário, 10 minutos para os fios abertos, 10 minutos para os avisos dos estudos e 5 minutos para as decisões.">
+        <g font-size="11.5" text-anchor="middle">
+          <rect class="bx" x="60" y="24" width="130" height="56"/><text x="125" y="49">Calendário:</text><text x="125" y="64">o que atrasou</text>
+          <rect class="hd-ink gap2" x="190" y="24" width="260" height="56"/><text class="t-ground b" x="320" y="49">Fios abertos:</text><text class="t-ground b" x="320" y="64">o próximo passo de cada um</text>
+          <rect class="hd-d gap2" x="450" y="24" width="260" height="56"/><text class="on b" x="580" y="49">Avisos dos estudos:</text><text class="on b" x="580" y="64">painéis e conferências</text>
+          <rect class="bx" x="710" y="24" width="130" height="56"/><text x="775" y="56">Decisões</text>
+        </g>
+        <g class="ln-mu" stroke-width="1">
+          <line x1="60" y1="82" x2="60" y2="94"/><line x1="190" y1="82" x2="190" y2="94"/><line x1="450" y1="82" x2="450" y2="94"/>
+          <line x1="710" y1="82" x2="710" y2="94"/><line x1="840" y1="82" x2="840" y2="94"/>
+        </g>
+        <g class="mono" font-size="10.5" text-anchor="middle">
+          <text class="mu" x="60" y="112">0</text><text class="mu" x="190" y="112">5</text><text class="mu" x="450" y="112">15</text>
+          <text class="mu" x="710" y="112">25</text><text class="mu" x="840" y="112">30</text>
+        </g>
+      </svg>
+    </div>
+    <figcaption><b>Figura 11.</b> Uma reunião de 30 minutos, desenhada em escala. Os fios e os avisos ocupam dois terços do tempo.</figcaption>
+  </figure>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Momento</th><th style="width:42%">O que fazer</th><th>Perguntas que ajudam</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Calendário</strong></td><td>As atividades atrasadas e as do mês seguinte.</td><td>"Quando isto será feito, e por quem?"</td></tr>
+        <tr><td><strong>Fios abertos</strong></td><td>Para cada problema importante em andamento: em que passo está, e qual é o próximo.</td><td>"Para onde foi a saída do último passo?"</td></tr>
+        <tr><td><strong>Avisos dos estudos</strong></td><td>O aviso do painel de cada planilha em uso: o que está vencido, atrasado ou incompleto.</td><td>"Que aviso se repete há dois meses?"</td></tr>
+        <tr><td><strong>Decisões</strong></td><td>Datas novas, fios a abrir, assuntos para a análise crítica.</td><td>"O que precisa da direção, e não pode esperar o semestre?"</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Todo mês, escolha um registro ao acaso, como um RNC, uma reclamação ou uma ata, e pergunte de onde ele veio e para onde foi. Se a resposta depende da memória de alguém, o fio está frágil.</p>
+
+  <h3>Checklist do sistema integrado</h3>
+  <p>Marque os itens conforme revisa como o seu sistema funciona como um todo. As marcações ficam salvas neste navegador.</p>
+  <ol class="check" id="checklist">
+    <li><label><input type="checkbox" id="ck-1"><span>Cada estudo usado na organização tem dono e frequência definidos.</span></label></li>
+    <li><label><input type="checkbox" id="ck-2"><span>Existe um calendário anual com as atividades do sistema, os meses e os responsáveis.</span></label></li>
+    <li><label><input type="checkbox" id="ck-3"><span>O calendário é lido todo mês, e as atividades atrasadas ganham data nova.</span></label></li>
+    <li><label><input type="checkbox" id="ck-4"><span>As saídas de cada processo do sistema têm destino conhecido.</span></label></li>
+    <li><label><input type="checkbox" id="ck-5"><span>É possível seguir um problema importante do primeiro registro à decisão final.</span></label></li>
+    <li><label><input type="checkbox" id="ck-6"><span>Os registros citam uns aos outros: o RNC cita a reclamação, a ata cita o RNC.</span></label></li>
+    <li><label><input type="checkbox" id="ck-7"><span>Os intervalos longos entre um passo e o seguinte são percebidos e discutidos.</span></label></li>
+    <li><label><input type="checkbox" id="ck-8"><span>A análise crítica recebe o que os estudos produziram, e não só os indicadores.</span></label></li>
+    <li><label><input type="checkbox" id="ck-9"><span>As decisões da análise crítica voltam aos objetivos, aos recursos e aos riscos.</span></label></li>
+    <li><label><input type="checkbox" id="ck-10"><span>O que se aprende no fio vira lição incorporada.</span></label></li>
+    <li><label><input type="checkbox" id="ck-11"><span>A implantação seguiu uma ordem: base, planejamento, operação, verificação.</span></label></li>
+    <li><label><input type="checkbox" id="ck-12"><span>A equipe sabe explicar como o seu trabalho entra no sistema.</span></label></li>
+  </ol>
+  <div class="bar"><span><b id="ck-count">0</b> de 12 itens marcados</span><button class="btn" id="ck-reset" type="button">Limpar marcações</button></div>
+</section>
+
+<!-- ============================ MÓDULO 12 ============================ -->
+<section id="pratique">
+  <p class="eyebrow">Módulo 12</p>
+  <h2>Pratique</h2>
+  <h3>Exercício 1. Para onde vai esta saída?</h3>
+  <p>Cada item descreve a saída de um passo. Diga qual estudo deve recebê-la: não conformidade, indicadores, análise crítica, ou conhecimento e lições.</p>
+  <div class="quiz" id="quiz"></div>
+  <div class="bar"><span>Acertos: <b id="qz-score">0</b> de <b id="qz-total">12</b></span><span>Respondidos: <b id="qz-done">0</b></span><button class="btn" id="qz-reset" type="button">Recomeçar</button></div>
+
+  <h3>Exercício 2. Siga um fio e monte o seu calendário</h3>
+  <p>Abra a planilha de apoio e siga o roteiro.</p>
+  <ol>
+    <li>Escolha um problema importante dos últimos doze meses da sua organização.</li>
+    <li>Na aba Rastro, registre cada passo, do mais antigo ao mais recente, com a data, o estudo, o que aconteceu e o registro.</li>
+    <li>Para cada passo, escreva o que saiu e para qual estudo foi. Leia a coluna Conferência: onde o fio se partiu?</li>
+    <li>Na aba Calendário, informe o ano e o mês da leitura, e liste as atividades periódicas do sistema, com estudo, requisito, responsável, frequência e mês de início.</li>
+    <li>Marque com um X os meses em que cada atividade foi feita.</li>
+    <li>Leia a aba Painel e passe o checklist do módulo 11.</li>
+  </ol>
+  <p>Depois, conte o fio à sua equipe, com os registros na mão. Peça a cada pessoa para dizer em que passo o trabalho dela entrou.</p>
+</section>
+
+<!-- ============================ MÓDULO 13 ============================ -->
+<section id="planilha">
+  <p class="eyebrow">Módulo 13</p>
+  <h2>A planilha de apoio</h2>
+  <p>Este treinamento acompanha o arquivo <a id="xlsx-ref" href="Caso-Integrado-modelo.xlsx">Caso-Integrado-modelo.xlsx</a>, que fica na mesma pasta. As células em amarelo-claro são para preenchimento. As células cinza são calculadas.</p>
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:24%">Aba</th><th>Para que serve</th><th style="width:36%">O que ela calcula</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Instruções</strong></td><td>Legenda de cores, as regras de cálculo, ordem de preenchimento e premissas do modelo.</td><td>Nada. É só leitura.</td></tr>
+        <tr><td><strong>Rastro</strong></td><td>O nome do fio e até 30 passos, com data, estudo, o que aconteceu, registro, saída e próximo estudo.</td><td>Os dias entre os passos e a conferência, que vê se o próximo estudo é o do passo seguinte.</td></tr>
+        <tr><td><strong>Calendário</strong></td><td>O ano, o mês da leitura e até 40 atividades, com estudo, requisito, responsável, frequência, mês de início e os meses feitos.</td><td>Os meses previstos, as feitas, as atrasadas, a situação e a conferência, com as cores no próprio calendário.</td></tr>
+        <tr><td><strong>Estudos</strong></td><td>Os 29 estudos da série, com o grupo e o ritmo recomendado.</td><td>A lista usada nas listas suspensas.</td></tr>
+        <tr><td><strong>Painel</strong></td><td>Nada a preencher.</td><td>Os números do fio e do calendário, o gráfico e o aviso.</td></tr>
+        <tr><td><strong>Checklist</strong></td><td>Os mesmos 12 itens do módulo 11, com status Sim, Parcial ou Não.</td><td>Percentual atendido e situação da validação.</td></tr>
+        <tr><td><strong>Exemplo 1 e Exemplo 2</strong></td><td>O fio e o calendário da pizzaria e da indústria.</td><td>As mesmas contas das abas de entrada.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================ GLOSSÁRIO ============================ -->
+<section id="glossario">
+  <p class="eyebrow">Referência</p>
+  <h2>Glossário</h2>
+  <dl class="gloss">
+    <div><dt>Calendário do sistema</dt><dd>A lista das atividades periódicas do sistema, com frequência, meses e responsáveis.</dd></div>
+    <div><dt>Cumprimento</dt><dd>As atividades feitas divididas pelas previstas até o mês da leitura.</dd></div>
+    <div><dt>Entrada</dt><dd>O que um processo recebe para trabalhar: um registro, um dado, uma decisão.</dd></div>
+    <div><dt>Fio</dt><dd>Neste material, o caminho de um problema pelos registros do sistema, de estudo em estudo.</dd></div>
+    <div><dt>Interação entre processos</dt><dd>A ligação em que a saída de um processo é a entrada de outro.</dd></div>
+    <div><dt>Intervalo</dt><dd>Os dias entre um passo do fio e o seguinte.</dd></div>
+    <div><dt>Passo</dt><dd>Um momento do fio, com data, estudo, ação e registro.</dd></div>
+    <div><dt>Rastro</dt><dd>O registro escrito de um fio, passo a passo.</dd></div>
+    <div><dt>Registro</dt><dd>A evidência de que algo foi feito: um RNC, uma ata, uma folha de verificação.</dd></div>
+    <div><dt>Ritmo</dt><dd>A frequência com que uma atividade do sistema acontece: mensal, trimestral, semestral, anual ou contínua.</dd></div>
+    <div><dt>Saída</dt><dd>O que um processo entrega a outro.</dd></div>
+    <div><dt>Sistema de gestão da qualidade</dt><dd>O conjunto de processos ligados que a organização usa para entregar produto conforme e melhorar.</dd></div>
+  </dl>
+</section>
+
+</main>
+</div>
+
+<footer>Material de estudo. Os exemplos, documentos e números são ilustrativos e foram criados para fins didáticos. As referências às normas ISO são resumos para estudo e não substituem o texto das normas.</footer>
+</div>
+
+<script>
+(function () {
+  function read(key) { try { return JSON.parse(localStorage.getItem(key) || 'null'); } catch (e) { return null; } }
+  function write(key, val) { try { localStorage.setItem(key, JSON.stringify(val)); } catch (e) {} }
+
+  /* ---------- Checklist ---------- */
+  var boxes = Array.prototype.slice.call(document.querySelectorAll('#checklist input'));
+  var count = document.getElementById('ck-count');
+  var saved = read('caso-integrado-checklist') || {};
+  function refreshChecks() {
+    var n = 0, state = {};
+    boxes.forEach(function (b) { if (b.checked) { n++; } state[b.id] = b.checked; });
+    count.textContent = n;
+    return state;
+  }
+  boxes.forEach(function (b) {
+    if (saved[b.id]) { b.checked = true; }
+    b.addEventListener('change', function () { write('caso-integrado-checklist', refreshChecks()); });
+  });
+  refreshChecks();
+  document.getElementById('ck-reset').addEventListener('click', function () {
+    boxes.forEach(function (b) { b.checked = false; });
+    write('caso-integrado-checklist', refreshChecks());
+  });
+
+  /* ---------- Exercício ---------- */
+  var KEYS = ['N', 'I', 'A', 'L'];
+  var LABEL = { N: 'Não conformidade', I: 'Indicadores', A: 'Análise crítica', L: 'Conhecimento e lições' };
+  var NAMES = { N: 'não conformidade', I: 'indicadores', A: 'análise crítica', L: 'conhecimento e lições' };
+  var ITEMS = [
+    { t: '“Reclamação grave de um cliente, com produto devolvido.”', a: 'N', w: 'Reclamação com produto afetado pede registro, causa e ação corretiva.' },
+    { t: '“Ação corretiva concluída. Falta saber se o efeito aparece nos próximos meses.”', a: 'I', w: 'O indicador mostra se o efeito se mantém.' },
+    { t: '“O resumo das auditorias do semestre, para a direção.”', a: 'A', w: 'O resultado das auditorias é entrada da análise crítica.' },
+    { t: '“Constatação da auditoria: pedido aceito sem confirmar o prazo com a produção.”', a: 'N', w: 'Constatação de não conformidade é tratada com causa e ação.' },
+    { t: '“O micrômetro marcava 1,6 µm a mais; os resultados foram revistos. Como não esquecer isso?”', a: 'L', w: 'A regra nova vira lição incorporada no procedimento.' },
+    { t: '“Pedido de investimento num medidor de espessura em linha.”', a: 'A', w: 'Recursos e investimentos são decisões da direção.' },
+    { t: '“Regra nova: bobina acima de 600 mm viaja com cantoneira.”', a: 'L', w: 'O que se aprendeu no pós-entrega vai para o procedimento e para o treinamento.' },
+    { t: '“A escala nova do pico virou padrão. É preciso ver se o resultado se mantém.”', a: 'I', w: 'O padrão é acompanhado pelo indicador, todo mês.' },
+    { t: '“O custo do pós-entrega somou R$ 13.000 em dois meses.”', a: 'A', w: 'O custo da não qualidade é entrada para as decisões da direção.' },
+    { t: '“Resina recebida úmida, fora da especificação, segregada no almoxarifado.”', a: 'N', w: 'Produto não conforme no recebimento: registro e tratamento.' },
+    { t: '“A nota da entrega na pesquisa cai há três meses seguidos.”', a: 'I', w: 'A tendência é acompanhada no painel de indicadores, e pode abrir um problema.' },
+    { t: '“O pizzaiolo líder, o único que regula o forno, sai em agosto.”', a: 'L', w: 'Conhecimento exposto com saída prevista: transferência planejada.' }
+  ];
+  var quiz = document.getElementById('quiz');
+  var score = document.getElementById('qz-score');
+  var done = document.getElementById('qz-done');
+  document.getElementById('qz-total').textContent = ITEMS.length;
+  var hits = 0, answered = 0;
+
+  function render() {
+    hits = 0; answered = 0; score.textContent = 0; done.textContent = 0;
+    quiz.textContent = '';
+    ITEMS.forEach(function (item, idx) {
+      var row = document.createElement('div'); row.className = 'q';
+      var p = document.createElement('p'); p.textContent = (idx + 1) + '. ' + item.t;
+      var opts = document.createElement('div'); opts.className = 'opts';
+      opts.setAttribute('role', 'group'); opts.setAttribute('aria-label', 'Para onde vai a saída do item ' + (idx + 1));
+      var why = document.createElement('p'); why.className = 'why'; why.hidden = true;
+      KEYS.forEach(function (k) {
+        var b = document.createElement('button');
+        b.type = 'button'; b.textContent = LABEL[k]; b.id = 'qz-' + idx + '-' + k;
+        b.setAttribute('data-k', k);
+        b.addEventListener('click', function () {
+          var ok = k === item.a;
+          Array.prototype.forEach.call(opts.children, function (o) {
+            o.disabled = true;
+            if (o.getAttribute('data-k') === item.a) { o.className = 'right'; }
+          });
+          if (!ok) { b.className = 'wrong'; }
+          var lead = document.createElement('b');
+          lead.textContent = (ok ? 'Certo. ' : 'A resposta é: ' + NAMES[item.a] + '. ');
+          why.textContent = ''; why.appendChild(lead); why.appendChild(document.createTextNode(item.w));
+          why.className = 'why ' + (ok ? 'ok' : 'no'); why.hidden = false;
+          answered++; if (ok) { hits++; }
+          score.textContent = hits; done.textContent = answered;
+        });
+        opts.appendChild(b);
+      });
+      row.appendChild(p); row.appendChild(opts); row.appendChild(why);
+      quiz.appendChild(row);
+    });
+  }
+  render();
+  document.getElementById('qz-reset').addEventListener('click', render);
+
+  /* ---------- Gráfico: leitura dos valores ---------- */
+  var fig = document.getElementById('fig-bars');
+  var tip = document.getElementById('bars-tip');
+  var svg = document.getElementById('bars');
+  var bars = document.querySelectorAll('#bars .bar');
+  function hide() {
+    tip.hidden = true;
+    Array.prototype.forEach.call(bars, function (b) { b.removeAttribute('opacity'); });
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('#bars .hit'), function (r) {
+    function show() {
+      var d = r.dataset;
+      Array.prototype.forEach.call(bars, function (b) {
+        b.setAttribute('opacity', b.getAttribute('data-k') === d.k ? '1' : '.4');
+      });
+      tip.textContent = '';
+      var strong = document.createElement('b'); strong.textContent = d.s + ' · ' + d.d;
+      tip.appendChild(strong);
+      tip.appendChild(document.createTextNode(d.n + ' · ' + d.p));
+      var box = fig.getBoundingClientRect();
+      var pt = svg.createSVGPoint(); pt.x = parseFloat(d.cx); pt.y = parseFloat(d.cy);
+      var scr = pt.matrixTransform(svg.getScreenCTM());
+      tip.style.left = Math.min(Math.max(scr.x - box.left, 180), box.width - 180) + 'px';
+      tip.style.top = (scr.y - box.top + 4) + 'px';
+      tip.hidden = false;
+    }
+    r.addEventListener('pointerenter', show);
+    r.addEventListener('focus', show);
+    r.addEventListener('pointerleave', hide);
+    r.addEventListener('blur', hide);
+  });
+})();
+</script>
+</body>
+</html>

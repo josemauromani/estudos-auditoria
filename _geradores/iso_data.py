@@ -51,6 +51,7 @@ ESTUDOS = {
     "cal": ("Calibração e recursos de medição", "../Calibracao/treinamento-calibracao.html"),
     "rec": ("Recursos, infraestrutura e ambiente", "../Recursos/treinamento-recursos.html"),
     "con": ("Conhecimento organizacional e pós-entrega", "../Conhecimento/treinamento-conhecimento.html"),
+    "caso": ("Caso integrado", "../Caso-Integrado/treinamento-caso-integrado.html"),
 }
 
 
@@ -81,7 +82,7 @@ REQ = _req([
     ("4.4", "Sistema de gestão da qualidade e seus processos",
      "Determinar os processos necessários, com entradas, saídas, sequência, interação, critérios, recursos, responsáveis, riscos e oportunidades. Avaliar os processos e melhorá-los.",
      "Quais são os processos, como se ligam e como se sabe que funcionam?",
-     "Mapa de processos, SIPOC, indicadores por processo.", ("proc", "sipoc")),
+     "Mapa de processos, SIPOC, indicadores por processo.", ("proc", "sipoc", "caso")),
     # ------------------------------------------------------------ 5
     ("5.1.1", "Liderança e comprometimento: generalidades",
      "A alta direção deve demonstrar liderança: responder pela eficácia do sistema, assegurar política e objetivos compatíveis com a estratégia, integrar os requisitos aos processos do negócio, prover recursos e promover a melhoria.",
@@ -222,7 +223,7 @@ REQ = _req([
     ("9.1.1", "Monitoramento, medição, análise e avaliação: generalidades",
      "Determinar o que medir e monitorar, os métodos, quando medir e quando analisar os resultados. Avaliar o desempenho e a eficácia do sistema.",
      "Quais são os indicadores, e quem os analisa?",
-     "Painel de indicadores, com método e frequência.", ("ind", "pdca")),
+     "Painel de indicadores, com método e frequência.", ("ind", "pdca", "caso")),
     ("9.1.2", "Satisfação do cliente",
      "Monitorar a percepção do cliente sobre o grau em que as suas necessidades e expectativas foram atendidas. Determinar os métodos para obter e usar essa informação.",
      "Como se sabe se o cliente está satisfeito?",
@@ -251,7 +252,7 @@ REQ = _req([
     ("10.3", "Melhoria contínua",
      "Melhorar continuamente a adequação, a suficiência e a eficácia do sistema, considerando os resultados da análise e avaliação e as saídas da análise crítica pela direção.",
      "Como os resultados viram melhoria?",
-     "Evolução dos indicadores, ações derivadas da análise crítica.", ("pdca",)),
+     "Evolução dos indicadores, ações derivadas da análise crítica.", ("pdca", "caso")),
 ])
 NUMS = [r["num"] for r in REQ]
 assert len(REQ) == 45 and len(set(NUMS)) == 45

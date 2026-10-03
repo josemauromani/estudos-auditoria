@@ -35,6 +35,7 @@ Para começar, abra o arquivo `index.html` no navegador.
 | Calibração e recursos de medição | `Calibracao/` | `Calibracao-modelo.xlsx` |
 | Recursos, infraestrutura e ambiente | `Recursos/` | `Recursos-modelo.xlsx` |
 | Conhecimento organizacional e pós-entrega | `Conhecimento/` | `Conhecimento-modelo.xlsx` |
+| Caso integrado | `Caso-Integrado/` | `Caso-Integrado-modelo.xlsx` |
 | Avaliação de fornecedores | `Fornecedores/` | `Fornecedores-modelo.xlsx` |
 | Satisfação do cliente | `Satisfacao/` | `Satisfacao-modelo.xlsx` |
 
