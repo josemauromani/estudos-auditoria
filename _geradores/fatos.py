@@ -169,7 +169,7 @@ _PIZZARIA['linha_do_tempo'] = [
     ('2026-07-24', 'Plano 5W2H: seis ações, A1 a A6 (P22)', ['5W2H', 'Caso-Integrado']),
     ('2026-09-06', 'Fim da verificação do PDCA: 95,5% nas semanas 9 a 12; padronização até 15/09', ['PDCA', 'Caso-Integrado']),
     ('2026-09-15', 'IT-EXP-01 revisão 2, com o agrupamento por zona: ação A6 do 5W2H e etapa 7 do PDCA (P09, N01)', ['Informacao-Documentada', 'Nao-Conformidade', '5W2H', 'PDCA']),
-    ('2026-09', 'Auditoria interna 2026-03, do delivery: 2 NC menores e 1 oportunidade', ['Auditoria', 'Analise-Critica', 'Competencias']),
+    ('2026-09', 'Auditoria interna 2026-03, do delivery: 3 NC menores, nenhuma oportunidade (T05, N23)', ['Auditoria', 'Analise-Critica', 'Competencias']),
     ('2026-09-25', 'RNC 2026-05 aberto; encerrado como eficaz em 10/11/2026', ['Nao-Conformidade']),
     ('2026-09-29', 'Matriz GUT dos problemas do trimestre', ['GUT', 'Caso-Integrado']),
     ('2026-10-02', 'Diagnóstico da ISO 9001 (68% hoje; a T13 recalcula)', ['ISO-9001', 'Analise-Critica']),
@@ -800,6 +800,8 @@ PROIBIDO = [
     {'id': 'N20', 'regex': r'Desenvolvimento e produção de filmes', 'motivo': 'o escopo do certificado é o da declaração de Escopo', 'pastas': ['Certificacao']},
     {'id': 'N22a', 'regex': r'turno do almoço', 'motivo': 'a pizzaria não tem turno do almoço', 'pastas': ['Auditoria', 'Tecnica-Auditoria', 'Certificacao', 'Nao-Conformidade']},
     {'id': 'P09a', 'regex': r'revisão 2 da instrução, de julho', 'motivo': 'a revisão 2 da IT-EXP-01 é de 15/09/2026', 'pastas': ['Nao-Conformidade']},
+    {'id': 'N23', 'regex': r'O segundo está em verificação|duas não conformidades menores e uma oportunidade|Dois registros (no ano|abertos pela auditoria)', 'motivo': 'a auditoria 2026-03 teve três não conformidades menores (T05, N23)', 'pastas': ['Analise-Critica']},
+    {'id': 'N24', 'regex': r'falha que se repete|desvio que se repete', 'motivo': 'o grau da não conformidade não vem da repetição na amostra (N24)', 'pastas': ['Certificacao']},
     {'id': 'T07', 'regex': r'Não há justificativa possível', 'motivo': 'afirmação absoluta a corrigir', 'pastas': None},
     {'id': 'T19', 'regex': r'A Produção tem o maior número de pendências', 'motivo': 'conclusão que os dados não sustentam', 'pastas': None},
     {'id': 'T41', 'regex': r'Erro, ou correção', 'motivo': 'título a corrigir', 'pastas': None},
@@ -1072,7 +1074,9 @@ DECISOES = [
      'canone': 'Valem os números de registro e de auditoria (quatro estudos citam o RNC 2026-05). Na análise crítica, a '
                'entrada c4 passa a "Dois registros abertos pela auditoria 2026-03. O RNC 2026-05 foi encerrado como '
                'eficaz. O segundo está em verificação." e a c6 passa a "A auditoria 2026-03, no delivery: duas não '
-               'conformidades menores e uma oportunidade de melhoria. O salão e as compras nunca foram auditados."',
+               'conformidades menores e uma oportunidade de melhoria. O salão e as compras nunca foram auditados." '
+               'SUPERADO para c4 e c6 por N23 (tarefa 3, depois de T05): a auditoria 2026-03 teve três não conformidades '
+               'menores. Vale o texto de N23, já aplicado em ac_data.py; não aplicar as frases acima.',
      'estudos': ['Analise-Critica']},
     {'id': 'N06',
      'conflito': 'Volume de pedidos: Liberação conta de 118 a 236 pedidos por noite (15 a 21/03/2027, cerca de 4.800 por '
@@ -1459,4 +1463,26 @@ DECISOES = [
                'conformidade da auditoria, passa a ser". Nenhuma conta muda: a avaliação de c4 (Favorável) e a de c6 '
                '(Atenção) ficam.',
      'estudos': ['Analise-Critica', 'Competencias']},
+    {'id': 'N24',
+     'conflito': 'Achado na revisão da tarefa 3. Técnica de auditoria passou a chamar de "Desvio pontual" a amostra com um '
+                 'desvio e de "Desvio repetido" a com dois ou mais; Certificação definia a NC maior como a que "mostra uma '
+                 'falha que se repete" ou "desvio que se repete", e a menor como "desvio pontual"; e Auditoria classifica '
+                 '3 de 28 turnos sem registro como NC menor. Juntos, levavam a ler "repetido na amostra ⇒ maior".',
+     'canone': 'O grau da não conformidade segue o critério da tabela "Tipos de constatação" de Auditoria interna (maior: '
+               'falha generalizada, ou que compromete o sistema ou o resultado para o cliente; menor: falha pontual ou '
+               'parcial), e não a contagem de desvios na amostra. Técnica de auditoria (tec_body.html): módulo 8, linha '
+               '"Desvio pontual", ação "Não conformidade; ampliar a amostra para saber se é pontual ou repetido." → "Não '
+               'conformidade; ampliar a amostra para medir a extensão."; módulo 5, nota "O que fazer com um desvio", '
+               'acrescentada a frase do grau pelo critério de Auditoria; exemplo 1, "O que observar": a não conformidade '
+               'das comandas passa a ter o grau dito (menor, falha parcial, só nas comandas de sábado). O rótulo "Desvio '
+               'pontual" (ISOL) fica. Certificação (cert_body.html): módulo 6, parágrafo "a maior põe em dúvida a '
+               'capacidade do sistema de alcançar os resultados, ou mostra uma falha que se repete" → "…ou mostra uma '
+               'falha generalizada, ou que volta depois de a ação corretiva ter sido dada como concluída"; tabela, NC '
+               'maior, "desvio que se repete" → "falha generalizada, ou que volta depois de a ação corretiva ter sido '
+               'dada como concluída"; glossário, NC maior, "ou mostra falha que se repete" → "ou mostra falha '
+               'generalizada, ou que volta depois de a ação corretiva ter sido dada como concluída". "NC menor: desvio '
+               'pontual, que não compromete o sistema" fica. A I-3 (4 de 11 mudanças sem autorização, 2 depois da '
+               'constatação da auditoria interna) continua maior, porque a ação corretiva não funcionou; o item do '
+               'questionário sobre ela fica. Auditoria não muda.',
+     'estudos': ['Tecnica-Auditoria', 'Certificacao']},
 ]
