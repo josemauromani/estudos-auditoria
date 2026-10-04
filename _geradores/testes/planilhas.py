@@ -9,17 +9,29 @@ ERROS = ('#DIV/0!', '#N/A', '#NAME?', '#NULL!', '#NUM!', '#REF!', '#VALUE!', 'Er
 NS = '{http://schemas.openxmlformats.org/spreadsheetml/2006/main}'
 
 
+def _arquivos_das_abas(z):
+    """Nome da aba -> caminho do XML dela, pelo workbook.xml e pelas relações."""
+    import xml.etree.ElementTree as ET
+    rel_ns = '{http://schemas.openxmlformats.org/officeDocument/2006/relationships}'
+    pkg = '{http://schemas.openxmlformats.org/package/2006/relationships}'
+    alvos = {r.get('Id'): r.get('Target') for r in ET.fromstring(z.read('xl/_rels/workbook.xml.rels')).iter(pkg + 'Relationship')}
+    abas = {}
+    for s in ET.fromstring(z.read('xl/workbook.xml')).iter(NS + 'sheet'):
+        alvo = alvos[s.get(rel_ns + 'id')]
+        abas[s.get('name')] = alvo.lstrip('/') if alvo.startswith('/') else 'xl/' + alvo
+    return abas
+
+
 def _sem_valor(caminho):
-    """Células com fórmula e sem tipo de resultado gravado (arquivo que ninguém recalculou)."""
+    """(aba, célula) com fórmula e sem tipo de resultado gravado (arquivo que ninguém recalculou)."""
     import xml.etree.ElementTree as ET
     achados = set()
     with zipfile.ZipFile(caminho) as z:
-        nomes = [n for n in z.namelist() if re.match(r'xl/worksheets/sheet\d+\.xml$', n)]
-        for n in nomes:
-            for c in ET.fromstring(z.read(n)).iter(NS + 'c'):
+        for aba, arq in _arquivos_das_abas(z).items():
+            for c in ET.fromstring(z.read(arq)).iter(NS + 'c'):
                 v = c.find(NS + 'v')
                 if c.find(NS + 'f') is not None and c.get('t') != 'str' and (v is None or not (v.text or '').strip()):
-                    achados.add((n, c.get('r')))
+                    achados.add((aba, c.get('r')))
     return achados
 
 
@@ -28,7 +40,7 @@ def varrer(caminho):
     f = openpyxl.load_workbook(caminho)
     v = openpyxl.load_workbook(caminho, data_only=True)
     sem_valor = _sem_valor(caminho)
-    for i, ws in enumerate(f.worksheets, 1):
+    for ws in f.worksheets:
         wv = v[ws.title]
         for linha in ws.iter_rows():
             for c in linha:
@@ -38,7 +50,7 @@ def varrer(caminho):
                     if val == '#N/A' and 'NA()' in formula:
                         continue
                     achados.append((ws.title, c.coordinate, 'erro %s' % val))
-                elif formula and val is None and ('xl/worksheets/sheet%d.xml' % i, c.coordinate) in sem_valor:
+                elif formula and val is None and (ws.title, c.coordinate) in sem_valor:
                     achados.append((ws.title, c.coordinate, 'fórmula sem valor gravado'))
     return achados
 

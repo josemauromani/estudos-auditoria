@@ -16,3 +16,9 @@ assert [r[0] for r in C.achar_proibidos(t, regras, 'Caso-Integrado')] == ['D01']
 q = "var KEYS = ['B','C'];\nvar ITEMS = [ { t: 'x', a: 'B', w: 'y' }, { t: 'z', a: 'Q', w: 'y' } ];"
 assert C.questionarios('<script>' + q + '</script>') == ['Q']
 print('autoteste OK')
+import subprocess
+_cli = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'coerencia.py')
+r = subprocess.run([sys.executable, _cli, '--so', 'ZZ99'], capture_output=True, text=True)
+assert r.returncode == 2 and 'ZZ99' in r.stdout, (r.returncode, r.stdout)
+assert subprocess.run([sys.executable, _cli, '--so', 'D01'], capture_output=True, text=True).returncode == 1
+print('--so OK')

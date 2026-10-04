@@ -203,7 +203,12 @@ def main(argv):
         return 0
     import fatos as F
     if '--so' in argv:
-        falhas = _so(F, set(argv[argv.index('--so') + 1].split(',')))
+        ids = set(argv[argv.index('--so') + 1].split(','))
+        desconhecidos = ids - {r['id'] for r in F.PROIBIDO}
+        if desconhecidos:
+            print('id desconhecido em PROIBIDO: %s' % ', '.join(sorted(desconhecidos)))
+            return 2
+        falhas = _so(F, ids)
     else:
         falhas = _rodar_tudo(F)
     for arq, trecho, motivo in falhas:
