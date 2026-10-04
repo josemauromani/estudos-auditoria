@@ -220,7 +220,7 @@ EX1 = {
         (PARCIAL, "Lista mestra em dia", "Recolher a instrução do salão na revisão 1, ainda em uso no balcão.", _GL, D(2027, 12, 10)),
         (NAO, "", "Escolher entre as três propostas pedidas em outubro.", "Dono da loja", D(2027, 12, 15)),
         (SIM, "Registros desde janeiro de 2027", "", "", None),
-        (PARCIAL, "Delivery, salão e recebimento auditados", "Auditar a produção e as compras em janeiro.", "Atendente do turno do almoço", D(2028, 1, 31)),
+        (PARCIAL, "Delivery, salão e recebimento auditados", "Auditar a produção e as compras em janeiro.", "Atendente do turno da tarde", D(2028, 1, 31)),
         (SIM, "Atas de 14/12/2026 e de 14/06/2027", "", "", None),
         (SIM, "Ações das auditorias de 2026 e de março de 2027", "", "", None),
         (SIM, "Painel com 12 meses de entregas no prazo e de reclamações", "", "", None),
@@ -245,7 +245,7 @@ EX1 = {
 # ------------------------------------------------------------ exemplo 2: indústria
 _CQ = "Coordenador da Qualidade"
 EX2 = {
-    "head": dict(org="Indústria de embalagens plásticas", escopo="Desenvolvimento e produção de filmes técnicos lisos e impressos para embalagem de alimentos.",
+    "head": dict(org="Indústria de embalagens plásticas", escopo="Projeto, fabricação e expedição de filmes plásticos técnicos, lisos e impressos, para embalagem de alimentos.",
                  organismo="Organismo acreditado pela Cgcre, contratado em 23/04/2027 por R$ 38.000", motivo="Objetivo O4: certificação até dezembro de 2027. Dois grandes clientes passam a exigir o certificado."),
     "pront": dict(data=D(2027, 9, 30), itens=_itens([
         (SIM, "Escopo revisado em maio de 2027", "", "", None),
@@ -270,17 +270,17 @@ EX2 = {
          D(2027, 10, 25), D(2027, 10, 31), D(2027, 11, 5)),
         ("I-2", "Fase 1", D(2027, 10, 20), PONTO, "9.3", "A análise crítica de 19/08 não tratou a satisfação do cliente como entrada.",
          D(2027, 10, 25), D(2027, 11, 12), D(2027, 11, 15)),
-        ("I-3", "Fase 2", D(2027, 11, 23), MAIOR, "8.5.6", "Das 9 mudanças de processo de 2027, 4 sem autorização, 2 delas depois da constatação da auditoria interna de outubro: a ação corretiva não funcionou.",
+        ("I-3", "Fase 2", D(2027, 11, 23), MAIOR, "8.5.6", "Das 11 mudanças de processo de 2027, 4 sem autorização, 2 delas depois da constatação da auditoria interna de outubro: a ação corretiva não funcionou.",
          D(2027, 11, 30), D(2027, 12, 8), D(2027, 12, 10)),
         ("I-4", "Fase 2", D(2027, 11, 23), MENOR, "7.2", "O operador novo do turno C regula a extrusora 3 sem registro de treinamento.", D(2027, 12, 5), None, None),
         ("I-5", "Fase 2", D(2027, 11, 23), MENOR, "8.5.5", "A política do filme impresso aceita reclamação em 30 dias, e o contrato do cliente A exige 60.", None, None, None),
-        ("I-6", "Fase 2", D(2027, 11, 23), OM, "7.1.3", "O destino do produto afetado por quebra poderia constar em todas as ordens de manutenção.", None, None, None),
+        ("I-6", "Fase 2", D(2027, 11, 23), OM, "7.1.3", "O destino do produto afetado por quebra já consta do registro de produto não conforme e poderia constar também nas ordens de manutenção.", None, None, None),
     ]),
 }
 
 # exemplo 3: da não conformidade maior à decisão, na indústria (só no treinamento)
 MAIOR_FIO = [
-    ("23/11", "Fase 2", "NC maior no 8.5.6: 4 de 9 mudanças sem autorização. A ação da auditoria interna não funcionou."),
+    ("23/11", "Fase 2", "NC maior no 8.5.6: 4\u00a0de\u00a011 mudanças sem autorização. A ação da auditoria interna não funcionou."),
     ("30/11", "Plano enviado", "Causa: o formulário de mudança não chega ao turno C. Correção e ação com prazo."),
     ("08/12", "Ação concluída", "Mudança só no sistema, com aprovação do gerente; treinamento dos três turnos."),
     ("10/12", "Evidência aceita", "O organismo confere os registros de mudança de dezembro, todos autorizados."),

@@ -16,14 +16,14 @@ RISCOS = [ALTO, MEDIO, BAIXO]
 FATOR = {ALTO: 1.5, MEDIO: 1.0, BAIXO: 0.6}
 MINIMO = 3
 BASE = [(5, None), (20, 5), (50, 8), (100, 10), (500, 15), (None, 20)]  # população até: amostra-base (None: todos / acima)
-INCOMP, CONF, ISOL, REPET = "Amostra incompleta", "Conforme na amostra", "Desvio isolado: ampliar a amostra", "Desvio repetido: não conformidade"
+INCOMP, CONF, ISOL, REPET = "Amostra incompleta", "Conforme na amostra", "Desvio pontual: não conformidade, ampliar a amostra", "Desvio repetido: não conformidade"
 AM_SITS = [CONF, ISOL, REPET, INCOMP]
 # ---- evidências
 CONFORME, NC, OM = "Conforme", "Não conformidade", "Oportunidade de melhoria"
 CONSTS = [CONFORME, NC, OM]
 FORTE, MEDIA, FRACA = "Forte", "Média", "Fraca"
 FORCAS = [FORTE, MEDIA, FRACA]
-SEMCORR = "Não conformidade sem corroboração"
+SEMCORR = "Não conformidade sem evidência objetiva"
 # ---- auditor
 NIVEIS = ["Apto a liderar", "Apto a auditar em equipe", "Em formação", "Observação insuficiente"]
 LIDERAR, EQUIPE, FORMACAO, POUCO = NIVEIS
@@ -154,7 +154,7 @@ def ev_conf(e):
         return "Falta a evidência"
     if not e["const"]:
         return "Falta a constatação"
-    if e["const"] == NC and forca(e) != FORTE:
+    if e["const"] == NC and forca(e) == FRACA:
         return SEMCORR
     return "OK"
 
@@ -215,7 +215,7 @@ _ = None
 # ------------------------------------------------------------ exemplo 1: pizzaria, 18/03/2027
 EX1 = {
     "head": dict(num="2027-02", processo="Atender no salão e receber insumos", org="Pizzaria (loja com salão e delivery)", data=D(2027, 3, 18),
-                 lider="Atendente do turno do almoço", equipe="Pizzaiolo do turno do almoço", observador="Consultor que acompanhou a primeira auditoria do salão",
+                 lider="Atendente do turno da tarde", equipe="Pizzaiolo do turno da tarde", observador="Consultor que acompanhou a primeira auditoria do salão",
                  criterios="ISO 9001:2015, requisitos 7 e 8. Instrução do salão IT-SAL-01 rev. 2. Rotina de recebimento de insumos."),
     "ams": _ams([
         ("Comandas do salão: mesa e horário anotados", "8.5.1", "Fevereiro de 2027", 620, MEDIO, 7, 20, 3, "Três comandas sem mesa ou sem horário, todas de sábado."),
@@ -229,6 +229,8 @@ EX1 = {
          "20 comandas de fevereiro: 3 sem mesa ou sem horário", NC),
         ("7.1.5", "Como vocês sabem que o termômetro da câmara mede certo?", "Pizzaiolo líder: “verificamos todo mês”", "",
          "Planilha FR-07: termômetro da câmara verificado em 15/03, reprovado e trocado; leituras anteriores não revistas", NC),
+        ("7.1.4", "Como as leituras de temperatura da câmara fria são registradas?", "", "",
+         "10 leituras de fevereiro: 1 sem anotação, a do domingo, 14/02", NC),
         ("8.4", "Como o recebimento confere a temperatura dos refrigerados?", "Atendente que recebe", "Recebimento do laticínio às 15h: temperatura medida e anotada",
          "12 notas de fevereiro com a temperatura anotada", CONFORME),
         ("7.2", "Quem treinou a equipe nova do salão, e como?", "Gerente da loja", "", "3 fichas de treinamento assinadas, com a instrução IT-SAL-01", CONFORME),
@@ -239,8 +241,8 @@ EX1 = {
         ("8.5.1", "Como a pizza do salão é conferida antes de servir?", "Pizzaiolo do turno", "Conferência do sabor pela comanda, no passa-pratos", "", ""),
     ]),
     "auds": _auds([
-        ("Atendente do turno do almoço", "Auditor líder", [2, 2, 3, 2, 1, 3, 2, 1, 2, 2, 3, _]),
-        ("Pizzaiolo do turno do almoço", "Auditor", [1, 1, _, 2, 2, 2, 1, 2, 3, _, 2, 2]),
+        ("Atendente do turno da tarde", "Auditor líder", [2, 2, 3, 2, 1, 3, 2, 1, 2, 2, 3, _]),
+        ("Pizzaiolo do turno da tarde", "Auditor", [1, 1, _, 2, 2, 2, 1, 2, 3, _, 2, 2]),
     ]),
 }
 
@@ -253,7 +255,7 @@ EX2 = {
     "ams": _ams([
         ("Registros de espessura por bobina, com cinco pontos", "8.5.1", "Julho e agosto de 2027", 1150, ALTO, 12, 30, 0, ""),
         ("Registros de mudança de processo, com autorização", "8.5.6", "2027 até setembro", 9, ALTO, 1, 8, 2, "Duas mudanças de velocidade do turno C sem autorização."),
-        ("Ordens de manutenção corretiva, com o produto afetado", "7.1.3", "Julho e agosto de 2027", 14, MEDIO, 2, 5, 1, "Quebra do chiller, 22/07: produto afetado sem destino."),
+        ("Ordens de manutenção corretiva, com o produto afetado", "8.7", "Julho e agosto de 2027", 14, MEDIO, 2, 5, 1, "Quebra do chiller, 22/07: produto afetado sem destino."),
         ("Instrumentos do posto com etiqueta em dia", "7.1.5", "Na data da auditoria", 25, ALTO, 1, 12, 0, ""),
         ("Registros de treinamento do turno C", "7.2", "Admissões e remanejamentos de 2027", 12, MEDIO, 2, 5, 0, ""),
     ]),
@@ -261,8 +263,8 @@ EX2 = {
         ("8.5.6", "Como uma mudança de processo é autorizada?", "Líder do turno C", "", "8 registros de mudança de 2027: 2 sem autorização", NC),
         ("8.5.1", "Como a espessura é medida na extrusora 3?", "Operador do turno A", "Medição em cinco pontos com o micrômetro de 0,1 µm",
          "30 bobinas de julho e agosto, todas com os cinco pontos", CONFORME),
-        ("7.1.3", "O que acontece com o produto quando uma máquina quebra?", "Supervisor de manutenção", "",
-         "5 ordens corretivas: 1 sem o destino do produto afetado", OM),
+        ("8.7", "O que acontece com o produto quando uma máquina quebra?", "Supervisor de manutenção", "",
+         "5 ordens corretivas: 1 sem o destino do produto afetado", NC),
         ("7.1.6", "Quem mais sabe regular a extrusora 3?", "Operador sênior e operador do turno C", "Operador do turno C regulando com acompanhamento",
          "Mapa do conhecimento, C-01, ação até 30/11", CONFORME),
         ("7.1.5", "Os instrumentos do posto estão identificados e em dia?", "", "12 instrumentos com etiqueta em dia", "Lista de instrumentos de 30/09", CONFORME),
@@ -292,9 +294,9 @@ CHECK = [
     "O tamanho de cada amostra é decidido antes, pela população e pelo risco.",
     "O auditor escolhe a amostra, e o ponto de partida não vem do auditado.",
     "O tamanho da amostra e o resultado ficam anotados: quantos se viu e quantos desvios.",
-    "Um desvio isolado leva a ampliar a amostra antes de concluir.",
+    "Um desvio pontual já é não conformidade, e a amostra é ampliada para medir a extensão.",
     "Cada constatação tem ao menos uma evidência objetiva: observação ou registro.",
-    "Toda não conformidade é corroborada por duas fontes.",
+    "Toda não conformidade tem ao menos uma evidência objetiva; a que nasce de entrevista é corroborada.",
     "O auditor segue ao menos uma trilha até o fim em cada processo.",
     "As perguntas indutoras são evitadas, e o auditado fala mais que o auditor.",
     "As constatações são mostradas ao auditado durante a auditoria.",

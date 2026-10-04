@@ -35,7 +35,7 @@ D, T = date, time
 
 EX1 = {
     "head": dict(num="2026-03", processo="Atender pedido de delivery", area="Pizzaria (loja)", data=D(2026, 9, 25),
-                 lider="Atendente do turno do almoço", equipe="Pizzaiolo do turno do almoço",
+                 lider="Atendente do turno da tarde", equipe="Pizzaiolo do turno da tarde",
                  auditado="Líder da expedição e atendentes da noite", versao="1.0",
                  objetivo="Verificar se os padrões definidos no ciclo de melhoria das entregas estão sendo seguidos.",
                  escopo="Registro do pedido, expedição e controle de temperatura, nos turnos da noite de sexta e de sábado.",
@@ -62,7 +62,7 @@ EX1 = {
         ("Indicador de entregas", "O indicador de entregas no prazo é atualizado toda semana?", "Últimas 8 semanas",
          "Gráfico atualizado nas 8 semanas, por faixa de horário.", C, None),
         ("IT-EXP-01, item 7", "A equipe da expedição foi treinada no método de agrupamento?", "Lista de presença e 2 entregadores admitidos em setembro",
-         "Equipe treinada em julho. A instrução não diz como treinar quem entra depois. 1 dos 2 novos ainda não foi treinado.", OM, 3),
+         "Equipe treinada em julho. A instrução não diz como treinar quem entra depois. 1 dos 2 novos ainda não foi treinado.", NC, 3),
     ]),
     "const": _ct([
         ("NC menor", "Registro do pedido", "IT-EXP-01 rev. 2, item 2: todo pedido deve ser registrado com o complemento do endereço.",
@@ -73,12 +73,12 @@ EX1 = {
          "Planilha de temperatura sem registro nos turnos da noite de 12/09, 13/09 e 20/09, em 28 turnos analisados.",
          "O registro de temperatura da câmara fria não é feito em todos os turnos.",
          "Pizzaiolo líder", D(2026, 10, 9), "Aberta"),
-        ("Oportunidade de melhoria", "Expedição", "IT-EXP-01 rev. 2, item 7: a equipe deve ser treinada no método.",
+        ("NC menor", "Expedição", "IT-EXP-01 rev. 2, item 7: a equipe deve ser treinada no método.",
          "A equipe foi treinada em julho. 1 de 2 entregadores admitidos em setembro ainda não recebeu o treinamento.",
-         "A instrução pode definir quando e como treinar quem entra na equipe depois do treinamento inicial.",
+         "Entregadores admitidos depois do treinamento inicial trabalham sem o treinamento no método exigido pela instrução.",
          "Líder da expedição", D(2026, 10, 30), "Aberta"),
     ]),
-    "conclusao": "Os padrões da expedição estão implantados e são seguidos. O registro do pedido por telefone e o controle de temperatura precisam de ação corretiva.",
+    "conclusao": "Os padrões da expedição estão implantados e são seguidos. O registro do pedido por telefone, o controle de temperatura e o treinamento de quem entra na expedição precisam de ação corretiva.",
 }
 
 EX2 = {

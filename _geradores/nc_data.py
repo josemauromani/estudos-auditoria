@@ -31,7 +31,7 @@ def media(ex, momento):
 
 EX1 = {
     "head": dict(num="2026-05", aberta=D(2026, 9, 25), origem="Auditoria interna", ref="Auditoria 2026-03, constatação nº 1",
-                 processo="Registro do pedido", area="Pizzaria (loja)", por="Atendente do turno do almoço, auditor líder",
+                 processo="Registro do pedido", area="Pizzaria (loja)", por="Atendente do turno da tarde, auditor líder",
                  resp="Atendente líder"),
     "desc": dict(req="IT-EXP-01 rev. 2, item 2: todo pedido deve ser registrado com o complemento do endereço.",
                  evid="Em 10 pedidos recebidos por telefone em 19/09, 6 foram registrados sem complemento.",
@@ -50,7 +50,7 @@ EX1 = {
          "O roteiro de atendimento por telefone não traz essa pergunta.",
          "Leitura do roteiro afixado no balcão, de março de 2026."),
         ("Por que o roteiro não traz a pergunta?",
-         "O roteiro foi escrito antes da revisão 2 da instrução, de julho de 2026, e não foi atualizado.",
+         "O roteiro foi escrito antes da revisão 2 da instrução, de setembro de 2026, e não foi atualizado.",
          "Comparação das datas dos dois documentos."),
         ("Por que o roteiro não foi atualizado?",
          "Quando uma instrução muda, ninguém confere os roteiros, as telas e os formulários ligados a ela.",
@@ -167,7 +167,7 @@ CHECK = [
     "Cada ação corretiva trata uma causa confirmada.",
     "Cada ação tem responsável, prazo e evidência de implantação.",
     "O indicador, a meta e o período de observação foram definidos antes da implantação.",
-    "A eficácia foi verificada por quem não executou as ações.",
+    "A eficácia foi verificada, de preferência por quem não executou as ações.",
     "Os riscos, os procedimentos e os treinamentos foram atualizados.",
 ]
 

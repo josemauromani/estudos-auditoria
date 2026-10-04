@@ -11,8 +11,8 @@ _src = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'tec_test_m
 _ns = {}
 exec(_src[_src.index('AK = '):_src.index("preencher('t3'")], vars(R).copy(), _ns)
 EX3 = dict(ams=_ns['ams3'], evs=_ns['evs3'], auds=_ns['auds3'])
-PAINEL = {'Amostras': 7, 'Registros verificados': 8, 'Desvios': 9, 'Conforme na amostra': 10, 'Desvio isolado': 11, 'Desvio repetido': 12, 'Amostra incompleta': 13,
-          'Perguntas': 15, 'Não conformidades': 16, 'Evidências fortes': 17, 'Evidências fracas': 18, 'Não conformidades sem corroboração': 19, 'Auditores avaliados': 21,
+PAINEL = {'Amostras': 7, 'Registros verificados': 8, 'Desvios': 9, 'Conforme na amostra': 10, 'Desvio pontual': 11, 'Desvio repetido': 12, 'Amostra incompleta': 13,
+          'Perguntas': 15, 'Não conformidades': 16, 'Evidências fortes': 17, 'Evidências fracas': 18, 'Não conformidades sem evidência objetiva': 19, 'Auditores avaliados': 21,
           'Apto a liderar': 22, 'Apto a auditar em equipe': 23, 'Em formação': 24, 'Linhas a completar': 25}
 
 
@@ -49,9 +49,9 @@ for nome, ex in (('t1', EX1), ('t2', EX2), ('t3', EX3)):
     print('Avisos     ', [A['E46'].value, E['E71'].value, U['F30'].value, Pa['C28'].value])
     if nome != 't3':
         r = resumo(ex)
-        esp = {'Amostras': r['ams'], 'Registros verificados': r['verif'], 'Desvios': r['desv'], 'Conforme na amostra': r['sits'][CONF], 'Desvio isolado': r['sits'][ISOL],
+        esp = {'Amostras': r['ams'], 'Registros verificados': r['verif'], 'Desvios': r['desv'], 'Conforme na amostra': r['sits'][CONF], 'Desvio pontual': r['sits'][ISOL],
                'Desvio repetido': r['sits'][REPET], 'Amostra incompleta': r['sits'][INCOMP], 'Perguntas': r['evs'], 'Não conformidades': r['consts'][NC],
-               'Evidências fortes': r['forcas'][FORTE], 'Evidências fracas': r['forcas'][FRACA], 'Não conformidades sem corroboração': r['semcorr'], 'Auditores avaliados': r['auds'],
+               'Evidências fortes': r['forcas'][FORTE], 'Evidências fracas': r['forcas'][FRACA], 'Não conformidades sem evidência objetiva': r['semcorr'], 'Auditores avaliados': r['auds'],
                'Apto a liderar': r['niveis'][LIDERAR], 'Apto a auditar em equipe': r['niveis'][EQUIPE], 'Em formação': r['niveis'][FORMACAO],
                'Linhas a completar': r['am_rever'] + r['ev_rever']}
         dif = {k: (pa[k], x) for k, x in esp.items() if pa[k] != x}

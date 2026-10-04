@@ -119,7 +119,7 @@ def f_forca(r):
 
 def f_evconf(r):
     return (f'IF(AND(C{r}="",D{r}="",COUNTA(E{r}:H{r})=0),"",IF(D{r}="","Falta o requisito",IF(C{r}="","Falta a pergunta",IF(N(I{r})=0,"Falta a evidência",'
-            f'IF(H{r}="","Falta a constatação",IF(AND(H{r}="{NC}",J{r}<>"{FORTE}"),"{SEMCORR}","OK"))))))')
+            f'IF(H{r}="","Falta a constatação",IF(AND(H{r}="{NC}",J{r}="{FRACA}"),"{SEMCORR}","OK"))))))')
 
 
 def ev_formulas(ws, r, merge=None):
@@ -249,10 +249,10 @@ r += 1
 section("As outras regras de cálculo")
 for k, text in [
     (CONF, "Amostra completa, sem desvio."),
-    (ISOL, "Amostra completa, com um desvio. Amplie antes de concluir."),
+    (ISOL, "Amostra completa, com um desvio. Já é não conformidade; amplie a amostra para saber se é pontual ou repetido."),
     (REPET, "Amostra completa, com dois desvios ou mais."),
     (INCOMP, "Menos verificados do que a amostra calculada."),
-    ("Força da evidência", f"{FORTE}: duas fontes ou mais. {MEDIA}: só observação ou só registro. {FRACA}: só entrevista. Não conformidade pede evidência forte."),
+    ("Força da evidência", f"{FORTE}: duas fontes ou mais. {MEDIA}: só observação ou só registro. {FRACA}: só entrevista. Não conformidade pede ao menos uma fonte objetiva (força média ou forte); a que só tem entrevista pede corroboração."),
     ("Nível do auditor", f"Com pelo menos {MIN_OBS} critérios observados: 80% ou mais, {LIDERAR.lower()}; de 60% a 79%, {EQUIPE.lower()}; abaixo, {FORMACAO.lower()}. "
                          "Um critério crítico com nota 0 ou 1 leva a em formação."),
     ("Notas", " ".join(f"{n}: {t.lower()}." for n, t in ESCALA) + " Em branco: não observado."),
@@ -332,7 +332,7 @@ N_ = f"N{A1}:N{A2}"
 AAV = resumo_aba(ws, s, [
     ("Amostras", f'=COUNTA(C{A1}:C{A2})&" amostras, "&SUM(K{A1}:K{A2})&" registros verificados, "&SUM(L{A1}:L{A2})&" desvios"'),
     ("Conclusões", conta_por(N_, AM_SITS)),
-    ("Aviso", f'=IF(COUNTA(C{A1}:C{A2})=0,"Liste as amostras da auditoria",IF(COUNTIF({N_},"{ISOL}")>0,"Há desvio isolado: amplie a amostra antes de concluir",'
+    ("Aviso", f'=IF(COUNTA(C{A1}:C{A2})=0,"Liste as amostras da auditoria",IF(COUNTIF({N_},"{ISOL}")>0,"Há desvio pontual: amplie a amostra para medir a extensão",'
               f'IF(COUNTIF({N_},"{INCOMP}")>0,"Há amostra incompleta: complete ou registre por quê",'
               f'IF(SUMPRODUCT((O{A1}:O{A2}<>"")*(O{A1}:O{A2}<>"OK"))>0,"Há amostra a completar: veja a coluna Conferência","OK"))))'),
 ], "O")
@@ -374,7 +374,7 @@ H_ = f"H{E1}:H{E2}"
 EAV = resumo_aba(ws, s, [
     ("Perguntas", f'=COUNTA(C{E1}:C{E2})&" perguntas: "&' + conta_por(H_, CONSTS)[1:]),
     ("Força", conta_por(f"J{E1}:J{E2}", (FORTE, MEDIA, FRACA))),
-    ("Aviso", f'=IF(COUNTA(C{E1}:C{E2})=0,"Registre as perguntas e as evidências",IF(COUNTIF(K{E1}:K{E2},"{SEMCORR}")>0,"Há não conformidade sem corroboração: busque outra fonte",'
+    ("Aviso", f'=IF(COUNTA(C{E1}:C{E2})=0,"Registre as perguntas e as evidências",IF(COUNTIF(K{E1}:K{E2},"{SEMCORR}")>0,"Há não conformidade sem evidência objetiva: busque registro ou observação",'
               f'IF(SUMPRODUCT((K{E1}:K{E2}<>"")*(K{E1}:K{E2}<>"OK"))>0,"Há pergunta a completar: veja a coluna Conferência","OK")))'),
 ], "K")
 ws.freeze_panes = f"D{E1}"
@@ -438,7 +438,7 @@ IND = [
     ("Registros verificados", f"=SUM({Ak})", "A soma das amostras."),
     ("Desvios", f"=SUM({Al})", "Em todas as amostras."),
     (CONF, f'=COUNTIF({An},"{CONF}")', "Amostras sem desvio."),
-    ("Desvio isolado", f'=COUNTIF({An},"{ISOL}")', "Ampliar antes de concluir."),
+    ("Desvio pontual", f'=COUNTIF({An},"{ISOL}")', "Não conformidade; ampliar para medir a extensão."),
     ("Desvio repetido", f'=COUNTIF({An},"{REPET}")', "Não conformidade sustentada."),
     (INCOMP, f'=COUNTIF({An},"{INCOMP}")', "Completar ou registrar por quê."),
     ("EVIDÊNCIAS", None, None),
@@ -446,7 +446,7 @@ IND = [
     ("Não conformidades", f'=COUNTIF({Eh},"{NC}")', "Constatações de não conformidade."),
     ("Evidências fortes", f'=COUNTIF({Ej},"{FORTE}")', "Duas fontes ou mais."),
     ("Evidências fracas", f'=COUNTIF({Ej},"{FRACA}")', "Só entrevista."),
-    ("Não conformidades sem corroboração", f'=COUNTIF({Ek},"{SEMCORR}")', "Buscar outra fonte antes do relatório."),
+    ("Não conformidades sem evidência objetiva", f'=COUNTIF({Ek},"{SEMCORR}")', "Buscar registro ou observação antes do relatório."),
     ("AUDITORES", None, None),
     ("Auditores avaliados", f"=COUNTA(Auditores!{AUDC[0]}5:{AUDC[-1]}5)", "Da aba Auditores."),
     (LIDERAR, f'=COUNTIF({Un},"{LIDERAR}")', "Podem conduzir auditorias."),
@@ -472,8 +472,8 @@ s = rr + 1
 band(ws, s, "Resumo automático", "F")
 label(ws, f"B{s+1}", "Aviso")
 C = lambda n: f"C{IR[n]}"  # noqa: E731
-calc(ws, f"C{s+1}", f'=IF({C("Amostras")}+{C("Perguntas")}=0,"Preencha as abas Amostras e Evidências",IF({C("Não conformidades sem corroboração")}>0,"Há não conformidade sem corroboração",'
-     f'IF({C("Desvio isolado")}>0,"Há desvio isolado: amplie a amostra",IF({C(INCOMP)}>0,"Há amostra incompleta",'
+calc(ws, f"C{s+1}", f'=IF({C("Amostras")}+{C("Perguntas")}=0,"Preencha as abas Amostras e Evidências",IF({C("Não conformidades sem evidência objetiva")}>0,"Há não conformidade sem evidência objetiva",'
+     f'IF({C("Desvio pontual")}>0,"Há desvio pontual: amplie a amostra",IF({C(INCOMP)}>0,"Há amostra incompleta",'
      f'IF({C("Linhas a completar")}>0,"Há linha a completar: veja as conferências",IF({C(FORMACAO)}>0,"Há auditor em formação: planeje o acompanhamento","OK"))))))',
      merge=f"C{s+1}:F{s+1}", sz=9, b=False, h="left")
 cf_warn(ws, f"C{s+1}:F{s+1}", f"C{s+1}")
@@ -579,7 +579,7 @@ def exemplo(ws, ex_):
         fontes = f'COUNTA(E{rr},F{rr},H{rr})'
         calc(ws, f"M{rr}", f'=IF({fontes}=0,"",IF({fontes}>=2,"{FORTE}",IF(OR(F{rr}<>"",H{rr}<>""),"{MEDIA}","{FRACA}")))', sz=9)
         calc(ws, f"N{rr}", f'=IF(D{rr}="","Falta o requisito",IF(C{rr}="","Falta a pergunta",IF({fontes}=0,"Falta a evidência",IF(K{rr}="","Falta a constatação",'
-                           f'IF(AND(K{rr}="{NC}",M{rr}<>"{FORTE}"),"{SEMCORR}","OK")))))', b=False, sz=9, merge=f"N{rr}:O{rr}")
+                           f'IF(AND(K{rr}="{NC}",M{rr}="{FRACA}"),"{SEMCORR}","OK")))))', b=False, sz=9, merge=f"N{rr}:O{rr}")
         ws.row_dimensions[rr].height = alt([(e["perg"], 36), (e["ent"], 24), (e["obs"], 34), (e["reg"], 46)], minimo=21.75)
     e2 = rr
     cf_texto(ws, f"M{e1}:M{e2}", f"M{e1}", EV_CF)

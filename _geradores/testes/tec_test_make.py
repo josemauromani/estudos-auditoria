@@ -29,7 +29,7 @@ def r4(x):
     return round(x, 4) if isinstance(x, float) else x
 
 
-for aba, ex, pos in (('Exemplo 1 - Pizzaria', EX1, dict(a=14, e=22, k=35, rs=47)), ('Exemplo 2 - Indústria', EX2, dict(a=14, e=22, k=34, rs=46))):
+for aba, ex, pos in (('Exemplo 1 - Pizzaria', EX1, dict(a=14, e=22, k=36, rs=48)), ('Exemplo 2 - Indústria', EX2, dict(a=14, e=22, k=34, rs=46))):
     s = wb[aba]
     got_a = [(v(s[f'I{r}']), v(s[f'J{r}']), v(s[f'N{r}']), v(s[f'O{r}'])) for r in range(pos['a'], pos['a'] + len(ex['ams']))]
     esp_a = [(e(tamanho(a)), e(passo(a)), am_sit(a), am_conf(a)) for a in ex['ams']]
@@ -89,7 +89,8 @@ ams3 = [dict(zip(AK, r)) for r in [
 EK = ('perg', 'req', 'ent', 'obs', 'reg', 'const')
 evs3 = [dict(zip(EK, r)) for r in [
     ('p', '7.1', 'e', '', '', CONFORME),   # fraca, mas conforme: OK
-    ('p', '7.1', '', 'o', '', NC),         # média: sem corroboração
+    ('p', '7.1', '', 'o', '', NC),         # média: uma fonte objetiva basta, OK
+    ('p', '7.1', 'e', '', '', NC),         # fraca: sem evidência objetiva
     ('p', '7.1', 'e', '', 'r', NC),        # forte: OK
     ('p', '7.1', '', '', '', CONFORME),    # falta a evidência
     ('', '7.1', 'e', '', '', CONFORME),    # falta a pergunta

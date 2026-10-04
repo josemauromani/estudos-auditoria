@@ -506,7 +506,7 @@ dv_list(ws, "G7", ["Sim", "Não"], "A mesma não conformidade ocorreu de novo de
 dv_date(ws, "L6")
 note(ws, "D4", 'O indicador mede a não conformidade, e não a ação.\nEx.: "Requisições com especificação ausente ou insuficiente".')
 note(ws, "D7", "Quantos períodos seguidos o indicador precisa ficar dentro da meta para a ação ser considerada eficaz.\nEx.: 3 meses, 4 semanas.")
-note(ws, "L5", "A verificação deve ser feita por quem não executou as ações.")
+note(ws, "L5", "Convém que a verificação seja feita por quem não executou as ações. É uma convenção deste material.")
 for col, text in zip("BCDEFGH", ["#", "Período", "Momento", "Valor", "Meta", "Dentro da meta?", "Seguidos na meta"]):
     head(ws, f"{col}9", text)
 ws.row_dimensions[9].height = 30

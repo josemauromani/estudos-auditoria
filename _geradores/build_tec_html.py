@@ -17,7 +17,7 @@ SRC, BODY, OUT = sys.argv[1], sys.argv[2], sys.argv[3]
 src = open(SRC, encoding="utf-8").read()
 css = re.search(r"<style>\n(.*?)</style>", src, re.S).group(1)
 
-# conforme, isolado e repetido: a mesma paleta de três cores do estudo de Calibração, validada para daltonismo nos dois modos
+# conforme, pontual e repetido: a mesma paleta de três cores do estudo de Calibração, validada para daltonismo nos dois modos
 LIGHT = ("\n  --s1:#2A6FB0; --s1-tint:#DCE8F3;\n  --s2:#D19A2E; --s2-tint:#F8EBCB;\n  --s3:#B0413E; --s3-tint:#F5DEDC;\n  --on-s2:#16242E;")
 DARK = ("\n  --s1:#4F97DB; --s1-tint:#1B2F42;\n  --s2:#B58E14; --s2-tint:#3A2C12;\n  --s3:#D14B45; --s3-tint:#3D1F1E;\n  --on-s2:#0F171C;")
 assert css.count("--accent:#2B5C8A;") == 1 and css.count("--accent:#86B7E3;") == 2
@@ -112,11 +112,11 @@ ci.append("      </svg>")
 
 # ------------------------------------------------------------------ figura 2: as cinco etapas em campo
 et = ['      <svg viewBox="0 0 900 236" role="img" aria-label="As cinco etapas do trabalho em campo. ' + " ".join(f"{n}: {d}" for n, d in ETAPAS)
-      + ' Quando a amostra mostra um desvio isolado, o auditor volta a coletar.">', "        <defs>" + marker("a2") + marker("a2m", True) + "</defs>"]
+      + ' Quando a amostra mostra um desvio pontual, o auditor volta a coletar, para medir a extensão.">', "        <defs>" + marker("a2") + marker("a2m", True) + "</defs>"]
 xs = cinco(et, ETAPAS, ["bx", "bx-p", "bx-d", "bx-c", "bx-ink"], "a2", h=152, rotulo=lambda k: f"ETAPA {k + 1}", mid=84)
 xa, xb = xs[3] + W5 / 2, xs[2] + W5 / 2
 et.append(f'        <path class="ln-mu dash" d="M{xa} 170 V198 H{xb} V174" marker-end="url(#a2m)"/>')
-et.append(f'        <text class="mu halo" x="{(xa + xb) / 2}" y="202" font-size="11"{MID}>desvio isolado: ampliar a amostra</text>')
+et.append(f'        <text class="mu halo" x="{(xa + xb) / 2}" y="202" font-size="11"{MID}>desvio pontual: ampliar a amostra</text>')
 et.append(f'        <text x="450" y="228" font-size="11.5"{MID}>Coletar e comparar se alternam até a evidência bastar. Só então a constatação é escrita.</text>')
 et.append("      </svg>")
 
@@ -155,7 +155,7 @@ am.append("      </svg>")
 
 # ------------------------------------------------------------------ figura 5: o triângulo da evidência
 tr = ['      <svg viewBox="0 0 900 270" role="img" aria-label="O triângulo da evidência. ' + " ".join(f"{a}: {b}" for a, b in TRIANGULO)
-      + ' Forte: duas fontes ou mais. Média: só observação ou só registro. Fraca: só entrevista. Toda não conformidade precisa de evidência forte.">']
+      + ' Forte: duas fontes ou mais. Média: só observação ou só registro. Fraca: só entrevista. Toda não conformidade precisa de ao menos uma fonte objetiva: observação ou registro.">']
 V = [(230, 30), (80, 220), (380, 220)]
 tr.append(f'        <path class="bx-s1" d="M{V[0][0]} {V[0][1]} L{V[1][0]} {V[1][1]} L{V[2][0]} {V[2][1]} Z"/>')
 for (x, y), (t, d), cls in zip(V, TRIANGULO, ("hd-p", "hd-d", "hd-c")):
@@ -164,9 +164,9 @@ for (x, y, anc, dy), (t, d) in zip(((230, 18, MID, -4), (70, 248, END, 0), (390,
     tr.append(f'        <text class="b" x="{x}" y="{y + dy}" font-size="12"{anc}>{escape(t)}</text>')
 tr.append(f'        <text class="b" x="230" y="160" font-size="13"{MID}>Forte</text>')
 tr.append(f'        <text class="mu" x="230" y="177" font-size="10.5"{MID}>duas fontes ou mais</text>')
-for k, (f, d, cls, uso) in enumerate(((FORTE, "Duas fontes ou mais, uma delas objetiva.", "bx-s1", "Basta para uma não conformidade."),
-                                     (MEDIA, "Só observação, ou só registro.", "bx-s2", "Basta para conforme ou oportunidade."),
-                                     (FRACA, "Só o que alguém disse.", "bx-s3", "Pede outra fonte antes de concluir."))):
+for k, (f, d, cls, uso) in enumerate(((FORTE, "Duas fontes ou mais, uma delas objetiva.", "bx-s1", "A base mais segura para uma não conformidade."),
+                                     (MEDIA, "Só observação, ou só registro.", "bx-s2", "Basta para a não conformidade; a segunda fonte é recomendada."),
+                                     (FRACA, "Só o que alguém disse.", "bx-s3", "Pede observação ou registro antes de concluir."))):
     y = 22 + k * 76
     tr.append(f'        <rect class="{cls}" x="470" y="{y}" width="418" height="66"/>')
     tr.append(f'        <text class="b" x="486" y="{y + 24}" font-size="12.5">{f}</text>')
@@ -234,7 +234,8 @@ def ev_tab(ex):
         fc = f'<span class="chip {EV_CLS[f]}">{f}</span>' if f else "—"
         rows.append(f'<td class="n">{e["req"]}</td><td><strong>{escape(e["perg"])}</strong>{fon}</td><td>{const}</td><td>{fc}</td><td>{chip(ev_conf(e))}</td>')
     c = r["consts"]
-    return tabela(f'Evidências · {r["evs"]} perguntas: {c[CONFORME]} conformes, {c[NC]} não conformidades, {c[OM]} oportunidade{"s" if c[OM] != 1 else ""}',
+    partes = [f"{c[CONFORME]} conformes", f"{c[NC]} não conformidades"] + ([f'{c[OM]} oportunidade{"s" if c[OM] != 1 else ""}'] if c[OM] else [])
+    return tabela(f'Evidências · {r["evs"]} perguntas: {", ".join(partes)}',
                   ['<th>Requisito</th>', '<th style="width:56%">Pergunta<small>As fontes de evidência</small></th>', '<th>Constatação</th>', '<th>Força</th>', '<th>Conferência</th>'], rows)
 
 
@@ -280,7 +281,7 @@ COR = {CONF: "f1", ISOL: "f2", INCOMP: "f2", REPET: "f3"}
 ch = [f'      <svg id="bars" viewBox="0 0 900 {bottom + 44}" role="img" aria-label="Registros verificados em cada amostra, com o tamanho planejado e os desvios. '
       + " ".join(f'{r[1]["oque"]}: {r[1]["verif"]} de {tamanho(r[1])}, {r[1]["desv"]} desvios, {am_sit(r[1]).lower()}.' for r in rows_c if r[0] == "a") + '">',
       '        <g font-size="11.5">']
-for k, (t, cls) in enumerate(((CONF, "f1"), ("Isolado ou incompleta", "f2"), ("Desvio repetido", "f3"))):
+for k, (t, cls) in enumerate(((CONF, "f1"), ("Pontual ou incompleta", "f2"), ("Desvio repetido", "f3"))):
     ch.append(f'          <rect class="{cls}" x="{X0 + k * 165}" y="12" width="14" height="14"/><text x="{X0 + 22 + k * 165}" y="24">{t}</text>')
 ch.append('        </g>')
 for d in range(0, XMAX + 1, 8):

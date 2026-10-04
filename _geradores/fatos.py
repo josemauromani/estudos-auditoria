@@ -789,7 +789,17 @@ PROIBIDO = [
     {'id': 'P10b', 'regex': r'RNC 2027-(27|29|30)', 'motivo': 'número de RNC em conflito', 'pastas': ['Recursos']},
     {'id': 'P10c', 'regex': r'RNC 2027-(27|29|30)', 'motivo': 'número de RNC em conflito', 'pastas': ['Histograma-CEP']},
     {'id': 'P23', 'regex': r'mussarela', 'motivo': 'grafia única: muçarela', 'pastas': None},
+    {'id': 'T01', 'regex': r'[Dd]esvio isolado|oportunidade ou ponto a verificar', 'motivo': 'um desvio com evidência objetiva já é não conformidade', 'pastas': ['Tecnica-Auditoria']},
     {'id': 'T02', 'regex': r'corroborada por duas fontes', 'motivo': 'afirmação a corrigir', 'pastas': None},
+    {'id': 'T02b', 'regex': r'precisa de duas fontes|regra das duas fontes|quais foram as duas fontes', 'motivo': 'a não conformidade pede uma fonte objetiva; a segunda é recomendada', 'pastas': ['Tecnica-Auditoria']},
+    {'id': 'T03', 'regex': r'ainda não sustenta nada', 'motivo': 'a leitura que faltou é não conformidade pontual', 'pastas': ['Tecnica-Auditoria']},
+    {'id': 'T04', 'regex': r'virou oportunidade de melhoria até a amostra', 'motivo': 'a quebra sem destino é não conformidade contra o 8.7', 'pastas': ['Tecnica-Auditoria']},
+    {'id': 'T05', 'regex': r'A instrução pode definir quando e como treinar', 'motivo': 'a constatação 3 é não conformidade menor', 'pastas': ['Auditoria']},
+    {'id': 'T06', 'regex': r'A verificação deve ser feita por quem não executou', 'motivo': 'verificação independente é convenção do material', 'pastas': ['Nao-Conformidade']},
+    {'id': 'N02', 'regex': r'IT-05', 'motivo': 'a rotina de temperatura é a IT-PRO-01', 'pastas': ['Auditoria']},
+    {'id': 'N20', 'regex': r'Desenvolvimento e produção de filmes', 'motivo': 'o escopo do certificado é o da declaração de Escopo', 'pastas': ['Certificacao']},
+    {'id': 'N22a', 'regex': r'turno do almoço', 'motivo': 'a pizzaria não tem turno do almoço', 'pastas': ['Auditoria', 'Tecnica-Auditoria', 'Certificacao', 'Nao-Conformidade']},
+    {'id': 'P09a', 'regex': r'revisão 2 da instrução, de julho', 'motivo': 'a revisão 2 da IT-EXP-01 é de 15/09/2026', 'pastas': ['Nao-Conformidade']},
     {'id': 'T07', 'regex': r'Não há justificativa possível', 'motivo': 'afirmação absoluta a corrigir', 'pastas': None},
     {'id': 'T19', 'regex': r'A Produção tem o maior número de pendências', 'motivo': 'conclusão que os dados não sustentam', 'pastas': None},
     {'id': 'T41', 'regex': r'Erro, ou correção', 'motivo': 'título a corrigir', 'pastas': None},
@@ -1432,4 +1442,21 @@ DECISOES = [
                'aplicativo de delivery." (ind_body.html); o número 96 não entra em nenhuma conta e fica. Os "atendentes '
                'da noite", o "garçom do turno da noite" e o "cansaço do turno da noite" não mudam.',
      'estudos': ['Auditoria', 'Tecnica-Auditoria', 'Certificacao', 'Nao-Conformidade', 'Indicadores']},
+    {'id': 'N23',
+     'conflito': 'Achado na tarefa 3 (núcleo de auditoria). Pelo item T05 do spec, a constatação 3 da auditoria 2026-03 '
+                 '(entregador admitido em setembro sem o treinamento na IT-EXP-01) passa de oportunidade de melhoria a '
+                 'não conformidade menor nº 3. Dois estudos ainda contam o resultado antigo: a análise crítica de '
+                 '14/12/2026 (c4: dois registros; c6: "duas não conformidades menores e uma oportunidade de melhoria", '
+                 'texto que N05 mantinha) e Competências ("A integração, que a auditoria sugeriu").',
+     'canone': 'Vale T05 (spec, aprovado). A auditoria 2026-03 teve três não conformidades menores e nenhuma oportunidade '
+               'de melhoria. Na análise crítica (ac_data.py), as frases de N05 passam a: c4 "Três registros abertos pela '
+               'auditoria 2026-03. O RNC 2026-05 foi encerrado como eficaz. Os outros dois estão em verificação." (o '
+               'segundo é o da temperatura, que c5 dá como registrada em todos os turnos desde outubro; o terceiro é o do '
+               'treinamento, cuja eficácia saiu parcial em Competências); c6 "A auditoria 2026-03, no delivery: três não '
+               'conformidades menores. O salão e as compras nunca foram auditados." Esta entrada substitui o texto de c4 e '
+               'c6 dado em N05, e foi aplicada na tarefa 3. Em Competências (comp_body.html, exemplo 1, "O que observar"), '
+               '"A integração, que a auditoria sugeriu, passa a ser" passa a "A integração, ação corretiva da não '
+               'conformidade da auditoria, passa a ser". Nenhuma conta muda: a avaliação de c4 (Favorável) e a de c6 '
+               '(Atenção) ficam.',
+     'estudos': ['Analise-Critica', 'Competencias']},
 ]
