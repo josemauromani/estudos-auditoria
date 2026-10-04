@@ -32,6 +32,29 @@ def extrair_texto(html):
     return '\n'.join(l for l in linhas if l)
 
 
+def texto_das_figuras(html):
+    """Texto de dentro das figuras SVG: o aria-label de cada <svg>, os <title> e o conteúdo dos <text>.
+    Os <text> de uma figura vão numa linha só, na ordem do arquivo, para que a frase quebrada em linhas se leia inteira."""
+    linhas = []
+    for svg in re.findall(r'(?is)<svg\b.*?</svg>', html):
+        abre = re.match(r'(?is)<svg\b[^>]*>', svg).group(0)
+        rot = re.search(r'aria-label="([^"]*)"', abre)
+        if rot:
+            linhas.append(rot.group(1))
+        linhas += re.findall(r'(?is)<title\b[^>]*>(.*?)</title>', svg)
+        sem_titulo = re.sub(r'(?is)<title\b[^>]*>.*?</title>', '', svg)
+        textos = [re.sub(r'<[^>]+>', ' ', x) for x in re.findall(r'(?is)<text\b[^>]*>(.*?)</text>', sem_titulo)]
+        if textos:
+            linhas.append(' '.join(textos))
+    linhas = [re.sub(r'[ \t\xa0]+', ' ', _html.unescape(l)).strip() for l in linhas]
+    return '\n'.join(l for l in linhas if l)
+
+
+def texto_para_proibidos(html):
+    """O texto que as regras de PROIBIDO leem: o texto corrido e o texto das figuras."""
+    return extrair_texto(html) + '\n' + texto_das_figuras(html)
+
+
 def achar_proibidos(texto, regras, pasta):
     """Devolve (id, trecho, motivo) de cada ocorrência de regra que vale para a pasta."""
     achados = []
@@ -165,7 +188,7 @@ def _rodar_tudo(F):
         nome = os.path.relpath(caminho, RAIZ)
         html = _ler(caminho)
         texto = extrair_texto(html)
-        for i, trecho, motivo in achar_proibidos(texto, F.PROIBIDO, pasta):
+        for i, trecho, motivo in achar_proibidos(texto_para_proibidos(html), F.PROIBIDO, pasta):
             falhas.append((nome, trecho, '%s: %s' % (i, motivo)))
         for c in sorted(codigos_no_texto(texto)):
             if c not in todos and c.split('-')[0] not in F.SERIES_LIVRES:
@@ -190,7 +213,7 @@ def _so(F, ids):
     regras = [r for r in F.PROIBIDO if r['id'] in ids]
     falhas = []
     for pasta, caminho in _arquivos_da_raiz():
-        for i, trecho, motivo in achar_proibidos(extrair_texto(_ler(caminho)), regras, pasta):
+        for i, trecho, motivo in achar_proibidos(texto_para_proibidos(_ler(caminho)), regras, pasta):
             falhas.append((os.path.relpath(caminho, RAIZ), trecho, '%s: %s' % (i, motivo)))
     return falhas
 

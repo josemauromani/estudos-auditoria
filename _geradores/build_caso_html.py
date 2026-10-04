@@ -300,7 +300,7 @@ for i, (k, d) in enumerate(gaps):
     de.append(f'        <text x="14" y="{y + 16}" font-size="11"><tspan class="b"{TNUM}>{k}→{k + 1}</tspan><tspan class="mu" dx="6">{escape(textwrap.shorten(a + " → " + b, 44, placeholder="…"))}</tspan></text>')
     de.append(f'        <rect class="{"f3" if d == mx else "f1"}" x="{X0}" y="{y + 5}" width="{max(gx(d) - X0, 2):.1f}" height="{RH - 10}"/>')
     de.append(f'        <text class="mu halo" x="{gx(d) + 6:.1f}" y="{y + 16}" font-size="10.5"{TNUM}>{d}</text>')
-de.append(f'        <text x="450" y="{bottom + 58}" font-size="11.5"{MID}>A proposta do medidor esperou {mx} dias pela análise crítica semestral, com a inspeção de 100% contendo o problema.</text>')
+de.append(f'        <text x="450" y="{bottom + 58}" font-size="11.5"{MID}>A proposta dos dois medidores esperou {mx} dias pela análise crítica semestral, com a inspeção de 100% contendo o problema.</text>')
 de.append("      </svg>")
 
 # ------------------------------------------------------------------ módulo 7: cumprimento do calendário por atividade

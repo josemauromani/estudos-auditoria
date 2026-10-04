@@ -859,6 +859,8 @@ PROIBIDO = [
     {'id': 'P22a', 'regex': r'Três causas confirmadas|Três ações: reforçar a escala', 'motivo': 'cinco causas confirmadas, quatro no plano e seis ações (P22)',
      'pastas': ['Caso-Integrado']},
     {'id': 'N10', 'regex': r'RNC 2027-(19|22)', 'motivo': 'registros de produto não conforme, e não RNC (N10)', 'pastas': ['Caso-Integrado']},
+    {'id': 'N25', 'regex': r'[Gg]arantia, assistência,? e? ?atendimento a reclamações', 'motivo': 'a reclamação não é atividade pós-entrega (N25)',
+     'pastas': ['Producao', 'Conhecimento']},
     {'id': 'N13a', 'regex': r'itens de fornecedor único', 'motivo': 'o item de fornecedor único é a resina (N13)', 'pastas': ['ISO-9001']},
 ]
 
@@ -1531,4 +1533,15 @@ DECISOES = [
                'constatação da auditoria interna) continua maior, porque a ação corretiva não funcionou; o item do '
                'questionário sobre ela fica. Auditoria não muda.',
      'estudos': ['Tecnica-Auditoria', 'Certificacao']},
+    {'id': 'N25',
+     'conflito': 'Achado na revisão da tarefa 4. Depois de T15, Escopo, ISO 9001 e Conhecimento (módulo das normas) dizem que '
+                 'atender a reclamação não é atividade pós-entrega: ela é tratada pelo 8.2.1, pelo 9.1.2 e pelo 10.2. Dois '
+                 'lugares ainda punham a reclamação entre as atividades pós-entrega.',
+     'canone': 'Pós-entrega é garantia, assistência, obrigações do contrato e serviços como o recolhimento; a reclamação é '
+               'tratada pela comunicação com o cliente, pelo monitoramento da satisfação e pelo tratamento de não '
+               'conformidade. Produção (prod_body.html), módulo das normas, linha 8.5.5, coluna do significado: "Garantia, assistência e atendimento a reclamações fazem parte do serviço." → "Garantia, assistência e o que o contrato prevê depois da entrega fazem parte do serviço. A reclamação segue pela comunicação com o cliente e pelo tratamento de não conformidade." '
+               'Conhecimento (con_body.html), glossário, "Atividades pós-entrega": "O que a organização faz depois que o produto chega ao cliente: garantia, assistência, atendimento a reclamações, recolhimento." → "O que a organização faz depois que o produto chega ao cliente: garantia, assistência, obrigações do contrato, recolhimento. A reclamação é tratada pela comunicação com o cliente, pelo monitoramento da satisfação e pelo tratamento de não conformidade." Os outros textos de '
+               'Conhecimento que tratam a reclamação junto com o pós-entrega (introdução e tabela do módulo 1) ficam para a '
+               'tarefa do grupo de Apoio e avaliação decidir.',
+     'estudos': ['Producao', 'Conhecimento']},
 ]

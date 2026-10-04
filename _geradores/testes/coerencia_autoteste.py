@@ -1,5 +1,5 @@
 # Autoteste das funções de coerencia.py
-import os, re, sys
+import os, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import coerencia as C
 
@@ -15,13 +15,31 @@ regras = [{'id': 'D01', 'regex': r'\b29 estudos', 'motivo': 'a série tem 34', '
 assert [r[0] for r in C.achar_proibidos(t, regras, 'Caso-Integrado')] == ['D01']
 q = "var KEYS = ['B','C'];\nvar ITEMS = [ { t: 'x', a: 'B', w: 'y' }, { t: 'z', a: 'Q', w: 'y' } ];"
 assert C.questionarios('<script>' + q + '</script>') == ['Q']
+svg = ('<p>Texto corrido.</p><figure><svg viewBox="0 0 9 9" role="img" aria-label="Rótulo &amp; figura">'
+       '<text x="1">A proposta do</text><text x="1"><tspan>medidor</tspan> esperou</text><text>12 itens<title>lista inteira</title></text></svg></figure>')
+f = C.texto_das_figuras(svg)
+assert f.split('\n') == ['Rótulo & figura', 'lista inteira', 'A proposta do medidor esperou 12 itens'], f
+assert '[FIGURA]' in C.extrair_texto(svg) and 'medidor' not in C.extrair_texto(svg)
+so_figura = [{'id': 'F1', 'regex': r'proposta do medidor esperou', 'motivo': 'só na figura', 'pastas': None}]
+assert C.achar_proibidos(C.extrair_texto(svg), so_figura, 'X') == []
+assert [r[0] for r in C.achar_proibidos(C.texto_para_proibidos(svg), so_figura, 'X')] == ['F1']
 print('autoteste OK')
-import subprocess
-_cli = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'coerencia.py')
-r = subprocess.run([sys.executable, _cli, '--so', 'ZZ99'], capture_output=True, text=True)
-assert r.returncode == 2 and 'ZZ99' in r.stdout, (r.returncode, r.stdout)
-# o código de saída acompanha a contagem de falhas do id pedido, qualquer que seja o estado dos estudos
-r = subprocess.run([sys.executable, _cli, '--so', 'D01'], capture_output=True, text=True)
-_n = int(re.search(r'(\d+) falha', r.stdout).group(1))
-assert r.returncode == (1 if _n else 0), (r.returncode, r.stdout)
+
+# --so pelo caminho real de main(), com regras temporárias em fatos.PROIBIDO, restauradas no fim
+import contextlib, io
+import fatos as F
+_original = list(F.PROIBIDO)
+F.PROIBIDO.extend([{'id': 'ZZ-SIM', 'regex': r'Abrir o treinamento', 'motivo': 'teste: sempre presente no painel', 'pastas': ['index']},
+                   {'id': 'ZZ-NAO', 'regex': r'(?!x)x', 'motivo': 'teste: nunca casa', 'pastas': None}])
+try:
+    for ids, esperado in (('ZZ-SIM', 1), ('ZZ-NAO', 0), ('ZZ-SIM,ZZ-NAO', 1), ('ZZ99', 2), ('ZZ-NAO,ZZ99', 2)):
+        saida = io.StringIO()
+        with contextlib.redirect_stdout(saida):
+            r = C.main(['--so', ids])
+        assert r == esperado, (ids, r, saida.getvalue()[-300:])
+        if ids == 'ZZ-SIM':
+            assert 'ZZ-SIM:' in saida.getvalue() and 'ZZ-NAO' not in saida.getvalue()
+finally:
+    F.PROIBIDO[:] = _original
+assert all(not r['id'].startswith('ZZ-') for r in F.PROIBIDO)
 print('--so OK')
