@@ -100,3 +100,20 @@ $PY _geradores/testes/rk_test_read.py /tmp/teste/saida
 ```
 
 Os roteiros importam os arquivos de dados desta pasta. Os roteiros a partir do de indicadores já encontram a pasta sozinhos. Para rodar os outros, informe o caminho de `_geradores/` em `PYTHONPATH`.
+
+## Ficha de fatos e teste de coerência
+
+Os exemplos dos estudos usam as mesmas organizações: a pizzaria, a indústria de embalagens plásticas e a distribuidora de materiais elétricos, que aparece só na cadeia de compras das ferramentas. O arquivo `fatos.py` guarda o que é verdade sobre cada uma: identidade, pessoas e cargos, processos, equipamentos e instrumentos, documentos, registros numerados, linha do tempo e números-chave. Guarda também os códigos de cada organização (`CODIGOS`), as expressões que não podem voltar (`PROIBIDO`) e as decisões tomadas quando dois estudos se contradiziam (`DECISOES`).
+
+A regra é ler a ficha antes de escrever um estudo e atualizá-la no mesmo commit. Um código, um registro ou uma data nova entram na ficha junto com o texto que os usa.
+
+O teste de coerência lê o texto dos treinamentos e do painel e confere com a ficha. A varredura de planilhas confere os modelos gerados:
+
+```bash
+PY=_geradores/.venv/bin/python
+$PY _geradores/testes/coerencia.py                 # tudo: PROIBIDO, códigos, registros, contagens, questionários e links
+$PY _geradores/testes/coerencia.py --so I03,P10a   # só as regras de PROIBIDO com esses id
+$PY _geradores/testes/planilhas.py Riscos/Riscos-modelo.xlsx   # células com erro e fórmulas sem valor gravado
+```
+
+O `planilhas.py` recebe uma ou mais planilhas e lista as células com erro (`#DIV/0!`, `#REF!` e outros) e as fórmulas sem valor gravado, sinal de arquivo que não passou pelo recálculo. No `coerencia.py`, cada falha sai numa linha, com o arquivo, o trecho e o motivo. Os dois roteiros terminam com código de saída diferente de zero quando há falha; zero quer dizer que nada falhou. O `--so` recusa um id que não existe em `PROIBIDO`: avisa e sai com código 2, para que um erro de digitação não passe por teste aprovado.
