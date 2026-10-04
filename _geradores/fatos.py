@@ -18,8 +18,9 @@ _PIZZARIA['identidade'] = {
               'para eventos, na loja do bairro (Escopo, rascunho de 08/02/2027; revisado em novembro de 2027).',
     'funcionamento': 'Aberta todos os dias, das 18h à meia-noite: 180 horas no mês (Recursos). O alvará '
                      'permite funcionar até a meia-noite (N04).',
-    'turnos': 'Dois turnos. O turno do almoço prepara a massa, recebe os insumos (recebimento às 15h) e '
-              'limpa; o turno da noite atende o salão, o balcão e o delivery.',
+    'turnos': 'Dois turnos (N22): o da tarde, antes da abertura, sem atendimento a clientes, em que a loja recebe os '
+              'insumos (recebimento às 15h, Técnica de auditoria); e o da noite, das 18h à meia-noite, que atende o '
+              'salão, o balcão e o delivery. Não existe "turno do almoço".',
     'encomendas': 'Encomenda para eventos: a partir de 20 pizzas, com 48 horas de antecedência, de terça a '
                   'domingo, das 18h às 23h (P01).',
     'entrega': 'Até 40 minutos na área de entrega; retirada no balcão em até 25 minutos.',
@@ -31,9 +32,6 @@ _PIZZARIA['identidade'] = {
                     '24/04/2031. Não tem transição a fazer.',
     'canais': 'Salão (um terço dos clientes), balcão, telefone, aplicativo de mensagens, site e aplicativo '
               'de delivery (mais da metade dos pedidos, em Partes interessadas; 70% dos pedidos do delivery, na SWOT).',
-    'turnos_nota': 'O horário de atendimento vem de Recursos; o papel do turno do almoço é dedução da ficha '
-                   '(Auditoria, Técnica de auditoria e Certificação citam pessoas "do turno do almoço"; a Técnica '
-                   'registra o recebimento às 15h). Nenhum estudo precisa mudar.',
 }
 
 _PIZZARIA['pessoas'] = [
@@ -130,7 +128,7 @@ _PIZZARIA['equipamentos'] = [
 _PIZZARIA['documentos'] = [
     # lista mestra (Informação documentada, levantamento de 22/01/2027), com o cânone de P08 e P09
     {'codigo': 'IT-EXP-01', 'titulo': 'Expedição e agrupamento por zona; inclui a montagem e a conferência do pedido (item 5)',
-     'revisao': '2', 'data': '2026-07-31', 'nota': 'P09. Próxima revisão 07/2028. Lição L-01 incorporada em 15/03/2027.'},
+     'revisao': '2', 'data': '2026-09-15', 'nota': 'P09: fim da ação A6 do 5W2H e etapa 7 do PDCA. Próxima revisão 09/2028. Lição L-01 incorporada em 15/03/2027.'},
     {'codigo': 'IT-ATE-01', 'titulo': 'Roteiro de atendimento por telefone e mensagens', 'revisao': '2', 'data': '2026-10-08',
      'nota': 'Revisão 1 de março de 2026; revisão 2 pela ação 2 do RNC 2026-05.'},
     {'codigo': 'IT-PRO-01', 'titulo': 'Rotina de controle de temperatura (duas vezes por turno)', 'revisao': '1', 'data': '2026-09-30', 'nota': ''},
@@ -169,8 +167,8 @@ _PIZZARIA['linha_do_tempo'] = [
     ('2026-07', 'Troca do sistema de pedidos, sem teste e sem treinamento (P06)', ['Indicadores', 'Analise-Critica', 'ISO-9001', 'Partes-Interessadas']),
     ('2026-07-17', 'Ishikawa: 12 hipóteses, 5 confirmadas, 4 seguem para o plano (P22)', ['Ishikawa', 'Caso-Integrado']),
     ('2026-07-24', 'Plano 5W2H: seis ações, A1 a A6 (P22)', ['5W2H', 'Caso-Integrado']),
-    ('2026-07-31', 'IT-EXP-01 revisão 2, no início do agrupamento por zona (P09, N01)', ['Informacao-Documentada', 'Nao-Conformidade']),
     ('2026-09-06', 'Fim da verificação do PDCA: 95,5% nas semanas 9 a 12; padronização até 15/09', ['PDCA', 'Caso-Integrado']),
+    ('2026-09-15', 'IT-EXP-01 revisão 2, com o agrupamento por zona: ação A6 do 5W2H e etapa 7 do PDCA (P09, N01)', ['Informacao-Documentada', 'Nao-Conformidade', '5W2H', 'PDCA']),
     ('2026-09', 'Auditoria interna 2026-03, do delivery: 2 NC menores e 1 oportunidade', ['Auditoria', 'Analise-Critica', 'Competencias']),
     ('2026-09-25', 'RNC 2026-05 aberto; encerrado como eficaz em 10/11/2026', ['Nao-Conformidade']),
     ('2026-09-29', 'Matriz GUT dos problemas do trimestre', ['GUT', 'Caso-Integrado']),
@@ -876,10 +874,20 @@ DECISOES = [
      'estudos': ['Informacao-Documentada', 'Conhecimento']},
     {'id': 'P09',
      'conflito': 'IT-EXP-01 revisão 2 em 10/07/2026, antes do plano de 24/07.',
-     'canone': 'IT-EXP-01 revisão 2 em 31/07/2026, no início do agrupamento por zona (ação A4). A próxima revisão '
-               'continua 07/2028. A Não conformidade ("revisão 2 da instrução, de julho de 2026") não muda. O 5W2H '
-               'ajusta a ação A6: ver N01.',
-     'estudos': ['Informacao-Documentada']},
+     'canone': 'IT-EXP-01 revisão 2 em 15/09/2026: é a ação A6 do 5W2H ("Atualizar a instrução de trabalho da '
+               'expedição", 07/09 a 15/09) e a etapa 7 do PDCA (15/09/2026, "a instrução de trabalho da expedição foi '
+               'atualizada"). A revisão vem depois do agrupamento por zona, que só começou na semana 8 do PDCA (de '
+               '03/08/2026), e antes da auditoria 2026-03 (25/09/2026), que a usa como critério. (O spec dizia 31/07/2026; '
+               'essa data viria antes do início do agrupamento e exigiria mudar o acompanhamento do 5W2H: ver N01.) '
+               'Informação documentada: na lista mestra, a data da IT-EXP-01 passa de 10/07/2026 a 15/09/2026 e a próxima '
+               'revisão de 07/2028 a 09/2028 (regra de 24 meses; doc_data.py, EX1, D(2026, 7, 10) passa a D(2026, 9, 15)); '
+               'no módulo 4, campo "Revisão e data", "Rev. 2 · 10/07/2026" passa a "Rev. 2 · 15/09/2026" (doc_body.html); '
+               'na figura 6, "IT-EXP-01 · REV. 2 · 10/07/2026" passa a "IT-EXP-01 · REV. 2 · 15/09/2026" '
+               '(build_doc_html.py). Não conformidade (RNC 2026-05, etapa 4, porquê 3): "O roteiro foi escrito antes da '
+               'revisão 2 da instrução, de julho de 2026, e não foi atualizado." passa a "… da revisão 2 da instrução, de '
+               'setembro de 2026, …" (nc_data.py). Auditoria ("A equipe foi treinada em julho") não muda: o treinamento '
+               'é a ação A3, de 27/07 a 30/07. 5W2H e PDCA não mudam.',
+     'estudos': ['Informacao-Documentada', 'Nao-Conformidade']},
     {'id': 'P10',
      'conflito': '"RNC" usado para duas séries; RNC 2027-04 em 03/04 e RNC 2027-07 em 22/03.',
      'canone': 'Duas séries com nomes diferentes: "RNC" (não conformidade e ação corretiva, 10.2) e "registro de produto '
@@ -1016,12 +1024,16 @@ DECISOES = [
 
     # ---------------------------------------------------------------- pizzaria: contradições novas
     {'id': 'N01',
-     'conflito': 'IT-EXP-01 revisão 2 em 31/07/2026 (P09) contra a ação A6 do 5W2H, "Atualizar a instrução de trabalho '
-                 'da expedição", de 07/09 a 15/09/2026.',
-     'canone': 'Vale a revisão 2 em 31/07/2026 (P09, e a Não conformidade: "de julho de 2026"). No 5W2H, a A6 passa a '
-               '"27/07 a 31/07"; o resto da linha não muda. O PDCA não muda: o passo 7, de 15/09/2026, diz que a '
-               'instrução foi atualizada, o que continua certo.',
-     'estudos': ['5W2H']},
+     'conflito': 'A revisão 2 da IT-EXP-01 em 31/07/2026, como o spec propunha para P09, bate com a ação A6 do 5W2H '
+                 '("Atualizar a instrução de trabalho da expedição", 07/09 a 15/09/2026), com o acompanhamento de 05/08 '
+                 '(A6 "Não iniciada"; a legenda da figura 4 diz que só a A4 está atrasada) e com o PDCA (agrupamento '
+                 'só na semana 8, a partir de 03/08/2026; instrução atualizada na etapa 7, em 15/09/2026).',
+     'canone': 'Vale o 5W2H, com o PDCA: a revisão 2 é de 15/09/2026 (P09). O 5W2H não muda em nenhum lugar: na tabela '
+               'do exemplo 1, a A6 continua "07/09 a 15/09"; no acompanhamento de 05/08 (tabela e figura 4), a A6 '
+               'continua "Não iniciada", com início 07/09 e prazo 15/09; a legenda da figura 4 continua "A ação A4 '
+               'deveria ter terminado no dia 2 e aparece como atrasada"; w5_data.py não muda. O PDCA também não muda. '
+               'Os estudos que mudam são os de P09: Informação documentada e Não conformidade.',
+     'estudos': []},
     {'id': 'N02',
      'conflito': 'Em Auditoria (tabela de como escrever a constatação), "A instrução IT-05 pede o registro da temperatura '
                  'a cada turno", com as datas da constatação 2 da auditoria 2026-03 da pizzaria. A rotina de temperatura '
@@ -1277,10 +1289,15 @@ DECISOES = [
                  'chiller "parou todas" com uma extrusora a 100%.',
      'canone': 'Instrumentos vencidos (exemplo 3 de GUT, Ishikawa, 5W2H e PDCA, da indústria): auditoria interna de '
                'agosto de 2026, 3 de 25 instrumentos no laboratório de recebimento. Prazo de tratamento da GUT: 30 dias '
-               '(sem mudança). A eficácia é verificada 90 dias depois de 15/09/2026, quando o cadastro único passou a '
-               'avisar os vencimentos: de 14/12 a 18/12/2026 (5W2H, sem mudança). No PDCA, a meta passa de "Nenhum '
-               'instrumento vencido, em 60 dias" a "Nenhum instrumento vencido, por 90 dias seguidos" (PDCA acrescentado à '
-               'lista do spec). Nos quatro estudos, o cabeçalho do exemplo 3 ganha a linha Organização: "Indústria de '
+               '(sem mudança). Os 90 dias contam do fim da ação A3 do 5W2H, o cadastro único com aviso de vencimento, e '
+               'a verificação da eficácia (A6) começa no 90º dia. Para isso, só o prazo da A3 muda: no 5W2H, exemplo 3, '
+               'coluna Quando da A3 ("Centralizar o controle dos 25 instrumentos em um cadastro único"), "07/09 a 25/09" '
+               'passa a "07/09 a 15/09" (w5_data.py, EX3, terceiro item: D(2026, 9, 25) passa a D(2026, 9, 15)). De '
+               '15/09/2026, 90 dias dão 14/12/2026: a A6 continua "14/12 a 18/12", e o texto "nenhum instrumento vencido '
+               'depois de 90 dias" e o "O que observar" ("data marcada para 90 dias depois") continuam certos. A A5 '
+               '(28/09 a 09/10) e as outras ações não mudam. No PDCA, a meta passa de "Nenhum instrumento vencido, em 60 '
+               'dias" a "Nenhum instrumento vencido, por 90 dias seguidos" (PDCA acrescentado à lista do spec; a etapa 6, '
+               '"Depois de 3 meses", já está certa). Nos quatro estudos, o cabeçalho do exemplo 3 ganha a linha Organização: "Indústria de '
                'embalagens plásticas". Recursos: na figura 4, "As três quebras de julho vieram de peças que a preventiva '
                'atrasada teria trocado ou medido." passa a "Duas das três quebras de julho vieram de peças que a '
                'preventiva atrasada teria trocado ou medido." (o texto já diz duas: a de 27/07, cabo do termopar, não '
@@ -1388,4 +1405,23 @@ DECISOES = [
      'canone': 'Não aplicar nesta leva: acertar exige reescrever as declarações e a figura do Escopo, o escopo de '
                'Certificação e conferir Partes interessadas e Satisfação, e o spec não prevê. Fica para a revisão do autor.',
      'estudos': []},
+    {'id': 'N22',
+     'conflito': 'A pizzaria abre das 18h à meia-noite (Recursos, base das contas de disponibilidade, 180 horas no mês), '
+                 'mas quatro estudos citam um "turno do almoço": a equipe auditora de Auditoria ("Atendente e pizzaiolo '
+                 'do turno do almoço"), os auditores de Técnica de auditoria, o responsável do critério 7 de Certificação '
+                 'e o auditor líder do RNC 2026-05 na planilha de Não conformidade. Indicadores diz que "O turno do '
+                 'almoço entrega 96% no prazo", como se a loja entregasse no almoço.',
+     'canone': 'Vale o horário de Recursos (contas conferidas). A loja tem dois turnos: o da tarde, antes da abertura, sem '
+               'atendimento a clientes (é nele que a loja recebe os insumos, às 15h, como em Técnica de auditoria), e o da '
+               'noite, das 18h à meia-noite. "Turno do almoço" passa a "turno da tarde" em todos os lugares: Auditoria, '
+               'exemplo 1, equipe auditora: "Atendente e pizzaiolo do turno da tarde" (aud_body.html e aud_data.py, '
+               'lider e equipe); Técnica de auditoria, exemplo 1: auditor líder "Atendente do turno da tarde", equipe '
+               '"Pizzaiolo do turno da tarde", e as duas colunas da tabela de avaliação dos auditores com os mesmos nomes '
+               '(tec_data.py, cabeçalho e avaliação); Certificação, critério 7 da prontidão da pizzaria: responsável '
+               '"Atendente do turno da tarde" (cert_data.py); Não conformidade, RNC 2026-05: "Atendente do turno da '
+               'tarde, auditor líder" (nc_data.py). Indicadores, módulo da meta, linha "Uma referência": "O turno do '
+               'almoço entrega 96% no prazo." passa a "As pizzarias da região entregam 96% no prazo, pelo relatório do '
+               'aplicativo de delivery." (ind_body.html); o número 96 não entra em nenhuma conta e fica. Os "atendentes '
+               'da noite", o "garçom do turno da noite" e o "cansaço do turno da noite" não mudam.',
+     'estudos': ['Auditoria', 'Tecnica-Auditoria', 'Certificacao', 'Nao-Conformidade', 'Indicadores']},
 ]
