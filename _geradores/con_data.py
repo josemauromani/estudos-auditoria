@@ -215,7 +215,7 @@ EX1 = {
          "O pizzaiolo líder escreve a regulagem, grava um vídeo e acompanha os dois pizzaiolos no forno.", D(2027, 6, 30)),
         ("K-02", "Ponto da massa pela temperatura da cozinha", "Produção", ALTA, ESCRITO, "Receita RC-01", 2, NAO, "", None),
         ("K-03", "Receitas das pizzas", "Produção", ALTA, TREINADO, "Receitas RC-01 a RC-24", 4, NAO, "", None),
-        ("K-04", "Montagem e conferência do pedido", "Expedição", ALTA, TREINADO, "Instrução IT-05", 3, NAO, "", None),
+        ("K-04", "Montagem e conferência do pedido", "Expedição", ALTA, TREINADO, "Instrução IT-EXP-01", 3, NAO, "", None),
         ("K-05", "Uso do sistema de pedidos novo", "Atendimento", MEDIA, CABECA, "", 2, NAO, "O gerente escreve o passo a passo do sábado, com as telas.", None),
         ("K-06", "Contingência da câmara fria", "Estoque", ALTA, ESCRITO, "Contingência CT-02, na porta da câmara", 2, NAO,
          "Treinar a equipe do domingo na contingência, com simulação.", D(2027, 6, 15)),
@@ -223,7 +223,7 @@ EX1 = {
     ]),
     "lics": _lics([
         ("L-01", D(2027, 3, 5), "Reclamação", "Pizza chegou fria.", "A bolsa térmica fica fechada até a entrega, e a pizza sai com 65 °C ou mais.",
-         "Instrução IT-05", "Gerente da loja", "K-04", D(2027, 3, 15)),
+         "Instrução IT-EXP-01", "Gerente da loja", "K-04", D(2027, 3, 15)),
         ("L-02", D(2027, 3, 22), "Reclamação", "Cliente pediu sem cebola e recebeu com cebola.", "A observação do pedido precisa sair em destaque na etiqueta.",
          "Etiqueta do sistema de pedidos", "", "K-05", None),
         ("L-03", D(2027, 4, 13), "Quebra", "Câmara fria parou, e a contingência foi improvisada.", "A contingência precisa estar escrita e na porta da câmara.",
@@ -231,7 +231,7 @@ EX1 = {
         ("L-04", D(2027, 4, 19), "Quebra", "Corrente da moto partiu na entrega.", "A revisão mensal precisa conferir a corrente.",
          "Roteiro de revisão das motos", "Gerente da loja", "", D(2027, 4, 25)),
         ("L-05", D(2027, 4, 26), "Quebra", "Chama do forno apagando, e só o pizzaiolo líder sabia regular.", "A regulagem do forno precisa estar escrita.",
-         "Instrução do forno IT-08", "Pizzaiolo líder", "K-01", None),
+         "Instrução do forno IT-PRO-02", "Pizzaiolo líder", "K-01", None),
         ("L-06", D(2027, 5, 10), "Pós-entrega", "Clientes perguntam como reaquecer a pizza.", "", "Embalagem", "", "", None),
     ]),
     "pols": _pols([

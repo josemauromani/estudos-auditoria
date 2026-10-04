@@ -12,14 +12,14 @@ exec(_src[: _src.index("STATUS = [")])
 
 from openpyxl.chart import BarChart, Series  # noqa: E402
 from openpyxl.chart.label import DataLabelList  # noqa: E402
-from esc_data import (CAMPOS, CHECK, COMPROMISSOS, DEM, EX1, EX2, EXCLUIVEL, NAO, NC, NDEM, OBRIG, PARC, REQS, SIM, SITS, aplicabilidade)  # noqa: E402
+from esc_data import (CAMPOS, CHECK, COMPROMISSOS, DEM, EX1, EX2, EXCLUIVEL, NAO, NC, NDEM, OBRIG, PARC, REFORCADA, REQS, SIM, SITS, aplicabilidade)  # noqa: E402
 
 BLUE, TEAL, AMBER, PURPLE, REDC = "2B5C8A", "1E7B73", "A96A12", "7A4A9A", "B0413E"
 S1_T, S2_T, S3_T = "DCE8F3", "F8EBCB", "F5DEDC"
 YESNO = ["Sim", "Parcial", "Não"]
 YESNO_CF = [("Sim", GREEN), ("Parcial", YELLOW), ("Não", RED)]
-PODE, SEMPRE = "Pode não se aplicar", "Aplica-se sempre"
-INDEV, SEMPRE_C = "Exclusão indevida", "Requisito que se aplica sempre"
+PODE, SEMPRE = "Pode não se aplicar", "Quase sempre se aplica"
+INDEV, REF = "Exclusão indevida", REFORCADA
 ES, AP, LI = "Escopo", "Aplicabilidade", "'Liderança'"
 F1 = 5                          # primeiro campo do escopo, na aba Escopo
 A1, A2 = 7, 7 + len(REQS) - 1   # requisitos, na aba Aplicabilidade
@@ -60,8 +60,8 @@ def alt(pares, minimo=21.75, linha=12):
 
 # ------------------------------------------------------------------ fórmulas compartilhadas pelas abas de entrada e pelos exemplos
 def f_aplic(pode, aplica, just, afeta):
-    return (f'IF({aplica}="","Falta decidir",IF({aplica}="{SIM}","OK",IF({pode}="{SEMPRE}","{SEMPRE_C}",IF({just}="","Falta a justificativa",'
-            f'IF({afeta}="","Falta avaliar o efeito",IF({afeta}="{SIM}","{INDEV}","OK"))))))')
+    return (f'IF({aplica}="","Falta decidir",IF({aplica}="{SIM}","OK",IF({just}="","Falta a justificativa",'
+            f'IF({afeta}="","Falta avaliar o efeito",IF({afeta}="{SIM}","{INDEV}",IF({pode}="{SEMPRE}","{REF}","OK"))))))')
 
 
 def f_lider(faz, sit, acao, resp, prazo, reg):
@@ -136,8 +136,8 @@ line("Comentários", "Células com triângulo vermelho no canto trazem uma dica 
 r += 1
 section("As regras de cálculo")
 for k, text in [
-    (PODE, "Os requisitos 7.1.5, 8.3, 8.5.3 e 8.5.5. Podem ser declarados não aplicáveis, com justificativa, se a ausência não afetar o cliente."),
-    (SEMPRE, "Todos os outros. Marcar “Não” neles gera o aviso “requisito que se aplica sempre”."),
+    (PODE, "Os candidatos mais comuns: a rastreabilidade do 7.1.5 (o 7.1.5.2), o 8.3, o 8.5.3 e o 8.5.5. Podem ser declarados não aplicáveis, com justificativa, se a ausência não afetar o cliente."),
+    (SEMPRE, "Todos os outros. Marcar “Não” neles pede uma justificativa reforçada, e a conferência mostra o aviso “justificativa reforçada”, que não conta como erro."),
     (INDEV, "Requisito declarado não aplicável cuja ausência afeta a conformidade do produto ou a satisfação do cliente."),
     ("Falta a ação", f"Compromisso “{PARC}” ou “{NDEM}” sem ação."),
     ("Falta o registro", f"Compromisso “{DEM}” sem dizer onde fica a evidência."),
@@ -206,8 +206,8 @@ for k, (text, formula) in enumerate([
     ("Campos obrigatórios preenchidos", f'=COUNTIF(D{F1}:D{F2},"OK")&" de {len(OBRIG)}"'),
     ("Requisitos não aplicáveis", f'=COUNTIF({AP}!E{A1}:E{A2},"{NAO}")&" de {len(REQS)}: veja a aba Aplicabilidade"'),
     ("Aviso", f'=IF(C4="","Escreva a organização",IF(COUNTIF(D{F1}:D{F2},"OK")<{len(OBRIG)},"Há campo obrigatório em branco",'
-              f'IF(COUNTIF({AP}!H{A1}:H{A2},"{INDEV}")+COUNTIF({AP}!H{A1}:H{A2},"{SEMPRE_C}")>0,"Há requisito declarado não aplicável que se aplica",'
-              f'IF(SUMPRODUCT(({AP}!H{A1}:H{A2}<>"OK")*1)>0,"Há requisito a decidir ou a completar na aba Aplicabilidade","OK"))))'),
+              f'IF(COUNTIF({AP}!H{A1}:H{A2},"{INDEV}")>0,"Há requisito declarado não aplicável que se aplica",'
+              f'IF(SUMPRODUCT(({AP}!H{A1}:H{A2}<>"OK")*({AP}!H{A1}:H{A2}<>"{REF}"))>0,"Há requisito a decidir ou a completar na aba Aplicabilidade","OK"))))'),
 ], 1):
     label(ws, f"B{s+k}", text, h="right")
     calc(ws, f"C{s+k}", formula, merge=f"C{s+k}:D{s+k}", sz=9 if text == "Aviso" else 10, b=text != "Aviso", h="left")
@@ -244,14 +244,15 @@ for k, (n, t) in enumerate(REQS):
 dv_list(ws, f"E{A1}:E{A2}", [SIM, NAO], "O requisito se aplica ao sistema?")
 dv_list(ws, f"G{A1}:G{A2}", [SIM, NAO], "Deixar de aplicá-lo afeta a conformidade do produto ou a satisfação do cliente?")
 cf_texto(ws, f"E{A1}:E{A2}", f"E{A1}", [(SIM, GREEN), (NAO, S2_T)])
-cf_texto(ws, f"H{A1}:H{A2}", f"H{A1}", [("OK", GREEN), (INDEV, RED), (SEMPRE_C, RED)], resto=YELLOW)
+cf_texto(ws, f"H{A1}:H{A2}", f"H{A1}", [("OK", GREEN), (INDEV, RED), (REF, S2_T)], resto=YELLOW)
 s = A2 + 2
 band(ws, s, "Resumo automático", "H")
 for k, (text, formula) in enumerate([
     ("Requisitos decididos", f'=COUNTA(E{A1}:E{A2})&" de {len(REQS)}"'),
     ("Aplicáveis e não aplicáveis", f'=COUNTIF(E{A1}:E{A2},"{SIM}")&" aplicáveis, "&COUNTIF(E{A1}:E{A2},"{NAO}")&" não aplicáveis"'),
-    ("Aviso", f'=IF(COUNTA(E{A1}:E{A2})=0,"Decida a aplicabilidade de cada requisito",IF(COUNTIF(H{A1}:H{A2},"{INDEV}")+COUNTIF(H{A1}:H{A2},"{SEMPRE_C}")>0,'
-              f'"Há requisito declarado não aplicável que se aplica",IF(SUMPRODUCT((H{A1}:H{A2}<>"OK")*1)>0,"Há requisito a decidir ou a completar","OK")))'),
+    ("Aviso", f'=IF(COUNTA(E{A1}:E{A2})=0,"Decida a aplicabilidade de cada requisito",IF(COUNTIF(H{A1}:H{A2},"{INDEV}")>0,'
+              f'"Há requisito declarado não aplicável que se aplica",IF(SUMPRODUCT((H{A1}:H{A2}<>"OK")*(H{A1}:H{A2}<>"{REF}"))>0,"Há requisito a decidir ou a completar",'
+              f'IF(COUNTIF(H{A1}:H{A2},"{REF}")>0,"Há requisito fora dos candidatos comuns: confira a justificativa reforçada","OK"))))'),
 ], 1):
     label(ws, f"B{s+k}", text, merge=f"B{s+k}:C{s+k}", h="right")
     calc(ws, f"D{s+k}", formula, merge=f"D{s+k}:H{s+k}", sz=9 if text == "Aviso" else 10, b=text != "Aviso", h="left")
@@ -316,8 +317,8 @@ IND = [
     ("Escopo aprovado", f'=IF({ES}!C{CR["aprov"]}="","Não","Sim")', "A direção aprova o escopo."),
     ("Requisitos decididos", f'=COUNTA({Ee})&" de {len(REQS)}"', "Da aba Aplicabilidade."),
     ("Requisitos não aplicáveis", f'=COUNTIF({Ee},"{NAO}")', "Cada um com justificativa, e sem efeito no cliente."),
-    ("Não aplicáveis que se aplicam", f'=COUNTIF({He},"{INDEV}")+COUNTIF({He},"{SEMPRE_C}")', "Exclusão indevida, ou requisito que se aplica sempre."),
-    ("Requisitos a decidir ou completar", f'=SUMPRODUCT(({He}<>"OK")*1)-COUNTIF({He},"{INDEV}")-COUNTIF({He},"{SEMPRE_C}")', "Sem decisão, sem justificativa ou sem o efeito avaliado."),
+    ("Não aplicáveis que se aplicam", f'=COUNTIF({He},"{INDEV}")', "Exclusão indevida: a ausência afeta o cliente."),
+    ("Requisitos a decidir ou completar", f'=SUMPRODUCT(({He}<>"OK")*({He}<>"{REF}"))-COUNTIF({He},"{INDEV}")', "Sem decisão, sem justificativa ou sem o efeito avaliado."),
     (DEM, f'=COUNTIF({Gl},"{DEM}")', f"Compromissos da direção, de {NC}."),
     (PARC, f'=COUNTIF({Gl},"{PARC}")', "Pedem ação, com responsável e prazo."),
     (NDEM, f'=COUNTIF({Gl},"{NDEM}")', "Levar à análise crítica."),
@@ -442,7 +443,7 @@ def exemplo(ws, ex_):
         put(ws, f"H{rr}", EXCLUIVEL.get(a["num"], ""), merge=f"H{rr}:I{rr}", f=font(9, c=MUTED))
         calc(ws, f"J{rr}", "=" + f_aplic(f"E{rr}", f"F{rr}", f"D{rr}", f"G{rr}"), b=False, sz=9, merge=f"J{rr}:K{rr}")
         ws.row_dimensions[rr].height = alt([(a["tit"], 26), (a["just"], 40), (EXCLUIVEL.get(a["num"], ""), 50)], minimo=21.75)
-        cf_texto(ws, f"J{rr}:K{rr}", f"$J{rr}", [("OK", GREEN), (INDEV, RED), (SEMPRE_C, RED)], resto=YELLOW)
+        cf_texto(ws, f"J{rr}:K{rr}", f"$J{rr}", [("OK", GREEN), (INDEV, RED), (REF, S2_T)], resto=YELLOW)
     rr += 2
     ws.row_breaks.append(Break(id=rr - 1))
     band(ws, rr, "Liderança", "K", color=AMBER)

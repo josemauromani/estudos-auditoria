@@ -94,7 +94,7 @@ EX1 = {
              ("Pizzaiolo líder", "Produção", NAO, "Presente"), ("Líder da expedição", "Expedição", NAO, "Presente")],
     "anteriores": [],
     "entradas": _entradas([
-        ("a", "Gerente da loja", "Diagnóstico de 02/10/2026", "Primeira análise crítica: não há ações anteriores. O ponto de partida é o diagnóstico, com 68% de atendimento.",
+        ("a", "Gerente da loja", "Diagnóstico de 02/10/2026", "Primeira análise crítica: não há ações anteriores. O ponto de partida é o diagnóstico, com 67% de atendimento.",
          SEMH, ATE, "As lacunas do diagnóstico entram nesta pauta, cada uma na sua entrada."),
         ("b", "Dono da loja", "Matriz SWOT", "Sistema de pedidos trocado em julho. Duas pizzarias novas no bairro. Preço do queijo em alta.",
          ESTAVEL, ATE, "A concorrência pede atenção ao salão, que não tem padrão de atendimento."),
@@ -152,7 +152,7 @@ EX2 = {
         (D(2026, 2, 12), "Rever a pesquisa de satisfação do cliente.", "Gerente comercial", D(2026, 5, 29), CONC, D(2026, 5, 28), SIM, "Pesquisa aplicada em novembro, com 41 respostas."),
         (D(2026, 8, 13), "Treinar os auditores internos nas diretrizes da ISO 19011.", "Coordenador da Qualidade", D(2026, 9, 30), CONC, D(2026, 9, 11), SIM, "Seis auditores treinados."),
         (D(2026, 8, 13), "Atualizar o mapa de processos com a nova linha de produção.", "Coordenador da Qualidade", D(2026, 11, 30), CONC, D(2026, 10, 20), SIM, "Mapa rev. 4."),
-        (D(2026, 8, 13), "Instalar o medidor de espessura em linha na extrusora 3.", "Gerente de engenharia", D(2026, 11, 30), ANDA, None, "",
+        (D(2026, 8, 13), "Orçar os medidores de espessura em linha para as extrusoras 3 e 4.", "Gerente de engenharia", D(2026, 11, 30), ANDA, None, "",
          "Orçamento recebido. Compra não aprovada."),
         (D(2026, 8, 13), "Definir o indicador de prazo de entrega por cliente.", "Gerente comercial", D(2026, 10, 30), NINI, None, "", ""),
     ]),

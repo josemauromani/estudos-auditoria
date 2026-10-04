@@ -26,7 +26,7 @@ CONCL, NOPRAZO, ATRAS, SEMACAO = "Concluída", "No prazo", "Atrasada", "—"
 # cada mudança: código, onde, título, tipo, impacto, o que mudou (resumo próprio), pergunta do diagnóstico, evidência típica, estudo da série
 MUDANCAS = [
     ("M1", "4.1 e 4.2", "Mudança climática no contexto", INCORP, BAIXO,
-     "A emenda de 2024, que pedia para avaliar se a mudança climática é uma questão pertinente e se as partes interessadas têm requisitos ligados a ela, passa para o texto da norma.",
+     "A emenda de 2024, que pediu no 4.1 que a organização determine se a mudança climática é uma questão pertinente e lembrou, numa nota do 4.2, que as partes interessadas podem ter requisitos ligados a ela, passa para o texto da norma.",
      "A análise de contexto e a lista de partes interessadas dizem se o clima afeta a organização?", "SWOT e lista de partes interessadas com o clima avaliado.", "swot"),
     ("M2", "5.1.1", "Cultura da qualidade e comportamento ético", NOVO, ALTO,
      "A alta direção passa a ter de promover e demonstrar uma cultura da qualidade e o comportamento ético.",
@@ -75,13 +75,18 @@ AVISO = 30
 P_REAL, P_FORA, P_PREV, P_VENCE, P_ATRAS = "Feito no prazo", "Feito fora do prazo", "Previsto", f"Vence em {AVISO} dias", "Atrasado"
 PL_SITS = [P_REAL, P_FORA, P_PREV, P_VENCE, P_ATRAS]
 
-ETAPAS = [
-    ("Ler a edição nova", "Com o anexo A, comparando com o sistema atual."),
-    ("Diagnosticar", "Para cada mudança: atende, atende em parte ou não atende."),
-    ("Ajustar o sistema", "Ações com dono e prazo, aprovadas pela direção."),
-    ("Auditar por dentro", "Auditoria interna e análise crítica já pela edição nova."),
-    ("Auditar com o organismo", "Numa manutenção, numa recertificação ou numa auditoria separada."),
-]
+# as oito etapas da transição (figura 3): as mesmas do plano dos exemplos, com uma descrição curta
+ETAPAS = list(zip([p for p, _ in PASSOS], [
+    "Com o anexo A, comparando com o sistema atual.",
+    "Atende, atende em parte ou não atende, com a evidência.",
+    "Uma ação, com dono e prazo, para cada lacuna.",
+    "Documentos e práticas ajustados.",
+    "Cultura, ética e o que muda para cada um.",
+    "Com as perguntas novas na lista de verificação.",
+    "A direção lê a transição e decide o que falta.",
+    "Numa manutenção, numa recertificação ou numa auditoria separada.",
+]))
+assert len(ETAPAS) == len(PASSOS) == 8
 CULTURA = [
     ("Direção", "Promove e demonstra a cultura da qualidade e a ética, nas decisões do dia a dia.", "5.1.1"),
     ("Política e objetivos", "Ligados ao contexto e à direção estratégica, e conhecidos por todos.", "5.2"),
@@ -159,7 +164,8 @@ EX1 = {
         (NAOATENDE, "", "O dono escreve três comportamentos esperados e os cobra na reunião mensal.", _DL, D(2027, 12, 31), None),
         (ATENDE, "Política de 2027 ligada ao crescimento do delivery", "", "", None, None),
         (PARCIAL, "Matriz de riscos do delivery", "Separar as oportunidades da SWOT numa lista própria, com ação e prazo.", _GL, D(2027, 12, 20), D(2027, 12, 18)),
-        (PARCIAL, "Troca do sistema de pedidos sem plano, em abril de 2027", "Criar uma rotina simples de planejar mudanças no sistema.", _GL, D(2028, 1, 15), None),
+        (PARCIAL, "Lançamento da pizza vegana planejado pelo projeto P-03; a atualização de versão do sistema de pedidos, em abril de 2027, foi feita sem plano",
+         "Criar uma rotina simples de planejar mudanças no sistema.", _GL, D(2028, 1, 15), None),
         (NAOATENDE, "", "Conversa com toda a equipe sobre a política e os comportamentos esperados.", _GL, D(2028, 1, 15), None),
         (ATENDE, "Termos lidos; a loja não tem glossário próprio", "", "", None, None),
         (ATENDE, "Matriz de requisitos conferida", "", "", None, None),
@@ -178,7 +184,7 @@ EX2 = {
         (ATENDE, "Calor no salão de impressão medido e avaliado como questão pertinente", "", "", None, None),
         (PARCIAL, "Compromissos da direção de 2027, sem cultura e ética", "Código de conduta e comportamentos esperados, apresentados pela direção.", _DG, D(2028, 8, 31), None),
         (ATENDE, "Política revisada com a SWOT e o objetivo O4", "", "", None, None),
-        (ATENDE, "Riscos C1 a C8 e oportunidades O1 a O4 em listas separadas, desde 2026", "", "", None, None),
+        (ATENDE, "Riscos C1 a C8 e quatro oportunidades em listas separadas, desde 2026", "", "", None, None),
         (NAOATENDE, "", "Procedimento de mudanças do sistema, com plano, comunicação e análise do efeito.", _CQ, D(2028, 8, 31), None),
         (NAOATENDE, "", "Incluir cultura e ética nas entrevistas de conscientização e na integração.", "Gerente de RH", D(2028, 9, 30), None),
         (PARCIAL, "Glossário da lista mestra com os termos de 2015", "Atualizar o glossário com os termos da norma nova.", _CQ, D(2028, 5, 31), None),

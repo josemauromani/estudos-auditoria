@@ -197,7 +197,7 @@ for k, text in [
 r += 1
 section("Regras e premissas do modelo")
 for k, text in [
-    ("Requisitos", "A lista tem 45 itens. Os requisitos 7.1.1 e 7.1.2 foram reunidos, e os itens dos requisitos 8.3 e 9.3 foram tratados em conjunto. As perguntas e os resumos foram escritos com palavras próprias e não substituem o texto da norma."),
+    ("Requisitos", "A lista tem 45 itens. Os requisitos 7.1.1 e 7.1.2 foram reunidos. Os subitens de 4.4, 5.2, 6.1, 6.2, 7.1.5, 7.5, 8.2.3, 8.3, 8.7, 9.2, 9.3 e 10.2 foram tratados em conjunto, no requisito de que fazem parte. As perguntas e os resumos foram escritos com palavras próprias e não substituem o texto da norma."),
     ("Percentual", "Atendimento = (requisitos atendidos + metade dos atendidos em parte) ÷ requisitos avaliados. Os requisitos não aplicáveis ficam fora da conta. A pontuação é uma convenção deste modelo."),
     ("Estágio", "Abaixo de 50%: inicial. De 50% a 79%: em implantação. A partir de 80%, sem requisito não atendido: pronto para a auditoria interna. As faixas são uma convenção deste modelo."),
     ("Não aplicável", "Todo requisito marcado como não aplicável pede justificativa na coluna de evidência. A justificativa também vai para o escopo do sistema."),

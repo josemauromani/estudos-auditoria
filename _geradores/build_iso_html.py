@@ -63,8 +63,13 @@ def dt(d):
     return d.strftime("%d/%m/%Y")
 
 
+def pct(v):
+    """Percentual inteiro, arredondado como na planilha: 62,5 vira 63, e não 62."""
+    return int(v * 100 + 0.5)
+
+
 def pc(v):
-    return f"{round(v * 100)}%"
+    return f"{pct(v)}%"
 
 
 def links(keys):
@@ -80,8 +85,9 @@ def secoes_table():
         n = sum(1 for r in REQ if r["secao"] == s)
         tile = f'<span class="k {cls}{" w" if cls == "base" else ""}">{txt}</span>'
         o.append(f'        <tr><td class="num">{s}</td><td><strong>{escape(t)}</strong></td><td class="num">{n}</td><td>{escape(q)}</td><td>{tile}</td></tr>')
-    o.append(f'        <tr><td></td><td><strong>Total</strong></td><td class="num">{len(REQ)}</td><td>Os requisitos 7.1.1 e 7.1.2 foram reunidos, '
-             'e os itens dos requisitos 8.3 e 9.3 foram tratados em conjunto.</td><td></td></tr>')
+    o.append(f'        <tr><td></td><td><strong>Total</strong></td><td class="num">{len(REQ)}</td><td>Os requisitos 7.1.1 e 7.1.2 foram reunidos. '
+             'Os subitens de 4.4, 5.2, 6.1, 6.2, 7.1.5, 7.5, 8.2.3, 8.3, 8.7, 9.2, 9.3 e 10.2 foram tratados em conjunto, '
+             'no requisito de que fazem parte.</td><td></td></tr>')
     o += ['      </tbody>', '    </table>', '  </div>']
     return "\n".join(o)
 
@@ -191,7 +197,7 @@ ch.append(f'        <text class="mu" x="880" y="{ly}" font-size="11.5" text-anch
 for k, (s, (t, a, p, n, v)) in enumerate(RES.items()):
     ch.append(f'        <rect class="hit" x="14" y="{TOP + RH * k}" width="872" height="{RH}" tabindex="0" role="img" '
               f'aria-label="Seção {s}, {escape(NOME[s])}: {a} atendidos, {p} em parte e {n} não atendidos, de {t} requisitos" data-k="{k}" '
-              f'data-s="{s}" data-n="{escape(NOME[s])}" data-t="{t}" data-a="{a}" data-p="{p}" data-x="{n}" data-pc="{round(v * 100)}" '
+              f'data-s="{s}" data-n="{escape(NOME[s])}" data-t="{t}" data-a="{a}" data-p="{p}" data-x="{n}" data-pc="{pct(v)}" '
               f'data-cx="{X0 + t * U / 2:.1f}"/>')
 ch.append("      </svg>")
 tb = ['        <table class="aud">', '          <thead><tr><th>Seção</th><th>Requisitos</th><th>Atende</th><th>Atende em parte</th><th>Não atende</th>'

@@ -92,11 +92,14 @@ EX1 = {
                  origem="Decisão da análise crítica de 14/12/2026 e lacuna do requisito 7.5 no diagnóstico de 02/10/2026.",
                  regra="Documentos revistos a cada 24 meses, ou quando o processo muda."),
     "docs": _docs([
-        ("IT-EXP-01", "Expedição e agrupamento por zona", "IT", "Entregar o pedido", "2", D(2026, 7, 10), "Líder da expedição", "Gerente da loja", PAPEL, "Quadro da expedição", 24, VIG),
+        ("IT-EXP-01", "Expedição e agrupamento por zona", "IT", "Entregar o pedido", "2", D(2026, 9, 15), "Líder da expedição", "Gerente da loja", PAPEL, "Quadro da expedição", 24, VIG),
         ("IT-ATE-01", "Roteiro de atendimento por telefone e mensagens", "IT", "Registrar o pedido", "2", D(2026, 10, 8), "Atendente líder", "Gerente da loja", PAPEL, "Balcão", 24, VIG),
         ("", "Escala padrão de entregadores", "IT", "Entregar o pedido", "", None, "Líder da expedição", "", PAPEL, "Quadro da expedição", 24, VIG),
         ("IT-PRO-01", "Rotina de controle de temperatura", "IT", "Comprar e armazenar insumos", "1", D(2026, 9, 30), "Pizzaiolo líder", "Gerente da loja", PAPEL, "Porta da câmara fria", 24, VIG),
+        ("FR-02", "Planilha de temperatura", "FR", "Comprar e armazenar insumos", "1", D(2026, 9, 30), "Pizzaiolo líder", "Gerente da loja", PAPEL, "Porta da câmara fria", 24, VIG),
         ("PR-GES-01", "Rotina de documentos", "PR", "Medir e melhorar", "3", D(2026, 10, 14), "Gerente da loja", "Dono da loja", ELET, "Pasta da gerência", 24, VIG),
+        ("FR-06", "Registro de não conformidade", "FR", "Medir e melhorar", "1", D(2026, 10, 20), "Gerente da loja", "Dono da loja", AMBOS, "Pasta da qualidade", 24, VIG),
+        ("FR-09", "Relatório de auditoria interna", "FR", "Medir e melhorar", "1", D(2026, 10, 20), "Gerente da loja", "Dono da loja", ELET, "Pasta da qualidade", 24, VIG),
         ("FR-03", "Ficha de alergênicos", "FR", "Produzir e embalar", "1", D(2026, 10, 16), "Pizzaiolo líder", "Gerente da loja", AMBOS, "Sistema de pedidos", 24, VIG),
         ("", "Receitas padrão", "IT", "Produzir e embalar", "", None, "Pizzaiolo líder", "", PAPEL, "Caderno do pizzaiolo", 24, VIG),
         ("", "Cardápio", "ES", "Atender no salão", "2026-2", D(2026, 7, 1), "Gerente da loja", "Dono da loja", AMBOS, "Mesas e site", 12, VIG),
@@ -104,6 +107,7 @@ EX1 = {
         ("FR-05", "Ficha de treinamento", "FR", "Treinar a equipe", "1", D(2026, 7, 10), "Gerente da loja", "", PAPEL, "Pasta de pessoal", 24, VIG),
         ("MP-01", "Mapa de processos", "MP", "Planejar e dirigir a loja", "1", D(2026, 10, 14), "Gerente da loja", "Dono da loja", ELET, "Pasta da gerência", 12, VIG),
         ("MP-02", "Matriz de riscos do delivery", "MP", "Planejar e dirigir a loja", "1", D(2026, 10, 5), "Gerente da loja", "Dono da loja", ELET, "Pasta da gerência", 6, VIG),
+        ("FR-08", "Ata da análise crítica", "FR", "Planejar e dirigir a loja", "1", D(2026, 12, 1), "Gerente da loja", "Dono da loja", ELET, "Pasta da gerência", 24, VIG),
         ("IT-CAI-01", "Fechamento de caixa", "IT", "Atender no salão", "1", D(2025, 3, 12), "Gerente da loja", "Dono da loja", PAPEL, "Gaveta do caixa", 24, OBS),
     ]),
     "regs": _regs([
@@ -113,7 +117,7 @@ EX1 = {
         ("Ficha de treinamento preenchida", "FR-05", "Treinar a equipe", "Sala da gerência", "Pasta de pessoal", PAPEL, 60, "Gerente da loja", "Picotar"),
         ("Registro de reclamações", "Planilha de reclamações", "Medir e melhorar", "Balcão e site", "Planilha da gerência", ELET, 24, "Gerente e atendente líder", "Exclusão"),
         ("Registro de não conformidade", "FR-06", "Medir e melhorar", "Sala da gerência", "Pasta da qualidade", AMBOS, 60, "Gerente da loja", "Picotar e excluir"),
-        ("Relatório de auditoria interna", "FR-07", "Medir e melhorar", "Sala da gerência", "Pasta da qualidade", ELET, 60, "Gerente e dono", "Exclusão"),
+        ("Relatório de auditoria interna", "FR-09", "Medir e melhorar", "Sala da gerência", "Pasta da qualidade", ELET, 60, "Gerente e dono", "Exclusão"),
         ("Ata da análise crítica", "FR-08", "Planejar e dirigir a loja", "Sala da gerência", "Pasta da gerência", ELET, 60, "Dono e gerente", "Exclusão"),
     ]),
     "ligados": [("IT-ATE-01", "Roteiro de atendimento"), ("Tela do sistema", "Campo de complemento obrigatório"), ("FR-03", "Ficha de alergênicos"),
@@ -124,7 +128,8 @@ EX1 = {
 EX2 = {
     "head": dict(org="Indústria de embalagens plásticas · Suprimentos", data=D(2027, 3, 5), por="Gerente de Suprimentos, com o Coordenador da Qualidade",
                  origem="Preparação da auditoria de certificação, decidida na análise crítica de 18/02/2027.",
-                 regra="Documentos revistos a cada 24 meses. Formulários e listas, a cada 12."),
+                 regra="Documentos revistos a cada 24 meses. Formulários e listas, a cada 12; a lista de fornecedores homologados, a cada 6, com a avaliação semestral. "
+                       "Registros retidos por 3 anos; os de compra, por 5, pelo prazo fiscal; os contratos, por 10."),
     "docs": _docs([
         ("PR-SUP-01", "Aquisição de materiais e serviços", "PR", "Suprimentos", "6", D(2026, 10, 16), "Gerente de Suprimentos", "Diretor geral", ELET, "Rede, pasta Qualidade", 24, VIG),
         ("PO-02", "Política de compras e alçadas", "PO", "Suprimentos", "3", D(2025, 11, 20), "Diretor geral", "Diretor geral", ELET, "Rede, pasta Qualidade", 24, VIG),
@@ -153,7 +158,8 @@ EX2 = {
 
 # exemplo 3: documentos de origem externa da indústria (só no treinamento)
 EXT = _ext([
-    ("ISO 9001:2015, com a emenda de 2024", "ISO e ABNT", "Emenda 1, de 2024", "Todo o sistema", "Consulta ao site da ABNT a cada seis meses", D(2027, 1, 12), 6),
+    ("ISO 9001:2015, com a emenda de 2024", "ISO e ABNT", "Emenda 1, de 2024; em uso até a transição", "Todo o sistema", "Consulta ao site da ABNT a cada seis meses", D(2027, 1, 12), 6),
+    ("ISO 9001:2026", "ISO e ABNT", "Edição de 2026, comprada em 10/02/2027", "Todo o sistema, para a transição", "Consulta ao site da ABNT a cada seis meses", D(2027, 2, 10), 6),
     ("Norma regulamentadora de segurança em máquinas", "Ministério do Trabalho", "Texto vigente em 2026", "Produção e Manutenção", "Consultoria de segurança avisa as mudanças", D(2026, 11, 3), 6),
     ("Desenhos e especificações do cliente", "Cada cliente", "Revisão informada no desenho", "Desenvolvimento e Produção", "O cliente envia a revisão nova; a antiga é retirada do posto", D(2027, 2, 20), 3),
     ("Fichas técnicas das resinas", "Fornecedores", "Data da ficha", "Suprimentos e Produção", "Pedida ao fornecedor a cada lote novo", D(2027, 2, 26), 6),
@@ -162,7 +168,7 @@ EXT = _ext([
 ])
 
 # situação dos documentos por processo da indústria (módulo 7): em dia, revisão vencida, sem controle
-IND_DOCS = [("Comercial e análise de pedidos", 4, 1, 1), ("Desenvolvimento de produto", 5, 2, 0), ("Suprimentos", 8, 1, 1), ("Produção", 9, 3, 2),
+IND_DOCS = [("Comercial e análise de pedidos", 4, 1, 1), ("Desenvolvimento de produto", 5, 2, 0), ("Suprimentos", 7, 2, 1), ("Produção", 9, 3, 2),
             ("Laboratório e controle da qualidade", 7, 1, 0), ("Expedição e logística", 3, 1, 1), ("Manutenção", 2, 2, 3), ("Gestão de pessoas", 3, 0, 1),
             ("Gestão do sistema da qualidade", 6, 1, 0)]
 

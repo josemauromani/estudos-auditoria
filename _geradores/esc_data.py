@@ -12,12 +12,13 @@ from iso_data import REQ
 D = date
 SIM, NAO = "Sim", "Não"
 DEM, PARC, NDEM = "Demonstrado", "Parcial", "Não demonstrado"
+REFORCADA = "Justificativa reforçada: requisito fora dos candidatos comuns"
 SITS = [DEM, PARC, NDEM]
-# requisitos que, na prática, podem não se aplicar a uma organização; os outros se aplicam sempre
-EXCLUIVEL = {"7.1.5": "Quando nenhum resultado depende de medição, ou a medição não exige rastreabilidade a padrões.",
+# os candidatos mais comuns a não aplicável; nos outros requisitos, a não aplicabilidade pede justificativa reforçada
+EXCLUIVEL = {"7.1.5": "Quando a rastreabilidade não é requisito, e só no 7.1.5.2. O 7.1.5.1 vale sempre que há monitoramento ou medição.",
              "8.3": "Quando a organização não define as características do que fornece: produz pelo projeto do cliente ou revende.",
              "8.5.3": "Quando nada do cliente ou do fornecedor fica sob os cuidados da organização: material, ferramenta, dado.",
-             "8.5.5": "Quando não há nenhuma atividade depois da entrega: garantia, troca, assistência, reclamação."}
+             "8.5.5": "Quando não há nenhuma atividade depois da entrega: garantia, troca, assistência técnica, manutenção."}
 REQS = [(r["num"], r["titulo"]) for r in REQ]
 CAMPOS = [("unidades", "Unidades e locais"), ("produtos", "Produtos e serviços"), ("processos", "Processos"), ("terceiros", "Processos terceirizados"),
           ("fora", "Fora do escopo"), ("declaracao", "Declaração de escopo"), ("rev", "Revisão e data"), ("aprov", "Aprovado por")]
@@ -56,14 +57,14 @@ def aplic_conf(num, aplica, just, afeta):
         return "Falta decidir"
     if aplica == SIM:
         return "OK"
-    if num not in EXCLUIVEL:
-        return "Requisito que se aplica sempre"
     if not just:
         return "Falta a justificativa"
     if not afeta:
         return "Falta avaliar o efeito"
     if afeta == SIM:
         return "Exclusão indevida"
+    if num not in EXCLUIVEL:
+        return REFORCADA
     return "OK"
 
 
@@ -109,7 +110,7 @@ EX1 = {
     "head": dict(org="Pizzaria (loja com salão e delivery)", data=D(2027, 2, 8), por="Gerente da loja, com o dono", ref=D(2027, 2, 15),
                  origem="Requisito 4.3 não atendido no diagnóstico de 2026: não havia escopo escrito."),
     "escopo": dict(unidades="Uma loja, com salão, cozinha e expedição.", produtos="Pizzas e bebidas, servidas no salão, para retirada no balcão e entregues em casa. Encomendas para eventos.",
-                   processos="Registrar o pedido, produzir e embalar, entregar; planejar e dirigir a loja, medir e melhorar; comprar e armazenar, manter equipamentos e motos, treinar a equipe.",
+                   processos="Registrar o pedido, produzir e embalar, entregar, atender no salão; planejar e dirigir a loja, medir e melhorar; comprar e armazenar, manter equipamentos e motos, treinar a equipe.",
                    terceiros="Pagamento pelo aplicativo, controle de pragas e manutenção do forno, por empresas contratadas.", fora="Nenhuma parte da loja.",
                    declaracao="Produção e venda de pizzas e bebidas no salão, para retirada e por entrega, e encomendas para eventos, na loja do bairro.",
                    rev="Rascunho de 08/02/2027", aprov=""),
@@ -118,7 +119,7 @@ EX1 = {
         ("O dono conduz a análise crítica de dezembro e assina as decisões.", "Anual", "Ata da análise crítica de 14/12/2026", DEM, "", "", None),
         ("Os objetivos de 2027 saíram da análise crítica e da SWOT, com o dono.", "Anual", "Quadro de objetivos de 2027", DEM, "", "", None),
         ("Os indicadores são lidos na reunião semanal, junto com as vendas.", "Semanal", "Painel de indicadores", DEM, "", "", None),
-        ("O mapa de processos está na parede da cozinha. Os riscos são revistos uma vez por ano.", "Anual", "Matriz de riscos", PARC,
+        ("O mapa de processos está na parede da cozinha. Os riscos são revistos a cada seis meses.", "Semestral", "Matriz de riscos", PARC,
          "Ler os riscos de cada processo na reunião mensal com os líderes.", _GL, D(2027, 4, 30)),
         ("Aprovou o segundo pizzaiolo e o treinamento. O segundo forno está em estudo.", "Quando necessário", "Ata da análise crítica de 14/12/2026", DEM, "", "", None),
         ("Fala da qualidade na abertura do turno de sexta-feira.", "Semanal", "", PARC, "Incluir os entregadores e mandar uma mensagem por semana no grupo da equipe.", _DO,
@@ -148,7 +149,7 @@ EX2 = {
         ("Os objetivos de 2027 estão ligados à SWOT e à certificação.", "Anual", "Quadro de objetivos de 2027", DEM, "", "", None),
         ("Os indicadores da qualidade são lidos na reunião mensal de resultados, junto com os financeiros.", "Mensal", "Ata da reunião de resultados", DEM, "", "", None),
         ("Cada gerente é dono de processo, com tartaruga e matriz de riscos.", "Semestral", "Mapa de processos e matrizes de riscos", DEM, "", "", None),
-        ("Aprovou o medidor de espessura de R$ 96.000, e a instalação atrasou.", "Quando necessário", "Ata da análise crítica de 18/02/2027", PARC,
+        ("Aprovou os dois medidores de espessura em linha, de R$ 96.000, com instalação até 30/06/2027; em maio, a compra ainda não tinha sido feita.", "Quando necessário", "Ata da análise crítica de 18/02/2027", PARC,
          "Acompanhar a instalação na reunião mensal de resultados.", _DG, D(2027, 9, 30)),
         ("Comunicado trimestral do diretor sobre qualidade e clientes, no mural e na intranet.", "Trimestral", "Comunicados publicados", DEM, "", "", None),
         ("Os objetivos são revistos a cada trimestre, com os gerentes.", "Trimestral", "Quadro de objetivos", DEM, "", "", None),
@@ -178,7 +179,7 @@ CHECK = [
 def resumo(ex):
     ap = aplicabilidade(ex)
     lid = ex["lid"]
-    return dict(reqs=len(ap), aplic=sum(1 for a in ap if a["aplica"] == SIM), naoap=sum(1 for a in ap if a["aplica"] == NAO), ap_rever=sum(1 for a in ap if a["conf"] != "OK"),
+    return dict(reqs=len(ap), aplic=sum(1 for a in ap if a["aplica"] == SIM), naoap=sum(1 for a in ap if a["aplica"] == NAO), ap_rever=sum(1 for a in ap if a["conf"] not in ("OK", REFORCADA)),
                 esc_falta=len(escopo_conf(ex["escopo"])), dem=sum(1 for c in lid if c["sit"] == DEM), parc=sum(1 for c in lid if c["sit"] == PARC),
                 ndem=sum(1 for c in lid if c["sit"] == NDEM), acoes=sum(1 for c in lid if c["acao"]), lid_rever=sum(1 for c in lid if lider_conf(c) != "OK"))
 

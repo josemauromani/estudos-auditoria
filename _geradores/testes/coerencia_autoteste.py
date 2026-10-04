@@ -1,5 +1,5 @@
 # Autoteste das funções de coerencia.py
-import os, sys
+import os, re, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import coerencia as C
 
@@ -20,5 +20,8 @@ import subprocess
 _cli = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'coerencia.py')
 r = subprocess.run([sys.executable, _cli, '--so', 'ZZ99'], capture_output=True, text=True)
 assert r.returncode == 2 and 'ZZ99' in r.stdout, (r.returncode, r.stdout)
-assert subprocess.run([sys.executable, _cli, '--so', 'D01'], capture_output=True, text=True).returncode == 1
+# o código de saída acompanha a contagem de falhas do id pedido, qualquer que seja o estado dos estudos
+r = subprocess.run([sys.executable, _cli, '--so', 'D01'], capture_output=True, text=True)
+_n = int(re.search(r'(\d+) falha', r.stdout).group(1))
+assert r.returncode == (1 if _n else 0), (r.returncode, r.stdout)
 print('--so OK')

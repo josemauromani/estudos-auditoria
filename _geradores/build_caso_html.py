@@ -344,7 +344,7 @@ for row in rows_c:
         tb.append(f'            <tr><td>{escape(a["ativ"])}</td><td>{escape(a["resp"])}</td><td class="c">{c["prev"]}</td><td class="c">{c["feitos"]}</td><td class="c">{c["atras"]}</td></tr>')
 tb += ['          </tbody>', '        </table>']
 
-# ------------------------------------------------------------------ módulo 5: tabela das frequências dos 29 estudos
+# ------------------------------------------------------------------ módulo 5: tabela das frequências dos 34 estudos
 fq = ['  <div class="tbl">', '    <table>', '      <thead><tr><th style="width:30%">Estudo</th><th style="width:16%">Ritmo</th><th>O que se faz</th></tr></thead>', '      <tbody>']
 for g in GRUPOS:
     fq.append(f'        <tr><td colspan="3"><span class="eyebrow" style="margin:0">{escape(g)}</span></td></tr>')

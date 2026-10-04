@@ -153,14 +153,30 @@ for k, (d, t) in enumerate(EVT):
 tr.append(f'        <text x="450" y="228" font-size="11.5"{MID}>Datas do documento de transição da Global ACI, publicado junto com a norma.</text>')
 tr.append("      </svg>")
 
-# ------------------------------------------------------------------ figura 3: as cinco etapas
-et = ['      <svg viewBox="0 0 900 236" role="img" aria-label="As cinco etapas da transição. ' + " ".join(f"{n}: {d}" for n, d in ETAPAS)
-      + ' O que a auditoria encontrar volta ao ajuste do sistema.">', "        <defs>" + marker("a3") + marker("a3m", True) + "</defs>"]
-xs = cinco(et, ETAPAS, ["bx", "bx-p", "bx-d", "bx-c", "bx-ink"], "a3", h=152, rotulo=lambda k: f"ETAPA {k + 1}", mid=84)
-xa, xb = xs[4] + W5 / 2, xs[2] + W5 / 2
-et.append(f'        <path class="ln-mu dash" d="M{xa} 170 V198 H{xb} V174" marker-end="url(#a3m)"/>')
-et.append(f'        <text class="mu halo" x="{(xa + xb) / 2}" y="202" font-size="11"{MID}>constatações da auditoria de transição</text>')
-et.append(f'        <text x="450" y="228" font-size="11.5"{MID}>A transição não pede um sistema novo: pede ajustes em poucos pontos, feitos e auditados antes da data.</text>')
+# ------------------------------------------------------------------ figura 3: as oito etapas, em duas linhas de quatro
+W8, G8, H8, Y8 = 196, 24, 118, (16, 170)
+et = ['      <svg viewBox="0 0 900 340" role="img" aria-label="As oito etapas da transição. ' + " ".join(f"Etapa {k}, {n}: {d}" for k, (n, d) in enumerate(ETAPAS, 1))
+      + ' O que a auditoria do organismo encontrar volta às ações.">', "        <defs>" + marker("a3") + marker("a3m", True) + "</defs>"]
+CL8 = ["bx", "bx-p", "bx-p", "bx-d", "bx-d", "bx-c", "bx-c", "bx-ink"]
+for k, (tit, desc) in enumerate(ETAPAS):
+    x, y0 = 12 + (k % 4) * (W8 + G8), Y8[k // 4]
+    ink = CL8[k] == "bx-ink"
+    et.append(f'        <rect class="{CL8[k]}" x="{x}" y="{y0}" width="{W8}" height="{H8}"/>')
+    et.append(f'        <text class="mono {"t-ground" if ink else "mu"}" x="{x + 12}" y="{y0 + 20}" font-size="10">ETAPA {k + 1}</text>')
+    tl = textwrap.wrap(tit, 22, break_on_hyphens=False)
+    assert len(tl) <= 2, tit
+    for j, l in enumerate(tl):
+        et.append(f'        <text class="b{" t-ground" if ink else ""}" x="{x + 12}" y="{y0 + 42 + j * 15}" font-size="12.5">{escape(l)}</text>')
+    lines(et, desc, x + 12, y0 + 42 + 15 * len(tl) + 6, 30, cls="t-ground" if ink else "", step=14, maxl=3)
+    if k % 4 < 3:
+        ym = y0 + H8 / 2
+        et.append(f'        <line class="ln" x1="{x + W8 + 1}" y1="{ym}" x2="{x + W8 + G8 - 2}" y2="{ym}" marker-end="url(#a3)"/>')
+c4, c5 = 12 + 3 * (W8 + G8) + W8 / 2, 12 + W8 / 2
+et.append(f'        <path class="ln" d="M{c4} {Y8[0] + H8 + 1} V{Y8[0] + H8 + 18} H{c5} V{Y8[1] - 2}" marker-end="url(#a3)"/>')
+xr = 12 + 3 * (W8 + G8) + W8
+et.append(f'        <path class="ln-mu dash" d="M{xr + 1} {Y8[1] + H8 / 2} H{xr + 18} V{Y8[0] + H8 / 2} H{xr + 2}" marker-end="url(#a3m)"/>')
+et.append(f'        <text class="mu" x="{xr + 18}" y="{Y8[1] + H8 + 18}" font-size="11"{END}>constatações da auditoria do organismo voltam às ações</text>')
+et.append(f'        <text x="450" y="{Y8[1] + H8 + 44}" font-size="11.5"{MID}>A transição não pede um sistema novo: pede ajustes em poucos pontos, feitos e auditados antes da data.</text>')
 et.append("      </svg>")
 
 # ------------------------------------------------------------------ figura 4: a cultura da qualidade em três camadas

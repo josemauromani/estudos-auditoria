@@ -7,7 +7,7 @@ import textwrap
 from html import escape
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from esc_data import (CAMPOS, CHECK, COMPROMISSOS, DECLARACOES, DEM, ETAPAS, EX1, EX2, EXCLUIVEL, NAO, NDEM, OBRIG, PARC,  # noqa: E402
+from esc_data import (CAMPOS, CHECK, COMPROMISSOS, DECLARACOES, DEM, ETAPAS, EX1, EX2, EXCLUIVEL, NAO, NDEM, OBRIG, PARC, REFORCADA,  # noqa: E402
                       aplicabilidade, escopo_conf, lider_conf, resumo)
 
 SRC, BODY, OUT = sys.argv[1], sys.argv[2], sys.argv[3]
@@ -160,14 +160,14 @@ ar += ['        <line class="ln" x1="271" y1="55" x2="328" y2="55" marker-end="u
        '        <rect class="bx" x="640" y="150" width="240" height="56"/>',
        '        <text class="mono mu" x="652" y="170" font-size="9.5">SE APLICAM SEMPRE</text>',
        '        <text x="652" y="188" font-size="10.5">As seções 4, 5, 6, 9 e 10, e quase</text>', '        <text x="652" y="201" font-size="10.5">todo o restante da 7 e da 8.</text>',
-       '        <text x="450" y="240" font-size="11.5" text-anchor="middle">Na prática, os candidatos são poucos: 7.1.5, 8.3, 8.5.3 e 8.5.5. E mesmo eles costumam se aplicar.</text>',
+       '        <text x="450" y="240" font-size="11.5" text-anchor="middle">Na prática, os candidatos são poucos: a rastreabilidade do 7.1.5, o 8.3, o 8.5.3 e o 8.5.5. E mesmo eles costumam se aplicar.</text>',
        "      </svg>"]
 
 excltab = ['  <div class="tbl">', '    <table>', '      <thead><tr><th style="width:10%">Requisito</th><th style="width:44%">Pode não se aplicar quando</th><th>Mas costuma se aplicar porque</th></tr></thead>', '      <tbody>']
-PORQUE = {"7.1.5": "Quase toda organização mede algo de que o cliente depende: temperatura, peso, espessura, tempo.",
+PORQUE = {"7.1.5": "Quase toda organização mede algo de que o cliente depende: temperatura, peso, espessura, tempo. E conferir documentos também é monitorar.",
           "8.3": "Quem cria sabores, adapta produtos ou desenvolve sob encomenda está projetando.",
           "8.5.3": "Dados do cliente, cilindros, embalagens retornáveis e bolsas da plataforma são propriedade de terceiros.",
-          "8.5.5": "Troca, garantia e atendimento a reclamações são atividades pós-entrega."}
+          "8.5.5": "Troca, garantia e assistência técnica são atividades pós-entrega."}
 for num, quando in EXCLUIVEL.items():
     excltab.append(f'        <tr><td class="num">{num}</td><td>{escape(quando)}</td><td>{escape(PORQUE[num])}</td></tr>')
 excltab += ['      </tbody>', '    </table>', '  </div>']
@@ -192,7 +192,7 @@ def tabela(caption, heads, rows):
 
 
 def conf_chip(c):
-    return f'<span class="chip {"s1" if c == "OK" else "s3"}">{escape(c)}</span>'
+    return f'<span class="chip {"s1" if c == "OK" else "s2" if c == REFORCADA else "s3"}">{escape(c)}</span>'
 
 
 def escopo_tab(ex):
@@ -270,7 +270,7 @@ tb += ['          </tbody>', '        </table>']
 r1, r2 = resumo(EX1), resumo(EX2)
 charttext = (f'  <p>As duas direções demonstram a maior parte dos compromissos: {r1["dem"]} na pizzaria e {r2["dem"]} na indústria. As diferenças estão onde o tamanho pesa. '
              'Na pizzaria, tudo passa pelo gerente, e os líderes não decidem nada no seu processo: o compromisso de apoiar os outros gestores não aparece. '
-             'Na indústria, os gerentes conduzem os seus processos, mas o turno da noite fica longe da direção, e uma compra aprovada atrasou a instalação. '
+             'Na indústria, os gerentes conduzem os seus processos, mas o turno da noite fica longe da direção, e uma compra aprovada em fevereiro ainda não tinha sido feita em maio. '
              'Em nenhum dos dois casos a direção está ausente. O que falta é chegar a quem está mais longe dela: os líderes da loja, o turno da noite da fábrica.</p>')
 
 # ------------------------------------------------------------------ módulo 10: figura da ISO

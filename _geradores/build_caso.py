@@ -230,7 +230,7 @@ section("Abas da planilha")
 for k, text in [
     ("Rastro", f"O nome do fio e até {NR} passos. Calcula os dias entre os passos e a conferência."),
     ("Calendário", f"O ano, o mês da leitura e até {NC} atividades. Calcula as previstas, as feitas, as atrasadas, a situação e a conferência."),
-    ("Estudos", "Os 29 estudos da série, com o grupo e o ritmo recomendado. Alimenta as listas suspensas."),
+    ("Estudos", f"Os {len(ESTUDOS)} estudos da série, com o grupo e o ritmo recomendado. Alimenta as listas suspensas."),
     ("Painel", "Os números do fio e do calendário, o gráfico e o aviso."),
     ("Checklist", "Doze verificações do sistema integrado, com percentual de conclusão."),
     ("Exemplo 1 - Pizzaria", "Os atrasos das noites de pico, e o calendário de 2027 lido em junho."),

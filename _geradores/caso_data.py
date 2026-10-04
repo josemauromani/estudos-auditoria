@@ -9,12 +9,13 @@ de conferência são uma convenção deste material.
 from datetime import date
 
 D = date
-# ---- os 29 estudos da série: nome curto, título, grupo, pasta e arquivo, frequência recomendada, ritmo
+# ---- os 34 estudos da série: nome curto, título, grupo, pasta e arquivo, frequência recomendada, ritmo
 G1, G2, G3, G4 = "Conhecer a norma e montar o sistema", "Conhecer a organização e planejar", "Resolver problemas e melhorar", "Verificar e corrigir o sistema"
 GRUPOS = [G1, G2, G3, G4]
 MENSAL, TRIM, SEM, ANUAL, CONT, NEC = "Mensal", "Trimestral", "Semestral", "Anual", "Contínuo", "Quando necessário"
 ESTUDOS = [
     ("ISO 9001", "ISO 9001 requisito a requisito", G1, "ISO-9001/treinamento-iso-9001.html", "Diagnóstico requisito a requisito, uma vez por ano.", ANUAL),
+    ("ISO 9001:2026", "ISO 9001:2026: o que muda", G1, "ISO-9001-2026/treinamento-iso-9001-2026.html", "Uma vez, na transição, com o plano lido no calendário.", NEC),
     ("Escopo e liderança", "Escopo e liderança", G1, "Escopo/treinamento-escopo.html", "Revisão do escopo e dos compromissos da direção.", ANUAL),
     ("Informação documentada", "Informação documentada", G1, "Informacao-Documentada/treinamento-informacao-documentada.html", "Revisão da lista mestra e da retenção.", ANUAL),
     ("Matriz de competências", "Matriz de competências e treinamento", G1, "Competencias/treinamento-competencias.html", "Matriz atualizada e plano de treinamento.", SEM),
@@ -34,20 +35,24 @@ ESTUDOS = [
     ("Liberação e produto não conforme", "Liberação e produto não conforme", G2, "Liberacao/treinamento-liberacao.html", "A cada lote, com leitura mensal dos registros.", CONT),
     ("Matriz GUT", "Matriz GUT", G3, "GUT/treinamento-gut.html", "Escolha dos problemas do trimestre.", TRIM),
     ("Pareto", "Pareto e folha de verificação", G3, "Pareto/treinamento-pareto.html", "A cada problema escolhido.", NEC),
+    ("Histograma e CEP", "Histograma e CEP", G3, "Histograma-CEP/treinamento-histograma-cep.html", "A cada subgrupo medido, com leitura mensal dos sinais.", CONT),
     ("Ishikawa", "Diagrama de Ishikawa", G3, "Ishikawa/treinamento-ishikawa.html", "A cada problema escolhido.", NEC),
     ("5W2H", "5W2H", G3, "5W2H/treinamento-5w2h.html", "A cada plano de ação.", NEC),
     ("PDCA", "PDCA", G3, "PDCA/treinamento-pdca.html", "A cada problema escolhido, do começo ao fim.", NEC),
     ("Indicadores", "Indicadores de desempenho", G4, "Indicadores/treinamento-indicadores.html", "Reunião mensal de indicadores.", MENSAL),
     ("Auditoria interna", "Auditoria interna", G4, "Auditoria/treinamento-auditoria.html", "Programa com auditorias a cada semestre.", SEM),
+    ("Técnica de auditoria", "Técnica de auditoria", G4, "Tecnica-Auditoria/treinamento-tecnica-auditoria.html", "A cada auditoria interna, com a avaliação dos auditores.", SEM),
     ("Não conformidade", "Não conformidade e ação corretiva", G4, "Nao-Conformidade/treinamento-nao-conformidade.html", "A cada desvio, com leitura mensal dos registros.", CONT),
     ("Análise crítica", "Análise crítica pela direção", G4, "Analise-Critica/treinamento-analise-critica.html", "Reunião da direção a cada semestre.", SEM),
     ("Avaliação de fornecedores", "Avaliação de fornecedores", G4, "Fornecedores/treinamento-fornecedores.html", "Avaliação dos fornecedores críticos.", SEM),
     ("Satisfação do cliente", "Satisfação do cliente", G4, "Satisfacao/treinamento-satisfacao.html", "Reclamações todo dia, pesquisa a cada trimestre.", TRIM),
+    ("Processo de certificação", "Processo de certificação", G4, "Certificacao/treinamento-certificacao.html", "Auditoria do organismo a cada ano, com a preparação.", ANUAL),
+    ("Caso integrado", "Caso integrado", G4, "Caso-Integrado/treinamento-caso-integrado.html", "Leitura mensal do calendário e dos fios abertos.", MENSAL),
 ]
 NOMES = [e[0] for e in ESTUDOS]
 GRUPO = {e[0]: e[2] for e in ESTUDOS}
 LINK = {e[0]: "../" + e[3] for e in ESTUDOS}
-assert len(ESTUDOS) == 29 and len(set(NOMES)) == 29
+assert len(ESTUDOS) == 34 and len(set(NOMES)) == 34
 
 # ---- calendário
 FREQS = {"Mensal": 1, "Bimestral": 2, "Trimestral": 3, "Semestral": 6, "Anual": 12}
@@ -179,9 +184,11 @@ EX1 = {
          "O problema medido, para estratificar", _PAR),
         (D(2026, 7, 10), _PAR, "Folha de verificação: em 46% dos atrasos, a pizza pronta esperou entregador, nas sextas e nos sábados.", "Folha de verificação de 15/06 a 09/07",
          "Os dois motivos principais", _ISH),
-        (D(2026, 7, 17), _ISH, "Causas confirmadas: escala igual todos os dias, pedidos sem agrupamento por bairro, endereço sem complemento.", "Diagrama de 17/07/2026",
-         "Três causas confirmadas", _W5),
-        (D(2026, 7, 24), _W5, "Três ações: reforçar a escala no pico, agrupar os pedidos por bairro, tornar o complemento obrigatório.", "Plano de ação de 24/07/2026",
+        (D(2026, 7, 17), _ISH, "Cinco causas confirmadas; quatro vão para o plano: escala igual todos os dias, pedidos sem agrupamento por bairro, endereço sem complemento "
+         "e tempo medido só pela média do dia. A fila do forno fica para depois.", "Diagrama de 17/07/2026",
+         "Quatro causas para o plano", _W5),
+        (D(2026, 7, 24), _W5, "Seis ações, de A1 a A6: reforçar a escala no pico, tornar o complemento obrigatório, treinar a expedição, agrupar os pedidos por bairro, "
+         "medir o tempo por faixa de horário e atualizar a instrução da expedição.", "Plano de ação de 24/07/2026",
          "Ações com dono e prazo", _PDCA),
         (D(2026, 9, 6), _PDCA, "Média de 95,5% nas semanas 9 a 12. Meta atingida, e a escala do pico vira padrão.", "Ciclo PDCA, etapa de padronização",
          "O segundo motivo, a fila do forno, fica para depois", _GUT),
@@ -228,16 +235,16 @@ EX2 = {
     "passos": _passos([
         (D(2026, 9, 14), _SAT, "Cliente A reclama de espessura fora: a sétima reclamação do ano, a quinta pelo mesmo motivo.", "Registro de reclamação de 14/09/2026",
          "A reclamação, para análise de causa", _NC),
-        (D(2026, 9, 23), _NC, "Causa: variação de espessura na extrusora 3, sem medidor em linha. Inspeção de 100% das bobinas do cliente A.", "RNC 2026-29",
-         "A proposta do medidor de espessura em linha", _AC),
-        (D(2027, 2, 18), _AC, "Aprova o medidor em linha e cobra a homologação do segundo fornecedor de resina, ação da matriz de riscos.", "Ata da análise crítica de 18/02/2027",
+        (D(2026, 9, 23), _NC, "Causa: variação de espessura na extrusora 3, sem medidor em linha. Inspeção de 100% das bobinas do cliente A.", "RNC 2026-32",
+         "A proposta dos dois medidores de espessura em linha", _AC),
+        (D(2027, 2, 18), _AC, "Aprova os dois medidores em linha e cobra a homologação do segundo fornecedor de resina, ação da matriz de riscos.", "Ata da análise crítica de 18/02/2027",
          "A homologação, com prazo", _FORN),
         (D(2027, 3, 29), _FORN, "Segundo fornecedor de resina homologado.", "Registro de homologação de 29/03/2027", "A resina nova liberada para uso", _PROD),
-        (D(2027, 5, 14), _PROD, "Mudança registrada: resina do segundo fornecedor na extrusora 3, com lote piloto de duas bobinas, o lote 135.", "Registro de mudança de 14/05/2027",
-         "O lote piloto, para liberar", _LIB),
-        (D(2027, 5, 14), _LIB, "Bobina 1 com 37,4 µm, segregada. Bobina 2 com 39,1 µm, liberada e embarcada em 17/05.", "RNC 2027-19",
+        (D(2027, 5, 14), _PROD, "Mudança registrada: resina do segundo fornecedor na extrusora 3, depois do lote piloto 127, de duas bobinas; o lote 135 é o primeiro da produção regular.",
+         "Registro de mudança de 14/05/2027", "O lote 135, para liberar", _LIB),
+        (D(2027, 5, 14), _LIB, "Bobina 1 com 37,4 µm, segregada. Bobina 2 com 39,1 µm, liberada e embarcada em 17/05.", "Registro de produto não conforme 2027-19",
          "A bobina 2, no cliente A", _SAT),
-        (D(2027, 5, 24), _SAT, "Cliente A reclama de filme fino no lote 135. Bobina recolhida e reposta em 26/05.", "RNC 2027-22",
+        (D(2027, 5, 24), _SAT, "Cliente A reclama de filme fino no lote 135. Bobina recolhida e reposta em 26/05.", "Registro de produto não conforme 2027-22",
          "A dúvida sobre a medição", _CAL),
         (D(2027, 6, 12), _CAL, "O micrômetro marca 1,6 µm a mais. Medições corrigidas desde 10/01: 6 bobinas abaixo de 38 µm, 2 entregues. Clientes informados em 14/06.",
          "Registro de verificação FV-12", "A lição sobre reclamação de espessura", _CON),
@@ -255,7 +262,7 @@ EX2 = {
         ("Programa de calibração", _CAL, "7.1.5", "Analista da Qualidade", "Mensal", 1, [1, 2, 3, 5, 6, 7, 8, 9]),
         ("Preventiva das extrusoras", _REC, "7.1.3", "Supervisor de manutenção", "Trimestral", 3, [3, 8, 9]),
         ("Ronda do aprendizado", _CON, "7.1.6 · 8.5.5", "Analista da Qualidade", "Mensal", 6, [6, 7, 9]),
-        ("Mapa do conhecimento", _CON, "7.1.6", "Gerente de produção", "Anual", 9, [9]),
+        ("Mapa do conhecimento", _CON, "7.1.6", "Gerente industrial", "Anual", 9, [9]),
         ("Matriz de competências e treinamento", "Matriz de competências", "7.2", "Gerente de RH", "Trimestral", 1, [1, 4, 7]),
         ("Acompanhamento dos objetivos", _OBJ, "6.2", "Diretor geral", "Trimestral", 1, [1, 4, 7]),
         ("Avaliação dos fornecedores críticos", _FORN, "8.4", "Comprador sênior", "Semestral", 6, [6]),
@@ -268,7 +275,7 @@ EX2 = {
 }
 
 PERGUNTAS = [
-    ("De onde veio?", "Qual registro deu origem a este passo?", "A reclamação de 14/09, o RNC 2026-29."),
+    ("De onde veio?", "Qual registro deu origem a este passo?", "A reclamação de 14/09, o RNC 2026-32."),
     ("O que foi feito?", "Qual foi a decisão ou a ação, e por quem?", "A inspeção de 100% das bobinas do cliente A."),
     ("O que saiu?", "Que registro este passo deixou?", "A ata da análise crítica, com a aprovação."),
     ("Para onde foi?", "Quem recebeu a saída, e o que fez com ela?", "Suprimentos, com a homologação do segundo fornecedor."),

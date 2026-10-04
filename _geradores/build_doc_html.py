@@ -148,7 +148,7 @@ lg = ['      <svg viewBox="0 0 900 236" role="img" aria-label="A instrução IT-
       + "; ".join(f"{a}, {b.lower()}" for a, b in EX1["ligados"]) + '. Quando a instrução muda, os quatro precisam ser conferidos.">',
       '        <defs><marker id="a6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah-mu" d="M0 0 L10 5 L0 10 z"/></marker></defs>',
       '        <rect class="bx-ink" x="320" y="16" width="260" height="66"/>',
-      '        <text class="mono t-ground" x="336" y="38" font-size="10">IT-EXP-01 · REV. 2 · 10/07/2026</text>',
+      '        <text class="mono t-ground" x="336" y="38" font-size="10">IT-EXP-01 · REV. 2 · 15/09/2026</text>',
       '        <text class="b t-ground" x="336" y="62" font-size="13">Expedição e agrupamento por zona</text>',
       '        <text class="mu" x="450" y="112" font-size="11" text-anchor="middle">quando a instrução muda, estes quatro precisam ser conferidos</text>']
 n = len(EX1["ligados"])
@@ -245,10 +245,13 @@ TA, TB, TC = (sum(r[i] for r in H) for i in (1, 2, 3))
 tb.append(f'            <tr class="tot"><td>Total</td><td class="c">{TA + TB + TC}</td><td class="c">{TA}</td><td class="c">{TB}</td><td class="c">{TC}</td><td class="c">{round(100 * TA / (TA + TB + TC))}%</td></tr>')
 tb += ['          </tbody>', '        </table>']
 pior = min(H, key=lambda r: r[1] / (r[1] + r[2] + r[3]))
-mais = max(H, key=lambda r: r[2] + r[3])
+npend = max(r[2] + r[3] for r in H)
+mais = [r for r in H if r[2] + r[3] == npend]
+# Produção e Manutenção empatam no número de pendências (T19): o texto diz os dois
+assert [r[0] for r in mais] == ["Produção", "Manutenção"] and pior[0] == "Manutenção", (mais, pior)
 charttext = (f'  <p>A indústria tem {TA + TB + TC} documentos na lista mestra, e {round(100 * TA / (TA + TB + TC))}% estão em dia. A leitura por processo muda a conversa: '
              f'a Manutenção tem {pior[1]} documentos em dia de {sum(pior[1:])}, e é o processo que mais precisa de ajuda, porque os documentos sem controle são os que foram '
-             f'criados pela própria área, sem passar pelo ciclo. A Produção tem o maior número de pendências, {mais[2] + mais[3]}, mas em um conjunto de {sum(mais[1:])} documentos. '
+             f'criados pela própria área, sem passar pelo ciclo. Produção e Manutenção têm o maior número de pendências, {npend} cada, mas a Produção as tem num conjunto de {sum(mais[0][1:])} documentos. '
              f'As {TB} revisões vencidas são, na maior parte, instruções escritas na implantação e nunca relidas.</p>')
 
 # ------------------------------------------------------------------ módulo 10: o que a norma pede
