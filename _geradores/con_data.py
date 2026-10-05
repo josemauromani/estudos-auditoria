@@ -281,13 +281,13 @@ EX2 = {
          "Formulário de manutenção FM-02", "Supervisor de manutenção", "", None),
         ("I-06", D(2027, 8, 30), "Projeto", "Ensaio a -18 °C quase feito com a câmara vencida.", "Ensaio só começa com os instrumentos conferidos.",
          "Procedimento PE-14", "Laboratório", "C-04", D(2027, 9, 10)),
-        ("I-07", D(2027, 9, 15), "Pós-entrega", "Bobina telescopada no transporte para o cliente B.", "Bobina acima de 600 mm viaja com cantoneira.", "", "", "", None),
+        ("I-07", D(2027, 9, 15), "Reclamação", "Bobina telescopada no transporte para o cliente B.", "Bobina acima de 600 mm viaja com cantoneira.", "", "", "", None),
     ]),
     "pols": _pols([
-        (_D7, "12 meses em estoque, de 15 a 30 °C", 90, 90, "Laudo da reclamação técnica, visita técnica quando pedida, reposição do lote.", 5,
+        (_D7, "12 meses em estoque, de 15 a 30 °C", 90, 90, "Laudo técnico do defeito, visita técnica quando pedida, reposição do lote.", 5,
          "Embalagem rompendo no freezer do consumidor."),
-        (_LI, "12 meses em estoque", 30, 30, "Laudo da reclamação técnica e reposição do lote.", 5, ""),
-        (_IM, "12 meses em estoque", 60, 30, "Laudo da reclamação técnica, prova de cor e reposição do lote.", 5, "Cor diferente da marca do cliente na gôndola."),
+        (_LI, "12 meses em estoque", 30, 30, "Laudo técnico do defeito e reposição do lote.", 5, ""),
+        (_IM, "12 meses em estoque", 60, 30, "Laudo técnico do defeito, prova de cor e reposição do lote.", 5, "Cor diferente da marca do cliente na gôndola."),
     ]),
     "ats": _ats([
         ("N-01", D(2027, 8, 2), "Cliente A", _IM, "Reclamação", "Cor fora do padrão no lote 151.", D(2027, 8, 6), 3200, "Acerto de cor feito sem a prova aprovada pelo cliente.", ""),

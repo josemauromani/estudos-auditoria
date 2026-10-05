@@ -370,7 +370,7 @@ footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);font-si
         <tr><td><strong>Processo ou produto novo</strong></td><td>Listar o que é preciso saber, e de onde vem: dentro, cliente, fornecedor, consultor.</td><td>O processo começa sabendo.</td></tr>
         <tr><td><strong>Depois de uma quebra, uma reclamação ou uma auditoria</strong></td><td>Registrar a lição, com o que se aprendeu e onde vai entrar.</td><td>O caso ensina uma vez só.</td></tr>
         <tr><td><strong>Produto novo à venda</strong></td><td>Definir a política de pós-entrega: o que se faz, os prazos, o que a lei e o cliente pedem.</td><td>O cliente sabe o que esperar.</td></tr>
-        <tr><td><strong>A cada atendimento</strong></td><td>Registrar com o prazo, a causa e o custo.</td><td>O pós-entrega vira dado.</td></tr>
+        <tr><td><strong>A cada atendimento</strong></td><td>Registrar com o prazo, a causa e o custo.</td><td>O atendimento vira dado.</td></tr>
         <tr><td><strong>Todo mês</strong></td><td>Ler o mapa, as lições pendentes e os atendimentos fora do prazo.</td><td>Nada fica parado sem dono.</td></tr>
       </tbody>
     </table>
@@ -783,7 +783,7 @@ footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);font-si
         <tr><td class="n">I-04</td><td class="c">18/07</td><td>Quebra</td><td>Rosca desgastada, medida só na preventiva.</td><td>O desgaste da rosca é medido todo mês.</td><td>Plano de manutenção PM-01<small>Supervisor de manutenção · C-03</small></td><td><span class="chip s1">Incorporada</span><small>em 10/08</small></td><td><span class="chip s1">OK</span></td></tr>
         <tr><td class="n">I-05</td><td class="c">22/07</td><td>Quebra</td><td>Chiller parou, e o produto afetado não foi registrado.</td><td>Toda quebra registra o produto afetado e o destino dele.</td><td>Formulário de manutenção FM-02<small>Supervisor de manutenção</small></td><td><span class="chip s2">Pendente</span><small>há 70 dias</small></td><td><span class="chip s3">Pendente há mais de 60 dias</span></td></tr>
         <tr><td class="n">I-06</td><td class="c">30/08</td><td>Projeto</td><td>Ensaio a -18 °C quase feito com a câmara vencida.</td><td>Ensaio só começa com os instrumentos conferidos.</td><td>Procedimento PE-14<small>Laboratório · C-04</small></td><td><span class="chip s1">Incorporada</span><small>em 10/09</small></td><td><span class="chip s1">OK</span></td></tr>
-        <tr><td class="n">I-07</td><td class="c">15/09</td><td>Pós-entrega</td><td>Bobina telescopada no transporte para o cliente B.</td><td>Bobina acima de 600 mm viaja com cantoneira.</td><td>—<small>sem responsável</small></td><td><span class="chip s2">Pendente</span><small>há 15 dias</small></td><td><span class="chip s3">Falta onde incorporar</span></td></tr>
+        <tr><td class="n">I-07</td><td class="c">15/09</td><td>Reclamação</td><td>Bobina telescopada no transporte para o cliente B.</td><td>Bobina acima de 600 mm viaja com cantoneira.</td><td>—<small>sem responsável</small></td><td><span class="chip s2">Pendente</span><small>há 15 dias</small></td><td><span class="chip s3">Falta onde incorporar</span></td></tr>
       </tbody>
     </table>
   </div>
@@ -792,9 +792,9 @@ footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);font-si
       <caption>Política de pós-entrega · 3 produtos</caption>
       <thead><tr><th style="width:18%">Produto<small>Vida útil</small></th><th class="c">Mínimo para reclamar<small>Lei ou contrato</small></th><th class="c">Prazo aceito</th><th style="width:26%">O que se faz</th><th class="c">Prazo de solução</th><th style="width:18%">O que se quer evitar</th><th>Conferência</th></tr></thead>
       <tbody>
-        <tr><td><strong>Filme para congelados D-07</strong><small>12 meses em estoque, de 15 a 30 °C</small></td><td class="c">90 dias</td><td class="c">90 dias</td><td>Laudo da reclamação técnica, visita técnica quando pedida, reposição do lote.</td><td class="c">5 dias</td><td>Embalagem rompendo no freezer do consumidor.</td><td><span class="chip s1">OK</span></td></tr>
-        <tr><td><strong>Filme liso padrão</strong><small>12 meses em estoque</small></td><td class="c">30 dias</td><td class="c">30 dias</td><td>Laudo da reclamação técnica e reposição do lote.</td><td class="c">5 dias</td><td>—</td><td><span class="chip s1">OK</span></td></tr>
-        <tr><td><strong>Filme impresso</strong><small>12 meses em estoque</small></td><td class="c">60 dias</td><td class="c no">30 dias</td><td>Laudo da reclamação técnica, prova de cor e reposição do lote.</td><td class="c">5 dias</td><td>Cor diferente da marca do cliente na gôndola.</td><td><span class="chip s3">Prazo aceito menor que o mínimo</span></td></tr>
+        <tr><td><strong>Filme para congelados D-07</strong><small>12 meses em estoque, de 15 a 30 °C</small></td><td class="c">90 dias</td><td class="c">90 dias</td><td>Laudo técnico do defeito, visita técnica quando pedida, reposição do lote.</td><td class="c">5 dias</td><td>Embalagem rompendo no freezer do consumidor.</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td><strong>Filme liso padrão</strong><small>12 meses em estoque</small></td><td class="c">30 dias</td><td class="c">30 dias</td><td>Laudo técnico do defeito e reposição do lote.</td><td class="c">5 dias</td><td>—</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td><strong>Filme impresso</strong><small>12 meses em estoque</small></td><td class="c">60 dias</td><td class="c no">30 dias</td><td>Laudo técnico do defeito, prova de cor e reposição do lote.</td><td class="c">5 dias</td><td>Cor diferente da marca do cliente na gôndola.</td><td><span class="chip s3">Prazo aceito menor que o mínimo</span></td></tr>
       </tbody>
     </table>
   </div>
@@ -871,7 +871,7 @@ footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);font-si
 <section id="leitura">
   <p class="eyebrow">Módulo 8</p>
   <h2>Ler os atendimentos</h2>
-  <p>Cada atendimento é lido contra o prazo de solução do produto. O que passou do prazo, resolvido ou não, é o primeiro sinal de que o pós-entrega precisa de gente, de método ou de poder para resolver.</p>
+  <p>Cada atendimento é lido contra o prazo de solução do produto. O que passou do prazo, resolvido ou não, é o primeiro sinal de que o atendimento precisa de gente, de método ou de poder para resolver.</p>
 
   <figure id="fig-bars">
     <div class="scroll">
@@ -1026,7 +1026,7 @@ footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);font-si
   </div>
 
   <div class="note">
-    <h4>O custo do pós-entrega</h4>
+    <h4>O custo dos atendimentos</h4>
     <p>Reposições, descontos, fretes e horas de laboratório são o preço da não qualidade que chegou ao cliente. A indústria gastou R$ 13.000 em dois meses com oito atendimentos; a pizzaria, R$ 195 em um mês. Somar o custo por causa mostra onde a lição vale mais, e é um bom dado para a análise crítica pela direção.</p>
   </div>
 </section>
@@ -1069,7 +1069,7 @@ footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);font-si
         <tr><td><a href="../Projeto/treinamento-projeto.html"><strong>Projeto e desenvolvimento</strong></a></td><td>O conhecimento gerado no projeto, e o que veio de fora.</td><td>As lições de projetos anteriores, como entrada.</td></tr>
         <tr><td><a href="../Pedidos/treinamento-pedidos.html"><strong>Requisitos do cliente e análise de pedidos</strong></a></td><td>Os requisitos do cliente depois da entrega, no contrato.</td><td>O mínimo contratual da política de pós-entrega.</td></tr>
         <tr><td><a href="../Riscos/treinamento-riscos.html"><strong>Matriz de riscos</strong></a></td><td>O risco de perder uma pessoa-chave.</td><td>Os conhecimentos críticos, como riscos a tratar.</td></tr>
-        <tr><td><a href="../Analise-Critica/treinamento-analise-critica.html"><strong>Análise crítica pela direção</strong></a></td><td>As decisões sobre tempo e recursos para a transferência.</td><td>O retorno do cliente e o custo do pós-entrega, como entrada.</td></tr>
+        <tr><td><a href="../Analise-Critica/treinamento-analise-critica.html"><strong>Análise crítica pela direção</strong></a></td><td>As decisões sobre tempo e recursos para a transferência.</td><td>O retorno do cliente e o custo dos atendimentos, como entrada.</td></tr>
       </tbody>
     </table>
   </div>
@@ -1158,7 +1158,7 @@ footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);font-si
 
   <div class="note">
     <h4>Pontos de atenção</h4>
-    <p>O auditor costuma perguntar a um operador experiente o que ele sabe que não está escrito, e depois perguntar ao gerente o que acontece se esse operador sair. No pós-entrega, pede a política de garantia, escolhe três reclamações e confere prazo, causa e o que mudou depois. As constatações mais comuns são o conhecimento crítico dependente de uma pessoa, a reclamação sem causa e a política que contraria a lei.</p>
+    <p>O auditor costuma perguntar a um operador experiente o que ele sabe que não está escrito, e depois perguntar ao gerente o que acontece se esse operador sair. No pós-entrega, pede a política de garantia; nas reclamações, escolhe três e confere prazo, causa e o que mudou depois. As constatações mais comuns são o conhecimento crítico dependente de uma pessoa, a reclamação sem causa e a política que contraria a lei.</p>
     <p>Este módulo usa a numeração da ISO 9001:2015 e resume os textos com palavras próprias. Confira sempre a edição vigente da norma antes de citar um requisito em relatório.</p>
     <p>Os exemplos se passam de 2026 a 2028 e usam a numeração da ISO 9001:2015, que as organizações dos exemplos seguem até a transição. O estudo <a href="../ISO-9001-2026/treinamento-iso-9001-2026.html">ISO 9001:2026: o que muda</a> mostra as diferenças.</p>
   </div>
@@ -1329,7 +1329,7 @@ footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);font-si
     { t: '“O cartaz da loja diz: reclamações só no dia da compra.”', a: 'P', w: 'O prazo aceito não pode ser menor que o da lei.' },
     { t: '“As receitas estão escritas, e os três pizzaiolos e o forneiro as seguem sozinhos.”', a: 'O', w: 'Escrito e treinado, com várias pessoas: sob controle.' },
     { t: '“O acerto de cor da impressora, que o cliente aprova, só um impressor sabe fazer.”', a: 'C', w: 'Conhecimento crítico exposto, sem ação.' },
-    { t: '“A reclamação de atraso foi resolvida com desconto, sem causa registrada.”', a: 'P', w: 'Reclamação resolvida pede a causa, ou volta.' },
+    { t: '“A reclamação de atraso foi resolvida com desconto. O caso fechou sem causa registrada, e a entrega continua igual.”', a: 'L', w: 'Sem a causa, a reclamação não vira lição, e o atraso volta.' },
     { t: '“Vinte clientes perguntaram como reaquecer a pizza, e a embalagem continua igual.”', a: 'L', w: 'Perguntas repetidas são uma lição para a embalagem.' },
     { t: '“O contrato do cliente exige 60 dias para reclamar, e a política da fábrica aceita 30.”', a: 'P', w: 'O prazo aceito está abaixo do mínimo contratual.' },
     { t: '“O operador sênior se aposenta em dezembro e acompanha o turno C desde setembro, com prazo até novembro.”', a: 'O', w: 'Saída prevista com transferência planejada e em andamento.' },

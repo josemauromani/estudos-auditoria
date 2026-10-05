@@ -871,7 +871,8 @@ PROIBIDO = [
     {'id': 'P22a', 'regex': r'Três causas confirmadas|Três ações: reforçar a escala', 'motivo': 'cinco causas confirmadas, quatro no plano e seis ações (P22)',
      'pastas': ['Caso-Integrado']},
     {'id': 'N10', 'regex': r'RNC 2027-(19|22)', 'motivo': 'registros de produto não conforme, e não RNC (N10)', 'pastas': ['Caso-Integrado']},
-    {'id': 'N25', 'regex': r'[Gg]arantia, assistência,? e? ?atendimento a reclamações|atende a reclamação, cumpre a garantia|depois da entrega: reclamação',
+    {'id': 'N25', 'regex': r'[Gg]arantia, assistência,? e? ?atendimento a reclamações|atende a reclamação, cumpre a garantia|depois da entrega: reclamação|'
+                           r'escolhe três reclamações|[Ll]audo da reclamação técnica|[Cc]usto do pós-entrega',
      'motivo': 'a reclamação não é atividade pós-entrega (N25)',
      'pastas': ['Producao', 'Conhecimento']},
     {'id': 'N13a', 'regex': r'itens de fornecedor único', 'motivo': 'o item de fornecedor único é a resina (N13)', 'pastas': ['ISO-9001']},
@@ -987,6 +988,8 @@ PROIBIDO = [
     {'id': 'N19', 'regex': r'Instrumentos · 7 cadastrados: 5 em dia', 'motivo': 'o exemplo mostra 7 dos 25 instrumentos da indústria (N19)', 'pastas': ['Calibracao']},
     {'id': 'D04', 'regex': r'sem estudo na série|Quase todas já existem', 'motivo': 'Satisfação, Fornecedores e Recursos têm estudo próprio (D04)',
      'pastas': ['Analise-Critica']},
+    {'id': 'N34', 'regex': r'O cliente A não reclamou de novo\.', 'motivo': 'o cliente A reclama de novo em 24/05/2027; a frase vale até fevereiro (N34)',
+     'pastas': ['Satisfacao']},
 ]
 
 # {'id', 'conflito', 'canone', 'estudos'}
@@ -1690,8 +1693,30 @@ DECISOES = [
                'que o contrato prevê. A reclamação entra no mesmo registro, mas tem requisitos próprios." / "O ajuste da '
                'seladora do cliente ao filme novo." (o atendimento N-03). Figura 1, caixa "Pós-entrega": "Reclamação, '
                'garantia, assistência, orientação de uso." → "Garantia, assistência, orientação de uso. As reclamações '
-               'chegam pelo mesmo caminho." A regra N25 de PROIBIDO ganha as duas frases antigas do módulo 1.',
-     'estudos': ['Producao', 'Conhecimento']},
+               'chegam pelo mesmo caminho." A regra N25 de PROIBIDO ganha as duas frases antigas do módulo 1. '
+               'Revisão da tarefa 7: outros lugares de Conhecimento ainda punham o tratamento da reclamação no '
+               'pós-entrega. Pontos de atenção do módulo 11: "No pós-entrega, pede a política de garantia, escolhe três '
+               'reclamações e confere prazo, causa e o que mudou depois." → "No pós-entrega, pede a política de garantia; '
+               'nas reclamações, escolhe três e confere prazo, causa e o que mudou depois." Exercício 1, item 6: '
+               '"A reclamação de atraso foi resolvida com desconto, sem causa registrada.", resposta "Acertar o '
+               'pós-entrega" (P), explicação "Reclamação resolvida pede a causa, ou volta." → "A reclamação de atraso foi '
+               'resolvida com desconto. O caso fechou sem causa registrada, e a entrega continua igual.", resposta "Dar '
+               'destino à lição" (L), explicação "Sem a causa, a reclamação não vira lição, e o atraso volta." (12 itens; '
+               'C 3, L 4, P 2, O 3). Política do exemplo 2 (con_data.py), coluna "O que se faz depois da entrega", nos '
+               'três produtos: "Laudo da reclamação técnica" → "Laudo técnico do defeito" (o resto da frase fica). Lição '
+               'I-07 (bobina telescopada, vinda da reclamação N-05): origem "Pós-entrega" → "Reclamação". Os atendimentos, '
+               'que incluem as reclamações, deixam de ser chamados de pós-entrega: tabela do módulo 2, linha "A cada '
+               'atendimento", "O pós-entrega vira dado." → "O atendimento vira dado."; módulo 8, "o primeiro sinal de que '
+               'o pós-entrega precisa de gente" → "o primeiro sinal de que o atendimento precisa de gente"; caixa "O custo '
+               'do pós-entrega" → "O custo dos atendimentos"; tabela do módulo 10, linha da Análise crítica, "o custo do '
+               'pós-entrega, como entrada" → "o custo dos atendimentos, como entrada". Propagado ao Caso integrado '
+               '(caso_body.html, questionário): "O custo do pós-entrega somou R$ 13.000 em dois meses." → "O custo dos '
+               'atendimentos depois da entrega somou R$ 13.000 em dois meses."; explicação do item da cantoneira, "O que '
+               'se aprendeu no pós-entrega vai para o procedimento e para o treinamento." → "O que se aprendeu com a '
+               'reclamação vai para o procedimento e para o treinamento." O título do estudo, a aba Pós-entrega e a '
+               'política de pós-entrega (com o prazo para reclamar, que é o da garantia legal ou contratual) ficam. A regra '
+               'N25 ganha "escolhe três reclamações", "Laudo da reclamação técnica" e "custo do pós-entrega".',
+     'estudos': ['Producao', 'Conhecimento', 'Caso-Integrado']},
     {'id': 'N26',
      'conflito': 'Achado na tarefa 5. Pelo item T23 do spec, o O5 da pizzaria (dar indicador e meta aos quatro processos '
                  'que não tinham, prazo 26/02/2027) passa a constar como alcançado em março, com atraso: o acompanhamento '
@@ -1807,4 +1832,14 @@ DECISOES = [
                'em maio, com a demanda de abril." sai, porque não há o que rever. O ambiente da pizzaria passa de 3 a 2 '
                'fatores fora do limite; as outras contagens não mudam.',
      'estudos': ['Recursos']},
+    {'id': 'N34',
+     'conflito': 'Achado na revisão da tarefa 7. Satisfação, exemplo 3 (reclamação do cliente A de 14/09/2026, fechada na '
+                 'análise crítica de 18/02/2027), "O que observar": "O cliente A não reclamou de novo." Mas o mesmo cliente '
+                 'reclama do filme fino do lote 135 em 24/05/2027 (Liberação, Calibração, Conhecimento I-01, Caso integrado '
+                 'e a linha do tempo), e de cor e de odor em agosto e setembro de 2027 (Conhecimento, N-01 e N-07).',
+     'canone': 'Vale a linha do tempo. A frase passa a valer só até o fechamento do exemplo, como já diz a etapa "Fechada" de '
+               '18/02/2027 em sat_data.py ("Nenhuma reclamação do cliente A de outubro a fevereiro."). Satisfação '
+               '(sat_body.html), exemplo 3, "O que observar": "O cliente A não reclamou de novo." → "O cliente A não '
+               'reclamou de novo até fevereiro." Nenhum outro estudo dizia que o cliente A não reclamou mais.',
+     'estudos': ['Satisfacao']},
 ]
