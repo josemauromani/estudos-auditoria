@@ -90,7 +90,7 @@ O estudo de SWOT não tem arquivo de dados: os exemplos estão dentro de `build_
 
 ## Testes
 
-A pasta `testes/` tem os roteiros usados para conferir as fórmulas de vinte e seis planilhas. Cada par preenche uma cópia do modelo com dados de teste, inclusive erros propositais, e lê os resultados depois do recálculo.
+A pasta `testes/` tem os roteiros usados para conferir as fórmulas de vinte e seis planilhas. Cada par preenche uma cópia do modelo com dados de teste, inclusive erros propositais, e lê os resultados depois do recálculo. A planilha da Matriz SWOT não tem par: o roteiro `swot_confere_postura.py` confere as médias, os balanços e a postura dos dois exemplos numa cópia já recalculada pelo LibreOffice.
 
 ```bash
 PY=_geradores/.venv/bin/python
