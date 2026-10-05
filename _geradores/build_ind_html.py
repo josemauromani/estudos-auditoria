@@ -94,7 +94,7 @@ def exemplo(ex):
     o += ['      </tbody>', '    </table>', '  </div>',
           '  <div class="tbl">', '    <table class="aud">', f'      <caption>Resultados · situação em {dt(h["data"])}</caption>',
           '      <thead><tr><th>Nº</th>' + "".join(f'<th class="c">{m}</th>' for m in MESES[-6:])
-          + '<th class="c" style="width:7%">Média do ano</th><th style="width:11%">Situação</th><th class="c" style="width:8%">Seguidos fora</th>'
+          + '<th class="c" style="width:7%">Média do ano</th><th style="width:11%">Situação</th><th class="c" style="width:8%">Seguidos sem a meta</th>'
             '<th style="width:10%">Tendência</th><th style="width:28%">Decisão</th></tr></thead>', '      <tbody>']
     for i in ex["inds"]:
         c = casas(i)
@@ -171,7 +171,7 @@ for i, (m, v) in enumerate(zip(MESES, V)):
     ch.append(f'        <rect class="hit" x="{cx(i) - DX / 2}" y="{YT}" width="{DX}" height="{YB - YT}" tabindex="0" role="img" '
               f'aria-label="{m}: {num(v, 1)} dias úteis, {s.lower()}" data-i="{i}" data-v="{num(v, 1)}" data-p="{m}" data-s="{s.lower()}" data-n="{run}"/>')
 ch.append("      </svg>")
-tb = ['        <table>', '          <thead><tr><th>Mês</th><th>Prazo médio, em dias úteis</th><th>Situação</th><th>Meses seguidos fora da meta</th></tr></thead>',
+tb = ['        <table>', '          <thead><tr><th>Mês</th><th>Prazo médio, em dias úteis</th><th>Situação</th><th>Meses seguidos sem atingir a meta</th></tr></thead>',
       '          <tbody>']
 for m, v, s, run in linhas:
     tb.append(f'            <tr><td>{m}</td><td class="num">{num(v, 1)}</td><td>{s}</td><td class="num">{run}</td></tr>')

@@ -11,7 +11,7 @@ MAIOR, MENOR = "Maior é melhor", "Menor é melhor"
 NA_META, ATENCAO, FORA = "Na meta", "Atenção", "Fora da meta"
 SITS = [NA_META, ATENCAO, FORA]
 MESES = ["Out/25", "Nov/25", "Dez/25", "Jan/26", "Fev/26", "Mar/26", "Abr/26", "Mai/26", "Jun/26", "Jul/26", "Ago/26", "Set/26"]
-SEGUIDOS = 3  # períodos seguidos fora da meta que pedem análise de causa
+SEGUIDOS = 3  # períodos seguidos sem atingir a meta que pedem análise de causa
 ESTAVEL = 0.05  # variação entre as médias de três períodos abaixo da qual a tendência é considerada estável
 
 
@@ -27,7 +27,7 @@ def situacao(v, ind):
 
 
 def seguidos(ind):
-    """Períodos seguidos fora da meta, contados a partir do último."""
+    """Períodos seguidos sem atingir a meta, contados a partir do último."""
     n = 0
     for v in reversed(ind["valores"]):
         if atende(v, ind):
@@ -65,12 +65,12 @@ def _inds(rows):
 
 EX1 = {
     "head": dict(org="Pizzaria (loja com salão e delivery)", periodo="Outubro de 2025 a setembro de 2026", data=D(2026, 10, 6),
-                 por="Gerente da loja", reuniao="Toda segunda-feira, com fechamento mensal"),
+                 por="Gerente da loja", reuniao="Toda terça-feira, com fechamento mensal"),
     "inds": _inds([
         ("P1", "Entregas em até 40 minutos", "Entregar o pedido no prazo prometido", "Atender pedido de delivery",
          "Pedidos entregues em até 40 minutos ÷ pedidos entregues × 100", "%", MAIOR, 95, 90,
          "Horários de saída e de chegada, no sistema de pedidos", "Mensal", "Líder da expedição",
-         [81, 83, 80, 82, 82, 83, 82, 84, 88, 94, 96, 95],
+         [81, 83, 80, 82, 82, 83, 82, 84, 81, 84, 96, 95],  # jun e jul: médias das semanas do PDCA (P07)
          "A escala padrão e o agrupamento por zona, definidos no ciclo PDCA, continuam."),
         ("P2", "Reclamações por 100 pedidos", "Reduzir as reclamações dos clientes", "Atender pedido de delivery",
          "Reclamações registradas ÷ pedidos entregues × 100", "por 100 pedidos", MENOR, 2.0, 3.0,
@@ -136,7 +136,7 @@ QUADRO = [
 
 # figura: três leituras de um gráfico (valores esquemáticos, com meta de no máximo 5)
 LEITURAS = [
-    ("Ponto isolado", "Um período fora da meta, e os outros dentro.", "Anote o motivo e acompanhe.", [4.4, 4.6, 4.3, 5.6, 4.5, 4.4, 4.6, 4.3]),
+    ("Ponto isolado", "Um período sem atingir a meta, e os outros dentro.", "Anote o motivo e acompanhe.", [4.4, 4.6, 4.3, 5.6, 4.5, 4.4, 4.6, 4.3]),
     ("Tendência", "Vários períodos seguidos na mesma direção.", "Analise a causa antes de sair da meta.", [4.0, 4.1, 4.3, 4.4, 4.6, 4.8, 5.0, 5.3]),
     ("Mudança de patamar", "O resultado muda de nível e fica.", "Procure o que mudou naquela data.", [4.2, 4.4, 4.1, 4.3, 5.6, 5.8, 5.5, 5.7]),
 ]
@@ -152,7 +152,7 @@ CHECK = [
     "O conjunto de indicadores cabe em uma página.",
     "Os resultados são apresentados em gráfico, com a meta.",
     "Os resultados são analisados em reunião, com data marcada.",
-    "Cada indicador fora da meta tem decisão registrada, com responsável e prazo.",
+    "Cada indicador sem atingir a meta tem decisão registrada, com responsável e prazo.",
     "Os indicadores e as metas são revistos pelo menos uma vez por ano.",
 ]
 

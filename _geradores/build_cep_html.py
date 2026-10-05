@@ -8,7 +8,7 @@ import textwrap
 from html import escape
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from cep_data import (A2, ACOMP, BASE, CAPAZ, CHECK, D2, D4, ETAPAS, EX1, EX2, EXCL, FORMAS, LIMITE, NAOCAPAZ, PARADA, PARTES, REGRAS, S_AMP, S_FORA, S_LADO,  # noqa: E402
+from cep_data import (A2, ACOMP, BASE, CAPAZ, CHECK, D2, D4, ETAPAS, EX1, EX2, EXCL, FORMAS, LIMITE, NAOCAPAZ, PARADA, PARTES, REGRAS, S_AMP, S_FORA, S_LADO, SEP,  # noqa: E402
                       S_TEND, amp, classes, conf, fora_espec, media, resumo)
 
 SRC, BODY, OUT = sys.argv[1], sys.argv[2], sys.argv[3]
@@ -316,19 +316,20 @@ SIG_CLS = {S_FORA: "s3", S_AMP: "s3", S_LADO: "s2", S_TEND: "s2"}
 
 def tab_dados(ex, r):
     h, L = ex["head"], r["L"]
+    xl = 1 if ex is EX2 else 0  # na indústria, os limites da média com três casas: a bobina 22 fica a 0,002 µm do LIC (T59)
     rows = []
     for k, g in enumerate(ex["subs"]):
         s = r["sg"][k]
         vals = "".join(f'<td class="c{" no" if v < h["lie"] or v > h["lse"] else ""}">{nv(ex, v)}</td>' for v in g["v"])
         fa = r["fases"][k]
         fase_ = f'<span class="chip sl">{fa}</span>' if fa == EXCL else fa
-        sig = f'<span class="chip {SIG_CLS[s]}">{s}</span>' if s else "—"
+        sig = " ".join(f'<span class="chip {SIG_CLS[x]}">{x}</span>' for x in s.split(SEP)) if s else "—"
         rows.append(f'<td class="n">{k + 1}</td><td>{g["data"].strftime("%d/%m")}<small>{escape(g["id"])}</small></td>{vals}'
                     f'<td class="c">{nv(ex, media(g["v"]), 1)}</td><td class="c">{nv(ex, amp(g["v"]))}</td><td>{fase_}{"<small>" + escape(g["motivo"]) + "</small>" if g["motivo"] else ""}</td>'
                     f'<td>{sig}</td>')
     cap_ = r["cap"]
     o = ['  <div class="tbl">', '    <table class="aud">',
-         f'      <caption>{len(ex["subs"])} subgrupos · LC {nv(ex, L["lc"], 1)} · LSC {nv(ex, L["lsc"], 1)} · LIC {nv(ex, L["lic"], 1)} · R̄ {nv(ex, L["rb"], 1)} · '
+         f'      <caption>{len(ex["subs"])} subgrupos · LC {nv(ex, L["lc"], 1 + xl)} · LSC {nv(ex, L["lsc"], 1 + xl)} · LIC {nv(ex, L["lic"], 1 + xl)} · R̄ {nv(ex, L["rb"], 1)} · '
          f'Cp {br(cap_["cp"], 2)} · Cpk {br(cap_["cpk"], 2)}</caption>',
          '      <thead><tr><th>#</th><th>Data</th><th class="c" colspan="5">Cinco medições (em ' + h["unid"] + ')</th><th class="c">Média</th><th class="c">Amplitude</th>'
          '<th style="width:22%">Fase</th><th>Sinal</th></tr></thead>', '      <tbody>']
@@ -374,8 +375,8 @@ LO, HI = 37.9, 41.3
 n2 = len(EX2["subs"])
 pxi = lambda k: X0 + 16 + k * (X1 - X0 - 32) / (n2 - 1)  # noqa: E731
 pyi = lambda v: Y1 - (v - LO) * (Y1 - Y0) / (HI - LO)  # noqa: E731
-ch = [f'      <svg id="bars" viewBox="0 0 900 320" role="img" aria-label="Médias de espessura das 25 bobinas da indústria, com a linha central de {br(L2["lc"], 2)} µm e os limites de '
-      f'{br(L2["lic"], 2)} e {br(L2["lsc"], 2)} µm. ' + " ".join(f'{k + 1}: {br(media(g["v"]), 2)}{" (" + R2["sg"][k].lower() + ")" if R2["sg"][k] else ""}.' for k, g in enumerate(EX2["subs"])) + '">']
+ch = [f'      <svg id="bars" viewBox="0 0 900 320" role="img" aria-label="Médias de espessura das 25 bobinas da indústria, com a linha central de {br(L2["lc"], 3)} µm e os limites de '
+      f'{br(L2["lic"], 3)} e {br(L2["lsc"], 3)} µm. ' + " ".join(f'{k + 1}: {br(media(g["v"]), 2)}{" (" + R2["sg"][k].lower() + ")" if R2["sg"][k] else ""}.' for k, g in enumerate(EX2["subs"])) + '">']
 xb_ = pxi(R2["fases"].index(ACOMP)) - (pxi(1) - pxi(0)) / 2
 ch.append(f'        <rect class="lane" x="{xb_:.1f}" y="{Y0}" width="{X1 - xb_:.1f}" height="{Y1 - Y0}"/>')
 ch.append(f'        <text class="mono mu" x="{X0 + 8}" y="{Y0 + 14}" font-size="10">BASE</text><text class="mono mu" x="{xb_ + 8:.1f}" y="{Y0 + 14}" font-size="10">ACOMPANHAMENTO</text>')
@@ -384,7 +385,7 @@ for v in (38, 39, 40, 41):
 ch.append(f'        <line class="esp" x1="{X0}" y1="{pyi(38):.1f}" x2="{X1}" y2="{pyi(38):.1f}"/><text class="b halo" x="{X1 + 6}" y="{pyi(38) + 4:.1f}" font-size="10.5">LIE 38</text>')
 for v, cls, rot in ((L2["lsc"], "lim", "LSC"), (L2["lc"], "ctr", "LC"), (L2["lic"], "lim", "LIC")):
     ch.append(f'        <line class="{cls}" x1="{X0}" y1="{pyi(v):.1f}" x2="{X1}" y2="{pyi(v):.1f}"/>')
-    ch.append(f'        <text class="mu halo" x="{X1 + 6}" y="{pyi(v) + 4:.1f}" font-size="10.5"{TNUM}>{rot} {br(v, 2)}</text>')
+    ch.append(f'        <text class="mu halo" x="{X1 + 6}" y="{pyi(v) + 4:.1f}" font-size="10.5"{TNUM}>{rot} {br(v, 3)}</text>')
 ptsi = [(pxi(k), pyi(media(g["v"]))) for k, g in enumerate(EX2["subs"])]
 ch.append('        <path class="ser" d="' + " ".join(f'{"M" if k == 0 else "L"}{x:.1f} {y:.1f}' for k, (x, y) in enumerate(ptsi)) + '"/>')
 hits = []
@@ -431,7 +432,7 @@ const = "\n".join([
     f'        <tr><td><strong>Linha central da média</strong></td><td>Média das médias dos subgrupos da base</td><td class="num">{br(L1["lc"], 1)} g</td><td class="num">{br(L2["lc"], 2)} µm</td></tr>',
     f'        <tr><td><strong>Amplitude média (R̄)</strong></td><td>Média das amplitudes da base</td><td class="num">{br(L1["rb"], 1)} g</td><td class="num">{br(L2["rb"], 2)} µm</td></tr>',
     f'        <tr><td><strong>Limites da média</strong></td><td>Linha central ± {br(A2, 3)} × R̄</td><td class="num">{br(L1["lic"], 1)} a {br(L1["lsc"], 1)} g</td>'
-    f'<td class="num">{br(L2["lic"], 2)} a {br(L2["lsc"], 2)} µm</td></tr>',
+    f'<td class="num">{br(L2["lic"], 3)} a {br(L2["lsc"], 3)} µm</td></tr>',
     f'        <tr><td><strong>Limite da amplitude</strong></td><td>{br(D4, 3)} × R̄ (o inferior é zero)</td><td class="num">{br(L1["lscr"], 1)} g</td><td class="num">{br(L2["lscr"], 2)} µm</td></tr>',
     f'        <tr><td><strong>Desvio estimado (σ)</strong></td><td>R̄ ÷ {br(D2, 3)}</td><td class="num">{br(L1["sigma"], 2)} g</td><td class="num">{br(L2["sigma"], 3)} µm</td></tr>',
 ])
@@ -439,7 +440,8 @@ const = "\n".join([
 check = "\n".join(f'    <li><label><input type="checkbox" id="ck-{k}"><span>{escape(t)}</span></label></li>' for k, t in enumerate(CHECK, 1))
 c1, c2 = R1["cap"], R2["cap"]
 NUMS = {"{{CP1}}": br(c1["cp"], 2), "{{CPK1}}": br(c1["cpk"], 2), "{{CP2}}": br(c2["cp"], 2), "{{CPK2}}": br(c2["cpk"], 2), "{{SIG1}}": br(L1["sigma"], 1),
-        "{{LIC1}}": br(L1["lic"], 1), "{{LSC1}}": br(L1["lsc"], 1), "{{LIC2}}": br(L2["lic"], 2), "{{LSC2}}": br(L2["lsc"], 2), "{{LC2}}": br(L2["lc"], 2),
+        "{{LIC1}}": br(L1["lic"], 1), "{{LSC1}}": br(L1["lsc"], 1), "{{LIC2}}": br(L2["lic"], 3), "{{LSC2}}": br(L2["lsc"], 3), "{{LC2}}": br(L2["lc"], 2),
+        "{{LSCR2}}": br(L2["lscr"], 2),
         "{{PRIM}}": EX2["subs"][R2["primeiro"]]["data"].strftime("%d/%m"), "{{NSIN2}}": str(sum(1 for k, s in enumerate(R2["sg"]) if s and R2["fases"][k] == ACOMP)),
         "{{FORA1}}": str(R1["hist"]["fora"]), "{{FORA2}}": str(R2["hist"]["fora"]), "{{STAT1}}": c1["status"].lower(), "{{STAT2}}": c2["status"].lower()}
 assert c1["status"] == NAOCAPAZ and c2["status"] == CAPAZ and LIMITE

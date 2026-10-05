@@ -37,18 +37,18 @@ EX1 = {
     "causas": _mk(M6, [
         ("Método", "Pedidos saem um a um, sem agrupamento por bairro", "Pedidos não agrupados por bairro",
          "A expedição não separa os pedidos por zona", "Alta", "Acompanhar 50 saídas no pico e mapear as rotas", "C",
-         "Rotas cruzadas em 31 das 50 saídas", True),
+         "Em 31 das 50 saídas, outro entregador saiu para o mesmo bairro menos de 10 minutos depois", True),
         ("Método", "Rota escolhida por cada entregador", "Rota escolhida pelo entregador",
          "Não há roteiro sugerido", "Média", "Comparar o tempo de rota entre os entregadores", "D",
          "Tempos parecidos entre os entregadores", False),
         ("Mão de obra", "Escala de entregadores igual em todos os dias", "Escala igual em todos os dias",
          "A escala foi montada pelo movimento médio da semana", "Alta", "Comparar entregadores disponíveis e pedidos por hora", "C",
-         "Pizza pronta esperou entregador em 46% dos atrasos", True),
+         "Mesmo número de entregadores todos os dias; nas sextas e nos sábados, 74 entregas por noite, contra 35 nos outros dias", True),
         ("Mão de obra", "Expedição sem responsável definido no pico", "Expedição sem responsável no pico",
          "Quem está livre faz o despacho", "Média", "Observar a expedição em três noites de pico", "N", None, False),
         ("Máquina", "Forno único, com fila no horário de pico", "Forno único, com fila no pico",
          "O forno assa seis pizzas por vez", "Alta", "Medir o tempo de espera antes do forno", "C",
-         "Fila no forno em 27% dos atrasos. Fica para o próximo ciclo", False),
+         "Espera média de 12 minutos antes do forno no pico, contra 3 fora dele. Fica para o próximo ciclo", False),
         ("Máquina", "Motos com manutenção atrasada", "Motos com manutenção atrasada",
          None, "Baixa", "Conferir o registro de quebras do trimestre", "D", "Nenhuma quebra em horário de pico", False),
         ("Material", "Pedido chega com endereço sem complemento", "Endereço sem complemento",
@@ -58,7 +58,7 @@ EX1 = {
          None, "Baixa", "Contar bolsas e entregadores no pico", "D", "Há bolsas para todos os entregadores", False),
         ("Medição", "Tempo de entrega medido só pela média do dia", "Tempo medido pela média do dia",
          "O relatório padrão do aplicativo não separa por horário", "Média", "Refazer o indicador por faixa de horário", "C",
-         "No prazo: 96% fora do pico e 68% no pico", True),
+         "No prazo: 91% fora do pico e 68% no pico. A média do dia, de 82%, escondia o pico", True),
         ("Medição", "Prazo prometido igual para todos os bairros", "Prazo igual para todos os bairros",
          None, "Média", "Comparar os atrasos por distância", "N", None, False),
         ("Meio ambiente", "Obras na avenida principal", "Obras na avenida principal",
@@ -74,13 +74,15 @@ EX1 = {
     },
     "raiz": {"B1": "Os pedidos não são analisados por faixa de horário, e a escala não acompanha o pico.",
              "A1": "A expedição não tem regra nem espaço para agrupar os pedidos por zona."},
+    # causas que não produzem o efeito, mas explicam por que ele não foi percebido antes (T61)
+    "nao_deteccao": ["E1"],
     "pareto": [("Pizza pronta esperando entregador", 46), ("Fila no forno", 27), ("Endereço incompleto", 15),
                ("Trânsito ou obras", 5), ("Outros motivos", 7)],
 }
 
 C2 = ["Procedimentos", "Pessoas", "Sistemas", "Informações", "Indicadores", "Ambiente"]
 EX2 = {
-    "head": dict(tema="Requisições de compra devolvidas", resp="Gerente de Suprimentos", area="Suprimentos",
+    "head": dict(tema="Requisições de compra devolvidas", resp="Gerente de Suprimentos", area="Distribuidora de materiais elétricos · Compras",
                  data=date(2026, 6, 26), autor="Equipe de compras", versao="1.0",
                  efeito="40% das requisições de compra são devolvidas ao requisitante.",
                  onde="Todas as áreas requisitantes, no último trimestre", part="Gerente, compradores, dois requisitantes e TI",

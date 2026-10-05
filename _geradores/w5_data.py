@@ -18,12 +18,12 @@ EX1 = {
                  origem="Ciclo PDCA: causas confirmadas na análise", orcamento=1500,
                  fora="Compra de forno e mudanças no cardápio."),
     "ref": D(2026, 8, 5),  # data de referência do gráfico do treinamento
-    "ref_status": ["Concluída", "Concluída", "Concluída", "Atrasada", "Em andamento", "Não iniciada"],
+    "ref_status": ["Concluída", "Concluída", "Concluída", "Atrasada", "No prazo", "No prazo"],  # situação calculada, como no módulo 5
     "itens": _mk([
         ("Reforçar a escala de entregadores nas sextas e nos sábados, das 19h às 22h", "Reforçar a escala de entregadores no pico",
          "A escala é igual em todos os dias e não acompanha o pico de pedidos", "Expedição da loja",
          D(2026, 7, 27), D(2026, 7, 31), "Gerente da loja",
-         "Contratar dois entregadores parceiros para o horário de pico", 600, "R$ 600 no primeiro mês",
+         "Contratar dois entregadores parceiros para o pico; daí em diante, a escala do pico segue os pedidos por faixa de horário medidos na A5", 600, "R$ 600 no primeiro mês",
          "Concluída", D(2026, 7, 31), 600, "Escala de agosto publicada"),
         ("Tornar obrigatório o complemento do endereço no pedido", "Tornar obrigatório o complemento do endereço",
          "15% dos atrasos têm endereço incompleto", "Site e aplicativo de delivery",
@@ -56,7 +56,7 @@ EX1 = {
 }
 
 EX2 = {
-    "head": dict(plano="Reduzir o prazo de compra", resp="Gerente de Suprimentos", area="Suprimentos",
+    "head": dict(plano="Reduzir o prazo de compra", resp="Gerente de Suprimentos", area="Distribuidora de materiais elétricos · Compras",
                  data=D(2026, 7, 3), autor="Equipe de compras", versao="1.0",
                  objetivo="Reduzir de 12 para 7 dias úteis o prazo entre a requisição aprovada e o pedido emitido.",
                  origem="Ciclo PDCA e Matriz GUT da área", orcamento=3000,
@@ -107,7 +107,7 @@ EX3 = {
          "Registros de inspeção", D(2026, 9, 2), D(2026, 9, 9), "Coordenador da Qualidade",
          "Comparar os resultados com os da nova calibração e reavaliar os lotes afetados", 0, "Sem custo", "", None, None, ""),
         ("Centralizar o controle dos 25 instrumentos em um cadastro único", "", "A planilha local não avisa sobre o vencimento",
-         "Sistema da Qualidade", D(2026, 9, 7), D(2026, 9, 25), "Analista da Qualidade",
+         "Sistema da Qualidade", D(2026, 9, 7), D(2026, 9, 15), "Analista da Qualidade",
          "Cadastrar os instrumentos, com aviso automático 30 dias antes do vencimento", 0, "Sem custo", "", None, None, ""),
         ("Nomear responsável e suplente pelo controle dos instrumentos", "", "O controle dependia de uma única pessoa, que mudou de área",
          "Todas as áreas com instrumentos", D(2026, 9, 7), D(2026, 9, 11), "Gerente industrial",

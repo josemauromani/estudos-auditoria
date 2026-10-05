@@ -505,6 +505,10 @@ footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);font-si
     <li><h4>Acompanhe</h4><p>Cada subgrupo novo entra no gráfico, contra os limites fixos, e é lido na hora com as regras do módulo 6.</p></li>
     <li><h4>Reaja e registre</h4><p>Sinal pede causa e ação, anotadas no próprio gráfico. Mudança de propósito no processo pede uma base nova.</p></li>
   </ol>
+  <div class="note">
+    <h4>O subgrupo racional</h4>
+    <p>O subgrupo é racional quando as medições dele só variam pelas causas comuns de curto prazo, e uma mudança no processo aparece entre um subgrupo e outro, e não dentro dele. Cinco pontos fixos na largura da bobina, como no exemplo 2, não são cinco repetições: as bordas e o centro podem ter espessuras diferentes por causa da matriz, e essa diferença fixa entra na amplitude, alarga os limites das médias e aumenta o σ estimado. Quando o perfil da largura importa, acompanhe cada posição no seu próprio gráfico, ou forme o subgrupo com medições da mesma posição, e escreva a escolha no plano de controle.</p>
+  </div>
 </section>
 
 <!-- ============================ MÓDULO 4 ============================ -->
@@ -633,7 +637,7 @@ footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);font-si
 
   <figure>
     <div class="scroll">
-      <svg viewBox="0 0 900 330" role="img" aria-label="As partes do gráfico de média e amplitude, com a base da indústria. Linha central: A média das médias dos subgrupos da base. É onde o processo costuma ficar. Limites de controle: A média mais e menos três desvios das médias. Vêm dos dados, não do cliente. Subgrupo: Cinco medições feitas juntas, nas mesmas condições: as cinco bolas de um lote, os cinco pontos de uma bobina. Amplitude: A maior menos a menor medição do subgrupo. Mostra a variação de dentro do subgrupo. Linha central da média 39,97 µm, limites 39,60 e 40,34 µm; amplitude média 0,64 µm, limite superior 1,35 µm.">
+      <svg viewBox="0 0 900 330" role="img" aria-label="As partes do gráfico de média e amplitude, com a base da indústria. Linha central: A média das médias dos subgrupos da base. É onde o processo costuma ficar. Limites de controle: A linha central mais e menos três desvios-padrão das médias, σ ÷ √n. Vêm dos dados, não do cliente. Subgrupo: Cinco medições feitas juntas, nas mesmas condições: as cinco bolas de um lote, os cinco pontos de uma bobina. Amplitude: A maior menos a menor medição do subgrupo. Mostra a variação de dentro do subgrupo. Linha central da média 39,97 µm, limites 39,60 e 40,34 µm; amplitude média 0,64 µm, limite superior 1,35 µm.">
         <defs><marker id="a4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker></defs>
         <text class="mono mu" x="40" y="30" font-size="10">MÉDIA DE CADA BOBINA (µm)</text>
         <line class="ln-mu" x1="40" y1="40" x2="40" y2="170"/><line class="ln-mu" x1="40" y1="170" x2="520" y2="170"/>
@@ -700,16 +704,17 @@ footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);font-si
         <text x="650" y="70.0" font-size="10.5">A média das médias dos subgrupos da</text>
         <text x="650" y="83.5" font-size="10.5">base. É onde o processo costuma ficar.</text>
         <text class="b" x="650" y="109.0" font-size="12">Limites de controle</text>
-        <text x="650" y="125.0" font-size="10.5">A média mais e menos três desvios das</text>
-        <text x="650" y="138.5" font-size="10.5">médias. Vêm dos dados, não do cliente.</text>
-        <text class="b" x="650" y="164.0" font-size="12">Subgrupo</text>
-        <text x="650" y="180.0" font-size="10.5">Cinco medições feitas juntas, nas</text>
-        <text x="650" y="193.5" font-size="10.5">mesmas condições: as cinco bolas de um</text>
-        <text x="650" y="207.0" font-size="10.5">lote, os cinco pontos de uma bobina.</text>
-        <text class="b" x="650" y="232.5" font-size="12">Amplitude</text>
-        <text x="650" y="248.5" font-size="10.5">A maior menos a menor medição do</text>
-        <text x="650" y="262.0" font-size="10.5">subgrupo. Mostra a variação de dentro</text>
-        <text x="650" y="275.5" font-size="10.5">do subgrupo.</text>
+        <text x="650" y="125.0" font-size="10.5">A linha central mais e menos três</text>
+        <text x="650" y="138.5" font-size="10.5">desvios-padrão das médias, σ ÷ √n. Vêm</text>
+        <text x="650" y="152.0" font-size="10.5">dos dados, não do cliente.</text>
+        <text class="b" x="650" y="177.5" font-size="12">Subgrupo</text>
+        <text x="650" y="193.5" font-size="10.5">Cinco medições feitas juntas, nas</text>
+        <text x="650" y="207.0" font-size="10.5">mesmas condições: as cinco bolas de um</text>
+        <text x="650" y="220.5" font-size="10.5">lote, os cinco pontos de uma bobina.</text>
+        <text class="b" x="650" y="246.0" font-size="12">Amplitude</text>
+        <text x="650" y="262.0" font-size="10.5">A maior menos a menor medição do</text>
+        <text x="650" y="275.5" font-size="10.5">subgrupo. Mostra a variação de dentro</text>
+        <text x="650" y="289.0" font-size="10.5">do subgrupo.</text>
       </svg>
     </div>
     <figcaption><b>Figura 4.</b> As partes do gráfico de média e amplitude, com a base da espessura do filme na indústria. O ponto vazio é a bobina excluída da base.</figcaption>
@@ -721,13 +726,13 @@ footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);font-si
       <tbody>
         <tr><td><strong>Linha central da média</strong></td><td>Média das médias dos subgrupos da base</td><td class="num">400,3 g</td><td class="num">39,97 µm</td></tr>
         <tr><td><strong>Amplitude média (R̄)</strong></td><td>Média das amplitudes da base</td><td class="num">18,7 g</td><td class="num">0,64 µm</td></tr>
-        <tr><td><strong>Limites da média</strong></td><td>Linha central ± 0,577 × R̄</td><td class="num">389,5 a 411,1 g</td><td class="num">39,60 a 40,34 µm</td></tr>
+        <tr><td><strong>Limites da média</strong></td><td>Linha central ± 0,577 × R̄</td><td class="num">389,5 a 411,1 g</td><td class="num">39,602 a 40,339 µm</td></tr>
         <tr><td><strong>Limite da amplitude</strong></td><td>2,114 × R̄ (o inferior é zero)</td><td class="num">39,5 g</td><td class="num">1,35 µm</td></tr>
         <tr><td><strong>Desvio estimado (σ)</strong></td><td>R̄ ÷ 2,326</td><td class="num">8,03 g</td><td class="num">0,274 µm</td></tr>
       </tbody>
     </table>
   </div>
-  <p>As constantes 0,577, 2,114 e 2,326 são as de Shewhart para subgrupos de cinco, tabeladas nas normas e nos livros de estatística. Com outro tamanho de subgrupo, as constantes mudam. Os limites ficam a três desvios da média das médias: com o processo estável, quase nenhum ponto passa deles por acaso.</p>
+  <p>As constantes 0,577, 2,114 e 2,326 são as de Shewhart para subgrupos de cinco, tabeladas nas normas e nos livros de estatística. Com outro tamanho de subgrupo, as constantes mudam. Os limites ficam a três desvios-padrão das médias, de cada lado da linha central. A média de cinco medições varia menos que cada medição: o desvio-padrão das médias é σ ÷ √n, e 0,577 × R̄ é o mesmo que 3 × σ ÷ √5. Com o processo estável, quase nenhum ponto passa deles por acaso.</p>
   <div class="note">
     <h4>Os limites ficam fixos</h4>
     <p>Depois de calculados com a base, os limites não se movem a cada ponto novo. Recalcular com os pontos de acompanhamento esconde exatamente a mudança que o gráfico deveria mostrar. Só se refaz a base depois de uma mudança de propósito no processo, como uma máquina reformada ou um método novo.</p>
@@ -907,6 +912,14 @@ footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);font-si
     <h4>Só calcule a capacidade com o processo em controle</h4>
     <p>Com causa especial na base, o desvio estimado mistura duas coisas, e o Cpk não prevê nada. Primeiro, trate os sinais; depois, calcule. E nunca desenhe os limites da especificação no gráfico das médias: eles valem para cada peça, e as médias variam menos que as peças. Um gráfico de médias dentro da especificação pode esconder peças fora, como no exemplo 3.</p>
   </div>
+  <div class="note">
+    <h4>O que o Cpk não garante</h4>
+    <p>O Cpk é uma conta sobre um modelo do processo, e vale o que valem as hipóteses dele. Quatro cuidados antes de confiar no número:</p>
+    <p><b>Normalidade.</b> A conta supõe uma distribuição parecida com o sino. Com o histograma assimétrico, cortado ou de dois picos, a parte fora da especificação pode ser bem maior do que o índice sugere.</p>
+    <p><b>Variação só de dentro do subgrupo.</b> O σ vem da amplitude média e só enxerga a variação de curto prazo. A variação entre subgrupos, de turno para turno ou de lote para lote, fica de fora, e o índice sai otimista. O desvio-padrão de todas as medições dá os índices de desempenho, Pp e Ppk, que mostram o longo prazo.</p>
+    <p><b>Sistema de medição.</b> A variação medida inclui a do instrumento e a de quem mede. Sem avaliar o sistema de medição, parte do que parece processo é medição.</p>
+    <p><b>Limites provisórios.</b> Com menos de 20 subgrupos na base, como no exemplo 2, o Cpk é uma estimativa com margem grande: trate-o como provisório e refaça a conta quando a base estiver completa.</p>
+  </div>
 </section>
 
 <!-- ============================ MÓDULO 8 ============================ -->
@@ -1057,7 +1070,7 @@ footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);font-si
   <p>Depois do micrômetro reprovado em junho, a Qualidade começou o gráfico em 04/07, com a primeira bobina de cada turno. A base são as 14 primeiras bobinas, menos a de 06/07, em que a resistência da zona 3 queimou.</p>
   <div class="tbl">
     <table class="aud">
-      <caption>25 subgrupos · LC 39,97 · LSC 40,34 · LIC 39,60 · R̄ 0,64 · Cp 2,43 · Cpk 2,39</caption>
+      <caption>25 subgrupos · LC 39,971 · LSC 40,339 · LIC 39,602 · R̄ 0,64 · Cp 2,43 · Cpk 2,39</caption>
       <thead><tr><th>#</th><th>Data</th><th class="c" colspan="5">Cinco medições (em µm)</th><th class="c">Média</th><th class="c">Amplitude</th><th style="width:22%">Fase</th><th>Sinal</th></tr></thead>
       <tbody>
         <tr><td class="n">1</td><td>04/07<small>Turno A</small></td><td class="c">39,7</td><td class="c">39,9</td><td class="c">39,8</td><td class="c">39,9</td><td class="c">40,2</td><td class="c">39,90</td><td class="c">0,5</td><td>Base</td><td>—</td></tr>
@@ -1065,7 +1078,7 @@ footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);font-si
         <tr><td class="n">3</td><td>05/07<small>Turno A</small></td><td class="c">40,0</td><td class="c">40,7</td><td class="c">40,1</td><td class="c">40,0</td><td class="c">40,3</td><td class="c">40,22</td><td class="c">0,7</td><td>Base</td><td>—</td></tr>
         <tr><td class="n">4</td><td>05/07<small>Turno C</small></td><td class="c">39,7</td><td class="c">39,8</td><td class="c">40,2</td><td class="c">39,8</td><td class="c">39,7</td><td class="c">39,84</td><td class="c">0,5</td><td>Base</td><td>—</td></tr>
         <tr><td class="n">5</td><td>06/07<small>Turno A</small></td><td class="c">39,8</td><td class="c">39,6</td><td class="c">40,3</td><td class="c">40,4</td><td class="c">40,8</td><td class="c">40,18</td><td class="c">1,2</td><td>Base</td><td>—</td></tr>
-        <tr><td class="n">6</td><td>06/07<small>Turno C</small></td><td class="c">40,7</td><td class="c">41,3</td><td class="c">40,7</td><td class="c">41,5</td><td class="c">40,1</td><td class="c">40,86</td><td class="c">1,4</td><td><span class="chip sl">Excluído</span><small>Resistência da zona 3 queimada; bobina segregada e moída (RNC 2027-29).</small></td><td><span class="chip s3">Média fora dos limites</span></td></tr>
+        <tr><td class="n">6</td><td>06/07<small>Turno C</small></td><td class="c">40,7</td><td class="c">41,3</td><td class="c">40,7</td><td class="c">41,5</td><td class="c">40,1</td><td class="c">40,86</td><td class="c">1,4</td><td><span class="chip sl">Excluído</span><small>Resistência da zona 3 queimada; bobina segregada e moída (registro de produto não conforme 2027-29).</small></td><td><span class="chip s3">Média fora dos limites</span> <span class="chip s3">Amplitude fora do limite</span></td></tr>
         <tr><td class="n">7</td><td>07/07<small>Turno A</small></td><td class="c">40,2</td><td class="c">39,9</td><td class="c">39,6</td><td class="c">40,5</td><td class="c">39,9</td><td class="c">40,02</td><td class="c">0,9</td><td>Base</td><td>—</td></tr>
         <tr><td class="n">8</td><td>07/07<small>Turno C</small></td><td class="c">40,3</td><td class="c">39,9</td><td class="c">40,0</td><td class="c">39,5</td><td class="c">39,7</td><td class="c">39,88</td><td class="c">0,8</td><td>Base</td><td>—</td></tr>
         <tr><td class="n">9</td><td>08/07<small>Turno A</small></td><td class="c">40,1</td><td class="c">40,2</td><td class="c">39,9</td><td class="c">40,0</td><td class="c">39,4</td><td class="c">39,92</td><td class="c">0,8</td><td>Base</td><td>—</td></tr>
@@ -1079,7 +1092,7 @@ footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);font-si
         <tr><td class="n">17</td><td>12/07<small>Turno A</small></td><td class="c">39,4</td><td class="c">39,5</td><td class="c">40,2</td><td class="c">39,3</td><td class="c">39,8</td><td class="c">39,64</td><td class="c">0,9</td><td>Acompanhamento</td><td>—</td></tr>
         <tr><td class="n">18</td><td>12/07<small>Turno C</small></td><td class="c">40,3</td><td class="c">40,2</td><td class="c">39,3</td><td class="c">39,5</td><td class="c">39,5</td><td class="c">39,76</td><td class="c">1,0</td><td>Acompanhamento</td><td>—</td></tr>
         <tr><td class="n">19</td><td>13/07<small>Turno A</small></td><td class="c">38,9</td><td class="c">39,6</td><td class="c">39,1</td><td class="c">39,9</td><td class="c">39,0</td><td class="c">39,30</td><td class="c">1,0</td><td>Acompanhamento</td><td><span class="chip s3">Média fora dos limites</span></td></tr>
-        <tr><td class="n">20</td><td>13/07<small>Turno C</small></td><td class="c">39,1</td><td class="c">39,1</td><td class="c">39,5</td><td class="c">38,0</td><td class="c">40,0</td><td class="c">39,14</td><td class="c">2,0</td><td>Acompanhamento</td><td><span class="chip s3">Média fora dos limites</span></td></tr>
+        <tr><td class="n">20</td><td>13/07<small>Turno C</small></td><td class="c">39,1</td><td class="c">39,1</td><td class="c">39,5</td><td class="c">38,0</td><td class="c">40,0</td><td class="c">39,14</td><td class="c">2,0</td><td>Acompanhamento</td><td><span class="chip s3">Média fora dos limites</span> <span class="chip s3">Amplitude fora do limite</span></td></tr>
         <tr><td class="n">21</td><td>14/07<small>Turno A</small></td><td class="c">39,2</td><td class="c">39,4</td><td class="c">40,1</td><td class="c">39,4</td><td class="c">39,6</td><td class="c">39,54</td><td class="c">0,9</td><td>Acompanhamento</td><td><span class="chip s3">Média fora dos limites</span></td></tr>
         <tr><td class="n">22</td><td>14/07<small>Turno C</small></td><td class="c">39,3</td><td class="c">39,8</td><td class="c">39,7</td><td class="c">40,0</td><td class="c">39,2</td><td class="c">39,60</td><td class="c">0,8</td><td>Acompanhamento</td><td><span class="chip s3">Média fora dos limites</span></td></tr>
         <tr><td class="n">23</td><td>15/07<small>Turno A</small></td><td class="c">38,5</td><td class="c">39,3</td><td class="c">38,4</td><td class="c">39,1</td><td class="c">38,9</td><td class="c">38,84</td><td class="c">0,9</td><td>Acompanhamento</td><td><span class="chip s3">Média fora dos limites</span></td></tr>
@@ -1141,7 +1154,7 @@ footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);font-si
     </div>
     <figcaption><b>Figura 9.</b> Histogramas da espessura na base e no acompanhamento. A largura dobra, e o centro desce.</figcaption>
   </figure>
-  <p><strong>O que observar.</strong> Com a máquina sã, a extrusora 3 é muito capaz: Cp 2,43 e Cpk 2,39 na base, com a espessura entre 39,60 e 40,34 µm em média. A base tem só 13 subgrupos, menos que os 20 recomendados: os limites são provisórios. No acompanhamento, a média começa a cair, e a amplitude a crescer, e o primeiro sinal aparece em 13/07: média abaixo do limite inferior. Seguem mais sinais em todas as bobinas até 16/07. Era a rosca se desgastando. A extrusora parou em 18/07 com 6 bobinas fora (RNC 2027-30), no estudo de <a href="../Recursos/treinamento-recursos.html">Recursos</a>. O gráfico tinha avisado cinco dias antes, mas foi lido só na reunião semanal. A lição não é sobre estatística: o gráfico precisa ser lido no turno, por quem pode parar a máquina.</p>
+  <p><strong>O que observar.</strong> Com a máquina sã, a extrusora 3 é muito capaz: Cp 2,43 e Cpk 2,39 na base, com a espessura entre 39,602 e 40,339 µm em média. A base tem só 13 subgrupos, menos que os 20 recomendados: os limites são provisórios. No acompanhamento, a média começa a cair, e a amplitude a crescer, e o primeiro sinal aparece em 13/07: média abaixo do limite inferior. Seguem mais sinais em todas as bobinas até 16/07. Era a rosca se desgastando. A extrusora parou em 18/07 com 6 bobinas fora (registro de produto não conforme 2027-30), no estudo de <a href="../Recursos/treinamento-recursos.html">Recursos</a>. O gráfico tinha avisado cinco dias antes, mas foi lido só na reunião semanal. A lição não é sobre estatística: o gráfico precisa ser lido no turno, por quem pode parar a máquina.</p>
 
   <h3>Exemplo 3. A média que aprovava bolas fora</h3>
   <figure>
@@ -1200,7 +1213,7 @@ footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);font-si
 
   <figure id="fig-bars">
     <div class="scroll">
-      <svg id="bars" viewBox="0 0 900 320" role="img" aria-label="Médias de espessura das 25 bobinas da indústria, com a linha central de 39,97 µm e os limites de 39,60 e 40,34 µm. 1: 39,90. 2: 39,80. 3: 40,22. 4: 39,84. 5: 40,18. 6: 40,86 (média fora dos limites). 7: 40,02. 8: 39,88. 9: 39,92. 10: 39,90. 11: 39,88. 12: 40,18. 13: 40,06. 14: 39,84. 15: 39,98. 16: 40,02. 17: 39,64. 18: 39,76. 19: 39,30 (média fora dos limites). 20: 39,14 (média fora dos limites). 21: 39,54 (média fora dos limites). 22: 39,60 (média fora dos limites). 23: 38,84 (média fora dos limites). 24: 38,14 (média fora dos limites). 25: 38,68 (média fora dos limites).">
+      <svg id="bars" viewBox="0 0 900 320" role="img" aria-label="Médias de espessura das 25 bobinas da indústria, com a linha central de 39,971 µm e os limites de 39,602 e 40,339 µm. 1: 39,90. 2: 39,80. 3: 40,22. 4: 39,84. 5: 40,18. 6: 40,86 (média fora dos limites; amplitude fora do limite). 7: 40,02. 8: 39,88. 9: 39,92. 10: 39,90. 11: 39,88. 12: 40,18. 13: 40,06. 14: 39,84. 15: 39,98. 16: 40,02. 17: 39,64. 18: 39,76. 19: 39,30 (média fora dos limites). 20: 39,14 (média fora dos limites; amplitude fora do limite). 21: 39,54 (média fora dos limites). 22: 39,60 (média fora dos limites). 23: 38,84 (média fora dos limites). 24: 38,14 (média fora dos limites). 25: 38,68 (média fora dos limites).">
         <rect class="lane" x="468.6" y="30" width="321.4" height="220"/>
         <text class="mono mu" x="68" y="44" font-size="10">BASE</text><text class="mono mu" x="476.6" y="44" font-size="10">ACOMPANHAMENTO</text>
         <line class="grid" x1="60" y1="243.5" x2="790" y2="243.5"/><text class="mu" x="52" y="247.5" font-size="10.5" text-anchor="end" style="font-variant-numeric:tabular-nums">38</text>
@@ -1209,11 +1222,11 @@ footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);font-si
         <line class="grid" x1="60" y1="49.4" x2="790" y2="49.4"/><text class="mu" x="52" y="53.4" font-size="10.5" text-anchor="end" style="font-variant-numeric:tabular-nums">41</text>
         <line class="esp" x1="60" y1="243.5" x2="790" y2="243.5"/><text class="b halo" x="796" y="247.5" font-size="10.5">LIE 38</text>
         <line class="lim" x1="60" y1="92.2" x2="790" y2="92.2"/>
-        <text class="mu halo" x="796" y="96.2" font-size="10.5" style="font-variant-numeric:tabular-nums">LSC 40,34</text>
+        <text class="mu halo" x="796" y="96.2" font-size="10.5" style="font-variant-numeric:tabular-nums">LSC 40,339</text>
         <line class="ctr" x1="60" y1="116.0" x2="790" y2="116.0"/>
-        <text class="mu halo" x="796" y="120.0" font-size="10.5" style="font-variant-numeric:tabular-nums">LC 39,97</text>
+        <text class="mu halo" x="796" y="120.0" font-size="10.5" style="font-variant-numeric:tabular-nums">LC 39,971</text>
         <line class="lim" x1="60" y1="139.8" x2="790" y2="139.8"/>
-        <text class="mu halo" x="796" y="143.8" font-size="10.5" style="font-variant-numeric:tabular-nums">LIC 39,60</text>
+        <text class="mu halo" x="796" y="143.8" font-size="10.5" style="font-variant-numeric:tabular-nums">LIC 39,602</text>
         <path class="ser" d="M76.0 120.6 L105.1 127.1 L134.2 99.9 L163.2 124.5 L192.3 102.5 L221.4 58.5 L250.5 112.8 L279.6 121.9 L308.7 119.3 L337.8 120.6 L366.8 121.9 L395.9 102.5 L425.0 110.2 L454.1 124.5 L483.2 115.4 L512.2 112.8 L541.3 137.4 L570.4 129.6 L599.5 159.4 L628.6 169.8 L657.7 143.9 L686.8 140.0 L715.8 189.2 L744.9 234.5 L774.0 199.5"/>
         <circle class="pt-c p-ok" data-k="0" cx="76.0" cy="120.6" r="4.2"/>
         <text class="mu" x="76.0" y="266" font-size="10" text-anchor="middle" style="font-variant-numeric:tabular-nums">04/07</text>
@@ -1261,7 +1274,7 @@ footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);font-si
         <rect class="hit" x="122.2" y="30" width="24" height="220" tabindex="0" role="img" aria-label="Bobina 3, 05/07, Turno A: média 40,22 µm, amplitude 0,7 µm. Sem sinal." data-k="2" data-n="Bobina 3 · 05/07 · Turno A" data-s="40,22 µm" data-d="amplitude 0,7 µm" data-p="sem sinal" data-cx="134.2" data-cy="99.9"/>
         <rect class="hit" x="151.2" y="30" width="24" height="220" tabindex="0" role="img" aria-label="Bobina 4, 05/07, Turno C: média 39,84 µm, amplitude 0,5 µm. Sem sinal." data-k="3" data-n="Bobina 4 · 05/07 · Turno C" data-s="39,84 µm" data-d="amplitude 0,5 µm" data-p="sem sinal" data-cx="163.2" data-cy="124.5"/>
         <rect class="hit" x="180.3" y="30" width="24" height="220" tabindex="0" role="img" aria-label="Bobina 5, 06/07, Turno A: média 40,18 µm, amplitude 1,2 µm. Sem sinal." data-k="4" data-n="Bobina 5 · 06/07 · Turno A" data-s="40,18 µm" data-d="amplitude 1,2 µm" data-p="sem sinal" data-cx="192.3" data-cy="102.5"/>
-        <rect class="hit" x="209.4" y="30" width="24" height="220" tabindex="0" role="img" aria-label="Bobina 6, 06/07, Turno C: média 40,86 µm, amplitude 1,4 µm. Média fora dos limites." data-k="5" data-n="Bobina 6 · 06/07 · Turno C" data-s="40,86 µm" data-d="amplitude 1,4 µm" data-p="média fora dos limites" data-cx="221.4" data-cy="58.5"/>
+        <rect class="hit" x="209.4" y="30" width="24" height="220" tabindex="0" role="img" aria-label="Bobina 6, 06/07, Turno C: média 40,86 µm, amplitude 1,4 µm. Média fora dos limites; Amplitude fora do limite." data-k="5" data-n="Bobina 6 · 06/07 · Turno C" data-s="40,86 µm" data-d="amplitude 1,4 µm" data-p="média fora dos limites; amplitude fora do limite" data-cx="221.4" data-cy="58.5"/>
         <rect class="hit" x="238.5" y="30" width="24" height="220" tabindex="0" role="img" aria-label="Bobina 7, 07/07, Turno A: média 40,02 µm, amplitude 0,9 µm. Sem sinal." data-k="6" data-n="Bobina 7 · 07/07 · Turno A" data-s="40,02 µm" data-d="amplitude 0,9 µm" data-p="sem sinal" data-cx="250.5" data-cy="112.8"/>
         <rect class="hit" x="267.6" y="30" width="24" height="220" tabindex="0" role="img" aria-label="Bobina 8, 07/07, Turno C: média 39,88 µm, amplitude 0,8 µm. Sem sinal." data-k="7" data-n="Bobina 8 · 07/07 · Turno C" data-s="39,88 µm" data-d="amplitude 0,8 µm" data-p="sem sinal" data-cx="279.6" data-cy="121.9"/>
         <rect class="hit" x="296.7" y="30" width="24" height="220" tabindex="0" role="img" aria-label="Bobina 9, 08/07, Turno A: média 39,92 µm, amplitude 0,8 µm. Sem sinal." data-k="8" data-n="Bobina 9 · 08/07 · Turno A" data-s="39,92 µm" data-d="amplitude 0,8 µm" data-p="sem sinal" data-cx="308.7" data-cy="119.3"/>
@@ -1275,7 +1288,7 @@ footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);font-si
         <rect class="hit" x="529.3" y="30" width="24" height="220" tabindex="0" role="img" aria-label="Bobina 17, 12/07, Turno A: média 39,64 µm, amplitude 0,9 µm. Sem sinal." data-k="16" data-n="Bobina 17 · 12/07 · Turno A" data-s="39,64 µm" data-d="amplitude 0,9 µm" data-p="sem sinal" data-cx="541.3" data-cy="137.4"/>
         <rect class="hit" x="558.4" y="30" width="24" height="220" tabindex="0" role="img" aria-label="Bobina 18, 12/07, Turno C: média 39,76 µm, amplitude 1,0 µm. Sem sinal." data-k="17" data-n="Bobina 18 · 12/07 · Turno C" data-s="39,76 µm" data-d="amplitude 1,0 µm" data-p="sem sinal" data-cx="570.4" data-cy="129.6"/>
         <rect class="hit" x="587.5" y="30" width="24" height="220" tabindex="0" role="img" aria-label="Bobina 19, 13/07, Turno A: média 39,30 µm, amplitude 1,0 µm. Média fora dos limites." data-k="18" data-n="Bobina 19 · 13/07 · Turno A" data-s="39,30 µm" data-d="amplitude 1,0 µm" data-p="média fora dos limites" data-cx="599.5" data-cy="159.4"/>
-        <rect class="hit" x="616.6" y="30" width="24" height="220" tabindex="0" role="img" aria-label="Bobina 20, 13/07, Turno C: média 39,14 µm, amplitude 2,0 µm. Média fora dos limites." data-k="19" data-n="Bobina 20 · 13/07 · Turno C" data-s="39,14 µm" data-d="amplitude 2,0 µm" data-p="média fora dos limites" data-cx="628.6" data-cy="169.8"/>
+        <rect class="hit" x="616.6" y="30" width="24" height="220" tabindex="0" role="img" aria-label="Bobina 20, 13/07, Turno C: média 39,14 µm, amplitude 2,0 µm. Média fora dos limites; Amplitude fora do limite." data-k="19" data-n="Bobina 20 · 13/07 · Turno C" data-s="39,14 µm" data-d="amplitude 2,0 µm" data-p="média fora dos limites; amplitude fora do limite" data-cx="628.6" data-cy="169.8"/>
         <rect class="hit" x="645.7" y="30" width="24" height="220" tabindex="0" role="img" aria-label="Bobina 21, 14/07, Turno A: média 39,54 µm, amplitude 0,9 µm. Média fora dos limites." data-k="20" data-n="Bobina 21 · 14/07 · Turno A" data-s="39,54 µm" data-d="amplitude 0,9 µm" data-p="média fora dos limites" data-cx="657.7" data-cy="143.9"/>
         <rect class="hit" x="674.8" y="30" width="24" height="220" tabindex="0" role="img" aria-label="Bobina 22, 14/07, Turno C: média 39,60 µm, amplitude 0,8 µm. Média fora dos limites." data-k="21" data-n="Bobina 22 · 14/07 · Turno C" data-s="39,60 µm" data-d="amplitude 0,8 µm" data-p="média fora dos limites" data-cx="686.8" data-cy="140.0"/>
         <rect class="hit" x="703.8" y="30" width="24" height="220" tabindex="0" role="img" aria-label="Bobina 23, 15/07, Turno A: média 38,84 µm, amplitude 0,9 µm. Média fora dos limites." data-k="22" data-n="Bobina 23 · 15/07 · Turno A" data-s="38,84 µm" data-d="amplitude 0,9 µm" data-p="média fora dos limites" data-cx="715.8" data-cy="189.2"/>
@@ -1296,7 +1309,7 @@ footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);font-si
             <tr><td>3</td><td>05/07 · Turno A</td><td class="c">40,22</td><td class="c">0,7</td><td>Base</td><td>—</td></tr>
             <tr><td>4</td><td>05/07 · Turno C</td><td class="c">39,84</td><td class="c">0,5</td><td>Base</td><td>—</td></tr>
             <tr><td>5</td><td>06/07 · Turno A</td><td class="c">40,18</td><td class="c">1,2</td><td>Base</td><td>—</td></tr>
-            <tr><td>6</td><td>06/07 · Turno C</td><td class="c">40,86</td><td class="c">1,4</td><td>Excluído</td><td>Média fora dos limites</td></tr>
+            <tr><td>6</td><td>06/07 · Turno C</td><td class="c">40,86</td><td class="c">1,4</td><td>Excluído</td><td>Média fora dos limites; Amplitude fora do limite</td></tr>
             <tr><td>7</td><td>07/07 · Turno A</td><td class="c">40,02</td><td class="c">0,9</td><td>Base</td><td>—</td></tr>
             <tr><td>8</td><td>07/07 · Turno C</td><td class="c">39,88</td><td class="c">0,8</td><td>Base</td><td>—</td></tr>
             <tr><td>9</td><td>08/07 · Turno A</td><td class="c">39,92</td><td class="c">0,8</td><td>Base</td><td>—</td></tr>
@@ -1310,7 +1323,7 @@ footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);font-si
             <tr><td>17</td><td>12/07 · Turno A</td><td class="c">39,64</td><td class="c">0,9</td><td>Acompanhamento</td><td>—</td></tr>
             <tr><td>18</td><td>12/07 · Turno C</td><td class="c">39,76</td><td class="c">1,0</td><td>Acompanhamento</td><td>—</td></tr>
             <tr><td>19</td><td>13/07 · Turno A</td><td class="c">39,30</td><td class="c">1,0</td><td>Acompanhamento</td><td>Média fora dos limites</td></tr>
-            <tr><td>20</td><td>13/07 · Turno C</td><td class="c">39,14</td><td class="c">2,0</td><td>Acompanhamento</td><td>Média fora dos limites</td></tr>
+            <tr><td>20</td><td>13/07 · Turno C</td><td class="c">39,14</td><td class="c">2,0</td><td>Acompanhamento</td><td>Média fora dos limites; Amplitude fora do limite</td></tr>
             <tr><td>21</td><td>14/07 · Turno A</td><td class="c">39,54</td><td class="c">0,9</td><td>Acompanhamento</td><td>Média fora dos limites</td></tr>
             <tr><td>22</td><td>14/07 · Turno C</td><td class="c">39,60</td><td class="c">0,8</td><td>Acompanhamento</td><td>Média fora dos limites</td></tr>
             <tr><td>23</td><td>15/07 · Turno A</td><td class="c">38,84</td><td class="c">0,9</td><td>Acompanhamento</td><td>Média fora dos limites</td></tr>
@@ -1333,7 +1346,7 @@ footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);font-si
       </tbody>
     </table>
   </div>
-  <p>Na indústria, a base fica em torno de 39,97 µm, perto do alvo de 40. A bobina de 06/07, com a resistência queimada, sobe e é excluída. Depois de 11/07, os pontos descem: em 13/07, o primeiro passa do limite inferior, e 7 bobinas do acompanhamento têm sinal. A especificação, de 38 µm, ainda não tinha sido atingida pela média, mas dois pontos de uma bobina já estavam abaixo dela.</p>
+  <p>Na indústria, a base fica em torno de 39,97 µm, perto do alvo de 40. A bobina de 06/07, com a resistência queimada, sobe e é excluída. Depois de 11/07, os pontos descem: em 13/07, o primeiro passa do limite inferior, e 7 bobinas do acompanhamento têm sinal. A bobina 22, de 14/07, tem média de 39,60 µm, e o limite inferior é 39,602: com duas casas, ela parece estar sobre a linha, mas fica abaixo dela, e o sinal vale. A bobina 20, de 13/07, tem também a amplitude acima do limite, 2,0 µm contra 1,35, com um ponto de 38,0 e outro de 40,0 µm no mesmo subgrupo. A bobina excluída, de 06/07, também passa do limite da amplitude, e continua fora da base pelo motivo anotado. A especificação, de 38 µm, ainda não tinha sido atingida pela média, mas dois pontos de uma bobina já estavam abaixo dela.</p>
 </section>
 
 <!-- ============================ MÓDULO 10 ============================ -->
@@ -1438,6 +1451,11 @@ footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);font-si
     </div>
   </div>
   <p>Na edição de 2026 da ISO 9001, o monitoramento e a análise continuam como em 2015, como mostra o estudo da <a href="../ISO-9001-2026/treinamento-iso-9001-2026.html">ISO 9001:2026</a>.</p>
+
+  <div class="note">
+    <h4>Pontos de atenção</h4>
+    <p>Os exemplos se passam de 2026 a 2028 e usam a numeração da ISO 9001:2015, que as organizações dos exemplos seguem até a transição. O estudo <a href="../ISO-9001-2026/treinamento-iso-9001-2026.html">ISO 9001:2026: o que muda</a> mostra as diferenças.</p>
+  </div>
 </section>
 
 <!-- ============================ MÓDULO 13 ============================ -->
@@ -1557,7 +1575,7 @@ footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);font-si
     <div><dt>Cp e Cpk</dt><dd>Índices de capacidade: a tolerância dividida pela variação, sem e com o centro.</dd></div>
     <div><dt>Desvio-padrão (σ)</dt><dd>A medida da variação típica em torno da média. No gráfico X̄-R, estimado pela amplitude média.</dd></div>
     <div><dt>Especificação</dt><dd>Os limites que o cliente ou o projeto aceita: LIE e LSE.</dd></div>
-    <div><dt>Limites de controle</dt><dd>LSC e LIC: a três desvios da linha central, calculados dos dados.</dd></div>
+    <div><dt>Limites de controle</dt><dd>LSC e LIC: a três desvios-padrão das médias (σ ÷ √n) da linha central, calculados dos dados.</dd></div>
     <div><dt>Subgrupo</dt><dd>Um conjunto de medições feitas juntas, nas mesmas condições.</dd></div>
   </dl>
 </section>

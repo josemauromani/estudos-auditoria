@@ -301,17 +301,23 @@ def chip(classe):
     return f'<span class="chip {"pr" if classe == PRIOR else "sl"}">{classe}</span>'
 
 
-def pareto_tab(rows, titulo, col1, unidade, base=None, base_nome=None):
+def pareto_tab(rows, titulo, col1, unidade, base=None, base_nome=None, bases=None):
+    """Com `bases` (nome -> base de cada linha), a tabela mostra a base e a taxa de cada linha."""
     p = pareto(rows)
     tot = sum(r["v"] for r in p)
     o = ['  <div class="tbl">', '    <table class="aud">', f'      <caption>{escape(titulo)}</caption>',
          f'      <thead><tr><th class="c" style="width:7%">Ordem</th><th style="width:36%">{escape(col1)}</th><th class="c">{escape(unidade)}</th><th class="c">Parte do total</th><th class="c">Acumulado</th>'
-         + (f'<th class="c">Por 100 {escape(base_nome)}</th>' if base else "") + '<th>Classe</th></tr></thead>', '      <tbody>']
+         + (f'<th class="c">{escape(base_nome[0].upper() + base_nome[1:])}</th>' if bases else "")
+         + (f'<th class="c">Por 100 {escape(base_nome)}</th>' if base or bases else "") + '<th>Classe</th></tr></thead>', '      <tbody>']
     for r in p:
+        b = bases[r["nome"]] if bases else base
         o.append(f'        <tr><td class="c n">{r["k"]}</td><td><strong>{escape(r["nome"])}</strong></td><td class="c">{mil(r["v"])}</td><td class="c">{pc(r["pct"])}</td><td class="c">{pc(r["acc"])}</td>'
-                 + (f'<td class="c">{br(taxa(r["v"], base))}</td>' if base else "") + f'<td>{chip(r["classe"])}</td></tr>')
+                 + (f'<td class="c">{mil(b)}</td>' if bases else "")
+                 + (f'<td class="c">{br(taxa(r["v"], b))}</td>' if b else "") + f'<td>{chip(r["classe"])}</td></tr>')
+    bt = sum(bases.values()) if bases else base
     o.append(f'        <tr class="tot"><td></td><td>Total</td><td class="c">{mil(tot)}</td><td class="c">100%</td><td class="c"></td>'
-             + (f'<td class="c">{br(taxa(tot, base))}</td>' if base else "") + '<td></td></tr>')
+             + (f'<td class="c">{mil(bt)}</td>' if bases else "")
+             + (f'<td class="c">{br(taxa(tot, bt))}</td>' if bt else "") + '<td></td></tr>')
     o += ['      </tbody>', '    </table>', '  </div>']
     return "\n".join(o)
 
@@ -320,7 +326,8 @@ ex1folha = folha_tab(EX1, f'Folha do período · motivo do atraso por dia da sem
 ex1pareto = pareto_tab(L1, "Pareto por motivo do atraso", "Motivo principal", "Atrasos", H1["base"], H1["base_nome"])
 ex2folha = folha_tab(EX2, f'Folha do período · motivo da devolução por área requisitante · {T2} devoluções em {H2["base"]} requisições')
 ex2pareto = pareto_tab(L2, "Pareto por motivo da devolução", "Motivo", "Devoluções", H2["base"], H2["base_nome"])
-ex2area = pareto_tab(colunas(EX2), "Pareto por área requisitante · as colunas da mesma folha", "Área requisitante", "Devoluções")
+ex2area = pareto_tab(colunas(EX2), "Pareto por área requisitante · as colunas da mesma folha, com as requisições de cada área", "Área requisitante", "Devoluções",
+                     base_nome=H2["base_nome"], bases=dict(zip(EX2["cols"], EX2["req"])))
 
 # exemplo 3: por ocorrências e por peso
 DEF = EX3["defeitos"]

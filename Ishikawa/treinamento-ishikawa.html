@@ -506,6 +506,7 @@ footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);font-si
   <dl class="ficha">
     <div><dt>Efeito</dt><dd>18% das entregas chegam depois de 40 minutos</dd></div>
     <div><dt>Onde e quando</dt><dd>Sextas e sábados, das 19h às 22h</dd></div>
+    <div><dt>Dado de partida</dt><dd>Pareto de 10/07/2026: em 46% dos atrasos, a pizza pronta esperou entregador</dd></div>
     <div><dt>Categorias</dt><dd>6M</dd></div>
     <div><dt>Responsável</dt><dd>Gerente da loja</dd></div>
   </dl>
@@ -580,25 +581,26 @@ footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);font-si
     <table class="causas">
       <thead><tr><th>Código</th><th style="width:13%">Categoria</th><th style="width:24%">Causa provável</th><th style="width:21%">Como foi verificada</th><th style="width:13%">Resultado</th><th>Evidência</th></tr></thead>
       <tbody>
-        <tr><td class="cod">A1</td><td>Método</td><td class="cau">Pedidos saem um a um, sem agrupamento por bairro</td><td>Acompanhar 50 saídas no pico e mapear as rotas</td><td class="res"><b>Confirmada</b><small>segue para o plano</small></td><td>Rotas cruzadas em 31 das 50 saídas</td></tr>
+        <tr><td class="cod">A1</td><td>Método</td><td class="cau">Pedidos saem um a um, sem agrupamento por bairro</td><td>Acompanhar 50 saídas no pico e mapear as rotas</td><td class="res"><b>Confirmada</b><small>segue para o plano</small></td><td>Em 31 das 50 saídas, outro entregador saiu para o mesmo bairro menos de 10 minutos depois</td></tr>
         <tr class="cut"><td class="cod">A2</td><td>Método</td><td class="cau">Rota escolhida por cada entregador</td><td>Comparar o tempo de rota entre os entregadores</td><td class="res"><b>Descartada</b></td><td>Tempos parecidos entre os entregadores</td></tr>
-        <tr><td class="cod">B1</td><td>Mão de obra</td><td class="cau">Escala de entregadores igual em todos os dias</td><td>Comparar entregadores disponíveis e pedidos por hora</td><td class="res"><b>Confirmada</b><small>segue para o plano</small></td><td>Pizza pronta esperou entregador em 46% dos atrasos</td></tr>
+        <tr><td class="cod">B1</td><td>Mão de obra</td><td class="cau">Escala de entregadores igual em todos os dias</td><td>Comparar entregadores disponíveis e pedidos por hora</td><td class="res"><b>Confirmada</b><small>segue para o plano</small></td><td>Mesmo número de entregadores todos os dias; nas sextas e nos sábados, 74 entregas por noite, contra 35 nos outros dias</td></tr>
         <tr class="open"><td class="cod">B2</td><td>Mão de obra</td><td class="cau">Expedição sem responsável definido no pico</td><td>Observar a expedição em três noites de pico</td><td class="res"><b>Não verificada</b></td><td>—</td></tr>
-        <tr><td class="cod">C1</td><td>Máquina</td><td class="cau">Forno único, com fila no horário de pico</td><td>Medir o tempo de espera antes do forno</td><td class="res"><b>Confirmada</b></td><td>Fila no forno em 27% dos atrasos. Fica para o próximo ciclo</td></tr>
+        <tr><td class="cod">C1</td><td>Máquina</td><td class="cau">Forno único, com fila no horário de pico</td><td>Medir o tempo de espera antes do forno</td><td class="res"><b>Confirmada</b></td><td>Espera média de 12 minutos antes do forno no pico, contra 3 fora dele. Fica para o próximo ciclo</td></tr>
         <tr class="cut"><td class="cod">C2</td><td>Máquina</td><td class="cau">Motos com manutenção atrasada</td><td>Conferir o registro de quebras do trimestre</td><td class="res"><b>Descartada</b></td><td>Nenhuma quebra em horário de pico</td></tr>
         <tr><td class="cod">D1</td><td>Material</td><td class="cau">Pedido chega com endereço sem complemento</td><td>Contar os atrasos com endereço incompleto</td><td class="res"><b>Confirmada</b><small>segue para o plano</small></td><td>Endereço incompleto em 15% dos atrasos</td></tr>
         <tr class="cut"><td class="cod">D2</td><td>Material</td><td class="cau">Bolsas térmicas insuficientes</td><td>Contar bolsas e entregadores no pico</td><td class="res"><b>Descartada</b></td><td>Há bolsas para todos os entregadores</td></tr>
-        <tr><td class="cod">E1</td><td>Medição</td><td class="cau">Tempo de entrega medido só pela média do dia</td><td>Refazer o indicador por faixa de horário</td><td class="res"><b>Confirmada</b><small>segue para o plano</small></td><td>No prazo: 96% fora do pico e 68% no pico</td></tr>
+        <tr><td class="cod">E1</td><td>Medição</td><td class="cau">Tempo de entrega medido só pela média do dia</td><td>Refazer o indicador por faixa de horário</td><td class="res"><b>Confirmada</b><small>segue para o plano</small><small>causa de não detecção</small></td><td>No prazo: 91% fora do pico e 68% no pico. A média do dia, de 82%, escondia o pico</td></tr>
         <tr class="open"><td class="cod">E2</td><td>Medição</td><td class="cau">Prazo prometido igual para todos os bairros</td><td>Comparar os atrasos por distância</td><td class="res"><b>Não verificada</b></td><td>—</td></tr>
         <tr class="cut"><td class="cod">F1</td><td>Meio ambiente</td><td class="cau">Obras na avenida principal</td><td>Comparar rotas com e sem passagem pela avenida</td><td class="res"><b>Descartada</b></td><td>Atraso igual nas rotas sem obra</td></tr>
         <tr class="open"><td class="cod">F2</td><td>Meio ambiente</td><td class="cau">Chuva nas noites de pico</td><td>Cruzar os atrasos com os dias de chuva</td><td class="res"><b>Não verificada</b></td><td>—</td></tr>
       </tbody>
     </table>
   </div>
-  <p><strong>O que observar.</strong> A fila do forno foi confirmada pelos dados, mas não seguiu para o plano: pesa menos que a espera por entregador e exige investimento. Ficou registrada para o ciclo seguinte. As obras na avenida eram a explicação preferida da equipe e foram descartadas: o atraso era o mesmo nas rotas que não passam por lá.</p>
+  <p><strong>O que observar.</strong> A fila do forno foi confirmada pelos dados, mas não seguiu para o plano: pesa menos que a espera por entregador e exige investimento. Ficou registrada para o ciclo seguinte. As obras na avenida eram a explicação preferida da equipe e foram descartadas: o atraso era o mesmo nas rotas que não passam por lá. A medição pela média do dia, E1, não atrasa nenhuma entrega: é a causa de o atraso do pico não ter sido visto antes, e seguiu para o plano com uma ação de controle.</p>
 
   <h3>Exemplo 2. Requisições de compra devolvidas</h3>
   <dl class="ficha">
+    <div><dt>Organização</dt><dd>Distribuidora de materiais elétricos · Compras</dd></div>
     <div><dt>Efeito</dt><dd>40% das requisições de compra são devolvidas ao requisitante</dd></div>
     <div><dt>Onde e quando</dt><dd>Todas as áreas requisitantes, no último trimestre</dd></div>
     <div><dt>Categorias</dt><dd>6M, com nomes adaptados ao processo administrativo</dd></div>
@@ -686,6 +688,7 @@ footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);font-si
 
   <h3>Exemplo 3. Não conformidade de auditoria interna</h3>
   <dl class="ficha">
+    <div><dt>Organização</dt><dd>Indústria de embalagens plásticas</dd></div>
     <div><dt>Efeito</dt><dd>3 de 25 instrumentos de medição em uso com a calibração vencida</dd></div>
     <div><dt>Onde e quando</dt><dd>Laboratório de recebimento, na auditoria interna</dd></div>
     <div><dt>Categorias</dt><dd>6M</dd></div>
@@ -775,7 +778,7 @@ footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);font-si
   <p>O diagrama pronto é uma lista organizada de hipóteses. Duas etapas o transformam em conhecimento sobre o processo: verificar cada hipótese escolhida e aprofundar as confirmadas até a causa raiz.</p>
 
   <h3>Verificar: o que os dados dizem</h3>
-  <p>Cada hipótese escolhida recebe um teste simples, definido antes de olhar os dados: o que se espera encontrar se a causa for verdadeira? No exemplo 1, a equipe classificou 200 entregas atrasadas pelo motivo do atraso.</p>
+  <p>Cada hipótese escolhida recebe um teste simples, definido antes de olhar os dados: o que se espera encontrar se a causa for verdadeira? No exemplo 1, a equipe já tinha a folha do Pareto, com 200 entregas atrasadas classificadas pelo motivo do atraso. A folha mostra onde o efeito aparece, mas não confirma nenhuma causa: cada hipótese teve o seu próprio teste, e a evidência registrada na tabela do exemplo é o resultado desse teste.</p>
 
   <figure id="fig-bars">
     <div class="scroll">
@@ -853,6 +856,11 @@ footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);font-si
     </table>
   </div>
   <p>Uma hipótese descartada é um resultado, e não um fracasso. Ela evita uma ação inútil e deve ficar registrada, com o motivo.</p>
+
+  <div class="note">
+    <h4>Causa de ocorrência e causa de não detecção</h4>
+    <p>A causa de ocorrência explica por que o efeito acontece. A causa de não detecção explica por que ele passou sem ser percebido. No exemplo 1, a escala igual em todos os dias faz a pizza esperar entregador; a medição pela média do dia (E1) não atrasa nenhuma entrega, mas escondeu o pico durante meses. As duas pedem ação, de tipos diferentes: a primeira muda o processo, e a segunda muda o controle. Marque na tabela qual é qual, para que a ação de controle não seja apresentada como a solução do efeito.</p>
+  </div>
 
   <h3>Aprofundar: os 5 porquês</h3>
   <p>Uma causa confirmada ainda pode ser um sintoma. Para chegar à causa raiz, pergunte por que ela acontece e repita a pergunta sobre cada resposta. O número cinco é uma referência: às vezes bastam três perguntas, às vezes são necessárias seis.</p>
@@ -1073,6 +1081,7 @@ footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);font-si
     <h4>Pontos de atenção</h4>
     <p>A norma não exige o Diagrama de Ishikawa nem qualquer outro método. A profundidade da análise deve ser proporcional ao efeito da não conformidade: um desvio simples pode ser resolvido com os 5 porquês.</p>
     <p>Este módulo usa a numeração da ISO 9001:2015 e resume os requisitos com palavras próprias. Confira sempre a edição vigente da norma antes de citar um requisito em relatório.</p>
+    <p>Os exemplos se passam de 2026 a 2028 e usam a numeração da ISO 9001:2015, que as organizações dos exemplos seguem até a transição. O estudo <a href="../ISO-9001-2026/treinamento-iso-9001-2026.html">ISO 9001:2026: o que muda</a> mostra as diferenças.</p>
   </div>
 </section>
 
@@ -1181,7 +1190,7 @@ footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);font-si
         <tr><td><strong>5 Porquês</strong></td><td>Cadeia de porquês de até seis causas, com a causa raiz e o teste de volta.</td><td>Puxa a causa pelo código e avisa quando a cadeia é curta ou a causa raiz não passa no teste.</td></tr>
         <tr><td><strong>Plano de ação</strong></td><td>Ação, responsável, prazo e status para cada causa que segue para o plano.</td><td>Lista sozinha as causas marcadas, calcula a situação e aponta causas sem ação.</td></tr>
         <tr><td><strong>Checklist</strong></td><td>Os mesmos 12 itens do módulo 9, com status Sim, Parcial ou Não.</td><td>Percentual atendido e situação da validação.</td></tr>
-        <tr><td><strong>Exemplo 1 e Exemplo 2</strong></td><td>As análises da pizzaria e de Suprimentos, preenchidas, com os porquês das causas principais.</td><td>Os mesmos resumos da aba Ishikawa.</td></tr>
+        <tr><td><strong>Exemplo 1 e Exemplo 2</strong></td><td>As análises da pizzaria e da distribuidora, preenchidas, com os porquês das causas principais.</td><td>Os mesmos resumos da aba Ishikawa.</td></tr>
       </tbody>
     </table>
   </div>

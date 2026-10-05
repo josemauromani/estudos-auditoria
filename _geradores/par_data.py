@@ -96,13 +96,15 @@ EX1 = {
 
 # ------------------------------------------------------------ exemplo 2: compras
 EX2 = {
-    "head": dict(org="Indústria de embalagens plásticas · Suprimentos", data=D(2026, 6, 19), por="Analista de compras",
+    "head": dict(org="Distribuidora de materiais elétricos · Compras", data=D(2026, 6, 19), por="Analista de compras",
                  conta="Requisições de compra devolvidas ao requisitante, pelo motivo da devolução.",
                  periodo="De dezembro de 2025 a maio de 2026. Dados do sistema de compras, conferidos uma a uma.",
                  como="Uma linha por requisição devolvida, com o motivo lido no campo de observação do comprador.",
                  origem="Ciclo PDCA do prazo de compra: etapa de observação do problema.",
                  base=250, base_nome="requisições", fator="Área requisitante"),
     "cols": ["Manutenção", "Produção", "Laboratório", "Logística", "Administrativo"],
+    # requisições emitidas por cada área no período: a base da taxa de devolução por área
+    "req": [80, 75, 35, 30, 30],
     "folha": [
         ("Especificação técnica em branco", "O campo de especificação veio vazio ou com “conforme amostra”.", [24, 7, 4, 2, 1]),
         ("Quantidade ou unidade em branco", "Faltou a quantidade, ou a unidade não permite comprar (peça, caixa, quilo).", [8, 6, 2, 2, 1]),
@@ -151,6 +153,8 @@ if __name__ == "__main__":
             print("  %d %-36s %4d %5.1f%% %5.1f%% %s" % (r["k"], r["nome"], r["v"], 100 * r["pct"], 100 * r["acc"], r["classe"]))
         print("  aviso:", aviso(linhas(ex)))
     assert sum(v for _, v in linhas(EX1)) == 200 and sum(v for _, v in linhas(EX2)) == 100
+    assert sum(EX2["req"]) == EX2["head"]["base"]
+    print("devoluções por 100 requisições, por área:", [(c, v, b, round(taxa(v, b), 1)) for (c, v), b in zip(colunas(EX2), EX2["req"])])
     assert [sum(l) for l in EX1["noite"]["linhas"]] == [13, 8, 2, 1, 1]
     d = EX1["depois"]
     print("depois:", sum(d["valores"]), "atrasos em", d["base"], "| %.1f por 100, contra %.1f" % (taxa(sum(d["valores"]), d["base"]), taxa(200, EX1["head"]["base"])))

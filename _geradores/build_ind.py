@@ -156,7 +156,7 @@ for k, text in enumerate([
     "Aba Medições: registre o resultado de cada período, da esquerda para a direita, sem pular colunas.",
     "Aba Painel: leia a situação, a tendência e a ação sugerida de cada indicador.",
     "Aba Painel: informe o número do indicador que deve aparecer no gráfico.",
-    "Aba Análise: registre a decisão de cada indicador fora da meta, com responsável e prazo.",
+    "Aba Análise: registre a decisão de cada indicador sem atingir a meta, com responsável e prazo.",
     "Aba Checklist: valide o conjunto de indicadores, pelo menos uma vez por ano.",
 ], 1):
     line(f"Passo {k}", text)
@@ -164,7 +164,7 @@ r += 1
 section("Abas da planilha")
 for k, text in [
     ("Fichas", "Definição de até 12 indicadores, com conferência dos campos."),
-    ("Medições", "Resultados de cada indicador, em até 12 períodos, e contagem dos períodos seguidos fora da meta."),
+    ("Medições", "Resultados de cada indicador, em até 12 períodos, e contagem dos períodos seguidos sem atingir a meta."),
     ("Painel", "Leitura de cada indicador, resumo e gráfico do indicador escolhido."),
     ("Análise", "Registro das decisões tomadas nas reuniões de indicadores."),
     ("Checklist", "Doze verificações de qualidade dos indicadores, com percentual de conclusão."),
@@ -282,12 +282,12 @@ for k in range(NI):
     calc(ws, f"Q{rr}", f"=COUNT({CA}{rr}:{CZ}{rr})", b=False)
     ws.row_dimensions[rr].height = 27
 dv_number(ws, f"{CA}{M1}:{CZ}{M2}")
-# células fora da meta ficam com fundo cinza
+# células sem atingir a meta ficam com fundo cinza
 ws.conditional_formatting.add(f"{CA}{M1}:{CZ}{M2}", FormulaRule(
     formula=[f'AND({CA}{M1}<>"",Fichas!$I{F1}<>"",Fichas!$H{F1}<>"",NOT(IF(Fichas!$H{F1}="{MAIOR}",{CA}{M1}>=Fichas!$I{F1},{CA}{M1}<=Fichas!$I{F1})))'],
     fill=PatternFill("solid", bgColor="D9DEE2", fgColor="D9DEE2")))
 H0 = M2 + 2
-band(ws, H0, "Períodos seguidos fora da meta", "Q")
+band(ws, H0, "Períodos seguidos sem atingir a meta", "Q")
 put(ws, f"B{H0+1}", "Contagem calculada a partir dos resultados e da meta de cada indicador. Volta a zero quando o resultado atende à meta.",
     f=font(9, i=True, c=MUTED), box=False, merge=f"B{H0+1}:Q{H0+1}")
 H1 = H0 + 2
@@ -331,7 +331,7 @@ label(ws, "I4", "Atualizado em", merge="I4:K4")
 calc(ws, "L4", '=IF(Fichas!K5="","",Fichas!K5)', h="left", b=False, fmt=DATE, merge="L4:O4")
 ws.row_dimensions[4].height = 21.75
 for col, text in zip("BCDEFGHIJKLMN", ["#", "Indicador", "Meta", "Limite de atenção", "Medições", "Último resultado", "Situação", "Média",
-                                       "Seguidos fora da meta", "Média dos 3 anteriores", "Média dos 3 últimos", "Tendência", "Ação sugerida"]):
+                                       "Seguidos sem atingir a meta", "Média dos 3 anteriores", "Média dos 3 últimos", "Tendência", "Ação sugerida"]):
     head(ws, f"{col}6", text)
 head(ws, "O6", "Sentido")
 ws.row_dimensions[6].height = 39
@@ -413,7 +413,7 @@ setup(ws, TEAL, f"B1:O{g+24}", fit_height=True)
 # ------------------------------------------------------------------ Análise
 ws = wb.create_sheet("Análise")
 widths(ws, {"A": 2, "B": 5, "C": 13, "D": 11, "E": 30, "F": 38, "G": 34, "H": 36, "I": 20, "J": 13, "K": 15, "L": 14, "M": 2})
-title(ws, "Registro das reuniões de análise", "Uma linha por decisão. Todo indicador fora da meta tem decisão registrada, com responsável e prazo.", "L")
+title(ws, "Registro das reuniões de análise", "Uma linha por decisão. Todo indicador sem atingir a meta tem decisão registrada, com responsável e prazo.", "L")
 for col, text in zip("BCDEFGHIJKL", ["#", "Data da reunião", "Indicador", "Nome do indicador", "O que os dados mostram", "Causa provável", "Decisão",
                                       "Responsável", "Prazo", "Status", "Situação"]):
     head(ws, f"{col}4", text)
@@ -543,7 +543,7 @@ def example(ws, data, grafico):
     band(ws, rr, "Medições", "R", color=AMBER)
     rr += 1
     per = rr
-    cab(rr, [("B", "Nº", None), ("C", "Indicador", None)] + [(c, m, None) for c, m in zip(MC, MESES)] + [("P", "Média", None), ("Q", "Seguidos fora", None),
+    cab(rr, [("B", "Nº", None), ("C", "Indicador", None)] + [(c, m, None) for c, m in zip(MC, MESES)] + [("P", "Média", None), ("Q", "Seguidos sem a meta", None),
                                                                                                            ("R", "", None)])
     m1 = rr + 1
     for k, i in enumerate(inds):
@@ -561,7 +561,7 @@ def example(ws, data, grafico):
         formula=[f'NOT(IF($Q{f1}="{MAIOR}",D{m1}>=$O{f1},D{m1}<=$O{f1}))'], fill=PatternFill("solid", bgColor="D9DEE2", fgColor="D9DEE2")))
     # ---- contagem dos períodos seguidos
     rr += 2
-    band(ws, rr, "Períodos seguidos fora da meta", "R", color=AMBER)
+    band(ws, rr, "Períodos seguidos sem atingir a meta", "R", color=AMBER)
     h1 = rr + 1
     for k, i in enumerate(inds):
         rr += 1

@@ -246,7 +246,7 @@ for k, text in [
     ("Plano de ação", "Ações para os problemas escolhidos, com situação calculada a partir do prazo e do status."),
     ("Checklist", "Doze verificações de qualidade da matriz, com percentual de conclusão."),
     ("Exemplo 1 - Pizzaria", "Matriz preenchida com oito problemas de uma operação, incluindo um alerta de gravidade máxima."),
-    ("Exemplo 2 - Compras", "Matriz preenchida com sete problemas de uma área, incluindo um empate."),
+    ("Exemplo 2 - Compras", "Matriz preenchida com sete problemas da área de compras de uma distribuidora, incluindo um empate."),
 ]:
     line(k, text)
 r += 1

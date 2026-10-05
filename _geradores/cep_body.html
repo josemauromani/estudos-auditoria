@@ -122,6 +122,10 @@
     <li><h4>Acompanhe</h4><p>Cada subgrupo novo entra no gráfico, contra os limites fixos, e é lido na hora com as regras do módulo 6.</p></li>
     <li><h4>Reaja e registre</h4><p>Sinal pede causa e ação, anotadas no próprio gráfico. Mudança de propósito no processo pede uma base nova.</p></li>
   </ol>
+  <div class="note">
+    <h4>O subgrupo racional</h4>
+    <p>O subgrupo é racional quando as medições dele só variam pelas causas comuns de curto prazo, e uma mudança no processo aparece entre um subgrupo e outro, e não dentro dele. Cinco pontos fixos na largura da bobina, como no exemplo 2, não são cinco repetições: as bordas e o centro podem ter espessuras diferentes por causa da matriz, e essa diferença fixa entra na amplitude, alarga os limites das médias e aumenta o σ estimado. Quando o perfil da largura importa, acompanhe cada posição no seu próprio gráfico, ou forme o subgrupo com medições da mesma posição, e escreva a escolha no plano de controle.</p>
+  </div>
 </section>
 
 <!-- ============================ MÓDULO 4 ============================ -->
@@ -173,7 +177,7 @@
       </tbody>
     </table>
   </div>
-  <p>As constantes 0,577, 2,114 e 2,326 são as de Shewhart para subgrupos de cinco, tabeladas nas normas e nos livros de estatística. Com outro tamanho de subgrupo, as constantes mudam. Os limites ficam a três desvios da média das médias: com o processo estável, quase nenhum ponto passa deles por acaso.</p>
+  <p>As constantes 0,577, 2,114 e 2,326 são as de Shewhart para subgrupos de cinco, tabeladas nas normas e nos livros de estatística. Com outro tamanho de subgrupo, as constantes mudam. Os limites ficam a três desvios-padrão das médias, de cada lado da linha central. A média de cinco medições varia menos que cada medição: o desvio-padrão das médias é σ ÷ √n, e 0,577 × R̄ é o mesmo que 3 × σ ÷ √5. Com o processo estável, quase nenhum ponto passa deles por acaso.</p>
   <div class="note">
     <h4>Os limites ficam fixos</h4>
     <p>Depois de calculados com a base, os limites não se movem a cada ponto novo. Recalcular com os pontos de acompanhamento esconde exatamente a mudança que o gráfico deveria mostrar. Só se refaz a base depois de uma mudança de propósito no processo, como uma máquina reformada ou um método novo.</p>
@@ -241,6 +245,14 @@
     <h4>Só calcule a capacidade com o processo em controle</h4>
     <p>Com causa especial na base, o desvio estimado mistura duas coisas, e o Cpk não prevê nada. Primeiro, trate os sinais; depois, calcule. E nunca desenhe os limites da especificação no gráfico das médias: eles valem para cada peça, e as médias variam menos que as peças. Um gráfico de médias dentro da especificação pode esconder peças fora, como no exemplo 3.</p>
   </div>
+  <div class="note">
+    <h4>O que o Cpk não garante</h4>
+    <p>O Cpk é uma conta sobre um modelo do processo, e vale o que valem as hipóteses dele. Quatro cuidados antes de confiar no número:</p>
+    <p><b>Normalidade.</b> A conta supõe uma distribuição parecida com o sino. Com o histograma assimétrico, cortado ou de dois picos, a parte fora da especificação pode ser bem maior do que o índice sugere.</p>
+    <p><b>Variação só de dentro do subgrupo.</b> O σ vem da amplitude média e só enxerga a variação de curto prazo. A variação entre subgrupos, de turno para turno ou de lote para lote, fica de fora, e o índice sai otimista. O desvio-padrão de todas as medições dá os índices de desempenho, Pp e Ppk, que mostram o longo prazo.</p>
+    <p><b>Sistema de medição.</b> A variação medida inclui a do instrumento e a de quem mede. Sem avaliar o sistema de medição, parte do que parece processo é medição.</p>
+    <p><b>Limites provisórios.</b> Com menos de 20 subgrupos na base, como no exemplo 2, o Cpk é uma estimativa com margem grande: trate-o como provisório e refaça a conta quando a base estiver completa.</p>
+  </div>
 </section>
 
 <!-- ============================ MÓDULO 8 ============================ -->
@@ -271,7 +283,7 @@
     </div>
     <figcaption><b>Figura 9.</b> Histogramas da espessura na base e no acompanhamento. A largura dobra, e o centro desce.</figcaption>
   </figure>
-  <p><strong>O que observar.</strong> Com a máquina sã, a extrusora 3 é muito capaz: Cp {{CP2}} e Cpk {{CPK2}} na base, com a espessura entre {{LIC2}} e {{LSC2}} µm em média. A base tem só 13 subgrupos, menos que os 20 recomendados: os limites são provisórios. No acompanhamento, a média começa a cair, e a amplitude a crescer, e o primeiro sinal aparece em {{PRIM}}: média abaixo do limite inferior. Seguem mais sinais em todas as bobinas até 16/07. Era a rosca se desgastando. A extrusora parou em 18/07 com 6 bobinas fora (RNC 2027-30), no estudo de <a href="../Recursos/treinamento-recursos.html">Recursos</a>. O gráfico tinha avisado cinco dias antes, mas foi lido só na reunião semanal. A lição não é sobre estatística: o gráfico precisa ser lido no turno, por quem pode parar a máquina.</p>
+  <p><strong>O que observar.</strong> Com a máquina sã, a extrusora 3 é muito capaz: Cp {{CP2}} e Cpk {{CPK2}} na base, com a espessura entre {{LIC2}} e {{LSC2}} µm em média. A base tem só 13 subgrupos, menos que os 20 recomendados: os limites são provisórios. No acompanhamento, a média começa a cair, e a amplitude a crescer, e o primeiro sinal aparece em {{PRIM}}: média abaixo do limite inferior. Seguem mais sinais em todas as bobinas até 16/07. Era a rosca se desgastando. A extrusora parou em 18/07 com 6 bobinas fora (registro de produto não conforme 2027-30), no estudo de <a href="../Recursos/treinamento-recursos.html">Recursos</a>. O gráfico tinha avisado cinco dias antes, mas foi lido só na reunião semanal. A lição não é sobre estatística: o gráfico precisa ser lido no turno, por quem pode parar a máquina.</p>
 
   <h3>Exemplo 3. A média que aprovava bolas fora</h3>
   <figure>
@@ -314,7 +326,7 @@
       </tbody>
     </table>
   </div>
-  <p>Na indústria, a base fica em torno de {{LC2}} µm, perto do alvo de 40. A bobina de 06/07, com a resistência queimada, sobe e é excluída. Depois de 11/07, os pontos descem: em {{PRIM}}, o primeiro passa do limite inferior, e {{NSIN2}} bobinas do acompanhamento têm sinal. A especificação, de 38 µm, ainda não tinha sido atingida pela média, mas dois pontos de uma bobina já estavam abaixo dela.</p>
+  <p>Na indústria, a base fica em torno de {{LC2}} µm, perto do alvo de 40. A bobina de 06/07, com a resistência queimada, sobe e é excluída. Depois de 11/07, os pontos descem: em {{PRIM}}, o primeiro passa do limite inferior, e {{NSIN2}} bobinas do acompanhamento têm sinal. A bobina 22, de 14/07, tem média de 39,60 µm, e o limite inferior é {{LIC2}}: com duas casas, ela parece estar sobre a linha, mas fica abaixo dela, e o sinal vale. A bobina 20, de 13/07, tem também a amplitude acima do limite, 2,0 µm contra {{LSCR2}}, com um ponto de 38,0 e outro de 40,0 µm no mesmo subgrupo. A bobina excluída, de 06/07, também passa do limite da amplitude, e continua fora da base pelo motivo anotado. A especificação, de 38 µm, ainda não tinha sido atingida pela média, mas dois pontos de uma bobina já estavam abaixo dela.</p>
 </section>
 
 <!-- ============================ MÓDULO 10 ============================ -->
@@ -390,6 +402,11 @@
     </div>
   </div>
   <p>Na edição de 2026 da ISO 9001, o monitoramento e a análise continuam como em 2015, como mostra o estudo da <a href="../ISO-9001-2026/treinamento-iso-9001-2026.html">ISO 9001:2026</a>.</p>
+
+  <div class="note">
+    <h4>Pontos de atenção</h4>
+    <p>Os exemplos se passam de 2026 a 2028 e usam a numeração da ISO 9001:2015, que as organizações dos exemplos seguem até a transição. O estudo <a href="../ISO-9001-2026/treinamento-iso-9001-2026.html">ISO 9001:2026: o que muda</a> mostra as diferenças.</p>
+  </div>
 </section>
 
 <!-- ============================ MÓDULO 13 ============================ -->
@@ -498,7 +515,7 @@
     <div><dt>Cp e Cpk</dt><dd>Índices de capacidade: a tolerância dividida pela variação, sem e com o centro.</dd></div>
     <div><dt>Desvio-padrão (σ)</dt><dd>A medida da variação típica em torno da média. No gráfico X̄-R, estimado pela amplitude média.</dd></div>
     <div><dt>Especificação</dt><dd>Os limites que o cliente ou o projeto aceita: LIE e LSE.</dd></div>
-    <div><dt>Limites de controle</dt><dd>LSC e LIC: a três desvios da linha central, calculados dos dados.</dd></div>
+    <div><dt>Limites de controle</dt><dd>LSC e LIC: a três desvios-padrão das médias (σ ÷ √n) da linha central, calculados dos dados.</dd></div>
     <div><dt>Subgrupo</dt><dd>Um conjunto de medições feitas juntas, nas mesmas condições.</dd></div>
   </dl>
 </section>

@@ -496,8 +496,8 @@ footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);font-si
       <tbody>
         <tr><th class="p" rowspan="4" scope="rowgroup">P<small>Planejar</small></th><td class="p st"><b>1</b>Identificar o problema</td><td class="p">18% das entregas chegam depois de 40 minutos. Meta: passar de 82% para 95% de entregas no prazo.</td><td class="p ev">Relatório do aplicativo de delivery</td></tr>
         <tr><td class="p st"><b>2</b>Observar</td><td class="p">Os atrasos se concentram nas sextas e sábados, das 19h às 22h. Em 46% deles, a pizza pronta ficou esperando entregador.</td><td class="p ev">Estratificação por dia e horário; gráfico de Pareto</td></tr>
-        <tr><td class="p st"><b>3</b>Analisar as causas</td><td class="p">A escala de entregadores é igual em todos os dias, os pedidos saem sem agrupamento por bairro e o formulário aceita endereço sem complemento.</td><td class="p ev">Diagrama de Ishikawa; 5 porquês</td></tr>
-        <tr><td class="p st"><b>4</b>Planejar a ação</td><td class="p">Três ações: reforçar a escala no pico, agrupar pedidos por bairro na expedição e tornar o complemento do endereço obrigatório.</td><td class="p ev">Plano de ação 5W2H</td></tr>
+        <tr><td class="p st"><b>3</b>Analisar as causas</td><td class="p">Das doze hipóteses levantadas, cinco foram confirmadas. Seguem para o plano a escala de entregadores igual em todos os dias, os pedidos sem agrupamento por bairro, o endereço sem complemento e a medição só pela média do dia. A fila do forno fica para o ciclo seguinte.</td><td class="p ev">Diagrama de Ishikawa; 5 porquês</td></tr>
+        <tr><td class="p st"><b>4</b>Planejar a ação</td><td class="p">Seis ações: reforçar a escala no pico, tornar o complemento do endereço obrigatório, treinar a expedição, agrupar os pedidos por bairro, medir o tempo de entrega por faixa de horário e atualizar a instrução de trabalho.</td><td class="p ev">Plano de ação 5W2H</td></tr>
         <tr><th class="d" scope="row">D<small>Executar</small></th><td class="d st"><b>5</b>Executar</td><td class="d">Ações implantadas nas semanas 7 e 8, com treinamento da expedição. Desvio registrado: o agrupamento por bairro só começou na semana 8.</td><td class="d ev">Plano de ação com datas reais; lista de presença</td></tr>
         <tr><th class="c" scope="row">C<small>Verificar</small></th><td class="c st"><b>6</b>Verificar</td><td class="c">Média de 95,5% nas semanas 9 a 12. Meta atingida. Efeito colateral: o custo com entregadores subiu R$ 600 por mês.</td><td class="c ev">Gráfico de tendência, antes e depois</td></tr>
         <tr><th class="a" rowspan="2" scope="rowgroup">A<small>Agir</small></th><td class="a st"><b>7</b>Padronizar</td><td class="a">A nova escala virou padrão, a instrução de trabalho da expedição foi atualizada e o campo obrigatório foi mantido.</td><td class="a ev">Instrução de trabalho revisada; registro de treinamento</td></tr>
@@ -509,6 +509,7 @@ footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);font-si
 
   <h3>Exemplo 2. Reduzir o prazo de compra</h3>
   <dl class="ficha">
+    <div><dt>Organização</dt><dd>Distribuidora de materiais elétricos · Compras</dd></div>
     <div><dt>Dono do problema</dt><dd>Gerente de Suprimentos</dd></div>
     <div><dt>Indicador</dt><dd>Dias úteis entre a requisição aprovada e o pedido emitido</dd></div>
     <div><dt>Situação inicial</dt><dd>12 dias úteis, na média do trimestre</dd></div>
@@ -533,10 +534,11 @@ footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);font-si
 
   <h3>Exemplo 3. Tratar uma não conformidade de auditoria interna</h3>
   <dl class="ficha">
+    <div><dt>Organização</dt><dd>Indústria de embalagens plásticas</dd></div>
     <div><dt>Dono do problema</dt><dd>Coordenador da Qualidade</dd></div>
     <div><dt>Indicador</dt><dd>Instrumentos de medição com calibração vencida</dd></div>
     <div><dt>Situação inicial</dt><dd>3 de 25 instrumentos vencidos</dd></div>
-    <div><dt>Meta</dt><dd>Nenhum instrumento vencido, em 60 dias</dd></div>
+    <div><dt>Meta</dt><dd>Nenhum instrumento vencido, por 90 dias seguidos</dd></div>
   </dl>
   <div class="tbl">
     <table class="pdca">
@@ -569,7 +571,7 @@ footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);font-si
       <tbody>
         <tr><td>Melhorar as entregas</td><td>Valor e prazo</td><td>Aumentar de 82% para 95% as entregas em até 40 minutos, até 30 de novembro</td></tr>
         <tr><td>Reduzir o prazo de compra em 40%</td><td>Prazo e ponto de partida</td><td>Reduzir de 12 para 7 dias úteis o prazo entre requisição e pedido, em 3 meses</td></tr>
-        <tr><td>Implantar o controle de instrumentos até março</td><td>É uma ação, e não um resultado</td><td>Zerar os instrumentos com calibração vencida, em 60 dias</td></tr>
+        <tr><td>Implantar o controle de instrumentos até março</td><td>É uma ação, e não um resultado</td><td>Zerar os instrumentos com calibração vencida e mantê-los assim por 90 dias seguidos</td></tr>
       </tbody>
     </table>
   </div>
@@ -706,56 +708,73 @@ footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);font-si
 
   <figure>
     <div class="scroll">
-      <svg viewBox="0 0 900 330" role="img" aria-label="Diagrama de Ishikawa do exemplo da pizzaria. O efeito é entregas fora do prazo. As causas estão em quatro categorias: método, pessoas, equipamento e informação. Três causas foram confirmadas com dados: pedidos não agrupados por bairro, escala que não acompanha o pico e endereço sem complemento.">
+      <svg viewBox="0 0 900 440" role="img" aria-label="Diagrama de Ishikawa do exemplo da pizzaria. O efeito é 18% das entregas chegam depois de 40 minutos. Doze hipóteses nas seis categorias dos 6M. Método: pedidos não agrupados por bairro (confirmada, segue para o plano); rota escolhida pelo entregador (descartada). Mão de obra: escala igual em todos os dias (confirmada, segue para o plano); expedição sem responsável no pico (não verificada). Máquina: forno único, com fila no pico (confirmada, fica para o ciclo seguinte); motos com manutenção atrasada (descartada). Material: endereço sem complemento (confirmada, segue para o plano); bolsas térmicas insuficientes (descartada). Medição: tempo medido pela média do dia (confirmada, segue para o plano); prazo igual para todos os bairros (não verificada). Meio ambiente: obras na avenida principal (descartada); chuva nas noites de pico (não verificada).">
         <defs>
           <marker id="a5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker>
         </defs>
         <!-- espinha e efeito -->
-        <line class="ln" x1="30" y1="165" x2="696" y2="165" marker-end="url(#a5)" stroke-width="2"/>
-        <rect class="bx-ink" x="702" y="128" width="182" height="74"/>
-        <text class="mono t-ground" x="793" y="150" font-size="10" text-anchor="middle">EFEITO</text>
-        <text class="b t-ground" x="793" y="172" font-size="13" text-anchor="middle">Entregas fora</text>
-        <text class="b t-ground" x="793" y="189" font-size="13" text-anchor="middle">do prazo</text>
-
-        <!-- ossos -->
-        <line class="ln" x1="250" y1="50" x2="320" y2="165"/>
-        <line class="ln" x1="560" y1="50" x2="630" y2="165"/>
-        <line class="ln" x1="250" y1="280" x2="320" y2="165"/>
-        <line class="ln" x1="560" y1="280" x2="630" y2="165"/>
-        <g font-size="12.5" text-anchor="middle">
-          <rect class="bx" x="195" y="24" width="110" height="26"/><text class="b" x="250" y="41.5">Método</text>
-          <rect class="bx" x="505" y="24" width="110" height="26"/><text class="b" x="560" y="41.5">Pessoas</text>
-          <rect class="bx" x="195" y="280" width="110" height="26"/><text class="b" x="250" y="297.5">Equipamento</text>
-          <rect class="bx" x="505" y="280" width="110" height="26"/><text class="b" x="560" y="297.5">Informação</text>
-        </g>
-
-        <!-- causas -->
-        <g class="ln-mu" stroke-width="1">
-          <line x1="273.1" y1="88" x2="58" y2="88"/><line x1="296.3" y1="126" x2="81" y2="126"/>
-          <line x1="583.1" y1="88" x2="368" y2="88"/><line x1="606.3" y1="126" x2="391" y2="126"/>
-          <line x1="296.3" y1="204" x2="81" y2="204"/><line x1="273.1" y1="242" x2="58" y2="242"/>
-          <line x1="606.3" y1="204" x2="391" y2="204"/><line x1="583.1" y1="242" x2="368" y2="242"/>
-        </g>
-        <g font-size="11.5" text-anchor="end">
-          <text class="b" x="262" y="82">Pedidos não agrupados por bairro</text>
-          <text x="285" y="120">Rota escolhida por cada entregador</text>
-          <text class="b" x="572" y="82">Escala não acompanha o pico</text>
-          <text x="595" y="120">Expedição sem responsável definido</text>
-          <text x="285" y="198">Forno único, com fila no pico</text>
-          <text x="262" y="236">Bolsas térmicas insuficientes</text>
-          <text class="b" x="595" y="198">Endereço sem complemento</text>
-          <text x="572" y="236">Mesmo prazo prometido a todos os bairros</text>
-        </g>
-        <circle class="root" cx="273.1" cy="88" r="5"/>
-        <circle class="root" cx="583.1" cy="88" r="5"/>
-        <circle class="root" cx="606.3" cy="204" r="5"/>
-
+        <line class="ln" x1="14" y1="210" x2="696" y2="210" marker-end="url(#a5)" stroke-width="2"/>
+        <rect class="bx-ink" x="702" y="166" width="188" height="88"/>
+        <text class="mono t-ground" x="796" y="186" font-size="10" text-anchor="middle">EFEITO</text>
+        <text class="b t-ground" x="796" y="206" font-size="12.5" text-anchor="middle">18% das entregas</text>
+        <text class="b t-ground" x="796" y="222" font-size="12.5" text-anchor="middle">chegam depois</text>
+        <text class="b t-ground" x="796" y="238" font-size="12.5" text-anchor="middle">de 40 minutos</text>
+        <!-- categorias e hipóteses -->
+        <line class="ln" x1="183" y1="52" x2="258" y2="210"/>
+        <rect class="bx" x="117" y="26" width="132" height="26"/>
+        <text class="b" x="183" y="43.5" font-size="12.5" text-anchor="middle">Método</text>
+        <line class="ln-mu" stroke-width="1" x1="202.0" y1="92" x2="6.0" y2="92"/>
+        <text class="b" x="193.0" y="87" font-size="11" text-anchor="end">Pedidos não agrupados por bairro</text>
+        <circle class="root" cx="202.0" cy="92" r="5"/>
+        <line class="ln-mu" stroke-width="1" x1="220.0" y1="130" x2="24.0" y2="130"/>
+        <text class="mu" text-decoration="line-through" x="211.0" y="125" font-size="11" text-anchor="end">Rota escolhida pelo entregador</text>
+        <line class="ln" x1="397" y1="52" x2="472" y2="210"/>
+        <rect class="bx" x="331" y="26" width="132" height="26"/>
+        <text class="b" x="397" y="43.5" font-size="12.5" text-anchor="middle">Mão de obra</text>
+        <line class="ln-mu" stroke-width="1" x1="416.0" y1="92" x2="220.0" y2="92"/>
+        <text class="b" x="407.0" y="87" font-size="11" text-anchor="end">Escala igual em todos os dias</text>
+        <circle class="root" cx="416.0" cy="92" r="5"/>
+        <line class="ln-mu" stroke-width="1" x1="434.0" y1="130" x2="238.0" y2="130"/>
+        <text class="mu" font-style="italic" x="425.0" y="125" font-size="11" text-anchor="end">Expedição sem responsável no pico</text>
+        <line class="ln" x1="611" y1="52" x2="686" y2="210"/>
+        <rect class="bx" x="545" y="26" width="132" height="26"/>
+        <text class="b" x="611" y="43.5" font-size="12.5" text-anchor="middle">Máquina</text>
+        <line class="ln-mu" stroke-width="1" x1="630.0" y1="92" x2="434.0" y2="92"/>
+        <text x="621.0" y="87" font-size="11" text-anchor="end">Forno único, com fila no pico</text>
+        <circle class="ln" cx="630.0" cy="92" r="4"/>
+        <line class="ln-mu" stroke-width="1" x1="648.0" y1="130" x2="452.0" y2="130"/>
+        <text class="mu" text-decoration="line-through" x="639.0" y="125" font-size="11" text-anchor="end">Motos com manutenção atrasada</text>
+        <line class="ln" x1="183" y1="368" x2="258" y2="210"/>
+        <rect class="bx" x="117" y="368" width="132" height="26"/>
+        <text class="b" x="183" y="385.5" font-size="12.5" text-anchor="middle">Material</text>
+        <line class="ln-mu" stroke-width="1" x1="202.0" y1="328" x2="6.0" y2="328"/>
+        <text class="b" x="193.0" y="323" font-size="11" text-anchor="end">Endereço sem complemento</text>
+        <circle class="root" cx="202.0" cy="328" r="5"/>
+        <line class="ln-mu" stroke-width="1" x1="220.0" y1="290" x2="24.0" y2="290"/>
+        <text class="mu" text-decoration="line-through" x="211.0" y="285" font-size="11" text-anchor="end">Bolsas térmicas insuficientes</text>
+        <line class="ln" x1="397" y1="368" x2="472" y2="210"/>
+        <rect class="bx" x="331" y="368" width="132" height="26"/>
+        <text class="b" x="397" y="385.5" font-size="12.5" text-anchor="middle">Medição</text>
+        <line class="ln-mu" stroke-width="1" x1="416.0" y1="328" x2="220.0" y2="328"/>
+        <text class="b" x="407.0" y="323" font-size="11" text-anchor="end">Tempo medido pela média do dia</text>
+        <circle class="root" cx="416.0" cy="328" r="5"/>
+        <line class="ln-mu" stroke-width="1" x1="434.0" y1="290" x2="238.0" y2="290"/>
+        <text class="mu" font-style="italic" x="425.0" y="285" font-size="11" text-anchor="end">Prazo igual para todos os bairros</text>
+        <line class="ln" x1="611" y1="368" x2="686" y2="210"/>
+        <rect class="bx" x="545" y="368" width="132" height="26"/>
+        <text class="b" x="611" y="385.5" font-size="12.5" text-anchor="middle">Meio ambiente</text>
+        <line class="ln-mu" stroke-width="1" x1="630.0" y1="328" x2="434.0" y2="328"/>
+        <text class="mu" text-decoration="line-through" x="621.0" y="323" font-size="11" text-anchor="end">Obras na avenida principal</text>
+        <line class="ln-mu" stroke-width="1" x1="648.0" y1="290" x2="452.0" y2="290"/>
+        <text class="mu" font-style="italic" x="639.0" y="285" font-size="11" text-anchor="end">Chuva nas noites de pico</text>
         <!-- legenda -->
-        <circle class="root" cx="36" cy="318" r="5"/>
-        <text x="48" y="322" font-size="11.5"><tspan class="b">em negrito:</tspan> causa confirmada com dados, que segue para o plano de ação</text>
+        <circle class="root" cx="22" cy="420" r="5"/><text class="b" x="34" y="424" font-size="11">confirmada, segue para o plano</text>
+        <circle class="ln" cx="252" cy="420" r="4"/><text x="264" y="424" font-size="11">confirmada, fica para depois</text>
+        <text class="mu" text-decoration="line-through" x="468" y="424" font-size="11">descartada pelos dados</text>
+        <text class="mu" font-style="italic" x="650" y="424" font-size="11">não verificada</text>
       </svg>
     </div>
-    <figcaption><b>Figura 5.</b> Diagrama de Ishikawa do exemplo 1. Das oito hipóteses levantadas, três foram confirmadas pelos dados da observação. A fila do forno é real, mas pesa menos e ficou para o ciclo seguinte.</figcaption>
+    <figcaption><b>Figura 5.</b> Diagrama de Ishikawa do exemplo 1, o mesmo do estudo de Ishikawa. Das doze hipóteses levantadas, cinco foram confirmadas, e quatro seguiram para o plano de ação. A fila do forno é real, mas pesa menos e ficou para o ciclo seguinte.</figcaption>
   </figure>
 
   <h3>PDCA e seus parentes</h3>
@@ -904,6 +923,7 @@ footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);font-si
     <h4>A auditoria também gira</h4>
     <p>A própria auditoria interna é uma atividade da fase <em>Verificar</em> do sistema de gestão. E o programa de auditoria, conforme a ISO 19011:2018, segue o mesmo ciclo: estabelecer o programa, implementá-lo, monitorá-lo, analisá-lo criticamente e melhorá-lo.</p>
     <p>Este módulo usa a numeração da ISO 9001:2015. Confira sempre a edição vigente da norma antes de citar um requisito em relatório.</p>
+    <p>Os exemplos se passam de 2026 a 2028 e usam a numeração da ISO 9001:2015, que as organizações dos exemplos seguem até a transição. O estudo <a href="../ISO-9001-2026/treinamento-iso-9001-2026.html">ISO 9001:2026: o que muda</a> mostra as diferenças.</p>
   </div>
 </section>
 
@@ -1014,7 +1034,7 @@ footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);font-si
         <tr><td><strong>Verificação</strong></td><td>Medições do indicador antes, durante e depois das ações, com gráfico.</td><td>Puxa indicador e meta da aba PDCA. Calcula as médias, a variação e se a meta foi atingida.</td></tr>
         <tr><td><strong>Checklist</strong></td><td>Os mesmos 12 itens do módulo 9, com status Sim, Parcial ou Não.</td><td>Percentual atendido e situação da validação.</td></tr>
         <tr><td><strong>Padronização</strong></td><td>Padrões, treinamentos, pendências e lições aprendidas.</td><td>Contagem por status e padrões ou treinamentos ainda em aberto.</td></tr>
-        <tr><td><strong>Exemplo 1 e Exemplo 2</strong></td><td>Os ciclos da pizzaria e de compras, preenchidos, com as medições e o gráfico.</td><td>Os mesmos resumos das abas PDCA e Verificação.</td></tr>
+        <tr><td><strong>Exemplo 1 e Exemplo 2</strong></td><td>Os ciclos da pizzaria e da distribuidora, preenchidos, com as medições e o gráfico.</td><td>Os mesmos resumos das abas PDCA e Verificação.</td></tr>
       </tbody>
     </table>
   </div>

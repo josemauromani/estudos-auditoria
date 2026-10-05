@@ -411,9 +411,9 @@ EX1 = {
          "Relatório do aplicativo de delivery", "Gerente da loja", date(2026, 6, 26), "Concluída"),
         ("Os atrasos se concentram nas sextas e sábados, das 19h às 22h. Em 46% deles, a pizza pronta ficou esperando entregador.",
          "Estratificação por dia e horário; gráfico de Pareto", "Líder da expedição", date(2026, 7, 10), "Concluída"),
-        ("Causas confirmadas: a escala de entregadores é igual em todos os dias; os pedidos saem sem agrupamento por bairro; o formulário aceita endereço sem complemento.",
+        ("Das doze hipóteses, cinco confirmadas. Seguem para o plano: a escala de entregadores igual em todos os dias; os pedidos sem agrupamento por bairro; o endereço sem complemento; a medição só pela média do dia. A fila do forno fica para o ciclo seguinte.",
          "Diagrama de Ishikawa; 5 porquês", "Equipe da loja", date(2026, 7, 17), "Concluída"),
-        ("Três ações: reforçar a escala no pico, agrupar pedidos por bairro na expedição e tornar o complemento do endereço obrigatório.",
+        ("Seis ações: reforçar a escala no pico, tornar o complemento do endereço obrigatório, treinar a expedição, agrupar os pedidos por bairro, medir o tempo de entrega por faixa de horário e atualizar a instrução de trabalho.",
          "Plano de ação 5W2H", "Gerente da loja", date(2026, 7, 24), "Concluída"),
         ("Ações implantadas nas semanas 7 e 8, com treinamento da expedição. Desvio: o agrupamento por bairro só começou na semana 8.",
          "Plano de ação com datas reais; lista de presença", "Líder da expedição", date(2026, 8, 7), "Concluída"),
@@ -433,7 +433,7 @@ EX1 = {
 
 EX2 = {
     "eixo": (0, 14),
-    "head": dict(tema="Reduzir o prazo de compra", dono="Gerente de Suprimentos", area="Suprimentos",
+    "head": dict(tema="Reduzir o prazo de compra", dono="Gerente de Suprimentos", area="Distribuidora de materiais elétricos · Compras",
                  inicio=date(2026, 6, 1), autor="Equipe de compras", versao="1.0",
                  problema="O pedido de compra leva, em média, 12 dias úteis para ser emitido depois da requisição aprovada. As áreas recebem os itens depois da data de necessidade.",
                  indicador="Dias úteis entre a requisição aprovada e o pedido emitido", unidade="dias úteis", atual=12, meta=7,
@@ -449,7 +449,7 @@ EX2 = {
         ("Novo formulário com campos obrigatórios e catálogo de itens. Uma cotação só para compras de até R$ 2.000, com aprovação da Diretoria.",
          "Plano de ação 5W2H; política de compras revisada", "Gerente de Suprimentos", date(2026, 7, 3), "Concluída"),
         ("Piloto de 4 semanas em duas áreas requisitantes, com treinamento dos requisitantes e dos compradores.",
-         "Registro do piloto", "Analista de compras", date(2026, 7, 31), "Concluída"),
+         "Registro do piloto", "Analista de compras", date(2026, 8, 7), "Concluída"),
         ("O prazo caiu para 8 dias úteis. Meta não atingida. As devoluções caíram de 40% para 12%. O tempo restante está na revisão de contratos.",
          "Comparação antes e depois; novo Pareto", "Gerente de Suprimentos", date(2026, 8, 28), "Concluída"),
         ("O formulário e a nova alçada foram estendidos a todas as áreas, porque funcionaram. O procedimento de compras foi revisado.",
@@ -528,7 +528,7 @@ for k, text in [
     ("Checklist", "Doze verificações de qualidade do ciclo, com percentual de conclusão."),
     ("Padronização", "Registro de padrões, treinamentos, pendências e lições aprendidas."),
     ("Exemplo 1 - Pizzaria", "Ciclo preenchido em que a meta foi atingida: reduzir os atrasos nas entregas."),
-    ("Exemplo 2 - Compras", "Ciclo preenchido em que a meta não foi atingida: reduzir o prazo de compra."),
+    ("Exemplo 2 - Compras", "Ciclo preenchido em que a meta não foi atingida: reduzir o prazo de compra de uma distribuidora."),
 ]:
     line(k, text)
 r += 1

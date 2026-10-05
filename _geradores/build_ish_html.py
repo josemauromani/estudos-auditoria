@@ -134,7 +134,8 @@ def tabela(ex):
          '<th style="width:21%">Como foi verificada</th><th style="width:13%">Resultado</th><th>Evidência</th></tr></thead>', '      <tbody>']
     for c in ex["causas"]:
         st = estado(c)
-        res = f"<b>{c['res']}</b>" + ("<small>segue para o plano</small>" if st == "go" else "")
+        res = (f"<b>{c['res']}</b>" + ("<small>segue para o plano</small>" if st == "go" else "")
+               + ("<small>causa de não detecção</small>" if c["k"] in ex.get("nao_deteccao", []) else ""))
         row = f' class="{st}"' if st in ("cut", "open") else ""
         o.append(f'        <tr{row}><td class="cod">{c["k"]}</td><td>{escape(c["cat"])}</td><td class="cau">{escape(c["causa"])}</td>'
                  f'<td>{escape(c["como"])}</td><td class="res">{res}</td><td>{escape(c["evid"] or "—")}</td></tr>')

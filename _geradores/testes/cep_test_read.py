@@ -2,7 +2,7 @@
 import openpyxl, sys, os
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 import cep_data as R
-from cep_data import (ACOMP, BASE, EX1, EX2, EXCL, LIMITE, NAOCAPAZ, SINAIS, amp, capacidade, classes, conf, fase, fora_espec, histograma, limites, media, sinal)
+from cep_data import (ACOMP, BASE, EX1, EX2, EXCL, LIMITE, NAOCAPAZ, SINAIS, amp, capacidade, classes, conf, conta_sinais, fase, fora_espec, histograma, limites, media, sinal)
 PASTA = sys.argv[1]
 
 # os casos de borda vêm do roteiro de preenchimento, sem regravar as cópias
@@ -77,7 +77,7 @@ for nome, ex in (('t1', EX1), ('t2', EX2), ('t3', _ns['EX3']), ('t4', _ns['EX4']
     situ = '' if cap is None else ('Base com sinal: trate antes' if cap['base_sinal'] else cap['status'])
     espp = {'Subgrupos completos': sum(1 for g in subs if media(g['v']) is not None), 'Na base': fases.count(BASE), 'Excluídos': fases.count(EXCL),
             'Em acompanhamento': fases.count(ACOMP), 'Linhas a completar': sum(1 for g in subs if conf(g) not in ('', 'OK')),
-            **{s: sg.count(s) for s in SINAIS}, 'Sinais na base': sum(1 for f, s in zip(fases, sg) if f == BASE and s),
+            **conta_sinais(sg), 'Sinais na base': sum(1 for f, s in zip(fases, sg) if f == BASE and s),
             'Sinais no acompanhamento': sum(1 for f, s in zip(fases, sg) if f == ACOMP and s), 'Primeiro sinal no acompanhamento': prim,
             'Medições': h['n'], 'Medições fora da especificação': h['fora'], 'Cp': rnd(cap['cp']) if cap else '', 'Cpk': rnd(cap['cpk']) if cap else '', 'Situação da capacidade': situ}
     pa = {k: rnd(v(Pa[f'C{r}'])) for k, r in PAINEL.items()}

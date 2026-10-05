@@ -6,7 +6,7 @@ n = 5. As três regras de sinal (ponto fora dos limites, sete pontos do mesmo la
 classificação da capacidade e as classes do histograma são uma convenção deste material, próxima das usuais. Os exemplos
 continuam os dos outros estudos: o peso da bola de massa da pizzaria (critério de 380 a 420 g no plano de controle), de
 22/03 a 15/04/2027, depois do registro de produto não conforme 2027-17; e a espessura do filme da extrusora 3 da
-indústria (38 a 42 µm), de 04 a 16/07/2027, os dias antes da parada de 18/07 pela rosca desgastada (RNC 2027-30).
+indústria (38 a 42 µm), de 04 a 16/07/2027, os dias antes da parada de 18/07 pela rosca desgastada (registro de produto não conforme 2027-30).
 """
 from datetime import date, timedelta
 from statistics import mean
@@ -19,6 +19,7 @@ BASE, EXCL, ACOMP = "Base", "Excluído", "Acompanhamento"
 S_FORA, S_AMP, S_LADO, S_TEND = "Média fora dos limites", "Amplitude fora do limite", "7 do mesmo lado", "6 subindo ou descendo"
 SINAIS = [S_FORA, S_AMP, S_LADO, S_TEND]
 LADO, TEND = 7, 6
+SEP = "; "  # separa os sinais de um mesmo subgrupo na coluna Sinal
 CAPAZ, LIMITE, NAOCAPAZ = "Capaz", "No limite", "Não capaz"
 CPK_BOM, CPK_MIN = 1.33, 1.0
 NCLASSES = 12
@@ -26,7 +27,7 @@ NCLASSES = 12
 # as partes do gráfico de controle, para a figura e o glossário
 PARTES = [
     ("Linha central", "A média das médias dos subgrupos da base. É onde o processo costuma ficar."),
-    ("Limites de controle", "A média mais e menos três desvios das médias. Vêm dos dados, não do cliente."),
+    ("Limites de controle", "A linha central mais e menos três desvios-padrão das médias, σ ÷ √n. Vêm dos dados, não do cliente."),
     ("Subgrupo", "Cinco medições feitas juntas, nas mesmas condições: as cinco bolas de um lote, os cinco pontos de uma bobina."),
     ("Amplitude", "A maior menos a menor medição do subgrupo. Mostra a variação de dentro do subgrupo."),
 ]
@@ -99,25 +100,36 @@ def limites(ex):
     return dict(lc=xbb, lsc=xbb + A2 * rb, lic=xbb - A2 * rb, rb=rb, lscr=D4 * rb, licr=D3 * rb, sigma=rb / D2, n=len(b))
 
 
-def sinal(ex, k, L=None):
+def sinais(ex, k, L=None):
+    """Os sinais do subgrupo: o da média (o primeiro, na ordem das regras da média) e o da amplitude, que tem gráfico próprio."""
     L = L or limites(ex)
     xs = [media(g["v"]) for g in ex["subs"]]
     x, r = xs[k], amp(ex["subs"][k]["v"])
     if x is None or L is None:
-        return ""
+        return []
+    out = []
     if x > L["lsc"] or x < L["lic"]:
-        return S_FORA
-    if r > L["lscr"]:
-        return S_AMP
-    if k >= LADO - 1:
-        jan = xs[k - LADO + 1:k + 1]
-        if all(v is not None and v > L["lc"] for v in jan) or all(v is not None and v < L["lc"] for v in jan):
-            return S_LADO
-    if k >= TEND - 1:
+        out.append(S_FORA)
+    elif k >= LADO - 1 and (all(v is not None and v > L["lc"] for v in xs[k - LADO + 1:k + 1])
+                            or all(v is not None and v < L["lc"] for v in xs[k - LADO + 1:k + 1])):
+        out.append(S_LADO)
+    elif k >= TEND - 1:
         jan = xs[k - TEND + 1:k + 1]
         if all(v is not None for v in jan) and (all(b > a for a, b in zip(jan, jan[1:])) or all(b < a for a, b in zip(jan, jan[1:]))):
-            return S_TEND
-    return ""
+            out.append(S_TEND)
+    if r > L["lscr"]:
+        out.append(S_AMP)
+    return out
+
+
+def sinal(ex, k, L=None):
+    """O texto da coluna Sinal: os sinais do subgrupo, separados por ponto e vírgula."""
+    return SEP.join(sinais(ex, k, L))
+
+
+def conta_sinais(sg):
+    """Quantos subgrupos têm cada sinal, a partir da coluna Sinal."""
+    return {s: sum(1 for x in sg if s in x.split(SEP)) for s in SINAIS}
 
 
 def fora_espec(ex, s):
@@ -199,7 +211,7 @@ EX2 = {
         [39.7, 39.9, 39.9, 39.9, 40.0], [39.9, 40.3, 40.5, 40.3, 39.9], [39.8, 40.1, 39.9, 40.4, 40.1], [40.1, 39.8, 40.0, 39.7, 39.6], [40.0, 39.5, 39.7, 40.2, 40.5],
         [39.9, 39.7, 40.2, 40.2, 40.1], [39.4, 39.5, 40.2, 39.3, 39.8], [40.3, 40.2, 39.3, 39.5, 39.5], [38.9, 39.6, 39.1, 39.9, 39.0], [39.1, 39.1, 39.5, 38.0, 40.0],
         [39.2, 39.4, 40.1, 39.4, 39.6], [39.3, 39.8, 39.7, 40.0, 39.2], [38.5, 39.3, 38.4, 39.1, 38.9], [37.6, 38.8, 38.4, 38.1, 37.8], [39.2, 39.4, 38.2, 38.2, 38.4]],
-        excl={5: "Resistência da zona 3 queimada; bobina segregada e moída (RNC 2027-29)."}),
+        excl={5: "Resistência da zona 3 queimada; bobina segregada e moída (registro de produto não conforme 2027-29)."}),
 }
 PARADA = D(2027, 7, 18)
 
@@ -209,7 +221,7 @@ def resumo(ex):
     sg = [sinal(ex, k, L) for k in range(len(ex["subs"]))]
     fases = [fase(ex, k) for k in range(len(ex["subs"]))]
     primeiro = next((k for k in range(len(sg)) if sg[k] and fases[k] == ACOMP), None)
-    return dict(L=L, cap=capacidade(ex, L), sinais={s: sg.count(s) for s in SINAIS}, sg=sg, fases=fases, primeiro=primeiro, hist=histograma(ex),
+    return dict(L=L, cap=capacidade(ex, L), sinais=conta_sinais(sg), sg=sg, fases=fases, primeiro=primeiro, hist=histograma(ex),
                 lotes_media_ok_bola_fora=sum(1 for g in ex["subs"] if ex["head"]["lie"] <= media(g["v"]) <= ex["head"]["lse"] and fora_espec(ex, g["v"])))
 
 

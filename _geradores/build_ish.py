@@ -89,7 +89,7 @@ def ish_sheet(ws, tab, data=None):
         ex(ws, "F13", "Alta", h="center")
         ex(ws, "G13", "Acompanhar 50 saídas no pico e mapear as rotas")
         ex(ws, "H13", "Confirmada", h="center")
-        ex(ws, "I13", "Rotas cruzadas em 31 das 50 saídas")
+        ex(ws, "I13", "Em 31 das 50 saídas, outro entregador saiu para o mesmo bairro menos de 10 minutos depois")
         ex(ws, "J13", "Sim", h="center")
         note(ws, "D4", 'Nome curto da análise.\nEx.: "Atrasos nas entregas de delivery".')
         note(ws, "D7", 'O problema, com número, local e período. Sem causa e sem solução.\nEx.: "18% das entregas chegam depois de 40 minutos".')
@@ -115,7 +115,8 @@ def ish_sheet(ws, tab, data=None):
             c = items[n] if n < len(items) else None
             bg = WHITE if is_ex else INPUT
             put(ws, f"B{r}", f"{'ABCDEF'[i]}{n+1}", f=font(10, True, c=MUTED), bg=GRAY, h="center")
-            inp(ws, f"C{r}", c["causa"] if c else None, merge=f"C{r}:D{r}", bg=bg)
+            nd = " (causa de não detecção)" if c and c["k"] in data.get("nao_deteccao", []) else ""
+            inp(ws, f"C{r}", c["causa"] + nd if c else None, merge=f"C{r}:D{r}", bg=bg)
             inp(ws, f"E{r}", c["porque"] if c else None, bg=bg)
             inp(ws, f"F{r}", c["prob"] if c else None, h="center", bg=bg)
             inp(ws, f"G{r}", c["como"] if c else None, bg=bg)

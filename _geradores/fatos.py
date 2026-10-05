@@ -171,7 +171,7 @@ _PIZZARIA['linha_do_tempo'] = [
     ('2026-09-15', 'IT-EXP-01 revisão 2, com o agrupamento por zona: ação A6 do 5W2H e etapa 7 do PDCA (P09, N01)', ['Informacao-Documentada', 'Nao-Conformidade', '5W2H', 'PDCA']),
     ('2026-09', 'Auditoria interna 2026-03, do delivery: 3 NC menores, nenhuma oportunidade (T05, N23)', ['Auditoria', 'Analise-Critica', 'Competencias']),
     ('2026-09-25', 'RNC 2026-05 aberto; encerrado como eficaz em 10/11/2026', ['Nao-Conformidade']),
-    ('2026-09-29', 'Matriz GUT dos problemas do trimestre', ['GUT', 'Caso-Integrado']),
+    ('2026-09-29', 'Matriz GUT dos problemas do trimestre, com os valores de setembro de Indicadores: pedidos refeitos 2%, desperdício 3,9% (P21)', ['GUT', 'Caso-Integrado']),
     ('2026-10-02', 'Diagnóstico da ISO 9001: 67% de atendimento (T13)', ['ISO-9001', 'Analise-Critica']),
     ('2026-10-05', 'Matriz de riscos do delivery (MP-02)', ['Riscos']),
     ('2026-10-06', 'Leitura dos indicadores de out/2025 a set/2026 (terça-feira)', ['Indicadores', 'Caso-Integrado']),
@@ -441,7 +441,7 @@ _INDUSTRIA['linha_do_tempo'] = [
     ('2026-08', 'Auditoria interna do laboratório de recebimento: 3 de 25 instrumentos com calibração vencida', ['GUT', 'Ishikawa', '5W2H', 'PDCA', 'Calibracao']),
     ('2026-08-13', 'Análise crítica: ações 5 a 8, entre elas orçar os medidores de espessura (I07)', ['Analise-Critica']),
     ('2026-09', 'Extrusora 4 em operação (I02)', ['Analise-Critica', 'Recursos']),
-    ('2026-09-01', 'Instrumentos vencidos retirados de uso; plano 5W2H até 18/12/2026 (I19)', ['5W2H', 'PDCA']),
+    ('2026-09-01', 'Instrumentos vencidos retirados de uso; plano 5W2H até 18/12/2026, com o cadastro único (A3) até 15/09 e a eficácia verificada 90 dias depois, de 14 a 18/12 (I19); meta do PDCA: nenhum instrumento vencido por 90 dias seguidos', ['5W2H', 'PDCA', 'GUT']),
     ('2026-09-14', 'Sétima reclamação do cliente A em 2026, a quinta por espessura (lote 26-0911)', ['Satisfacao', 'Caso-Integrado']),
     ('2026-09-22', 'Auditoria 2026-07, de compras: 2 NC menores e 1 OM; RNC 2026-31 aberto', ['Auditoria', 'Nao-Conformidade', 'ISO-9001']),
     ('2026-09-23', 'RNC 2026-32 (era 2026-29, I11): espessura na extrusora 3, sem medidor em linha', ['Caso-Integrado', 'Satisfacao']),
@@ -500,7 +500,8 @@ _INDUSTRIA['numeros'] = [
      '(31%); depois das ações: 14%, e 4, 3 e 2%.'),
     ('Disponibilidade', 'Meta de 95%; 744 horas programadas (496 na impressora). EXT-03 em julho de 2027: 94,6%.'),
     ('Instrumentos', '25 em uso (auditoria de 2026, 5W2H, Técnica de auditoria); a Calibração mostra 7 deles (N19).'),
-    ('Espessura do filme do cliente A', '40 µm, de 38 a 42 µm. CEP de julho de 2027: LC 39,97, LSC 40,34, LIC 39,60, Cp 2,43, Cpk 2,39.'),
+    ('Espessura do filme do cliente A', '40 µm, de 38 a 42 µm. CEP de julho de 2027: LC 39,971, LSC 40,339, LIC 39,602, Cp 2,43, Cpk 2,39; '
+     'sinais em 7 bobinas do acompanhamento, de 13 a 16/07, e amplitude acima do limite na 20 e na excluída (T59).'),
     ('Mudanças de processo em 2027', '11: 9 até setembro e 2 em outubro e novembro; 4 sem autorização (I03).'),
     ('Prontidão para a certificação', '93% em 30/09/2027.'),
     ('Documentos na lista mestra', '68 em 05/03/2027: 46 em dia, 13 com revisão vencida, 9 sem controle (68%); Suprimentos 10: 7, 2 e 1, '
@@ -575,7 +576,9 @@ _DISTRIBUIDORA['linha_do_tempo'] = [
 _DISTRIBUIDORA['numeros'] = [
     ('Prazo de compra', '12 dias úteis entre a requisição aprovada e o pedido emitido; meta de 7; 8 depois do piloto.'),
     ('Requisições devolvidas', '40% (100 de 250, de dezembro de 2025 a maio de 2026); 72 das 100 com campo essencial em '
-     'branco; 38 por especificação técnica, 24 delas da Manutenção; 12% depois do piloto (meta de 15%).'),
+     'branco; 38 por especificação técnica, 24 delas da Manutenção; 12% depois do piloto (meta de 15%). Requisições por área no '
+     'período: Manutenção 80, Produção 75, Laboratório 35, Logística 30, Administrativo 30; devolução de 60 por 100 na '
+     'Manutenção e cerca de 30 nas outras (T62).'),
     ('Plano 5W2H', 'R$ 2.200 previstos para um orçamento de R$ 3.000 (R$ 1.800 de TI e R$ 400 de material; gasto R$ 350).'),
     ('GUT', 'Compras urgentes fora do processo: +30% no semestre (80 pontos); fornecedor único para três itens críticos (60).'),
 ]
@@ -990,6 +993,31 @@ PROIBIDO = [
      'pastas': ['Analise-Critica']},
     {'id': 'N34', 'regex': r'O cliente A não reclamou de novo\.', 'motivo': 'o cliente A reclama de novo em 24/05/2027; a frase vale até fevereiro (N34)',
      'pastas': ['Satisfacao']},
+    # tarefa 8: ferramentas de melhoria
+    {'id': 'T59', 'regex': r'LIC 39,60 ·|entre 39,60 e 40,34', 'motivo': 'o limite inferior da indústria é 39,602: a bobina 22, com 39,60, fica abaixo dele (T59)',
+     'pastas': ['Histograma-CEP']},
+    {'id': 'T62', 'regex': r'a Manutenção responde por 48%, e por', 'motivo': 'a parte das devoluções pede o total de requisições de cada área e a taxa (T62)',
+     'pastas': ['Pareto']},
+    {'id': 'T63', 'regex': r'a causa aqui é uma só', 'motivo': 'o Pareto aponta uma hipótese, que segue para o Ishikawa (T63)', 'pastas': ['Pareto']},
+    {'id': 'T64', 'regex': r'os três primeiros itens receberam prazo de 30 dias', 'motivo': 'a correção é imediata; o prazo da matriz é o da ação corretiva (T64)',
+     'pastas': ['GUT']},
+    {'id': 'P07', 'regex': r'85,8|84 88 94 96', 'motivo': 'P1 de jun/26 e jul/26 são as médias das semanas do PDCA: 81 e 84; média do ano 84,4 (P07)',
+     'pastas': ['Indicadores']},
+    {'id': 'P21', 'regex': r'tamanho em 3% dos pedidos|acima de 8%|Toda segunda-feira, com fechamento|Três indicadores melhoraram',
+     'motivo': 'os valores da GUT de 29/09/2026 são os de Indicadores; a reunião é às terças; dois indicadores melhoraram (P21)',
+     'pastas': ['GUT', 'Indicadores']},
+    {'id': 'P22b', 'regex': r'[Oo]ito hipóteses|três foram confirmadas|96% fora do pico|Três ações: reforçar a escala',
+     'motivo': 'doze hipóteses, cinco confirmadas, seis ações; no prazo, 91% fora do pico e 68% no pico (P22)',
+     'pastas': ['PDCA', 'Ishikawa', 'GUT', '5W2H']},
+    {'id': 'P23b', 'regex': r'(?i)indicador(es)? fora da meta|seguidos fora|vários indicadores estão fora',
+     'motivo': '"Fora da meta" é só a situação além do limite de atenção; o sentido geral é "sem atingir a meta" (P23)',
+     'pastas': ['Indicadores']},
+    {'id': 'I08', 'regex': r'embalagens plásticas · Suprimentos|pizzaria e de Suprimentos|pizzaria e de compras',
+     'motivo': 'a cadeia de compras das ferramentas é da distribuidora de materiais elétricos (I08)',
+     'pastas': ['GUT', 'Pareto', 'Ishikawa', '5W2H', 'PDCA']},
+    {'id': 'I19b', 'regex': r'vencid[oa]s?, em 60 dias', 'motivo': 'a eficácia dos instrumentos vencidos se verifica por 90 dias seguidos (I19)',
+     'pastas': ['PDCA']},
+    {'id': 'N22b', 'regex': r'turno do almoço', 'motivo': 'a pizzaria não tem turno do almoço (N22)', 'pastas': ['Indicadores']},
 ]
 
 # {'id', 'conflito', 'canone', 'estudos'}

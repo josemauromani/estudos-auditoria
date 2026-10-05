@@ -233,6 +233,7 @@
   <dl class="ficha">
     <div><dt>Efeito</dt><dd>18% das entregas chegam depois de 40 minutos</dd></div>
     <div><dt>Onde e quando</dt><dd>Sextas e sábados, das 19h às 22h</dd></div>
+    <div><dt>Dado de partida</dt><dd>Pareto de 10/07/2026: em 46% dos atrasos, a pizza pronta esperou entregador</dd></div>
     <div><dt>Categorias</dt><dd>6M</dd></div>
     <div><dt>Responsável</dt><dd>Gerente da loja</dd></div>
   </dl>
@@ -243,10 +244,11 @@
     <figcaption><b>Figura 4.</b> Diagrama do exemplo 1, depois da verificação. Das doze hipóteses, cinco foram confirmadas, quatro foram descartadas e três não foram verificadas. Quatro causas seguiram para o plano de ação.</figcaption>
   </figure>
 <!--TAB1-->
-  <p><strong>O que observar.</strong> A fila do forno foi confirmada pelos dados, mas não seguiu para o plano: pesa menos que a espera por entregador e exige investimento. Ficou registrada para o ciclo seguinte. As obras na avenida eram a explicação preferida da equipe e foram descartadas: o atraso era o mesmo nas rotas que não passam por lá.</p>
+  <p><strong>O que observar.</strong> A fila do forno foi confirmada pelos dados, mas não seguiu para o plano: pesa menos que a espera por entregador e exige investimento. Ficou registrada para o ciclo seguinte. As obras na avenida eram a explicação preferida da equipe e foram descartadas: o atraso era o mesmo nas rotas que não passam por lá. A medição pela média do dia, E1, não atrasa nenhuma entrega: é a causa de o atraso do pico não ter sido visto antes, e seguiu para o plano com uma ação de controle.</p>
 
   <h3>Exemplo 2. Requisições de compra devolvidas</h3>
   <dl class="ficha">
+    <div><dt>Organização</dt><dd>Distribuidora de materiais elétricos · Compras</dd></div>
     <div><dt>Efeito</dt><dd>40% das requisições de compra são devolvidas ao requisitante</dd></div>
     <div><dt>Onde e quando</dt><dd>Todas as áreas requisitantes, no último trimestre</dd></div>
     <div><dt>Categorias</dt><dd>6M, com nomes adaptados ao processo administrativo</dd></div>
@@ -263,6 +265,7 @@
 
   <h3>Exemplo 3. Não conformidade de auditoria interna</h3>
   <dl class="ficha">
+    <div><dt>Organização</dt><dd>Indústria de embalagens plásticas</dd></div>
     <div><dt>Efeito</dt><dd>3 de 25 instrumentos de medição em uso com a calibração vencida</dd></div>
     <div><dt>Onde e quando</dt><dd>Laboratório de recebimento, na auditoria interna</dd></div>
     <div><dt>Categorias</dt><dd>6M</dd></div>
@@ -285,7 +288,7 @@
   <p>O diagrama pronto é uma lista organizada de hipóteses. Duas etapas o transformam em conhecimento sobre o processo: verificar cada hipótese escolhida e aprofundar as confirmadas até a causa raiz.</p>
 
   <h3>Verificar: o que os dados dizem</h3>
-  <p>Cada hipótese escolhida recebe um teste simples, definido antes de olhar os dados: o que se espera encontrar se a causa for verdadeira? No exemplo 1, a equipe classificou 200 entregas atrasadas pelo motivo do atraso.</p>
+  <p>Cada hipótese escolhida recebe um teste simples, definido antes de olhar os dados: o que se espera encontrar se a causa for verdadeira? No exemplo 1, a equipe já tinha a folha do Pareto, com 200 entregas atrasadas classificadas pelo motivo do atraso. A folha mostra onde o efeito aparece, mas não confirma nenhuma causa: cada hipótese teve o seu próprio teste, e a evidência registrada na tabela do exemplo é o resultado desse teste.</p>
 
   <figure id="fig-bars">
     <div class="scroll">
@@ -314,6 +317,11 @@
     </table>
   </div>
   <p>Uma hipótese descartada é um resultado, e não um fracasso. Ela evita uma ação inútil e deve ficar registrada, com o motivo.</p>
+
+  <div class="note">
+    <h4>Causa de ocorrência e causa de não detecção</h4>
+    <p>A causa de ocorrência explica por que o efeito acontece. A causa de não detecção explica por que ele passou sem ser percebido. No exemplo 1, a escala igual em todos os dias faz a pizza esperar entregador; a medição pela média do dia (E1) não atrasa nenhuma entrega, mas escondeu o pico durante meses. As duas pedem ação, de tipos diferentes: a primeira muda o processo, e a segunda muda o controle. Marque na tabela qual é qual, para que a ação de controle não seja apresentada como a solução do efeito.</p>
+  </div>
 
   <h3>Aprofundar: os 5 porquês</h3>
   <p>Uma causa confirmada ainda pode ser um sintoma. Para chegar à causa raiz, pergunte por que ela acontece e repita a pergunta sobre cada resposta. O número cinco é uma referência: às vezes bastam três perguntas, às vezes são necessárias seis.</p>
@@ -534,6 +542,7 @@
     <h4>Pontos de atenção</h4>
     <p>A norma não exige o Diagrama de Ishikawa nem qualquer outro método. A profundidade da análise deve ser proporcional ao efeito da não conformidade: um desvio simples pode ser resolvido com os 5 porquês.</p>
     <p>Este módulo usa a numeração da ISO 9001:2015 e resume os requisitos com palavras próprias. Confira sempre a edição vigente da norma antes de citar um requisito em relatório.</p>
+    <p>Os exemplos se passam de 2026 a 2028 e usam a numeração da ISO 9001:2015, que as organizações dos exemplos seguem até a transição. O estudo <a href="../ISO-9001-2026/treinamento-iso-9001-2026.html">ISO 9001:2026: o que muda</a> mostra as diferenças.</p>
   </div>
 </section>
 
@@ -642,7 +651,7 @@
         <tr><td><strong>5 Porquês</strong></td><td>Cadeia de porquês de até seis causas, com a causa raiz e o teste de volta.</td><td>Puxa a causa pelo código e avisa quando a cadeia é curta ou a causa raiz não passa no teste.</td></tr>
         <tr><td><strong>Plano de ação</strong></td><td>Ação, responsável, prazo e status para cada causa que segue para o plano.</td><td>Lista sozinha as causas marcadas, calcula a situação e aponta causas sem ação.</td></tr>
         <tr><td><strong>Checklist</strong></td><td>Os mesmos 12 itens do módulo 9, com status Sim, Parcial ou Não.</td><td>Percentual atendido e situação da validação.</td></tr>
-        <tr><td><strong>Exemplo 1 e Exemplo 2</strong></td><td>As análises da pizzaria e de Suprimentos, preenchidas, com os porquês das causas principais.</td><td>Os mesmos resumos da aba Ishikawa.</td></tr>
+        <tr><td><strong>Exemplo 1 e Exemplo 2</strong></td><td>As análises da pizzaria e da distribuidora, preenchidas, com os porquês das causas principais.</td><td>Os mesmos resumos da aba Ishikawa.</td></tr>
       </tbody>
     </table>
   </div>

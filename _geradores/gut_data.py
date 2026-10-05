@@ -33,8 +33,8 @@ EX1 = {
         ("Forno único opera no limite no horário de pico", "Forno único no limite no horário de pico", "Indicador", 4, 3, 4),
         ("Margem do delivery caiu com o aumento da taxa do aplicativo", "Margem do delivery em queda", "Indicador", 4, 4, 4),
         ("Câmara fria com falha intermitente de temperatura", "Câmara fria com falha de temperatura", "Reunião", 5, 5, 4),
-        ("Erros de sabor ou de tamanho em 3% dos pedidos", "Erros de sabor ou de tamanho em 3% dos pedidos", "Reclamação", 3, 3, 2),
-        ("Desperdício de ingredientes acima de 8% do consumo", "Desperdício de ingredientes acima de 8%", "Indicador", 3, 2, 3),
+        ("Erros de sabor ou de tamanho em 2% dos pedidos", "Erros de sabor ou de tamanho em 2% dos pedidos", "Reclamação", 3, 3, 2),
+        ("Desperdício de insumos em 3,9% do custo comprado", "Desperdício de insumos em 3,9%", "Indicador", 3, 2, 3),
         ("Licença sanitária vence em 45 dias", "Licença sanitária vence em 45 dias", "Reunião", 5, 4, 2),
         ("Saídas de entregadores subiram de 2 para 5 por trimestre", "Saídas de entregadores em alta", "Indicador", 3, 3, 4),
         ("Fila no balcão de retirada nas noites de sábado", "Fila no balcão de retirada aos sábados", "Reclamação", 2, 1, 2),
@@ -48,8 +48,8 @@ EX1 = {
 }
 
 EX2 = {
-    "head": dict(tema="Problemas do processo de compras", resp="Gerente de Suprimentos", area="Suprimentos",
-                 data=date(2026, 9, 29), autor="Equipe de compras", versao="1.0",
+    "head": dict(tema="Problemas do processo de compras", resp="Gerente de Suprimentos", area="Distribuidora de materiais elétricos · Compras",
+                 data=date(2026, 5, 29), autor="Equipe de compras", versao="1.0",
                  objetivo="Definir a ordem dos projetos de melhoria do semestre.",
                  origem="Matriz SWOT da área, indicadores e auditoria interna",
                  part="Gerente, compradores, Controladoria e Qualidade",
@@ -64,10 +64,10 @@ EX2 = {
         ("Avaliação de fornecedores não distingue bom e mau desempenho", "Avaliação de fornecedores sem distinção", "Auditoria", 3, 2, 2),
     ]),
     "decisoes": [
-        ("P6", "Abrir um ciclo PDCA sobre as compras urgentes fora do processo.", "Gerente de Suprimentos", date(2026, 10, 9)),
-        ("P1", "Homologar um segundo fornecedor para os três itens críticos. Avaliado à parte, pela gravidade máxima.", "Comprador sênior", date(2026, 12, 18)),
-        ("P3", "Abrir um ciclo PDCA para reduzir o prazo de emissão do pedido.", "Analista de compras", date(2026, 10, 30)),
-        ("P4", "Iniciar a renegociação do contrato de frete.", "Comprador de serviços", date(2026, 10, 16)),
+        ("P6", "Abrir um ciclo PDCA sobre as compras urgentes fora do processo.", "Gerente de Suprimentos", date(2026, 6, 9)),
+        ("P1", "Homologar um segundo fornecedor para os três itens críticos. Avaliado à parte, pela gravidade máxima.", "Comprador sênior", date(2026, 8, 18)),
+        ("P3", "Abrir um ciclo PDCA para reduzir o prazo de emissão do pedido.", "Analista de compras", date(2026, 6, 30)),
+        ("P4", "Iniciar a renegociação do contrato de frete.", "Comprador de serviços", date(2026, 6, 16)),
     ],
 }
 

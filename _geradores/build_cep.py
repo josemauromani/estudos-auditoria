@@ -11,7 +11,7 @@ exec(_src[: _src.index("STATUS = [")])
 
 from openpyxl.chart import BarChart, Series  # noqa: E402
 from cep_data import (A2, ACOMP, BASE, CAPAZ, CHECK, CPK_BOM, CPK_MIN, D2, D4, EX1, EX2, EXCL, LIMITE, N, NAOCAPAZ, NCLASSES, S_AMP, S_FORA, S_LADO,  # noqa: E402
-                      S_TEND, SIM, SINAIS)
+                      S_TEND, SEP, SIM, SINAIS)
 
 BLUE, TEAL, AMBER, REDC = "2B5C8A", "1E7B73", "A96A12", "B0413E"
 S2_T = "F8EBCB"
@@ -96,8 +96,15 @@ def colunas(ws, anchor, r1, r2, c_cat, c_val, width=18, height=8):
     ws.add_chart(ch, anchor)
 
 
-def conta_por(rng, valores):
+def conta_por(rng, valores, contem=False):
+    if contem:  # a célula pode trazer mais de um valor, separados por ponto e vírgula
+        return "=" + '&", "&'.join(f'SUMPRODUCT(--ISNUMBER(SEARCH("{x}",{rng})))&" {x.lower()}"' for x in valores)
     return "=" + '&", "&'.join(f'COUNTIF({rng},"{x}")&" {x.lower()}"' for x in valores)
+
+
+def conta(rng, valor):
+    """Quantas células da coluna Sinal trazem o sinal, sozinho ou junto de outro."""
+    return f'=SUMPRODUCT(--ISNUMBER(SEARCH("{valor}",{rng})))'
 
 
 # ------------------------------------------------------------------ o bloco de dados, igual na aba Dados e nos exemplos
@@ -175,13 +182,15 @@ def bloco(ws, r0, ns, ex=None, nf="General"):
             trend = f"AND(COUNT(L{r - 5}:L{r})=6,OR(AND({up}),AND({dn})))"
         else:
             trend = "FALSE"
-        calc(ws, f"P{r}", f'=IF(OR(L{r}="",{LC}=""),"",IF(OR(L{r}>{LSC},L{r}<{LIC}),"{S_FORA}",IF(M{r}>{LSCR},"{S_AMP}",IF({run},"{S_LADO}",IF({trend},"{S_TEND}","")))))',
-             b=False, sz=9)
+        sm = f'IF(OR(L{r}>{LSC},L{r}<{LIC}),"{S_FORA}",IF({run},"{S_LADO}",IF({trend},"{S_TEND}","")))'  # o sinal da média
+        calc(ws, f"P{r}", f'=IF(OR(L{r}="",{LC}=""),"",{sm}&IF(M{r}>{LSCR},IF({sm}="","","{SEP}")&"{S_AMP}",""))', b=False, sz=9)
         calc(ws, f"Q{r}", f'=IF(COUNT({V})+LEN(C{r})+LEN(D{r})+LEN(J{r})=0,"",IF(AND(COUNT({V})>0,COUNT({V})<{N}),"Faltam medições",'
                           f'IF(AND(COUNT({V})>0,C{r}=""),"Falta a data",IF(AND(J{r}="{SIM}",K{r}=""),"Falta o motivo",IF(COUNT({V})=0,"Faltam medições","OK")))))', b=False, sz=9)
         ws.row_dimensions[r].height = 19.5 if not (g and g["motivo"]) else 31.5
     cf_texto(ws, f"N{d1}:N{d2}", f"N{d1}", FASE_CF)
-    cf_texto(ws, f"P{d1}:P{d2}", f"P{d1}", SIG_CF)
+    for t, cor in SIG_CF:  # a célula pode trazer dois sinais: a cor segue o primeiro da lista que aparece nela
+        ws.conditional_formatting.add(f"P{d1}:P{d2}", FormulaRule(formula=[f'ISNUMBER(SEARCH("{t}",P{d1}))'], stopIfTrue=True,
+                                                                  fill=PatternFill("solid", bgColor=cor, fgColor=cor)))
     cf_warn(ws, f"Q{d1}:Q{d2}", f"Q{d1}")
     # medição fora da especificação, em vermelho
     ws.conditional_formatting.add(f"E{d1}:I{d2}", FormulaRule(formula=[f'AND(ISNUMBER(E{d1}),{LIE}<>"",{LSE}<>"",OR(E{d1}<{LIE},E{d1}>{LSE}))'],
@@ -208,10 +217,10 @@ def resumo_rows(P, aba=""):
         ("Em acompanhamento", f'=COUNTIF({q("N")},"{ACOMP}")', "Lidos contra os limites fixos.", "0"),
         ("Linhas a completar", f'=SUMPRODUCT(({q("Q")}<>"")*({q("Q")}<>"OK"))', "Conferências diferentes de OK.", "0"),
         ("SINAIS", None, None, None),
-        (S_FORA, f'=COUNTIF({q("P")},"{S_FORA}")', "Média acima do LSC ou abaixo do LIC.", "0"),
-        (S_AMP, f'=COUNTIF({q("P")},"{S_AMP}")', "Amplitude acima do limite.", "0"),
-        (S_LADO, f'=COUNTIF({q("P")},"{S_LADO}")', "Sequência do mesmo lado da linha central.", "0"),
-        (S_TEND, f'=COUNTIF({q("P")},"{S_TEND}")', "Tendência: desgaste ou aquecimento.", "0"),
+        (S_FORA, conta(q("P"), S_FORA), "Média acima do LSC ou abaixo do LIC.", "0"),
+        (S_AMP, conta(q("P"), S_AMP), "Amplitude acima do limite.", "0"),
+        (S_LADO, conta(q("P"), S_LADO), "Sequência do mesmo lado da linha central.", "0"),
+        (S_TEND, conta(q("P"), S_TEND), "Tendência: desgaste ou aquecimento.", "0"),
         ("Sinais na base", f'=SUMPRODUCT(({q("N")}="{BASE}")*(LEN({q("P")})>0))', "Com sinal na base, a capacidade não vale.", "0"),
         ("Sinais no acompanhamento", f'=SUMPRODUCT(({q("N")}="{ACOMP}")*(LEN({q("P")})>0))', "Cada um pede causa e ação.", "0"),
         ("Primeiro sinal no acompanhamento", f'=IFERROR(INDEX({q("C")},MATCH(1,INDEX(({q("N")}="{ACOMP}")*(LEN({q("P")})>0),0),0)),"")', "A data do primeiro aviso.", DATE),
@@ -298,7 +307,8 @@ for k, text in [
     ("Média e amplitude", f"Só com as {N} medições do subgrupo preenchidas."),
     ("Fase", f"{EXCL} quando marcado para excluir. {BASE} para os primeiros subgrupos, até o número informado. {ACOMP} para os seguintes."),
     ("Limites", f"Calculados só com os subgrupos da base: LC ± {BR(A2)} × R̄ para a média; {BR(D4)} × R̄ para a amplitude; σ = R̄ ÷ {BR(D2)}."),
-    ("Sinais", f"Na ordem: {S_FORA.lower()}; {S_AMP.lower()}; sete médias seguidas do mesmo lado da linha central; seis médias seguidas subindo ou descendo."),
+    ("Sinais", f"Na média, vale a primeira regra, nesta ordem: {S_FORA.lower()}; sete médias seguidas do mesmo lado da linha central; seis médias seguidas subindo ou descendo. "
+               f"A {S_AMP.lower()} é marcada junto, separada por ponto e vírgula."),
     ("Capacidade", f"Cp = (LSE − LIE) ÷ 6σ. Cpk = menor distância da LC a um limite ÷ 3σ. {CAPAZ}: {BR_BOM} ou mais; {LIMITE}: de {BR_MIN} a {BR_BOM}; abaixo: {NAOCAPAZ.lower()}."),
     ("Histograma", f"{NCLASSES} classes de largura igual a um oitavo da tolerância, a partir de dois oitavos abaixo do LIE. Cada valor entra na classe em que é maior ou igual ao início."),
 ]:
@@ -346,7 +356,7 @@ band(ws, s, "Resumo automático", "Q")
 label(ws, f"B{s + 1}", "Fases", merge=f"B{s + 1}:D{s + 1}", h="right")
 calc(ws, f"E{s + 1}", conta_por(f"N{PD['d1']}:N{PD['d2']}", (BASE, EXCL, ACOMP)), merge=f"E{s + 1}:Q{s + 1}", h="left")
 label(ws, f"B{s + 2}", "Sinais", merge=f"B{s + 2}:D{s + 2}", h="right")
-calc(ws, f"E{s + 2}", conta_por(f"P{PD['d1']}:P{PD['d2']}", SINAIS), merge=f"E{s + 2}:Q{s + 2}", h="left")
+calc(ws, f"E{s + 2}", conta_por(f"P{PD['d1']}:P{PD['d2']}", SINAIS, contem=True), merge=f"E{s + 2}:Q{s + 2}", h="left")
 for rr in (s + 1, s + 2):
     ws.row_dimensions[rr].height = 21.75
 DAV = s + 2

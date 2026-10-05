@@ -568,12 +568,14 @@ def folha(ws, rr, ex):
     return rr + 2
 
 
-def tabela_pareto(ws, rr, rows, titulo, col1, unidade, base=None, base_nome=None):
-    """Pareto já ordenado, com fórmulas para a parte, o acumulado e a classe. Devolve a linha seguinte e as linhas da tabela."""
+def tabela_pareto(ws, rr, rows, titulo, col1, unidade, base=None, base_nome=None, bases=None):
+    """Pareto já ordenado, com fórmulas para a parte, o acumulado e a classe. Devolve a linha seguinte e as linhas da tabela.
+    Com `bases` (nome -> base de cada linha), a coluna J traz a base da linha, e a K, a taxa por 100."""
     rows = ordenar(rows)
     band(ws, rr, titulo, LAST, color=TEAL)
     rr += 1
     sub(ws, rr, [("B", None, "Ordem"), ("C", None, col1), ("D", None, unidade), ("E", None, "Parte"), ("F", None, "Acumulado"), ("G", "H", "Classe"), ("I", None, "Corte")]
+        + ([("J", None, base_nome[0].upper() + base_nome[1:]), ("K", None, f"Por 100 {base_nome}")] if bases else [])
         + ([("J", "K", f"Por 100 {base_nome}")] if base else []), height=30)
     p1, p2 = rr + 1, rr + len(rows)
     for k, (nome, v) in enumerate(rows, 1):
@@ -587,6 +589,9 @@ def tabela_pareto(ws, rr, rows, titulo, col1, unidade, base=None, base_nome=None
         put(ws, f"I{rr}", CORTE, f=font(9, c=MUTED), bg=GRAY, h="center", fmt=PCT)
         if base:
             calc(ws, f"J{rr}", f"=100*D{rr}/{base}", fmt="0.0", b=False, merge=f"J{rr}:K{rr}")
+        if bases:
+            put(ws, f"J{rr}", bases[nome], h="center")
+            calc(ws, f"K{rr}", f"=100*D{rr}/J{rr}", fmt="0.0", b=False)
         ws.row_dimensions[rr].height = 21.75
     cf_texto(ws, f"G{p1}:H{p2}", f"G{p1}", [(PRIOR, BLUE_T)])
     rr += 1
@@ -598,6 +603,9 @@ def tabela_pareto(ws, rr, rows, titulo, col1, unidade, base=None, base_nome=None
     put(ws, f"G{rr}", "", bg=GRAY, merge=f"G{rr}:H{rr}")
     if base:
         calc(ws, f"J{rr}", f"=100*D{rr}/{base}", fmt="0.0", merge=f"J{rr}:K{rr}")
+    if bases:
+        calc(ws, f"J{rr}", f"=SUM(J{p1}:J{p2})")
+        calc(ws, f"K{rr}", f"=100*D{rr}/J{rr}", fmt="0.0")
     ws.row_dimensions[rr].height = 21.75
     return rr + 2, p1, p2
 
@@ -676,7 +684,8 @@ def exemplo2(ws, ex):
     pareto_chart(ws, f"B{rr}", p1, p2, 3, 5, 6, 9, width=22, height=8.5)
     rr += 19
     ws.row_breaks.append(Break(id=rr - 1))
-    rr, q1, q2 = tabela_pareto(ws, rr, colunas(ex), "Pareto por área requisitante · as colunas da mesma folha", "Área requisitante", "Devoluções")
+    rr, q1, q2 = tabela_pareto(ws, rr, colunas(ex), "Pareto por área requisitante · as colunas da mesma folha, com as requisições de cada área",
+                               "Área requisitante", "Devoluções", base_nome=H["base_nome"], bases=dict(zip(ex["cols"], ex["req"])))
     npr = f'COUNTIF(G{p1}:H{p2},"{PRIOR}")'
     rr = resumo(ws, rr, [
         ("Devoluções no período", f"=D{p2 + 1}", None),
@@ -684,6 +693,7 @@ def exemplo2(ws, ex):
         ("Prioridade", f'={npr}&" categorias, com "&TEXT(INDEX(F{p1}:F{p2},{npr}),"0%")&" do total"', None),
         ("Campos em branco: as três primeiras categorias", f"=F{p1 + 2}", PCT),
         ("Área com mais devoluções", f'=C{q1}&" · "&TEXT(E{q1},"0%")', None),
+        ("Área com a maior taxa de devolução", f'=INDEX(C{q1}:C{q2},MATCH(MAX(K{q1}:K{q2}),K{q1}:K{q2},0))&" · "&TEXT(MAX(K{q1}:K{q2}),"0,0")&" por 100 requisições"', None),
     ])
     setup(ws, MUTED, f"B1:{LAST}{rr}")
 

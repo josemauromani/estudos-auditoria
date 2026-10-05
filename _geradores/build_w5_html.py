@@ -83,7 +83,7 @@ ppd = (X1 - X0) / (T1 - T0).days
 sx = lambda d: round(X0 + (d - T0).days * ppd, 1)
 bottom = TOP + RH * len(rows)
 H = bottom + 66
-CLS = {"Concluída": "st-ok", "Atrasada": "st-late", "Em andamento": "st-run", "Não iniciada": "st-wait"}
+CLS = {"Concluída": "st-ok", "Atrasada": "st-late", "No prazo": "st-run"}
 resumo = "; ".join(f'{p["k"]}, {p["curto"].lower()}, de {dm(p["inicio"])} a {dm(p["prazo"])}, {s.lower()}' for p, s in zip(rows, status))
 out = [f'      <svg id="gantt" viewBox="0 0 900 {H}" role="img" aria-label="Cronograma das seis ações do exemplo 1, com a situação em {dm(ref)}: {resumo}.">']
 d = T0
@@ -104,7 +104,7 @@ for k, (p, s) in enumerate(zip(rows, status)):
     out.append(f'        <rect class="{CLS[s]}" x="{X1 + 16}" y="{y + 2:.1f}" width="10" height="10"/>')
     out.append(f'        <text x="{X1 + 32}" y="{y + 11.5:.1f}" font-size="11.5">{s}</text>')
 lx, ly = 20, bottom + 56
-for s in ("Concluída", "Em andamento", "Atrasada", "Não iniciada"):
+for s in ("Concluída", "No prazo", "Atrasada"):
     out.append(f'        <rect class="{CLS[s]}" x="{lx}" y="{ly - 10}" width="14" height="12"/>')
     out.append(f'        <text x="{lx + 21}" y="{ly}" font-size="11.5">{s}</text>')
     lx += 150
