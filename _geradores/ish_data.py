@@ -42,7 +42,7 @@ EX1 = {
          "Não há roteiro sugerido", "Média", "Comparar o tempo de rota entre os entregadores", "D",
          "Tempos parecidos entre os entregadores", False),
         ("Mão de obra", "Escala de entregadores igual em todos os dias", "Escala igual em todos os dias",
-         "A escala foi montada pelo movimento médio da semana", "Alta", "Comparar entregadores disponíveis e pedidos por hora", "C",
+         "A escala foi montada pelo movimento médio da semana", "Alta", "Comparar os entregadores disponíveis e as entregas por noite", "C",
          "Mesmo número de entregadores todos os dias; nas sextas e nos sábados, 74 entregas por noite, contra 35 nos outros dias", True),
         ("Mão de obra", "Expedição sem responsável definido no pico", "Expedição sem responsável no pico",
          "Quem está livre faz o despacho", "Média", "Observar a expedição em três noites de pico", "N", None, False),

@@ -86,7 +86,7 @@ def _regs(plano, dias, series, reacoes, lotes, quem):
 # ------------------------------------------------------------ exemplo 1: pizzaria, cozinha e expedição
 _DIAS1 = [D(2027, 3, d) for d in range(8, 15)]
 _P1 = _plano([
-    ("K1", "Receber e guardar insumos", "Temperatura da câmara fria", PROCESSO, 0, 5, "°C", "Termômetro da câmara, leitura no visor", "Duas leituras por noite",
+    ("K1", "Receber e guardar insumos", "Temperatura da câmara fria", PROCESSO, 0, 5, "°C", "Termômetro da câmara, leitura no visor", "Duas leituras por dia, uma em cada turno",
      "Pizzaiolo do turno", "Planilha de temperatura (FR-02)", "Avisar o gerente, passar os insumos para o refrigerador reserva e avaliar o que ficou acima de 5 °C por mais de duas horas."),
     ("K2", "Preparar a massa", "Peso da bola de massa da pizza grande", PRODUTO, 380, 420, "g", "Balança da bancada, média de cinco bolas", "Uma vez por noite, no lote de massa do dia",
      "Pizzaiolo do turno", "Ficha do lote de massa", "Regular a divisora e pesar de novo o lote inteiro."),

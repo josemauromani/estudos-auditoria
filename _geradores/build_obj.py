@@ -284,7 +284,7 @@ hint_row(ws, 5, [("B", ""), ("C", "Código"), ("D", "Vem da aba Objetivos"), ("E
                  ("J", "Data"), ("K", "A medida que dirá se funcionou"), ("L", "Calculada")])
 ex(ws, "B6", "Ex.", h="center")
 for col, v, h_, fmt in [("C", "O1", "center", None), ("D", "Entregar 96% dos pedidos em até 40 minutos.", "left", None), ("E", "Rever a escala do pico em março.", "left", None),
-                        ("F", "Dois entregadores extras nas sextas e nos sábados", "left", None), ("G", "Líder da expedição", "left", None), ("H", date(2027, 3, 31), "center", DATE),
+                        ("F", "Mais dois entregadores extras nas sextas e nos sábados", "left", None), ("G", "Líder da expedição", "left", None), ("H", date(2027, 3, 31), "center", DATE),
                         ("I", CONC, "center", None), ("J", date(2027, 3, 26), "center", DATE), ("K", "Entregas no prazo nas noites de pico, por semana.", "left", None), ("L", "OK", "center", None)]:
     ex(ws, f"{col}6", v, h=h_, fmt=fmt)
 ws.row_dimensions[6].height = 30

@@ -72,7 +72,17 @@ def codigos_no_texto(texto):
 
 
 def registros_no_texto(texto):
-    return set(re.findall(r'(?:RNC |registro )(20\d\d-\d{2})', texto, re.IGNORECASE))
+    """Registros numerados citados no texto, como pares (série, número), séries de REGISTROS em fatos.py:
+    "RNC aaaa-nn" é da série RNC; "registro(s) de produto não conforme aaaa-nn" e "registro aaaa-nn", da PNC."""
+    pares = {('RNC', n) for n in re.findall(r'\bRNC (20\d\d-\d{2})\b', texto)}
+    pares |= {('PNC', n) for n in re.findall(r'(?i)\bregistros? (?:de produto não conforme )?(20\d\d-\d{2})\b', texto)}
+    return pares
+
+
+def registros_ausentes(texto, registros):
+    """Pares (série, número) do texto que não existem em REGISTROS: o número certo na série errada também falha."""
+    existentes = {(r['serie'], r['numero']) for r in registros}
+    return sorted(p for p in registros_no_texto(texto) if p not in existentes)
 
 
 def _numero_por_extenso(s):
@@ -183,7 +193,6 @@ def _rodar_tudo(F):
         if len(orgs) > 1 and c not in F.COMPARTILHADOS:
             falhas.append(('fatos.py', c, 'código em mais de uma organização (%s) e fora de COMPARTILHADOS'
                            % ', '.join(orgs)))
-    registrados = {r['numero'] for r in F.REGISTROS}
     for pasta, caminho in arquivos:
         nome = os.path.relpath(caminho, RAIZ)
         html = _ler(caminho)
@@ -193,14 +202,12 @@ def _rodar_tudo(F):
         for c in sorted(codigos_no_texto(texto)):
             if c not in todos and c.split('-')[0] not in F.SERIES_LIVRES:
                 falhas.append((nome, c, 'código não registrado em CODIGOS'))
-        for n in sorted(registros_no_texto(texto)):
-            if n not in registrados:
-                falhas.append((nome, n, 'número de registro ausente de REGISTROS'))
-        if pasta in ('index', 'Caso-Integrado'):
-            for n in contagens_de_estudos(texto):
-                if n >= 20 and n != total:
-                    falhas.append((nome, '%d estudos' % n,
-                                   'o painel tem %d links "Abrir o treinamento"' % total))
+        for serie, n in registros_ausentes(texto, F.REGISTROS):
+            falhas.append((nome, '%s %s' % (serie, n), 'registro ausente de REGISTROS nessa série'))
+        for n in contagens_de_estudos(texto):
+            if n >= 20 and n != total:
+                falhas.append((nome, '%d estudos' % n,
+                               'o painel tem %d links "Abrir o treinamento"' % total))
         for a in questionarios(html):
             falhas.append((nome, a, 'resposta do questionário fora das opções'))
         for h in links_quebrados(caminho):

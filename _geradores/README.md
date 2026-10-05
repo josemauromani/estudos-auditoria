@@ -117,3 +117,12 @@ $PY _geradores/testes/planilhas.py Riscos/Riscos-modelo.xlsx   # células com er
 ```
 
 O `planilhas.py` recebe uma ou mais planilhas e lista as células com erro (`#DIV/0!`, `#REF!` e outros) e as fórmulas sem valor gravado, sinal de arquivo que não passou pelo recálculo. No `coerencia.py`, cada falha sai numa linha, com o arquivo, o trecho e o motivo. Os dois roteiros terminam com código de saída diferente de zero quando há falha; zero quer dizer que nada falhou. O `--so` recusa um id que não existe em `PROIBIDO`: avisa e sai com código 2, para que um erro de digitação não passe por teste aprovado.
+
+Os registros numerados são conferidos pela série: "RNC aaaa-nn" precisa existir na série RNC de `REGISTROS`, e "registro de produto não conforme aaaa-nn" (ou só "registro aaaa-nn"), na série PNC. O número certo na série errada falha.
+
+O teste não vê tudo. Ficam de fora, e pedem a leitura de quem revisa:
+
+- o texto dos questionários, que está dentro do script da página (só a resposta de cada item é conferida contra as opções);
+- as planilhas: o `planilhas.py` procura células com erro e fórmulas sem valor, mas o texto das abas não passa pelas regras de `PROIBIDO`;
+- os códigos, os registros e as contagens dentro das figuras (as regras de `PROIBIDO` leem as figuras; as outras conferências, não);
+- a organização de cada código e de cada registro: um código registrado numa organização passa mesmo citado no exemplo de outra, e um registro é conferido pela série e pelo número, não pela organização.

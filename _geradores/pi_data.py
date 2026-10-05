@@ -134,7 +134,7 @@ EX1 = {
         ("Vigilância sanitária", "Manter a licença sanitária válida.", LEGAL, SIM, "Renovação protocolada em 09/10/2026.",
          "Controle de vencimentos das licenças, todo mês.", PARTE, "Acompanhar o protocolo até a emissão da licença.", "Gerente da loja", D(2026, 11, 13)),
         ("Vigilância sanitária", "Cumprir as boas práticas de manipulação: temperatura, higiene e controle de pragas.", LEGAL, SIM,
-         "Manual de boas práticas e registro de temperatura, duas vezes por turno.", "Registros de temperatura, conferidos toda semana.", ATENDE),
+         "Manual de boas práticas e registro de temperatura, uma vez em cada turno.", "Registros de temperatura, conferidos toda semana.", ATENDE),
         ("Prefeitura e Corpo de Bombeiros", "Manter o alvará de funcionamento e o auto de vistoria válidos.", LEGAL, SIM, "Documentos afixados na loja, com vencimento em 2027.",
          "Controle de vencimentos das licenças, todo mês.", ATENDE),
         ("Aplicativo de delivery", "Aceitar o pedido em até 3 minutos e manter a nota mínima da loja.", CONTR, SIM, "Tela de pedidos no balcão, com alerta sonoro.",

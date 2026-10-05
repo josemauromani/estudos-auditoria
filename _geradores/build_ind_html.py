@@ -5,6 +5,7 @@ import re
 import sys
 import textwrap
 from html import escape
+from decimal import Decimal, ROUND_HALF_UP
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from ind_data import (ATENCAO, CHECK, EX1, EX2, FORA, LEITURAS, MAIOR, MESES, NA_META, QUADRO, acao, atende, seguidos, situacao,  # noqa: E402
@@ -63,6 +64,12 @@ def num(v, c):
     return f"{v:.{c}f}".replace(".", ",")
 
 
+def media(v):
+    """Média com uma casa, arredondada como na planilha (meio para cima): 84,25 vira 84,3."""
+    m = (Decimal(str(round(sum(v), 6))) / len(v)).quantize(Decimal("0.1"), rounding=ROUND_HALF_UP)
+    return str(m).replace(".", ",")
+
+
 def meta_txt(ind):
     c = casas(ind)
     pre = "No mínimo" if ind["sentido"] == MAIOR else "Até"
@@ -100,7 +107,7 @@ def exemplo(ex):
         c = casas(i)
         v = i["valores"]
         cel = "".join(f'<td class="c{"" if atende(x, i) else " out"}">{num(x, c)}</td>' for x in v[-6:])
-        o.append(f'        <tr><td class="n">{i["id"]}</td>{cel}<td class="c">{num(sum(v) / 12, 1)}</td><td>{chip(situacao(v[-1], i))}</td>'
+        o.append(f'        <tr><td class="n">{i["id"]}</td>{cel}<td class="c">{media(v)}</td><td>{chip(situacao(v[-1], i))}</td>'
                  f'<td class="c">{seguidos(i)}</td><td>{tendencia(i)}</td><td><strong>{acao(i)}.</strong> {escape(i["decisao"])}</td></tr>')
     o += ['      </tbody>', '    </table>', '  </div>',
           '  <p class="leg"><small>As células com fundo cinza são os meses em que o resultado não atendeu à meta.</small></p>']

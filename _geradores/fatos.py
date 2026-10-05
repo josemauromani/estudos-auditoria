@@ -131,7 +131,7 @@ _PIZZARIA['documentos'] = [
      'revisao': '2', 'data': '2026-09-15', 'nota': 'P09: fim da ação A6 do 5W2H e etapa 7 do PDCA. Próxima revisão 09/2028. Lição L-01 incorporada em 15/03/2027.'},
     {'codigo': 'IT-ATE-01', 'titulo': 'Roteiro de atendimento por telefone e mensagens', 'revisao': '2', 'data': '2026-10-08',
      'nota': 'Revisão 1 de março de 2026; revisão 2 pela ação 2 do RNC 2026-05.'},
-    {'codigo': 'IT-PRO-01', 'titulo': 'Rotina de controle de temperatura (duas vezes por turno)', 'revisao': '1', 'data': '2026-09-30', 'nota': ''},
+    {'codigo': 'IT-PRO-01', 'titulo': 'Rotina de controle de temperatura (uma leitura em cada turno: duas por dia; N36)', 'revisao': '1', 'data': '2026-09-30', 'nota': ''},
     {'codigo': 'IT-PRO-02', 'titulo': 'Regulagem do forno e da chama do lastro', 'revisao': None, 'data': None,
      'nota': 'Código novo (P08), no lugar de "IT-08"; pendente desde a lição L-05, de 26/04/2027.'},
     {'codigo': 'IT-SAL-01', 'titulo': 'Instrução do salão', 'revisao': '2', 'data': '2027-02-10',
@@ -146,11 +146,11 @@ _PIZZARIA['documentos'] = [
     {'codigo': 'FR-03', 'titulo': 'Ficha de alergênicos', 'revisao': '1', 'data': '2026-10-16', 'nota': ''},
     {'codigo': 'FR-04', 'titulo': 'Planilha de descarte de insumos', 'revisao': '1', 'data': '2026-08-03', 'nota': ''},
     {'codigo': 'FR-05', 'titulo': 'Ficha de treinamento', 'revisao': '1', 'data': '2026-07-10', 'nota': 'Sem aprovação em 22/01/2027.'},
-    {'codigo': 'FR-06', 'titulo': 'Registro de não conformidade', 'revisao': '1', 'data': '2026-10-20', 'nota': 'Entra na lista mestra (P08).'},
+    {'codigo': 'FR-06', 'titulo': 'Registro de não conformidade', 'revisao': '1', 'data': '2026-09-01', 'nota': 'Entra na lista mestra (P08).'},
     {'codigo': 'FR-07', 'titulo': 'Planilha de verificação dos instrumentos', 'revisao': None, 'data': None,
      'nota': 'Só a planilha de verificação (P08). Fica fora da lista mestra de 22/01/2027, como hoje.'},
     {'codigo': 'FR-08', 'titulo': 'Ata da análise crítica', 'revisao': '1', 'data': '2026-12-01', 'nota': 'Entra na lista mestra (P08), antes da análise de 14/12/2026.'},
-    {'codigo': 'FR-09', 'titulo': 'Relatório de auditoria interna', 'revisao': '1', 'data': '2026-10-20',
+    {'codigo': 'FR-09', 'titulo': 'Relatório de auditoria interna', 'revisao': '1', 'data': '2026-09-01',
      'nota': 'Código novo (P08): o próximo FR- da pizzaria, depois do FR-08. Entra na lista mestra.'},
     {'codigo': 'RC-01 a RC-24', 'titulo': 'Receitas padrão das pizzas', 'revisao': None, 'data': None,
      'nota': 'Sem código no levantamento de 22/01/2027; codificadas depois (Conhecimento, 31/05/2027).'},
@@ -179,7 +179,7 @@ _PIZZARIA['linha_do_tempo'] = [
     ('2026-10-14', 'Mapa de processos (MP-01) e rotina de documentos revisão 3', ['Processos', 'Informacao-Documentada']),
     ('2026-10-23', 'Partes interessadas: 11 listadas, 9 pertinentes', ['Partes-Interessadas']),
     ('2026-11-20', 'Homologação do segundo fornecedor de queijo (P2), resposta ao risco R4 (P13)', ['Fornecedores', 'Analise-Critica']),
-    ('2026-12-04', 'Homologação dos outros seis fornecedores, P1 e P3 a P7 (P13)', ['Fornecedores']),
+    ('2026-12-04', 'Os outros seis fornecedores, P1 e P3 a P7, passam pela homologação: cinco homologados; o P6, de gás, com documentos pendentes (P13)', ['Fornecedores']),
     ('2026-12-14', 'Primeira análise crítica: oito decisões, R$ 11.100 aprovados; registra as homologações (P13)', ['Analise-Critica', 'Escopo', 'Caso-Integrado']),
     ('2027-01-20', 'Treinamento de Bruno no forno: parcial (P03)', ['Competencias', 'Objetivos']),
     ('2027-01-22', 'Levantamento da lista mestra: 17 documentos e 8 registros (P08)', ['Informacao-Documentada']),
@@ -208,10 +208,15 @@ _PIZZARIA['linha_do_tempo'] = [
 
 _PIZZARIA['numeros'] = [
     ('Entregas em até 40 minutos', 'Meta de 95% em 2026 e de 96% em 2027 (O1). Série semanal do PDCA, de 15/06/2026: '
-     '81, 83, 80, 84, 82, 82, 86, 90, 94, 96, 95, 97. Mensal (Indicadores, P07): jun/26 81, jul/26 84, ago/26 96, '
-     'set/26 95; média de out/25 a set/26: 84,4. 2027: jan 95, fev 94, mar 96, abr 95.'),
+     '81, 83, 80, 84, 82, 82, 86, 90, 94, 96, 95, 97. Mensal (Indicadores, P07): jun/26 81, jul/26 84, ago/26 94, '
+     'set/26 95; média de out/25 a set/26: 84,3. 2027: jan 95, fev 94, mar 96, abr 95.'),
     ('Atrasos no Pareto', '200 atrasos em 1.110 entregas, de 15/06 a 09/07/2026 (82,0% no prazo); 140 nas sextas e nos '
      'sábados. Depois das ações: 62 em 1.380, de 10/08 a 06/09/2026 (95,5%). No prazo: 91% fora do pico e 68% no pico (P22).'),
+    ('Evidências do Ishikawa dos atrasos (T60)', 'A1: em 31 das 50 saídas, outro entregador saiu para o mesmo bairro menos de '
+     '10 minutos depois. B1: mesmo número de entregadores todos os dias; nas sextas e nos sábados, 74 entregas por noite, '
+     'contra 35 nos outros dias (444 entregas em 6 noites de sexta e de sábado e 666 em 19 noites, na folha do Pareto); o '
+     'teste é "Comparar os entregadores disponíveis e as entregas por noite". C1, a fila do forno: espera média de 12 minutos '
+     'antes do forno no pico, contra 3 fora dele; fica para o ciclo seguinte. E1: 91% fora do pico e 68% no pico (P22).'),
     ('Reclamações por 100 pedidos', 'Meta até 2,0 em 2026 (Indicadores) e 1,5 em 2027 (O2, P19). Out/25 3,4; set/26 1,9; '
      'nov/26 1,7; 2027: jan 1,9, fev 1,9, mar 1,6, abr 1,4.'),
     ('Pedidos refeitos por erro', 'Meta 1,5%, limite 2,5%. Set/26 2,0; nov/26 1,4; 2027: jan 1,6, fev 1,5, mar 1,4, abr 1,3.'),
@@ -358,7 +363,7 @@ _INDUSTRIA['equipamentos'] = [
      'datas': ['2027-02-10']},
     {'codigo': None, 'descricao': 'Dois medidores de espessura em linha, extrusoras 3 e 4, R$ 96.000 com instalação (I07)',
      'criterio': 'Compra aprovada em 18/02/2027, prazo 30/06/2027',
-     'situacao': 'Não instalados em 09/07/2027 (atrasados); antecipação decidida em 19/08/2027', 'datas': ['2027-02-18', '2027-06-30', '2027-08-19']},
+     'situacao': 'Não instalados em 09/07/2027 (atrasados); em 19/08/2027, a análise crítica decide concluir a instalação (I07)', 'datas': ['2027-02-18', '2027-06-30', '2027-08-19']},
     # infraestrutura (Recursos, julho de 2027; meta de disponibilidade 95%)
     {'codigo': 'EXT-01', 'descricao': 'Extrusora 1', 'criterio': 'Preventiva a cada 3 meses',
      'situacao': 'Em dia (10/05/2027); 100% em julho', 'datas': ['2027-05-10']},
@@ -475,7 +480,7 @@ _INDUSTRIA['linha_do_tempo'] = [
     ('2027-06-30', 'Prazo dos medidores em linha, vencido sem instalação (I07)', ['Objetivos', 'Escopo']),
     ('2027-07', 'Três quebras da extrusora 3; CEP de 04 a 16/07; PNC 2027-29 e 2027-30', ['Recursos', 'Histograma-CEP', 'Caso-Integrado']),
     ('2027-07-08', 'Resina B no projeto D-07, antes do lote de teste de 15/07 (I10)', ['Projeto']),
-    ('2027-08-19', 'Análise crítica: antecipar os medidores e passar o conhecimento do operador sênior; a leitura de julho de Recursos a prepara (I06)',
+    ('2027-08-19', 'Análise crítica: concluir a instalação dos medidores, atrasada desde junho, e passar o conhecimento do operador sênior; a leitura de julho de Recursos a prepara (I06)',
      ['Caso-Integrado', 'Certificacao', 'Conhecimento', 'Recursos']),
     ('2027-09-30', 'Mapa do conhecimento; prontidão para a certificação: 93%', ['Conhecimento', 'Certificacao', 'Caso-Integrado']),
     ('2027-10-06', 'Auditoria interna 2027-11, da produção', ['Tecnica-Auditoria']),
@@ -496,7 +501,7 @@ _INDUSTRIA['numeros'] = [
      'Meta de 60 dias em 2027: 70, 66, 61, 58, 55, 52 (O6).'),
     ('Fornecedores críticos', '12 (F-01 a F-12), mais o F-13 em 29/03/2027. Avaliados em 2026: 83, 75, 67, 67, 58, 58 '
      '(abr a set). Segundo semestre de 2026: A 8, B 1, C 2, D 1 (avaliação de 11/01/2027). 2027: 100% até maio, 92% em junho (O7).'),
-    ('Requisições sem especificação', 'C2: 29, 31, 33, 30, 31, 29 (abr a set/2026; média do ano 30,2); abrangência: 97 de 312 '
+    ('Requisições sem especificação', 'C2: 29, 31, 33, 30, 31, 29 (abr a set/2026; média do ano 30,3, de 30,25: N37); abrangência: 97 de 312 '
      '(31%); depois das ações: 14%, e 4, 3 e 2%.'),
     ('Disponibilidade', 'Meta de 95%; 744 horas programadas (496 na impressora). EXT-03 em julho de 2027: 94,6%.'),
     ('Instrumentos', '25 em uso (auditoria de 2026, 5W2H, Técnica de auditoria); a Calibração mostra 7 deles (N19).'),
@@ -584,6 +589,17 @@ _DISTRIBUIDORA['numeros'] = [
 ]
 
 ORGS = {'pizzaria': _PIZZARIA, 'industria': _INDUSTRIA, 'distribuidora': _DISTRIBUIDORA}
+
+# Organizações avulsas: aparecem num só exemplo e não voltam na série. Não têm ficha; o que dizem vale só ali.
+# Um exemplo novo com uma delas pede ficha própria antes.
+AVULSAS = [
+    ('Fábrica de tampas plásticas por injeção', 'Nao-Conformidade', 'exemplo 3: desenho D-118, lotes 2607 e 2655 (N18)'),
+    ('Empresa de manutenção predial, com 80 pessoas', 'Analise-Critica', 'exemplo 3: pauta dividida em quatro reuniões'),
+    ('Transportadora de cargas secas', 'ISO-9001', 'exemplo 3 do módulo da aplicabilidade: 8.3 não aplicável'),
+    ('Escritório de contabilidade', 'ISO-9001', 'exemplo 3 do módulo da aplicabilidade: 7.1.5.2 não aplicável, 8.4 aplicável'),
+]
+# Os exemplos de processo sem organização dita (SIPOC, exemplo 3, "Atender chamado de suporte de TI"; RACI, exemplo 3,
+# "Realizar auditoria interna") também não estão na ficha.
 
 # organização -> código -> significado
 CODIGOS = {
@@ -805,7 +821,7 @@ PROIBIDO = [
     {'id': 'P10a', 'regex': r'RNC 2027-07', 'motivo': 'número de RNC em conflito', 'pastas': None},
     {'id': 'P10b', 'regex': r'RNC 2027-(27|29|30)', 'motivo': 'número de RNC em conflito', 'pastas': ['Recursos']},
     {'id': 'P10c', 'regex': r'RNC 2027-(27|29|30)', 'motivo': 'número de RNC em conflito', 'pastas': ['Histograma-CEP']},
-    {'id': 'P23', 'regex': r'mussarela', 'motivo': 'grafia única: muçarela', 'pastas': None},
+    {'id': 'P23', 'regex': r'(?i)mussarela', 'motivo': 'grafia única: muçarela', 'pastas': None},
     {'id': 'T01', 'regex': r'[Dd]esvio isolado|oportunidade ou ponto a verificar', 'motivo': 'um desvio com evidência objetiva já é não conformidade', 'pastas': ['Tecnica-Auditoria']},
     {'id': 'T02', 'regex': r'corroborada por duas fontes', 'motivo': 'afirmação a corrigir', 'pastas': None},
     {'id': 'T02b', 'regex': r'precisa de duas fontes|regra das duas fontes|quais foram as duas fontes', 'motivo': 'a não conformidade pede uma fonte objetiva; a segunda é recomendada', 'pastas': ['Tecnica-Auditoria']},
@@ -1001,7 +1017,7 @@ PROIBIDO = [
     {'id': 'T63', 'regex': r'a causa aqui é uma só', 'motivo': 'o Pareto aponta uma hipótese, que segue para o Ishikawa (T63)', 'pastas': ['Pareto']},
     {'id': 'T64', 'regex': r'os três primeiros itens receberam prazo de 30 dias', 'motivo': 'a correção é imediata; o prazo da matriz é o da ação corretiva (T64)',
      'pastas': ['GUT']},
-    {'id': 'P07', 'regex': r'85,8|84 88 94 96', 'motivo': 'P1 de jun/26 e jul/26 são as médias das semanas do PDCA: 81 e 84; média do ano 84,4 (P07)',
+    {'id': 'P07', 'regex': r'85,8|84,4|84 88 94 96|81 84 96 95', 'motivo': 'P1 de jun/26, jul/26 e ago/26 são as médias das semanas do PDCA que começam no mês: 81, 84 e 94; média do ano 84,3 (P07)',
      'pastas': ['Indicadores']},
     {'id': 'P21', 'regex': r'tamanho em 3% dos pedidos|acima de 8%|Toda segunda-feira, com fechamento|Três indicadores melhoraram',
      'motivo': 'os valores da GUT de 29/09/2026 são os de Indicadores; a reunião é às terças; dois indicadores melhoraram (P21)',
@@ -1024,6 +1040,9 @@ PROIBIDO = [
 
 # {'id', 'conflito', 'canone', 'estudos'}
 # 'estudos' são as pastas a ajustar. Quando a ficha acrescenta uma pasta à lista do spec, o 'canone' diz.
+# Os itens T (correções técnicas) e D (painel e documentação) do desenho não têm entrada aqui: estão no desenho
+# (docs/superpowers/specs/2026-10-03-leva-1-correcoes-e-ficha-de-fatos-design.md) e, quando o valor antigo não pode
+# voltar, numa regra de PROIBIDO com o mesmo id. A ficha cita alguns deles (T13, T23, T43, T45, T59, T60, T62) só como origem.
 DECISOES = [
     # ---------------------------------------------------------------- pizzaria (spec, seção 6.1)
     {'id': 'P01',
@@ -1067,20 +1086,31 @@ DECISOES = [
      'canone': 'A troca do sistema de pedidos foi em julho de 2026, sem teste e sem treinamento. Em abril de 2027 houve '
                'uma atualização de versão (SIS-01, preventiva de 01/04/2027). Em ISO 9001:2026 (M5: "Atualização de '
                'versão do sistema de pedidos sem plano, em abril de 2027" e o "O que observar"), em Conhecimento (K-05 e '
-               'exemplo 3) e em Recursos, o evento de abril de 2027 passa a "atualização de versão do sistema de pedidos".',
+               'exemplo 3) e em Recursos, o evento de abril de 2027 passa a "atualização de versão do sistema de pedidos". '
+               'Revisão final: a evidência do M5 citava um lançamento de produto feito como projeto (8.3), e não uma mudança '
+               'no sistema (6.3): ed26_data.py, "Lançamento da pizza vegana planejado pelo projeto P-03; a atualização de '
+               'versão…" → "Inclusão do salão no sistema planejada na análise crítica de 14/12/2026, com responsável e '
+               'prazo; a atualização de versão do sistema de pedidos, em abril de 2027, foi feita sem plano" (a decisão b '
+               'daquela análise, descrever o atendimento no salão, com a gerente da loja e prazo em 26/02/2027). Em '
+               'Recursos, "nenhum conhece o sistema de pedidos trocado sem treinamento" → "nenhum foi treinado no sistema de '
+               'pedidos, trocado em julho de 2026 sem treinamento da equipe." (rec_body.html).',
      'estudos': ['ISO-9001-2026', 'Conhecimento', 'Recursos']},
     {'id': 'P07',
      'conflito': 'Entregas no prazo: 88 e 94 em junho e julho de 2026, contra 80 a 84 por semana até 26/07.',
      'canone': 'Vale a série semanal do PDCA (semana 1 = 15/06/2026): 81, 83, 80, 84, 82, 82, 86, 90, 94, 96, 95, 97. '
                'Cada mês é a média das semanas que começam nele: jun/26 = semanas 1 a 3 = 81 (81,3); jul/26 = semanas 4 '
-               'a 7 = 84 (83,5). Em Indicadores, P1 passa de 88 e 94 para 81 e 84 em jun/26 e jul/26; a série de '
-               'out/25 a set/26 fica 81, 83, 80, 82, 82, 83, 82, 84, 81, 84, 96, 95, e a média do ano passa de 85,8 '
-               'para 84,4. Ago/26 (96) e set/26 (95) não mudam. Propagar a quem citar 88 ou 94 como valor mensal. '
-               'Revisão da tarefa 8 (decisão do controlador): a média das semanas que começam no mês só define junho e julho, '
-               'os dois valores em conflito. Agosto fica em 96, como o autor aprovou: pela mesma regra daria 94,4 (semanas 8 a 12), '
-               'mas o valor do mês é o das entregas do mês inteiro, que não precisa igualar a média simples das porcentagens '
-               'semanais (a semana 12 começa em 31/08 e é quase toda de setembro). Nenhum texto de Indicadores ou do PDCA diz '
-               'que o valor mensal é a média das semanas.',
+               'a 7 = 84 (83,5); ago/26 = semanas 8 a 12 = 94 (94,4). Em Indicadores, P1 passa de 88, 94 e 96 para 81, 84 '
+               'e 94 em jun/26, jul/26 e ago/26; a série de out/25 a set/26 fica 81, 83, 80, 82, 82, 83, 82, 84, 81, 84, '
+               '94, 95, e a média do ano passa de 85,8 para 84,3 (84,25, arredondada para cima como na planilha; o '
+               'gerador do treinamento passou a arredondar do mesmo modo: N37). Agosto fica abaixo da meta '
+               'de 95, na faixa de atenção: a célula do mês fica cinza. Set/26 (95) não muda, nem a situação "Na meta", '
+               'os "seguidos sem a meta" (0) e a tendência ("Melhorando"). Propagar a quem citar 88, 94 ou 96 como valor '
+               'mensal de junho a agosto de 2026, ou a média do ano: nenhum outro estudo cita. Revisão final (decisão do '
+               'controlador, à espera da revisão do autor): a versão aprovada aplicava a regra só a junho e julho e '
+               'mantinha ago/26 em 96, com média do ano 84,4; pela mesma regra agosto dá 94,4, e um valor mensal não pode '
+               'ficar no máximo das semanas do mês (ponderado pelas entregas do Pareto, cerca de 93). Valor antigo → novo: '
+               'ind_data.py, EX1, P1, valores, 96 → 94 (11º mês); média do ano 84,4 → 84,3; regra P07 de PROIBIDO com '
+               '"84,4" e "81 84 96 95". Nenhum texto de Indicadores ou do PDCA diz que o valor mensal é a média das semanas.',
      'estudos': ['Indicadores']},
     {'id': 'P08',
      'conflito': 'FR-07 é relatório de auditoria e planilha de verificação; formulários da tabela de retenção fora da '
@@ -1093,7 +1123,10 @@ DECISOES = [
                'passa de 13 para 17 documentos; os registros continuam 8; os cinco documentos fora de ordem continuam '
                'cinco. As instruções seguem o padrão IT-XXX-00: em Conhecimento, "IT-05" (montagem e conferência do '
                'pedido, K-04 e L-01) passa a IT-EXP-01, que já cobre a conferência no item 5, e "IT-08" (instrução do '
-               'forno, L-05) passa a IT-PRO-02. O "IT-05" de Auditoria é outro documento: ver N02.',
+               'forno, L-05) passa a IT-PRO-02. O "IT-05" de Auditoria é outro documento: ver N02. Revisão final: o FR-06 '
+               'e o FR-09 entraram na lista mestra com data de 20/10/2026, depois da auditoria 2026-03 e do RNC 2026-05, '
+               'de setembro, que os usaram; a data dos dois passa a 01/09/2026 (doc_data.py, D(2026, 10, 20) → '
+               'D(2026, 9, 1)); a próxima revisão, calculada, passa de 10/2028 a 09/2028.',
      'estudos': ['Informacao-Documentada', 'Conhecimento']},
     {'id': 'P09',
      'conflito': 'IT-EXP-01 revisão 2 em 10/07/2026, antes do plano de 24/07.',
@@ -1162,7 +1195,13 @@ DECISOES = [
                'avaliação do segundo semestre de 2026 passa a ser datada de 11/01/2027 (era 11/12/2026); no "O que '
                'observar" do exemplo 1, "A avaliação de dezembro" passa a "A avaliação de janeiro"; na análise crítica da '
                'indústria de 18/02/2027 (entrada c7), "avaliação de fornecedores de dezembro" passa a "de janeiro" '
-               '(Análise crítica acrescentada à lista do spec).',
+               '(Análise crítica acrescentada à lista do spec). Revisão final: a frase "e os outros seis, de uma vez, em '
+               '04/12/2026, com os fornecedores já em uso: cadastro, nota fiscal e uma visita." dava os seis como '
+               'homologados, e o gás ficou pendente; passa a "e os outros seis passaram pela homologação de uma vez, em '
+               '04/12/2026, com os fornecedores já em uso: cadastro, nota fiscal e uma visita. Cinco foram homologados, e o '
+               'de gás ficou com documentos pendentes." (forn_body.html). No erro comum "Esquecer o serviço", "A '
+               'transportadora e a manutenção nunca foram avaliadas." → "A manutenção e a revisão das motos nunca foram '
+               'avaliadas.", porque a transportadora (F-09) é processo terceirizado (N30).',
      'estudos': ['Fornecedores', 'Analise-Critica']},
     {'id': 'P14',
      'conflito': '"Quatro resolvidos" com duas recusas; "3 das 8 encomendas"; E-34 fora das 48 horas sem comentário.',
@@ -1177,7 +1216,7 @@ DECISOES = [
      'canone': 'Os totais não mudam: K1 com 14 verificações e K2 a K7 com 7 cada, nas noites de 08 a 14/03/2027 (56 no '
                'total, 6 fora). A frequência escrita passa a corresponder a esses totais, e acompanha o risco: as conferências '
                'são feitas durante a noite e no pico, e o registro de cada noite é um resumo delas (corrigido por N31, que '
-               'traz o texto de cada controle). K1 com duas leituras por noite, cada uma registrada. A tabela de mudanças no '
+               'traz o texto de cada controle). K1 com duas leituras por dia, uma em cada turno, cada uma registrada (N36). A tabela de mudanças no '
                'processo ganha a própria data de leitura, 31/03/2027, e mantém a mudança de 26/03/2027. A reação do K5 é '
                'reescrita para acontecer antes da saída do pedido.',
      'estudos': ['Producao']},
@@ -1191,9 +1230,11 @@ DECISOES = [
      'estudos': ['Liberacao']},
     {'id': 'P17',
      'conflito': 'Entradas E1 e E2 da pizza vegana "atendem" depois de mudanças de ingrediente e alergênico.',
-     'canone': 'E1 e E2 recebem nota de reverificação: o "Atende" vale para a receita de 22/04 a 03/05/2027; depois da '
+     'canone': 'E1 e E2 recebem nota de reverificação: o "Atende" vale para a receita de 20/04 a 03/05/2027; depois da '
                'troca do queijo vegetal (12/05, marca B) e do recheio (18/05, tofu defumado), a ficha técnica, os rótulos e '
-               'o texto de alergênicos precisam ser conferidos de novo.',
+               'o texto de alergênicos precisam ser conferidos de novo. Revisão final: a nota dizia "de 22/04 a 03/05", '
+               'mas os rótulos da E1 foram conferidos em 20/04: proj_body.html, "a receita verificada de 22/04 a 03/05" → '
+               '"de 20/04 a 03/05".',
      'estudos': ['Projeto']},
     {'id': 'P18',
      'conflito': 'Níveis da Luana e do Felipe diferentes na matriz e no questionário; Camila com lacunas sem ação; Jorge '
@@ -1244,7 +1285,11 @@ DECISOES = [
                'pedidos não são analisados por faixa de horário, e a escala não acompanha o pico") tem ação no 5W2H: a A1 '
                'diz que a escala do pico passa a seguir os pedidos por faixa de horário medidos na A5. No PDCA: "Das '
                'doze hipóteses levantadas, cinco foram confirmadas" e seis ações. Também no Caso integrado (acrescentado '
-               'à lista do spec): passo 3, cinco causas confirmadas e quatro para o plano; passo 4, seis ações.',
+               'à lista do spec): passo 3, cinco causas confirmadas e quatro para o plano; passo 4, seis ações. Revisão '
+               'final: no PDCA (treinamento-pdca.html, "O que observar" do exemplo 1), "fora do pico, quase tudo chegava no '
+               'prazo." → "fora do pico, 91% das entregas chegavam no prazo; no pico, só 68%."; no Ishikawa (ish_data.py, '
+               'B1), o teste "Comparar entregadores disponíveis e pedidos por hora" → "Comparar os entregadores disponíveis '
+               'e as entregas por noite", a medida da evidência (74 e 35 entregas por noite: T60).',
      'estudos': ['PDCA', 'Ishikawa', 'GUT', '5W2H', 'Caso-Integrado']},
     {'id': 'P23',
      'conflito': '"Muçarela" e "mussarela"; "fora da meta" com dois sentidos; status e situação trocados.',
@@ -1257,25 +1302,24 @@ DECISOES = [
 
     # ---------------------------------------------------------------- pizzaria: contradições novas
     {'id': 'N01',
-     'conflito': 'A revisão 2 da IT-EXP-01 em 31/07/2026, como o spec propunha para P09, bate com a ação A6 do 5W2H '
+     'conflito': 'A revisão 2 da IT-EXP-01 em 31/07/2026, como o spec propunha para P09, não fecha com a ação A6 do 5W2H '
                  '("Atualizar a instrução de trabalho da expedição", 07/09 a 15/09/2026), com o acompanhamento de 05/08 '
-                 '(A6 "Não iniciada"; a legenda da figura 4 diz que só a A4 está atrasada) e com o PDCA (agrupamento '
+                 '(a A6 ainda por começar; a legenda da figura 4 diz que só a A4 está atrasada) e com o PDCA (agrupamento '
                  'só na semana 8, a partir de 03/08/2026; instrução atualizada na etapa 7, em 15/09/2026).',
-     'canone': 'Vale o 5W2H, com o PDCA: a revisão 2 é de 15/09/2026 (P09). O 5W2H não muda em nenhum lugar: na tabela '
-               'do exemplo 1, a A6 continua "07/09 a 15/09"; no acompanhamento de 05/08 (tabela e figura 4), a A6 '
-               'continua "Não iniciada", com início 07/09 e prazo 15/09; a legenda da figura 4 continua "A ação A4 '
-               'deveria ter terminado no dia 2 e aparece como atrasada"; w5_data.py não muda. O PDCA também não muda. '
-               'Os estudos que mudam são os de P09: Informação documentada e Não conformidade. Atualizado na tarefa 8: a '
-               'datação da A6 continua como acima, mas o 5W2H mudou por outros itens. Pela P23, a figura 4 e a tabela do '
-               'acompanhamento de 05/08 mostram a situação calculada, e não o status: a A5 e a A6 passam de "Em andamento" e '
-               '"Não iniciada" a "No prazo" (w5_data.py, ref_status; a legenda da figura 4 fica). Pela I19, o w5_data.py '
-               'mudou no exemplo 3 (A3 até 15/09); pela P22, a A1 do exemplo 1 liga a escala do pico à A5.',
+     'canone': 'Vale o 5W2H, com o PDCA: a revisão 2 é de 15/09/2026 (P09), e os estudos que mudam por isso são os de '
+               'P09, Informação documentada e Não conformidade. A datação da A6 no 5W2H fica: "07/09 a 15/09" na tabela do '
+               'exemplo 1 e, no acompanhamento de 05/08 (tabela e figura 4), início 07/09 e prazo 15/09; a legenda da '
+               'figura 4 continua "A ação A4 deveria ter terminado no dia 2 e aparece como atrasada"; o PDCA não muda por '
+               'esta entrada. O acompanhamento de 05/08 mostra a situação calculada, e não o status (P23): a A5 e a A6 '
+               'aparecem "No prazo" (w5_data.py, ref_status). O w5_data.py mudou por outros itens: o exemplo 3, pela I19 '
+               '(A3 até 15/09); a A1 do exemplo 1, pela P22 (escala do pico ligada à A5).',
      'estudos': []},
     {'id': 'N02',
      'conflito': 'Em Auditoria (tabela de como escrever a constatação), "A instrução IT-05 pede o registro da temperatura '
                  'a cada turno", com as datas da constatação 2 da auditoria 2026-03 da pizzaria. A rotina de temperatura '
-                 'é a IT-PRO-01, duas vezes por turno, e "IT-05" é outro documento em Conhecimento.',
-     'canone': 'A frase passa a "A rotina IT-PRO-01 pede o registro da temperatura duas vezes por turno."',
+                 'é a IT-PRO-01, e "IT-05" é outro documento em Conhecimento.',
+     'canone': 'A frase passa a "A rotina IT-PRO-01 pede o registro da temperatura em cada turno." (uma leitura em cada '
+               'turno, duas por dia: corrigido por N36; a versão aprovada dizia "duas vezes por turno").',
      'estudos': ['Auditoria']},
     # N03 foi retirado na revisão do controlador: com as homologações nas datas de hoje (P13), a análise crítica da
     # pizzaria não muda. Os demais números N não foram renumerados.
@@ -1310,7 +1354,10 @@ DECISOES = [
                  'como a mudança de 26/03/2027.',
      'canone': 'Em 26/03/2027, a escala do pico ganhou mais dois entregadores extras, além dos dois de 2026. Em Produção '
                '(tabela de mudanças) e em Objetivos (recursos da ação do O1), a frase passa a "Mais dois entregadores '
-               'extras nas sextas e nos sábados". Recursos ("mesmo com os extras de março") não muda.',
+               'extras nas sextas e nos sábados". Recursos ("mesmo com os extras de março") não muda. Revisão final: a planilha '
+               'de Objetivos (build_obj.py, exemplo 1, recursos da ação do O1) dizia "Dois entregadores extras nas sextas e '
+               'nos sábados" → "Mais dois entregadores extras nas sextas e nos sábados"; o módulo (obj_body.html, linha '
+               'Ação), "com dois entregadores extras" → "com mais dois entregadores extras".',
      'estudos': ['Producao', 'Objetivos']},
 
     # ---------------------------------------------------------------- indústria (spec, seção 6.2)
@@ -1335,7 +1382,12 @@ DECISOES = [
                '"8 funções e períodos, 2 com falta de gente: 2 pessoas a menos". "Alarme luminoso instalado nas três '
                'extrusoras" passa a "nas quatro extrusoras"; "O compressor de ar, de que as três extrusoras dependem" '
                'passa a "as quatro extrusoras"; a frase do chiller segue I19. "Pedidos redistribuídos entre as '
-               'extrusoras 1 e 2" não muda.',
+               'extrusoras 1 e 2" não muda. Além do texto (tarefa 7, registrado na revisão final): a infraestrutura do '
+               'exemplo 2 de Recursos ganhou a linha EXT-04 (rec_data.py: Extrusora 4, Equipamento, Extrusão, '
+               'criticidade alta, preventiva a cada 3 meses, última em 21/06/2027, contingência "Pedidos urgentes passam '
+               'para a extrusora 2.", 744 horas), e com ela o resumo passou de "10 itens, 6 críticos. Preventivas: 7 em '
+               'dia" a "11 itens, 7 críticos. Preventivas: 8 em dia" (1 vence em 7 dias, 1 atrasada e 1 sem plano não '
+               'mudam), e a figura 7 ganhou a disponibilidade da EXT-04.',
      'estudos': ['Recursos']},
     {'id': 'I03',
      'conflito': 'Nove mudanças de processo até setembro de 2027; "das 9 de 2027", com duas depois de outubro.',
@@ -1381,18 +1433,28 @@ DECISOES = [
      'conflito': 'Medidor em linha: um ou dois, atraso antes do prazo, decisão antes da reclamação que a justifica.',
      'canone': 'Dois medidores de espessura em linha, para as extrusoras 3 e 4, R$ 96.000 com instalação, compra aprovada '
                'na análise crítica de 18/02/2027 (decisão 5, diretor geral), com prazo em 30/06/2027; não instalados em '
-               '30/06 (Objetivos, 09/07/2027: atrasada); antecipação decidida em 19/08/2027. Escopo (10/05/2027), '
-               'compromisso 5: "Aprovou os dois medidores de espessura em linha, de R$ 96.000, com instalação até '
-               '30/06/2027; em maio, a compra ainda não tinha sido feita." (situação Parcial e ação sem mudança). '
-               'Análise crítica de 18/02/2027, ação 7 da análise de 13/08/2026: "Instalar o medidor de espessura em '
-               'linha na extrusora 3." passa a "Orçar os medidores de espessura em linha para as extrusoras 3 e 4.", '
-               'decidida pelas reclamações de espessura do cliente A do primeiro semestre de 2026 (prazo, situação e '
-               'resultado sem mudança: "Orçamento recebido. Compra não aprovada."). A reclamação de 14/09/2026 e o RNC '
-               '2026-32 confirmaram a causa e levaram a proposta à análise de 18/02/2027. Caso integrado: passo 11 '
-               'sem mudança; onde citar o medidor, "os dois medidores em linha". Acrescentada na tarefa 7: Satisfação '
-               '(exemplo 3, 02/10/2026: "até a compra dos medidores"; 18/02/2027: "Análise crítica aprova os dois '
-               'medidores de espessura em linha."; "O que observar" do exemplo 2: "justificou os medidores de espessura em '
-               'linha").',
+               '30/06 (Objetivos, 09/07/2027: atrasada); em 19/08/2027, a análise crítica decide concluir a instalação, '
+               'atrasada desde junho. Escopo (10/05/2027), compromisso 5: "Aprovou os dois medidores de espessura em '
+               'linha, de R$ 96.000, com instalação até 30/06/2027; em maio, a compra ainda não tinha sido feita." '
+               '(situação Parcial e ação sem mudança). Análise crítica de 18/02/2027, ação 7 da análise de 13/08/2026: '
+               '"Instalar o medidor de espessura em linha na extrusora 3." passa a "Orçar os medidores de espessura em '
+               'linha para as extrusoras 3 e 4 e levar a compra à aprovação.", decidida pelas reclamações de espessura do '
+               'cliente A do primeiro semestre de 2026 (prazo, status e resultado sem mudança: "Orçamento recebido. Compra '
+               'não aprovada."; a ação segue atrasada até a decisão 5 de 18/02/2027, que aprova a compra e a fecha). A '
+               'reclamação de 14/09/2026 e o RNC 2026-32 confirmaram a causa e levaram a proposta à análise de 18/02/2027. '
+               'Caso integrado: onde citar o medidor, "os dois medidores em linha"; no passo 11 (19/08/2027, caso_data.py), '
+               '"Decisões: antecipar o medidor em linha e planejar a passagem do conhecimento do operador sênior." passa a '
+               '"Decisões: concluir a instalação dos dois medidores em linha, atrasada desde junho, e planejar a passagem do '
+               'conhecimento do operador sênior." Acrescentada na tarefa 7, Satisfação: exemplo 3 (sat_data.py), etapa de '
+               '02/10/2026, "até a compra do medidor." → "até a compra dos medidores."; etapa de 18/02/2027, "Análise '
+               'crítica aprova o medidor de espessura." → "Análise crítica aprova os dois medidores de espessura em '
+               'linha."; "O que observar" do exemplo 2 (sat_body.html), "justificou o medidor de espessura" → "justificou '
+               'os medidores de espessura em linha". Revisão final (decisões do controlador, à espera da revisão do autor): '
+               'a versão aprovada dava a ação 7 como "Orçar os medidores de espessura em linha para as extrusoras 3 e 4.", '
+               'que, com o resultado "Orçamento recebido", ficava atrasada já feita: ela ganha "e levar a compra à '
+               'aprovação". A versão aprovada dizia "passo 11 sem mudança" e "antecipação decidida em 19/08/2027"; com o '
+               'prazo de 30/06/2027 vencido, "antecipar" (a palavra do desenho) não se lê, e o passo 11 passa a '
+               '"concluir a instalação…, atrasada desde junho".',
      'estudos': ['Escopo', 'Analise-Critica', 'Caso-Integrado', 'Satisfacao']},
     {'id': 'I08',
      'conflito': 'Compras com duas histórias: formulário novo e devoluções de 40% para 12% em 2026, contra indicador em 30% '
@@ -1409,7 +1471,10 @@ DECISOES = [
                'ORGS["distribuidora"]); a cronologia segue N09, e a SWOT de origem, N08. Nas listas dos exemplos da '
                'planilha, "de Suprimentos" passa a "da distribuidora" (GUT, Ishikawa e 5W2H: "As matrizes/análises/'
                'planos da pizzaria e da distribuidora"; PDCA: "Os ciclos da pizzaria e da distribuidora"). O exemplo 3 '
-               'desses estudos, dos instrumentos vencidos ("3 de 25"), continua da indústria (I19).',
+               'desses estudos, dos instrumentos vencidos ("3 de 25"), continua da indústria (I19). Nas planilhas de GUT, '
+               'Ishikawa, 5W2H e PDCA (tarefa 8, registrado na revisão final), o nome da distribuidora entrou no campo '
+               '"Área / unidade" do cabeçalho do exemplo 2 (campo area de gut_data.py, ish_data.py, w5_data.py e do '
+               'exemplo 2 de build_pdca.py), no lugar de "Suprimentos"; as planilhas não têm campo Organização.',
      'estudos': ['GUT', 'Pareto', 'Ishikawa', '5W2H', 'PDCA']},
     {'id': 'I09',
      'conflito': 'Lote piloto da resina nova, contra "o lote 135 foi o primeiro"; resposta "dentro do critério", contra '
@@ -1467,7 +1532,10 @@ DECISOES = [
                'exigem a ISO 9001 virou o objetivo O4"; "O4" fica só para o objetivo. A figura 7, cópia da matriz de '
                'Riscos, mantém os códigos. Os prazos do M5 (31/08/2028) e do M6 (30/09/2028) não mudam; o "O que '
                'observar" do exemplo 2 diz que o M6 vence depois do limite da etapa 4, ações concluídas (23/09/2028), e '
-               'que o M5 fica a três semanas dele.',
+               'que o M5 fica a três semanas dele. Revisão final: o módulo 3 dizia "oito etapas, as mesmas do plano dos '
+               'exemplos" antes de um passo a passo com outras oito; passa a "A transição tem oito etapas, as do plano dos '
+               'exemplos, mostradas na figura 3. O passo a passo abaixo diz como percorrê-las; as duas primeiras cabem em '
+               'poucas semanas." (ed26_body.html).',
      'estudos': ['ISO-9001-2026']},
     {'id': 'I14',
      'conflito': 'Refugo de 2,6% "atende em parte" com meta abaixo de 3%; contagens de quadrantes e de pendências.',
@@ -1506,8 +1574,10 @@ DECISOES = [
                'ganha "Resultado da inspeção de recebimento · Laboratório e controle da qualidade" e "Resultados de '
                'auditoria e ações · Gestão do sistema da qualidade", e a origem da requisição passa a "Produção e '
                'Manutenção". Nas interações do processo 3, "Recebe de 4 · Produção" passa a "Requisição de compra, com '
-               'especificação, e plano de produção do mês". As saídas já batem.',
-     'estudos': ['Processos']},
+               'especificação, e plano de produção do mês". As saídas já batem. Revisão final: a Análise crítica de '
+               '14/12/2026 cita a média do mapa de 14/10/2026 (entrada c3, ac_data.py): "63% dos elementos dos processos '
+               'estão definidos." → "64% dos elementos dos processos estão definidos." (46,0 de 72 pontos, 63,9%).',
+     'estudos': ['Processos', 'Analise-Critica']},
     {'id': 'I17',
      'conflito': '"Sete seguem para o cruzamento", com estratégias de fatores médios e ameaça alta sem estratégia.',
      'canone': 'Pizzaria (SWOT, exemplo 1). Só os sete fatores de prioridade alta entram no cruzamento: S1, S2, W1, W2, '
@@ -1543,7 +1613,10 @@ DECISOES = [
                'depois de 90 dias" e o "O que observar" ("data marcada para 90 dias depois") continuam certos. A A5 '
                '(28/09 a 09/10) e as outras ações não mudam. No PDCA, a meta passa de "Nenhum instrumento vencido, em 60 '
                'dias" a "Nenhum instrumento vencido, por 90 dias seguidos" (PDCA acrescentado à lista do spec; a etapa 6, '
-               '"Depois de 3 meses", já está certa). Nos quatro estudos, o cabeçalho do exemplo 3 ganha a linha Organização: "Indústria de '
+               '"Depois de 3 meses", já está certa). No módulo 5 do PDCA (tabela de metas, escrita à mão; revisão da tarefa 8, '
+               'registrado na revisão final), a meta completa de "Implantar o controle de instrumentos até março" passa de '
+               '"Zerar os instrumentos com calibração vencida, em 60 dias" a "Zerar os instrumentos com calibração vencida '
+               'e manter o zero por 90 dias seguidos, até 18/12/2026", o fim da A6. Nos quatro estudos, o cabeçalho do exemplo 3 ganha a linha Organização: "Indústria de '
                'embalagens plásticas". Recursos: na figura 4, "As três quebras de julho vieram de peças que a preventiva '
                'atrasada teria trocado ou medido." passa a "Duas das três quebras de julho vieram de peças que a '
                'preventiva atrasada teria trocado ou medido." (o texto já diz duas: a de 27/07, cabo do termopar, não '
@@ -1839,7 +1912,7 @@ DECISOES = [
                'frequência "Uma pizza por noite, no pico" → "Três pizzas por hora no pico; registra-se a menor temperatura '
                'da noite". Módulo 3 (exemplo do K7): "O que controlar" → "A menor temperatura da pizza na saída, na noite, '
                'na expedição"; "Frequência" → "Três pizzas por hora no pico; registra-se a menor temperatura da noite". '
-               'Ficam: K1 "Duas leituras por noite" (14 registros, cada leitura registrada), K2 "Uma vez por noite, no lote '
+               'Ficam: K1 "Duas leituras por noite" (14 registros, cada leitura registrada; o texto passa a "Duas leituras por dia, uma em cada turno" pela N36), K2 "Uma vez por noite, no lote '
                'de massa do dia" (7, um lote por dia), K3 "Uma vez por noite, na abertura" (7, uma abertura por noite). '
                'Indústria: K2 "A cada duas horas" → "A cada duas horas; a folha registra, por lote, a leitura mais afastada '
                'de 190 °C"; K4 "Cada bobina" → "Cada bobina; a folha registra, por lote, a largura mais afastada de 600 '
@@ -1893,4 +1966,50 @@ DECISOES = [
                'verificação. A A6 transforma o novo método em padrão. Um plano que só ataca as causas de ocorrência deixa de '
                'fora o controle, a verificação e a padronização." As ações e os números não mudam.',
      'estudos': ['5W2H']},
+
+    # ---------------------------------------------------------------- revisão final de todo o ramo
+    # As entradas abaixo e as emendas marcadas "Revisão final" foram decididas pelo controlador depois da aprovação do
+    # autor e esperam a revisão dele.
+    {'id': 'N36',
+     'conflito': 'Achado na revisão final. A frequência da leitura da câmara fria se contradizia: "duas vezes por turno" em '
+                 'Auditoria (pergunta do checklist e critério da constatação 2 da auditoria 2026-03; tabela de como '
+                 'escrever a constatação), em Partes interessadas (vigilância sanitária) e na ficha (IT-PRO-01 e N02); '
+                 '"duas leituras por noite" em Produção (K1, P15 e N31); e a Técnica de auditoria conta 56 leituras em '
+                 'fevereiro de 2027, duas por dia. Com os dois turnos da pizzaria (N22), "duas vezes por turno" daria '
+                 'quatro leituras por dia.',
+     'canone': 'Uma leitura em cada turno, duas por dia (regra 4.3 do desenho: a versão dos números conferidos, em mais '
+               'estudos, e a que muda menos). Valor antigo → novo: aud_data.py, checklist, "A temperatura da câmara fria é '
+               'registrada duas vezes por turno?" → "A temperatura da câmara fria é registrada em cada turno?", e a '
+               'evidência "3 turnos sem nenhum registro: 12/09 noite, 13/09 noite e 20/09 noite." → "3 turnos sem registro: '
+               '12/09 noite, 13/09 noite e 20/09 noite."; constatação 2, critério "Rotina de controle: a temperatura da '
+               'câmara fria deve ser registrada duas vezes por turno." → "…deve ser registrada uma vez em cada turno."; '
+               'aud_body.html, "A rotina IT-PRO-01 pede o registro da temperatura duas vezes por turno." → "A rotina '
+               'IT-PRO-01 pede o registro da temperatura em cada turno."; pi_data.py, vigilância sanitária, "registro de '
+               'temperatura, duas vezes por turno." → "registro de temperatura, uma vez em cada turno."; prod_data.py, K1, '
+               'frequência "Duas leituras por noite" → "Duas leituras por dia, uma em cada turno"; prod_body.html, tabela '
+               'do módulo 2, linha Registro, "A planilha de temperatura, duas vezes por noite." → "A planilha de '
+               'temperatura, uma leitura em cada turno."; caixa "Controle bem escrito", "no visor, duas vezes por noite." '
+               '→ "no visor, uma vez em cada turno."; build_prod_html.py, figura do K1, "DUAS LEITURAS POR NOITE" → "UMA '
+               'LEITURA EM CADA TURNO". Ficha: título da IT-PRO-01, N02, P15 e N31. Ficam: as 14 leituras de Produção '
+               '(duas por dia, em 7 dias; a 2ª do dia 11/03 fora, às 21h40, no turno da noite), as 56 de fevereiro na '
+               'Técnica de auditoria, os 28 turnos de Auditoria, a c5 da Análise crítica ("registrada em todos os '
+               'turnos"), a GUT ("registrar a temperatura duas vezes por turno até o reparo", medida provisória do P3, '
+               'treinamento e planilha), o item do questionário de Produção que dá "duas vezes por turno" como controle '
+               'mal escrito (o erro do item é a falta do número) e Recursos ("Visor lido na abertura e no fechamento", '
+               'abril de 2027: duas leituras por dia). Emenda a N02, que o autor aprovou: decisão do controlador, à espera '
+               'da revisão do autor.',
+     'estudos': ['Auditoria', 'Partes-Interessadas', 'Producao']},
+    {'id': 'N37',
+     'conflito': 'Achado na revisão final, ao refazer a média do P1 (P07). A coluna "Média do ano" de Indicadores sai de '
+                 'dois lugares: a planilha calcula a média e a mostra com uma casa, arredondando o meio para cima; o '
+                 'treinamento (build_ind_html.py) a escrevia com o arredondamento do Python, que leva o meio ao par. '
+                 'Nas médias que terminam em 5 na segunda casa, os dois divergiam: C2 30,25 (planilha 30,3, treinamento '
+                 '30,2) e C3 81,25 (planilha 81,3, treinamento 81,2); com agosto em 94, o P1 dá 84,25 (planilha 84,3, '
+                 'treinamento 84,2).',
+     'canone': 'Vale a planilha, que tem a conta (e é a regra do estudo de Processos, build_proc_html.py: o meio vai para '
+               'cima). O gerador do treinamento passa a arredondar a média como a planilha (build_ind_html.py, função '
+               'media). Valor antigo → novo no treinamento de Indicadores: P1 84,4 → 84,3 (por P07); C2 30,2 → 30,3; C3 '
+               '81,2 → 81,3. As outras médias não mudam. Ficha: média do ano do C2 30,2 → 30,3. Nenhum outro estudo cita '
+               'essas médias. Decidida na correção da revisão final (seção 4.3 do desenho), à espera da revisão do autor.',
+     'estudos': ['Indicadores']},
 ]

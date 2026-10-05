@@ -252,7 +252,7 @@ EX2 = {
          "A extrusora 3 sob atenção", _REC),
         (D(2027, 7, 31), _REC, "Três quebras da extrusora 3 em julho, 40 horas paradas, com a preventiva adiada desde junho.", "Registro de manutenções de julho",
          "A disponibilidade abaixo da meta", _AC),
-        (D(2027, 8, 19), _AC, "Entradas: o lote 135, o micrômetro reprovado e as quebras de julho. Decisões: antecipar o medidor em linha e planejar a passagem do conhecimento do operador sênior.",
+        (D(2027, 8, 19), _AC, "Entradas: o lote 135, o micrômetro reprovado e as quebras de julho. Decisões: concluir a instalação dos dois medidores em linha, atrasada desde junho, e planejar a passagem do conhecimento do operador sênior.",
          "Ata da análise crítica de 19/08/2027", "A passagem do conhecimento, com prazo", _CON),
         (D(2027, 9, 30), _CON, "Mapa do conhecimento: a regulagem da extrusora 3 e a medição da rosca estão críticas, com transferência planejada.", "Mapa do conhecimento, C-01 e C-03",
          "", ""),

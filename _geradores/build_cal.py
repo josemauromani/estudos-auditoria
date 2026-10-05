@@ -157,7 +157,7 @@ r += 1
 section("As regras de cálculo")
 for k, text in [
     ("Próxima data", "A última calibração ou verificação mais o intervalo, em meses."),
-    (EMDIA, f"Até a próxima data faltam mais dias do que o aviso: um quarto do intervalo, com no máximo {JANELA} dias."),
+    (EMDIA, f"Até a próxima data faltam tantos dias quanto o aviso, ou mais: um quarto do intervalo, com no máximo {JANELA} dias."),
     (VENCE, f"Faltam menos dias do que o aviso. Na verificação mensal, cerca de uma semana; no intervalo de um ano, {JANELA} dias."),
     (VENCIDO, "A próxima data já passou. O instrumento deve ser bloqueado até a calibração."),
     (SEMCAL, "Não há data de calibração nem de verificação."),
@@ -337,7 +337,7 @@ Ip, Iq, Ir = (f"{IN}!{c}{I1}:{c}{I2}" for c in "PQR")
 Cl, Co = (f"{CA}!{c}{C1}:{c}{C2}" for c in "LO")
 IND = [
     ("Instrumentos cadastrados", f"=COUNTA({IN}!C{I1}:C{I2})", "Da aba Instrumentos."),
-    (EMDIA, f'=COUNTIF({Ip},"{EMDIA}")', f"Mais longe do que o aviso: um quarto do intervalo, no máximo {JANELA} dias."),
+    (EMDIA, f'=COUNTIF({Ip},"{EMDIA}")', f"Faltam tantos dias quanto o aviso, ou mais: um quarto do intervalo, no máximo {JANELA} dias."),
     (VENCE, f'=COUNTIF({Ip},"{VENCE}")', "Programar a calibração ou a verificação."),
     (VENCIDO, f'=COUNTIF({Ip},"{VENCIDO}")', "Bloquear até calibrar."),
     (SEMCAL, f'=COUNTIF({Ip},"{SEMCAL}")', "Verificar antes de usar de novo."),

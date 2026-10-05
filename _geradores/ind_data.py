@@ -70,7 +70,7 @@ EX1 = {
         ("P1", "Entregas em até 40 minutos", "Entregar o pedido no prazo prometido", "Atender pedido de delivery",
          "Pedidos entregues em até 40 minutos ÷ pedidos entregues × 100", "%", MAIOR, 95, 90,
          "Horários de saída e de chegada, no sistema de pedidos", "Mensal", "Líder da expedição",
-         [81, 83, 80, 82, 82, 83, 82, 84, 81, 84, 96, 95],  # jun e jul: médias das semanas do PDCA (P07)
+         [81, 83, 80, 82, 82, 83, 82, 84, 81, 84, 94, 95],  # jun, jul e ago: médias das semanas do PDCA que começam no mês (P07)
          "A escala padrão e o agrupamento por zona, definidos no ciclo PDCA, continuam."),
         ("P2", "Reclamações por 100 pedidos", "Reduzir as reclamações dos clientes", "Atender pedido de delivery",
          "Reclamações registradas ÷ pedidos entregues × 100", "por 100 pedidos", MENOR, 2.0, 3.0,

@@ -381,7 +381,7 @@ footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);font-si
         <tr><td><strong>Plano de controle</strong></td><td>A lista dos controles de um processo, etapa por etapa.</td><td>Sete controles, da câmara fria à saída do pedido.</td></tr>
         <tr><td><strong>Controle do produto</strong></td><td>Confere uma característica do que está sendo feito.</td><td>O peso da bola de massa: de 380 a 420 g.</td></tr>
         <tr><td><strong>Controle do processo</strong></td><td>Confere uma condição que faz o produto sair certo.</td><td>A temperatura do forno: de 280 a 320 °C.</td></tr>
-        <tr><td><strong>Registro</strong></td><td>O resultado de cada verificação, guardado.</td><td>A planilha de temperatura, duas vezes por noite.</td></tr>
+        <tr><td><strong>Registro</strong></td><td>O resultado de cada verificação, guardado.</td><td>A planilha de temperatura, uma leitura em cada turno.</td></tr>
         <tr><td><strong>Reação</strong></td><td>O que fazer com o produto e com o processo quando o resultado sai do critério.</td><td>Regular o forno e segurar a entrada de pizzas.</td></tr>
         <tr><td><strong>Identificação</strong></td><td>O que diz qual é o produto e se ele já foi verificado.</td><td>A etiqueta com o número do pedido e a rubrica.</td></tr>
       </tbody>
@@ -586,7 +586,7 @@ footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);font-si
     <div class="box">
       <h4>Controle bem escrito</h4>
       <ul>
-        <li>“Temperatura da câmara fria: de 0 a 5 °C, no visor, duas vezes por noite. Fora disso: passar os insumos para o refrigerador reserva e avisar o gerente.”</li>
+        <li>“Temperatura da câmara fria: de 0 a 5 °C, no visor, uma vez em cada turno. Fora disso: passar os insumos para o refrigerador reserva e avisar o gerente.”</li>
         <li>“Espessura do filme: de 38 a 42 µm, micrômetro MIC-07, em cinco pontos, a cada bobina. Fora disso: ajustar a matriz e segregar a bobina.”</li>
         <li>Tem número, instrumento, frequência e reação.</li>
       </ul>
@@ -737,7 +737,7 @@ footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);font-si
       <caption>Plano de controle · 7 controles, em 6 etapas</caption>
       <thead><tr><th class="c">#</th><th style="width:13%">Etapa</th><th style="width:19%">O que controlar<small>Produto ou processo</small></th><th style="width:11%">Critério</th><th style="width:18%">Como medir<small>Frequência</small></th><th style="width:13%">Quem<small>Registro</small></th><th>Reação se sair do critério</th></tr></thead>
       <tbody>
-        <tr><td class="c n">K1</td><td>Receber e guardar insumos</td><td><strong>Temperatura da câmara fria</strong><small>Processo</small></td><td>0 a 5 °C</td><td>Termômetro da câmara, leitura no visor<small>Duas leituras por noite</small></td><td>Pizzaiolo do turno<small>Planilha de temperatura (FR-02)</small></td><td>Avisar o gerente, passar os insumos para o refrigerador reserva e avaliar o que ficou acima de 5 °C por mais de duas horas.</td></tr>
+        <tr><td class="c n">K1</td><td>Receber e guardar insumos</td><td><strong>Temperatura da câmara fria</strong><small>Processo</small></td><td>0 a 5 °C</td><td>Termômetro da câmara, leitura no visor<small>Duas leituras por dia, uma em cada turno</small></td><td>Pizzaiolo do turno<small>Planilha de temperatura (FR-02)</small></td><td>Avisar o gerente, passar os insumos para o refrigerador reserva e avaliar o que ficou acima de 5 °C por mais de duas horas.</td></tr>
         <tr><td class="c n">K2</td><td>Preparar a massa</td><td><strong>Peso da bola de massa da pizza grande</strong><small>Produto</small></td><td>380 a 420 g</td><td>Balança da bancada, média de cinco bolas<small>Uma vez por noite, no lote de massa do dia</small></td><td>Pizzaiolo do turno<small>Ficha do lote de massa</small></td><td>Regular a divisora e pesar de novo o lote inteiro.</td></tr>
         <tr><td class="c n">K3</td><td>Montar</td><td><strong>Bancada e utensílios higienizados antes do turno</strong><small>Processo</small></td><td>Conforme ou não</td><td>Lista de abertura do turno, conferida no posto<small>Uma vez por noite, na abertura</small></td><td>Pizzaiolo líder<small>Lista de abertura do turno</small></td><td>Higienizar antes de começar. Não montar pizza em bancada reprovada.</td></tr>
         <tr><td class="c n">K4</td><td>Assar</td><td><strong>Temperatura do forno no pico: a pior leitura da noite</strong><small>Processo</small></td><td>280 a 320 °C</td><td>Termômetro do forno, no pico do turno<small>A cada hora do pico; registra-se a leitura fora da faixa ou, com todas dentro, a mais afastada de 300 °C</small></td><td>Pizzaiolo do turno<small>Registro de regulagem do forno</small></td><td>Regular o forno e segurar a entrada de pizzas até a temperatura voltar à faixa.</td></tr>
@@ -995,7 +995,7 @@ footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);font-si
         <text class="mu" x="802.3" y="260" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">14/03</text>
         <line class="grid" x1="746.9" y1="240" x2="746.9" y2="248"/>
         <circle class="pt" data-k="13" cx="830.0" cy="150.0" r="5"/>
-        <text class="mono mu" x="470.0" y="284" font-size="10" text-anchor="middle">DUAS LEITURAS POR NOITE</text>
+        <text class="mono mu" x="470.0" y="284" font-size="10" text-anchor="middle">UMA LEITURA EM CADA TURNO</text>
         <rect class="hit" x="82.3" y="40" width="55.4" height="200" tabindex="0" role="img" aria-label="08/03, 1ª leitura: 3,2 °C, dentro" data-k="0" data-v="3,2 °C" data-s="Dentro" data-d="08/03, 1ª leitura" data-cx="110.0" data-cy="160.0"/>
         <rect class="hit" x="137.7" y="40" width="55.4" height="200" tabindex="0" role="img" aria-label="08/03, 2ª leitura: 3,5 °C, dentro" data-k="1" data-v="3,5 °C" data-s="Dentro" data-d="08/03, 2ª leitura" data-cx="165.4" data-cy="152.5"/>
         <rect class="hit" x="193.1" y="40" width="55.4" height="200" tabindex="0" role="img" aria-label="09/03, 1ª leitura: 3 °C, dentro" data-k="2" data-v="3 °C" data-s="Dentro" data-d="09/03, 1ª leitura" data-cx="220.8" data-cy="165.0"/>

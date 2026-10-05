@@ -327,7 +327,7 @@ for j, r in enumerate(rs):
         ch.append(f'        <text class="mu" x="{(sx(j) + sx(j + 1)) / 2:.1f}" y="{Y1 + 20}" font-size="11" text-anchor="middle"{TNUM}>{dt(r["data"], False)}</text>')
         if j:
             ch.append(f'        <line class="grid" x1="{(sx(j) + sx(j - 1)) / 2:.1f}" y1="{Y1}" x2="{(sx(j) + sx(j - 1)) / 2:.1f}" y2="{Y1 + 8}"/>')
-ch.append(f'        <text class="mono mu" x="{(X0 + X1) / 2}" y="{Y1 + 44}" font-size="10" text-anchor="middle">DUAS LEITURAS POR NOITE</text>')
+ch.append(f'        <text class="mono mu" x="{(X0 + X1) / 2}" y="{Y1 + 44}" font-size="10" text-anchor="middle">UMA LEITURA EM CADA TURNO</text>')
 w = (X1 - X0 - 60) / (len(rs) - 1)
 for j, r in enumerate(rs):
     ch.append(f'        <rect class="hit" x="{sx(j) - w / 2:.1f}" y="{Y0}" width="{w:.1f}" height="{Y1 - Y0}" tabindex="0" role="img" '

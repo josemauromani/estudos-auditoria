@@ -164,7 +164,7 @@ EX1 = {
         (NAOATENDE, "", "O dono escreve três comportamentos esperados e os cobra na reunião mensal.", _DL, D(2027, 12, 31), None),
         (ATENDE, "Política de 2027 ligada ao crescimento do delivery", "", "", None, None),
         (PARCIAL, "Matriz de riscos do delivery", "Separar as oportunidades da SWOT numa lista própria, com ação e prazo.", _GL, D(2027, 12, 20), D(2027, 12, 18)),
-        (PARCIAL, "Lançamento da pizza vegana planejado pelo projeto P-03; a atualização de versão do sistema de pedidos, em abril de 2027, foi feita sem plano",
+        (PARCIAL, "Inclusão do salão no sistema planejada na análise crítica de 14/12/2026, com responsável e prazo; a atualização de versão do sistema de pedidos, em abril de 2027, foi feita sem plano",
          "Criar uma rotina simples de planejar mudanças no sistema.", _GL, D(2028, 1, 15), None),
         (NAOATENDE, "", "Conversa com toda a equipe sobre a política e os comportamentos esperados.", _GL, D(2028, 1, 15), None),
         (ATENDE, "Termos lidos; a loja não tem glossário próprio", "", "", None, None),
