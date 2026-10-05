@@ -1018,6 +1018,8 @@ PROIBIDO = [
     {'id': 'I19b', 'regex': r'vencid[oa]s?, em 60 dias', 'motivo': 'a eficácia dos instrumentos vencidos se verifica por 90 dias seguidos (I19)',
      'pastas': ['PDCA']},
     {'id': 'N22b', 'regex': r'turno do almoço', 'motivo': 'a pizzaria não tem turno do almoço (N22)', 'pastas': ['Indicadores']},
+    {'id': 'N35', 'regex': r'Cada causa confirmada recebeu pelo menos uma ação|As duas últimas linhas não atacam causas',
+     'motivo': 'a fila do forno ficou sem ação; a A5 é a ação de controle da causa de não detecção E1 (N35)', 'pastas': ['5W2H']},
 ]
 
 # {'id', 'conflito', 'canone', 'estudos'}
@@ -1073,7 +1075,12 @@ DECISOES = [
                'Cada mês é a média das semanas que começam nele: jun/26 = semanas 1 a 3 = 81 (81,3); jul/26 = semanas 4 '
                'a 7 = 84 (83,5). Em Indicadores, P1 passa de 88 e 94 para 81 e 84 em jun/26 e jul/26; a série de '
                'out/25 a set/26 fica 81, 83, 80, 82, 82, 83, 82, 84, 81, 84, 96, 95, e a média do ano passa de 85,8 '
-               'para 84,4. Ago/26 (96) e set/26 (95) não mudam. Propagar a quem citar 88 ou 94 como valor mensal.',
+               'para 84,4. Ago/26 (96) e set/26 (95) não mudam. Propagar a quem citar 88 ou 94 como valor mensal. '
+               'Revisão da tarefa 8 (decisão do controlador): a média das semanas que começam no mês só define junho e julho, '
+               'os dois valores em conflito. Agosto fica em 96, como o autor aprovou: pela mesma regra daria 94,4 (semanas 8 a 12), '
+               'mas o valor do mês é o das entregas do mês inteiro, que não precisa igualar a média simples das porcentagens '
+               'semanais (a semana 12 começa em 31/08 e é quase toda de setembro). Nenhum texto de Indicadores ou do PDCA diz '
+               'que o valor mensal é a média das semanas.',
      'estudos': ['Indicadores']},
     {'id': 'P08',
      'conflito': 'FR-07 é relatório de auditoria e planilha de verificação; formulários da tabela de retenção fora da '
@@ -1258,7 +1265,11 @@ DECISOES = [
                'do exemplo 1, a A6 continua "07/09 a 15/09"; no acompanhamento de 05/08 (tabela e figura 4), a A6 '
                'continua "Não iniciada", com início 07/09 e prazo 15/09; a legenda da figura 4 continua "A ação A4 '
                'deveria ter terminado no dia 2 e aparece como atrasada"; w5_data.py não muda. O PDCA também não muda. '
-               'Os estudos que mudam são os de P09: Informação documentada e Não conformidade.',
+               'Os estudos que mudam são os de P09: Informação documentada e Não conformidade. Atualizado na tarefa 8: a '
+               'datação da A6 continua como acima, mas o 5W2H mudou por outros itens. Pela P23, a figura 4 e a tabela do '
+               'acompanhamento de 05/08 mostram a situação calculada, e não o status: a A5 e a A6 passam de "Em andamento" e '
+               '"Não iniciada" a "No prazo" (w5_data.py, ref_status; a legenda da figura 4 fica). Pela I19, o w5_data.py '
+               'mudou no exemplo 3 (A3 até 15/09); pela P22, a A1 do exemplo 1 liga a escala do pico à A5.',
      'estudos': []},
     {'id': 'N02',
      'conflito': 'Em Auditoria (tabela de como escrever a constatação), "A instrução IT-05 pede o registro da temperatura '
@@ -1870,4 +1881,16 @@ DECISOES = [
                '(sat_body.html), exemplo 3, "O que observar": "O cliente A não reclamou de novo." → "O cliente A não '
                'reclamou de novo até fevereiro." Nenhum outro estudo dizia que o cliente A não reclamou mais.',
      'estudos': ['Satisfacao']},
+    {'id': 'N35',
+     'conflito': 'Achado na revisão da tarefa 8. 5W2H, exemplo 1, "O que observar": "Cada causa confirmada recebeu pelo menos '
+                 'uma ação" e "As duas últimas linhas não atacam causas: uma mede o resultado". Mas o Ishikawa e o PDCA dão a '
+                 'fila do forno (C1) como confirmada e deixada para o ciclo seguinte, sem ação, e a A5 (medir por faixa de '
+                 'horário) é a ação de controle da causa de não detecção E1 (T61).',
+     'canone': 'Valem o Ishikawa e o PDCA (P22, T61). 5W2H (w5_body.html), exemplo 1, "O que observar": "Cada causa que '
+               'seguiu para o plano recebeu pelo menos uma ação, e o motivo está escrito ao lado dela. A fila do forno, '
+               'confirmada, ficou para o ciclo seguinte, como no Ishikawa. A A5 responde à causa de não detecção (E1): mede o '
+               'tempo por faixa de horário, para que o pico não volte a se esconder na média do dia, e dá os dados da '
+               'verificação. A A6 transforma o novo método em padrão. Um plano que só ataca as causas de ocorrência deixa de '
+               'fora o controle, a verificação e a padronização." As ações e os números não mudam.',
+     'estudos': ['5W2H']},
 ]
