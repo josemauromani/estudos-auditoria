@@ -136,9 +136,9 @@ def swot_sheet(ws, tab, data=None):
     band(ws, s, "Resumo automático", "M")
     label(ws, f"B{s+1}", "Quadrante", merge=f"B{s+1}:D{s+1}", h="right")
     slots = {"S": (f"E{s+1}:G{s+1}", "E"), "W": (f"H{s+1}:I{s+1}", "H"), "O": (f"J{s+1}:J{s+1}", "J"), "T": (f"K{s+1}:M{s+1}", "K")}
-    for r, text in ((s + 2, "Fatores listados"), (s + 3, "Pontos"), (s + 4, "Aviso")):
+    for r, text in ((s + 2, "Fatores listados"), (s + 3, "Pontos"), (s + 4, "Média por fator"), (s + 5, "Aviso")):
         label(ws, f"B{r}", text, merge=f"B{r}:D{r}", h="right")
-        ws.row_dimensions[r].height = 21.75 if r != s + 4 else 30
+        ws.row_dimensions[r].height = 21.75 if r != s + 5 else 30
     ws.row_dimensions[s + 1].height = 21.75
     for q in "SWOT":
         rng, col = slots[q]
@@ -149,27 +149,30 @@ def swot_sheet(ws, tab, data=None):
         put(ws, f"{col}{s+1}", f"{q} — {QD[q][2]}", f=font(10, True, c=WHITE), bg=QD[q][0], h="center", merge=mg(s + 1))
         calc(ws, f"{col}{s+2}", f"=COUNTA({cfa}{r1}:{cfa}{r2})", fmt='0" fatores"', merge=mg(s + 2))
         calc(ws, f"{col}{s+3}", f"=SUM({cpt}{r1}:{cpt}{r2})", fmt='0" pontos"', merge=mg(s + 3))
-        calc(ws, f"{col}{s+4}", f'=IF({col}{s+2}=0,"Liste os fatores",IF({col}{s+2}<3,"Poucos fatores: liste ao menos 3",'
-             f'IF(COUNT({cpt}{r1}:{cpt}{r2})<{col}{s+2},"Há fator sem nota","OK")))', b=False, sz=9, merge=mg(s + 4))
-    cf_ok(ws, f"E{s+4}:M{s+4}")
+        calc(ws, f"{col}{s+4}", f'=IF(COUNT({cpt}{r1}:{cpt}{r2})=0,"",AVERAGE({cpt}{r1}:{cpt}{r2}))', fmt='0.0', merge=mg(s + 4))
+        calc(ws, f"{col}{s+5}", f'=IF({col}{s+2}=0,"Liste os fatores",IF({col}{s+2}<3,"Poucos fatores: liste ao menos 3",'
+             f'IF(COUNT({cpt}{r1}:{cpt}{r2})<{col}{s+2},"Há fator sem nota","OK")))', b=False, sz=9, merge=mg(s + 5))
+    cf_ok(ws, f"E{s+5}:M{s+5}")
 
     def wide(r, text, formula, fmt=None, height=21.75, sz=10):
         label(ws, f"B{r}", text, merge=f"B{r}:G{r}", h="right")
         calc(ws, f"H{r}", formula, fmt=fmt, merge=f"H{r}:M{r}", sz=sz)
         ws.row_dimensions[r].height = height
 
-    pts = {q: f"{slots[q][1]}{s+3}" for q in "SWOT"}
+    med = {q: f"{slots[q][1]}{s+4}" for q in "SWOT"}
     rngs = {q: "{3}{4}:{3}{5}".format(*cells(q)) for q in "SWOT"}
-    wide(s + 5, "Balanço interno (forças menos fraquezas)", f"={pts['S']}-{pts['W']}", fmt="+0;-0;0")
-    wide(s + 6, "Balanço externo (oportunidades menos ameaças)", f"={pts['O']}-{pts['T']}", fmt="+0;-0;0")
-    wide(s + 7, "Postura estratégica sugerida",
+    wide(s + 6, "Balanço interno (média das forças menos a das fraquezas)",
+         f'=IF(OR({med["S"]}="",{med["W"]}=""),"",{med["S"]}-{med["W"]})', fmt="+0.0;-0.0;0.0")
+    wide(s + 7, "Balanço externo (média das oportunidades menos a das ameaças)",
+         f'=IF(OR({med["O"]}="",{med["T"]}=""),"",{med["O"]}-{med["T"]})', fmt="+0.0;-0.0;0.0")
+    wide(s + 8, "Postura estratégica sugerida",
          "=IF(OR(" + ",".join(f"COUNT({rngs[q]})=0" for q in "SWOT") + '),"Dê notas aos quatro quadrantes para ver a postura",'
-         f'IF({pts["S"]}>={pts["W"]},IF({pts["O"]}>={pts["T"]},"Desenvolvimento: usar as forças para aproveitar as oportunidades",'
+         f'IF({med["S"]}>={med["W"]},IF({med["O"]}>={med["T"]},"Desenvolvimento: usar as forças para aproveitar as oportunidades",'
          '"Manutenção: usar as forças para enfrentar as ameaças"),'
-         f'IF({pts["O"]}>={pts["T"]},"Crescimento: corrigir as fraquezas para aproveitar as oportunidades",'
+         f'IF({med["O"]}>={med["T"]},"Crescimento: corrigir as fraquezas para aproveitar as oportunidades",'
          '"Sobrevivência: reduzir as fraquezas e proteger-se das ameaças")))', height=30)
-    wide(s + 8, "Campos do cabeçalho preenchidos", "=COUNTA(D4,J4,D5,J5,D6,J6,D7,D8,J8,D9)", fmt='0" de 10"')
-    end = s + 8
+    wide(s + 9, "Campos do cabeçalho preenchidos", "=COUNTA(D4,J4,D5,J5,D6,J6,D7,D8,J8,D9)", fmt='0" de 10"')
+    end = s + 9
 
     if is_ex:
         band(ws, end + 2, "Estratégias da SWOT cruzada", "M")
@@ -214,17 +217,17 @@ EX1 = {
               ("Obras na avenida principal, que atrasam as entregas", 2, 2)],
     },
     "estrategias": [
-        ("SO — Desenvolvimento", "S3 × O4", "Lançar o pedido por mensagem, com programa de fidelidade para os clientes do bairro."),
+        ("SO — Desenvolvimento", "S2 × O4", "Lançar o pedido por mensagem, com a entrega própria no prazo como argumento."),
         ("SO — Desenvolvimento", "S1 × O1", "Fazer uma ação de boas-vindas nos novos condomínios, com degustação."),
         ("WO — Crescimento", "W2 × O4", "Levar 30% dos pedidos do aplicativo para o canal próprio."),
         ("WO — Crescimento", "W1 × O1", "Avaliar a compra do segundo forno antes da entrega dos condomínios."),
-        ("ST — Manutenção", "S2 × T2", "Divulgar a entrega no prazo como diferencial diante da rede concorrente."),
-        ("WT — Sobrevivência", "W3 × T3", "Implantar ficha técnica e custo por pizza, para reagir às altas de preço."),
+        ("ST — Manutenção", "S2 × T1", "Divulgar a entrega própria no prazo para levar os clientes do aplicativo ao canal próprio."),
+        ("WT — Sobrevivência", "W2 × T1", "Negociar a taxa com o aplicativo e definir preços por canal, para que o aumento não consuma a margem."),
     ],
 }
 EX2 = {
-    "head": dict(objeto="Área de Suprimentos de uma indústria", resp="Gerente de Suprimentos", area="Suprimentos",
-                 data=date(2026, 9, 29), autor="Equipe de compras", versao="1.0",
+    "head": dict(objeto="Distribuidora de materiais elétricos · Compras", resp="Gerente de Suprimentos", area="Suprimentos",
+                 data=date(2026, 5, 22), autor="Equipe de compras", versao="1.0",
                  objetivo="Reduzir em 8% o custo total de aquisição, sem aumentar as faltas de material.", horizonte="12 meses",
                  part="Gerente, compradores, Controladoria, Produção e Qualidade",
                  fora="Gestão de estoques e pagamento a fornecedores."),
@@ -233,7 +236,7 @@ EX2 = {
               ("Base de fornecedores homologados para todos os itens críticos", 4, 4),
               ("Contratos de longo prazo para os principais insumos", 5, 3)],
         "W": [("Requisições chegam com especificação incompleta", 4, 4),
-              ("Processo manual, em planilhas e e-mails", 4, 4),
+              ("Cotações e aprovações por e-mail, fora do sistema de compras", 4, 4),
               ("Fornecedor único contratado para três itens críticos", 5, 4),
               ("Avaliação de fornecedores sem indicadores objetivos", 3, 3)],
         "O": [("Novos fabricantes nacionais de itens hoje importados", 4, 3),
@@ -318,20 +321,20 @@ for k, text in enumerate([
 r += 1
 section("Abas da planilha")
 for k, text in [
-    ("SWOT", "Modelo principal. Cabeçalho da análise, quatro quadrantes com notas e resumo automático."),
+    ("SWOT", "Modelo principal. Cabeçalho da análise, quatro quadrantes com notas e resumo automático, com a média por quadrante."),
     ("Priorização", "Fatores em ordem de pontuação, faixas de prioridade e gráfico dos pontos por quadrante."),
     ("SWOT cruzada", "Estratégias que combinam um fator interno com um fator externo."),
     ("Plano de ação", "Ações de cada estratégia, com situação calculada a partir do prazo e do status."),
     ("Checklist", "Doze verificações de qualidade da análise, com percentual de conclusão."),
     ("Exemplo 1 - Pizzaria", "Análise preenchida com postura de desenvolvimento: crescer no delivery."),
-    ("Exemplo 2 - Compras", "Análise preenchida com postura de sobrevivência: reduzir o custo de aquisição."),
+    ("Exemplo 2 - Compras", "Análise preenchida com postura de manutenção: reduzir o custo de aquisição."),
 ]:
     line(k, text)
 r += 1
 section("Regras e premissas do modelo")
 for k, text in [
     ("Códigos", "Cada fator tem um código fixo, formado pela letra do quadrante e pelo número da linha: S1 a S8, W1 a W8, O1 a O8 e T1 a T8. A aba SWOT cruzada usa esses códigos para buscar o texto dos fatores."),
-    ("Postura estratégica", "A postura compara a soma dos pontos dos quadrantes: forças com fraquezas e oportunidades com ameaças. É uma leitura de apoio, que depende das notas dadas pelo grupo."),
+    ("Postura estratégica", "A postura compara a média dos pontos por fator de cada quadrante: forças com fraquezas e oportunidades com ameaças. A média, e não a soma, para que um quadrante não pese mais só por ter mais fatores. É uma leitura de apoio, que depende das notas dadas pelo grupo."),
     ("Empates", "Na aba Priorização, fatores com a mesma pontuação aparecem na ordem dos quadrantes: S, W, O e T."),
     ("Ação atrasada", "Uma ação é considerada atrasada quando o prazo é anterior à data de hoje e o status não é Concluída nem Cancelada."),
     ("Capacidade", "A planilha comporta 8 fatores por quadrante, 12 estratégias e 15 ações. Se faltar espaço, agrupe fatores parecidos: listas longas escondem o que importa."),

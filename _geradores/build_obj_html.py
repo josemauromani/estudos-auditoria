@@ -336,7 +336,7 @@ charttext = (f'  <p>Em {dt(H1["ref"])}, {r1["sits"][ALC]} dos {r1["n"]} objetivo
              f'com prazo em outubro: adiantada. O objetivo da pesquisa não tem base, porque a pesquisa não existia em 2026; a planilha o lê só pela meta.</p>')
 
 # ------------------------------------------------------------------ módulo 10: figura da ISO
-PARTES = [("5.2 · Partir da política", "A política da qualidade é a base dos objetivos.", "Compromissos C1 a C4 e a ligação de cada objetivo"),
+PARTES = [("5.2 · Partir da política", "A política da qualidade é a base dos objetivos.", "Os três compromissos e a ligação de cada objetivo"),
           ("6.2.1 · Objetivos mensuráveis", "Coerentes com a política, nos processos pertinentes, monitorados e comunicados.", "Indicador, base, meta, prazo e desdobramento"),
           ("6.2.2 · Planejar como alcançar", "O que será feito, recursos, responsável, prazo e avaliação.", "A ficha do objetivo e a aba Planos"),
           ("9.3 · Avaliar o alcance", "A análise crítica considera quanto de cada objetivo foi alcançado.", "Situação, caminho percorrido e fechamento do ano")]

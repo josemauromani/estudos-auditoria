@@ -70,13 +70,13 @@ _PIZZARIA['processos'] = [
     {'codigo': 'P3', 'nome': 'Entregar o pedido', 'tipo': 'Principal', 'dono': 'Líder da expedição',
      'indicador': 'Entregas em até 40 minutos'},
     {'codigo': 'P4', 'nome': 'Atender no salão', 'tipo': 'Principal', 'dono': 'Gerente da loja',
-     'indicador': 'Sem indicador em 14/10/2026; definido até 24/02/2027 (O5)'},
+     'indicador': 'Sem indicador em 14/10/2026; definido em março de 2027 (O5, alcançado com atraso: T23, N26)'},
     {'codigo': 'A1', 'nome': 'Comprar e armazenar insumos', 'tipo': 'Apoio', 'dono': 'Gerente da loja',
-     'indicador': 'Definido até 24/02/2027 (O5)'},
+     'indicador': 'Definido em março de 2027 (O5, alcançado com atraso: T23, N26)'},
     {'codigo': 'A2', 'nome': 'Manter equipamentos e motos', 'tipo': 'Apoio', 'dono': 'Pizzaiolo líder',
-     'indicador': 'Definido até 24/02/2027 (O5)'},
+     'indicador': 'Definido em março de 2027 (O5, alcançado com atraso: T23, N26)'},
     {'codigo': 'A3', 'nome': 'Treinar a equipe', 'tipo': 'Apoio', 'dono': 'Gerente da loja',
-     'indicador': 'Definido até 24/02/2027 (O5)'},
+     'indicador': 'Definido em março de 2027 (O5, alcançado com atraso: T23, N26)'},
     {'codigo': None, 'nome': 'Terceirizados', 'tipo': 'Externo', 'dono': None,
      'indicador': 'Pagamento pelo aplicativo, controle de pragas e manutenção do forno.'},
 ]
@@ -216,7 +216,8 @@ _PIZZARIA['numeros'] = [
     ('Pedidos refeitos por erro', 'Meta 1,5%, limite 2,5%. Set/26 2,0; nov/26 1,4; 2027: jan 1,6, fev 1,5, mar 1,4, abr 1,3.'),
     ('Desperdício de insumos', 'Meta 4,0% em 2026 e 3,5% em 2027 (O6). Set/26 3,9; 2027: jan 3,9, fev 4,0, mar 3,8, abr 3,9.'),
     ('Pesquisa de satisfação', 'Meta 4,3. Fev/27 4,33; mar 4,43; abr 4,53. Pedidos de delivery: fev 840, mar 910, abr 870.'),
-    ('Processos com indicador e meta', '5 de 9 em 14/10/2026; 9 de 9 em 24/02/2027.'),
+    ('Processos com indicador e meta', '5 de 9 em 14/10/2026; 7 de 9 em fevereiro e 9 de 9 em março de 2027: o O5, com prazo em '
+     '26/02/2027, foi alcançado com atraso (T23, N26).'),
     ('Disponibilidade dos equipamentos', 'Meta de 97%; 180 horas programadas no mês (720 h para a câmara fria).'),
     ('Diagnóstico da ISO 9001', '02/10/2026: 45 requisitos, 20 atendidos, 20 em parte, 5 não atendidos, 67%; seção 5 com 63% '
      '(T13: 5.1.1 em parte, sem política e sem análise crítica). Citado em ISO 9001 e Análise crítica.'),
@@ -862,6 +863,42 @@ PROIBIDO = [
     {'id': 'N25', 'regex': r'[Gg]arantia, assistência,? e? ?atendimento a reclamações', 'motivo': 'a reclamação não é atividade pós-entrega (N25)',
      'pastas': ['Producao', 'Conhecimento']},
     {'id': 'N13a', 'regex': r'itens de fornecedor único', 'motivo': 'o item de fornecedor único é a resina (N13)', 'pastas': ['ISO-9001']},
+    # tarefa 5: contexto e planejamento
+    {'id': 'I01c', 'regex': r'[Ss]istema de gestão (da qualidade )?certificado|Audita o sistema todo ano e mantém o certificado|certificado mantido',
+     'motivo': 'a indústria só é certificada em 17/12/2027 (I01)', 'pastas': ['SWOT', 'Partes-Interessadas']},
+    {'id': 'I04b', 'regex': r'[Gg]erente de [Pp]rodução', 'motivo': 'não existe gerente de produção na indústria (I04)', 'pastas': ['Partes-Interessadas']},
+    {'id': 'I05', 'regex': r'\d{4} (Extrusão|Comercial e Qualidade|Expedição|Gestão do sistema|Engenharia) (Gerente|Líder|Coordenador)',
+     'motivo': 'os processos da indústria são os nove de Processos (I05)', 'pastas': ['Objetivos']},
+    {'id': 'I14', 'regex': r'mais partes no quadrante de manter satisfeito|As pendências estão nos clientes',
+     'motivo': 'texto refeito pela tabela de Partes interessadas (I14)', 'pastas': ['Partes-Interessadas']},
+    {'id': 'I15', 'regex': r'dois deles antes do prazo|Manter 96% das entregas', 'motivo': 'três objetivos antes do prazo; o O3 da indústria mantém 97% (I15)',
+     'pastas': ['Objetivos']},
+    {'id': 'I16', 'regex': r'Áreas requisitantes', 'motivo': 'a requisição vem da Produção e da Manutenção (I16)', 'pastas': ['Processos']},
+    {'id': 'I17', 'regex': r'S3 × O4|S2 × T2|W3 × T3|programa de fidelidade|ficha técnica e custo por pizza',
+     'motivo': 'só os sete fatores de prioridade alta entram no cruzamento (I17)', 'pastas': ['SWOT']},
+    {'id': 'I18a', 'regex': r'Visitar o cliente A e combinar um plano conjunto', 'motivo': 'a ação do O2 é a segunda visita ao cliente A (I18)',
+     'pastas': ['Objetivos']},
+    {'id': 'N04', 'regex': r'até 23h30', 'motivo': 'o alvará permite funcionar até a meia-noite (N04)', 'pastas': ['Partes-Interessadas']},
+    {'id': 'N07a', 'regex': r'Dois entregadores extras nas sextas e nos sábados', 'motivo': 'em março de 2027, mais dois entregadores extras (N07)',
+     'pastas': ['Objetivos']},
+    {'id': 'N08', 'regex': r'Área de Suprimentos de uma indústria|Processo manual, em planilhas|pizzaria e de Suprimentos',
+     'motivo': 'a SWOT do exemplo 2 é da distribuidora (N08)', 'pastas': ['SWOT']},
+    {'id': 'N11', 'regex': r'Diretor industrial', 'motivo': 'a indústria tem diretor geral e gerente industrial (N11)', 'pastas': ['SWOT']},
+    {'id': 'N12', 'regex': r'Análise crítica anual', 'motivo': 'a análise crítica da indústria é semestral (N12)', 'pastas': ['Partes-Interessadas']},
+    {'id': 'N13b', 'regex': r'Três itens críticos têm fornecedor único', 'motivo': 'o item de fornecedor único é a resina (N13)',
+     'pastas': ['Partes-Interessadas']},
+    {'id': 'N14', 'regex': r'Homologar o fornecedor de resina reciclada', 'motivo': 'o F-13 é o segundo fornecedor de resina (N14)', 'pastas': ['Objetivos']},
+    {'id': 'P05', 'regex': r'a cada seis meses e instalar alarme', 'motivo': 'a resposta ao R3 é só a preventiva, a cada três meses (P05)', 'pastas': ['Riscos']},
+    {'id': 'P11', 'regex': r'refeitos por erro[^\n]*Produzir e embalar \(P2\)', 'motivo': 'os pedidos refeitos são do P1 (P11)', 'pastas': ['Objetivos']},
+    {'id': 'T21', 'regex': r'sem decisão registrada, é', 'motivo': 'dizer o requisito e pedir evidência de análise e ação (T21)', 'pastas': ['Objetivos']},
+    {'id': 'T22', 'regex': r'caíram: a ação funcionou', 'motivo': 'a queda começou antes da ação (T22)', 'pastas': ['Objetivos']},
+    {'id': 'T26', 'regex': r'Há quatro respostas possíveis', 'motivo': 'as quatro respostas são uma simplificação (T26)', 'pastas': ['Riscos']},
+    {'id': 'T27', 'regex': r'Compartilhar\. Revisar as motos', 'motivo': 'revisão e treinamento reduzem; o seguro compartilha (T27)', 'pastas': ['Riscos']},
+    {'id': 'T29', 'regex': r'fraquezas pesam mais que as forças|A soma dos pontos de cada quadrante indica',
+     'motivo': 'a postura compara as médias dos quadrantes (T29)', 'pastas': ['SWOT']},
+    {'id': 'T30', 'regex': r'Um projeto: tem início e fim', 'motivo': 'um projeto também é um processo (T30)', 'pastas': ['Processos']},
+    {'id': 'D06', 'regex': r'e 1 exercício', 'motivo': 'o SIPOC tem dois exercícios (D06)', 'pastas': ['SIPOC']},
+    {'id': 'D07', 'regex': r'C1 a C4', 'motivo': 'a política tem três compromissos (D07)', 'pastas': ['Objetivos']},
 ]
 
 # {'id', 'conflito', 'canone', 'estudos'}
@@ -1327,7 +1364,8 @@ DECISOES = [
     {'id': 'I16',
      'conflito': 'G1 com indicador e "não" no elemento; tartaruga e interações de Suprimentos diferentes.',
      'canone': 'Pizzaria: o G1 tem o indicador "Objetivos alcançados no ano", e o elemento g (avaliação) passa de "Não" '
-               'para "Parcial": G1 com 5,0 pontos e 62% (arredondamento do gerador); a média é refeita pelo gerador. '
+               'para "Parcial": G1 com 5,0 pontos e 63% (62,5%: o gerador do treinamento arredonda para cima, como a '
+               'planilha; a ficha dizia 62%, conferido na tarefa 5); a média dos nove processos passa de 63% a 64%. '
                'Indústria: a tartaruga (20/10/2026) e a matriz de interações ficam iguais. Na tartaruga, "O que entra" '
                'ganha "Resultado da inspeção de recebimento · Laboratório e controle da qualidade" e "Resultados de '
                'auditoria e ações · Gestão do sistema da qualidade", e a origem da requisição passa a "Produção e '
@@ -1544,4 +1582,16 @@ DECISOES = [
                'Conhecimento que tratam a reclamação junto com o pós-entrega (introdução e tabela do módulo 1) ficam para a '
                'tarefa do grupo de Apoio e avaliação decidir.',
      'estudos': ['Producao', 'Conhecimento']},
+    {'id': 'N26',
+     'conflito': 'Achado na tarefa 5. Pelo item T23 do spec, o O5 da pizzaria (dar indicador e meta aos quatro processos '
+                 'que não tinham, prazo 26/02/2027) passa a constar como alcançado em março, com atraso: o acompanhamento '
+                 'de Objetivos mostra 5, 7, 9 e 9 de janeiro a abril. Mas a única ação do O5 aparecia concluída em '
+                 '24/02/2027, dentro do prazo, e a ficha dava "9 de 9 em 24/02/2027".',
+     'canone': 'Vale T23 (spec, aprovado) e o acompanhamento (5, 7, 9, 9), que tem as contas do quadro: a ação "Definir o '
+               'indicador do salão, das compras, da manutenção e do treinamento, com os líderes" foi concluída em '
+               '10/03/2027, depois do prazo de 26/02/2027 (obj_data.py, data de conclusão, era 24/02/2027). Resultados, '
+               'prazo, situação e contagens não mudam. Na ficha, os processos P4, A1, A2 e A3 passam a "definido em março '
+               'de 2027", e o número-chave a "7 de 9 em fevereiro e 9 de 9 em março de 2027". A decisão c3 da análise '
+               'crítica de 14/12/2026 (prazo 26/02/2027) não muda.',
+     'estudos': ['Objetivos']},
 ]

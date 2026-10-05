@@ -254,7 +254,7 @@ EX1 = {
 # ------------------------------------------------------------ exemplo 2: indústria, setembro de 2027
 _D7, _LI, _IM = "Filme para congelados D-07", "Filme liso padrão", "Filme impresso"
 EX2 = {
-    "head": dict(org="Indústria de embalagens plásticas", resp="Analista da Qualidade, com o gerente de produção", ref=D(2027, 9, 30),
+    "head": dict(org="Indústria de embalagens plásticas", resp="Analista da Qualidade, com o gerente industrial", ref=D(2027, 9, 30),
                  mudanca="O operador sênior da extrusão se aposenta em dezembro de 2027. O filme D-07 entrou em produção em setembro.",
                  origem="Análise crítica de julho: as quebras da extrusora 3 mostraram que o desgaste da rosca só era medido pelo técnico do fabricante."),
     "cons": _cons([

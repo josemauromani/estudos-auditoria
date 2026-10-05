@@ -58,6 +58,11 @@ def br(v, casas=1):
     return f"{v:.{casas}f}".replace(".", ",")
 
 
+def pc(v):
+    """Percentual arredondado como na planilha (meio para cima): 62,5% vira 63%."""
+    return int(100 * v + 0.5 + 1e-9)
+
+
 def chip(tipo):
     return f'<span class="chip {TCLS[tipo]}">{tipo}</span>'
 
@@ -123,13 +128,23 @@ CAIXAS = {"oque": (100, 10, 330, 124), "quem": (470, 10, 330, 124), "entradas": 
           "como": (10, 318, 285, 124), "riscos": (307, 318, 286, 124), "quanto": (605, 318, 285, 124)}
 
 
+def linhas_da_parte(itens, w):
+    larg = int((w - 28) / 5.7)
+    return sum(len(textwrap.wrap(item, larg - 2)) for item, _ in itens)
+
+
 def tartaruga(nome, dono, conteudo, aria, generica=False):
-    o = [f'      <svg viewBox="0 0 900 452" role="img" aria-label="{escape(aria)}">',
+    # as caixas de entradas e de saídas crescem quando a lista é longa, e a fileira de baixo desce junto
+    lado = 140 if generica else max(140, max(61 + 15 * (linhas_da_parte(conteudo[k], CAIXAS[k][2]) - 1) + 14 for k in ("entradas", "saidas")))
+    desce = lado - 140
+    caixas = {k: (x, y + desce if y > 300 else y, w, lado if k in ("entradas", "saidas") else h) for k, (x, y, w, h) in CAIXAS.items()}
+    yb = 316 + desce
+    o = [f'      <svg viewBox="0 0 900 {452 + desce}" role="img" aria-label="{escape(aria)}">',
          '        <defs><marker id="at" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">'
          '<path class="ah" d="M0 0 L10 5 L0 10 z"/></marker></defs>',
          '        <line class="ln-mu" x1="265" y1="136" x2="362" y2="180"/><line class="ln-mu" x1="635" y1="136" x2="538" y2="180"/>',
-         '        <line class="ln-mu" x1="222" y1="316" x2="352" y2="270"/><line class="ln-mu" x1="678" y1="316" x2="548" y2="270"/>',
-         '        <line class="ln-mu" x1="450" y1="316" x2="450" y2="286"/>',
+         f'        <line class="ln-mu" x1="222" y1="{yb}" x2="352" y2="270"/><line class="ln-mu" x1="678" y1="{yb}" x2="548" y2="270"/>',
+         f'        <line class="ln-mu" x1="450" y1="{yb}" x2="450" y2="286"/>',
          '        <line class="ln" x1="244" y1="226" x2="276" y2="226" marker-end="url(#at)"/>',
          '        <line class="ln" x1="622" y1="226" x2="654" y2="226" marker-end="url(#at)"/>',
          '        <ellipse class="bx-ink" cx="450" cy="226" rx="170" ry="58"/>',
@@ -139,7 +154,7 @@ def tartaruga(nome, dono, conteudo, aria, generica=False):
         o.append(f'        <text class="b t-ground" x="450" y="{(224 if len(linhas) == 1 else 218) + j * 17}" font-size="13.5" text-anchor="middle">{escape(l)}</text>')
     o.append(f'        <text class="t-ground" x="450" y="{246 if len(linhas) == 1 else 256}" font-size="11.5" text-anchor="middle">{escape(dono)}</text>')
     for k in ORDEM_PARTES:
-        x, y, w, h = CAIXAS[k]
+        x, y, w, h = caixas[k]
         perg, tit, desc = PARTES[k]
         o.append(f'        <rect class="bx" x="{x}" y="{y}" width="{w}" height="{h}"/>')
         o.append(f'        <text class="mono mu" x="{x + 14}" y="{y + 21}" font-size="10">{perg}</text>')
@@ -157,7 +172,7 @@ def tartaruga(nome, dono, conteudo, aria, generica=False):
             n = 0
             for item, _ in conteudo[k]:
                 for j, l in enumerate(textwrap.wrap(item, larg - 2)):
-                    if n >= (5 if h > 130 else 4):
+                    if n >= int((h - 69) / 15) + 1:
                         break
                     o.append(f'        <text x="{x + (14 if j == 0 else 23)}" y="{yy}" font-size="11">{"· " if j == 0 else ""}{escape(l)}</text>')
                     yy += 15
@@ -284,7 +299,7 @@ bottom = TOP + RH * len(P1)
 HH = bottom + 48
 media = sum(p["pct"] for p in P1) / len(P1)
 ch = [f'      <svg id="bars" viewBox="0 0 900 {HH}" role="img" aria-label="Gráfico de barras com os elementos definidos em cada processo da pizzaria, de um total de oito. '
-      + " ".join(f'{p["id"]}, {p["nome"].lower()}: {br(p["pts"])}.' for p in P1) + f' A média é de {round(media * 100)}%.">']
+      + " ".join(f'{p["id"]}, {p["nome"].lower()}: {br(p["pts"])}.' for p in P1) + f' A média é de {pc(media)}%.">']
 for v in range(0, 9, 2):
     x = X0 + v * U
     ch.append(f'        <line class="grid" x1="{x}" y1="{TOP - 6}" x2="{x}" y2="{bottom}"/>')
@@ -296,7 +311,7 @@ for k, p in enumerate(P1):
     x1 = X0 + p["pts"] * U
     ch.append(f'        <path class="seg" data-k="{k}" d="M{X0} {y:.1f} H{x1 - 4:.1f} Q{x1:.1f} {y:.1f} {x1:.1f} {y + 4:.1f} V{y + BH - 4:.1f} '
               f'Q{x1:.1f} {y + BH:.1f} {x1 - 4:.1f} {y + BH:.1f} H{X0} Z"/>')
-    ch.append(f'        <text x="{x1 + 8:.1f}" y="{y + 12:.1f}" font-size="11.5"><tspan class="b">{br(p["pts"])}</tspan><tspan class="mu"> · {round(p["pct"] * 100)}%</tspan></text>')
+    ch.append(f'        <text x="{x1 + 8:.1f}" y="{y + 12:.1f}" font-size="11.5"><tspan class="b">{br(p["pts"])}</tspan><tspan class="mu"> · {pc(p["pct"])}%</tspan></text>')
 for k, p in enumerate(P1):
     e = p["elem"]
     ch.append(f'        <rect class="hit" x="14" y="{TOP + RH * k}" width="872" height="{RH}" tabindex="0" role="img" '
@@ -309,7 +324,7 @@ tb = ['        <table class="aud">', '          <thead><tr><th>Processo</th>' + 
       + '<th class="c">Pontos</th><th class="c">Percentual</th></tr></thead>', '          <tbody>']
 for p in P1:
     tb.append(f'            <tr><td><strong>{p["id"]} · {escape(p["nome"])}</strong></td>' + "".join(f'<td class="c{CL[x]}">{x}</td>' for x in p["elem"])
-              + f'<td class="c">{br(p["pts"])}</td><td class="c">{round(p["pct"] * 100)}%</td></tr>')
+              + f'<td class="c">{br(p["pts"])}</td><td class="c">{pc(p["pct"])}%</td></tr>')
 tb += ['          </tbody>', '        </table>']
 
 check = "\n".join(f'    <li><label><input type="checkbox" id="ck-{k}"><span>{escape(t)}</span></label></li>' for k, t in enumerate(CHECK, 1))
@@ -327,4 +342,4 @@ head = src[: src.index("<style>")].replace("<title>PDCA na prática</title>", "<
 assert "Mapa de processos" in head
 open(OUT, "w", encoding="utf-8").write(head + "<style>\n" + css + "</style>\n</head>\n" + body)
 print("ok", OUT, "| figuras:", body.count("<figure"), "| módulos:", body.count('class="eyebrow">Módulo'), "| processos:", len(P1),
-      "| média", round(media * 100), "% | interações:", len(INTER))
+      "| média", pc(media), "% | interações:", len(INTER))

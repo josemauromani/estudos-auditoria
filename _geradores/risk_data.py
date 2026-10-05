@@ -70,11 +70,11 @@ EX1 = {
         ("R2", "Registro do pedido", "Queda da internet ou do sistema", "A loja fica sem registrar pedidos", "Pedidos perdidos e clientes sem resposta", 3, 4,
          REDUZIR, "Ter um celular com internet móvel e um bloco de pedidos em papel para a contingência.", "Atendente líder", D(2026, 10, 23), "Concluída", 3, 2),
         ("R3", "Armazenamento", "Falha do compressor da câmara fria", "A temperatura sobe sem ninguém perceber", "Perda de insumos e risco para a saúde do cliente", 2, 5,
-         REDUZIR, "Fazer a manutenção preventiva a cada seis meses e instalar alarme de temperatura.", "Pizzaiolo líder", D(2026, 11, 13), "Em andamento", 1, 5),
+         REDUZIR, "Fazer a manutenção preventiva a cada três meses.", "Pizzaiolo líder", D(2026, 11, 13), "Em andamento", 1, 5),
         ("R4", "Compras", "Um só fornecedor de queijo", "O fornecedor atrasa a entrega", "Sabores fora do cardápio no fim de semana", 3, 3,
          REDUZIR, "Homologar um segundo fornecedor de queijo.", "Gerente da loja", D(2026, 11, 27), "Em andamento", 2, 2),
         ("R5", "Expedição", "Pressa e moto sem revisão", "Acidente com o entregador", "Dano à pessoa e entregas interrompidas", 2, 5,
-         COMPARTILHAR, "Revisar as motos todo mês, treinar direção segura e contratar seguro.", "Líder da expedição", D(2026, 11, 13), "Em andamento", 1, 5),
+         REDUZIR, "Revisar as motos todo mês e treinar direção segura. O seguro, contratado junto, compartilha o custo do acidente.", "Líder da expedição", D(2026, 11, 13), "Em andamento", 1, 5),
         ("R6", "Produção", "Só o pizzaiolo líder sabe regular o forno", "O pizzaiolo líder sai ou se afasta", "Pizzas fora do padrão e atraso na produção", 2, 4,
          REDUZIR, "Registrar a regulagem do forno e treinar um segundo pizzaiolo.", "Pizzaiolo líder", D(2026, 11, 27), "Não iniciada", 2, 2),
         ("R7", "Compras", "Alta no preço dos insumos", "O custo da pizza sobe", "Margem menor ou aumento de preço ao cliente", 4, 2,
@@ -111,7 +111,7 @@ EX2 = {
 # justificativa dos riscos aceitos (aparece no HTML e na planilha)
 ACEITE = {
     "R7": "O preço dos insumos não depende da loja. O gerente acompanha os preços todo mês.",
-    "C6": "As três cotações e as alçadas já reduzem a probabilidade ao mínimo. A auditoria confere o controle.",
+    "C6": "As três cotações e as alçadas já reduzem a probabilidade ao mínimo. A auditoria confere o controle. Contingência: se aparecer um favorecimento, suspender as compras do fornecedor e levar o caso à direção.",
     "C7": "O efeito é pequeno, e o indicador de prazo do Recebimento acompanha o risco.",
 }
 

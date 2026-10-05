@@ -296,7 +296,7 @@ EX1 = {
 
 # ------------------------------------------------------------ exemplo 2: indústria, julho de 2027
 EX2 = {
-    "head": dict(org="Indústria de embalagens plásticas", resp="Supervisor de manutenção, com o gerente de produção", ini=D(2027, 7, 1), fim=D(2027, 7, 31), ref=D(2027, 7, 31),
+    "head": dict(org="Indústria de embalagens plásticas", resp="Supervisor de manutenção, com o gerente industrial", ini=D(2027, 7, 1), fim=D(2027, 7, 31), ref=D(2027, 7, 31),
                  meta=0.95, horario="Três turnos, todos os dias: 744 horas no mês. A impressora trabalha em dois turnos: 496 horas.",
                  origem="Análise crítica do semestre: as paradas da extrusora 3 foram a segunda causa dos atrasos, e o turno da noite trabalha com gente a menos desde as férias de junho."),
     "caps": _caps([
