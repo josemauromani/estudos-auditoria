@@ -916,6 +916,8 @@ PROIBIDO = [
      'motivo': 'a norma pede a análise na medida necessária; a análise prévia é a prática do material (T40)', 'pastas': ['Producao']},
     {'id': 'P15', 'regex': r'Pedido conferido de novo antes de sair|Todo pedido de entrega|Conferir de novo o pedido sem rubrica antes da saída',
      'motivo': 'frequências pelos totais e reação do K5 antes da saída (P15)', 'pastas': ['Producao']},
+    {'id': 'N31', 'regex': r'Uma pizza por noite|Uma vez por noite, no pico|Uma vez por noite: a maior espera|somada no fechamento',
+     'motivo': 'a conferência acompanha o risco; o registro da noite resume as conferências do pico (N31)', 'pastas': ['Producao']},
     {'id': 'N07b', 'regex': r'Dois entregadores extras nas sextas e nos sábados', 'motivo': 'em março de 2027, mais dois entregadores extras (N07)',
      'pastas': ['Producao']},
     {'id': 'I09b', 'regex': r'O lote 135 foi o primeiro com a resina nova|primeira bobina com a resina do segundo fornecedor|Lote piloto de duas bobinas',
@@ -1084,8 +1086,9 @@ DECISOES = [
      'conflito': 'Frequências do plano de controle que não batem com o número de registros; mudança de 26/03 em registros '
                  'lidos em 15/03; reação do K5 depois da saída.',
      'canone': 'Os totais não mudam: K1 com 14 verificações e K2 a K7 com 7 cada, nas noites de 08 a 14/03/2027 (56 no '
-               'total, 6 fora). A frequência escrita passa a corresponder a esses totais: duas leituras por noite no K1 e '
-               'um registro por noite nos demais (para K5, a amostra de 20 pedidos no fechamento). A tabela de mudanças no '
+               'total, 6 fora). A frequência escrita passa a corresponder a esses totais, e acompanha o risco: as conferências '
+               'são feitas durante a noite e no pico, e o registro de cada noite é um resumo delas (corrigido por N31, que '
+               'traz o texto de cada controle). K1 com duas leituras por noite, cada uma registrada. A tabela de mudanças no '
                'processo ganha a própria data de leitura, 31/03/2027, e mantém a mudança de 26/03/2027. A reação do K5 é '
                'reescrita para acontecer antes da saída do pedido.',
      'estudos': ['Producao']},
@@ -1680,4 +1683,35 @@ DECISOES = [
                'por transportadora ou por aplicativo."; a nota "Processo terceirizado" do módulo 3 passa a usar a entrega ao '
                'cliente pela transportadora. Índices, classes e contagens não mudam.',
      'estudos': ['Fornecedores']},
+    {'id': 'N31',
+     'conflito': 'Achado na revisão da tarefa 6. A primeira aplicação de P15 ("um registro por noite nos demais") escreveu '
+                 'frequências fracas no plano da pizzaria: K7 "Uma pizza por noite, no pico", também como exemplo do campo '
+                 'Frequência no módulo 3, que ensina que a frequência acompanha o risco; K4 "Uma vez por noite, no pico"; K6 '
+                 '"Uma vez por noite: a maior espera, lida no fechamento", que não sustenta as reações durante o serviço '
+                 '(saída priorizada em 12/03, pedidos refeitos em 13/03). O exercício dá como completos "três pedidos por '
+                 'hora" (K7) e "uma vez por hora" (K4), e Liberação diz que a temperatura na saída "não foi medida na última '
+                 'hora do pico" em 20/03. Na indústria, K2 ("A cada duas horas") e K4, K5 e K7 ("Cada bobina") tinham um '
+                 'registro por lote.',
+     'canone': 'As conferências acontecem durante a noite e no pico; o registro de cada noite (ou de cada lote, na indústria) '
+               'resume essas conferências. Nenhum total muda: pizzaria 56 verificações, 6 fora, 1 sem reação; indústria 40, '
+               '5 e 1; "8 de 8" em Liberação. Pizzaria (prod_data.py): K4 "O que controlar" "Temperatura do forno" → '
+               '"Temperatura do forno no pico: a pior leitura da noite", frequência "Uma vez por noite, no pico" → "A cada '
+               'hora do pico; registra-se a leitura fora da faixa ou, com todas dentro, a mais afastada de 300 °C"; K5 '
+               '"Uma amostra de 20 pedidos por noite, somada no fechamento" → "20 pedidos por noite, conferidos na saída '
+               'durante o pico; o fechamento registra quantos tinham a rubrica"; K6 "Uma vez por noite: a maior espera, lida '
+               'no fechamento" → "Acompanhada no sistema durante a noite; a maior espera é registrada no fechamento"; K7 "O '
+               'que controlar" "Temperatura da pizza na saída" → "Menor temperatura da pizza na saída, na noite", '
+               'frequência "Uma pizza por noite, no pico" → "Três pizzas por hora no pico; registra-se a menor temperatura '
+               'da noite". Módulo 3 (exemplo do K7): "O que controlar" → "A menor temperatura da pizza na saída, na noite, '
+               'na expedição"; "Frequência" → "Três pizzas por hora no pico; registra-se a menor temperatura da noite". '
+               'Ficam: K1 "Duas leituras por noite" (14 registros, cada leitura registrada), K2 "Uma vez por noite, no lote '
+               'de massa do dia" (7, um lote por dia), K3 "Uma vez por noite, na abertura" (7, uma abertura por noite). '
+               'Indústria: K2 "A cada duas horas" → "A cada duas horas; a folha registra, por lote, a leitura mais afastada '
+               'de 190 °C"; K4 "Cada bobina" → "Cada bobina; a folha registra, por lote, a largura mais afastada de 600 '
+               'mm"; K5 "Cada bobina" → "Cada bobina; a folha registra, por lote, se todas as bobinas estão conformes"; K7 '
+               '"Cada bobina" → "Cada bobina; o romaneio registra, por lote, se todas as etiquetas conferem" (5 registros '
+               'cada, um por lote). Ficam: K1 "Cada lote recebido" (5), K3 "Cada bobina" (10, duas bobinas por lote), K6 '
+               '"Uma amostra por lote" (5). Os exercícios ("três pedidos por hora", "uma vez por hora", "a cada bobina") e '
+               'a frase de Liberação sobre a última hora do pico passam a concordar com o plano sem mudança.',
+     'estudos': ['Producao']},
 ]

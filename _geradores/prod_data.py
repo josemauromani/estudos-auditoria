@@ -14,10 +14,10 @@ DENTRO, FORA = "Dentro", "Fora"
 SIM, NAO = "Sim", "Não"
 SEMREACAO = "Fora sem reação registrada"
 PARTES = [
-    ("O que controlar", "A característica do produto ou o parâmetro do processo, em uma etapa.", "A temperatura da pizza na saída, na expedição"),
+    ("O que controlar", "A característica do produto ou o parâmetro do processo, em uma etapa.", "A menor temperatura da pizza na saída, na noite, na expedição"),
     ("Critério", "O valor mínimo, o máximo, ou o padrão que diz o que é conforme.", "No mínimo 65 °C"),
     ("Como medir", "O método e o instrumento.", "Termômetro de espeto, no centro da pizza"),
-    ("Frequência", "Quando e em quantas unidades.", "Uma pizza por noite, no pico"),
+    ("Frequência", "Quando e em quantas unidades.", "Três pizzas por hora no pico; registra-se a menor temperatura da noite"),
     ("Quem", "A função que mede e registra.", "Líder da expedição"),
     ("Registro", "Onde o resultado fica guardado.", "Planilha da expedição"),
     ("Reação", "O que fazer com o produto e com o processo quando o resultado sai do critério.", "Reaquecer ou refazer, e conferir a bolsa térmica"),
@@ -92,13 +92,16 @@ _P1 = _plano([
      "Pizzaiolo do turno", "Ficha do lote de massa", "Regular a divisora e pesar de novo o lote inteiro."),
     ("K3", "Montar", "Bancada e utensílios higienizados antes do turno", PROCESSO, None, None, "", "Lista de abertura do turno, conferida no posto", "Uma vez por noite, na abertura",
      "Pizzaiolo líder", "Lista de abertura do turno", "Higienizar antes de começar. Não montar pizza em bancada reprovada."),
-    ("K4", "Assar", "Temperatura do forno", PROCESSO, 280, 320, "°C", "Termômetro do forno, no pico do turno", "Uma vez por noite, no pico",
+    ("K4", "Assar", "Temperatura do forno no pico: a pior leitura da noite", PROCESSO, 280, 320, "°C", "Termômetro do forno, no pico do turno",
+     "A cada hora do pico; registra-se a leitura fora da faixa ou, com todas dentro, a mais afastada de 300 °C",
      "Pizzaiolo do turno", "Registro de regulagem do forno", "Regular o forno e segurar a entrada de pizzas até a temperatura voltar à faixa."),
     ("K5", "Conferir e embalar", "Pedidos com a etiqueta rubricada, em 20 conferidos", PRODUTO, 20, None, "pedidos", "Conferência da pizza com a etiqueta, na saída, antes de o pedido sair",
-     "Uma amostra de 20 pedidos por noite, somada no fechamento", "Quem embala", "Etiqueta rubricada", "Segurar na saída o pedido sem rubrica, conferir com a etiqueta e orientar quem embalou."),
-    ("K6", "Expedir", "Maior espera da pizza pronta, na noite", PROCESSO, None, 10, "min", "Horários de pronto e de saída, no sistema de pedidos", "Uma vez por noite: a maior espera, lida no fechamento",
+     "20 pedidos por noite, conferidos na saída durante o pico; o fechamento registra quantos tinham a rubrica", "Quem embala", "Etiqueta rubricada", "Segurar na saída o pedido sem rubrica, conferir com a etiqueta e orientar quem embalou."),
+    ("K6", "Expedir", "Maior espera da pizza pronta, na noite", PROCESSO, None, 10, "min", "Horários de pronto e de saída, no sistema de pedidos",
+     "Acompanhada no sistema durante a noite; a maior espera é registrada no fechamento",
      "Líder da expedição", "Sistema de pedidos", "Priorizar a saída. Acima de 15 minutos, refazer a pizza."),
-    ("K7", "Expedir", "Temperatura da pizza na saída", PRODUTO, 65, None, "°C", "Termômetro de espeto, no centro da pizza", "Uma pizza por noite, no pico",
+    ("K7", "Expedir", "Menor temperatura da pizza na saída, na noite", PRODUTO, 65, None, "°C", "Termômetro de espeto, no centro da pizza",
+     "Três pizzas por hora no pico; registra-se a menor temperatura da noite",
      "Líder da expedição", "Planilha da expedição", "Reaquecer ou refazer, e conferir a bolsa térmica."),
 ])
 EX1 = {
@@ -150,17 +153,20 @@ _DIAS2 = [D(2027, 5, d) for d in range(10, 15)]
 _P2 = _plano([
     ("K1", "Receber a resina", "Índice de fluidez do lote de resina", PRODUTO, 1.8, 2.2, "g/10 min", "Laudo do fornecedor, conferido com a ficha técnica", "Cada lote recebido",
      "Laboratório", "Registro de recebimento", "Segregar o lote com etiqueta vermelha e acionar Suprimentos."),
-    ("K2", "Extrusar", "Temperatura da zona 3 da extrusora", PROCESSO, 185, 195, "°C", "Leitura no painel da extrusora", "A cada duas horas",
+    ("K2", "Extrusar", "Temperatura da zona 3 da extrusora", PROCESSO, 185, 195, "°C", "Leitura no painel da extrusora",
+     "A cada duas horas; a folha registra, por lote, a leitura mais afastada de 190 °C",
      "Operador", "Folha de processo", "Ajustar a zona e medir de novo a bobina em curso."),
     ("K3", "Extrusar", "Espessura do filme", PRODUTO, 38, 42, "µm", "Micrômetro MIC-07, cinco pontos na largura", "Cada bobina",
      "Operador", "Folha de processo", "Ajustar a matriz, segregar a bobina com etiqueta vermelha e abrir o registro de produto não conforme."),
-    ("K4", "Extrusar", "Largura do filme", PRODUTO, 598, 602, "mm", "Trena calibrada TR-03", "Cada bobina",
+    ("K4", "Extrusar", "Largura do filme", PRODUTO, 598, 602, "mm", "Trena calibrada TR-03", "Cada bobina; a folha registra, por lote, a largura mais afastada de 600 mm",
      "Operador", "Folha de processo", "Ajustar as guias e segregar a bobina."),
-    ("K5", "Bobinar", "Aparência: sem géis, rugas ou furos", PRODUTO, None, None, "", "Exame visual, com o padrão de defeitos do posto", "Cada bobina",
+    ("K5", "Bobinar", "Aparência: sem géis, rugas ou furos", PRODUTO, None, None, "", "Exame visual, com o padrão de defeitos do posto",
+     "Cada bobina; a folha registra, por lote, se todas as bobinas estão conformes",
      "Operador", "Folha de processo", "Segregar a bobina e procurar a origem: filtro, matriz ou resina."),
     ("K6", "Inspecionar e liberar", "Resistência da solda", PRODUTO, 12, None, "N/15 mm", "Dinamômetro do laboratório, três corpos de prova", "Uma amostra por lote",
      "Laboratório", "Laudo do lote", "Reter o lote, ensaiar de novo e decidir com a Qualidade."),
-    ("K7", "Embalar e armazenar", "Etiqueta da bobina com lote, extrusora, turno e situação", PRODUTO, None, None, "", "Conferência da etiqueta com a folha de processo", "Cada bobina",
+    ("K7", "Embalar e armazenar", "Etiqueta da bobina com lote, extrusora, turno e situação", PRODUTO, None, None, "", "Conferência da etiqueta com a folha de processo",
+     "Cada bobina; o romaneio registra, por lote, se todas as etiquetas conferem",
      "Expedição", "Romaneio", "Identificar de novo pela folha de processo. Sem origem comprovada, segregar."),
 ])
 EX2 = {
