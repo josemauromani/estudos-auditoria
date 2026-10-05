@@ -587,7 +587,7 @@ def exemplo(ws, ex_):
         ws.row_dimensions[rr].height = alt([(item, 24), (ident, 30), (cuid, 46), (oc, 66)], minimo=21.75)
     t2 = rr
     rr += 2
-    band(ws, rr, "Mudanças", "L", color=PURPLE)
+    band(ws, rr, "Mudanças" + (f' · registro lido em {H["mud_ref"]:%d/%m/%Y}' if H.get("mud_ref") else ""), "L", color=PURPLE)
     rr += 1
     sub(ws, rr, [("B", None, "Data"), ("C", None, "O que mudou"), ("D", None, "Motivo"), ("E", "H", "Análise antes de mudar"), ("I", None, "Quem autorizou"), ("J", "K", "Ações decorrentes"),
                  ("L", None, "Conferência")])

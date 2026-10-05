@@ -192,6 +192,7 @@ _PIZZARIA['linha_do_tempo'] = [
     ('2027-03-18', 'Auditoria interna 2027-02, do salão e do recebimento', ['Tecnica-Auditoria']),
     ('2027-03-22', 'RNC 2027-03, sabor trocado repetido (P10)', ['Liberacao']),
     ('2027-03-26', 'Escala do pico revista: mais dois entregadores extras nas sextas e nos sábados (N07)', ['Producao', 'Objetivos']),
+    ('2027-03-31', 'Registro de mudanças do processo da cozinha e da expedição lido (P15)', ['Producao']),
     ('2027-04-01', 'Atualização de versão do sistema de pedidos (P06)', ['Recursos', 'Conhecimento', 'ISO-9001-2026']),
     ('2027-04-03', 'RNC 2027-04, pizza fria no condomínio', ['Partes-Interessadas', 'Satisfacao']),
     ('2027-04-12', 'Quebra da câmara fria; registro de produto não conforme 2027-27', ['Recursos', 'Conhecimento']),
@@ -759,7 +760,8 @@ REGISTROS = [
     {'org': 'industria', 'serie': 'PNC', 'numero': '2027-20', 'data': '2027-05-18',
      'assunto': 'Lote 137, bobina 3: géis; refugada', 'estudos': ['Liberacao']},
     {'org': 'industria', 'serie': 'PNC', 'numero': '2027-21', 'data': '2027-05-20',
-     'assunto': 'Lote 140, duas bobinas com 43,1 e 43,4 µm; retido; cliente B aceitou sob concessão em 21/05 (P16)',
+     'assunto': 'Lote 140, duas bobinas com 43,1 e 43,4 µm; retido em 20/05; cliente B aceitou sob concessão em 21/05, e o '
+                'analista da Qualidade liberou o lote no mesmo dia (P16)',
      'estudos': ['Liberacao']},
     {'org': 'industria', 'serie': 'PNC', 'numero': '2027-22', 'data': '2027-05-24',
      'assunto': 'Lote 135, bobina 2: reclamação do cliente A de filme fino; recolhida e reposta em 26/05; o Caso '
@@ -770,7 +772,8 @@ REGISTROS = [
     {'org': 'industria', 'serie': 'PNC', 'numero': '2027-24', 'data': '2027-05-26',
      'assunto': 'Lote 143, bobina 1: largura de 603 mm; retrabalhada', 'estudos': ['Liberacao']},
     {'org': 'industria', 'serie': 'PNC', 'numero': '2027-25', 'data': '2027-05-26',
-     'assunto': 'Lote 142: solda fraca, ensaio dois dias depois do embarque', 'estudos': ['Liberacao']},
+     'assunto': 'Lote 142: solda fraca, ensaio dois dias depois do embarque; recolhimento decidido pelo gerente industrial '
+                'e pelo gerente comercial (N29); em tratamento', 'estudos': ['Liberacao']},
     {'org': 'industria', 'serie': 'PNC', 'numero': '2027-29', 'data': '2027-07-06',
      'assunto': 'Bobina segregada e moída na quebra da resistência da zona 3 da extrusora 3; era "RNC 2027-29" (P10)',
      'estudos': ['Recursos', 'Histograma-CEP']},
@@ -899,6 +902,38 @@ PROIBIDO = [
     {'id': 'T30', 'regex': r'Um projeto: tem início e fim', 'motivo': 'um projeto também é um processo (T30)', 'pastas': ['Processos']},
     {'id': 'D06', 'regex': r'e 1 exercício', 'motivo': 'o SIPOC tem dois exercícios (D06)', 'pastas': ['SIPOC']},
     {'id': 'D07', 'regex': r'C1 a C4', 'motivo': 'a política tem três compromissos (D07)', 'pastas': ['Objetivos']},
+    # tarefa 6: operação
+    {'id': 'P14', 'regex': r'das 8 encomendas|outro horário ou outro dia|um horário diferente, outro dia',
+     'motivo': 'texto refeito pela tabela de Pedidos: 5 encomendas, 2 recusas (P14)', 'pastas': ['Pedidos']},
+    {'id': 'T32', 'regex': r'Cada parte pede um registro', 'motivo': 'quatro das seis partes do 8.3 pedem registro retido (T32)', 'pastas': ['Projeto']},
+    {'id': 'T33', 'regex': r'exclusão do 8\.3|o requisito é excluído|ela pode excluir|a exclusão, se houver|\nExclusão\n',
+     'motivo': 'a edição de 2015 fala em não aplicabilidade; exclusão é o termo de 2008 (T33)', 'pastas': ['Projeto']},
+    {'id': 'I10', 'regex': r'Laudo de 12/07|Queda de dardo repetida|com o ensaio repetido',
+     'motivo': 'resina B em 08/07, laudo de 18/07 e ensaio no lote de teste (I10)', 'pastas': ['Projeto']},
+    {'id': 'T39', 'regex': r'Identificação do produto e da situação dele\.|Identificar o produto e a situação dele\.',
+     'motivo': 'a identificação do produto vale quando necessária para a conformidade (T39)', 'pastas': ['Producao']},
+    {'id': 'T40', 'regex': r'Nenhuma mudança entra em uso sem análise e sem autorização|Analisar a mudança antes, e registrar',
+     'motivo': 'a norma pede a análise na medida necessária; a análise prévia é a prática do material (T40)', 'pastas': ['Producao']},
+    {'id': 'P15', 'regex': r'Pedido conferido de novo antes de sair|Todo pedido de entrega|Conferir de novo o pedido sem rubrica antes da saída',
+     'motivo': 'frequências pelos totais e reação do K5 antes da saída (P15)', 'pastas': ['Producao']},
+    {'id': 'N07b', 'regex': r'Dois entregadores extras nas sextas e nos sábados', 'motivo': 'em março de 2027, mais dois entregadores extras (N07)',
+     'pastas': ['Producao']},
+    {'id': 'I09b', 'regex': r'O lote 135 foi o primeiro com a resina nova|primeira bobina com a resina do segundo fornecedor|Lote piloto de duas bobinas',
+     'motivo': 'o lote piloto é o 127; o 135 é o primeiro da produção regular (I09)', 'pastas': ['Producao', 'Liberacao']},
+    {'id': 'I09c', 'regex': r'a fábrica respondeu com o que tinha|A fábrica tinha medido 39,1',
+     'motivo': 'primeira resposta em 24/05, medição no laboratório em 26/05, verificação em 12/06 (I09)', 'pastas': ['Calibracao']},
+    {'id': 'T34', 'regex': r'O produto sem a verificação planejada, enquanto ela não é feita',
+     'motivo': 'produto com verificação pendente tem situação indeterminada e fica retido (T34)', 'pastas': ['Liberacao']},
+    {'id': 'P16', 'regex': r'Atendente líder|segue aberto', 'motivo': 'quem decidiu segue o cabeçalho de autoridades; 2027-25 em tratamento (P16)',
+     'pastas': ['Liberacao']},
+    {'id': 'P13', 'regex': r'decidiu começar pelos insumos|A avaliação de dezembro|A: 5 · B: 2',
+     'motivo': 'homologações desde novembro; avaliação da indústria em 11/01/2027; caixas fora da tabela (P13)', 'pastas': ['Fornecedores']},
+    {'id': 'P13b', 'regex': r'[Aa]valiação de fornecedores de dezembro', 'motivo': 'a avaliação da indústria é de 11/01/2027 (P13)', 'pastas': ['Analise-Critica']},
+    {'id': 'T35', 'regex': r'Avaliação de fornecedores não críticos\.', 'motivo': 'a norma permite graduar o controle, com critério defensável (T35)',
+     'pastas': ['Fornecedores']},
+    {'id': 'T36', 'regex': r'8\.6 Verificar o produto antes da liberação', 'motivo': 'a verificação do recebido é do 8.4.2 (T36)', 'pastas': ['Fornecedores']},
+    {'id': 'T38', 'regex': r'Usinagem de moldes, impressão, entrega por aplicativo|a usinagem de moldes é terceirizada',
+     'motivo': 'processo terceirizado: impressão ou laminação externas e a entrega ao cliente (T38)', 'pastas': ['Fornecedores']},
 ]
 
 # {'id', 'conflito', 'canone', 'estudos'}
@@ -1617,4 +1652,32 @@ DECISOES = [
                'planilhas." passa a "Implantar uma plataforma de cotação eletrônica no lugar das cotações por e-mail." O '
                'treinamento não mostra as estratégias do exemplo 2.',
      'estudos': ['SWOT']},
+    {'id': 'N29',
+     'conflito': 'Achado na tarefa 6, ao aplicar P16 na indústria. O cabeçalho de autoridades do exemplo 2 de Liberação '
+                 'dizia só "Coordenador da Qualidade. Refugo acima de 500 kg e recolhimento no cliente: gerente industrial e '
+                 'gerente comercial.", mas o 2027-23 (devolução da resina) foi decidido pelo gerente de Suprimentos, o '
+                 '2027-24 (retrabalho na linha) pelo líder do turno, e os recolhimentos 2027-22 e 2027-25 pelo gerente '
+                 'comercial sozinho e pelo coordenador da Qualidade. O exercício do estudo dá como certa a devolução da '
+                 'resina decidida pelo gerente de Suprimentos e como certa a autoridade do líder do turno no refile.',
+     'canone': 'O cabeçalho da indústria ("Quem decide a disposição", lib_data.py) passa a "Coordenador da Qualidade. '
+               'Retrabalho na linha: líder do turno. Devolução de insumo ao fornecedor: gerente de Suprimentos. Refugo acima '
+               'de 500 kg e recolhimento no cliente: gerente industrial e gerente comercial." O 2027-23 e o 2027-24 ficam '
+               'como estão; no 2027-22 e no 2027-25 (recolher ou substituir), quem decidiu passa a "Gerente industrial e '
+               'gerente comercial" (eram "Gerente comercial" e "Coordenador da Qualidade"). O lote 140 ganha quem liberou, '
+               '"Analista da Qualidade", e a observação "Retido em 20/05; liberado em 21/05, com a concessão do cliente B." '
+               'A decisão do lote continua "Retido" (a de 20/05), e as contagens não mudam. Não foi achada no texto atual '
+               'a frase "2 fora" citada no conflito de P16: as colunas "Fora" das liberações batem com os registros.',
+     'estudos': ['Liberacao']},
+    {'id': 'N30',
+     'conflito': 'Achado na tarefa 6, ao aplicar T38. Fornecedores tinha a usinagem de moldes (F-12) como processo '
+                 'terceirizado e o transporte (F-09) e os ensaios externos (F-11) como serviço; o Escopo e a ficha dão como '
+                 'processos terceirizados da indústria a armazenagem e o transporte, os ensaios de migração em laboratório '
+                 'externo e a calibração, e como serviços críticos a manutenção (F-10) e a usinagem (F-12).',
+     'canone': 'No cadastro do exemplo 1 de Fornecedores (forn_data.py), F-09 (transporte de produto acabado) e F-11 '
+               '(ensaios de migração e espessura) passam a "Processo terceirizado", e F-12 (usinagem de moldes) a "Serviço". '
+               'No módulo 1, os exemplos de serviço ficam "Manutenção, usinagem de moldes, revisão das motos." e os de '
+               'processo terceirizado "Impressão ou laminação feitas fora, ensaio em laboratório externo, entrega ao cliente '
+               'por transportadora ou por aplicativo."; a nota "Processo terceirizado" do módulo 3 passa a usar a entrega ao '
+               'cliente pela transportadora. Índices, classes e contagens não mudam.',
+     'estudos': ['Fornecedores']},
 ]

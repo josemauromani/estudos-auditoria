@@ -17,7 +17,7 @@ PARTES = [
     ("O que controlar", "A característica do produto ou o parâmetro do processo, em uma etapa.", "A temperatura da pizza na saída, na expedição"),
     ("Critério", "O valor mínimo, o máximo, ou o padrão que diz o que é conforme.", "No mínimo 65 °C"),
     ("Como medir", "O método e o instrumento.", "Termômetro de espeto, no centro da pizza"),
-    ("Frequência", "Quando e em quantas unidades.", "Três pedidos por hora"),
+    ("Frequência", "Quando e em quantas unidades.", "Uma pizza por noite, no pico"),
     ("Quem", "A função que mede e registra.", "Líder da expedição"),
     ("Registro", "Onde o resultado fica guardado.", "Planilha da expedição"),
     ("Reação", "O que fazer com o produto e com o processo quando o resultado sai do critério.", "Reaquecer ou refazer, e conferir a bolsa térmica"),
@@ -86,24 +86,25 @@ def _regs(plano, dias, series, reacoes, lotes, quem):
 # ------------------------------------------------------------ exemplo 1: pizzaria, cozinha e expedição
 _DIAS1 = [D(2027, 3, d) for d in range(8, 15)]
 _P1 = _plano([
-    ("K1", "Receber e guardar insumos", "Temperatura da câmara fria", PROCESSO, 0, 5, "°C", "Termômetro da câmara, leitura no visor", "Duas vezes por turno",
+    ("K1", "Receber e guardar insumos", "Temperatura da câmara fria", PROCESSO, 0, 5, "°C", "Termômetro da câmara, leitura no visor", "Duas leituras por noite",
      "Pizzaiolo do turno", "Planilha de temperatura (FR-02)", "Avisar o gerente, passar os insumos para o refrigerador reserva e avaliar o que ficou acima de 5 °C por mais de duas horas."),
-    ("K2", "Preparar a massa", "Peso da bola de massa da pizza grande", PRODUTO, 380, 420, "g", "Balança da bancada, média de cinco bolas", "Cada lote de massa",
+    ("K2", "Preparar a massa", "Peso da bola de massa da pizza grande", PRODUTO, 380, 420, "g", "Balança da bancada, média de cinco bolas", "Uma vez por noite, no lote de massa do dia",
      "Pizzaiolo do turno", "Ficha do lote de massa", "Regular a divisora e pesar de novo o lote inteiro."),
-    ("K3", "Montar", "Bancada e utensílios higienizados antes do turno", PROCESSO, None, None, "", "Lista de abertura do turno, conferida no posto", "Cada turno",
+    ("K3", "Montar", "Bancada e utensílios higienizados antes do turno", PROCESSO, None, None, "", "Lista de abertura do turno, conferida no posto", "Uma vez por noite, na abertura",
      "Pizzaiolo líder", "Lista de abertura do turno", "Higienizar antes de começar. Não montar pizza em bancada reprovada."),
-    ("K4", "Assar", "Temperatura do forno", PROCESSO, 280, 320, "°C", "Termômetro do forno, no pico do turno", "Uma vez por hora",
+    ("K4", "Assar", "Temperatura do forno", PROCESSO, 280, 320, "°C", "Termômetro do forno, no pico do turno", "Uma vez por noite, no pico",
      "Pizzaiolo do turno", "Registro de regulagem do forno", "Regular o forno e segurar a entrada de pizzas até a temperatura voltar à faixa."),
-    ("K5", "Conferir e embalar", "Pedidos com a etiqueta rubricada, em 20 conferidos", PRODUTO, 20, None, "pedidos", "Conferência da pizza com a etiqueta; amostra de 20 no fechamento",
-     "Todo pedido", "Quem embala", "Etiqueta rubricada", "Conferir de novo o pedido sem rubrica antes da saída e orientar quem embalou."),
-    ("K6", "Expedir", "Maior espera da pizza pronta, na noite", PROCESSO, None, 10, "min", "Horários de pronto e de saída, no sistema de pedidos", "Todo pedido de entrega",
+    ("K5", "Conferir e embalar", "Pedidos com a etiqueta rubricada, em 20 conferidos", PRODUTO, 20, None, "pedidos", "Conferência da pizza com a etiqueta, na saída, antes de o pedido sair",
+     "Uma amostra de 20 pedidos por noite, somada no fechamento", "Quem embala", "Etiqueta rubricada", "Segurar na saída o pedido sem rubrica, conferir com a etiqueta e orientar quem embalou."),
+    ("K6", "Expedir", "Maior espera da pizza pronta, na noite", PROCESSO, None, 10, "min", "Horários de pronto e de saída, no sistema de pedidos", "Uma vez por noite: a maior espera, lida no fechamento",
      "Líder da expedição", "Sistema de pedidos", "Priorizar a saída. Acima de 15 minutos, refazer a pizza."),
-    ("K7", "Expedir", "Temperatura da pizza na saída", PRODUTO, 65, None, "°C", "Termômetro de espeto, no centro da pizza", "Três pedidos por hora",
+    ("K7", "Expedir", "Temperatura da pizza na saída", PRODUTO, 65, None, "°C", "Termômetro de espeto, no centro da pizza", "Uma pizza por noite, no pico",
      "Líder da expedição", "Planilha da expedição", "Reaquecer ou refazer, e conferir a bolsa térmica."),
 ])
 EX1 = {
     "head": dict(org="Pizzaria (loja com salão e delivery)", processo="Produzir e embalar (P2) e Entregar o pedido (P3)", produto="Pizza entregue em casa",
                  rev="Revisão 2, de 01/03/2027", por="Pizzaiolo líder e líder da expedição, com o gerente da loja", periodo="Noites de 08 a 14/03/2027", ref=D(2027, 3, 15),
+                 mud_ref=D(2027, 3, 31),
                  origem="Requisito 8.5.6 não atendido no diagnóstico de 2026, e objetivo O4: reduzir os pedidos refeitos."),
     "plano": _P1,
     "regs": _regs(_P1, _DIAS1, [
@@ -117,7 +118,7 @@ EX1 = {
     ], {
         ("K1", 7): "Insumos passados para o refrigerador reserva às 21h40. Borracha da porta solta, trocada em 12/03.",
         ("K4", 5): "Forno regulado. Entrada de pizzas segurada por seis minutos.",
-        ("K5", 4): "Pedido conferido de novo antes de sair. Atendente do turno orientado.",
+        ("K5", 4): "Pedido sem rubrica segurado na saída e conferido com a etiqueta. Atendente do turno orientado.",
         ("K6", 4): "Saída priorizada. Nenhum pedido passou de 15 minutos.",
         ("K6", 5): "Dois pedidos refeitos. Escala do pico levada à reunião mensal.",
     }, lambda d, kid, j: {"K1": f"Câmara, {'1ª' if j == 0 else '2ª'} leitura", "K2": f"Massa {d:%d/%m}", "K3": f"Turno {d:%d/%m}"}.get(kid, f"Noite {d:%d/%m}"),
@@ -139,7 +140,7 @@ EX1 = {
         (D(2027, 3, 2), "Farinha da marca B no lugar da marca A.", "Falta no fornecedor.", "Um lote de massa de teste: peso e ponto conferidos.", "Pizzaiolo líder",
          "Receita ajustada, com 2% a mais de água. Ficha da massa atualizada."),
         (D(2027, 3, 12), "Tempo de forno de sete para seis minutos, no pico.", "Fila no forno na sexta à noite.", "", "", ""),
-        (D(2027, 3, 26), "Dois entregadores extras nas sextas e nos sábados.", "Espera da pizza pronta acima de 10 minutos no pico.", "Esperas das duas últimas semanas, lidas na reunião mensal.",
+        (D(2027, 3, 26), "Mais dois entregadores extras nas sextas e nos sábados.", "Espera da pizza pronta acima de 10 minutos no pico.", "Esperas das duas últimas semanas, lidas na reunião mensal.",
          "Gerente da loja", "Escala padrão revista. Líder da expedição informado."),
     ],
 }
@@ -199,7 +200,7 @@ EX2 = {
     ],
     "mud": [
         (D(2027, 5, 3), "Velocidade da linha de 42 para 45 m/min.", "Atraso na programação.", "", "Líder do turno", ""),
-        (D(2027, 5, 14), "Resina do segundo fornecedor na extrusora 3.", "Segundo fornecedor homologado em 29/03.", "Lote piloto de duas bobinas: espessura e solda ensaiadas.",
+        (D(2027, 5, 14), "Resina do segundo fornecedor na extrusora 3.", "Segundo fornecedor homologado em 29/03.", "Lote piloto 127, de 05/05/2027, com duas bobinas: espessura e solda ensaiadas.",
          "Gerente industrial", "Zona 3 de 190 para 187 °C. Folha de processo na revisão 5."),
     ],
 }
@@ -211,7 +212,7 @@ BUSCA = dict(
           ("Folha de processo", "Bobina 1 com 37,4 µm, fora do critério. Bobina 2 com 39,1 µm. Resina do lote R-0412, do segundo fornecedor."),
           ("Registro de recebimento", "Lote R-0412: índice de fluidez 2,2, no limite do critério. Laudo aprovado.")],
     frente=[("Bobinas do lote 135", "Bobina 1: segregada na fábrica, com etiqueta vermelha. Bobina 2: liberada."),
-            ("Outros lotes com a resina R-0412", "Nenhum até 14/05. O lote 135 foi o primeiro com a resina nova."),
+            ("Outros lotes com a resina R-0412", "Nenhum até 14/05. O lote 135 foi o primeiro da produção regular com a resina nova, depois do lote piloto 127."),
             ("Romaneio de expedição", "Só a bobina 2 foi embarcada para o cliente A, em 17/05.")],
     conclusao="A busca delimita o problema: só a bobina 2 chegou ao cliente, e mediu 39,1 µm, perto do mínimo. A resposta sai com dados, e a verificação se concentra nessa bobina.")
 

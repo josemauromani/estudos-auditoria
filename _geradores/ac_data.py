@@ -173,7 +173,7 @@ EX2 = {
          ESTAVEL, FAV, "As medições são feitas e analisadas todo mês. Manter."),
         ("c6", "Coordenador da Qualidade", "Relatórios das auditorias de 2026", "Programa cumprido: 12 auditorias, nos 9 processos. Foram 10 não conformidades e 14 oportunidades de melhoria. A Produção teve 3 não conformidades.",
          ESTAVEL, ATE, "A Produção concentra as não conformidades pelo segundo ciclo."),
-        ("c7", "Gerente de Suprimentos", "Avaliação de fornecedores de dezembro", "Doze fornecedores críticos avaliados: nove aprovados, dois com plano de ação e um reprovado. Nenhuma devolução por item errado desde novembro.",
+        ("c7", "Gerente de Suprimentos", "Avaliação de fornecedores de janeiro", "Doze fornecedores críticos avaliados: nove aprovados, dois com plano de ação e um reprovado. Nenhuma devolução por item errado desde novembro.",
          MELHOR, FAV, "As ações do RNC 2026-31 funcionaram. Manter a avaliação semestral."),
         ("d", "Gerente de RH", "Pedidos das áreas e orçamento de 2027", "O Laboratório tem um analista a mais desde maio. A Qualidade tem seis auditores para doze auditorias, e as extrusoras 3 e 4 não têm medidor de espessura.",
          ESTAVEL, ATE, "Faltam auditores e o equipamento de medição."),

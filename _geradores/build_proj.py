@@ -320,8 +320,8 @@ ws.row_dimensions[4].height = 33
 hint_row(ws, 5, [("B", ""), ("C", "Data"), ("D", "De quê, para quê"), ("E", "Por que mudar"), ("F", "Efeito nas entradas, nas saídas e no uso"), ("G", "O ensaio, o teste, a validação"),
                  ("H", "Quem tem autoridade"), ("I", "Calculada")])
 ex(ws, "B6", "Ex.", h="center")
-for col, v, h_, fmt in [("C", date(2027, 7, 20), "center", DATE), ("D", "Resina do fornecedor B no lugar do A.", "left", None), ("E", "Prazo de entrega.", "left", None),
-                        ("F", "Fichas técnicas comparadas.", "left", None), ("G", "Queda de dardo repetida: 410 g.", "left", None), ("H", "Gerente de engenharia", "left", None),
+for col, v, h_, fmt in [("C", date(2027, 7, 8), "center", DATE), ("D", "Resina do fornecedor B no lugar do A.", "left", None), ("E", "Prazo de entrega.", "left", None),
+                        ("F", "Fichas técnicas comparadas.", "left", None), ("G", "Queda de dardo no lote de teste: 420 g.", "left", None), ("H", "Gerente de engenharia", "left", None),
                         ("I", "OK", "center", None)]:
     ex(ws, f"{col}6", v, h=h_, fmt=fmt)
 ws.row_dimensions[6].height = 30

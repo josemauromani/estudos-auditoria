@@ -182,7 +182,7 @@ EX2 = {
 IMPACTO = [
     ("10/01", "Última calibração aprovada", "Erro de +0,6 µm, dentro do critério de ±1 µm."),
     ("Até 12/06", "Cinco meses de medições", "Cerca de 1.200 bobinas medidas no posto da extrusora 3."),
-    ("24/05", "Reclamação do cliente A", "Filme fino no lote 135. A fábrica tinha medido 39,1 µm na bobina."),
+    ("24 e 26/05", "Reclamação do cliente A", "Lote 135. Primeira resposta: 39,1 µm na liberação. Em 26/05, o MIC-08 mede trechos com 37,9 µm."),
     ("12/06", "Verificação reprovada", "O micrômetro marca 1,6 µm a mais. A bobina de 39,1 µm tinha, na verdade, 37,5 µm."),
     ("14/06", "Avaliação e ação", "Medições corrigidas desde 10/01. 6 bobinas abaixo de 38 µm, 2 entregues. Clientes informados."),
 ]

@@ -114,9 +114,9 @@ EX1 = {
                  origem="Requisito 8.3 atendido em parte no diagnóstico de 2026: sabores novos eram testados com a equipe, sem registro da receita aprovada nem do teste."),
     "ents": _ents([
         ("E1", "Nenhum ingrediente de origem animal, inclusive na massa e no molho.", CLI, "Pedidos e comentários no aplicativo", "Ficha técnica P-03, com todos os ingredientes",
-         "Conferência da ficha técnica e dos rótulos dos insumos", ATENDE, "Rótulos conferidos em 20/04."),
+         "Conferência da ficha técnica e dos rótulos dos insumos", ATENDE, "Rótulos conferidos em 20/04. Vale para a receita verificada até 03/05: com o queijo da marca B (12/05) e o tofu defumado (18/05), a ficha técnica e os rótulos precisam ser conferidos de novo."),
         ("E2", "Alergênicos informados no cardápio e no aplicativo.", LEG, "Requisito legal de rotulagem de alergênicos", "Texto do cardápio e do aplicativo",
-         "Conferência do texto contra a ficha técnica", ATENDE, "Texto conferido em 03/05."),
+         "Conferência do texto contra a ficha técnica", ATENDE, "Texto conferido em 03/05. Vale para a receita verificada até 03/05: com o queijo da marca B (12/05) e o tofu defumado (18/05), o texto de alergênicos precisa ser conferido de novo."),
         ("E3", "Aviso de que a cozinha é compartilhada com produtos de origem animal.", FAL, "Oferta: o que a loja não garante", "Texto do cardápio",
          "Conferência do texto", ATENDE, "Texto conferido em 03/05."),
         ("E4", "Tempo de forno de até 7 minutos, como o das outras pizzas.", FUN, "Capacidade do forno no pico", "Instrução de montagem e de forno",
@@ -162,7 +162,7 @@ EX2 = {
         ("E3", "Queda de dardo de pelo menos 300 g a -18 °C.", FUN, "Uso pretendido: freezer do cliente", "Resina para baixa temperatura e receita RX-D07",
          "Ensaio de queda de dardo a -18 °C", ATENDE, "420 g, em 16/07."),
         ("E4", "Declaração de conformidade para contato com alimentos.", LEG, "Legislação de embalagens para alimentos", "Declaração DC-D07, com as resinas e o aditivo",
-         "Laudo de migração de laboratório externo", ATENDE, "Laudo de 12/07."),
+         "Laudo de migração de laboratório externo", ATENDE, "Laudo de 18/07."),
         ("E5", "Método de ensaio de queda de dardo da norma técnica.", NOR, "Ficha técnica do cliente", "Instrução de ensaio IE-12", "Conferência da instrução com a norma",
          ATENDE, "Instrução revista em 02/07."),
         ("E6", "Perfil de extrusão do filme de 40 µm como ponto de partida.", ANT, "Receita RX-40 da extrusora 3", "Receita RX-D07", "Lote de teste de 500 kg", ATENDE,
@@ -188,8 +188,8 @@ EX2 = {
         ("Liberação para produção regular, com o plano de controle", LIB, _GE, "Produção e Qualidade", D(2027, 9, 24), None, "", "", ""),
     ]),
     "muds": _muds([
-        (D(2027, 7, 20), "Resina para baixa temperatura do fornecedor B no lugar do fornecedor A.", "Prazo de entrega do fornecedor A.",
-         "Fichas técnicas comparadas. Laudo de migração estendido à resina B.", "Queda de dardo repetida com a resina B: 410 g, conforme.", _GE),
+        (D(2027, 7, 8), "Resina para baixa temperatura do fornecedor B no lugar do fornecedor A.", "Prazo de entrega do fornecedor A.",
+         "Fichas técnicas comparadas. Laudo de migração estendido à resina B.", "Queda de dardo no lote de teste, com a resina B: 420 g, em 16/07, conforme.", _GE),
         (D(2027, 8, 12), "Camada interna de 15 para 20 µm.", "Validação de 09/08: furos no transporte.", "Efeito na selagem, no custo e na espessura total avaliado.",
          "Planejado no lote 2: perfuração, selagem e espessura.", _GE),
         (D(2027, 8, 22), "Espessura total de 50 para 52 µm, para compensar a camada interna.", "Pedido da Produção.", "", "", "Líder do turno"),
@@ -206,7 +206,7 @@ HISTORIA = [
 ]
 
 CHECK = [
-    "Está decidido se a organização faz projeto e desenvolvimento, e a exclusão, se houver, está justificada.",
+    "Está decidido se a organização faz projeto e desenvolvimento, e a não aplicabilidade, se houver, está justificada.",
     "Cada projeto tem um plano: etapas, responsáveis, prazos, análises críticas, verificações e validações.",
     "O cliente e os usuários participam quando o projeto depende deles.",
     "As entradas estão escritas: cliente, desempenho, requisitos legais, normas, projetos anteriores, falhas potenciais e a organização.",

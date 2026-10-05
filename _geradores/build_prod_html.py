@@ -290,7 +290,8 @@ def mud_tab(ex):
         c = mud_conf(m)
         rows.append(f'<td class="c">{dt(m[0])}</td><td><strong>{escape(m[1])}</strong><small>{escape(m[2])}</small></td><td>{escape(m[3]) or "—"}</td><td>{escape(m[4]) or "—"}</td>'
                     f'<td>{escape(m[5]) or "—"}</td><td><span class="chip {"s1" if c == "OK" else "s3"}">{c}</span></td>')
-    return tabela('Mudanças no processo',
+    cap = 'Mudanças no processo' + (f' · registro lido em {dt(ex["head"]["mud_ref"])}' if ex["head"].get("mud_ref") else '')
+    return tabela(cap,
                   ['<th class="c">Data</th>', '<th style="width:26%">O que mudou<small>Motivo</small></th>', '<th style="width:22%">Análise antes de mudar</th>', '<th style="width:13%">Quem autorizou</th>',
                    '<th>Ações decorrentes</th>', '<th>Conferência</th>'], rows)
 
@@ -346,9 +347,9 @@ charttext = (f'  <p>Das {len(rs)} leituras da semana, {len(rs) - 1} ficaram dent
 
 # ------------------------------------------------------------------ módulo 10: figura da ISO
 ISOP = [("8.5.1 · Condições controladas", "Saber o que fazer e o resultado esperado, e conferir nas etapas certas, com recursos e pessoas adequados.", "o plano de controle e os registros"),
-        ("8.5.2 · Identificar e rastrear", "Identificar o produto e a situação dele. Guardar o registro quando a rastreabilidade for requisito.", "a identificação por etapa e o exemplo 3"),
+        ("8.5.2 · Identificar e rastrear", "Identificar o produto, quando preciso para a conformidade, e a situação dele. Rastrear, com registro, quando for requisito.", "a identificação por etapa e o exemplo 3"),
         ("8.5.3 e 8.5.4 · Cuidar e preservar", "Cuidar do que é do cliente ou do fornecedor, e proteger o produto até a entrega.", "as tabelas de propriedade e de preservação"),
-        ("8.5.6 · Controlar as mudanças", "Analisar a mudança antes, e registrar quem autorizou e o que foi feito.", "o registro de mudanças")]
+        ("8.5.6 · Controlar as mudanças", "Analisar e controlar a mudança, na medida necessária, e registrar quem autorizou e o que foi feito.", "o registro de mudanças")]
 iso = ['      <svg viewBox="0 0 900 200" role="img" aria-label="O que a norma pede sobre o controle da produção e do serviço. ' + " ".join(f"{a}: {b} Neste estudo: {c}." for a, b, c in ISOP) + '">']
 for k, (a, b, c) in enumerate(ISOP):
     x = 10 + k * 222

@@ -30,7 +30,7 @@ DISP_INFO = [
     (REFUGO, "Descartar o produto, ou destruí-lo para reaproveitar o material.", "Não há correção possível, ou ela custa mais do que refazer.", "Garantir que o produto não volte ao fluxo.",
      "Pizza com o sabor trocado. Bobina com géis, moída."),
     (DEVOLV, "Devolver o item recebido a quem o forneceu.", "O defeito veio no insumo, e foi visto no recebimento ou antes do uso.", "Registrar a ocorrência na avaliação do fornecedor.",
-     "Mussarela recebida a 9 °C."),
+     "Muçarela recebida a 9 °C."),
     (RECOLH, "Buscar o produto que já está com o cliente, trocar ou reparar.", "O defeito foi encontrado depois da entrega.", "Informar o cliente, sem esperar a reclamação.",
      "Pedido entregue com o sabor errado."),
 ]
@@ -133,7 +133,7 @@ EX1 = {
          "1 pizza", FINAL, "", "", "", "", "", None, None, ""),
         ("2027-15", D(2027, 3, 16), "Pedido 5127", "Sabor trocado", "Pizza de calabresa montada no lugar da portuguesa. Vista na conferência com a etiqueta.",
          "1 pizza", FINAL, "Retirada da bancada de saída.", REFUGO, "Pizzaiolo líder", "", "", D(2027, 3, 16), 28, ""),
-        ("2027-16", D(2027, 3, 17), "Mussarela, nota de 17/03", "Insumo fora de temperatura", "Mussarela recebida a 9 °C, com o critério de até 7 °C.",
+        ("2027-16", D(2027, 3, 17), "Muçarela, nota de 17/03", "Insumo fora de temperatura", "Muçarela recebida a 9 °C, com o critério de até 7 °C.",
          "12 kg", RECEB, "Não entrou na câmara. Ficou na área de recebimento, com etiqueta vermelha.", DEVOLV, "Gerente da loja", "", "", D(2027, 3, 17), 0, ""),
         ("2027-17", D(2027, 3, 18), "Massa 18/03", "Peso da massa fora", "Bolas de massa com 365 g em média, com o critério de 380 a 420 g.",
          "40 bolas", PROC, "Caixa do lote com etiqueta vermelha.", RETRAB, "Pizzaiolo líder", "", R_CONF, D(2027, 3, 18), 0, ""),
@@ -141,10 +141,10 @@ EX1 = {
          "1 pizza", FINAL, "Mostrada ao cliente antes de servir.", CONCES, "Gerente da loja", "Cliente da mesa 7 aceitou, com desconto de 20%, em 19/03.", "", D(2027, 3, 19), 11, ""),
         ("2027-19", D(2027, 3, 19), "Pedido 5360", "Pizza fria na saída", "Pizza a 61 °C na saída, depois de 13 minutos de espera.",
          "1 pizza", FINAL, "Voltou da bancada de saída para o forno.", RETRAB, _LE, "", R_CONF, D(2027, 3, 19), 0, ""),
-        ("2027-20", D(2027, 3, 20), "Pedido 5431", "Sabor trocado", "Cliente recebeu meia mussarela no lugar de meia marguerita. Avisou pelo aplicativo.",
-         "1 pizza", APOS, "", RECOLH, "Atendente líder", "Cliente atendido em 20/03: pizza nova entregue em 35 minutos.", "", D(2027, 3, 20), 46, ""),
+        ("2027-20", D(2027, 3, 20), "Pedido 5431", "Sabor trocado", "Cliente recebeu meia muçarela no lugar de meia marguerita. Avisou pelo aplicativo.",
+         "1 pizza", APOS, "", RECOLH, "Gerente da loja", "Cliente atendido em 20/03: pizza nova entregue em 35 minutos.", "", D(2027, 3, 20), 46, ""),
         ("2027-21", D(2027, 3, 20), "Pedido 5440", "Sabor trocado", "Pizza de frango montada no lugar da de atum. Vista na conferência com a etiqueta.",
-         "1 pizza", FINAL, "Retirada da bancada de saída.", REFUGO, "Pizzaiolo líder", "", "", D(2027, 3, 20), 28, "RNC 2027-07"),
+         "1 pizza", FINAL, "Retirada da bancada de saída.", REFUGO, "Pizzaiolo líder", "", "", D(2027, 3, 20), 28, "RNC 2027-03"),
     ]),
 }
 
@@ -153,7 +153,8 @@ _AQ = "Analista da Qualidade"
 EX2 = {
     "head": dict(org="Indústria de embalagens plásticas", processo="Extrusão, na extrusora 3, e inspeção final", produto="Filme de 40 µm para clientes do segmento de alimentos",
                  libera="Analista da Qualidade, com o laudo do lote. Liberação com verificação pendente: só com a autorização do gerente industrial e o aceite do cliente.",
-                 decide="Coordenador da Qualidade. Refugo acima de 500 kg e recolhimento no cliente: gerente industrial e gerente comercial.",
+                 decide="Coordenador da Qualidade. Retrabalho na linha: líder do turno. Devolução de insumo ao fornecedor: gerente de Suprimentos. "
+                        "Refugo acima de 500 kg e recolhimento no cliente: gerente industrial e gerente comercial.",
                  periodo="Lotes 136 a 143, de 17 a 26/05/2027", ref=D(2027, 5, 28), origem="Reclamações do cliente A e o objetivo O1: reduzir o refugo para 2,0%."),
     "libs": _libs([
         (D(2027, 5, 17), "Lote 136", "4 bobinas, 1.210 kg", 12, 12, 0, LIBERADO, _AQ, "", "", ""),
@@ -161,7 +162,8 @@ EX2 = {
         (D(2027, 5, 19), "Lote 138", "4 bobinas, 1.225 kg", 12, 12, 0, LIBERADO, _AQ, "", "", ""),
         (D(2027, 5, 20), "Lote 139", "4 bobinas, 1.190 kg", 12, 11, 0, AUTORIZADO, _AQ, "Gerente industrial, com o aceite do cliente A por e-mail.", "",
          "Ensaio de solda pendente: dinamômetro em calibração. Feito em 21/05, conforme."),
-        (D(2027, 5, 20), "Lote 140", "2 bobinas, 600 kg", 12, 12, 2, RETIDO, "", "", "2027-21", "Espessura acima do critério nas duas bobinas."),
+        (D(2027, 5, 20), "Lote 140", "2 bobinas, 600 kg", 12, 12, 2, RETIDO, _AQ, "", "2027-21",
+         "Espessura acima do critério nas duas bobinas. Retido em 20/05; liberado em 21/05, com a concessão do cliente B."),
         (D(2027, 5, 21), "Lote 141", "4 bobinas, 1.205 kg", 12, 12, 0, LIBERADO, _AQ, "", "", ""),
         (D(2027, 5, 24), "Lote 142", "4 bobinas, 1.215 kg", 12, 11, 0, LIBERADO, _AQ, "", "", "Ensaio de solda na fila do laboratório. Lote embarcado no mesmo dia."),
         (D(2027, 5, 26), "Lote 143", "4 bobinas, 1.200 kg", 12, 12, 1, LIBERADO, _AQ, "", "2027-24", "Bobina 1 segregada para refilar."),
@@ -171,21 +173,21 @@ EX2 = {
          "290 kg", PROC, "Etiqueta vermelha. Área de segregação da extrusão.", REFUGO, "Coordenador da Qualidade", "", "", D(2027, 5, 12), 580, ""),
         ("2027-18", D(2027, 5, 12), "Lote 133, bobina 1", "Espessura fora", "Espessura de 42,6 µm, com o critério de 38 a 42 µm.",
          "310 kg", PROC, "Etiqueta vermelha. Área de segregação da extrusão.", RECLAS, "Coordenador da Qualidade", "", "", D(2027, 5, 14), 620, "Ciclo PDCA do refugo"),
-        ("2027-19", D(2027, 5, 14), "Lote 135, bobina 1", "Espessura fora", "Espessura de 37,4 µm, na primeira bobina com a resina do segundo fornecedor.",
+        ("2027-19", D(2027, 5, 14), "Lote 135, bobina 1", "Espessura fora", "Espessura de 37,4 µm, na primeira bobina da produção regular com a resina do segundo fornecedor.",
          "305 kg", PROC, "Etiqueta vermelha. Área de segregação da extrusão.", REFUGO, "Coordenador da Qualidade", "", "", D(2027, 5, 17), 610, ""),
         ("2027-20", D(2027, 5, 18), "Lote 137, bobina 3", "Géis", "Géis visíveis depois da troca da tela do filtro.",
          "280 kg", PROC, "Etiqueta vermelha. Área de segregação da extrusão.", REFUGO, "Coordenador da Qualidade", "", "", D(2027, 5, 19), 560, ""),
         ("2027-21", D(2027, 5, 20), "Lote 140, duas bobinas", "Espessura fora", "Espessura de 43,1 e 43,4 µm, vista na inspeção final.",
          "600 kg", FINAL, "Lote retido no armazém, com etiqueta vermelha no palete.", CONCES, "Coordenador da Qualidade", "Cliente B aceitou até 44 µm, por e-mail de 21/05, com desconto de 15%.", "",
          D(2027, 5, 21), 1350, ""),
-        ("2027-22", D(2027, 5, 24), "Lote 135, bobina 2", "Espessura fora", "Cliente A reclamou de filme fino. Trechos com 37,9 µm, medidos na bobina devolvida.",
-         "300 kg", APOS, "", RECOLH, "Gerente comercial", "Cliente A informado em 24/05. Bobina recolhida e reposta em 26/05.", "", None, 2900, ""),
+        ("2027-22", D(2027, 5, 24), "Lote 135, bobina 2", "Espessura fora", "Cliente A reclamou de filme fino. Primeira resposta, em 24/05: 39,1 µm na liberação. Medida no laboratório em 26/05, com o MIC-08: trechos com 37,9 µm.",
+         "300 kg", APOS, "", RECOLH, "Gerente industrial e gerente comercial", "Cliente A informado em 24/05. Bobina recolhida e reposta em 26/05.", "", None, 2900, ""),
         ("2027-23", D(2027, 5, 25), "Resina, lote R-0440", "Resina úmida", "Sacaria molhada no recebimento. Umidade acima do limite da ficha técnica.",
          "2.000 kg", RECEB, "Etiqueta vermelha no almoxarifado. Não entrou no estoque.", DEVOLV, "Gerente de Suprimentos", "", "", D(2027, 5, 27), 0, ""),
         ("2027-24", D(2027, 5, 26), "Lote 143, bobina 1", "Largura fora", "Largura de 603 mm, com o critério de 598 a 602 mm.",
          "300 kg", PROC, "Etiqueta vermelha. Ao lado da refiladeira.", RETRAB, "Líder do turno", "", "", None, 150, ""),
         ("2027-25", D(2027, 5, 26), "Lote 142", "Solda fraca", "Resistência da solda de 11,2 N/15 mm, com o critério de no mínimo 12. Ensaio feito dois dias depois do embarque.",
-         "1.215 kg", APOS, "", RECOLH, "Coordenador da Qualidade", "", "", None, 3400, ""),
+         "1.215 kg", APOS, "", RECOLH, "Gerente industrial e gerente comercial", "", "", None, 3400, ""),
     ]),
 }
 
@@ -200,7 +202,7 @@ DUAS = dict(
         ("24/05", "Ensaio de solda pendente", "A amostra está na fila do laboratório. As outras 11 verificações estão conformes."),
         ("24/05", "Liberado e embarcado", "Ninguém autorizou, e o cliente não foi avisado."),
         ("26/05", "Ensaio feito: não conforme", "Solda de 11,2 N/15 mm. O lote já está no cliente."),
-        ("Resultado", "R$ 3.400 e o cliente a informar", "Recolher 1.215 kg, repor e explicar. O registro 2027-25 segue aberto.")]),
+        ("Resultado", "R$ 3.400 e o cliente a informar", "Recolher 1.215 kg, repor e explicar. O registro 2027-25 segue em tratamento.")]),
     conclusao="A verificação pendente era a mesma. A diferença foi a autorização: ela não evita o defeito, e sim a surpresa.")
 
 CHECK = [

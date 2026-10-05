@@ -290,8 +290,10 @@ tb = ['        <table class="aud">', '          <thead><tr><th>Pergunta</th><th 
 for k, ((t, _), a, b) in enumerate(zip(PERGUNTAS, n1, n2), 1):
     tb.append(f'            <tr><td>{k} · {escape(t)}</td><td class="c">{a}</td><td class="c">{b}</td></tr>')
 tb += ['          </tbody>', '        </table>']
-charttext = (f'  <p>Na pizzaria, a pergunta que mais encontra problema é a da capacidade: {n1[1]} das {len(EX1["peds"])} encomendas pediam mais do que a loja consegue no horário pedido. '
-             f'Duas foram resolvidas na análise, com outro horário ou outro dia. A terceira, a E-34, foi aceita pela atendente sem a análise do gerente, para o mesmo sábado da formatura. '
+NENC = sum(1 for p in EX1["peds"] if p["num"].startswith("E-"))
+charttext = (f'  <p>Na pizzaria, a pergunta que mais encontra problema é a da capacidade: {n1[1]} das {NENC} encomendas pediam mais do que a loja consegue no horário pedido. '
+             f'A da formatura foi resolvida na análise, com outro horário, e a da escola foi recusada. '
+             f'A terceira, a E-34, foi aceita pela atendente sem a análise do gerente e com menos de 48 horas de antecedência, para o mesmo sábado da formatura. '
              f'Na indústria, os problemas se espalham: a especificação que o processo não alcança, o uso que o cliente não contou, a lei, a diferença entre o pedido e a proposta. '
              f'É por isso que a análise da fábrica envolve a Engenharia e a Qualidade, e não só o Comercial. Em nenhum dos dois casos a pergunta do preço pegou alguma coisa: '
              f'é a que todos já fazem sem precisar de lista.</p>')

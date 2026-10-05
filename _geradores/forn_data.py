@@ -83,7 +83,7 @@ def _aval(rows):
 
 # ------------------------------------------------------------ exemplo 1: indústria de embalagens
 EX1 = {
-    "head": dict(org="Indústria de embalagens plásticas · Suprimentos", data=D(2026, 12, 11), periodo="Julho a dezembro de 2026",
+    "head": dict(org="Indústria de embalagens plásticas · Suprimentos", data=D(2027, 1, 11), periodo="Julho a dezembro de 2026",
                  por="Comprador sênior, com o Gerente de Suprimentos e a Qualidade",
                  origem="Constatação nº 2 da auditoria 2026-07: cinco fornecedores críticos sem avaliação em 2026. Avaliação semestral, PR-SUP-02 rev. 2."),
     "forns": _forn([
@@ -95,10 +95,10 @@ EX1 = {
         ("F-06", "Filmes Técnicos", "Filme para laminação", PRODUTO, CRITICO, D(2026, 1, 20), SIM),
         ("F-07", "Papelão Oeste", "Caixas de papelão", PRODUTO, CRITICO, D(2024, 9, 30), SIM),
         ("F-08", "Paletes Rápido", "Paletes de madeira", PRODUTO, CRITICO, D(2024, 10, 14), NAO),
-        ("F-09", "Transportes Horizonte", "Transporte de produto acabado", SERVICO, CRITICO, D(2025, 5, 5), SIM),
+        ("F-09", "Transportes Horizonte", "Transporte de produto acabado", TERCEIRIZADO, CRITICO, D(2025, 5, 5), SIM),
         ("F-10", "Mantec", "Manutenção de extrusoras", SERVICO, CRITICO, D(2025, 4, 22), SIM),
-        ("F-11", "Laboratório Analítica", "Ensaios de migração e espessura", SERVICO, CRITICO, D(2025, 7, 8), SIM),
-        ("F-12", "Ferramentaria Precisa", "Usinagem de moldes", TERCEIRIZADO, CRITICO, D(2025, 1, 13), SIM),
+        ("F-11", "Laboratório Analítica", "Ensaios de migração e espessura", TERCEIRIZADO, CRITICO, D(2025, 7, 8), SIM),
+        ("F-12", "Ferramentaria Precisa", "Usinagem de moldes", SERVICO, CRITICO, D(2025, 1, 13), SIM),
     ]),
     "avals": _aval([
         ("F-01", 26, 26, 26, 24, 8, "Fornecedor único da resina. Segundo fornecedor em homologação."),
@@ -135,7 +135,6 @@ EX2 = {
         ("P2", 8, 8, 8, 8, 8, "Fornece desde novembro. Primeira avaliação."),
         ("P3", 12, 12, 12, 12, 9, ""),
         ("P4", 12, 12, 12, 11, 8, ""),
-        ("P5", 6, 6, 6, 6, 8, ""),
         ("P6", 26, 26, 26, 26, 7, "Nota fiscal sem o número do contrato em cinco entregas."),
         ("P7", 6, 5, 6, 6, 8, "Uma revisão refeita: freio com folga."),
     ]),
@@ -176,4 +175,4 @@ if __name__ == "__main__":
             print("   ", a["cod"], a["indice"], a["classe"], "|", pct(a["aceitos"], a["recebidos"]), pct(a["no_prazo"], a["entregas"]), a["nota"])
         print("   classes", {c: sum(1 for a in ex["avals"] if a["classe"] == c) for c, _, _, _ in CLASSES})
         for f in ex["forns"]:
-            assert any(a["cod"] == f["cod"] for a in ex["avals"]), f["cod"]
+            assert (f["crit"] == CRITICO) == any(a["cod"] == f["cod"] for a in ex["avals"]), f["cod"]
