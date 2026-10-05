@@ -72,11 +72,11 @@ _PIZZARIA['processos'] = [
     {'codigo': 'P4', 'nome': 'Atender no salão', 'tipo': 'Principal', 'dono': 'Gerente da loja',
      'indicador': 'Sem indicador em 14/10/2026; definido em março de 2027 (O5, alcançado com atraso: T23, N26)'},
     {'codigo': 'A1', 'nome': 'Comprar e armazenar insumos', 'tipo': 'Apoio', 'dono': 'Gerente da loja',
-     'indicador': 'Definido em março de 2027 (O5, alcançado com atraso: T23, N26)'},
+     'indicador': 'Definido em fevereiro de 2027, ainda no prazo do O5 (N26)'},
     {'codigo': 'A2', 'nome': 'Manter equipamentos e motos', 'tipo': 'Apoio', 'dono': 'Pizzaiolo líder',
      'indicador': 'Definido em março de 2027 (O5, alcançado com atraso: T23, N26)'},
     {'codigo': 'A3', 'nome': 'Treinar a equipe', 'tipo': 'Apoio', 'dono': 'Gerente da loja',
-     'indicador': 'Definido em março de 2027 (O5, alcançado com atraso: T23, N26)'},
+     'indicador': 'Definido em fevereiro de 2027, ainda no prazo do O5 (N26)'},
     {'codigo': None, 'nome': 'Terceirizados', 'tipo': 'Externo', 'dono': None,
      'indicador': 'Pagamento pelo aplicativo, controle de pragas e manutenção do forno.'},
 ]
@@ -216,8 +216,8 @@ _PIZZARIA['numeros'] = [
     ('Pedidos refeitos por erro', 'Meta 1,5%, limite 2,5%. Set/26 2,0; nov/26 1,4; 2027: jan 1,6, fev 1,5, mar 1,4, abr 1,3.'),
     ('Desperdício de insumos', 'Meta 4,0% em 2026 e 3,5% em 2027 (O6). Set/26 3,9; 2027: jan 3,9, fev 4,0, mar 3,8, abr 3,9.'),
     ('Pesquisa de satisfação', 'Meta 4,3. Fev/27 4,33; mar 4,43; abr 4,53. Pedidos de delivery: fev 840, mar 910, abr 870.'),
-    ('Processos com indicador e meta', '5 de 9 em 14/10/2026; 7 de 9 em fevereiro e 9 de 9 em março de 2027: o O5, com prazo em '
-     '26/02/2027, foi alcançado com atraso (T23, N26).'),
+    ('Processos com indicador e meta', '5 de 9 em 14/10/2026; 7 de 9 em fevereiro (A1 e A3) e 9 de 9 em março de 2027 (P4 e A2): '
+     'o O5, com prazo em 26/02/2027, foi alcançado com atraso (T23, N26).'),
     ('Disponibilidade dos equipamentos', 'Meta de 97%; 180 horas programadas no mês (720 h para a câmara fria).'),
     ('Diagnóstico da ISO 9001', '02/10/2026: 45 requisitos, 20 atendidos, 20 em parte, 5 não atendidos, 67%; seção 5 com 63% '
      '(T13: 5.1.1 em parte, sem política e sem análise crítica). Citado em ISO 9001 e Análise crítica.'),
@@ -1363,8 +1363,9 @@ DECISOES = [
      'estudos': ['Objetivos']},
     {'id': 'I16',
      'conflito': 'G1 com indicador e "não" no elemento; tartaruga e interações de Suprimentos diferentes.',
-     'canone': 'Pizzaria: o G1 tem o indicador "Objetivos alcançados no ano", e o elemento g (avaliação) passa de "Não" '
-               'para "Parcial": G1 com 5,0 pontos e 63% (62,5%: o gerador do treinamento arredonda para cima, como a '
+     'canone': 'Pizzaria: o G1 tem o indicador "Objetivos alcançados no ano", e o elemento c (critérios e indicadores) '
+               'passa de "Não" para "Parcial"; o elemento g (avaliação) não muda, "Não" (corrigido por N27; a primeira '
+               'versão mudava o g): G1 com 5,0 pontos e 63% (62,5%: o gerador do treinamento arredonda para cima, como a '
                'planilha; a ficha dizia 62%, conferido na tarefa 5); a média dos nove processos passa de 63% a 64%. '
                'Indústria: a tartaruga (20/10/2026) e a matriz de interações ficam iguais. Na tartaruga, "O que entra" '
                'ganha "Resultado da inspeção de recebimento · Laboratório e controle da qualidade" e "Resultados de '
@@ -1590,8 +1591,30 @@ DECISOES = [
      'canone': 'Vale T23 (spec, aprovado) e o acompanhamento (5, 7, 9, 9), que tem as contas do quadro: a ação "Definir o '
                'indicador do salão, das compras, da manutenção e do treinamento, com os líderes" foi concluída em '
                '10/03/2027, depois do prazo de 26/02/2027 (obj_data.py, data de conclusão, era 24/02/2027). Resultados, '
-               'prazo, situação e contagens não mudam. Na ficha, os processos P4, A1, A2 e A3 passam a "definido em março '
-               'de 2027", e o número-chave a "7 de 9 em fevereiro e 9 de 9 em março de 2027". A decisão c3 da análise '
-               'crítica de 14/12/2026 (prazo 26/02/2027) não muda.',
+               'prazo, situação e contagens não mudam. Nenhum estudo diz quando cada indicador foi definido; a ficha '
+               'escolhe, coerente com o acompanhamento (5, 7, 9) e com o O7, cuja cobertura da matriz tem resultado desde '
+               'fevereiro: em fevereiro, A1 (comprar e armazenar) e A3 (treinar a equipe); em março, P4 (atender no '
+               'salão) e A2 (manter equipamentos e motos), quando a ação foi concluída. O número-chave passa a "7 de 9 em '
+               'fevereiro (A1 e A3) e 9 de 9 em março de 2027 (P4 e A2)". A decisão c3 da análise crítica de 14/12/2026 '
+               '(prazo 26/02/2027) não muda.',
      'estudos': ['Objetivos']},
+    {'id': 'N27',
+     'conflito': 'Achado na revisão da tarefa 5. I16 mandava mudar o elemento g (avaliação) do G1 da pizzaria de "Não" para '
+                 '"Parcial", mas o conflito do spec é o do elemento c: o G1 tem o indicador "Objetivos alcançados no ano" e '
+                 'o elemento c (critérios e indicadores) dizia "Não". Com isso, a coluna c contava 5 processos sem '
+                 'indicador, contra "Quatro processos não têm indicador" no "O que observar" de Processos e a base 5 de 9 '
+                 'do O5 em Objetivos.',
+     'canone': 'Em Processos (proc_data.py, G1), o elemento c passa de "Não" a "Parcial", e o g volta a "Não": '
+               '"SPNSSPPP" (versão da tarefa 5) → "SPPSSPNP" (era "SPNSSPNP" antes da leva). Pontos 5,0 e 63% sem mudança; '
+               'coluna 4.4.1 c: 3 sim, 2 parcial, 4 não; coluna g: 2 sim, 2 parcial, 5 não. O parcial do G1 fica como '
+               'o do P1, só na tabela dos elementos. A parte da pizzaria de I16 foi corrigida.',
+     'estudos': ['Processos']},
+    {'id': 'N28',
+     'conflito': 'Achado na revisão da tarefa 5. N08 trocou o W2 da SWOT, exemplo 2, de "Processo manual, em planilhas e '
+                 'e-mails" para "Cotações e aprovações por e-mail, fora do sistema de compras", e manteve as estratégias. '
+                 'A estratégia WO "W2 × O2" da planilha ficou falando de planilhas que o exemplo não tem mais.',
+     'canone': 'Na aba "Exemplo 2 - Compras" (build_swot.py), "Implantar uma plataforma de cotação eletrônica no lugar das '
+               'planilhas." passa a "Implantar uma plataforma de cotação eletrônica no lugar das cotações por e-mail." O '
+               'treinamento não mostra as estratégias do exemplo 2.',
+     'estudos': ['SWOT']},
 ]

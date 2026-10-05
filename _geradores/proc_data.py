@@ -56,7 +56,7 @@ EX1 = {
                  cliente_in="Cliente com fome", cliente_out="Cliente atendido",
                  origem="Lacuna do requisito 4.4 no diagnóstico de 02/10/2026: só o delivery estava mapeado."),
     "procs": _procs([
-        ("G1", "Planejar e dirigir a loja", GESTAO, "Dono da loja", "Definir objetivos, recursos e prioridades.", "Objetivos alcançados no ano", "SPNSSPPP"),
+        ("G1", "Planejar e dirigir a loja", GESTAO, "Dono da loja", "Definir objetivos, recursos e prioridades.", "Objetivos alcançados no ano", "SPPSSPNP"),
         ("G2", "Medir e melhorar", GESTAO, "Gerente da loja", "Acompanhar os resultados e tratar os desvios.", "Indicadores na meta", "SSSSSPPS"),
         ("P1", "Registrar o pedido", PRINCIPAL, "Atendente líder", "Registrar o pedido certo, com endereço completo.", "Pedidos refeitos por erro", "SSPSSSPP"),
         ("P2", "Produzir e embalar", PRINCIPAL, "Pizzaiolo líder", "Produzir a pizza pedida, no padrão da receita.", "Desperdício de insumos", "SSSSSPSP"),

@@ -251,7 +251,7 @@ EX2 = {
         ("WT — Sobrevivência", "W3 × T4", "Homologar um segundo fornecedor para os três itens críticos."),
         ("WT — Sobrevivência", "W1 × T2", "Padronizar a requisição, com especificação e data de necessidade, para reduzir as compras urgentes."),
         ("ST — Manutenção", "S3 × T1", "Incluir cláusulas de reajuste e de proteção cambial nos contratos de longo prazo."),
-        ("WO — Crescimento", "W2 × O2", "Implantar uma plataforma de cotação eletrônica no lugar das planilhas."),
+        ("WO — Crescimento", "W2 × O2", "Implantar uma plataforma de cotação eletrônica no lugar das cotações por e-mail."),
         ("SO — Desenvolvimento", "S1 × O1", "Desenvolver fabricantes nacionais, com o apoio técnico dos compradores."),
     ],
 }
