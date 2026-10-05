@@ -146,7 +146,7 @@ for k, text in [
     ("Satisfeito", f"Nota igual ou acima de {round(100 * SATISFEITO)}% da escala: 4 em 5, 8 em 10. Percentual de satisfeitos = notas nesse nível sobre as respostas."),
     ("Indicação", "Pergunta de 0 a 10. Promotor dá 9 ou 10; neutro, 7 ou 8; detrator, de 0 a 6. Indicação = promotores menos detratores, em percentual das respostas."),
     ("Reclamações por 100", "Reclamações do período ÷ pedidos do período × 100. Os pedidos são informados na aba Painel."),
-    ("Prazos", f"Resposta em até {PRAZO_RESPOSTA} dias úteis e solução em até {PRAZO_SOLUCAO} dias, neste modelo. A organização define os seus."),
+    ("Prazos", f"Primeira resposta em até {PRAZO_RESPOSTA} dias úteis e solução em até {PRAZO_SOLUCAO} dias, neste modelo. A organização define os seus."),
 ]:
     line(k, text)
 r += 1
@@ -165,7 +165,7 @@ section("Abas da planilha")
 for k, text in [
     ("Pesquisa", f"Até {NPER} perguntas, com a escala, o período e o canal. Calcula o limite de satisfeito."),
     ("Respostas", f"Até {NRES} respostas. Calcula a média por pergunta, o percentual de satisfeitos e a classificação da indicação."),
-    ("Reclamações", f"Até {NREC} reclamações. Calcula o prazo de resposta e a situação de cada uma, e conta os motivos."),
+    ("Reclamações", f"Até {NREC} reclamações. Calcula o prazo da primeira resposta e a situação de cada uma, e conta os motivos."),
     ("Painel", "Os indicadores do período, com meta e situação, e o gráfico das perguntas."),
     ("Checklist", "Doze verificações de qualidade do sistema, com percentual de conclusão."),
     ("Exemplo 1 - Pizzaria", "A pesquisa depois da entrega, por mês, com os motivos e as reclamações."),
@@ -303,7 +303,7 @@ setup(ws, AMBER, f"B1:M{t+6}", fit_height=True)
 # ------------------------------------------------------------------ Reclamações
 ws = wb.create_sheet("Reclamações")
 widths(ws, {"A": 2, "B": 5, "C": 12, "D": 18, "E": 12, "F": 26, "G": 40, "H": 12, "I": 12, "J": 11, "K": 30, "L": 12, "M": 24, "N": 2})
-title(ws, "Reclamações", "Uma linha por reclamação, de qualquer canal. O prazo de resposta e a situação são calculados pelas datas.", "M")
+title(ws, "Reclamações", "Uma linha por reclamação, de qualquer canal. O prazo da primeira resposta e a situação são calculados pelas datas.", "M")
 for col, text in zip("BCDEFGHIJKLM", ["#", "Data", "Cliente ou pedido", "Canal", "Motivo", "Descrição", "Respondida em", "Resolvida em", "Dias até a resposta",
                                        "Tratamento", "RNC nº", "Situação"]):
     head(ws, f"{col}4", text)
@@ -343,7 +343,7 @@ dv.add(f"F{C1}:F{C2}")
 cf_texto(ws, f"M{C1}:M{C2}", f"M{C1}", [("Resolvida", GREEN), ("Respondida", BLUE_T), ("Aberta", RED)], resto=YELLOW)
 ws.conditional_formatting.add(f"J{C1}:J{C2}", FormulaRule(formula=[f"AND(ISNUMBER(J{C1}),J{C1}>{PRAZO_RESPOSTA})"], fill=PatternFill("solid", bgColor=YELLOW, fgColor=YELLOW)))
 note(ws, "H4", f"Data em que o cliente recebeu a primeira resposta: quem cuida e o que vai ser feito. Prazo do modelo: {PRAZO_RESPOSTA} dias úteis.")
-note(ws, "L4", "Reclamação grave ou repetida vira registro de não conformidade, com análise de causa.")
+note(ws, "L4", "Reclamação procedente é não conformidade e recebe correção. A grave ou repetida abre registro de não conformidade, com análise de causa.")
 s = C2 + 2
 band(ws, s, "Resumo automático", "G")
 put(ws, f"I{s}", "Reclamações por motivo", f=font(10, True, c=WHITE), bg=INK, box=False, merge=f"I{s}:M{s}")

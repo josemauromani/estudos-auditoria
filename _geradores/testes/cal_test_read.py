@@ -22,4 +22,11 @@ for nome, ex in (('t1', EX1), ('t2', EX2), ('t3', None)):
         ind = [Pa[f'C{r}'].value for r in range(6, 17)]
         ok_p = ind[:7] == [r['insts']] + [r['sits'][s] for s in SITS] + [r['grossa']] and ind[8] == r['reprov']
         print('            igual ao exemplo: instrumentos', 'OK' if ok_i else 'DIFERE %s' % ins, '| calibrações', 'OK' if ok_c else 'DIFERE %s' % cal, '| painel', 'OK' if ok_p else 'DIFERE %s' % ind)
+    # a situação de cada instrumento, refeita pela regra de cal_data a partir do que foi digitado na aba
+    ref_ = I['E4'].value.date() if I['E4'].value else None
+    lidos = [dict(cod=I[f'C{r}'].value, emuso=I[f'N{r}'].value, interv=I[f'K{r}'].value,
+                  ultima=I[f'L{r}'].value.date() if I[f'L{r}'].value else None) for r in range(8, 48) if I[f'C{r}'].value]
+    got_s = [I[f'P{r}'].value for r in range(8, 48) if I[f'C{r}'].value]
+    esp_s = [situacao(i, ref_) for i in lidos]
+    print('            situações pela regra de cal_data:', 'OK' if got_s == esp_s else 'DIFERE %s' % [(i['cod'], g, e) for i, g, e in zip(lidos, got_s, esp_s) if g != e])
     print('Checklist ', [K[f'D{r}'].value for r in range(19, 25)])

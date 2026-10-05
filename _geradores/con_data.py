@@ -37,14 +37,14 @@ ETAPAS = [
 CICLO = [
     ("Processo", "Faz o produto com o que a organização sabe."),
     ("Entrega", "O produto chega ao cliente, e começa a vida útil."),
-    ("Pós-entrega", "Reclamação, garantia, assistência, orientação de uso."),
+    ("Pós-entrega", "Garantia, assistência, orientação de uso. As reclamações chegam pelo mesmo caminho."),
     ("Lição aprendida", "O que o caso ensinou, escrito e com destino."),
     ("Conhecimento", "O documento, a instrução e o treinamento mudam."),
 ]
 ESCADA = [
     (CABECA, "O conhecimento existe, mas só em quem faz. Some com a pessoa.", "A regulagem do forno, que só o pizzaiolo líder conhece."),
     (ESCRITO, "Está num documento que outra pessoa pode ler.", "A ficha de regulagem da extrusora 3."),
-    (TREINADO, "Está escrito, e outras pessoas já fizeram sozinhas.", "As receitas, que quatro pizzaiolos seguem."),
+    (TREINADO, "Está escrito, e outras pessoas já fizeram sozinhas.", "As receitas, que os três pizzaiolos e o forneiro seguem."),
 ]
 CONSIDERA = [
     ("Requisitos legais", "Prazos para reclamar, troca e recolhimento, pela lei."),
@@ -140,7 +140,7 @@ def pol_conf(p):
     if not p["ativ"]:
         return "Falta o que se faz"
     if p["resp"] is None:
-        return "Falta o prazo de resposta"
+        return "Falta o prazo de solução"
     return "OK"
 
 
@@ -208,7 +208,7 @@ def _ats(rows):
 _PE, _SA, _MC = "Pizza entregue", "Pizza no salão", "Massa congelada para levar"
 EX1 = {
     "head": dict(org="Pizzaria (loja com salão e delivery)", resp="Gerente da loja", ref=D(2027, 5, 31),
-                 mudanca="O pizzaiolo líder, há 12 anos na loja, muda de cidade em agosto de 2027.",
+                 mudanca="O pizzaiolo líder, há seis anos na loja, muda de cidade em agosto de 2027.",
                  origem="Diagnóstico ISO de 2026: requisito 7.1.6 atendido em parte. As receitas estavam escritas, e a regulagem do forno só o pizzaiolo líder conhecia."),
     "cons": _cons([
         ("K-01", "Regulagem do forno e da chama do lastro", "Produção", ALTA, CABECA, "", 1, SIM,
@@ -216,7 +216,7 @@ EX1 = {
         ("K-02", "Ponto da massa pela temperatura da cozinha", "Produção", ALTA, ESCRITO, "Receita RC-01", 2, NAO, "", None),
         ("K-03", "Receitas das pizzas", "Produção", ALTA, TREINADO, "Receitas RC-01 a RC-24", 4, NAO, "", None),
         ("K-04", "Montagem e conferência do pedido", "Expedição", ALTA, TREINADO, "Instrução IT-EXP-01", 3, NAO, "", None),
-        ("K-05", "Uso do sistema de pedidos novo", "Atendimento", MEDIA, CABECA, "", 2, NAO, "O gerente escreve o passo a passo do sábado, com as telas.", None),
+        ("K-05", "Uso do sistema de pedidos, depois da atualização de versão", "Atendimento", MEDIA, CABECA, "", 2, NAO, "O gerente escreve o passo a passo do sábado, com as telas.", None),
         ("K-06", "Contingência da câmara fria", "Estoque", ALTA, ESCRITO, "Contingência CT-02, na porta da câmara", 2, NAO,
          "Treinar a equipe do domingo na contingência, com simulação.", D(2027, 6, 15)),
         ("K-07", "Rotas e atalhos do bairro", "Entrega", BAIXA, CABECA, "", 3, NAO, "", None),
@@ -256,7 +256,7 @@ _D7, _LI, _IM = "Filme para congelados D-07", "Filme liso padrão", "Filme impre
 EX2 = {
     "head": dict(org="Indústria de embalagens plásticas", resp="Analista da Qualidade, com o gerente industrial", ref=D(2027, 9, 30),
                  mudanca="O operador sênior da extrusão se aposenta em dezembro de 2027. O filme D-07 entrou em produção em setembro.",
-                 origem="Análise crítica de julho: as quebras da extrusora 3 mostraram que o desgaste da rosca só era medido pelo técnico do fabricante."),
+                 origem="Análise crítica de 19/08/2027: as quebras da extrusora 3 mostraram que o desgaste da rosca só era medido pelo técnico do fabricante."),
     "cons": _cons([
         ("C-01", "Regulagem da extrusora 3 para filme de 38 a 42 µm", "Extrusão", ALTA, ESCRITO, "Ficha de regulagem FR-03", 2, SIM,
          "O operador sênior acompanha os operadores do turno C por dois meses.", D(2027, 11, 30)),
@@ -272,7 +272,7 @@ EX2 = {
         ("I-01", D(2027, 5, 24), "Reclamação", "Cliente A reclamou de filme fino no lote 135.", "Reclamação de espessura dispara a verificação do micrômetro do posto.",
          "Procedimento PQ-08", "Analista da Qualidade", "C-07", D(2027, 6, 20)),
         ("I-02", D(2027, 6, 12), "Não conformidade", "Micrômetro de 1 µm era grosso demais para a tolerância.", "Na compra de instrumentos, a resolução cabe 10 vezes na tolerância.",
-         "Procedimento de compras PC-02", "Comprador", "", None),
+         "Procedimento PR-SUP-01", "Comprador", "", None),
         ("I-03", D(2027, 7, 6), "Quebra", "Resistência da zona 3 queimou, com a preventiva adiada.", "Preventiva de item crítico só é adiada com análise da direção.",
          "Plano de manutenção PM-01", "Supervisor de manutenção", "", D(2027, 8, 10)),
         ("I-04", D(2027, 7, 18), "Quebra", "Rosca desgastada, medida só na preventiva.", "O desgaste da rosca é medido todo mês.",
@@ -305,7 +305,7 @@ EX2 = {
 REPETE = [
     ("22/03", "Reclamação", "Cliente pediu sem cebola e recebeu com cebola. Reposição na hora."),
     ("22/03", "Lição registrada", "A observação precisa sair em destaque na etiqueta. Ninguém ficou com a tarefa."),
-    ("Abril", "Lição parada", "O sistema de pedidos é trocado, e a etiqueta continua igual."),
+    ("Abril", "Lição parada", "O sistema de pedidos recebe uma atualização de versão, e a etiqueta continua igual."),
     ("07/05", "A mesma reclamação", "Sabor trocado de novo. R$\u00a060 de reposição, e um cliente que talvez não volte."),
     ("31/05", "Na leitura", "A lição aparece com 70 dias pendente. Agora precisa de responsável e prazo."),
 ]
@@ -320,7 +320,7 @@ CHECK = [
     "Lições pendentes são lidas todo mês, e nenhuma fica parada sem responsável.",
     "O que a organização faz depois da entrega está definido para cada produto ou serviço.",
     "Os prazos aceitos para reclamar respeitam a lei e os contratos.",
-    "As reclamações, garantias e assistências são registradas, com prazo de resposta.",
+    "As reclamações, garantias e assistências são registradas, com prazo de solução.",
     "Cada reclamação resolvida tem a causa registrada.",
     "O que o pós-entrega ensina volta como lição aprendida.",
 ]

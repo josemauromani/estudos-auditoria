@@ -44,8 +44,8 @@ BLOCOS = [
 ]
 FATOR_EX = {
     FIS: ["Temperatura e umidade", "Limpeza e higiene", "Iluminação", "Ruído e vibração"],
-    SOC: ["Horas extras e escalas", "Convivência sem conflito", "Tratamento justo", "Comunicação entre turnos"],
-    PSI: ["Carga de trabalho no pico", "Pausas e descanso", "Pressão do prazo", "Reconhecimento"],
+    SOC: ["Convivência sem conflito", "Tratamento justo", "Comunicação entre turnos", "Relação com a liderança"],
+    PSI: ["Carga de trabalho no pico", "Horas extras e jornada", "Pausas e descanso", "Pressão do prazo"],
 }
 
 
@@ -242,7 +242,7 @@ def _amb(rows):
 # ------------------------------------------------------------ exemplo 1: pizzaria, abril de 2027
 EX1 = {
     "head": dict(org="Pizzaria (loja com salão e delivery)", resp="Gerente da loja, com o pizzaiolo líder", ini=D(2027, 4, 1), fim=D(2027, 4, 30), ref=D(2027, 4, 30),
-                 meta=0.97, horario="Loja aberta das 18h à meia-noite: 180 horas no mês. Câmara fria e sistema ligados o tempo todo.",
+                 meta=0.97, horario="Loja aberta das 18h à meia-noite: 180 horas no mês. A câmara fria fica ligada o tempo todo: 720 horas. O sistema de pedidos é contado nas horas de loja aberta.",
                  origem="Requisitos 7.1.1, 7.1.3 e 7.1.4 atendidos no diagnóstico de 2026, mas a escala de pico era feita de cabeça, e a quebra da câmara fria em abril mostrou que não havia plano para ela parar."),
     "caps": _caps([
         ("Atendimento", "Sexta, 19h às 23h", "pedidos por hora", 40, 20, 2, 2),
@@ -266,12 +266,12 @@ EX1 = {
         ("SEL-01", "Seladora de embalagens", "Equipamento", "Expedição", BAIXA, None, None, "", None),
     ]),
     "ocs": _ocs([
-        (D(2027, 4, 1), "SIS-01", PREV, 0, "Atualização do sistema e cópia de segurança testada.", "", "", "", ""),
+        (D(2027, 4, 1), "SIS-01", PREV, 0, "Atualização de versão do sistema e cópia de segurança testada.", "", "", "", ""),
         (D(2027, 4, 2), "FOR-01", PREV, 0, "Limpeza dos queimadores e teste da válvula de segurança.", "", "", "", ""),
         (D(2027, 4, 5), "MOT-01", PREV, 0, "Revisão mensal: óleo, freios, pneus e luzes.", "", "", "", ""),
         (D(2027, 4, 5), "MOT-02", PREV, 0, "Revisão mensal: óleo, freios, pneus e luzes.", "", "", "", ""),
         (D(2027, 4, 12), "CAM-01", CORR, 9, "Compressor parado. Câmara a 11 °C na abertura da cozinha.", "Capacitor do compressor queimado. A revisão de 10/04 não tinha sido feita.",
-         "Capacitor trocado. Alarme de temperatura instalado, contingência escrita e revisão marcada para 05/05.", SIM, "18 kg de mussarela e molho descartados (RNC 2027-27)."),
+         "Capacitor trocado. Alarme de temperatura instalado, contingência escrita e revisão marcada para 05/05.", SIM, "18 kg de muçarela e molho descartados (registro de produto não conforme 2027-27)."),
         (D(2027, 4, 16), "SIS-01", CORR, 1.5, "Sistema fora do ar na sexta, das 20h às 21h30.", "Atualização automática disparada no horário de pico.",
          "Atualização automática desligada. Atualizar só às segundas, de manhã.", NAO, ""),
         (D(2027, 4, 19), "MOT-02", CORR, 12, "Corrente da transmissão partiu durante uma entrega.", "Corrente gasta, que a revisão não confere.",
@@ -288,8 +288,8 @@ EX1 = {
         ("Iluminação da expedição", FIS, "Expedição", "Com pouca luz, o pedido sai com o sabor trocado.", "lux", 500, None,
          "Medição com luxímetro a cada 6 meses", None, ""),
         ("Pizzas por pizzaiolo no pico", PSI, "Cozinha", "Acima de 20 por hora, a montagem perde o padrão.", "pizzas/h", None, 20,
-         "Pedidos do sistema divididos pelos pizzaiolos, toda sexta", 24, "Rever a escala da sexta em maio, com a demanda de abril."),
-        ("Horas extras por pessoa na semana", SOC, "Loja", "Equipe cansada erra mais e falta mais.", "h", None, 6,
+         "Pedidos do sistema divididos pelos pizzaiolos, toda sexta", 20, ""),
+        ("Horas extras por pessoa na semana", PSI, "Loja", "Equipe cansada erra mais e falta mais.", "h", None, 6,
          "Folha de ponto, toda semana", 5, ""),
     ]),
 }
@@ -298,11 +298,11 @@ EX1 = {
 EX2 = {
     "head": dict(org="Indústria de embalagens plásticas", resp="Supervisor de manutenção, com o gerente industrial", ini=D(2027, 7, 1), fim=D(2027, 7, 31), ref=D(2027, 7, 31),
                  meta=0.95, horario="Três turnos, todos os dias: 744 horas no mês. A impressora trabalha em dois turnos: 496 horas.",
-                 origem="Análise crítica do semestre: as paradas da extrusora 3 foram a segunda causa dos atrasos, e o turno da noite trabalha com gente a menos desde as férias de junho."),
+                 origem="Preparação da análise crítica de 19/08/2027: as paradas da extrusora 3 foram a segunda causa dos atrasos, e o turno da noite trabalha com gente a menos desde as férias de junho."),
     "caps": _caps([
-        ("Operador de extrusão", "Turno A", "extrusoras em operação", 3, 1, 3, 3),
-        ("Operador de extrusão", "Turno B", "extrusoras em operação", 3, 1, 3, 3),
-        ("Operador de extrusão", "Turno C", "extrusoras em operação", 3, 1, 2, 2),
+        ("Operador de extrusão", "Turno A", "extrusoras em operação", 4, 1, 4, 4),
+        ("Operador de extrusão", "Turno B", "extrusoras em operação", 4, 1, 4, 4),
+        ("Operador de extrusão", "Turno C", "extrusoras em operação", 4, 1, 3, 3),
         ("Impressor", "Turno A", "impressoras em operação", 1, 1, 1, 1),
         ("Rebobinador", "Turno A", "bobinas por hora", 24, 8, 3, 3),
         ("Rebobinador", "Turno C", "bobinas por hora", 24, 8, 2, 2),
@@ -312,6 +312,7 @@ EX2 = {
     "infra": _infra([
         ("EXT-01", "Extrusora 1", "Equipamento", "Extrusão", ALTA, 3, D(2027, 5, 10), "Pedidos urgentes passam para a extrusora 2.", 744),
         ("EXT-03", "Extrusora 3", "Equipamento", "Extrusão", ALTA, 3, D(2027, 3, 15), "Pedidos redistribuídos entre as extrusoras 1 e 2, com hora extra.", 744),
+        ("EXT-04", "Extrusora 4", "Equipamento", "Extrusão", ALTA, 3, D(2027, 6, 21), "Pedidos urgentes passam para a extrusora 2.", 744),
         ("IMP-01", "Impressora flexográfica", "Equipamento", "Impressão", ALTA, 1, D(2027, 7, 20), "Impressão de pedidos urgentes em terceiro homologado.", 496),
         ("REB-01", "Rebobinadeira", "Equipamento", "Rebobinamento", MEDIA, 6, D(2027, 2, 20), "", 744),
         ("CMP-01", "Compressor de ar", "Equipamento", "Utilidades", ALTA, 3, D(2027, 6, 2), "", 744),
@@ -325,16 +326,16 @@ EX2 = {
         (D(2027, 6, 28), "EXT-03", CORR, 10, "Resistência da zona 2 queimou.", "Resistência no fim da vida útil.", "Resistência trocada.", NAO, ""),
         (D(2027, 7, 3), "ERP-01", PREV, 0, "Teste de restauração da cópia de segurança: dados recuperados em 40 minutos.", "", "", "", ""),
         (D(2027, 7, 6), "EXT-03", CORR, 14, "Resistência da zona 3 queimou.", "Resistência no fim da vida útil. A troca estava prevista na preventiva de junho, adiada.",
-         "Resistência trocada. Preventiva remarcada para 07/08, com os pedidos redistribuídos.", SIM, "Bobina em produção segregada e moída (RNC 2027-29)."),
+         "Resistência trocada. Preventiva remarcada para 07/08, com os pedidos redistribuídos.", SIM, "Bobina em produção segregada e moída (registro de produto não conforme 2027-29)."),
         (D(2027, 7, 12), "IMP-01", CORR, 4, "Anilox entupido: falha na cor.", "Limpeza do anilox esquecida na troca do turno C.",
          "Limpeza do anilox incluída no roteiro da troca de turno.", NAO, ""),
         (D(2027, 7, 18), "EXT-03", CORR, 20, "Espessura variando ao longo da bobina.", "Rosca desgastada. O desgaste só é medido na preventiva, que está atrasada.",
-         "Rosca recuperada. Medição da rosca antecipada para a preventiva de 07/08.", SIM, "6 bobinas com espessura fora segregadas (RNC 2027-30)."),
+         "Rosca recuperada. Medição da rosca antecipada para a preventiva de 07/08.", SIM, "6 bobinas com espessura fora segregadas (registro de produto não conforme 2027-30)."),
         (D(2027, 7, 20), "IMP-01", PREV, 6, "Troca das facas e limpeza geral.", "", "", "", ""),
         (D(2027, 7, 22), "CHI-01", CORR, 8, "Vazamento de gás refrigerante: água acima de 18 °C.", "Conexão trincada por vibração.",
          "Conexão trocada e suporte antivibração instalado.", SIM, ""),
         (D(2027, 7, 27), "EXT-03", CORR, 6, "Leitura instável da temperatura da zona 3.", "Cabo do termopar danificado pela vibração.",
-         "Cabo trocado e termopar TER-Z3 verificado contra o padrão PAD-01.", NAO, ""),
+         "Cabo trocado. Termopar TER-Z3 calibrado no local por laboratório externo, a 190 °C, antes de a extrusora voltar.", NAO, ""),
     ]),
     "amb": _amb([
         ("Temperatura do salão de impressão", FIS, "Impressão", "Acima de 28 °C, a tinta seca no anilox e a cor varia.", "°C", 18, 28,
@@ -342,10 +343,10 @@ EX2 = {
         ("Umidade do salão de impressão", FIS, "Impressão", "Abaixo de 40 %, a eletricidade estática atrai pó para o filme.", "%", 40, 65,
          "Termo-higrômetro lido a cada turno", 52, ""),
         ("Ruído na extrusão", FIS, "Extrusão", "Acima de 85 dB(A), o operador não ouve o alarme da extrusora.", "dB(A)", None, 85,
-         "Medição a cada 6 meses", 88, "Alarme luminoso instalado nas três extrusoras. Protetor auricular obrigatório."),
+         "Medição a cada 6 meses", 88, "Alarme luminoso instalado nas quatro extrusoras. Protetor auricular obrigatório."),
         ("Limpeza da área de rebobinamento", FIS, "Rebobinamento", "Pó sobre o filme vira reclamação de sujeira.", "% do checklist", 95, None,
          "Checklist de limpeza a cada turno", 97, ""),
-        ("Horas extras por operador no mês", SOC, "Turno C", "Turno com gente a menos, e cansada, erra a regulagem.", "h", None, 16,
+        ("Horas extras por operador no mês", PSI, "Turno C", "Turno com gente a menos, e cansada, erra a regulagem.", "h", None, 16,
          "Folha de ponto, todo mês", 22, ""),
         ("Pausas cumpridas no turno da noite", PSI, "Turno C", "Sem pausa, a atenção cai de madrugada, quando os ajustes errados se concentram.", "% das pausas", 90, None,
          "Registro de pausas no posto", None, ""),
@@ -358,7 +359,7 @@ CAMARA = [
     ("12/04, 15h", "Compressor parado", "Na abertura da cozinha, o visor marca 11 °C. Não havia alarme."),
     ("12/04, 15h20", "Contingência improvisada", "Insumos para o freezer reserva e para caixas com gelo. Cada item medido com o TER-01."),
     ("12/04, 24h", "Reparo", "Capacitor do compressor trocado às 22h. A câmara volta a 4 °C à meia-noite: 9 horas parada."),
-    ("13/04", "Produto e prevenção", "18 kg descartados (RNC\u00a02027-27). Contingência escrita, alarme instalado, revisão marcada."),
+    ("13/04", "Produto e prevenção", "18 kg descartados (registro de produto não conforme 2027-27). Contingência escrita, alarme instalado, revisão marcada."),
 ]
 
 # figura do módulo 4: a sexta-feira 16/04/2027 da pizzaria, entregas por hora

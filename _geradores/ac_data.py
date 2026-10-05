@@ -24,14 +24,14 @@ SIT_ACAO = [A_PRAZO, A_ATRASO, A_ABERTA, A_VENCIDA, A_CANC]
 ENTRADAS = [
     ("a", "Ações das análises anteriores", "O que foi decidido nas análises anteriores, e o que foi feito.", "Ata da análise anterior e plano de ação", "w5h2"),
     ("b", "Mudanças no contexto", "O que mudou fora e dentro da organização, e afeta o sistema.", "Matriz SWOT atualizada", "swot"),
-    ("c1", "Satisfação do cliente", "O que os clientes e as outras partes interessadas dizem.", "Pesquisa, reclamações e elogios", None),
+    ("c1", "Satisfação do cliente", "O que os clientes e as outras partes interessadas dizem.", "Pesquisa, reclamações e elogios", "sat"),
     ("c2", "Objetivos da qualidade", "Quanto de cada objetivo foi alcançado.", "Quadro de objetivos, com meta e resultado", "ind"),
     ("c3", "Processos e produtos", "Como os processos se saíram, e se o produto saiu conforme.", "Indicadores dos processos e de produto", "proc"),
     ("c4", "Não conformidades", "Quantas houve, de que tipo, e se as ações funcionaram.", "Controle das não conformidades", "nc"),
     ("c5", "Monitoramento e medição", "O que as medições do período mostram.", "Painel de indicadores", "ind"),
     ("c6", "Auditorias", "O que as auditorias internas e externas constataram.", "Relatórios e programa de auditoria", "auditoria"),
-    ("c7", "Provedores externos", "Como os fornecedores e os terceirizados se saíram.", "Avaliação de fornecedores", None),
-    ("d", "Recursos", "Se as pessoas, os equipamentos e os sistemas são suficientes.", "Pedidos das áreas e orçamento", None),
+    ("c7", "Provedores externos", "Como os fornecedores e os terceirizados se saíram.", "Avaliação de fornecedores", "forn"),
+    ("d", "Recursos", "Se as pessoas, os equipamentos e os sistemas são suficientes.", "Pedidos das áreas e orçamento", "rec"),
     ("e", "Riscos e oportunidades", "Se as ações sobre os riscos e as oportunidades funcionaram.", "Matriz de riscos, com o risco residual", "riscos"),
     ("f", "Oportunidades de melhoria", "O que pode ser feito melhor, mesmo sem problema.", "Sugestões, projetos e ciclos PDCA", "pdca"),
 ]
@@ -185,7 +185,7 @@ EX2 = {
     "saidas": _saidas([
         ("a", MUD, "Acompanhar as ações da análise crítica na reunião mensal de indicadores, a começar pelas duas atrasadas.", "Coordenador da Qualidade", D(2027, 3, 5), "", None),
         ("b", REC, "Contratar a auditoria de certificação ISO 9001 para o segundo semestre.", "Diretor geral", D(2027, 4, 30), "Organismo de certificação", 38000),
-        ("c1", MEL, "Visitar o cliente que concentra as reclamações e combinar um plano conjunto.", "Gerente comercial", D(2027, 3, 19), "", None),
+        ("c1", MEL, "Fazer a segunda visita ao cliente A e rever o plano conjunto de outubro de 2026.", "Gerente comercial", D(2027, 3, 19), "", None),
         ("c3", REC, "Aprovar a compra do medidor de espessura em linha para as extrusoras 3 e 4.", "Diretor geral", D(2027, 6, 30), "Dois medidores, com instalação", 96000),
         ("c2", MEL, "Abrir novo ciclo PDCA do refugo, com meta de 2,0% até dezembro.", "Gerente industrial", D(2027, 3, 31), "", None),
         ("c4", MUD, "Definir prazo máximo de 60 dias para o tratamento das não conformidades.", "Coordenador da Qualidade", D(2027, 3, 31), "", None),

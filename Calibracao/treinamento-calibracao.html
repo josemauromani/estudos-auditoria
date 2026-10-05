@@ -343,7 +343,7 @@ footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);font-si
     <table>
       <thead><tr><th style="width:24%">Elemento</th><th style="width:40%">O que é</th><th>Exemplo</th></tr></thead>
       <tbody>
-        <tr><td><strong>Calibração</strong></td><td>A comparação com um padrão rastreável, que diz o erro do instrumento e a incerteza.</td><td>Certificado do laboratório: erro de +0,6 µm, incerteza de 0,3 µm.</td></tr>
+        <tr><td><strong>Calibração</strong></td><td>A comparação com um padrão rastreável, que diz o erro do instrumento e a incerteza.</td><td>Certificado do laboratório: erro de +0,3 µm, incerteza de 0,6 µm.</td></tr>
         <tr><td><strong>Verificação</strong></td><td>A conferência de que o erro cabe no critério. Pode ser feita na própria organização.</td><td>Termômetro em água com gelo: deve marcar 0 °C, com ±1 °C.</td></tr>
         <tr><td><strong>Ajuste</strong></td><td>A correção do instrumento para reduzir o erro. Não é calibração.</td><td>Regular o zero da balança.</td></tr>
         <tr><td><strong>Erro máximo admissível</strong></td><td>O maior erro que a organização aceita naquele instrumento.</td><td>±1 °C no termômetro da câmara fria.</td></tr>
@@ -467,7 +467,7 @@ footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);font-si
       <thead><tr><th style="width:26%">Papel</th><th style="width:28%">Quem costuma ser</th><th>O que faz</th></tr></thead>
       <tbody>
         <tr><td><strong>Quem controla</strong></td><td>A Qualidade, o laboratório ou o líder.</td><td>Mantém a lista, programa as calibrações e lê os certificados.</td></tr>
-        <tr><td><strong>Quem calibra</strong></td><td>Um laboratório externo competente.</td><td>Compara com padrões rastreáveis e emite o certificado.</td></tr>
+        <tr><td><strong>Quem calibra</strong></td><td>Um laboratório competente, externo ou interno.</td><td>Compara com padrões rastreáveis e emite o certificado.</td></tr>
         <tr><td><strong>Quem verifica</strong></td><td>O laboratório interno ou o líder treinado.</td><td>Aplica o método escrito, com o padrão próprio.</td></tr>
         <tr><td><strong>Quem usa</strong></td><td>Quem mede no posto.</td><td>Confere a etiqueta antes de usar e avisa da queda ou do dano.</td></tr>
       </tbody>
@@ -525,7 +525,8 @@ footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);font-si
       <thead><tr><th style="width:24%">No certificado</th><th style="width:40%">O que significa</th><th>O que conferir</th></tr></thead>
       <tbody>
         <tr><td><strong>Pontos calibrados</strong></td><td>Os valores em que o instrumento foi comparado.</td><td>Os pontos cobrem a faixa em que o instrumento é usado?</td></tr>
-        <tr><td><strong>Erro, ou correção</strong></td><td>A diferença entre o que o instrumento mostrou e o padrão.</td><td>O erro, somado à incerteza, cabe no critério?</td></tr>
+        <tr><td><strong>Erro</strong></td><td>O que o instrumento mostrou menos o valor do padrão. Positivo: o instrumento marca a mais.</td><td>O erro, somado à incerteza, cabe no critério?</td></tr>
+        <tr><td><strong>Correção</strong></td><td>O valor que se soma à leitura para chegar ao valor do padrão: o erro com o sinal trocado. Alguns certificados trazem a correção, e não o erro.</td><td>O sinal foi lido certo? Um erro de +0,3 µm é uma correção de −0,3 µm.</td></tr>
         <tr><td><strong>Incerteza</strong></td><td>A faixa de dúvida da calibração.</td><td>A incerteza é pequena perto do critério?</td></tr>
         <tr><td><strong>Padrões usados</strong></td><td>Contra o que o instrumento foi comparado.</td><td>Os padrões têm calibração válida? A cadeia é rastreável?</td></tr>
         <tr><td><strong>Laboratório</strong></td><td>Quem calibrou, e se é acreditado.</td><td>O laboratório é competente para aquela grandeza?</td></tr>
@@ -643,7 +644,7 @@ footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);font-si
       <thead><tr><th style="width:20%">Pergunta</th><th style="width:44%">O que conferir</th><th>Exemplo</th></tr></thead>
       <tbody>
         <tr><td><strong>Faixa</strong></td><td>O instrumento mede todos os valores que podem aparecer?</td><td>O termômetro do forno precisa ir além de 320 °C.</td></tr>
-        <tr><td><strong>Resolução</strong></td><td>O menor passo cabe ao menos dez vezes na tolerância?</td><td>Tolerância de 4 µm pede resolução de 0,4 µm ou menor.</td></tr>
+        <tr><td><strong>Resolução</strong></td><td>O menor passo cabe ao menos dez vezes na tolerância?</td><td>Tolerância de 4 µm pede resolução de 0,4 µm ou menor. Num limite de um lado só, como “no mínimo 65 °C”, não há faixa: as tabelas dos exemplos usam como tolerância a margem que importa, de 5 °C.</td></tr>
         <tr><td><strong>Método</strong></td><td>O instrumento mede a grandeza certa, no lugar certo?</td><td>Termômetro infravermelho mede a superfície, e não o centro do queijo.</td></tr>
         <tr><td><strong>Condições de uso</strong></td><td>Temperatura, umidade, vibração, limpeza.</td><td>A balança perto do forno, sujeita a correntes de ar.</td></tr>
       </tbody>
@@ -672,32 +673,34 @@ footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);font-si
   </dl>
   <div class="tbl">
     <table class="aud">
-      <caption>Instrumentos · 6 cadastrados: 2 em dia, 2 vencem em 30 dias, 0 vencidos, 1 sem calibração, 1 fora de uso</caption>
+      <caption>Instrumentos · 7 cadastrados: 3 em dia, 2 vencem em breve, 0 vencidos, 1 sem calibração, 1 fora de uso</caption>
       <thead><tr><th>Código</th><th style="width:28%">Instrumento<small>Local · o que mede</small></th><th class="c">Tolerância</th><th class="c">Resolução</th><th style="width:15%">Controle<small>Intervalo · erro máximo</small></th><th class="c">Última</th><th class="c">Próxima</th><th>Situação</th><th>Conferência</th></tr></thead>
       <tbody>
-        <tr><td class="n">TER-01</td><td><strong>Termômetro de espeto</strong><small>Expedição · Temperatura da pizza na saída: no mínimo 65 °C</small></td><td class="c">5 °C</td><td class="c">0,1 °C<small>Adequado</small></td><td>Verificação interna<small>todo mês · ±1 °C</small></td><td class="c">05/03/2027</td><td class="c">05/04/2027</td><td><span class="chip s2">Vence em 30 dias</span></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">TER-01</td><td><strong>Termômetro de espeto</strong><small>Expedição · Temperatura da pizza na saída: no mínimo 65 °C</small></td><td class="c">5 °C</td><td class="c">0,1 °C<small>Adequado</small></td><td>Verificação interna<small>todo mês · ±1 °C</small></td><td class="c">05/03/2027</td><td class="c">05/04/2027</td><td><span class="chip s2">Vence em breve</span></td><td><span class="chip s1">OK</span></td></tr>
         <tr><td class="n">TER-02</td><td><strong>Termômetro de visor da câmara fria</strong><small>Câmara fria · Temperatura da câmara: 0 a 5 °C</small></td><td class="c">5 °C</td><td class="c">0,1 °C<small>Adequado</small></td><td>Verificação interna<small>a cada 3 meses · ±1 °C</small></td><td class="c">15/03/2027</td><td class="c">15/06/2027</td><td><span class="chip sl">Fora de uso</span></td><td><span class="chip sl">Fora de uso</span></td></tr>
         <tr><td class="n">TER-03</td><td><strong>Termômetro do forno</strong><small>Forno · Temperatura do forno: 280 a 320 °C</small></td><td class="c">40 °C</td><td class="c">1 °C<small>Adequado</small></td><td>Calibração externa<small>a cada 12 meses · ±5 °C</small></td><td class="c">15/06/2026</td><td class="c">15/06/2027</td><td><span class="chip s1">Em dia</span></td><td><span class="chip s1">OK</span></td></tr>
         <tr><td class="n">TER-04</td><td><strong>Termômetro de espeto do recebimento</strong><small>Recebimento · Temperatura dos insumos refrigerados: até 7 °C</small></td><td class="c">2 °C</td><td class="c">0,1 °C<small>Adequado</small></td><td>Verificação interna<small>todo mês · ±1 °C</small></td><td class="c">—</td><td class="c">—</td><td><span class="chip s3">Sem calibração</span></td><td><span class="chip s3">Sem calibração ou verificação</span></td></tr>
-        <tr><td class="n">BAL-01</td><td><strong>Balança da bancada</strong><small>Produção · Peso da bola de massa: 380 a 420 g</small></td><td class="c">40 g</td><td class="c">1 g<small>Adequado</small></td><td>Verificação interna<small>todo mês · ±2 g</small></td><td class="c">01/03/2027</td><td class="c">01/04/2027</td><td><span class="chip s2">Vence em 30 dias</span></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">TER-05</td><td><strong>Termômetro de visor da câmara fria, novo</strong><small>Câmara fria · Temperatura da câmara: 0 a 5 °C</small></td><td class="c">5 °C</td><td class="c">0,1 °C<small>Adequado</small></td><td>Verificação interna<small>a cada 3 meses · ±1 °C</small></td><td class="c">15/03/2027</td><td class="c">15/06/2027</td><td><span class="chip s1">Em dia</span></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="n">BAL-01</td><td><strong>Balança da bancada</strong><small>Produção · Peso da bola de massa: 380 a 420 g</small></td><td class="c">40 g</td><td class="c">1 g<small>Adequado</small></td><td>Verificação interna<small>todo mês · ±2 g</small></td><td class="c">01/03/2027</td><td class="c">01/04/2027</td><td><span class="chip s2">Vence em breve</span></td><td><span class="chip s1">OK</span></td></tr>
         <tr><td class="n">BAL-02</td><td><strong>Balança do recebimento</strong><small>Recebimento · Peso dos insumos recebidos</small></td><td class="c">200 g</td><td class="c">5 g<small>Adequado</small></td><td>Calibração externa<small>a cada 12 meses · ±10 g</small></td><td class="c">20/01/2027</td><td class="c">20/01/2028</td><td><span class="chip s1">Em dia</span></td><td><span class="chip s1">OK</span></td></tr>
       </tbody>
     </table>
   </div>
   <div class="tbl">
     <table class="aud">
-      <caption>Calibrações e verificações · 5 registros, 1 reprovado</caption>
+      <caption>Calibrações e verificações · 6 registros, 1 reprovado</caption>
       <thead><tr><th class="c">Data</th><th>Código</th><th style="width:18%">Tipo<small>Registro</small></th><th style="width:12%">Ponto medido</th><th class="c">Erro<small>Incerteza</small></th><th class="c">Critério</th><th>Resultado</th><th style="width:28%">Ação e resultados anteriores</th><th>Conferência</th></tr></thead>
       <tbody>
         <tr><td class="c">15/06</td><td class="n">TER-03</td><td>Calibração<small>Certificado 1442/26, laboratório acreditado</small></td><td>300 °C</td><td class="c">-3 °C<small>± 1,5</small></td><td class="c">±5 °C</td><td><span class="chip s1">Aprovado</span></td><td>—</td><td><span class="chip s1">OK</span></td></tr>
         <tr><td class="c">20/01</td><td class="n">BAL-02</td><td>Calibração<small>Certificado 0187/27, laboratório acreditado</small></td><td>10 kg</td><td class="c">+5 g<small>± 3</small></td><td class="c">±10 g</td><td><span class="chip s1">Aprovado</span></td><td>—</td><td><span class="chip s1">OK</span></td></tr>
         <tr><td class="c">01/03</td><td class="n">BAL-01</td><td>Verificação<small>Planilha de verificação FR-07</small></td><td>Peso-padrão de 500 g</td><td class="c">+1 g<small>± 0,5</small></td><td class="c">±2 g</td><td><span class="chip s1">Aprovado</span></td><td>—</td><td><span class="chip s1">OK</span></td></tr>
         <tr><td class="c">05/03</td><td class="n">TER-01</td><td>Verificação<small>Planilha de verificação FR-07</small></td><td>Água com gelo, 0 °C</td><td class="c">+0,3 °C<small>± 0,2</small></td><td class="c">±1 °C</td><td><span class="chip s1">Aprovado</span></td><td>—</td><td><span class="chip s1">OK</span></td></tr>
-        <tr><td class="c">15/03</td><td class="n">TER-02</td><td>Verificação<small>Planilha de verificação FR-07</small></td><td>Contra o TER-01, a 5 °C</td><td class="c">-2 °C<small>± 0,3</small></td><td class="c">±1 °C</td><td><span class="chip s3">Reprovado</span></td><td><strong>Ação:</strong> Retirado da câmara. Um termômetro novo, verificado contra o TER-01, foi instalado no lugar.<small>Resultados anteriores: não avaliados.</small></td><td><span class="chip s3">Falta avaliar os resultados anteriores</span></td></tr>
+        <tr><td class="c">15/03</td><td class="n">TER-02</td><td>Verificação<small>Planilha de verificação FR-07</small></td><td>Contra o TER-01, a 5 °C</td><td class="c">-2 °C<small>± 0,3</small></td><td class="c">±1 °C</td><td><span class="chip s3">Reprovado</span></td><td><strong>Ação:</strong> Retirado da câmara. O TER-05, verificado contra o TER-01, foi instalado no lugar.<small>Resultados anteriores: não avaliados.</small></td><td><span class="chip s3">Falta avaliar os resultados anteriores</span></td></tr>
+        <tr><td class="c">15/03</td><td class="n">TER-05</td><td>Verificação<small>Planilha de verificação FR-07</small></td><td>Contra o TER-01, a 5 °C</td><td class="c">+0,2 °C<small>± 0,3</small></td><td class="c">±1 °C</td><td><span class="chip s1">Aprovado</span></td><td>—</td><td><span class="chip s1">OK</span></td></tr>
       </tbody>
     </table>
   </div>
-  <p><strong>O que observar.</strong> A verificação de 15/03 pegou o termômetro da câmara fria marcando 2 °C a menos que o real. Ele foi trocado no mesmo dia, o que está certo. Falta a outra metade: as leituras do plano de controle na semana de 08 a 14/03, entre 2,9 e 4,1 °C, podem ter sido de 4,9 a 6,1 °C, acima do limite de 5 °C, e a de 7 °C, já tratada, pode ter sido de 9 °C. A loja precisa decidir o que isso significa para os insumos daquela semana, que já foram usados. O termômetro do recebimento nunca foi verificado: a mussarela recusada a 9 °C no estudo de liberação foi medida com ele. A balança da bancada e o termômetro de espeto vencem em poucos dias, e a verificação mensal só funciona se alguém olhar a lista.</p>
+  <p><strong>O que observar.</strong> A verificação de 15/03 pegou o termômetro da câmara fria marcando 2 °C a menos que o real. Ele foi trocado no mesmo dia pelo TER-05, verificado contra o TER-01, o que está certo. Falta a outra metade: as leituras do plano de controle na semana de 08 a 14/03, entre 2,9 e 4,1 °C, podem ter sido de 4,9 a 6,1 °C, acima do limite de 5 °C, e a de 7 °C, já tratada, pode ter sido de 9 °C. A loja precisa decidir o que isso significa para os insumos daquela semana, que já foram usados. O termômetro do recebimento nunca foi verificado: a muçarela recusada a 9 °C no estudo de liberação foi medida com ele. A balança da bancada e o termômetro de espeto vencem em poucos dias, e a verificação mensal só funciona se alguém olhar a lista. Há ainda uma lacuna que o próprio exemplo deixa passar: o termômetro de espeto foi verificado só a 0 °C, em água com gelo, e é usado a 65 °C, na saída da pizza, e a 5 °C, como padrão da verificação dos termômetros da câmara. Um ponto não diz o erro nos outros. Como ele é o padrão das verificações internas, a ação é mandá-lo calibrar num laboratório, em pontos que cubram de 0 a 70 °C.</p>
 
   <h3>Exemplo 2. Os instrumentos da indústria</h3>
   <dl class="ficha">
@@ -709,7 +712,7 @@ footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);font-si
   </dl>
   <div class="tbl">
     <table class="aud">
-      <caption>Instrumentos · 7 cadastrados: 5 em dia, 0 vencem em 30 dias, 1 vencido, 0 sem calibração, 1 fora de uso</caption>
+      <caption>Instrumentos da extrusora 3 e do laboratório · 7 dos 25 cadastrados: 5 em dia, 0 vencem em breve, 1 vencido, 0 sem calibração, 1 fora de uso</caption>
       <thead><tr><th>Código</th><th style="width:28%">Instrumento<small>Local · o que mede</small></th><th class="c">Tolerância</th><th class="c">Resolução</th><th style="width:15%">Controle<small>Intervalo · erro máximo</small></th><th class="c">Última</th><th class="c">Próxima</th><th>Situação</th><th>Conferência</th></tr></thead>
       <tbody>
         <tr><td class="n">MIC-07</td><td><strong>Micrômetro de ponta plana</strong><small>Extrusora 3 · Espessura do filme: 38 a 42 µm</small></td><td class="c">4 µm</td><td class="c no">1 µm<small>Resolução grossa</small></td><td>Calibração externa<small>a cada 6 meses · ±1 µm</small></td><td class="c">12/06/2027</td><td class="c">12/12/2027</td><td><span class="chip sl">Fora de uso</span></td><td><span class="chip sl">Fora de uso</span></td></tr>
@@ -729,12 +732,12 @@ footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);font-si
       <tbody>
         <tr><td class="c">02/08</td><td class="n">TER-Z3</td><td>Calibração<small>Certificado T-2026-0802, laboratório acreditado</small></td><td>190 °C</td><td class="c">+1,2 °C<small>± 0,5</small></td><td class="c">±2 °C</td><td><span class="chip s1">Aprovado</span></td><td>—</td><td><span class="chip s1">OK</span></td></tr>
         <tr><td class="c">08/11</td><td class="n">TR-03</td><td>Calibração<small>Certificado D-2026-1108, laboratório acreditado</small></td><td>600 mm</td><td class="c">+0,1 mm<small>± 0,05</small></td><td class="c">±0,3 mm</td><td><span class="chip s1">Aprovado</span></td><td>—</td><td><span class="chip s1">OK</span></td></tr>
-        <tr><td class="c">10/01</td><td class="n">MIC-07</td><td>Calibração<small>Certificado C-2027-0112, laboratório acreditado</small></td><td>40 µm</td><td class="c">+0,6 µm<small>± 0,3</small></td><td class="c">±1 µm</td><td><span class="chip s1">Aprovado</span></td><td>—</td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="c">10/01</td><td class="n">MIC-07</td><td>Calibração<small>Certificado C-2027-0112, laboratório acreditado</small></td><td>40 µm</td><td class="c">+0,3 µm<small>± 0,6</small></td><td class="c">±1 µm</td><td><span class="chip s1">Aprovado</span></td><td>—</td><td><span class="chip s1">OK</span></td></tr>
         <tr><td class="c">10/02</td><td class="n">PAD-01</td><td>Calibração<small>Certificado P-2027-0210, laboratório acreditado</small></td><td>-18 °C e 20 °C</td><td class="c">+0,02 °C<small>± 0,03</small></td><td class="c">±0,1 °C</td><td><span class="chip s1">Aprovado</span></td><td>—</td><td><span class="chip s1">OK</span></td></tr>
         <tr><td class="c">15/03</td><td class="n">MIC-08</td><td>Calibração<small>Certificado C-2027-0315, laboratório acreditado</small></td><td>40 µm</td><td class="c">+0,1 µm<small>± 0,08</small></td><td class="c">±0,5 µm</td><td><span class="chip s1">Aprovado</span></td><td>—</td><td><span class="chip s1">OK</span></td></tr>
         <tr><td class="c">15/03</td><td class="n">TER-L1</td><td>Verificação<small>Registro de verificação FV-09</small></td><td>Contra o PAD-01, a -18 °C</td><td class="c">+0,4 °C<small>± 0,1</small></td><td class="c">±1 °C</td><td><span class="chip s1">Aprovado</span></td><td>—</td><td><span class="chip s1">OK</span></td></tr>
         <tr><td class="c">21/05</td><td class="n">DIN-01</td><td>Calibração<small>Certificado F-2027-0521, laboratório acreditado</small></td><td>15 N</td><td class="c">+0,15 N<small>± 0,05</small></td><td class="c">±0,2 N</td><td><span class="chip s1">Aprovado</span></td><td>—</td><td><span class="chip s1">OK</span></td></tr>
-        <tr><td class="c">12/06</td><td class="n">MIC-07</td><td>Verificação<small>Registro de verificação FV-12</small></td><td>Bloco-padrão de 40 µm</td><td class="c">+1,6 µm<small>± 0,2</small></td><td class="c">±1 µm</td><td><span class="chip s3">Reprovado</span></td><td><strong>Ação:</strong> Retirado do posto. O MIC-08 mede as bobinas até a reposição, e um micrômetro de 0,1 µm foi comprado.<small>Resultados anteriores: Medições de 10/01 a 12/06 corrigidas em 1,6 µm: 6 bobinas abaixo de 38 µm, 2 delas já entregues, inclusive a do lote 135. Clientes informados em 14/06.</small></td><td><span class="chip s1">OK</span></td></tr>
+        <tr><td class="c">12/06</td><td class="n">MIC-07</td><td>Verificação<small>Registro de verificação FV-12</small></td><td>Bloco-padrão de 40 µm</td><td class="c">+1,6 µm<small>± 0,6</small></td><td class="c">±1 µm</td><td><span class="chip s3">Reprovado</span></td><td><strong>Ação:</strong> Retirado do posto. O MIC-08 mede as bobinas até a reposição, e um micrômetro de 0,1 µm foi comprado.<small>Resultados anteriores: Medições de 10/01 a 12/06 corrigidas em 1,6 µm: 6 bobinas abaixo de 38 µm, 2 delas já entregues, inclusive a do lote 135. Clientes informados em 14/06.</small></td><td><span class="chip s1">OK</span></td></tr>
       </tbody>
     </table>
   </div>
@@ -743,14 +746,16 @@ footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);font-si
   <h3>Exemplo 3. A avaliação dos resultados anteriores</h3>
   <figure>
     <div class="scroll">
-      <svg viewBox="0 0 900 222" role="img" aria-label="A avaliação dos resultados anteriores do micrômetro MIC-07. 10/01, Última calibração aprovada: Erro de +0,6 µm, dentro do critério de ±1 µm. Até 12/06, Cinco meses de medições: Cerca de 1.200 bobinas medidas no posto da extrusora 3. 24 e 26/05, Reclamação do cliente A: Lote 135. Primeira resposta: 39,1 µm na liberação. Em 26/05, o MIC-08 mede trechos com 37,9 µm. 12/06, Verificação reprovada: O micrômetro marca 1,6 µm a mais. A bobina de 39,1 µm tinha, na verdade, 37,5 µm. 14/06, Avaliação e ação: Medições corrigidas desde 10/01. 6 bobinas abaixo de 38 µm, 2 entregues. Clientes informados.">
+      <svg viewBox="0 0 900 222" role="img" aria-label="A avaliação dos resultados anteriores do micrômetro MIC-07. 10/01, Última calibração aprovada: Erro de +0,3 µm e incerteza de 0,6 µm: 0,9 µm, dentro do critério de ±1 µm. Até 12/06, Cinco meses de medições: Cerca de 1.200 bobinas medidas no posto da extrusora 3. 24 e 26/05, Reclamação do cliente A: Lote 135. Primeira resposta: 39,1 µm na liberação. Em 26/05, o MIC-08 mede trechos com 37,9 µm. 12/06, Verificação reprovada: O micrômetro marca 1,6 µm a mais. A bobina de 39,1 µm tinha, na verdade, 37,5 µm. 14/06, Avaliação e ação: Medições corrigidas desde 10/01. 6 bobinas abaixo de 38 µm, 2 entregues. Clientes informados.">
         <defs><marker id="a5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker></defs>
         <rect class="bx-s1" x="12" y="14" width="164" height="168"/>
         <text class="mono mu" x="24" y="34" font-size="9.5">10/01</text>
         <text class="b" x="24" y="54" font-size="12">Última calibração</text>
         <text class="b" x="24" y="69" font-size="12">aprovada</text>
-        <text x="24" y="90" font-size="10.5">Erro de +0,6 µm, dentro do</text>
-        <text x="24" y="104" font-size="10.5">critério de ±1 µm.</text>
+        <text x="24" y="90" font-size="10.5">Erro de +0,3 µm e</text>
+        <text x="24" y="104" font-size="10.5">incerteza de 0,6 µm: 0,9</text>
+        <text x="24" y="118" font-size="10.5">µm, dentro do critério de</text>
+        <text x="24" y="132" font-size="10.5">±1 µm.</text>
         <line class="ln" x1="177" y1="96" x2="188" y2="96" marker-end="url(#a5)"/>
         <rect class="bx" x="190" y="14" width="164" height="168"/>
         <text class="mono mu" x="202" y="34" font-size="9.5">ATÉ 12/06</text>
@@ -790,7 +795,7 @@ footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);font-si
     </div>
     <figcaption><b>Figura 5.</b> Do último certificado aprovado do micrômetro MIC-07 à ação no cliente. A reclamação de maio ganhou explicação em junho.</figcaption>
   </figure>
-  <p><strong>O que observar.</strong> Em 24/05, o cliente A reclamou de filme fino no lote 135, e a primeira resposta da fábrica citou a medição da liberação: 39,1 µm, dentro do critério. Em 26/05, a bobina devolvida foi medida no laboratório, com o MIC-08, e mostrou trechos com 37,9 µm. Em junho, a verificação mostrou que o micrômetro do posto marcava 1,6 µm a mais. A bobina tinha 37,5 µm, e o cliente estava certo. A fábrica fez o que a norma pede: corrigiu todas as medições desde a última calibração aprovada, encontrou as bobinas abaixo do critério e avisou os clientes que as receberam. Sem essa avaliação, o instrumento trocado resolveria o futuro e deixaria o passado no cliente.</p>
+  <p><strong>O que observar.</strong> Em 24/05, o cliente A reclamou de filme fino no lote 135, e a primeira resposta da fábrica citou a medição da liberação: 39,1 µm, dentro do critério. Em 26/05, a bobina devolvida foi medida no laboratório, com o MIC-08, e mostrou trechos com 37,9 µm. Em junho, a verificação mostrou que o micrômetro do posto marcava 1,6 µm a mais. A bobina tinha 37,5 µm, e o cliente estava certo. A fábrica fez o que a norma pede: corrigiu todas as medições desde a última calibração aprovada, encontrou as bobinas abaixo do critério e avisou os clientes que as receberam. A correção de 1,6 µm em todas as medições desde 10/01 é o pior caso: em 10/01 o erro era de +0,3 µm, e ninguém sabe quando ele cresceu, por isso cada medição foi tratada como se já tivesse o erro maior. Sem essa avaliação, o instrumento trocado resolveria o futuro e deixaria o passado no cliente.</p>
 </section>
 
 <!-- ============================ MÓDULO 7 ============================ -->
@@ -801,29 +806,29 @@ footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);font-si
 
   <figure id="fig-bars">
     <div class="scroll">
-      <svg id="bars" viewBox="0 0 900 480" role="img" aria-label="Dias até o vencimento da calibração ou da verificação de cada instrumento, na data da leitura de cada exemplo. TER-01: 5 dias. TER-02: fora de uso. TER-03: 76 dias. TER-04: sem calibração. BAL-01: 1 dias. BAL-02: 295 dias. MIC-07: fora de uso. MIC-08: 77 dias. TR-03: 131 dias. TER-Z3: 33 dias. DIN-01: 326 dias. TER-L1: -15 dias. PAD-01: 225 dias.">
+      <svg id="bars" viewBox="0 0 900 506" role="img" aria-label="Dias até o vencimento da calibração ou da verificação de cada instrumento, na data da leitura de cada exemplo. TER-01: 5 dias. TER-02: fora de uso. TER-03: 76 dias. TER-04: sem calibração. TER-05: 76 dias. BAL-01: 1 dias. BAL-02: 295 dias. MIC-07: fora de uso. MIC-08: 77 dias. TR-03: 131 dias. TER-Z3: 33 dias. DIN-01: 326 dias. TER-L1: -15 dias. PAD-01: 225 dias.">
         <g font-size="11.5">
           <rect class="f1" x="330" y="12" width="14" height="14"/><text x="352" y="24">Em dia</text>
-          <rect class="f2" x="490" y="12" width="14" height="14"/><text x="512" y="24">Vence em 30 dias</text>
+          <rect class="f2" x="490" y="12" width="14" height="14"/><text x="512" y="24">Vence em breve</text>
           <rect class="f3" x="650" y="12" width="14" height="14"/><text x="672" y="24">Vencido</text>
         </g>
-        <line class="grid" x1="330.0" y1="40" x2="330.0" y2="436"/>
-        <text class="mu" x="330.0" y="452" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">-60</text>
-        <line class="ln" x1="405.7" y1="40" x2="405.7" y2="436"/>
-        <text class="mu" x="405.7" y="452" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">0</text>
-        <line class="grid" x1="481.4" y1="40" x2="481.4" y2="436"/>
-        <text class="mu" x="481.4" y="452" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">60</text>
-        <line class="grid" x1="557.1" y1="40" x2="557.1" y2="436"/>
-        <text class="mu" x="557.1" y="452" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">120</text>
-        <line class="grid" x1="632.9" y1="40" x2="632.9" y2="436"/>
-        <text class="mu" x="632.9" y="452" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">180</text>
-        <line class="grid" x1="708.6" y1="40" x2="708.6" y2="436"/>
-        <text class="mu" x="708.6" y="452" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">240</text>
-        <line class="grid" x1="784.3" y1="40" x2="784.3" y2="436"/>
-        <text class="mu" x="784.3" y="452" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">300</text>
-        <line class="grid" x1="860.0" y1="40" x2="860.0" y2="436"/>
-        <text class="mu" x="860.0" y="452" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">360</text>
-        <text class="mono mu" x="595.0" y="472" font-size="10" text-anchor="middle">DIAS ATÉ O VENCIMENTO, NA DATA DA LEITURA</text>
+        <line class="grid" x1="330.0" y1="40" x2="330.0" y2="462"/>
+        <text class="mu" x="330.0" y="478" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">-60</text>
+        <line class="ln" x1="405.7" y1="40" x2="405.7" y2="462"/>
+        <text class="mu" x="405.7" y="478" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">0</text>
+        <line class="grid" x1="481.4" y1="40" x2="481.4" y2="462"/>
+        <text class="mu" x="481.4" y="478" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">60</text>
+        <line class="grid" x1="557.1" y1="40" x2="557.1" y2="462"/>
+        <text class="mu" x="557.1" y="478" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">120</text>
+        <line class="grid" x1="632.9" y1="40" x2="632.9" y2="462"/>
+        <text class="mu" x="632.9" y="478" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">180</text>
+        <line class="grid" x1="708.6" y1="40" x2="708.6" y2="462"/>
+        <text class="mu" x="708.6" y="478" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">240</text>
+        <line class="grid" x1="784.3" y1="40" x2="784.3" y2="462"/>
+        <text class="mu" x="784.3" y="478" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">300</text>
+        <line class="grid" x1="860.0" y1="40" x2="860.0" y2="462"/>
+        <text class="mu" x="860.0" y="478" font-size="11" text-anchor="middle" style="font-variant-numeric:tabular-nums">360</text>
+        <text class="mono mu" x="595.0" y="498" font-size="10" text-anchor="middle">DIAS ATÉ O VENCIMENTO, NA DATA DA LEITURA</text>
         <text class="mono mu" x="20" y="63" font-size="10">PIZZARIA</text>
         <text x="36" y="89" font-size="11.5"><tspan class="b">TER-01</tspan><tspan class="mu" dx="8">Termômetro de espeto</tspan></text>
         <rect class="bar f2" data-k="1" x="405.7" y="78" width="6.3" height="14"/>
@@ -835,46 +840,50 @@ footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);font-si
         <text class="mu halo" x="507.6" y="141" font-size="10.5" style="font-variant-numeric:tabular-nums">76</text>
         <text x="36" y="167" font-size="11.5"><tspan class="b">TER-04</tspan><tspan class="mu" dx="8">Termômetro de espeto do…</tspan></text>
         <text class="b halo" x="413.7" y="167" font-size="11">sem calibração</text>
-        <text x="36" y="193" font-size="11.5"><tspan class="b">BAL-01</tspan><tspan class="mu" dx="8">Balança da bancada</tspan></text>
-        <rect class="bar f2" data-k="5" x="405.7" y="182" width="2.0" height="14"/>
-        <text class="mu halo" x="413.0" y="193" font-size="10.5" style="font-variant-numeric:tabular-nums">1</text>
-        <text x="36" y="219" font-size="11.5"><tspan class="b">BAL-02</tspan><tspan class="mu" dx="8">Balança do recebimento</tspan></text>
-        <rect class="bar f1" data-k="6" x="405.7" y="208" width="372.3" height="14"/>
-        <text class="mu halo" x="784.0" y="219" font-size="10.5" style="font-variant-numeric:tabular-nums">295</text>
-        <text class="mono mu" x="20" y="245" font-size="10">INDÚSTRIA</text>
-        <text x="36" y="271" font-size="11.5"><tspan class="b">MIC-07</tspan><tspan class="mu" dx="8">Micrômetro de ponta plana</tspan></text>
-        <text class="b halo" x="413.7" y="271" font-size="11" fill-opacity=".75">fora de uso</text>
-        <text x="36" y="297" font-size="11.5"><tspan class="b">MIC-08</tspan><tspan class="mu" dx="8">Micrômetro digital</tspan></text>
-        <rect class="bar f1" data-k="9" x="405.7" y="286" width="97.2" height="14"/>
-        <text class="mu halo" x="508.9" y="297" font-size="10.5" style="font-variant-numeric:tabular-nums">77</text>
-        <text x="36" y="323" font-size="11.5"><tspan class="b">TR-03</tspan><tspan class="mu" dx="8">Trena digital</tspan></text>
-        <rect class="bar f1" data-k="10" x="405.7" y="312" width="165.3" height="14"/>
-        <text class="mu halo" x="577.0" y="323" font-size="10.5" style="font-variant-numeric:tabular-nums">131</text>
-        <text x="36" y="349" font-size="11.5"><tspan class="b">TER-Z3</tspan><tspan class="mu" dx="8">Termopar da zona 3</tspan></text>
-        <rect class="bar f1" data-k="11" x="405.7" y="338" width="41.6" height="14"/>
-        <text class="mu halo" x="453.4" y="349" font-size="10.5" style="font-variant-numeric:tabular-nums">33</text>
-        <text x="36" y="375" font-size="11.5"><tspan class="b">DIN-01</tspan><tspan class="mu" dx="8">Dinamômetro</tspan></text>
-        <rect class="bar f1" data-k="12" x="405.7" y="364" width="411.4" height="14"/>
-        <text class="mu halo" x="823.1" y="375" font-size="10.5" style="font-variant-numeric:tabular-nums">326</text>
-        <text x="36" y="401" font-size="11.5"><tspan class="b">TER-L1</tspan><tspan class="mu" dx="8">Termômetro da câmara de…</tspan></text>
-        <rect class="bar f3" data-k="13" x="386.8" y="390" width="18.9" height="14"/>
-        <text class="mu halo" x="380.8" y="401" font-size="10.5" text-anchor="end" style="font-variant-numeric:tabular-nums">-15</text>
-        <text x="36" y="427" font-size="11.5"><tspan class="b">PAD-01</tspan><tspan class="mu" dx="8">Termômetro padrão</tspan></text>
-        <rect class="bar f1" data-k="14" x="405.7" y="416" width="283.9" height="14"/>
-        <text class="mu halo" x="695.6" y="427" font-size="10.5" style="font-variant-numeric:tabular-nums">225</text>
-        <rect class="hit" x="14" y="72" width="872" height="26" tabindex="0" role="img" aria-label="TER-01, Termômetro de espeto: vence em 30 dias, próxima 05/04" data-k="1" data-n="TER-01 · Termômetro de espeto" data-s="Vence em 30 dias" data-p="05/04/2027" data-d="5 dias" data-cx="405.7" data-cy="72"/>
+        <text x="36" y="193" font-size="11.5"><tspan class="b">TER-05</tspan><tspan class="mu" dx="8">Termômetro de visor da câmara…</tspan></text>
+        <rect class="bar f1" data-k="5" x="405.7" y="182" width="95.9" height="14"/>
+        <text class="mu halo" x="507.6" y="193" font-size="10.5" style="font-variant-numeric:tabular-nums">76</text>
+        <text x="36" y="219" font-size="11.5"><tspan class="b">BAL-01</tspan><tspan class="mu" dx="8">Balança da bancada</tspan></text>
+        <rect class="bar f2" data-k="6" x="405.7" y="208" width="2.0" height="14"/>
+        <text class="mu halo" x="413.0" y="219" font-size="10.5" style="font-variant-numeric:tabular-nums">1</text>
+        <text x="36" y="245" font-size="11.5"><tspan class="b">BAL-02</tspan><tspan class="mu" dx="8">Balança do recebimento</tspan></text>
+        <rect class="bar f1" data-k="7" x="405.7" y="234" width="372.3" height="14"/>
+        <text class="mu halo" x="784.0" y="245" font-size="10.5" style="font-variant-numeric:tabular-nums">295</text>
+        <text class="mono mu" x="20" y="271" font-size="10">INDÚSTRIA</text>
+        <text x="36" y="297" font-size="11.5"><tspan class="b">MIC-07</tspan><tspan class="mu" dx="8">Micrômetro de ponta plana</tspan></text>
+        <text class="b halo" x="413.7" y="297" font-size="11" fill-opacity=".75">fora de uso</text>
+        <text x="36" y="323" font-size="11.5"><tspan class="b">MIC-08</tspan><tspan class="mu" dx="8">Micrômetro digital</tspan></text>
+        <rect class="bar f1" data-k="10" x="405.7" y="312" width="97.2" height="14"/>
+        <text class="mu halo" x="508.9" y="323" font-size="10.5" style="font-variant-numeric:tabular-nums">77</text>
+        <text x="36" y="349" font-size="11.5"><tspan class="b">TR-03</tspan><tspan class="mu" dx="8">Trena digital</tspan></text>
+        <rect class="bar f1" data-k="11" x="405.7" y="338" width="165.3" height="14"/>
+        <text class="mu halo" x="577.0" y="349" font-size="10.5" style="font-variant-numeric:tabular-nums">131</text>
+        <text x="36" y="375" font-size="11.5"><tspan class="b">TER-Z3</tspan><tspan class="mu" dx="8">Termopar da zona 3</tspan></text>
+        <rect class="bar f1" data-k="12" x="405.7" y="364" width="41.6" height="14"/>
+        <text class="mu halo" x="453.4" y="375" font-size="10.5" style="font-variant-numeric:tabular-nums">33</text>
+        <text x="36" y="401" font-size="11.5"><tspan class="b">DIN-01</tspan><tspan class="mu" dx="8">Dinamômetro</tspan></text>
+        <rect class="bar f1" data-k="13" x="405.7" y="390" width="411.4" height="14"/>
+        <text class="mu halo" x="823.1" y="401" font-size="10.5" style="font-variant-numeric:tabular-nums">326</text>
+        <text x="36" y="427" font-size="11.5"><tspan class="b">TER-L1</tspan><tspan class="mu" dx="8">Termômetro da câmara de…</tspan></text>
+        <rect class="bar f3" data-k="14" x="386.8" y="416" width="18.9" height="14"/>
+        <text class="mu halo" x="380.8" y="427" font-size="10.5" text-anchor="end" style="font-variant-numeric:tabular-nums">-15</text>
+        <text x="36" y="453" font-size="11.5"><tspan class="b">PAD-01</tspan><tspan class="mu" dx="8">Termômetro padrão</tspan></text>
+        <rect class="bar f1" data-k="15" x="405.7" y="442" width="283.9" height="14"/>
+        <text class="mu halo" x="695.6" y="453" font-size="10.5" style="font-variant-numeric:tabular-nums">225</text>
+        <rect class="hit" x="14" y="72" width="872" height="26" tabindex="0" role="img" aria-label="TER-01, Termômetro de espeto: vence em breve, próxima 05/04" data-k="1" data-n="TER-01 · Termômetro de espeto" data-s="Vence em breve" data-p="05/04/2027" data-d="5 dias" data-cx="405.7" data-cy="72"/>
         <rect class="hit" x="14" y="98" width="872" height="26" tabindex="0" role="img" aria-label="TER-02, Termômetro de visor da câmara fria: fora de uso, próxima 15/06" data-k="2" data-n="TER-02 · Termômetro de visor da câmara fria" data-s="Fora de uso" data-p="15/06/2027" data-d="Fora de uso" data-cx="405.7" data-cy="98"/>
         <rect class="hit" x="14" y="124" width="872" height="26" tabindex="0" role="img" aria-label="TER-03, Termômetro do forno: em dia, próxima 15/06" data-k="3" data-n="TER-03 · Termômetro do forno" data-s="Em dia" data-p="15/06/2027" data-d="76 dias" data-cx="405.7" data-cy="124"/>
         <rect class="hit" x="14" y="150" width="872" height="26" tabindex="0" role="img" aria-label="TER-04, Termômetro de espeto do recebimento: sem calibração, próxima —" data-k="4" data-n="TER-04 · Termômetro de espeto do recebimento" data-s="Sem calibração" data-p="—" data-d="Sem calibração" data-cx="405.7" data-cy="150"/>
-        <rect class="hit" x="14" y="176" width="872" height="26" tabindex="0" role="img" aria-label="BAL-01, Balança da bancada: vence em 30 dias, próxima 01/04" data-k="5" data-n="BAL-01 · Balança da bancada" data-s="Vence em 30 dias" data-p="01/04/2027" data-d="1 dias" data-cx="405.7" data-cy="176"/>
-        <rect class="hit" x="14" y="202" width="872" height="26" tabindex="0" role="img" aria-label="BAL-02, Balança do recebimento: em dia, próxima 20/01" data-k="6" data-n="BAL-02 · Balança do recebimento" data-s="Em dia" data-p="20/01/2028" data-d="295 dias" data-cx="405.7" data-cy="202"/>
-        <rect class="hit" x="14" y="254" width="872" height="26" tabindex="0" role="img" aria-label="MIC-07, Micrômetro de ponta plana: fora de uso, próxima 12/12" data-k="8" data-n="MIC-07 · Micrômetro de ponta plana" data-s="Fora de uso" data-p="12/12/2027" data-d="Fora de uso" data-cx="405.7" data-cy="254"/>
-        <rect class="hit" x="14" y="280" width="872" height="26" tabindex="0" role="img" aria-label="MIC-08, Micrômetro digital: em dia, próxima 15/09" data-k="9" data-n="MIC-08 · Micrômetro digital" data-s="Em dia" data-p="15/09/2027" data-d="77 dias" data-cx="405.7" data-cy="280"/>
-        <rect class="hit" x="14" y="306" width="872" height="26" tabindex="0" role="img" aria-label="TR-03, Trena digital: em dia, próxima 08/11" data-k="10" data-n="TR-03 · Trena digital" data-s="Em dia" data-p="08/11/2027" data-d="131 dias" data-cx="405.7" data-cy="306"/>
-        <rect class="hit" x="14" y="332" width="872" height="26" tabindex="0" role="img" aria-label="TER-Z3, Termopar da zona 3: em dia, próxima 02/08" data-k="11" data-n="TER-Z3 · Termopar da zona 3" data-s="Em dia" data-p="02/08/2027" data-d="33 dias" data-cx="405.7" data-cy="332"/>
-        <rect class="hit" x="14" y="358" width="872" height="26" tabindex="0" role="img" aria-label="DIN-01, Dinamômetro: em dia, próxima 21/05" data-k="12" data-n="DIN-01 · Dinamômetro" data-s="Em dia" data-p="21/05/2028" data-d="326 dias" data-cx="405.7" data-cy="358"/>
-        <rect class="hit" x="14" y="384" width="872" height="26" tabindex="0" role="img" aria-label="TER-L1, Termômetro da câmara de condicionamento: vencido, próxima 15/06" data-k="13" data-n="TER-L1 · Termômetro da câmara de condicionamento" data-s="Vencido" data-p="15/06/2027" data-d="-15 dias" data-cx="405.7" data-cy="384"/>
-        <rect class="hit" x="14" y="410" width="872" height="26" tabindex="0" role="img" aria-label="PAD-01, Termômetro padrão: em dia, próxima 10/02" data-k="14" data-n="PAD-01 · Termômetro padrão" data-s="Em dia" data-p="10/02/2028" data-d="225 dias" data-cx="405.7" data-cy="410"/>
+        <rect class="hit" x="14" y="176" width="872" height="26" tabindex="0" role="img" aria-label="TER-05, Termômetro de visor da câmara fria, novo: em dia, próxima 15/06" data-k="5" data-n="TER-05 · Termômetro de visor da câmara fria, novo" data-s="Em dia" data-p="15/06/2027" data-d="76 dias" data-cx="405.7" data-cy="176"/>
+        <rect class="hit" x="14" y="202" width="872" height="26" tabindex="0" role="img" aria-label="BAL-01, Balança da bancada: vence em breve, próxima 01/04" data-k="6" data-n="BAL-01 · Balança da bancada" data-s="Vence em breve" data-p="01/04/2027" data-d="1 dias" data-cx="405.7" data-cy="202"/>
+        <rect class="hit" x="14" y="228" width="872" height="26" tabindex="0" role="img" aria-label="BAL-02, Balança do recebimento: em dia, próxima 20/01" data-k="7" data-n="BAL-02 · Balança do recebimento" data-s="Em dia" data-p="20/01/2028" data-d="295 dias" data-cx="405.7" data-cy="228"/>
+        <rect class="hit" x="14" y="280" width="872" height="26" tabindex="0" role="img" aria-label="MIC-07, Micrômetro de ponta plana: fora de uso, próxima 12/12" data-k="9" data-n="MIC-07 · Micrômetro de ponta plana" data-s="Fora de uso" data-p="12/12/2027" data-d="Fora de uso" data-cx="405.7" data-cy="280"/>
+        <rect class="hit" x="14" y="306" width="872" height="26" tabindex="0" role="img" aria-label="MIC-08, Micrômetro digital: em dia, próxima 15/09" data-k="10" data-n="MIC-08 · Micrômetro digital" data-s="Em dia" data-p="15/09/2027" data-d="77 dias" data-cx="405.7" data-cy="306"/>
+        <rect class="hit" x="14" y="332" width="872" height="26" tabindex="0" role="img" aria-label="TR-03, Trena digital: em dia, próxima 08/11" data-k="11" data-n="TR-03 · Trena digital" data-s="Em dia" data-p="08/11/2027" data-d="131 dias" data-cx="405.7" data-cy="332"/>
+        <rect class="hit" x="14" y="358" width="872" height="26" tabindex="0" role="img" aria-label="TER-Z3, Termopar da zona 3: em dia, próxima 02/08" data-k="12" data-n="TER-Z3 · Termopar da zona 3" data-s="Em dia" data-p="02/08/2027" data-d="33 dias" data-cx="405.7" data-cy="358"/>
+        <rect class="hit" x="14" y="384" width="872" height="26" tabindex="0" role="img" aria-label="DIN-01, Dinamômetro: em dia, próxima 21/05" data-k="13" data-n="DIN-01 · Dinamômetro" data-s="Em dia" data-p="21/05/2028" data-d="326 dias" data-cx="405.7" data-cy="384"/>
+        <rect class="hit" x="14" y="410" width="872" height="26" tabindex="0" role="img" aria-label="TER-L1, Termômetro da câmara de condicionamento: vencido, próxima 15/06" data-k="14" data-n="TER-L1 · Termômetro da câmara de condicionamento" data-s="Vencido" data-p="15/06/2027" data-d="-15 dias" data-cx="405.7" data-cy="410"/>
+        <rect class="hit" x="14" y="436" width="872" height="26" tabindex="0" role="img" aria-label="PAD-01, Termômetro padrão: em dia, próxima 10/02" data-k="15" data-n="PAD-01 · Termômetro padrão" data-s="Em dia" data-p="10/02/2028" data-d="225 dias" data-cx="405.7" data-cy="436"/>
       </svg>
     </div>
     <div class="tip" id="bars-tip" hidden></div>
@@ -885,11 +894,12 @@ footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);font-si
         <table class="aud">
           <thead><tr><th>Código</th><th>Instrumento</th><th class="c">Próxima</th><th class="c">Dias</th><th>Situação</th></tr></thead>
           <tbody>
-            <tr><td>TER-01</td><td>Termômetro de espeto</td><td class="c">05/04/2027</td><td class="c">5</td><td>Vence em 30 dias</td></tr>
+            <tr><td>TER-01</td><td>Termômetro de espeto</td><td class="c">05/04/2027</td><td class="c">5</td><td>Vence em breve</td></tr>
             <tr><td>TER-02</td><td>Termômetro de visor da câmara fria</td><td class="c">15/06/2027</td><td class="c">—</td><td>Fora de uso</td></tr>
             <tr><td>TER-03</td><td>Termômetro do forno</td><td class="c">15/06/2027</td><td class="c">76</td><td>Em dia</td></tr>
             <tr><td>TER-04</td><td>Termômetro de espeto do recebimento</td><td class="c">—</td><td class="c">—</td><td>Sem calibração</td></tr>
-            <tr><td>BAL-01</td><td>Balança da bancada</td><td class="c">01/04/2027</td><td class="c">1</td><td>Vence em 30 dias</td></tr>
+            <tr><td>TER-05</td><td>Termômetro de visor da câmara fria, novo</td><td class="c">15/06/2027</td><td class="c">76</td><td>Em dia</td></tr>
+            <tr><td>BAL-01</td><td>Balança da bancada</td><td class="c">01/04/2027</td><td class="c">1</td><td>Vence em breve</td></tr>
             <tr><td>BAL-02</td><td>Balança do recebimento</td><td class="c">20/01/2028</td><td class="c">295</td><td>Em dia</td></tr>
             <tr><td>MIC-07</td><td>Micrômetro de ponta plana</td><td class="c">12/12/2027</td><td class="c">—</td><td>Fora de uso</td></tr>
             <tr><td>MIC-08</td><td>Micrômetro digital</td><td class="c">15/09/2027</td><td class="c">77</td><td>Em dia</td></tr>
@@ -904,14 +914,14 @@ footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);font-si
     </details>
   </figure>
 
-  <p>Na pizzaria, dois instrumentos vencem em menos de uma semana: a balança da bancada no dia seguinte, e o termômetro de espeto em cinco dias. Verificação mensal é assim: a lista de vencimentos precisa ser lida toda semana, ou a verificação vira atraso. O termômetro do recebimento nunca foi verificado, e foi ele que recusou a mussarela a 9 °C no estudo de liberação: a decisão provavelmente estava certa, mas ninguém pode provar. Na indústria, o termômetro da câmara de condicionamento venceu há 15 dias, às vésperas dos ensaios a -18 °C do projeto de filme para congelados, em julho. Os ensaios precisam esperar a verificação, ou não valem.</p>
+  <p>Na pizzaria, dois instrumentos vencem em menos de uma semana: a balança da bancada no dia seguinte, e o termômetro de espeto em cinco dias. Verificação mensal é assim: a lista de vencimentos precisa ser lida toda semana, ou a verificação vira atraso. O termômetro do recebimento nunca foi verificado, e foi ele que recusou a muçarela a 9 °C no estudo de liberação: a decisão provavelmente estava certa, mas ninguém pode provar. Na indústria, o termômetro da câmara de condicionamento venceu há 15 dias, às vésperas dos ensaios a -18 °C do projeto de filme para congelados, em julho. Os ensaios precisam esperar a verificação, ou não valem.</p>
 
   <div class="tbl">
     <table>
       <thead><tr><th style="width:24%">Situação</th><th style="width:40%">Regra deste material</th><th>O que fazer</th></tr></thead>
       <tbody>
-        <tr><td><strong>Em dia</strong></td><td>A próxima data está a mais de 30 dias.</td><td>Usar normalmente.</td></tr>
-        <tr><td><strong>Vence em 30 dias</strong></td><td>A próxima data está a 30 dias ou menos.</td><td>Programar a calibração ou a verificação.</td></tr>
+        <tr><td><strong>Em dia</strong></td><td>Até a próxima data faltam mais dias do que o aviso: um quarto do intervalo, com no máximo 30 dias.</td><td>Usar normalmente.</td></tr>
+        <tr><td><strong>Vence em breve</strong></td><td>Faltam menos dias do que o aviso. Na verificação mensal, cerca de uma semana; no intervalo de um ano, 30 dias.</td><td>Programar a calibração ou a verificação.</td></tr>
         <tr><td><strong>Vencido</strong></td><td>A próxima data já passou.</td><td>Bloquear o uso até calibrar. O que foi medido depois do vencimento fica em dúvida.</td></tr>
         <tr><td><strong>Sem calibração</strong></td><td>Não há registro de calibração nem de verificação.</td><td>Verificar antes de usar de novo.</td></tr>
         <tr><td><strong>Fora de uso</strong></td><td>O instrumento foi retirado: reprovado, quebrado, substituído.</td><td>Etiqueta de bloqueio, e fora do posto.</td></tr>
@@ -1057,6 +1067,7 @@ footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);font-si
     <h4>Pontos de atenção</h4>
     <p>As constatações mais comuns são o instrumento vencido em uso, o certificado sem leitura, a falta de critério de aceitação e, a mais séria, o instrumento reprovado sem avaliação dos resultados anteriores. O auditor costuma pegar um instrumento no posto, ler a etiqueta, pedir o certificado e perguntar: “o erro cabe no que vocês aceitam?”. Depois, pede o último instrumento reprovado e pergunta o que foi feito com o que ele mediu.</p>
     <p>Este módulo usa a numeração da ISO 9001:2015 e resume os textos com palavras próprias. Confira sempre a edição vigente da norma antes de citar um requisito em relatório.</p>
+    <p>Os exemplos se passam de 2026 a 2028 e usam a numeração da ISO 9001:2015, que as organizações dos exemplos seguem até a transição. O estudo <a href="../ISO-9001-2026/treinamento-iso-9001-2026.html">ISO 9001:2026: o que muda</a> mostra as diferenças.</p>
   </div>
 </section>
 
@@ -1137,7 +1148,7 @@ footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);font-si
     <li>Escreva a data da última calibração ou verificação, e se o instrumento está em uso.</li>
     <li>Na aba Calibrações, lance os últimos certificados e verificações, com o erro e a incerteza.</li>
     <li>Para cada reprovado, escreva a ação e a avaliação dos resultados anteriores.</li>
-    <li>Leia a aba Painel: os vencidos, os que vencem em 30 dias, os sem calibração, os grossos demais e os reprovados sem avaliação.</li>
+    <li>Leia a aba Painel: os vencidos, os que vencem em breve, os sem calibração, os grossos demais e os reprovados sem avaliação.</li>
     <li>Passe o checklist do módulo 11.</li>
   </ol>
   <p>Depois, vá até um posto e escolha um instrumento ao acaso. Se a etiqueta, a lista e o certificado não contarem a mesma história, comece por ali.</p>
@@ -1224,7 +1235,7 @@ footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);font-si
     { t: '“Verificação de hoje: o termômetro da câmara marca 2 °C a menos que o padrão. Ele vinha sendo usado havia três meses.”', a: 'R', w: 'Trocar resolve o futuro. As leituras dos três meses precisam ser revistas.' },
     { t: '“Balança com resolução de 10 g usada para pesar bolas de massa de 380 a 420 g.”', a: 'T', w: 'Tolerância de 40 g pede resolução de 4 g ou menor.' },
     { t: '“Paquímetro que caiu no chão da expedição, sem marca visível.”', a: 'B', w: 'Depois de uma queda, verificar antes de voltar a usar.' },
-    { t: '“Certificado: erro de +0,6 µm, incerteza de 0,3 µm, critério de ±1 µm.”', a: 'U', w: '0,6 + 0,3 = 0,9 µm, dentro do critério.' },
+    { t: '“Certificado: erro de +0,3 µm, incerteza de 0,6 µm, critério de ±1 µm.”', a: 'U', w: '0,3 + 0,6 = 0,9 µm, dentro do critério.' },
     { t: '“Certificado: erro de +0,8 µm, incerteza de 0,4 µm, critério de ±1 µm. O micrômetro estava em uso até a calibração.”', a: 'R', w: '0,8 + 0,4 = 1,2 µm, fora do critério. Além de ajustar, rever o que foi medido desde a última calibração boa.' },
     { t: '“Termômetro sem etiqueta e sem código, encontrado na gaveta da cozinha.”', a: 'B', w: 'Sem identificação, ninguém sabe a situação. Verificar e cadastrar antes de usar.' },
     { t: '“Trena de 1 mm de resolução para conferir a largura de 598 a 602 mm.”', a: 'T', w: 'Tolerância de 4 mm pede resolução de 0,4 mm ou menor.' },

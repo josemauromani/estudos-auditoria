@@ -279,7 +279,8 @@ _INDUSTRIA['pessoas'] = [
     {'nome': 'Antônio', 'cargo': 'Comprador sênior', 'desde': '2017-02',
      'papel': 'Avaliação e homologação de fornecedores; treina os compradores novos.'},
     {'nome': 'Luana', 'cargo': 'Compradora', 'desde': '2022-07', 'papel': 'Nível 2 em S1 (P18); reciclagem não eficaz.'},
-    {'nome': 'Felipe', 'cargo': 'Comprador', 'desde': '2024-03', 'papel': 'Nível 2 em S7 (P18).'},
+    {'nome': 'Felipe', 'cargo': 'Comprador', 'desde': '2024-03',
+     'papel': 'Nível 0 em S7 na matriz de 12/03/2027, depois do curso de 24/02/2027, com a eficácia ainda a avaliar (N32).'},
     {'nome': 'Camila', 'cargo': 'Compradora', 'desde': '2027-01',
      'papel': 'Admitida em janeiro de 2027 no lugar de um comprador que saiu no fim de 2026: os compradores continuam '
               'quatro (N15). Sete lacunas em 12/03/2027.'},
@@ -332,8 +333,9 @@ _INDUSTRIA['equipamentos'] = [
     # instrumentos (Calibração, leitura de 30/06/2027): 7 dos 25 instrumentos em uso (N19)
     {'codigo': 'MIC-07', 'descricao': 'Micrômetro de ponta plana, 1 µm, extrusora 3: espessura de 38 a 42 µm',
      'criterio': 'Calibração externa a cada 6 meses, ±1 µm',
-     'situacao': 'Aprovado em 10/01/2027; reprovado em 12/06/2027 (FV-12, +1,6 µm): fora de uso; medições de 10/01 a '
-                 '12/06 corrigidas, 6 bobinas abaixo de 38 µm, 2 entregues', 'datas': ['2027-01-10', '2027-06-12']},
+     'situacao': 'Aprovado em 10/01/2027 (C-2027-0112: +0,3 µm, incerteza de 0,6 µm, T45); reprovado em 12/06/2027 '
+                 '(FV-12: +1,6 µm, incerteza de 0,6 µm): fora de uso; medições de 10/01 a 12/06 corrigidas em 1,6 µm, o '
+                 'pior caso, 6 bobinas abaixo de 38 µm, 2 entregues', 'datas': ['2027-01-10', '2027-06-12']},
     {'codigo': 'MIC-08', 'descricao': 'Micrômetro digital, 0,1 µm, laboratório; mede as bobinas da extrusora 3 desde 12/06/2027',
      'criterio': 'Calibração externa a cada 6 meses, ±0,5 µm', 'situacao': 'Calibrado em 15/03/2027; próxima 15/09/2027',
      'datas': ['2027-03-15']},
@@ -342,7 +344,9 @@ _INDUSTRIA['equipamentos'] = [
      'datas': ['2026-11-08']},
     {'codigo': 'TER-Z3', 'descricao': 'Termopar da zona 3 da extrusora 3: 185 a 195 °C',
      'criterio': 'Calibração externa a cada 12 meses, ±2 °C',
-     'situacao': 'Calibrado em 02/08/2026; cabo trocado e verificado contra o PAD-01 em 27/07/2027', 'datas': ['2026-08-02', '2027-07-27']},
+     'situacao': 'Calibrado em 02/08/2026; cabo trocado em 27/07/2027 e termopar calibrado no local por laboratório '
+                 'externo, a 190 °C, antes de a extrusora voltar (T43: o PAD-01 só é calibrado até 20 °C)',
+     'datas': ['2026-08-02', '2027-07-27']},
     {'codigo': 'DIN-01', 'descricao': 'Dinamômetro do laboratório: solda de no mínimo 12 N/15 mm',
      'criterio': 'Calibração externa a cada 12 meses, ±0,2 N',
      'situacao': 'Em calibração em 20/05/2027; calibrado em 21/05/2027; próxima 21/05/2028', 'datas': ['2027-05-21']},
@@ -358,8 +362,10 @@ _INDUSTRIA['equipamentos'] = [
     # infraestrutura (Recursos, julho de 2027; meta de disponibilidade 95%)
     {'codigo': 'EXT-01', 'descricao': 'Extrusora 1', 'criterio': 'Preventiva a cada 3 meses',
      'situacao': 'Em dia (10/05/2027); 100% em julho', 'datas': ['2027-05-10']},
-    {'codigo': None, 'descricao': 'Extrusoras 2 e 4 (a 4 em operação desde setembro de 2026, I02)', 'criterio': None,
-     'situacao': 'Sem código nos estudos', 'datas': ['2026-09']},
+    {'codigo': None, 'descricao': 'Extrusora 2', 'criterio': None, 'situacao': 'Sem código nos estudos', 'datas': []},
+    {'codigo': 'EXT-04', 'descricao': 'Extrusora 4, em operação desde setembro de 2026 (I02)', 'criterio': 'Preventiva a cada 3 meses',
+     'situacao': 'Em dia (21/06/2027); 100% em julho: com o chiller parado em 22/07, trabalhou em velocidade reduzida, '
+                 'sem parada', 'datas': ['2026-09', '2027-06-21']},
     {'codigo': 'EXT-03', 'descricao': 'Extrusora 3, a dos exemplos de produção, CEP e caso integrado',
      'criterio': 'Preventiva a cada 3 meses',
      'situacao': 'Preventiva vencida em 15/06/2027 e adiada; 3 quebras em julho (06/07 resistência, 14 h; 18/07 rosca, '
@@ -469,7 +475,8 @@ _INDUSTRIA['linha_do_tempo'] = [
     ('2027-06-30', 'Prazo dos medidores em linha, vencido sem instalação (I07)', ['Objetivos', 'Escopo']),
     ('2027-07', 'Três quebras da extrusora 3; CEP de 04 a 16/07; PNC 2027-29 e 2027-30', ['Recursos', 'Histograma-CEP', 'Caso-Integrado']),
     ('2027-07-08', 'Resina B no projeto D-07, antes do lote de teste de 15/07 (I10)', ['Projeto']),
-    ('2027-08-19', 'Análise crítica: antecipar os medidores e passar o conhecimento do operador sênior', ['Caso-Integrado', 'Certificacao', 'Conhecimento']),
+    ('2027-08-19', 'Análise crítica: antecipar os medidores e passar o conhecimento do operador sênior; a leitura de julho de Recursos a prepara (I06)',
+     ['Caso-Integrado', 'Certificacao', 'Conhecimento', 'Recursos']),
     ('2027-09-30', 'Mapa do conhecimento; prontidão para a certificação: 93%', ['Conhecimento', 'Certificacao', 'Caso-Integrado']),
     ('2027-10-06', 'Auditoria interna 2027-11, da produção', ['Tecnica-Auditoria']),
     ('2027-10-20', 'Fase 1 da certificação', ['Certificacao']),
@@ -663,6 +670,7 @@ CODIGOS = {
         # infraestrutura (Recursos)
         'EXT-01': 'Extrusora 1',
         'EXT-03': 'Extrusora 3',
+        'EXT-04': 'Extrusora 4',
         'IMP-01': 'Impressora flexográfica',
         'REB-01': 'Rebobinadeira',
         'CMP-01': 'Compressor de ar',
@@ -863,7 +871,8 @@ PROIBIDO = [
     {'id': 'P22a', 'regex': r'Três causas confirmadas|Três ações: reforçar a escala', 'motivo': 'cinco causas confirmadas, quatro no plano e seis ações (P22)',
      'pastas': ['Caso-Integrado']},
     {'id': 'N10', 'regex': r'RNC 2027-(19|22)', 'motivo': 'registros de produto não conforme, e não RNC (N10)', 'pastas': ['Caso-Integrado']},
-    {'id': 'N25', 'regex': r'[Gg]arantia, assistência,? e? ?atendimento a reclamações', 'motivo': 'a reclamação não é atividade pós-entrega (N25)',
+    {'id': 'N25', 'regex': r'[Gg]arantia, assistência,? e? ?atendimento a reclamações|atende a reclamação, cumpre a garantia|depois da entrega: reclamação',
+     'motivo': 'a reclamação não é atividade pós-entrega (N25)',
      'pastas': ['Producao', 'Conhecimento']},
     {'id': 'N13a', 'regex': r'itens de fornecedor único', 'motivo': 'o item de fornecedor único é a resina (N13)', 'pastas': ['ISO-9001']},
     # tarefa 5: contexto e planejamento
@@ -936,6 +945,48 @@ PROIBIDO = [
     {'id': 'T36', 'regex': r'8\.6 Verificar o produto antes da liberação', 'motivo': 'a verificação do recebido é do 8.4.2 (T36)', 'pastas': ['Fornecedores']},
     {'id': 'T38', 'regex': r'Usinagem de moldes, impressão, entrega por aplicativo|a usinagem de moldes é terceirizada',
      'motivo': 'processo terceirizado: impressão ou laminação externas e a entrega ao cliente (T38)', 'pastas': ['Fornecedores']},
+    # tarefa 7: apoio e avaliação
+    {'id': 'T43', 'regex': r'verificado contra o padrão PAD-01', 'motivo': 'o termopar de 190 °C não se verifica contra um padrão calibrado até 20 °C (T43)',
+     'pastas': ['Recursos']},
+    {'id': 'T44', 'regex': r'Um laboratório externo competente', 'motivo': 'a calibração pode ser feita por laboratório externo ou interno competente (T44)',
+     'pastas': ['Calibracao']},
+    {'id': 'T45', 'regex': r'[Ee]rro de \+0,6 µm|incerteza de 0,3 µm|\+0,6 µm ± 0,3|\+1,6 µm ± 0,2',
+     'motivo': 'MIC-07: +0,3 µm com ±0,6 µm em 10/01 e +1,6 µm com ±0,6 µm em 12/06, coerentes com a resolução de 1 µm (T45)', 'pastas': ['Calibracao']},
+    {'id': 'T46', 'regex': r'[Vv]encem? em 30 dias|a mais de 30 dias|a 30 dias ou menos',
+     'motivo': 'o aviso de vencimento vale por um quarto do intervalo, com teto de 30 dias: "Vence em breve" (T46)', 'pastas': ['Calibracao']},
+    {'id': 'T48', 'regex': r'pessoas cujo trabalho afeta a qualidade|de quem afeta a qualidade',
+     'motivo': 'o 7.2 alcança quem trabalha sob o controle da organização, inclusive terceiros e temporários (T48)', 'pastas': ['Competencias']},
+    {'id': 'T49', 'regex': r'Câmara fria e sistema ligados o tempo todo',
+     'motivo': 'a câmara fria fica ligada o tempo todo; o sistema é contado nas horas de loja aberta (T49)', 'pastas': ['Recursos']},
+    {'id': 'T50', 'regex': r'24 pizzas/h', 'motivo': 'a carga por pizzaiolo no pico é a do dimensionamento: 20 pizzas por hora (T50)',
+     'pastas': ['Recursos']},
+    {'id': 'T51', 'regex': r'As constatações mais comuns são a preventiva atrasada',
+     'motivo': 'cada constatação comum diz contra qual critério se sustenta (T51)', 'pastas': ['Recursos']},
+    {'id': 'T52', 'regex': r'Horas extras[^\n]{0,40} Social', 'motivo': 'horas extras são fator psicológico (T52)', 'pastas': ['Recursos']},
+    {'id': 'T55', 'regex': r'Entre empresas, quem define o prazo é o contrato', 'motivo': 'entre empresas, em geral, o prazo vem do contrato (T55)',
+     'pastas': ['Conhecimento']},
+    {'id': 'P02', 'regex': r'quatro pizzaiolos', 'motivo': 'a loja tem três pizzaiolos e um forneiro (P02)', 'pastas': ['Competencias', 'Conhecimento']},
+    {'id': 'P03', 'regex': r'Regulou o forno sozinho|o nível de Bruno subiu|depois do treinamento de Bruno no forno',
+     'motivo': 'a eficácia do treinamento de Bruno no forno foi parcial, e o risco R6 continua aberto (P03)', 'pastas': ['Competencias']},
+    {'id': 'P06b', 'regex': r'[Tt]roca do sistema de pedidos|sistema de pedidos é trocado|sistema de pedidos novo',
+     'motivo': 'em abril de 2027 houve uma atualização de versão do sistema de pedidos (P06)', 'pastas': ['Conhecimento', 'Recursos']},
+    {'id': 'P19', 'regex': r'[Pp]razo de resposta|dentro da meta de 2,0',
+     'motivo': 'primeira resposta e solução são termos distintos; a meta de reclamações de 2027 é 1,5 por 100 pedidos (P19)',
+     'pastas': ['Satisfacao', 'Conhecimento']},
+    {'id': 'P20', 'regex': r'Instrumentos · 6 cadastrados|Um termômetro novo, verificado contra o TER-01',
+     'motivo': 'o TER-05 entra na lista de instrumentos da pizzaria: 7 instrumentos (P20)', 'pastas': ['Calibracao']},
+    {'id': 'I06', 'regex': r'Análise crítica de julho|Análise crítica do semestre', 'motivo': 'as análises críticas da indústria são de fevereiro e de agosto (I06)',
+     'pastas': ['Conhecimento', 'Recursos']},
+    {'id': 'I11b', 'regex': r'RNC 2026-29', 'motivo': 'o RNC de 23/09/2026 é o 2026-32 (I11)', 'pastas': ['Satisfacao']},
+    {'id': 'I18b', 'regex': r'Visitar o cliente que concentra as reclamações', 'motivo': 'a decisão de 18/02/2027 é a segunda visita ao cliente A (I18)',
+     'pastas': ['Analise-Critica']},
+    {'id': 'I19a', 'regex': r'As três quebras de julho vieram|parou as três extrusoras',
+     'motivo': 'duas das três quebras dependiam da preventiva; o chiller fez as quatro extrusoras trabalharem em velocidade reduzida (I19)',
+     'pastas': ['Recursos']},
+    {'id': 'N16', 'regex': r'PC-02', 'motivo': 'o procedimento de compras da indústria é o PR-SUP-01 (N16)', 'pastas': ['Conhecimento']},
+    {'id': 'N19', 'regex': r'Instrumentos · 7 cadastrados: 5 em dia', 'motivo': 'o exemplo mostra 7 dos 25 instrumentos da indústria (N19)', 'pastas': ['Calibracao']},
+    {'id': 'D04', 'regex': r'sem estudo na série|Quase todas já existem', 'motivo': 'Satisfação, Fornecedores e Recursos têm estudo próprio (D04)',
+     'pastas': ['Analise-Critica']},
 ]
 
 # {'id', 'conflito', 'canone', 'estudos'}
@@ -1112,7 +1163,8 @@ DECISOES = [
      'canone': 'Vale a matriz de Suprimentos da indústria (12/03/2027): Luana nível 2 em S1, Felipe nível 2 em S7; as '
                'perguntas do questionário sobre os dois passam a ter resposta 2, com o enunciado coerente. Camila tem sete '
                'lacunas, e o plano ganha ações para S6 e S7, as duas que hoje não têm. Jorge, desde 10/2020: "há sete '
-               'anos" passa a "há seis anos". (Pessoas da indústria, embora o item seja da série P.)',
+               'anos" passa a "há seis anos". (Pessoas da indústria, embora o item seja da série P.) Corrigido pela N32: '
+               'na matriz, Felipe tem nível 0 em S7, e não 2; a pergunta sobre ele passa a ter resposta 0.',
      'estudos': ['Competencias']},
     {'id': 'P19',
      'conflito': 'Meta de reclamações 2,0 e 1,5; "prazo de resposta" com dois sentidos; contingência escrita em 13/04 e '
@@ -1295,8 +1347,11 @@ DECISOES = [
                'decidida pelas reclamações de espessura do cliente A do primeiro semestre de 2026 (prazo, situação e '
                'resultado sem mudança: "Orçamento recebido. Compra não aprovada."). A reclamação de 14/09/2026 e o RNC '
                '2026-32 confirmaram a causa e levaram a proposta à análise de 18/02/2027. Caso integrado: passo 11 '
-               'sem mudança; onde citar o medidor, "os dois medidores em linha".',
-     'estudos': ['Escopo', 'Analise-Critica', 'Caso-Integrado']},
+               'sem mudança; onde citar o medidor, "os dois medidores em linha". Acrescentada na tarefa 7: Satisfação '
+               '(exemplo 3, 02/10/2026: "até a compra dos medidores"; 18/02/2027: "Análise crítica aprova os dois '
+               'medidores de espessura em linha."; "O que observar" do exemplo 2: "justificou os medidores de espessura em '
+               'linha").',
+     'estudos': ['Escopo', 'Analise-Critica', 'Caso-Integrado', 'Satisfacao']},
     {'id': 'I08',
      'conflito': 'Compras com duas histórias: formulário novo e devoluções de 40% para 12% em 2026, contra indicador em 30% '
                  'até setembro e RNC 2026-31.',
@@ -1429,8 +1484,10 @@ DECISOES = [
      'canone': 'A primeira visita ao cliente A foi em 02/10/2026 (Satisfação). Na análise crítica de 18/02/2027, a '
                'decisão 3 passa a "Fazer a segunda visita ao cliente A e rever o plano conjunto de outubro de 2026.", '
                'Gerente comercial, 19/03/2027. Acrescentado à lista do spec: em Objetivos, a ação do O2 passa a "Fazer a '
-               'segunda visita ao cliente A e rever o plano conjunto.", concluída em 12/03/2027.',
-     'estudos': ['Analise-Critica', 'Objetivos']},
+               'segunda visita ao cliente A e rever o plano conjunto.", concluída em 12/03/2027. Acrescentada na tarefa 7: '
+               'Satisfação, "O que observar" do exemplo 2, "Foi esse cliente que a análise crítica decidiu visitar" passa a '
+               '"Foi esse cliente que a análise crítica de fevereiro de 2027 decidiu visitar de novo".',
+     'estudos': ['Analise-Critica', 'Objetivos', 'Satisfacao']},
     {'id': 'I19',
      'conflito': 'Instrumentos vencidos: meta em 60 dias e eficácia em 90; "três quebras" na figura e "duas" no texto; '
                  'chiller "parou todas" com uma extrusora a 100%.',
@@ -1619,7 +1676,21 @@ DECISOES = [
                'conformidade. Produção (prod_body.html), módulo das normas, linha 8.5.5, coluna do significado: "Garantia, assistência e atendimento a reclamações fazem parte do serviço." → "Garantia, assistência e o que o contrato prevê depois da entrega fazem parte do serviço. A reclamação segue pela comunicação com o cliente e pelo tratamento de não conformidade." '
                'Conhecimento (con_body.html), glossário, "Atividades pós-entrega": "O que a organização faz depois que o produto chega ao cliente: garantia, assistência, atendimento a reclamações, recolhimento." → "O que a organização faz depois que o produto chega ao cliente: garantia, assistência, obrigações do contrato, recolhimento. A reclamação é tratada pela comunicação com o cliente, pelo monitoramento da satisfação e pelo tratamento de não conformidade." Os outros textos de '
                'Conhecimento que tratam a reclamação junto com o pós-entrega (introdução e tabela do módulo 1) ficam para a '
-               'tarefa do grupo de Apoio e avaliação decidir.',
+               'tarefa do grupo de Apoio e avaliação decidir. Decidido na tarefa 7 (con_body.html, con_data.py): o estudo '
+               'continua a tratar a reclamação junto, no mesmo registro de atendimentos (tipos, contagens e datas sem '
+               'mudança), mas não a chama de pós-entrega. Introdução do módulo 1: "atende a reclamação, cumpre a garantia, '
+               'presta assistência, orienta o uso. É também a melhor fonte de conhecimento novo, porque mostra o produto no '
+               'uso real." → "cumpre a garantia, presta assistência, troca ou devolve, orienta o uso e faz o que o contrato '
+               'prevê. As reclamações chegam pelo mesmo caminho e entram no mesmo registro de atendimentos, mas não são '
+               'atividade pós-entrega: a norma as trata pela comunicação com o cliente, pelo monitoramento da satisfação e '
+               'pelo tratamento de não conformidade. Os atendimentos, de um tipo ou de outro, são a melhor fonte de '
+               'conhecimento novo, porque mostram o produto no uso real." Tabela do módulo 1, "Pós-entrega": "As atividades '
+               'depois da entrega: reclamação, garantia, devolução, assistência, orientação." / "O laudo da reclamação '
+               'técnica em 5 dias." → "As atividades depois da entrega: garantia, devolução, assistência, orientação e o '
+               'que o contrato prevê. A reclamação entra no mesmo registro, mas tem requisitos próprios." / "O ajuste da '
+               'seladora do cliente ao filme novo." (o atendimento N-03). Figura 1, caixa "Pós-entrega": "Reclamação, '
+               'garantia, assistência, orientação de uso." → "Garantia, assistência, orientação de uso. As reclamações '
+               'chegam pelo mesmo caminho." A regra N25 de PROIBIDO ganha as duas frases antigas do módulo 1.',
      'estudos': ['Producao', 'Conhecimento']},
     {'id': 'N26',
      'conflito': 'Achado na tarefa 5. Pelo item T23 do spec, o O5 da pizzaria (dar indicador e meta aos quatro processos '
@@ -1714,4 +1785,26 @@ DECISOES = [
                '"Uma amostra por lote" (5). Os exercícios ("três pedidos por hora", "uma vez por hora", "a cada bobina") e '
                'a frase de Liberação sobre a última hora do pico passam a concordar com o plano sem mudança.',
      'estudos': ['Producao']},
+    {'id': 'N32',
+     'conflito': 'Achado na tarefa 7, ao aplicar P18. P18 manda valer a matriz de Suprimentos de 12/03/2027 e dá "Felipe nível '
+                 '2 em S7", mas a matriz (comp_data.py, "32223100") dá nível 0 a Felipe em S7: é a lacuna que o curso de '
+                 '24/02/2027 trata, com a eficácia ainda a avaliar (ação 8 do plano, "Em acompanhamento"). O questionário '
+                 'dava 1 ("fez o curso há uma semana e ainda não aplicou").',
+     'canone': 'Vale a matriz, como P18 manda: Felipe tem nível 0 em S7 (uma lacuna; 11 lacunas na indústria, sem mudança). '
+               'O número "2" de P18 para Felipe foi lido errado e não é aplicado: dar 2 mudaria a matriz, as contagens e '
+               'deixaria a ação 8 do plano sem lacuna. No questionário de Competências (comp_body.html), o item de Felipe '
+               'passa a "Felipe fez o curso de requisitos da ISO 9001 para aquisição, mas, perguntado no posto, não soube '
+               'dizer o que a norma pede de um fornecedor.", resposta 0, com a explicação "O curso não basta: ele ainda não '
+               'conhece o padrão. O nível vem do que a pessoa sabe e faz no posto, e não do certificado." Luana segue P18 '
+               '(nível 2 em S1, resposta 2).',
+     'estudos': ['Competencias']},
+    {'id': 'N33',
+     'conflito': 'Achado na tarefa 7. Pelo item T50 do spec, a pizzaria de Recursos tinha 20 pizzas por hora por pizzaiolo no '
+                 'dimensionamento (60 pizzas por hora, 3 pizzaiolos, "Justo") e 24 pizzas por hora medidas no fator de '
+                 'ambiente "Pizzas por pizzaiolo no pico".',
+     'canone': 'Vale o dimensionamento, que tem a conta da escala: 60 ÷ 3 = 20. No fator de ambiente (rec_data.py, exemplo 1), '
+               'o valor medido passa de 24 a 20 pizzas por hora, dentro do limite de 20, e a ação "Rever a escala da sexta '
+               'em maio, com a demanda de abril." sai, porque não há o que rever. O ambiente da pizzaria passa de 3 a 2 '
+               'fatores fora do limite; as outras contagens não mudam.',
+     'estudos': ['Recursos']},
 ]

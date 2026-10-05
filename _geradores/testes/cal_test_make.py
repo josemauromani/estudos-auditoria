@@ -58,7 +58,7 @@ for nome, ex, check in (('t1', EX1, ['Sim'] * 12), ('t2', EX2, ['Sim'] * 6 + ['P
 D = date
 ref = D(2027, 6, 30)
 insts3 = [('A', 'ok', 'L', 'mede', 'g', 40, 1, CALEXT, 12, D(2027, 1, 1), 2, SIM),          # em dia
-          ('B', 'vence', 'L', 'mede', 'g', 40, 1, VERINT, 1, D(2027, 6, 10), 2, SIM),       # vence em 30 dias (10/07)
+          ('B', 'mensal', 'L', 'mede', 'g', 40, 1, VERINT, 1, D(2027, 6, 10), 2, SIM),      # mensal, 10 dias (10/07): em dia, um quarto de 30 dias é 7,5
           ('C', 'vencido', 'L', 'mede', 'g', 40, 1, VERINT, 1, D(2027, 5, 1), 2, SIM),      # vencido
           ('D', 'sem data', 'L', 'mede', 'g', 40, 1, VERINT, 1, None, 2, SIM),             # sem calibração
           ('E', 'fora', 'L', 'mede', 'g', 40, 1, VERINT, 1, D(2027, 1, 1), 2, NAO),         # fora de uso
@@ -66,7 +66,11 @@ insts3 = [('A', 'ok', 'L', 'mede', 'g', 40, 1, CALEXT, 12, D(2027, 1, 1), 2, SIM
           ('G', 'no limite', 'L', 'mede', 'g', 40, 4, CALEXT, 12, D(2027, 1, 1), 2, SIM),  # 4 = 40/10: adequado
           ('H', 'sem uso', 'L', None, 'g', 40, 1, CALEXT, 12, D(2027, 1, 1), 2, SIM),      # falta o que mede
           ('I', 'sem tipo', 'L', 'mede', 'g', 40, 1, None, 12, D(2027, 1, 1), 2, SIM),     # falta o tipo
-          ('J', 'sem ema', 'L', 'mede', 'g', 40, 1, CALEXT, 12, D(2027, 1, 1), None, SIM)]  # falta o erro máximo
+          ('J', 'sem ema', 'L', 'mede', 'g', 40, 1, CALEXT, 12, D(2027, 1, 1), None, SIM),  # falta o erro máximo
+          ('K', 'anual', 'L', 'mede', 'g', 40, 1, CALEXT, 12, D(2026, 7, 29), 2, SIM),      # anual, 29 dias: vence em breve (teto de 30)
+          ('L', 'anual', 'L', 'mede', 'g', 40, 1, CALEXT, 12, D(2026, 7, 30), 2, SIM),      # anual, 30 dias: em dia (o aviso é de menos de 30)
+          ('M', 'trimestral', 'L', 'mede', 'g', 40, 1, VERINT, 3, D(2027, 4, 20), 2, SIM),  # trimestral, 20 dias: vence em breve (um quarto de 91 dias)
+          ('N', 'mensal', 'L', 'mede', 'g', 40, 1, VERINT, 1, D(2027, 6, 5), 2, SIM)]       # mensal, 5 dias: vence em breve
 cals3 = [(D(2027, 1, 1), 'A', CAL, 'Cert 1', '100 g', 1.5, 0.5, None, None),          # 2,0 = 2: aprovado no limite
          (D(2027, 1, 1), 'A', CAL, 'Cert 2', '100 g', -1.8, 0.3, None, None),         # 2,1: reprovado, falta a ação
          (D(2027, 1, 1), 'A', CAL, 'Cert 3', '100 g', 3, 0, 'Ajustada', None),        # reprovado, falta avaliar

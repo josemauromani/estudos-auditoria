@@ -55,7 +55,7 @@
     <table>
       <thead><tr><th style="width:24%">Elemento</th><th style="width:40%">O que é</th><th>Exemplo</th></tr></thead>
       <tbody>
-        <tr><td><strong>Calibração</strong></td><td>A comparação com um padrão rastreável, que diz o erro do instrumento e a incerteza.</td><td>Certificado do laboratório: erro de +0,6 µm, incerteza de 0,3 µm.</td></tr>
+        <tr><td><strong>Calibração</strong></td><td>A comparação com um padrão rastreável, que diz o erro do instrumento e a incerteza.</td><td>Certificado do laboratório: erro de +0,3 µm, incerteza de 0,6 µm.</td></tr>
         <tr><td><strong>Verificação</strong></td><td>A conferência de que o erro cabe no critério. Pode ser feita na própria organização.</td><td>Termômetro em água com gelo: deve marcar 0 °C, com ±1 °C.</td></tr>
         <tr><td><strong>Ajuste</strong></td><td>A correção do instrumento para reduzir o erro. Não é calibração.</td><td>Regular o zero da balança.</td></tr>
         <tr><td><strong>Erro máximo admissível</strong></td><td>O maior erro que a organização aceita naquele instrumento.</td><td>±1 °C no termômetro da câmara fria.</td></tr>
@@ -138,7 +138,7 @@
       <thead><tr><th style="width:26%">Papel</th><th style="width:28%">Quem costuma ser</th><th>O que faz</th></tr></thead>
       <tbody>
         <tr><td><strong>Quem controla</strong></td><td>A Qualidade, o laboratório ou o líder.</td><td>Mantém a lista, programa as calibrações e lê os certificados.</td></tr>
-        <tr><td><strong>Quem calibra</strong></td><td>Um laboratório externo competente.</td><td>Compara com padrões rastreáveis e emite o certificado.</td></tr>
+        <tr><td><strong>Quem calibra</strong></td><td>Um laboratório competente, externo ou interno.</td><td>Compara com padrões rastreáveis e emite o certificado.</td></tr>
         <tr><td><strong>Quem verifica</strong></td><td>O laboratório interno ou o líder treinado.</td><td>Aplica o método escrito, com o padrão próprio.</td></tr>
         <tr><td><strong>Quem usa</strong></td><td>Quem mede no posto.</td><td>Confere a etiqueta antes de usar e avisa da queda ou do dano.</td></tr>
       </tbody>
@@ -164,7 +164,8 @@
       <thead><tr><th style="width:24%">No certificado</th><th style="width:40%">O que significa</th><th>O que conferir</th></tr></thead>
       <tbody>
         <tr><td><strong>Pontos calibrados</strong></td><td>Os valores em que o instrumento foi comparado.</td><td>Os pontos cobrem a faixa em que o instrumento é usado?</td></tr>
-        <tr><td><strong>Erro, ou correção</strong></td><td>A diferença entre o que o instrumento mostrou e o padrão.</td><td>O erro, somado à incerteza, cabe no critério?</td></tr>
+        <tr><td><strong>Erro</strong></td><td>O que o instrumento mostrou menos o valor do padrão. Positivo: o instrumento marca a mais.</td><td>O erro, somado à incerteza, cabe no critério?</td></tr>
+        <tr><td><strong>Correção</strong></td><td>O valor que se soma à leitura para chegar ao valor do padrão: o erro com o sinal trocado. Alguns certificados trazem a correção, e não o erro.</td><td>O sinal foi lido certo? Um erro de +0,3 µm é uma correção de −0,3 µm.</td></tr>
         <tr><td><strong>Incerteza</strong></td><td>A faixa de dúvida da calibração.</td><td>A incerteza é pequena perto do critério?</td></tr>
         <tr><td><strong>Padrões usados</strong></td><td>Contra o que o instrumento foi comparado.</td><td>Os padrões têm calibração válida? A cadeia é rastreável?</td></tr>
         <tr><td><strong>Laboratório</strong></td><td>Quem calibrou, e se é acreditado.</td><td>O laboratório é competente para aquela grandeza?</td></tr>
@@ -196,7 +197,7 @@
       <thead><tr><th style="width:20%">Pergunta</th><th style="width:44%">O que conferir</th><th>Exemplo</th></tr></thead>
       <tbody>
         <tr><td><strong>Faixa</strong></td><td>O instrumento mede todos os valores que podem aparecer?</td><td>O termômetro do forno precisa ir além de 320 °C.</td></tr>
-        <tr><td><strong>Resolução</strong></td><td>O menor passo cabe ao menos dez vezes na tolerância?</td><td>Tolerância de 4 µm pede resolução de 0,4 µm ou menor.</td></tr>
+        <tr><td><strong>Resolução</strong></td><td>O menor passo cabe ao menos dez vezes na tolerância?</td><td>Tolerância de 4 µm pede resolução de 0,4 µm ou menor. Num limite de um lado só, como “no mínimo 65 °C”, não há faixa: as tabelas dos exemplos usam como tolerância a margem que importa, de 5 °C.</td></tr>
         <tr><td><strong>Método</strong></td><td>O instrumento mede a grandeza certa, no lugar certo?</td><td>Termômetro infravermelho mede a superfície, e não o centro do queijo.</td></tr>
         <tr><td><strong>Condições de uso</strong></td><td>Temperatura, umidade, vibração, limpeza.</td><td>A balança perto do forno, sujeita a correntes de ar.</td></tr>
       </tbody>
@@ -219,7 +220,7 @@
 <!--EX1HEAD-->
 <!--EX1INST-->
 <!--EX1CAL-->
-  <p><strong>O que observar.</strong> A verificação de 15/03 pegou o termômetro da câmara fria marcando 2 °C a menos que o real. Ele foi trocado no mesmo dia, o que está certo. Falta a outra metade: as leituras do plano de controle na semana de 08 a 14/03, entre 2,9 e 4,1 °C, podem ter sido de 4,9 a 6,1 °C, acima do limite de 5 °C, e a de 7 °C, já tratada, pode ter sido de 9 °C. A loja precisa decidir o que isso significa para os insumos daquela semana, que já foram usados. O termômetro do recebimento nunca foi verificado: a mussarela recusada a 9 °C no estudo de liberação foi medida com ele. A balança da bancada e o termômetro de espeto vencem em poucos dias, e a verificação mensal só funciona se alguém olhar a lista.</p>
+  <p><strong>O que observar.</strong> A verificação de 15/03 pegou o termômetro da câmara fria marcando 2 °C a menos que o real. Ele foi trocado no mesmo dia pelo TER-05, verificado contra o TER-01, o que está certo. Falta a outra metade: as leituras do plano de controle na semana de 08 a 14/03, entre 2,9 e 4,1 °C, podem ter sido de 4,9 a 6,1 °C, acima do limite de 5 °C, e a de 7 °C, já tratada, pode ter sido de 9 °C. A loja precisa decidir o que isso significa para os insumos daquela semana, que já foram usados. O termômetro do recebimento nunca foi verificado: a muçarela recusada a 9 °C no estudo de liberação foi medida com ele. A balança da bancada e o termômetro de espeto vencem em poucos dias, e a verificação mensal só funciona se alguém olhar a lista. Há ainda uma lacuna que o próprio exemplo deixa passar: o termômetro de espeto foi verificado só a 0 °C, em água com gelo, e é usado a 65 °C, na saída da pizza, e a 5 °C, como padrão da verificação dos termômetros da câmara. Um ponto não diz o erro nos outros. Como ele é o padrão das verificações internas, a ação é mandá-lo calibrar num laboratório, em pontos que cubram de 0 a 70 °C.</p>
 
   <h3>Exemplo 2. Os instrumentos da indústria</h3>
 <!--EX2HEAD-->
@@ -234,7 +235,7 @@
     </div>
     <figcaption><b>Figura 5.</b> Do último certificado aprovado do micrômetro MIC-07 à ação no cliente. A reclamação de maio ganhou explicação em junho.</figcaption>
   </figure>
-  <p><strong>O que observar.</strong> Em 24/05, o cliente A reclamou de filme fino no lote 135, e a primeira resposta da fábrica citou a medição da liberação: 39,1 µm, dentro do critério. Em 26/05, a bobina devolvida foi medida no laboratório, com o MIC-08, e mostrou trechos com 37,9 µm. Em junho, a verificação mostrou que o micrômetro do posto marcava 1,6 µm a mais. A bobina tinha 37,5 µm, e o cliente estava certo. A fábrica fez o que a norma pede: corrigiu todas as medições desde a última calibração aprovada, encontrou as bobinas abaixo do critério e avisou os clientes que as receberam. Sem essa avaliação, o instrumento trocado resolveria o futuro e deixaria o passado no cliente.</p>
+  <p><strong>O que observar.</strong> Em 24/05, o cliente A reclamou de filme fino no lote 135, e a primeira resposta da fábrica citou a medição da liberação: 39,1 µm, dentro do critério. Em 26/05, a bobina devolvida foi medida no laboratório, com o MIC-08, e mostrou trechos com 37,9 µm. Em junho, a verificação mostrou que o micrômetro do posto marcava 1,6 µm a mais. A bobina tinha 37,5 µm, e o cliente estava certo. A fábrica fez o que a norma pede: corrigiu todas as medições desde a última calibração aprovada, encontrou as bobinas abaixo do critério e avisou os clientes que as receberam. A correção de 1,6 µm em todas as medições desde 10/01 é o pior caso: em 10/01 o erro era de +0,3 µm, e ninguém sabe quando ele cresceu, por isso cada medição foi tratada como se já tivesse o erro maior. Sem essa avaliação, o instrumento trocado resolveria o futuro e deixaria o passado no cliente.</p>
 </section>
 
 <!-- ============================ MÓDULO 7 ============================ -->
@@ -263,8 +264,8 @@
     <table>
       <thead><tr><th style="width:24%">Situação</th><th style="width:40%">Regra deste material</th><th>O que fazer</th></tr></thead>
       <tbody>
-        <tr><td><strong>Em dia</strong></td><td>A próxima data está a mais de 30 dias.</td><td>Usar normalmente.</td></tr>
-        <tr><td><strong>Vence em 30 dias</strong></td><td>A próxima data está a 30 dias ou menos.</td><td>Programar a calibração ou a verificação.</td></tr>
+        <tr><td><strong>Em dia</strong></td><td>Até a próxima data faltam mais dias do que o aviso: um quarto do intervalo, com no máximo 30 dias.</td><td>Usar normalmente.</td></tr>
+        <tr><td><strong>Vence em breve</strong></td><td>Faltam menos dias do que o aviso. Na verificação mensal, cerca de uma semana; no intervalo de um ano, 30 dias.</td><td>Programar a calibração ou a verificação.</td></tr>
         <tr><td><strong>Vencido</strong></td><td>A próxima data já passou.</td><td>Bloquear o uso até calibrar. O que foi medido depois do vencimento fica em dúvida.</td></tr>
         <tr><td><strong>Sem calibração</strong></td><td>Não há registro de calibração nem de verificação.</td><td>Verificar antes de usar de novo.</td></tr>
         <tr><td><strong>Fora de uso</strong></td><td>O instrumento foi retirado: reprovado, quebrado, substituído.</td><td>Etiqueta de bloqueio, e fora do posto.</td></tr>
@@ -376,6 +377,7 @@
     <h4>Pontos de atenção</h4>
     <p>As constatações mais comuns são o instrumento vencido em uso, o certificado sem leitura, a falta de critério de aceitação e, a mais séria, o instrumento reprovado sem avaliação dos resultados anteriores. O auditor costuma pegar um instrumento no posto, ler a etiqueta, pedir o certificado e perguntar: “o erro cabe no que vocês aceitam?”. Depois, pede o último instrumento reprovado e pergunta o que foi feito com o que ele mediu.</p>
     <p>Este módulo usa a numeração da ISO 9001:2015 e resume os textos com palavras próprias. Confira sempre a edição vigente da norma antes de citar um requisito em relatório.</p>
+    <p>Os exemplos se passam de 2026 a 2028 e usam a numeração da ISO 9001:2015, que as organizações dos exemplos seguem até a transição. O estudo <a href="../ISO-9001-2026/treinamento-iso-9001-2026.html">ISO 9001:2026: o que muda</a> mostra as diferenças.</p>
   </div>
 </section>
 
@@ -445,7 +447,7 @@
     <li>Escreva a data da última calibração ou verificação, e se o instrumento está em uso.</li>
     <li>Na aba Calibrações, lance os últimos certificados e verificações, com o erro e a incerteza.</li>
     <li>Para cada reprovado, escreva a ação e a avaliação dos resultados anteriores.</li>
-    <li>Leia a aba Painel: os vencidos, os que vencem em 30 dias, os sem calibração, os grossos demais e os reprovados sem avaliação.</li>
+    <li>Leia a aba Painel: os vencidos, os que vencem em breve, os sem calibração, os grossos demais e os reprovados sem avaliação.</li>
     <li>Passe o checklist do módulo 11.</li>
   </ol>
   <p>Depois, vá até um posto e escolha um instrumento ao acaso. Se a etiqueta, a lista e o certificado não contarem a mesma história, comece por ali.</p>
@@ -532,7 +534,7 @@
     { t: '“Verificação de hoje: o termômetro da câmara marca 2 °C a menos que o padrão. Ele vinha sendo usado havia três meses.”', a: 'R', w: 'Trocar resolve o futuro. As leituras dos três meses precisam ser revistas.' },
     { t: '“Balança com resolução de 10 g usada para pesar bolas de massa de 380 a 420 g.”', a: 'T', w: 'Tolerância de 40 g pede resolução de 4 g ou menor.' },
     { t: '“Paquímetro que caiu no chão da expedição, sem marca visível.”', a: 'B', w: 'Depois de uma queda, verificar antes de voltar a usar.' },
-    { t: '“Certificado: erro de +0,6 µm, incerteza de 0,3 µm, critério de ±1 µm.”', a: 'U', w: '0,6 + 0,3 = 0,9 µm, dentro do critério.' },
+    { t: '“Certificado: erro de +0,3 µm, incerteza de 0,6 µm, critério de ±1 µm.”', a: 'U', w: '0,3 + 0,6 = 0,9 µm, dentro do critério.' },
     { t: '“Certificado: erro de +0,8 µm, incerteza de 0,4 µm, critério de ±1 µm. O micrômetro estava em uso até a calibração.”', a: 'R', w: '0,8 + 0,4 = 1,2 µm, fora do critério. Além de ajustar, rever o que foi medido desde a última calibração boa.' },
     { t: '“Termômetro sem etiqueta e sem código, encontrado na gaveta da cozinha.”', a: 'B', w: 'Sem identificação, ninguém sabe a situação. Verificar e cadastrar antes de usar.' },
     { t: '“Trena de 1 mm de resolução para conferir a largura de 598 a 602 mm.”', a: 'T', w: 'Tolerância de 4 mm pede resolução de 0,4 mm ou menor.' },

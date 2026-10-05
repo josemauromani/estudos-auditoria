@@ -10,7 +10,7 @@ D = date
 # as três famílias de fontes
 FONTES = [
     ("Diz, quando perguntamos", "Pesquisa depois da entrega, pesquisa anual, entrevista.", "Nota média, percentual de satisfeitos, indicação."),
-    ("Diz, sem perguntar", "Reclamações, elogios, comentários, devoluções pedidas.", "Reclamações por 100 pedidos, prazo de resposta, motivos."),
+    ("Diz, sem perguntar", "Reclamações, elogios, comentários, devoluções pedidas.", "Reclamações por 100 pedidos, prazo da primeira resposta, motivos."),
     ("Faz", "Volta a comprar, cancela, reduz o pedido, indica a outros.", "Recompra, clientes perdidos, participação de mercado."),
 ]
 SATISFEITO = 0.8   # nota igual ou acima de 80% da escala conta como satisfeito
@@ -22,7 +22,7 @@ ETAPAS = [
     ("Registrar", "Data, cliente, pedido, motivo e o que o cliente pede."),
     ("Responder", f"Em até {PRAZO_RESPOSTA} dias úteis: o cliente sabe que foi ouvido e quem cuida."),
     ("Resolver", f"Em até {PRAZO_SOLUCAO} dias: reposição, desconto, devolução ou explicação."),
-    ("Analisar", "Motivo agrupado. Reclamação grave ou repetida vira não conformidade."),
+    ("Analisar", "Motivo agrupado. A procedente é não conformidade; a grave ou repetida pede ação corretiva."),
     ("Devolver", "O cliente sabe o que foi feito. A equipe sabe o que mudou."),
 ]
 
@@ -55,7 +55,7 @@ EX1 = {
         (D(2027, 4, 3), "Pedido 3.611", "Mensagem", "Pizza fria", "Terceira reclamação de pizza fria do mesmo condomínio.", D(2027, 4, 3), D(2027, 4, 10), "RNC 2027-04", "Resolvida"),
         (D(2027, 4, 24), "Pedido 3.902", "Aplicativo", "Embalagem amassada", "Caixa amassada, pizza colada na tampa.", D(2027, 4, 27), None, "", "Aberta"),
     ],
-    "metas": dict(media=4.3, satisfeitos=0.80, nps=50, reclamacoes=2.0, resposta=1.0),
+    "metas": dict(media=4.3, satisfeitos=0.80, nps=50, reclamacoes=1.5, resposta=1.0),
 }
 
 # ------------------------------------------------------------ exemplo 2: indústria de embalagens
@@ -81,9 +81,9 @@ RECLAMACAO = dict(cliente="Cliente A, alimentos", data=D(2026, 9, 14), motivo="E
                       (D(2026, 9, 14), "Recebida", "Ligação do comprador do cliente ao gerente comercial, às 9h. Registrada às 9h30."),
                       (D(2026, 9, 14), "Respondida", "E-mail no mesmo dia: reposição de 3 bobinas em 48 horas e visita técnica marcada."),
                       (D(2026, 9, 16), "Resolvida", "Bobinas repostas. Lote reprovado devolvido para análise."),
-                      (D(2026, 9, 23), "Analisada", "RNC 2026-29: variação de espessura na extrusora 3, sem medidor em linha. Sétima reclamação do cliente no ano, quinta pelo mesmo motivo."),
-                      (D(2026, 10, 2), "Devolvida", "Visita ao cliente: plano apresentado, com inspeção de 100% das bobinas para ele até a compra do medidor."),
-                      (D(2027, 2, 18), "Fechada", "Análise crítica aprova o medidor de espessura. Nenhuma reclamação do cliente A de outubro a fevereiro."),
+                      (D(2026, 9, 23), "Analisada", "RNC 2026-32: variação de espessura na extrusora 3, sem medidor em linha. Sétima reclamação do cliente no ano, quinta pelo mesmo motivo."),
+                      (D(2026, 10, 2), "Devolvida", "Visita ao cliente: plano apresentado, com inspeção de 100% das bobinas para ele até a compra dos medidores."),
+                      (D(2027, 2, 18), "Fechada", "Análise crítica aprova os dois medidores de espessura em linha. Nenhuma reclamação do cliente A de outubro a fevereiro."),
                   ])
 
 CHECK = [
@@ -94,7 +94,7 @@ CHECK = [
     "Toda reclamação é registrada, de qualquer canal, com data, motivo e o que o cliente pede.",
     "A reclamação recebe resposta no prazo definido, e o cliente sabe quem cuida dela.",
     "Os motivos das reclamações e das notas baixas são agrupados e analisados.",
-    "Reclamação grave ou repetida vira não conformidade, com análise de causa.",
+    "Reclamação procedente é tratada como não conformidade, com correção, e a grave ou repetida tem análise de causa.",
     "Os indicadores de satisfação têm meta e entram no painel da organização.",
     "O resultado é analisado em reunião, com decisões registradas.",
     "O cliente recebe a devolutiva: o que foi feito com o que ele disse.",

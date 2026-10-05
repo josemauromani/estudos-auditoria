@@ -54,7 +54,9 @@ SCLS = {FAV: "s1", ATE: "s2", CRI: "s3"}
 ESTUDO = {"w5h2": ("5W2H", "../5W2H/treinamento-5w2h.html"), "swot": ("Matriz SWOT", "../SWOT/treinamento-swot.html"),
           "ind": ("Indicadores", "../Indicadores/treinamento-indicadores.html"), "proc": ("Mapa de processos", "../Processos/treinamento-processos.html"),
           "nc": ("Não conformidade", "../Nao-Conformidade/treinamento-nao-conformidade.html"), "auditoria": ("Auditoria interna", "../Auditoria/treinamento-auditoria.html"),
-          "riscos": ("Matriz de riscos", "../Riscos/treinamento-riscos.html"), "pdca": ("PDCA", "../PDCA/treinamento-pdca.html")}
+          "riscos": ("Matriz de riscos", "../Riscos/treinamento-riscos.html"), "pdca": ("PDCA", "../PDCA/treinamento-pdca.html"),
+          "sat": ("Satisfação do cliente", "../Satisfacao/treinamento-satisfacao.html"), "forn": ("Fornecedores", "../Fornecedores/treinamento-fornecedores.html"),
+          "rec": ("Recursos", "../Recursos/treinamento-recursos.html")}
 assert all(os.path.exists(os.path.join(os.path.dirname(os.path.abspath(SRC)), v[1])) for v in ESTUDO.values() if "Processos" not in v[1])
 
 
@@ -283,8 +285,11 @@ tb += ['          </tbody>', '        </table>']
 EXT = {2: "duas", 3: "três", 4: "quatro"}
 d25, d26 = sum(sum(r[1:]) for r in H[:2]), sum(sum(r[1:]) for r in H[2:])
 p25, p26 = sum(r[1] for r in H[:2]), sum(r[1] for r in H[2:])
+c25, c26 = sum(r[1] + r[2] for r in H[:2]), sum(r[1] + r[2] for r in H[2:])
+assert (2 * p25 == d25) and (8 * p26 == 5 * d26) and c25 / d25 > c26 / d26, (p25, d25, p26, d26, c25, c26)  # "metade", "cinco em cada oito" e "caiu"
 charttext = (f'  <p>Nas duas análises de 2025, a direção tomou {d25} decisões, e {p25} foram concluídas no prazo. Nas duas de 2026, tomou {d26}, e {p26} foram concluídas no prazo. '
-             f'A indústria passou a decidir menos em cada reunião e a concluir mais. As {EXT[H[-1][3]]} decisões não concluídas de agosto de 2026 têm a mesma origem: '
+             f'O cumprimento no prazo subiu, de metade das decisões para cinco em cada oito, mas a parte concluída, no prazo ou com atraso, caiu de {c25} em {d25} para {c26} em {d26}. '
+             f'As {EXT[H[-1][3]]} decisões não concluídas de agosto de 2026 têm a mesma origem: '
              'foram tomadas sem o recurso aprovado e sem acompanhamento entre uma análise e outra.</p>')
 
 # ------------------------------------------------------------------ módulo 10: os quatro critérios

@@ -65,7 +65,7 @@ def f_prox(ult, interv):
 
 def f_sit(cod, emuso, ult, prox, ref):
     return (f'IF({cod}="","",IF({emuso}="{NAO}","{FORA}",IF({ult}="","{SEMCAL}",IF(AND(ISNUMBER({ref}),{prox}<{ref}),"{VENCIDO}",'
-            f'IF(AND(ISNUMBER({ref}),{prox}-{ref}<={JANELA}),"{VENCE}","{EMDIA}")))))')
+            f'IF(AND(ISNUMBER({ref}),{prox}-{ref}<MIN({JANELA},({prox}-{ult})/4)),"{VENCE}","{EMDIA}")))))')
 
 
 def f_adeq(tol, res):
@@ -157,8 +157,8 @@ r += 1
 section("As regras de cálculo")
 for k, text in [
     ("Próxima data", "A última calibração ou verificação mais o intervalo, em meses."),
-    (EMDIA, f"A próxima data está a mais de {JANELA} dias da data da leitura."),
-    (VENCE, f"A próxima data está a {JANELA} dias ou menos."),
+    (EMDIA, f"Até a próxima data faltam mais dias do que o aviso: um quarto do intervalo, com no máximo {JANELA} dias."),
+    (VENCE, f"Faltam menos dias do que o aviso. Na verificação mensal, cerca de uma semana; no intervalo de um ano, {JANELA} dias."),
     (VENCIDO, "A próxima data já passou. O instrumento deve ser bloqueado até a calibração."),
     (SEMCAL, "Não há data de calibração nem de verificação."),
     (FORA, "O instrumento está marcado como fora de uso: reprovado, quebrado, substituído."),
@@ -251,7 +251,7 @@ for k, (text, formula) in enumerate([
     ("Resolução grossa", f'=COUNTIF(Q{I1}:Q{I2},"{GROSSA}")'),
     ("Aviso", f'=IF(E{s+1}=0,"Cadastre os instrumentos",IF(E4="","Informe a data da leitura",IF(COUNTIF({P_},"{VENCIDO}")>0,"Há instrumento vencido: bloquear até calibrar",'
               f'IF(COUNTIF({P_},"{SEMCAL}")>0,"Há instrumento sem calibração ou verificação",IF(COUNTIF(Q{I1}:Q{I2},"{GROSSA}")>0,"Há instrumento com resolução grossa para a tolerância",'
-              f'IF(COUNTIF({P_},"{VENCE}")>0,"Há instrumento que vence em {JANELA} dias: programe",IF(SUMPRODUCT((R{I1}:R{I2}<>"")*(R{I1}:R{I2}<>"OK")*(R{I1}:R{I2}<>"{FORA}"))>0,'
+              f'IF(COUNTIF({P_},"{VENCE}")>0,"Há instrumento que vence em breve: programe",IF(SUMPRODUCT((R{I1}:R{I2}<>"")*(R{I1}:R{I2}<>"OK")*(R{I1}:R{I2}<>"{FORA}"))>0,'
               f'"Há instrumento a completar: veja a coluna Conferência","OK")))))))'),
 ], 1):
     label(ws, f"B{s+k}", text, merge=f"B{s+k}:D{s+k}", h="right")
@@ -337,7 +337,7 @@ Ip, Iq, Ir = (f"{IN}!{c}{I1}:{c}{I2}" for c in "PQR")
 Cl, Co = (f"{CA}!{c}{C1}:{c}{C2}" for c in "LO")
 IND = [
     ("Instrumentos cadastrados", f"=COUNTA({IN}!C{I1}:C{I2})", "Da aba Instrumentos."),
-    (EMDIA, f'=COUNTIF({Ip},"{EMDIA}")', f"Vencem em mais de {JANELA} dias."),
+    (EMDIA, f'=COUNTIF({Ip},"{EMDIA}")', f"Mais longe do que o aviso: um quarto do intervalo, no máximo {JANELA} dias."),
     (VENCE, f'=COUNTIF({Ip},"{VENCE}")', "Programar a calibração ou a verificação."),
     (VENCIDO, f'=COUNTIF({Ip},"{VENCIDO}")', "Bloquear até calibrar."),
     (SEMCAL, f'=COUNTIF({Ip},"{SEMCAL}")', "Verificar antes de usar de novo."),
@@ -361,7 +361,7 @@ label(ws, f"B{s+1}", "Aviso")
 calc(ws, f"C{s+1}", f'=IF(C{IR["Instrumentos cadastrados"]}=0,"Cadastre os instrumentos na aba Instrumentos",IF(C3="","Informe a data da leitura na aba Instrumentos",'
      f'IF(C{IR["Reprovados sem avaliação"]}>0,"Há reprovado sem a avaliação dos resultados anteriores",IF(C{IR[VENCIDO]}>0,"Há instrumento vencido: bloquear até calibrar",'
      f'IF(C{IR[SEMCAL]}>0,"Há instrumento sem calibração ou verificação",IF(C{IR["Resolução grossa"]}>0,"Há instrumento com resolução grossa para a tolerância",'
-     f'IF(C{IR[VENCE]}>0,"Há instrumento que vence em {JANELA} dias: programe",IF(C{IR["Registros a completar"]}>0,"Há registro a completar","OK"))))))))',
+     f'IF(C{IR[VENCE]}>0,"Há instrumento que vence em breve: programe",IF(C{IR["Registros a completar"]}>0,"Há registro a completar","OK"))))))))',
      merge=f"C{s+1}:F{s+1}", sz=9, b=False, h="left")
 cf_warn(ws, f"C{s+1}:F{s+1}", f"C{s+1}")
 ws.row_dimensions[s + 1].height = 21.75

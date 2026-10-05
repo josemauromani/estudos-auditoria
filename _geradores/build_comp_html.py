@@ -274,15 +274,17 @@ for cod, nome, c in rows:
     tb.append(f'            <tr><td><strong>{cod} · {escape(nome)}</strong></td><td class="c">{sum(c)}</td>' + "".join(f'<td class="c">{v}</td>' for v in c) + f'<td class="c">{c[0] + c[1]}</td></tr>')
 tb += ['          </tbody>', '        </table>']
 dep = [cod for cod, _, c in rows if c[0] + c[1] < COBERTURA]
+NOMEC = {cod: nome for cod, nome, _ in rows}
 sem3 = [cod for cod, _, c in rows if c[0] == 0]
-charttext = (f'  <p>Na pizzaria, nenhuma competência ficou com uma só pessoa no nível 2 depois do treinamento de Bruno no forno. A leitura por nível 3 é a próxima: '
+charttext = (f'  <p>Na pizzaria, {dep[0]}, {NOMEC[dep[0]].lower()}, continua com uma só pessoa no nível 2 ou mais: o treinamento de Bruno foi eficaz só em parte, e o risco R6 segue aberto. '
+             f'A leitura por nível 3 é a próxima: '
              f'{("a competência " + sem3[0] + " não tem" if len(sem3) == 1 else "as competências " + ", ".join(sem3) + " não têm") + " ninguém que treine os outros" if sem3 else "todas as competências têm quem treine"}. '
              'O atendimento no salão, C8, é o caso a observar: a competência ainda não tem padrão escrito, e o nível 2 de duas pessoas foi dado pela experiência, e não pelo padrão. '
              'Quando o padrão de atendimento for aprovado, as duas voltam ao nível 1 até serem treinadas nele.</p>')
-assert not dep, dep
+assert dep == ["C3"], dep
 
 # ------------------------------------------------------------------ módulo 10: figura da ISO
-PASSOS = [("Determinar", "a competência necessária de quem afeta a qualidade", "Aba Funções: nível requerido por função"),
+PASSOS = [("Determinar", "a competência de quem trabalha sob o controle da organização, inclusive terceiros", "Aba Funções: nível requerido por função"),
           ("Assegurar", "que as pessoas sejam competentes, por educação, treinamento ou experiência", "Aba Matriz: nível de cada pessoa, com evidência"),
           ("Agir", "para adquirir a competência que falta, e avaliar a eficácia", "Aba Plano: ação, aprendizado e eficácia"),
           ("Reter", "a evidência da competência", "Aba Registros: treinamentos e avaliações")]

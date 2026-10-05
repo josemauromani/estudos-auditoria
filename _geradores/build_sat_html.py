@@ -149,7 +149,7 @@ for k, (nome, desc) in enumerate(ETAPAS):
         rc.append(f'        <text{" class=" + chr(34) + "t-ground" + chr(34) if ink else ""} x="{x + 12}" y="{84 + j * 14}" font-size="10.5">{escape(l)}</text>')
     if k < 5:
         rc.append(f'        <line class="ln" x1="{x + W6 + 1}" y1="88" x2="{x + W6 + G6 - 2}" y2="88" marker-end="url(#a4)"/>')
-rc.append(f'        <text x="450" y="180" font-size="11.5" text-anchor="middle">Os prazos deste material: resposta em {PRAZO_RESPOSTA} dias úteis, solução em {PRAZO_SOLUCAO} dias. A organização define os seus e os mede.</text>')
+rc.append(f'        <text x="450" y="180" font-size="11.5" text-anchor="middle">Os prazos deste material: primeira resposta em {PRAZO_RESPOSTA} dias úteis, solução em {PRAZO_SOLUCAO} dias. A organização define os seus e os mede.</text>')
 rc.append("      </svg>")
 
 

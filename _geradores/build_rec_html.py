@@ -186,7 +186,7 @@ for k, (t, v, d, c) in enumerate(STATS):
     tl_.append(f'        <text class="mono mu" x="{x + 14}" y="156" font-size="9.5">{escape(t.upper())}</text>')
     tl_.append(f'        <text class="disp" x="{x + 14}" y="186" font-size="24"{TNUM}>{v}</text>')
     tl_.append(f'        <text class="mu" x="{x + 14}" y="208" font-size="10.5">{escape(d)}</text>')
-tl_.append('        <text x="450" y="248" font-size="11.5" text-anchor="middle">As três quebras de julho vieram de peças que a preventiva atrasada teria trocado ou medido.</text>')
+tl_.append('        <text x="450" y="248" font-size="11.5" text-anchor="middle">Duas das três quebras de julho vieram de peças que a preventiva atrasada teria trocado ou medido.</text>')
 tl_.append("      </svg>")
 
 # ------------------------------------------------------------------ figura 5: os fatores do ambiente

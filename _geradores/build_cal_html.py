@@ -7,7 +7,7 @@ import textwrap
 from html import escape
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from cal_data import (APROV, CADEIA, CHECK, EMDIA, ETAPAS, EX1, EX2, FORA, GROSSA, IMPACTO, JANELA, RAZAO, REPROV, SEMCAL, VENCE, VENCIDO,  # noqa: E402
+from cal_data import (APROV, CADEIA, CHECK, EMDIA, ETAPAS, EX1, EX2, FORA, GROSSA, IMPACTO, RAZAO, REPROV, SEMCAL, VENCE, VENCIDO,  # noqa: E402
                       adequacao, cal_conf, inst_conf, proxima, resultado, resumo, situacao)
 
 SRC, BODY, OUT = sys.argv[1], sys.argv[2], sys.argv[3]
@@ -212,8 +212,10 @@ def inst_tab(ex):
                     f'<td class="c">{dt(i["ultima"])}</td><td class="c">{dt(proxima(i))}</td><td><span class="chip {SIT_CLS[s]}">{s}</span></td>'
                     f'<td>{conf_chip(inst_conf(i, ref))}</td>')
     sits = r["sits"]
-    return tabela(f'Instrumentos · {r["insts"]} cadastrados: {sits[EMDIA]} em dia, {sits[VENCE]} vencem em {JANELA} dias, {sits[VENCIDO]} vencido{"s" if sits[VENCIDO] != 1 else ""}, '
-                  f'{sits[SEMCAL]} sem calibração, {sits[FORA]} fora de uso',
+    h = ex["head"]
+    quantos = f'{r["insts"]} dos {h["total"]} cadastrados' if h["total"] else f'{r["insts"]} cadastrados'
+    return tabela(f'{h["lista"]} · {quantos}: {sits[EMDIA]} em dia, {sits[VENCE]} vence{"m" if sits[VENCE] != 1 else ""} em breve, '
+                  f'{sits[VENCIDO]} vencido{"s" if sits[VENCIDO] != 1 else ""}, {sits[SEMCAL]} sem calibração, {sits[FORA]} fora de uso',
                   ['<th>Código</th>', '<th style="width:28%">Instrumento<small>Local · o que mede</small></th>', '<th class="c">Tolerância</th>', '<th class="c">Resolução</th>',
                    '<th style="width:15%">Controle<small>Intervalo · erro máximo</small></th>', '<th class="c">Última</th>', '<th class="c">Próxima</th>', '<th>Situação</th>',
                    '<th>Conferência</th>'], rows)
@@ -271,7 +273,7 @@ bottom = TOP + RH * len(rows_c)
 ch = [f'      <svg id="bars" viewBox="0 0 900 {bottom + 44}" role="img" aria-label="Dias até o vencimento da calibração ou da verificação de cada instrumento, na data da leitura de cada exemplo. '
       + " ".join(f'{r[1]["cod"]}: ' + (f'{(proxima(r[1]) - r[2]).days} dias.' if situacao(r[1], r[2]) not in (FORA, SEMCAL) else situacao(r[1], r[2]).lower() + ".") for r in rows_c if r[0] == "inst")
       + '">', '        <g font-size="11.5">']
-for k, (t, cls) in enumerate(((EMDIA, "f1"), (f"Vence em {JANELA} dias", "f2"), (VENCIDO, "f3"))):
+for k, (t, cls) in enumerate(((EMDIA, "f1"), (VENCE, "f2"), (VENCIDO, "f3"))):
     ch.append(f'          <rect class="{cls}" x="{X0 + k * 160}" y="12" width="14" height="14"/><text x="{X0 + 22 + k * 160}" y="24">{t}</text>')
 ch.append('        </g>')
 for d in range(-60, DMAX + 1, 60):
@@ -292,7 +294,7 @@ for k, row in enumerate(rows_c):
         dias = s
     else:
         d = (proxima(i) - ref).days
-        cls = "f3" if d < 0 else "f2" if d <= JANELA else "f1"
+        cls = "f3" if s == VENCIDO else "f2" if s == VENCE else "f1"
         a, b = sorted((dx(0), dx(max(DMIN, min(DMAX, d)))))
         ch.append(f'        <rect class="bar {cls}" data-k="{k}" x="{a:.1f}" y="{y + 6}" width="{max(b - a, 2):.1f}" height="{RH - 12}"/>')
         ch.append(f'        <text class="mu halo" x="{(b + 6) if d >= 0 else (a - 6):.1f}" y="{y + 17}" font-size="10.5"{" text-anchor=" + chr(34) + "end" + chr(34) if d < 0 else ""}{TNUM}>{d}</text>')
@@ -309,7 +311,7 @@ for row in rows_c:
                   f'<td class="c">{(proxima(i) - ref).days if s not in (FORA, SEMCAL) else "—"}</td><td>{s}</td></tr>')
 tb += ['          </tbody>', '        </table>']
 charttext = ('  <p>Na pizzaria, dois instrumentos vencem em menos de uma semana: a balança da bancada no dia seguinte, e o termômetro de espeto em cinco dias. Verificação mensal é assim: '
-             'a lista de vencimentos precisa ser lida toda semana, ou a verificação vira atraso. O termômetro do recebimento nunca foi verificado, e foi ele que recusou a mussarela a 9 °C '
+             'a lista de vencimentos precisa ser lida toda semana, ou a verificação vira atraso. O termômetro do recebimento nunca foi verificado, e foi ele que recusou a muçarela a 9 °C '
              'no estudo de liberação: a decisão provavelmente estava certa, mas ninguém pode provar. Na indústria, o termômetro da câmara de condicionamento venceu há 15 dias, '
              'às vésperas dos ensaios a -18 °C do projeto de filme para congelados, em julho. Os ensaios precisam esperar a verificação, ou não valem.</p>')
 

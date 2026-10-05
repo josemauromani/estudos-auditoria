@@ -387,8 +387,8 @@ hint_row(ws, 5, [("B", ""), ("C", "Nome, como na matriz"), ("D", "Código, C1 a 
 ex(ws, "B6", "Ex.", h="center")
 for col, v, h_, fmt in [("C", "Bruno", "left", None), ("D", "C3", "center", "@"), ("E", "Instrução no posto: regular o forno com o pizzaiolo líder, uma semana por turno.", "left", None),
                         ("F", "Rafael", "left", None), ("G", date(2027, 1, 22), "center", DATE), ("H", date(2027, 1, 20), "center", DATE), ("I", "Sim", "center", None),
-                        ("J", "Eficaz", "center", None), ("K", date(2027, 2, 12), "center", DATE), ("L", "Regulou o forno sozinho em 8 turnos.", "left", None),
-                        ("M", A_EFICAZ, "center", None)]:
+                        ("J", "Parcial", "center", None), ("K", date(2027, 2, 12), "center", DATE), ("L", "Regula a temperatura; ainda não regula a chama do lastro.", "left", None),
+                        ("M", A_PARCIAL, "center", None)]:
     ex(ws, f"{col}6", v, h=h_, fmt=fmt)
 ws.row_dimensions[6].height = 30
 for k in range(NPLA):

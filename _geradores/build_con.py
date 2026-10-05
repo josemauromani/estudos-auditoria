@@ -109,7 +109,7 @@ def f_licconf(c, codes):
 
 def f_polconf(c):
     return (f'IF({c["prod"]}="","",IF({c["min"]}="","Falta o prazo mínimo para reclamar",IF({c["aceito"]}="","Falta o prazo aceito",'
-            f'IF({c["aceito"]}<{c["min"]},"{MENOR}",IF({c["ativ"]}="","Falta o que se faz",IF({c["resp"]}="","Falta o prazo de resposta","OK"))))))')
+            f'IF({c["aceito"]}<{c["min"]},"{MENOR}",IF({c["ativ"]}="","Falta o que se faz",IF({c["resp"]}="","Falta o prazo de solução","OK"))))))')
 
 
 def f_prazo(prod, prods, resps):
@@ -223,7 +223,7 @@ for k, text in [
     (RISCO, "Criticidade alta ou média com 2 pontos ou mais, quando não é crítico."),
     (CONTROLE, "Os demais, inclusive todo conhecimento de criticidade baixa."),
     ("Lição pendente", f"Sem data de incorporação. Vira aviso quando passa de {PRAZO_LICAO} dias da data do caso."),
-    ("Prazo do atendimento", "O prazo de resposta do produto, na aba Pós-entrega."),
+    ("Prazo do atendimento", "O prazo de solução do produto, na aba Pós-entrega: em quanto tempo o caso é resolvido."),
     ("Dias do atendimento", "Da abertura à resolução. Se ainda está aberto, da abertura à data da leitura."),
     ("Causa", f"Obrigatória quando o atendimento está resolvido e é {', '.join(t.lower() for t in TIPOS_CAUSA)}."),
 ]:
@@ -234,7 +234,7 @@ for k, text in enumerate([
     "Aba Conhecimento: informe a data da leitura.",
     "Aba Conhecimento: liste o que cada processo precisa saber, com criticidade, forma, onde está, quem sabe e saída prevista. Para o que estiver crítico ou em risco, a ação e o prazo.",
     "Aba Lições: registre os casos que ensinaram alguma coisa, com o destino e o responsável.",
-    "Aba Pós-entrega: a política de cada produto, com o mínimo da lei ou do contrato, o prazo aceito, o que se faz e o prazo de resposta.",
+    "Aba Pós-entrega: a política de cada produto, com o mínimo da lei ou do contrato, o prazo aceito, o que se faz e o prazo de solução.",
     "Aba Atendimentos: as reclamações, garantias, devoluções, assistências e orientações do período.",
     "Aba Painel: leia os avisos. Depois, valide na aba Checklist.",
 ], 1):
@@ -369,7 +369,7 @@ ws = wb.create_sheet("Pós-entrega")
 widths(ws, {"A": 2, "B": 5, "C": 28, "D": 26, "E": 13, "F": 12, "G": 40, "H": 12, "I": 30, "J": 32, "K": 2})
 title(ws, "Política de pós-entrega", "Um produto ou serviço por linha: o que se faz depois da entrega, e com que prazos.", "J")
 for col, text in zip("BCDEFGHIJ", ["#", "Produto ou serviço", "Vida útil", "Mínimo para reclamar (dias)", "Prazo aceito (dias)", "O que se faz depois da entrega",
-                                   "Prazo de resposta (dias)", "O que se quer evitar no uso", "Conferência"]):
+                                   "Prazo de solução (dias)", "O que se quer evitar no uso", "Conferência"]):
     head(ws, f"{col}4", text)
 ws.row_dimensions[4].height = 45
 hint_row(ws, 5, [("B", ""), ("C", ""), ("D", "Validade, durabilidade"), ("E", "Lei ou contrato"), ("F", "O que a casa aceita"), ("G", "Troca, laudo, visita, orientação"),
@@ -489,7 +489,7 @@ IND = [
     ("Prazo aceito menor que o mínimo", f'=COUNTIF({Pj},"{MENOR}")', "Abaixo da lei ou do contrato.", None),
     ("Atendimentos", f"=COUNTA({AS}!D{A1}:D{A2})", "Da aba Atendimentos.", None),
     ("Abertos", f'=COUNTIF({Ao},"{ABERTO}")+COUNTIF({Ao},"{ATRASADO}")', "Ainda sem resolução.", None),
-    ("Fora do prazo, resolvidos ou não", f'=COUNTIF({Ao},"{FORAPRAZO}")+COUNTIF({Ao},"{ATRASADO}")', "Passaram do prazo de resposta.", None),
+    ("Fora do prazo, resolvidos ou não", f'=COUNTIF({Ao},"{FORAPRAZO}")+COUNTIF({Ao},"{ATRASADO}")', "Passaram do prazo de solução.", None),
     ("Resolvidos no prazo", f'=IFERROR(COUNTIF({Ao},"{NOPRAZO}")/(COUNTIF({Ao},"{NOPRAZO}")+COUNTIF({Ao},"{FORAPRAZO}")),"")', "Entre os resolvidos.", "0%"),
     ("Custo dos atendimentos", f"=SUM({Aj})", "Reposições, descontos, fretes, horas.", MOEDA),
     ("Linhas a completar", f'=SUMPRODUCT(({Ko}<>"")*({Ko}<>"OK"))+SUMPRODUCT(({Ln}<>"")*({Ln}<>"OK"))+SUMPRODUCT(({Pj}<>"")*({Pj}<>"OK"))+SUMPRODUCT(({Ap}<>"")*({Ap}<>"OK"))',
@@ -648,7 +648,7 @@ def exemplo(ws, ex_):
     band(ws, rr, "Política de pós-entrega", "Q", color=AMBER)
     rr += 1
     sub(ws, rr, [("B", "C", "Produto ou serviço"), ("D", "E", "Vida útil"), ("F", None, "Mínimo (dias)"), ("G", None, "Aceito (dias)"), ("H", "K", "O que se faz"),
-                 ("L", None, "Resposta (dias)"), ("M", "P", "O que se quer evitar"), ("Q", None, "Conferência")])
+                 ("L", None, "Solução (dias)"), ("M", "P", "O que se quer evitar"), ("Q", None, "Conferência")])
     assert rr + 1 == p1
     for p in ex_["pols"]:
         rr += 1

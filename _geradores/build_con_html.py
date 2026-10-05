@@ -173,7 +173,7 @@ es.append("      </svg>")
 
 # ------------------------------------------------------------------ figura 5: o que considerar no pós-entrega
 po = ['      <svg viewBox="0 0 900 280" role="img" aria-label="O que considerar ao definir o pós-entrega. ' + " ".join(f"{a}: {b}" for a, b in CONSIDERA)
-      + ' As cinco considerações definem a política de pós-entrega de cada produto: o que se faz, o prazo para reclamar e o prazo de resposta.">',
+      + ' As cinco considerações definem a política de pós-entrega de cada produto: o que se faz, o prazo para reclamar e o prazo de solução.">',
       "        <defs>" + marker("a5") + "</defs>"]
 for k, (t, d) in enumerate(CONSIDERA):
     y = 12 + k * 48
@@ -185,7 +185,7 @@ po.append('        <line class="ln" x1="560" y1="130" x2="586" y2="130" marker-e
 po.append('        <rect class="bx-ink" x="590" y="40" width="298" height="180"/>')
 po.append('        <text class="b t-ground" x="606" y="68" font-size="13">Política de pós-entrega</text>')
 yy = 96
-for t in ("O que se faz depois da entrega", "O prazo para o cliente reclamar", "O prazo para responder", "O que se quer evitar no uso"):
+for t in ("O que se faz depois da entrega", "O prazo para o cliente reclamar", "O prazo para resolver", "O que se quer evitar no uso"):
     po.append(f'        <rect class="f2" x="606" y="{yy - 9}" width="8" height="8"/><text class="t-ground" x="622" y="{yy}" font-size="11.5">{t}</text>')
     yy += 26
 po.append('        <text x="450" y="272" font-size="11.5" text-anchor="middle">Uma política por produto ou serviço. O prazo aceito nunca é menor que o da lei ou o do contrato.</text>')
@@ -259,7 +259,7 @@ def pol_tab(ex):
                     f'<td class="c">{p["resp"]} dia{"s" if p["resp"] != 1 else ""}</td><td>{escape(p["conseq"]) or "—"}</td><td>{chip(pol_conf(p))}</td>')
     return tabela(f'Política de pós-entrega · {len(ex["pols"])} produtos',
                   ['<th style="width:18%">Produto<small>Vida útil</small></th>', '<th class="c">Mínimo para reclamar<small>Lei ou contrato</small></th>',
-                   '<th class="c">Prazo aceito</th>', '<th style="width:26%">O que se faz</th>', '<th class="c">Prazo de resposta</th>',
+                   '<th class="c">Prazo aceito</th>', '<th style="width:26%">O que se faz</th>', '<th class="c">Prazo de solução</th>',
                    '<th style="width:18%">O que se quer evitar</th>', '<th>Conferência</th>'], rows)
 
 
@@ -298,7 +298,7 @@ for nome, ex in (("PIZZARIA", EX1), ("INDÚSTRIA", EX2)):
     rows_c += [("at", a, ex) for a in ex["ats"]]
 bottom = TOP + RH * len(rows_c)
 COR = {NOPRAZO: "f1", FORAPRAZO: "f3", ABERTO: "f2", ATRASADO: "f3"}
-ch = [f'      <svg id="bars" viewBox="0 0 900 {bottom + 44}" role="img" aria-label="Dias para resolver cada atendimento, contra o prazo de resposta do produto. '
+ch = [f'      <svg id="bars" viewBox="0 0 900 {bottom + 44}" role="img" aria-label="Dias para resolver cada atendimento, contra o prazo de solução do produto. '
       + " ".join(f'{r[1]["num"]}: {at_dias(r[1], r[2]["head"]["ref"])} dias, prazo de {prazo_at(r[1], r[2]["pols"])}, {at_sit(r[1], r[2]["pols"], r[2]["head"]["ref"]).lower()}.'
                  for r in rows_c if r[0] == "at") + '">', '        <g font-size="11.5">']
 for k, (t, cls) in enumerate(((NOPRAZO, "f1"), ("Aberto, ainda no prazo", "f2"), ("Fora do prazo", "f3"))):
